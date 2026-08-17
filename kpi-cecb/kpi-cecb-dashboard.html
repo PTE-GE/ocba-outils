@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KPI CECB+ — Suivi des projets PTE</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --violet:#856EBE;--turquoise:#30E5D9;--emeraude:#06E9A8;--vertclair:#64F7A3;--lime:#6EF93C;--jaunevert:#D7FF37;--lavande:#B7BDDD;
+  --ardoise:#2C3E50;--vertfonce:#1A8554;--teal:#005F73;--bleupale:#E8F4F7;
+  --rouge:#C0392B;--ambre:#B7791F;
+  --grad:linear-gradient(90deg,var(--violet),var(--turquoise),var(--emeraude),var(--vertclair),var(--lime),var(--jaunevert));
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#f2f4f6;color:var(--ardoise);font-size:14px;padding-bottom:40px}
+.band{height:6px;background:var(--grad)}
+.hdr{background:var(--ardoise);color:#fff;padding:14px 22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.hdr h1{font-size:1.15rem;font-weight:700;letter-spacing:.2px}
+.hdr p{font-size:.72rem;opacity:.75;margin-top:2px}
+.hdr-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:12px}
+.badge.none{background:#5d6b78;color:#fff}
+.badge.ok{background:var(--vertfonce);color:#fff}
+.btn{border:none;border-radius:6px;padding:6px 13px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-ghost{background:rgba(255,255,255,.14);color:#fff}
+.btn-ghost:hover{background:rgba(255,255,255,.26)}
+.btn-purge{background:var(--rouge);color:#fff}
+.btn-purge:hover{background:#a13324}
+.wrap{max-width:1200px;margin:0 auto;padding:16px 18px}
+
+/* zone d'import */
+.drop{border:2px dashed #9fb0bd;border-radius:12px;background:#fff;padding:34px 20px;text-align:center;cursor:pointer;transition:.15s;margin-bottom:18px}
+.drop:hover,.drop.over{border-color:var(--turquoise);background:#f2fdfc}
+.drop .ic{font-size:2rem;margin-bottom:8px}
+.drop h2{font-size:1rem;color:var(--ardoise);margin-bottom:4px}
+.drop p{font-size:.78rem;color:#6b7a86}
+.drop input{display:none}
+
+.srcbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:#fff;border-radius:10px;padding:9px 14px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);font-size:.76rem}
+.srcbar .who{color:#5f6b76}
+.srcbar .who b{color:var(--ardoise)}
+.srcbar .actions{display:flex;gap:8px;align-items:center}
+.btn-upd{background:var(--teal);color:#fff}
+.btn-upd:hover{background:#004a5c}
+.btn-out{background:#fff;color:var(--rouge);border:1px solid var(--rouge)}
+.btn-out:hover{background:#fdecea}
+
+.hidden{display:none!important}
+
+/* cards KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+.kpi{background:#fff;border-radius:10px;padding:13px 12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06);border-top:3px solid var(--turquoise)}
+.kpi .n{font-size:1.5rem;font-weight:800;color:var(--vertfonce);line-height:1.1}
+.kpi .l{font-size:.68rem;color:#5f6b76;margin-top:4px;line-height:1.3}
+.kpi .s{font-size:.64rem;color:#8a94a0;margin-top:2px}
+
+/* section cards */
+.sec{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:14px;overflow:hidden}
+.sec-hd{background:linear-gradient(90deg,var(--turquoise),var(--emeraude));padding:9px 16px;display:flex;align-items:center;justify-content:space-between;cursor:default}
+.sec-hd h3{color:#fff;font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.sec-hd.clickable{cursor:pointer}
+.sec-hd .ch{color:#fff;transition:transform .25s;font-size:.9rem}
+.sec-hd .ch.op{transform:rotate(180deg)}
+.sec-bd{padding:16px}
+.sec-bd.collapsed{display:none}
+
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:760px){.row2{grid-template-columns:1fr}}
+
+/* donut */
+.donut-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.donut{width:130px;height:130px;border-radius:50%;flex-shrink:0;position:relative}
+.donut::after{content:'';position:absolute;inset:20px;background:#fff;border-radius:50%;display:flex}
+.donut-c{position:absolute;inset:20px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut-c b{font-size:1.15rem;color:var(--ardoise)}
+.donut-c span{font-size:.6rem;color:#8a94a0}
+.legend{display:flex;flex-direction:column;gap:7px;font-size:.78rem}
+.leg-item{display:flex;align-items:center;gap:7px}
+.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+.leg-item b{color:var(--ardoise)}
+.leg-item .pc{margin-left:auto;font-weight:700;color:var(--ardoise);padding-left:14px}
+
+/* bars */
+.bar-row{display:flex;align-items:center;gap:9px;margin-bottom:9px;font-size:.76rem}
+.bar-lbl{width:190px;flex-shrink:0;color:#455161;text-align:right}
+.bar-track{flex:1;height:18px;background:#e9edf1;border-radius:9px;overflow:hidden;display:flex}
+.bar-fill{height:100%;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;color:#fff;font-size:.63rem;font-weight:700;white-space:nowrap}
+.bar-val{width:110px;font-size:.68rem;color:#5f6b76;flex-shrink:0}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:.74rem}
+th{background:var(--teal);color:#fff;padding:7px 8px;text-align:left;font-weight:700;font-size:.68rem;text-transform:uppercase;letter-spacing:.2px;white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{background:#00485a}
+th .arw{opacity:.55;font-size:.6rem;margin-left:3px}
+td{padding:6px 8px;border-bottom:1px solid #eef1f4;vertical-align:top}
+tr:nth-child(even) td{background:var(--bleupale)}
+tr:hover td{background:#dcf3f1}
+.tbl-scroll{overflow-x:auto}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;padding:1px 8px;border-radius:9px;font-size:.63rem;font-weight:700;color:#fff}
+.pill-fini{background:var(--vertfonce)}
+.pill-cours{background:var(--teal)}
+.pill-attente{background:var(--ambre)}
+.pill-retard{background:var(--rouge)}
+.pill-ontime{background:var(--vertfonce)}
+
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.filters input,.filters select{padding:5px 9px;border:1px solid #cdd6dd;border-radius:6px;font-size:.76rem;font-family:inherit}
+.filters input{flex:1;min-width:160px}
+
+.note{font-size:.68rem;color:#8a94a0;margin-top:8px;line-height:1.5}
+
+/* évolution mensuelle */
+.evo-hd{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.evo-title{font-size:.72rem;font-weight:700;color:var(--ardoise)}
+.btn-evo{background:#eef2f5;color:var(--ardoise);border:1px solid #dbe2e8}
+.btn-evo:hover{background:#e3e9ed}
+.evo-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.7rem;color:#5f6b76;margin-bottom:8px}
+.evo-legend span{display:inline-flex;align-items:center;gap:5px}
+.evo-legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.evo-chart{display:flex;align-items:flex-end;gap:8px;height:150px;overflow-x:auto;padding:4px 4px 0;border-bottom:1px solid #e2e8f0}
+.evo-col{display:flex;flex-direction:column;align-items:center;min-width:40px;flex-shrink:0;height:100%;justify-content:flex-end}
+.evo-bars{display:flex;align-items:flex-end;gap:2px;height:118px}
+.evo-bar{width:12px;border-radius:2px 2px 0 0;min-height:1px}
+.evo-lbl{font-size:.58rem;color:#8a94a0;margin-top:5px;white-space:nowrap}
+.evo-mchart{display:flex;align-items:flex-end;gap:8px;height:110px;overflow-x:auto;padding:4px 4px 0;border-bottom:1px solid #e2e8f0;margin-top:18px}
+.evo-mcol{display:flex;flex-direction:column;align-items:center;min-width:40px;flex-shrink:0;height:100%;justify-content:flex-end}
+.evo-mbar{width:20px;border-radius:2px 2px 0 0;min-height:1px;background:var(--violet)}
+.evo-msub{font-size:.7rem;font-weight:700;color:var(--ardoise);margin:12px 0 2px}
+.qual{display:flex;align-items:center;gap:8px;font-size:.72rem;color:#7a5900;background:#fef9e7;border-left:3px solid var(--ambre);padding:8px 12px;border-radius:6px;margin-bottom:14px;cursor:pointer}
+.qual.ok{color:#155724;background:#eafaf1;border-left-color:var(--vertfonce)}
+.qual-detail{font-size:.7rem;color:#5f6b76;background:#fbfbfb;border:1px solid #eee;border-radius:6px;padding:8px 12px;margin:-6px 0 14px;line-height:1.7}
+
+footer{max-width:1200px;margin:20px auto 0;padding:0 18px;font-size:.66rem;color:#96a1ab;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="band"></div>
+<div class="hdr">
+  <div>
+    <h1>KPI CECB+ — Suivi des projets PTE</h1>
+    <p>Office cantonal des bâtiments · Programme de la transition écologique · Tableau de bord de pilotage</p>
+  </div>
+  <div class="hdr-right">
+    <span id="badge" class="badge none">○ Aucune donnée chargée</span>
+    <button class="btn btn-purge" id="btnPurge">Purger les données</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ZONE D'IMPORT -->
+  <div id="dropZone" class="drop">
+    <input type="file" id="fileInput" accept=".xlsx,.xlsm,.xls">
+    <div class="ic">⇩</div>
+    <h2>Glissez ici le dernier fichier « MDS_suivi projets et KPI » (.xlsm / .xlsx)</h2>
+    <p>ou cliquez pour parcourir — la feuille « Tbl suivi » est lue automatiquement, rien n'est envoyé sur un serveur</p>
+  </div>
+
+  <!-- BARRE SOURCE (visible une fois des données chargées) -->
+  <div id="srcBar" class="srcbar hidden">
+    <div class="who">Source : <b id="srcName">—</b> · importé le <b id="srcDate">—</b> · <b id="srcCount">0</b> projets lus</div>
+    <div class="actions">
+      <button class="btn btn-upd" id="btnUpdate">↻ Mettre à jour avec un nouveau fichier</button>
+    </div>
+  </div>
+
+  <div id="dash" class="hidden">
+
+    <div id="qualBox"></div>
+
+    <!-- CARDS KPI -->
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <div class="sec">
+      <div class="sec-hd"><h3>Évolution mensuelle</h3></div>
+      <div class="sec-bd" id="secEvolution"></div>
+    </div>
+
+    <div class="row2">
+      <div class="sec">
+        <div class="sec-hd"><h3>État d'avancement</h3></div>
+        <div class="sec-bd" id="secEtat"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-hd"><h3>Répartition par affectation</h3></div>
+        <div class="sec-bd" id="secAffect"></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><h3>Respect des délais contractuels</h3></div>
+      <div class="sec-bd" id="secDelais"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><h3>Énergie &amp; CO₂ (CECB+)</h3></div>
+      <div class="sec-bd" id="secEnergie"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd"><h3>Charge par mandataire</h3></div>
+      <div class="sec-bd" id="secMandataires"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hd clickable" id="hdDetail"><h3>Détail des projets (vue exhaustive)</h3><span class="ch" id="chDetail">▾</span></div>
+      <div class="sec-bd collapsed" id="secDetail"></div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  Outil autonome — aucune donnée n'est intégrée au fichier ni transmise à un serveur : tout le calcul se fait dans votre navigateur, à partir du fichier que vous importez.
+  Cliquez « Purger les données » avant de partager ou de committer ce fichier (ex. dépôt GitHub public) pour repartir d'une version vierge.
+</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const LS_KEY='kpiCecbData_v1';
+const COL_FINI='#1A8554', COL_COURS='#005F73', COL_ATTENTE='#B7791F', COL_RETARD='#C0392B', COL_OK='#1A8554', COL_TURQ='#30E5D9', COL_VIOLET='#856EBE';
+let RAW=null; // {rows, importedAt, fileName}
+
+/* ---------- Utils ---------- */
+function norm(s){return (s==null?'':String(s)).trim().toLowerCase().replace(/\s+/g,' ');}
+function fmtInt(n){return n==null||isNaN(n)?'—':Math.round(n).toLocaleString('fr-CH');}
+function fmtDec(n,d=1){return n==null||isNaN(n)?'—':n.toLocaleString('fr-CH',{minimumFractionDigits:d,maximumFractionDigits:d});}
+function fmtCHF(n){return n==null||isNaN(n)?'—':Math.round(n).toLocaleString('fr-CH')+' CHF';}
+function fmtPct(n,d=0){return n==null||isNaN(n)?'—':n.toLocaleString('fr-CH',{minimumFractionDigits:d,maximumFractionDigits:d})+' %';}
+function fmtDate(d){if(!(d instanceof Date)||isNaN(d))return '—';return d.toLocaleDateString('fr-CH');}
+function findColIdx(headers,needle,from){from=from||0;const n=norm(needle);for(let i=from;i<headers.length;i++){if(norm(headers[i]).includes(n))return i;}return -1;}
+function isValidDate(d){return d instanceof Date && !isNaN(d);}
+function monthKey(d){if(!isValidDate(d))return null;return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
+function monthLabel(key){const [y,m]=key.split('-').map(Number);return new Date(y,m-1,1).toLocaleDateString('fr-CH',{month:'short',year:'2-digit'});}
+
+/* ---------- Parsing ---------- */
+function parseWorkbook(wb,fileName){
+  let sheetName = wb.SheetNames.find(n=>norm(n).includes('tbl suivi')) || wb.SheetNames.find(n=>norm(n).includes('suivi'));
+  if(!sheetName) throw new Error("Feuille « Tbl suivi » introuvable dans ce classeur.");
+  const ws = wb.Sheets[sheetName];
+  const arr = XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:null,blankrows:false});
+
+  // localiser la ligne d'en-têtes : contient à la fois 'Etat' et 'Mandataires'
+  let hRow=-1;
+  for(let i=0;i<arr.length;i++){
+    const line=arr[i].map(norm);
+    if(line.includes('etat') && line.some(v=>v.includes('mandataire'))){hRow=i;break;}
+  }
+  if(hRow===-1) throw new Error("Ligne d'en-têtes introuvable (colonnes « Etat » / « Mandataires » non détectées).");
+  const headers = arr[hRow];
+
+  const idx = {
+    avt: findColIdx(headers,'avt'),
+    etat: findColIdx(headers,'etat'),
+    site: findColIdx(headers,'n° de site')>=0?findColIdx(headers,'n° de site'):findColIdx(headers,'n de site'),
+    sousSite: findColIdx(headers,'sous-site'),
+    nom: findColIdx(headers,'nom du site'),
+    projet: findColIdx(headers,'n° de projet')>=0?findColIdx(headers,'n° de projet'):findColIdx(headers,'n de projet'),
+    idcPlan: findColIdx(headers,'idc plan'),
+    sre: findColIdx(headers,'sre'),
+    nbEgid: findColIdx(headers,'nbre egid'),
+    egidChauffe: findColIdx(headers,'egid chauff'),
+    affectation: findColIdx(headers,'affectation'),
+    mandataire: findColIdx(headers,'mandataire'),
+    ouverture: findColIdx(headers,'ouverture projet'),
+    lancementCecb: findColIdx(headers,'lancement cecb'),
+    etp: findColIdx(headers,'etp'),
+    montant: findColIdx(headers,'montant mission'),
+    factu30: findColIdx(headers,'factu 30'),
+    factu100: findColIdx(headers,'factu 100'),
+    idcRecalc: findColIdx(headers,'idc recalcul'),
+    idcA: findColIdx(headers,'idc variante a'),
+    idcB: findColIdx(headers,'idc variante b'),
+    idcC: findColIdx(headers,'idc variante c'),
+    co2Ex: findColIdx(headers,'co2 existant'),
+    co2A: findColIdx(headers,'co2 variante a'),
+    co2B: findColIdx(headers,'co2 variante b'),
+    co2C: findColIdx(headers,'co2 variante c'),
+    choix: findColIdx(headers,'choix variante')
+  };
+
+  // 4 étapes contractuelles : positionnelles (contractuelle -> réelle -> écart)
+  const contractIdxs = headers.map((h,i)=>norm(h).includes('contractuelle')?i:-1).filter(i=>i>=0);
+  const etapes = contractIdxs.map((ci,n)=>({
+    label:['Visite (j+10)','Réunion post-visite (j+20)','1er rendu (j+50)','Rendu final (j+70)'][n] || ('Étape '+(n+1)),
+    contractIdx: ci, realIdx: ci+1, diffIdx: ci+2
+  }));
+
+  if(idx.site<0||idx.etat<0||idx.mandataire<0) throw new Error("Colonnes essentielles introuvables (site, état ou mandataire).");
+
+  const rows=[];
+  for(let r=hRow+1;r<arr.length;r++){
+    const line=arr[r];
+    if(!line || line[idx.site]==null || line[idx.site]==='') continue;
+    const g=(i)=> i>=0 && i<line.length ? line[i] : null;
+    const num=(i)=>{const v=g(i);return (typeof v==='number')?v:null;};
+    const choixTxt = g(idx.choix);
+    let idcChoisi=null, co2Choisi=null;
+    if(choixTxt){
+      const t=norm(choixTxt);
+      if(t.includes(' a')||t.endsWith('a')){idcChoisi=num(idx.idcA);co2Choisi=num(idx.co2A);}
+      else if(t.includes(' b')||t.endsWith('b')){idcChoisi=num(idx.idcB);co2Choisi=num(idx.co2B);}
+      else if(t.includes(' c')||t.endsWith('c')){idcChoisi=num(idx.idcC);co2Choisi=num(idx.co2C);}
+    }
+    rows.push({
+      avt: num(idx.avt),
+      etat: (g(idx.etat)||'').toString().trim().toLowerCase(),
+      site: g(idx.site), sousSite: g(idx.sousSite), nom: g(idx.nom)||'(sans nom)', projet: g(idx.projet),
+      idcPlan: num(idx.idcPlan), sre: num(idx.sre), nbEgid: num(idx.nbEgid), egidChauffe: num(idx.egidChauffe),
+      affectation: (g(idx.affectation)||'Non renseigné').toString().trim(),
+      mandataire: (g(idx.mandataire)||'Non attribué').toString().trim(),
+      ouverture: g(idx.ouverture), lancementCecb: g(idx.lancementCecb),
+      etp: num(idx.etp), montant: num(idx.montant),
+      factu30: !!g(idx.factu30), factu100: !!g(idx.factu100),
+      idcRecalc: num(idx.idcRecalc), co2Existant: num(idx.co2Ex),
+      choixVariante: choixTxt||null, idcChoisi, co2Choisi,
+      etapes: etapes.map(e=>({label:e.label, contract:g(e.contractIdx), real:g(e.realIdx), diff:num(e.diffIdx)}))
+      // note: idcRecalc sert de base "état actuel" ; idcChoisi = variante retenue (A/B/C)
+    });
+  }
+  return {fileName, importedAt: new Date(), rows};
+}
+
+/* ---------- Qualité des données ---------- */
+function computeQuality(rows){
+  const alerts=[];
+  const seen={}; let dup=0;
+  rows.forEach(r=>{const k=r.sousSite||r.site; if(seen[k])dup++; seen[k]=true;});
+  if(dup>0) alerts.push(dup+' doublon(s) de n° de sous-site détecté(s)');
+  const incoh = rows.filter(r=>r.etat==='fini' && (r.avt==null || r.avt<1)).length;
+  if(incoh>0) alerts.push(incoh+' projet(s) marqué(s) « fini » avec un avancement (Avt) inférieur à 100 %');
+  const sansMandat = rows.filter(r=>r.etat!=='en attente' && r.mandataire==='Non attribué').length;
+  if(sansMandat>0) alerts.push(sansMandat+' projet(s) en cours/finis sans mandataire renseigné');
+  return alerts;
+}
+
+/* ---------- Rendu ---------- */
+function render(data){
+  const rows=data.rows;
+  $('srcBar').classList.remove('hidden');
+  $('dash').classList.remove('hidden');
+  $('dropZone').classList.add('hidden');
+  $('srcName').textContent=data.fileName;
+  $('srcDate').textContent=data.importedAt.toLocaleString('fr-CH');
+  $('srcCount').textContent=rows.length;
+  $('badge').className='badge ok';
+  $('badge').textContent='● '+rows.length+' projets chargés';
+
+  renderQuality(rows);
+  renderKpis(rows);
+  renderEvolution(rows);
+  renderEtat(rows);
+  renderAffectation(rows);
+  renderDelais(rows);
+  renderEnergie(rows);
+  renderMandataires(rows);
+  renderDetail(rows);
+}
+
+function renderQuality(rows){
+  const alerts=computeQuality(rows);
+  const box=$('qualBox');
+  if(alerts.length===0){
+    box.innerHTML='<div class="qual ok">✓ Aucune anomalie de cohérence détectée sur ce fichier</div>';
+    return;
+  }
+  box.innerHTML='<div class="qual" id="qualToggle">⚠ '+alerts.length+' alerte(s) de cohérence — cliquer pour le détail</div>'+
+    '<div class="qual-detail hidden" id="qualDetail">'+alerts.map(a=>'• '+a).join('<br>')+'</div>';
+  $('qualToggle').onclick=()=>$('qualDetail').classList.toggle('hidden');
+}
+
+function renderKpis(rows){
+  const n=rows.length;
+  const fini=rows.filter(r=>r.etat==='fini').length;
+  const cours=rows.filter(r=>r.etat==='en cours').length;
+  const attente=rows.filter(r=>r.etat==='en attente').length;
+  const avtMoy=rows.filter(r=>r.avt!=null).reduce((s,r)=>s+r.avt,0)/(rows.filter(r=>r.avt!=null).length||1);
+  const sre=rows.reduce((s,r)=>s+(r.sre||0),0);
+  const egid=rows.reduce((s,r)=>s+(r.egidChauffe||0),0);
+  const mand=new Set(rows.filter(r=>r.mandataire!=='Non attribué').map(r=>r.mandataire)).size;
+  const montant=rows.reduce((s,r)=>s+(r.montant||0),0);
+  const etp=rows.reduce((s,r)=>s+(r.etp||0),0);
+  const items=[
+    [n,'Projets suivis',''],
+    [fini,'Terminés',fmtPct(100*fini/n)],
+    [cours,'En cours',fmtPct(100*cours/n)],
+    [attente,'En attente',fmtPct(100*attente/n)],
+    [fmtPct(100*avtMoy,0),'Avancement moyen','indicateur global (Avt)'],
+    [fmtInt(sre)+' m²','Surface SRE suivie',''],
+    [fmtInt(egid),'Bâtiments (EGID chauffés)',''],
+    [mand,'Mandataires actifs',''],
+    [fmtCHF(montant),'Missions engagées HT',''],
+    [fmtDec(etp,1),'ETP-mois mobilisés','']
+  ];
+  $('kpiGrid').innerHTML=items.map(([n,l,s])=>
+    `<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div>${s?`<div class="s">${s}</div>`:''}</div>`).join('');
+}
+
+/* ---------- Évolution mensuelle ---------- */
+let evoFullRange=false, evoRowsCache=[];
+function buildMonthly(rows){
+  const engages={}, termines={}, montants={};
+  rows.forEach(r=>{
+    const ko=monthKey(r.ouverture);
+    if(ko){
+      engages[ko]=(engages[ko]||0)+1;
+      if(typeof r.montant==='number') montants[ko]=(montants[ko]||0)+r.montant;
+    }
+    const finDate = r.etapes && r.etapes.length>=4 ? r.etapes[3].real : null;
+    const kt=monthKey(finDate);
+    if(kt) termines[kt]=(termines[kt]||0)+1;
+  });
+  const keys=[...new Set([...Object.keys(engages),...Object.keys(termines)])].sort();
+  return {keys, engages, termines, montants};
+}
+function renderEvolution(rows){
+  evoRowsCache=rows;
+  const {keys, engages, termines, montants}=buildMonthly(rows);
+  if(keys.length===0){
+    $('secEvolution').innerHTML='<div class="note">Aucune date exploitable (« Ouverture projet » / « CECB validé ») trouvée dans ce fichier — impossible de tracer une évolution mensuelle.</div>';
+    return;
+  }
+  const shown = evoFullRange ? keys : keys.slice(-24);
+  const maxCount = Math.max(1,...shown.map(k=>Math.max(engages[k]||0,termines[k]||0)));
+  const maxMontant = Math.max(1,...shown.map(k=>montants[k]||0));
+
+  const nOuv = rows.filter(r=>isValidDate(r.ouverture)).length;
+  const nFin = rows.filter(r=>r.etapes&&r.etapes.length>=4&&isValidDate(r.etapes[3].real)).length;
+  const nOuvMontant = rows.filter(r=>isValidDate(r.ouverture)&&typeof r.montant==='number').length;
+  const nFiniSansMontant = rows.filter(r=>r.etat==='fini'&&typeof r.montant!=='number').length;
+
+  const barsHtml = shown.map(k=>{
+    const e=engages[k]||0, t=termines[k]||0;
+    const he=Math.round(118*e/maxCount), ht=Math.round(118*t/maxCount);
+    return `<div class="evo-col">
+      <div class="evo-bars">
+        <div class="evo-bar" style="height:${he}px;background:${COL_TURQ}" title="${monthLabel(k)} — ${e} engagé(s)"></div>
+        <div class="evo-bar" style="height:${ht}px;background:${COL_FINI}" title="${monthLabel(k)} — ${t} terminé(s)"></div>
+      </div>
+      <div class="evo-lbl">${monthLabel(k)}</div>
+    </div>`;
+  }).join('');
+
+  const mbarsHtml = shown.map(k=>{
+    const m=montants[k]||0;
+    const hm=Math.round(90*m/maxMontant);
+    return `<div class="evo-mcol">
+      <div class="evo-mbar" style="height:${hm}px" title="${monthLabel(k)} — ${fmtCHF(m)}"></div>
+      <div class="evo-lbl">${monthLabel(k)}</div>
+    </div>`;
+  }).join('');
+
+  $('secEvolution').innerHTML=`
+    <div class="evo-hd">
+      <div class="evo-title">Nouveaux CECB+ engagés vs. terminés, par mois</div>
+      <button class="btn btn-evo" id="btnEvoToggle">${evoFullRange?'Réduire aux 24 derniers mois':'Afficher tout l’historique ('+keys.length+' mois)'}</button>
+    </div>
+    <div class="evo-legend">
+      <span><i style="background:${COL_TURQ}"></i>Engagés (date d'ouverture du projet)</span>
+      <span><i style="background:${COL_FINI}"></i>Terminés (CECB validé)</span>
+    </div>
+    <div class="evo-chart">${barsHtml}</div>
+
+    <div class="evo-msub">Montants de mission engagés par mois (HT, rattachés au mois d'ouverture du projet)</div>
+    <div class="evo-mchart">${mbarsHtml}</div>
+
+    <div class="note">
+      Basé sur « Ouverture projet » (${nOuv}/${rows.length} lignes renseignées) et « CECB validé » (${nFin}/${rows.length}).
+      Montants : ${nOuvMontant}/${rows.length} lignes disposent à la fois d'une date d'ouverture et d'un montant mission HT —
+      ${nFiniSansMontant} projet(s) « fini » n'ont pas de montant renseigné et sont absents des barres violettes.
+    </div>`;
+  $('btnEvoToggle').addEventListener('click',()=>{evoFullRange=!evoFullRange;renderEvolution(evoRowsCache);});
+}
+
+function renderEtat(rows){
+  const n=rows.length;
+  const fini=rows.filter(r=>r.etat==='fini').length;
+  const cours=rows.filter(r=>r.etat==='en cours');
+  const attente=rows.filter(r=>r.etat==='en attente').length;
+  const pf=100*fini/n, pc=100*cours.length/n, pa=100*attente/n;
+  const grad=`conic-gradient(${COL_FINI} 0 ${pf}%, ${COL_COURS} ${pf}% ${pf+pc}%, ${COL_ATTENTE} ${pf+pc}% 100%)`;
+  const c03=cours.filter(r=>(r.avt||0)<=0.3).length, c06=cours.filter(r=>(r.avt||0)>0.3&&(r.avt||0)<=0.6).length, c09=cours.length-c03-c06;
+  $('secEtat').innerHTML=`
+  <div class="donut-wrap">
+    <div class="donut" style="background:${grad}"><div class="donut-c"><b>${n}</b><span>projets</span></div></div>
+    <div class="legend">
+      <div class="leg-item"><span class="leg-dot" style="background:${COL_FINI}"></span>Terminés <b>${fini}</b><span class="pc">${fmtPct(pf)}</span></div>
+      <div class="leg-item"><span class="leg-dot" style="background:${COL_COURS}"></span>En cours <b>${cours.length}</b><span class="pc">${fmtPct(pc)}</span></div>
+      <div class="leg-item"><span class="leg-dot" style="background:${COL_ATTENTE}"></span>En attente <b>${attente}</b><span class="pc">${fmtPct(pa)}</span></div>
+    </div>
+  </div>
+  <div class="note">Détail « en cours » (${cours.length}) par stade d'avancement — ≤30 % : <b>${c03}</b> · ~60 % : <b>${c06}</b> · >60 % : <b>${c09}</b></div>`;
+}
+
+function renderAffectation(rows){
+  const counts={};
+  rows.forEach(r=>{counts[r.affectation]=(counts[r.affectation]||0)+1;});
+  const entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const max=entries[0]?entries[0][1]:1;
+  $('secAffect').innerHTML=entries.map(([k,v])=>`
+    <div class="bar-row">
+      <div class="bar-lbl">${k}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${100*v/max}%;background:${COL_VIOLET}">${v}</div></div>
+      <div class="bar-val">${fmtPct(100*v/rows.length)}</div>
+    </div>`).join('');
+}
+
+function renderDelais(rows){
+  const stages={};
+  rows.forEach(r=>r.etapes.forEach(e=>{
+    if(!stages[e.label]) stages[e.label]={vals:[]};
+    if(typeof e.diff==='number') stages[e.label].vals.push(e.diff);
+  }));
+  let html='';
+  Object.entries(stages).forEach(([label,{vals}])=>{
+    if(vals.length===0){html+=`<div class="bar-row"><div class="bar-lbl">${label}</div><div class="bar-track"></div><div class="bar-val">aucune donnée</div></div>`;return;}
+    const late=vals.filter(v=>v>0).length;
+    const onTime=vals.length-late;
+    const pOn=100*onTime/vals.length, pLate=100*late/vals.length;
+    const moy=vals.reduce((s,v)=>s+v,0)/vals.length;
+    html+=`<div class="bar-row">
+      <div class="bar-lbl">${label}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${pOn}%;background:${COL_OK}">${onTime}</div>
+        <div class="bar-fill" style="width:${pLate}%;background:${COL_RETARD}">${late}</div>
+      </div>
+      <div class="bar-val">écart moy. ${moy>=0?'+':''}${fmtDec(moy,1)} j (n=${vals.length})</div>
+    </div>`;
+  });
+
+  // top 5 projets les plus en retard cumulé
+  const sig = rows.map(r=>{
+    const vals=r.etapes.map(e=>e.diff).filter(v=>typeof v==='number');
+    return {nom:r.nom, mandataire:r.mandataire, sum: vals.length?vals.reduce((s,v)=>s+v,0):null, n:vals.length};
+  }).filter(r=>r.sum!=null).sort((a,b)=>b.sum-a.sum).slice(0,5);
+  let tbl='';
+  if(sig.length){
+    tbl='<table style="margin-top:12px"><tr><th>Projet le plus en retard cumulé</th><th>Mandataire</th><th class="num">Σ écarts (j)</th></tr>'+
+      sig.map(s=>`<tr><td>${s.nom}</td><td>${s.mandataire}</td><td class="num">${s.sum>=0?'+':''}${fmtInt(s.sum)}</td></tr>`).join('')+'</table>';
+  }
+  $('secDelais').innerHTML=`<div>${html}</div>${tbl}<div class="note">Écart = date réelle − date contractuelle (jours). Calculé uniquement sur les jalons déjà atteints (les projets « en attente » n'ont pas encore de date réelle).</div>`;
+}
+
+function renderEnergie(rows){
+  const withVariant = rows.filter(r=>r.idcRecalc!=null && r.idcChoisi!=null);
+  const idcAvant = withVariant.reduce((s,r)=>s+r.idcRecalc,0);
+  const idcApres = withVariant.reduce((s,r)=>s+r.idcChoisi,0);
+  const gain = idcAvant>0 ? 100*(idcAvant-idcApres)/idcAvant : null;
+  const co2 = rows.filter(r=>r.co2Existant!=null && r.co2Choisi!=null);
+  const co2Avant = co2.reduce((s,r)=>s+r.co2Existant,0);
+  const co2Apres = co2.reduce((s,r)=>s+r.co2Choisi,0);
+  const co2Gain = co2Avant - co2Apres;
+  $('secEnergie').innerHTML=`
+  <div class="kpi-grid" style="margin-bottom:4px">
+    <div class="kpi"><div class="n">${fmtInt(idcAvant)}</div><div class="l">IDC actuel cumulé (MJ/m².an)</div><div class="s">${withVariant.length} projets avec variante retenue</div></div>
+    <div class="kpi"><div class="n">${fmtInt(idcApres)}</div><div class="l">IDC cumulé — variante retenue</div></div>
+    <div class="kpi"><div class="n">${gain!=null?fmtPct(gain,0):'—'}</div><div class="l">Gain énergétique moyen</div></div>
+    <div class="kpi"><div class="n">${fmtInt(co2Gain)}</div><div class="l">Réduction CO₂ estimée (t/an)</div><div class="s">${co2.length} projets évalués</div></div>
+  </div>
+  <div class="note">Variante retenue = colonne « Choix variante » (A/B/C). Les projets sans variante encore arrêtée (CECB en cours) sont exclus de ce calcul.</div>`;
+}
+
+function renderMandataires(rows){
+  const byM={};
+  rows.forEach(r=>{
+    const m=r.mandataire;
+    if(!byM[m]) byM[m]={n:0,etp:0,montant:0,f30:0,f100:0,diffs:[]};
+    byM[m].n++; byM[m].etp+=r.etp||0; byM[m].montant+=r.montant||0;
+    if(r.factu30) byM[m].f30++; if(r.factu100) byM[m].f100++;
+    r.etapes.forEach(e=>{if(typeof e.diff==='number') byM[m].diffs.push(e.diff);});
+  });
+  const entries=Object.entries(byM).filter(([k])=>k!=='Non attribué').sort((a,b)=>b[1].montant-a[1].montant);
+  const rowsHtml=entries.map(([m,d])=>{
+    const moy=d.diffs.length?d.diffs.reduce((s,v)=>s+v,0)/d.diffs.length:null;
+    return `<tr>
+      <td>${m}</td>
+      <td class="num">${d.n}</td>
+      <td class="num">${fmtDec(d.etp,2)}</td>
+      <td class="num">${fmtCHF(d.montant)}</td>
+      <td class="num">${d.n?fmtPct(100*d.f30/d.n,0):'—'}</td>
+      <td class="num">${d.n?fmtPct(100*d.f100/d.n,0):'—'}</td>
+      <td class="num">${moy!=null?(moy>=0?'+':'')+fmtDec(moy,1)+' j':'—'}</td>
+    </tr>`;
+  }).join('');
+  $('secMandataires').innerHTML=`<div class="tbl-scroll"><table>
+    <tr><th>Mandataire</th><th class="num">Projets</th><th class="num">ETP-mois</th><th class="num">Montant HT</th><th class="num">Facturé 30 %</th><th class="num">Facturé 100 %</th><th class="num">Écart délai moy.</th></tr>
+    ${rowsHtml}
+  </table></div>`;
+}
+
+let detailRows=[], detailSort={col:null,dir:1};
+function renderDetail(rows){
+  detailRows=rows;
+  $('secDetail').innerHTML=`
+    <div class="filters">
+      <input type="text" id="fSearch" placeholder="Rechercher un site, un mandataire…">
+      <select id="fEtat"><option value="">Tous les états</option><option value="fini">Fini</option><option value="en cours">En cours</option><option value="en attente">En attente</option></select>
+      <select id="fMandataire"><option value="">Tous les mandataires</option>${[...new Set(rows.map(r=>r.mandataire))].sort().map(m=>`<option value="${m}">${m}</option>`).join('')}</select>
+    </div>
+    <div class="tbl-scroll"><table id="detailTbl">
+      <tr>
+        <th data-k="nom">Site</th><th data-k="affectation">Affectation</th><th data-k="mandataire">Mandataire</th>
+        <th data-k="etat">État</th><th data-k="avt">Avt</th><th data-k="sigma">Σ écarts (j)</th><th data-k="montant">Montant HT</th>
+      </tr>
+      <tbody id="detailBody"></tbody>
+    </table></div>
+    <div class="note" id="detailCount"></div>`;
+  ['fSearch','fEtat','fMandataire'].forEach(id=>$(id).addEventListener('input',drawDetail));
+  document.querySelectorAll('#detailTbl th[data-k]').forEach(th=>th.addEventListener('click',()=>{
+    const k=th.dataset.k;
+    detailSort.dir = detailSort.col===k ? -detailSort.dir : 1;
+    detailSort.col=k;
+    drawDetail();
+  }));
+  drawDetail();
+}
+function drawDetail(){
+  const q=norm($('fSearch').value), fe=$('fEtat').value, fm=$('fMandataire').value;
+  let list=detailRows.filter(r=>{
+    if(fe && r.etat!==fe) return false;
+    if(fm && r.mandataire!==fm) return false;
+    if(q && !(norm(r.nom).includes(q)||norm(r.mandataire).includes(q)||norm(r.affectation).includes(q))) return false;
+    return true;
+  }).map(r=>({...r, sigma: r.etapes.some(e=>typeof e.diff==='number') ? r.etapes.reduce((s,e)=>s+(typeof e.diff==='number'?e.diff:0),0) : null}));
+  if(detailSort.col){
+    const k=detailSort.col, dir=detailSort.dir;
+    list.sort((a,b)=>{
+      let av=a[k], bv=b[k];
+      if(av==null) return 1; if(bv==null) return -1;
+      if(typeof av==='string') return dir*av.localeCompare(bv);
+      return dir*(av-bv);
+    });
+  }
+  $('detailBody').innerHTML=list.slice(0,400).map(r=>`
+    <tr>
+      <td>${r.nom}</td>
+      <td>${r.affectation}</td>
+      <td>${r.mandataire}</td>
+      <td><span class="pill pill-${r.etat==='fini'?'fini':r.etat==='en cours'?'cours':'attente'}">${r.etat}</span></td>
+      <td class="num">${r.avt!=null?fmtPct(100*r.avt,0):'—'}</td>
+      <td class="num">${r.sigma!=null?(r.sigma>=0?'+':'')+fmtInt(r.sigma):'—'}</td>
+      <td class="num">${r.montant!=null?fmtCHF(r.montant):'—'}</td>
+    </tr>`).join('');
+  $('detailCount').textContent=list.length+' projet(s) affiché(s)'+(list.length>400?' (limité aux 400 premiers, affinez la recherche)':'');
+}
+
+/* ---------- Import / persistance / purge ---------- */
+function handleFile(file){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const wb=XLSX.read(e.target.result,{type:'array',cellDates:true});
+      const data=parseWorkbook(wb,file.name);
+      if(data.rows.length===0) throw new Error("Aucune ligne de projet n'a été trouvée dans la feuille « Tbl suivi ».");
+      RAW=data;
+      persist(data);
+      render(data);
+    }catch(err){
+      alert("Import impossible : "+err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+function persist(data){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify({fileName:data.fileName, importedAt:data.importedAt.toISOString(), rows:data.rows})); }catch(e){}
+}
+function reviveDates(rows){
+  // JSON.stringify/parse tourne les objets Date en chaînes ISO : on les recrée pour les
+  // champs utilisés par l'évolution mensuelle et les délais.
+  rows.forEach(r=>{
+    if(typeof r.ouverture==='string') r.ouverture=new Date(r.ouverture);
+    if(typeof r.lancementCecb==='string') r.lancementCecb=new Date(r.lancementCecb);
+    (r.etapes||[]).forEach(e=>{
+      if(typeof e.contract==='string') e.contract=new Date(e.contract);
+      if(typeof e.real==='string') e.real=new Date(e.real);
+    });
+  });
+  return rows;
+}
+function loadPersisted(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(!raw) return;
+    const p=JSON.parse(raw);
+    RAW={fileName:p.fileName, importedAt:new Date(p.importedAt), rows:reviveDates(p.rows)};
+    render(RAW);
+  }catch(e){}
+}
+function purge(){
+  try{ localStorage.removeItem(LS_KEY); }catch(e){}
+  RAW=null; evoFullRange=false;
+  $('dash').classList.add('hidden');
+  $('srcBar').classList.add('hidden');
+  $('dropZone').classList.remove('hidden');
+  $('badge').className='badge none';
+  $('badge').textContent='○ Aucune donnée chargée';
+  $('fileInput').value='';
+}
+
+const dz=$('dropZone');
+dz.addEventListener('click',()=>$('fileInput').click());
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);});
+$('fileInput').addEventListener('change',e=>{if(e.target.files[0])handleFile(e.target.files[0]);});
+$('btnPurge').addEventListener('click',()=>{if(confirm('Purger toutes les données chargées ? Cette action est irréversible pour cette session.'))purge();});
+$('btnUpdate').addEventListener('click',()=>$('fileInput').click());
+$('hdDetail').addEventListener('click',()=>{$('secDetail').classList.toggle('collapsed');$('chDetail').classList.toggle('op');});
+
+loadPersisted();
+</script>
+</body>
+</html>
