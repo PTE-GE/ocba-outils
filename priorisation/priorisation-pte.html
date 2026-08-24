@@ -898,7 +898,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 </div>
 </div>
 
-<div style="text-align:center;padding:16px;color:#999;font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v22.08.2026</div>
+<div style="text-align:center;padding:16px;color:#999;font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v24.08.2026</div>
 <script>
 /* ================================================================
    NOYAU COMMUN — état, persistance, pondérations
@@ -3586,7 +3586,10 @@ function sparkSvg(vals,col){
 function renderTiles(){
   const el=$('objTiles');if(!el)return;
   const g=(typeof OBJ_GAPS!=='undefined')?OBJ_GAPS:null;
-  if(!g){el.innerHTML='<p class="mini">Importez Plan_PTE.xlsx pour afficher l\'état du parc.</p>';$('objDetail').innerHTML='';return}
+  const dtl=$('objDetail');
+  if(!g){el.innerHTML='<p class="mini">Importez Plan_PTE.xlsx pour afficher l\'état du parc.</p>';
+    if(dtl){dtl.innerHTML='';dtl.style.display='none'}return}
+  if(dtl)dtl.style.display='';
   el.innerHTML=IND.map(function(o){
     const s=indState(o.k);if(!s)return'';
     const col=indColor(s);
