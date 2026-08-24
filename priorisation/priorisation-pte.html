@@ -309,9 +309,9 @@ body.night svg text{fill:var(--ink2)}
 .dash-foot{margin-top:16px;color:var(--ink3)}
 .dash-foot a{color:var(--acc);text-decoration:none;border-bottom:1px solid currentColor}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(214px,1fr));gap:12px}
-/* Les sept indicateurs forment une bande unique : on les lit d'un coup d'œil,
+/* Les huit indicateurs forment une bande unique : on les lit d'un coup d'œil,
    sans qu'un septième isolé donne l'impression d'un indicateur à part. */
-#objTiles{grid-template-columns:repeat(7,1fr);gap:9px}
+#objTiles{grid-template-columns:repeat(8,1fr);gap:8px}
 #objTiles .tile{padding:11px 11px 12px}
 #objTiles .tile .v{font-size:1.34rem}
 #objTiles .tile .k{font-size:.68rem}
@@ -546,7 +546,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <div class="cd" id="objRankCard">
 <div class="wt op" onclick="tglS('objRankBody','objRankCh')" title="Cliquer pour déplier ou replier le classement"><h3 style="margin:0;border:none;padding:0">Classement par objectif</h3><span class="ch op" id="objRankCh">▼</span></div>
 <div class="wb op" id="objRankBody">
-<p class="lead">Coût par unité gagnée sur la durée de vie retenue. Le rang de franchissement de la cible 2030 est mis en évidence. Cliquer une ligne ouvre le détail du bâtiment, ses notes et son ajustement qualitatif.</p>
+<p class="lead">Coût par unité gagnée sur la durée de vie retenue — au <b>m² créé</b> pour la végétalisation, à la puissance pour le photovoltaïque. Le rang de franchissement de la cible 2030 est mis en évidence. Cliquer une ligne ouvre le détail du bâtiment, ses notes et son ajustement qualitatif.</p>
 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:2px 0 6px">
 <button class="bt bt-i bt-s" onclick="snapSave()" title="Enregistrer l'état des classements du jour, pour pouvoir comparer plus tard">📌 Instantané</button>
 <select id="snapSel" onchange="renR()" style="padding:5px 8px;border:1px solid #cbd5e0;border-radius:6px;font-size:.76rem" title="Comparer les rangs actuels à ceux d'un instantané précédent"><option value="">Comparer avec…</option></select>
@@ -561,6 +561,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <option value="elec">⚡ Électricité</option>
 <option value="eau">💧 Eau</option>
 <option value="pv">☀️ Photovoltaïque</option>
+<option value="veg">Végétalisation</option>
 <option value="cee">💰 CEE</option>
 <option value="tous">📋 Tous les objectifs</option>
 </select>
@@ -781,7 +782,7 @@ classements, alertes bâtiment par bâtiment, taux de remplissage, puis la liste
 
 <!-- ===== MANUEL ===== -->
 <div id="manual" class="pnl">
-<div class="m-hdr"><h2>📐 Méthode &amp; données</h2><p>D'où vient chaque chiffre, comment il est calculé, et ce que l'outil ne peut pas dire</p><span class="m-ver">MAJ 22.08.2026</span></div>
+<div class="m-hdr"><h2>📐 Méthode &amp; données</h2><p>D'où vient chaque chiffre, comment il est calculé, et ce que l'outil ne peut pas dire</p><span class="m-ver">MAJ 24.08.2026</span></div>
 
 <div class="cd"><div class="wt" onclick="tglM(1)" title="Les colonnes du classeur réellement utilisées"><h3 style="margin:0;border:none;padding:0"><span class="m-num">1</span> D'où viennent les chiffres</h3><span class="ch" id="mCh1">▼</span></div><div class="wb" id="mB1"><div class="m-body">
 <p><b>Deux séries annuelles coexistent, et elles ne disent pas la même chose.</b> L'onglet
@@ -804,6 +805,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td>Références 2005 et cibles 2030</td><td>onglet <code>Objectifs PTE</code> : ligne de pourcentage (CO₂ −60 %, thermique −60 %, eau −60 %, électricité −20 %, renouvelable 50 %, PV 20 %) puis série annuelle démarrant en 2005. Aucune cible n'est codée dans l'outil.</td></tr>
 <tr><td>Séries mesurées du parc</td><td>onglet <code>Consommation par site</code> (2017 → dernière année fiable), surfaces comprises</td></tr>
 <tr><td>Indice développement durable</td><td>colonnes <code>DD …</code> du classeur, pondérées par les cinq volets réglables (menu ☰ → Paramètres)</td></tr>
+<tr><td>Végétalisation</td><td><code>Surface végétalisée ajoutée (m2)</code> et <code>Coût végétalisation TTC [CHF]</code> de <code>Plan_PTE</code> ; cible 2030 dans <code>Objectifs PTE</code>, ligne <code>Végétalisation [m2]</code></td></tr>
 <tr><td>Périmètre des portefeuilles</td><td><code>Responsable Portefeuille</code></td></tr>
 </tbody></table>
 </div></div></div>
@@ -818,6 +820,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <b>Quel montant ?</b> celui de la colonne choisie dans le menu 💰 de l'en-tête — <code>Invest estim. CECB+</code>, <code>Invest ImmOBA</code> ou <code>Prévisionnel PTE GEI</code>. Le menu indique combien de montants chaque colonne contient réellement ; en changer recalcule tous les classements, tous les coûts unitaires et l'arbitrage.<br>
 <b>Durée de vie retenue</b> : 40 ans par défaut. <b>Ce n'est pas une norme SIA</b> — c'est la convention de calcul du coût de l'énergie économisée reprise de <code>Priorisation_PTE.xlsx</code>. Elle est modifiable dans le menu ⚙️ de l'en-tête, avec le productible photovoltaïque et la cible d'intensité thermique.<br>
 <b>Rang de franchissement</b> : le rang auquel le cumul des gains atteint l'écart restant à combler pour 2030.</div></div>
+<p><b>La végétalisation fait exception elle aussi</b>, dans l'autre sens : elle est chiffrée mais ne se rapporte à aucune durée de vie. Une cour d'école désimperméabilisée ne produit pas un flux annuel de kWh évités ; elle crée une surface, une fois. Son classement se fait donc au <b>coût du m² créé</b> — montant TTC du projet ÷ m² créés — du moins cher au plus cher, sans actualisation ni durée de vie. Le rang de franchissement garde le même sens : le rang auquel le cumul des surfaces atteint la cible 2030. Attention à la lecture des surfaces : la colonne du classeur porte ce que les projets <b>créeraient</b>, pas ce qui est déjà créé — l'écart à combler est donc l'objectif entier.</p>
 <p>Le photovoltaïque fait exception : sans coût fiable, il est classé par puissance décroissante — un classement d'intention. Sa cible est en revanche chiffrée : <b>20 % de la consommation électrique</b>, convertie en kWc avec le productible paramétrable.</p>
 <h4 class="sub">Unités : ce qui est une intensité, ce qui est un total</h4>
 <p>Le classeur mélange les deux, et les confondre fausse tout. Dans <code>Plan_PTE</code> : <code>IDC</code>, <code>IDC projeté</code>, <code>IDE</code>, <code>IDE projeté</code> et <code>CO2 projeté</code> sont des <b>intensités</b> (par m² et par an), malgré des en-têtes qui indiquent « [kWh] » ; <code>CONSO</code>, <code>Conso Elec</code>, <code>Conso Eau</code> et <code>Co2</code> sont des <b>totaux annuels</b> par sous-site.</p>
@@ -1841,6 +1844,7 @@ function importFromRows(rows,includeAll){
     ddToitType:fc(h,['Toiture Principale Type']),ddToitSurf:fc(h,['Surface toiture brute estimée (m2)']),
     ddPerm:fc(h,['Indicateur Biodiversité 1 Surface perméabilisée ajoutée (m2)','Surface perméabilisée ajoutée (m2)']),
     ddVeget:fc(h,['Indicateur Biodiversité 2 Surface végétalisée ajoutée (m2)','Surface végétalisée ajoutée (m2)']),
+    ddVegCout:fc(h,['Coût végétalisation TTC [CHF]','Cout végétalisation TTC [CHF]','Coût végétalisation TTC']),
     ddArbres:fc(h,["Indicateur Biodiversité 3 Nombre d'arbres plantés","Nombre d'arbres plantés"]),
     ddCour:fc(h,["DD Cour d'école traitée"]),ddTri:fc(h,['DD Points de tri installés [nb]']),
     ddTriOk:fc(h,['DD Tri conforme']),ddMat:fc(h,['DD Exigence matériaux']),ddLci:fc(h,['DD LCI 117-118']),idcpB:fc(h,['IDC projeté VB [kWh]','IDC projeté VB']),idcpC:fc(h,['IDC projeté VC [kWh]','IDC projeté VC']),idcpGen:fc(h,['IDC projeté','IDCprojeté']),invEstim:fc(h,['Invest estim. CECB+','Estim PTE','EstimPTE']),invVB:fc(h,['Invest ImmOBA','InvestImmOBA','Invest VB']),invGE:fc(h,['Prévisionnel PTE GEI','GE-Invest','GEInvest','GE Invest','Invest GE']),invDG:fc(h,['DG (25%)','DG(25%)','DG 25%','DG25','Invest DG','DG']),lat:fc(h,['Latitude','Lat','GPS_Lat','YCOOR']),lng:fc(h,['Longitude','Long','Lng','GPS_Lng','XCOOR','lon']),notes:fc(h,['Notes','Commentaires','Remarques']),etat:fc(h,['Etat du projet (SIA)','État du projet (SIA)','Etat du projet','État du projet','Etat projet','EtatSIA']),gainElec:fc(h,['Gain Electricité (Max) - kWh','Gain Électricité (Max) - kWh']),gainEau:fc(h,['Gain Eau (Max) - m3']),pvKwc:fc(h,['Futur projet PV - puissance estimée (kWc)']),pvM2:fc(h,['Futur projet PV - surface toiture PV estimée (m2)'])};
@@ -1893,7 +1897,7 @@ function importFromRows(rows,includeAll){
   const idcCVal=pn(gvr(R,c.idcC))||pn(gvr(R,c.idcCorr));
   sites.push({id,nom:(gv(R,c.nom)||'').replace(/\s*-\s*\(.*/,'').substring(0,55),adr:gv(R,adrCol),rp:rpV.trim(),drt:(gv(R,c.drt)||'').trim(),coeff,sre:sreVal,idcC:idcCVal,pat:gv(R,c.pat)||'',fp:pn(gvr(R,c.fp)),ti:pn(gvr(R,c.ti)),clIDC:pn(gvr(R,c.clIDC)),clVet:pn(gvr(R,c.clVet)),elec:pn(gvr(R,c.elec)),eau:pn(gvr(R,c.eau)),consoTherm:pn(gvr(R,c.consoTherm)),co2:pn(gvr(R,c.co2)),ht:htVal,htPrin:htPrinVal,hsub:gv(R,c.hsub),cecbRaw:cecbRaw,cecbSt:cecbSt,cecb:CECB_DEF[cecbSt].pts===33,etat:(gv(R,c.etat)||'').trim(),idcVB:pn(gvr(R,idcpColF)),invEstim:pn(gvr(R,c.invEstim)),invImmOBA:pn(gvr(R,c.invVB)),invGE:pn(gvr(R,c.invGE)),invDG:pn(gvr(R,c.invDG)),invVB:pn(gvr(R,c.invVB)),gainElecMax:pn(gvr(R,c.gainElec)),gainEauMax:pn(gvr(R,c.gainEau)),pol:(gv(R,c.pol)||'').trim(),gainElecProj:pn(gvr(R,c.gainElecProj)),gainEauProj:pn(gvr(R,c.gainEauProj)),co2Proj:pn(gvr(R,c.co2Proj)),ideProj:pn(gvr(R,c.idceProj)),renAct:pn(gvr(R,c.renAct)),renFut:pn(gvr(R,c.renFut)),pvExist:pn(gvr(R,c.pvExist)),pvProd:pn(gvr(R,c.pvProd)),anneeIDC:pn(gvr(R,c.anneeIDC)),ddEng:pn(gvr(R,c.ddEng)),ddPrev:pn(gvr(R,c.ddPrev)),
     ddToitVeg:pn(gvr(R,c.ddToitVeg)),ddToitType:gv(R,c.ddToitType),ddToitSurf:pn(gvr(R,c.ddToitSurf)),
-    ddPerm:pn(gvr(R,c.ddPerm)),ddVeget:pn(gvr(R,c.ddVeget)),ddArbres:pn(gvr(R,c.ddArbres)),
+    ddPerm:pn(gvr(R,c.ddPerm)),ddVeget:pn(gvr(R,c.ddVeget)),ddVegCout:pn(gvr(R,c.ddVegCout)),ddArbres:pn(gvr(R,c.ddArbres)),
     ddCour:gv(R,c.ddCour),ddTri:pn(gvr(R,c.ddTri)),ddTriOk:gv(R,c.ddTriOk),
     ddMat:gv(R,c.ddMat),ddLci:gv(R,c.ddLci),pvKwc:pn(gvr(R,c.pvKwc)),pvM2:pn(gvr(R,c.pvM2)),lat:fLat,lng:fLng,geoQ:fQ,geoFallback:fQ==='none'})}
   return sites}
@@ -2026,6 +2030,9 @@ function refsFromObjectifs(rows){
       if(v!=null&&v<0){const s=next('total consommations');
         if(s)R.elec={pct:Math.abs(v),ref:num(s[c2005]),serie:serie(s),unit:'kWh'}}}
     else if(L.indexOf('renouvelable')===0&&v!=null&&v>0)R.ren={part:v};
+    /* Végétalisation : objectif ABSOLU (une surface à créer d'ici 2030), pas un
+       pourcentage de réduction. La valeur vit dans la feuille, jamais dans le code. */
+    else if((L.indexOf('végétalis')===0||L.indexOf('vegetalis')===0)&&v!=null&&v>0)R.veg={cible:v,unit:'m²'};
     else if(L.indexOf('pv')===0&&v!=null&&v>0){const s=next('total production');
       R.pv={part:v,serie:s?serie(s):null,unit:'kWh'}}
   }
@@ -2120,8 +2127,28 @@ function computeGapsObj(sheets){
     eau:{mesure:ea.v,annee:ea.y,cible:cEa,ref2005:R.eau?R.eau.ref:null,pct:R.eau?R.eau.pct:null,
          gap:g(ea.v,cEa),surface:S,unit:'m³'},
     pv:{actuelKw:P.pvKw||0,prod:pvProd2025,ciblePart:partPv,cibleKwh:cPvKwh,gapKwh:gapPvKwh,
-        gapKw:gapPvKwh/pPvProd(),cibleKw:(cPvKwh/pPvProd()),elec:el.v,surface:S,unit:'kWc'}}}
+        gapKw:gapPvKwh/pPvProd(),cibleKw:(cPvKwh/pPvProd()),elec:el.v,surface:S,unit:'kWc'},
+    veg:vegGap(R)}}
 
+/* Végétalisation : la cible vient de la feuille « Objectifs PTE » ; le réalisé
+   et le prévu viennent de la colonne « Surface végétalisée ajoutée (m2) » du
+   Plan_PTE. Sans cible dans la feuille, l'objectif n'existe pas — on ne
+   substitue aucune valeur. */
+function vegGap(R){
+  const cible=(R&&R.veg&&R.veg.cible>0)?R.veg.cible:null;
+  const pop=(typeof S_ALL!=='undefined'&&S_ALL&&S_ALL.length)?S_ALL:(typeof S!=='undefined'?S:[]);
+  let surf=0,cout=0,n=0,nc=0;
+  (pop||[]).forEach(function(s){
+    const v=+s.ddVeget||0;if(!(v>0))return;
+    surf+=v;n++;
+    const c=+s.ddVegCout||0;if(c>0){cout+=c;nc++}});
+  /* L'écart à combler est l'objectif ENTIER : la colonne porte des surfaces à
+     créer, pas des surfaces créées. Rien n'est encore réalisé, donc rien n'est
+     à déduire. « couvert » dit seulement quelle part de l'objectif les projets
+     repérés au plan permettraient d'atteindre s'ils étaient tous financés. */
+  return{cible:cible,surface:surf,cout:cout,n:n,nChiffres:nc,
+         gap:cible,couvert:(cible?surf/cible:null),
+         coutM2:(surf>0&&cout>0?cout/surf:null),unit:'m²'}}
 function plausibleObj(estim,sre){
   if(estim==null)return null;
   if(!sre||sre<=0)return true;
@@ -2133,7 +2160,7 @@ function plausibleObj(estim,sre){
    idcVB déjà corrigé pour la variante CECB+ réellement retenue */
 function buildContributionsObj(sites,coFactors){
   const fget=ciLookupObj(coFactors);
-  const out={co2:[],th:[],ren:[],elec:[],eau:[],pv:[]};
+  const out={co2:[],th:[],ren:[],elec:[],eau:[],pv:[],veg:[]};
   for(const s of sites){
     /* Le coût retenu est celui du RÉFÉRENTIEL ACTIF (menu « Montants »),
        pas la colonne Estim PTE en dur : changer de référentiel doit changer
@@ -2170,6 +2197,13 @@ function buildContributionsObj(sites,coFactors){
       if(s.gainElecMax&&s.gainElecMax>0)out.elec.push({id:s.id,nom:s.nom,estim:cout,sre:sre,gain:s.gainElecMax,mesure:LEGACY_ELEC_MSG});
       if(s.gainEauMax&&s.gainEauMax>0)out.eau.push({id:s.id,nom:s.nom,estim:cout,sre:sre,gain:s.gainEauMax,mesure:LEGACY_EAU_MSG});
     }
+    /* Végétalisation : la contribution est la surface créée, le coût son coût
+       TTC propre — pas le montant du référentiel financier, qui porte sur la
+       rénovation énergétique et n'a rien à voir avec une cour d'école. */
+    if(s.ddVeget&&s.ddVeget>0){
+      out.veg.push({id:s.id,nom:s.nom,estim:(+s.ddVegCout||null),sre:sre,gain:+s.ddVeget,
+        mesure:'Végétalisation — '+Math.round(s.ddVeget).toLocaleString('fr-CH')+' m² créés'});
+    }
     if(s.pvKwc&&s.pvKwc>0){
       out.pv.push({id:s.id,nom:s.nom,estim:hasEstim?cout:null,sre:sre,gain:s.pvKwc,
         mesure:s.pvM2?('Projet PV — '+Math.round(s.pvM2).toLocaleString('fr-CH')+' m² de toiture estimée'):'Projet PV — surface de toiture non renseignée'});
@@ -2201,6 +2235,29 @@ function rankIntentionObj(items,gap){
     if(franchiRang==null&&gap&&cumG>=gap)franchiRang=k;
     it.franchi=franchiRang!=null&&k<=franchiRang});
   return{items,franchiRang}}
+
+/* Végétalisation — tri par COÛT DU M² CRÉÉ croissant, le moins cher en tête.
+   Ni durée de vie ni actualisation : on achète une surface, pas un flux annuel.
+   Les bâtiments sans coût renseigné gardent un rang, en fin de liste, et ne
+   font pas avancer le cumul — comme partout ailleurs dans l'outil. */
+function rankVegObj(items,gap){
+  items=items.map(function(it){return Object.assign({},it)});
+  for(const it of items){
+    it.coutUnit=(it.estim>0&&it.gain>0)?it.estim/it.gain:null;
+    it.plausible=true}
+  items.sort(function(a,b){
+    if(a.coutUnit==null&&b.coutUnit==null)return a.id<b.id?-1:1;
+    if(a.coutUnit==null)return 1;
+    if(b.coutUnit==null)return -1;
+    return a.coutUnit-b.coutUnit||(a.id<b.id?-1:1)});
+  let cumG=0,cumI=0,franchiRang=null;
+  items.forEach(function(it,i){const k=i+1;
+    cumG+=it.gain;cumI+=(it.estim||0);
+    it.rang=k;it.cumulGain=cumG;it.cumulInvest=cumI;
+    it.pctGap=gap?cumG/gap:null;
+    if(franchiRang==null&&gap&&cumG>=gap)franchiRang=k;
+    it.franchi=franchiRang!=null&&k<=franchiRang});
+  return{items:items,franchiRang:franchiRang}}
 
 /* CEE — nouveau, pas dans Classements_Objectifs_PTE.xlsx. Tri par CHF/kWh
    croissant (même calcul que ceeCHFkWh() ci-dessus, sur 40 ans, référentiel
@@ -2251,9 +2308,10 @@ function computeObjRanking(){
   const elec=rankObjectiveObj(contribs.elec,OBJ_GAPS.elec.gap);
   const eau=rankObjectiveObj(contribs.eau,OBJ_GAPS.eau.gap);
   const pv=rankIntentionObj(contribs.pv,OBJ_GAPS.pv.gapKw);
+  const veg=rankVegObj(contribs.veg,(OBJ_GAPS.veg&&OBJ_GAPS.veg.gap)||null);
   const co2ById={};for(const it of co2.items)co2ById[it.id]=it.gain;
   const cee=rankCEEObj(pop,OBJ_GAPS.co2.gap,co2ById);
-  OBJRANK={co2,th,ren,elec,eau,pv,cee};
+  OBJRANK={co2,th,ren,elec,eau,pv,cee,veg};
 }
 
 function loadSample(){S=[
@@ -2466,7 +2524,7 @@ try{renCompleteness(all)}catch(e){}
    affichés ici et là-bas sont donc les mêmes. Plotly.purge avant tracé :
    sans cela le graphique se met à jour de façon erratique au changement de
    portefeuille (constaté le 20.08.2026). */
-const OBJ_UNIT={co2:'kg CO₂/an',th:'kWh/an',ren:'kWh/an',elec:'kWh/an',eau:'m³/an',pv:'kWc',cee:'CHF/kWh'};
+const OBJ_UNIT={co2:'kg CO₂/an',th:'kWh/an',ren:'kWh/an',elec:'kWh/an',eau:'m³/an',pv:'kWc',cee:'CHF/kWh',veg:'m²'};
 function renTop(all){
   const el=$('gTop');if(!el)return;
   const key=($('objSel')&&$('objSel').value)||'co2';
@@ -2485,7 +2543,7 @@ function renTop(all){
   const top=items.slice().reverse();
   const unit=OBJ_UNIT[key]||'';
   const val=function(it){return key==='cee'?it.cee:(key==='pv'?it.gain:it.coutUnit)};
-  const axis=key==='cee'?'CHF/kWh':(key==='pv'?'kWc':'coût par unité gagnée ('+pDuree()+' ans)');
+  const axis=key==='cee'?'CHF/kWh':(key==='pv'?'kWc':(key==='veg'?'CHF par m² créé':'coût par unité gagnée ('+pDuree()+' ans)'));
   /* Plotly.purge ne vide pas le message « aucun bâtiment » écrit par un rendu
      précédent : il resterait visible sous le graphique. */
   el.innerHTML='';
@@ -2544,7 +2602,8 @@ const OBJ_META={
   elec:{lbl:'Électricité (legacy)',lblCourt:'Élec.',unit:'kWh/an'},
   eau:{lbl:'Eau (legacy)',lblCourt:'Eau',unit:'m³/an'},
   pv:{lbl:'Photovoltaïque',lblCourt:'PV',unit:'kWc'},
-  cee:{lbl:'CEE',lblCourt:'CEE',unit:'kg CO2/an'}};
+  cee:{lbl:'CEE',lblCourt:'CEE',unit:'kg CO2/an'},
+  veg:{lbl:'Végétalisation',lblCourt:'Végét.',unit:'m²'}};
 function objFmtNum(v,d){if(v==null||isNaN(v))return'—';return Number(v).toLocaleString('fr-CH',{maximumFractionDigits:d==null?0:d})}
 
 function objRowStyle(it,franchiRang){
@@ -2619,13 +2678,13 @@ function objTable(key,R,meta,bySiteId,f){
     '<th style="text-align:right">'+(key==='pv'?'Puissance':'Contribution')+'<br>['+meta.unit+']</th>'+
     '<th style="text-align:right">Cumul<br>['+meta.unit+']</th>'+
     '<th style="text-align:right">% cible<br>comblé</th>'+
-    '<th style="text-align:right" title="Colonne d\'où viennent les montants — menu « Montants » au-dessus">'+esc(invDef().short)+'</th>'+
-    '<th style="text-align:right">'+(key==='pv'?'—':key==='cee'?'CHF/kWh<br>(tri)':'CHF/unité<br>('+pDuree()+' ans)')+'</th>'+
+    '<th style="text-align:right" title="'+(key==='veg'?'Coût TTC du projet de végétalisation, colonne « Coût végétalisation TTC [CHF] » — sans rapport avec le référentiel financier de la rénovation énergétique':'Colonne d\'où viennent les montants — menu « Montants » au-dessus')+'">'+(key==='veg'?'Coût TTC<br>végétalisation':esc(invDef().short))+'</th>'+
+    '<th style="text-align:right">'+(key==='pv'?'—':key==='cee'?'CHF/kWh<br>(tri)':key==='veg'?'CHF/m²<br>créé (tri)':'CHF/unité<br>('+pDuree()+' ans)')+'</th>'+
     '<th>Alerte</th></tr></thead><tbody>';
   for(const it of rankedRows){
     const s=bySiteId[it.id];
     const gainDisp=key==='cee'?objFmtNum(it.co2Gain,0):objFmtNum(it.gain,0);
-    const coutDisp=key==='pv'?'—':objFmtNum(key==='cee'?it.cee:it.coutUnit,key==='cee'?3:4);
+    const coutDisp=key==='pv'?'—':objFmtNum(key==='cee'?it.cee:it.coutUnit,key==='cee'?3:(key==='veg'?0:4));
     html+='<tr class="row-click'+((it.rangAdj||it.rang)===R.franchiRang?' franchi-row':'')+'" data-id="'+it.id+'" onclick="toggleDetail(\''+it.id+'\')" style="'+objRowStyle(Object.assign({},it,{rang:(it.rangAdj||it.rang)}),R.franchiRang)+'">'+
       '<td>'+(it.rangAdj||it.rang)+((it.rangAdj&&rangObj[it.id]&&it.rangAdj!==rangObj[it.id])?'<br><span style="font-size:.6rem;color:#8a94a0" title="rang du classement arithmétique, avant ajustement">obj. '+rangObj[it.id]+'</span>':'')+
       (snapCur()?('<br>'+snapDelta(key,it.id,(it.rangAdj||it.rang))):'')+'</td><td><b>'+it.id+'</b></td><td>'+(it.nom||'')+'<br><span style="color:#888;font-size:.63rem">'+(s.rp||'—')+'</span></td>'+
@@ -2635,13 +2694,16 @@ function objTable(key,R,meta,bySiteId,f){
       '<td style="text-align:right">'+objFmtNum(it.estim,0)+'</td><td style="text-align:right">'+coutDisp+'</td>'+
       '<td>'+alerteChip(alertsFor(s))+qualiChip(it.id)+(lockHas(it.id)?'<span class="lock-chip" title="Bâtiment du portefeuille validé">🔒</span>':'')+'</td></tr>'}
   if(restRows.length){
-    html+='<tr><td colspan="13" style="background:#f4f6f8;color:#777;font-size:.68rem;font-style:italic;padding:5px 8px">Classement de repli — non mesurable pour cet objectif via CECB+, trié par score composite provisoire (voir « Pondérations du classement de repli » ci-dessus)</td></tr>';
+    html+='<tr><td colspan="13" style="background:#f4f6f8;color:#777;font-size:.68rem;font-style:italic;padding:5px 8px">'+
+      (key==='veg'?'Aucun projet de végétalisation renseigné pour ces sous-sites — ils ne sont pas classables ici tant que la colonne « Surface végétalisée ajoutée (m2) » reste vide. L\'ordre ci-dessous est celui du score composite de repli.'
+                  :'Classement de repli — non mesurable pour cet objectif via CECB+, trié par score composite provisoire (voir « Pondérations du classement de repli » ci-dessus)')+'</td></tr>';
     for(const{s,sc}of restRows)
       html+='<tr class="row-click" data-id="'+s.id+'" onclick="toggleDetail(\''+s.id+'\')" style="color:#888">'+
         '<td>'+(sc.t!=null?'repli':'—')+'</td><td><b>'+s.id+'</b></td><td>'+(s.nom||'')+'<br><span style="color:#aaa;font-size:.63rem">'+(s.rp||'—')+'</span></td>'+
         '<td style="font-size:.63rem">'+(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td>'+
-        '<td colspan="4" style="text-align:center;font-size:.66rem">'+((+s.sre&&+s.idcC)?('conso estimée '+objFmtNum(s.sre*s.idcC,0)+' kWh/an'):'données insuffisantes')+'</td>'+
-        '<td style="text-align:right">'+objFmtNum(s.invEstim,0)+'</td>'+
+        '<td colspan="4" style="text-align:center;font-size:.66rem">'+(key==='veg'?'surface végétalisée non renseignée'
+           :((+s.sre&&+s.idcC)?('conso estimée '+objFmtNum(s.sre*s.idcC,0)+' kWh/an'):'données insuffisantes'))+'</td>'+
+        '<td style="text-align:right">'+(key==='veg'?'—':objFmtNum(s.invEstim,0))+'</td>'+
         '<td>'+alerteChip(alertsFor(s))+qualiChip(s.id)+'</td></tr>'}
   html+='</tbody></table>';
   return html}
@@ -2693,7 +2755,7 @@ function renR(){
   const bySiteId={};pop.forEach(s=>{bySiteId[s.id]=s});
   const f=rankFilters();
   if(key==='tous'){
-    if(note)note.innerHTML=OBJRANK?'Un bâtiment peut servir plusieurs objectifs à la fois — trié par nombre d’objectifs servis avant leur propre seuil, puis par coût moyen croissant sur les objectifs où il contribue. <b style="color:#1e8449">Vert</b> = le bâtiment fait partie de ceux à financer pour atteindre CETTE cible précise (avant son propre seuil, « # » = son rang dans ce classement) ; <b style="color:#999">gris</b> = après. Photovoltaïque exclu (pas de coût isolable, voir onglet dédié).':'';
+    if(note)note.innerHTML=OBJRANK?'Un bâtiment peut servir plusieurs objectifs à la fois — trié par nombre d’objectifs servis avant leur propre seuil, puis par coût moyen croissant sur les objectifs où il contribue. <b style="color:#1e8449">Vert</b> = le bâtiment fait partie de ceux à financer pour atteindre CETTE cible précise (avant son propre seuil, « # » = son rang dans ce classement) ; <b style="color:#999">gris</b> = après. Photovoltaïque exclu (pas de coût isolable) et végétalisation exclue (elle se classe au m² créé, pas à l’unité gagnée sur 40 ans) — voir leurs classements dédiés.':'';
     box.innerHTML=objTousTable(bySiteId,f);
     return}
   const meta=OBJ_META[key];
@@ -2705,6 +2767,8 @@ function renR(){
       const nR=R.items.length;
       note.innerHTML=(key==='cee'
         ?'Trié par CHF/kWh croissant (référentiel actif, 40 ans). Pas d’écart résiduel propre au CEE : cible reprise du CO₂, cumul du gain CO₂ (pas du kWh) dans cet ordre : '+objFmtNum(gap,0)+' kg CO2/an à combler. '
+        :key==='veg'
+        ?'Trié par <b>coût du m² créé</b> croissant, du moins cher au plus cher. Ni durée de vie ni actualisation : on achète une surface, pas un flux annuel. Objectif 2030 : '+objFmtNum(gap,0)+' m² à créer — les surfaces de la colonne du classeur sont à créer, aucune n’est comptée comme réalisée. '
         :key==='pv'
         ?'Trié par puissance décroissante (classement d’intention, aucune donnée n’isole le coût d’une installation PV du coût de rénovation du bâtiment). Objectif : +'+objFmtNum(gap,0)+' kWc. '
         :'Trié par CHF par '+meta.unit.replace('/an','')+' croissant, sur 40 ans. Écart résiduel à combler : '+objFmtNum(gap,0)+' '+meta.unit+'. ')
@@ -2834,7 +2898,7 @@ const TOUR=[
   d:"<b>Vue d'ensemble</b> : où en est le parc face aux cibles 2030. <b>Classement</b> : par quoi commencer. <b>Arbitrage</b> : ce qu'une enveloppe permet vraiment, et le prix de la tonne évitée. <b>Carte</b> : où sont les bâtiments. <b>Données</b> : ce qui manque et ce que cela empêche de calculer. <b>Méthode</b> : d'où vient chaque chiffre."},
  {sel:'.gsearch',t:'Retrouver un bâtiment',
   d:"Tapez un <b>numéro de sous-site</b> ou un <b>nom</b> : la liste propose les correspondances avec leur responsable de portefeuille et leur priorité. <b>Entrée</b> ouvre directement la fiche du bâtiment dans le classement, quel que soit l'onglet où vous étiez."},
- {sel:'#objTiles',t:'Sept indicateurs, un seul écran',panel:'dash',
+ {sel:'#objTiles',t:'Huit indicateurs, un seul écran',panel:'dash',
   d:"Chaque tuile porte la <b>valeur mesurée</b> du parc, la cible 2030 et le chemin déjà parcouru depuis la référence 2005. Le segment clair de la barre est ce que le portefeuille arrêté ajouterait. La couleur juge l'ensemble : vert si la cible est en vue, rouge si le compte n'y est pas."},
  {sel:'#objDetail',t:'Une tuile, une trajectoire',panel:'dash',
   d:"Cliquez une tuile : le graphique dessous montre la série mesurée depuis 2005, le rythme qu'il faudrait tenir jusqu'en 2030, et l'effet du portefeuille que vous aurez arrêté dans l'onglet Arbitrage. La ligne de sources, en bas, dit de quelle feuille vient chaque chiffre."},
@@ -2843,7 +2907,7 @@ const TOUR=[
  {sel:'#gRP',t:'Se limiter à un portefeuille',
   d:"Ce filtre restreint <b>tout l'outil</b> — classement, arbitrage, carte, indicateurs — au périmètre d'un responsable de portefeuille. Les rangs affichés restent ceux du classement global : on voit la place de ses bâtiments dans l'ensemble du parc, pas un classement interne. « tous » rétablit le parc entier."},
  {sel:'#objSel',t:'Un objectif à la fois',open:'objRankBody',panel:'rank',
-  d:"Le classement se fait objectif par objectif : CO₂, thermique, renouvelable, électricité, eau, photovoltaïque, coût de l'énergie économisée. Chaque bâtiment est classé par <b>coût de l'unité gagnée</b> sur la durée de vie retenue — pas par un score composite."},
+  d:"Le classement se fait objectif par objectif : CO₂, thermique, renouvelable, électricité, eau, photovoltaïque, végétalisation, coût de l'énergie économisée. Chaque bâtiment est classé par <b>coût de l'unité gagnée</b> sur la durée de vie retenue — pas par un score composite. La végétalisation fait exception : elle se classe au <b>coût du m² créé</b>, car une cour d'école n'a pas de durée de vie au sens énergétique."},
  {sel:'#objBody tr.franchi-row, #objNote',t:'Le rang de franchissement',open:'objRankBody',panel:'rank',
   act:tourToFranchi,d:tourFranchiTxt},
  {sel:'#detRow',t:"La fiche d'un bâtiment",open:'objRankBody',panel:'rank',act:tourOpenFiche,
@@ -3455,6 +3519,7 @@ const IND=[
  {k:'eau' ,lbl:'Eau'            ,unit:'m³/an'           ,div:1   ,dec:0},
  {k:'ren' ,lbl:'Renouvelable'   ,unit:'% du thermique'  ,div:1   ,dec:1,part:true},
  {k:'pv'  ,lbl:'Photovoltaïque' ,unit:"% de l'électricité",div:1  ,dec:1,part:true},
+ {k:'veg' ,lbl:'Végétalisation'   ,unit:'m²'              ,div:1   ,dec:0,cumul:true},
  {k:'dd'  ,lbl:'Développement durable',unit:'/ 100'     ,div:1   ,dec:0,dd:true}];
 const SERIE_OF={co2:'CO2 Scope 1+2',th:'ThTOT',elec:'ELEC',eau:'EAU',ren:'ThRenouv'};
 let indSel='co2';
@@ -3464,6 +3529,16 @@ function indState(k){
   if(k==='dd'){const P=ddParc((S_ALL&&S_ALL.length)?S_ALL:S);
     return{val:P.score,cible:100,ref:0,part:false,pct:P.score==null?0:P.score,
            lbl:'Développement durable',unit:'/ 100',couv:P.couverture,dd:P}}
+  if(k==='veg'){const v=g.veg||{};
+    /* Objectif cumulatif : on ne réduit pas, on crée. Le « chemin » n'est donc
+       pas un chemin parcouru mais la part de l'objectif que les projets
+       repérés couvriraient — la barre le dit, le sous-titre aussi. */
+    const cv=(v.cible?100*(v.surface||0)/v.cible:0);
+    return{val:v.surface||0,cible:v.cible||0,part:false,cumul:true,
+      pct:Math.max(0,Math.min(100,cv)),pctPort:0,couvert:cv,
+      n:v.n||0,nChiffres:v.nChiffres||0,cout:v.cout||0,coutM2:v.coutM2||null,
+      restant:(v.cible?Math.max(0,v.cible-(v.surface||0)):null),
+      sansCible:!(v.cible>0),atteint:!!(v.cible&&(v.surface||0)>=v.cible)}}
   if(k==='ren'){const r=g.ren;
     /* Pas de référence 2005 pour la part renouvelable : la progression se lit
        en niveau atteint par rapport à la cible, pas en chemin parcouru. */
@@ -3519,12 +3594,15 @@ function renderTiles(){
     const cibTxt=s.part?(nf(s.cible,1)+' %'):(nf(s.cible/(o.div||1),o.dec)+' '+o.unit.split('/')[0]);
     let sub;
     if(o.k==='dd')        sub='couverture des données '+nf(s.couv)+' %';
+    else if(o.k==='veg')  sub=(s.sansCible?'objectif absent de la feuille'
+                              :('cible '+nf(s.cible)+' m² · <b>'+nf(s.couvert)+' %</b> repérés'));
     else if(o.k==='pv')   sub='cible '+cibTxt+' · <b>'+nf(s.gapKw)+' kWc</b> à installer';
     else if(o.k==='ren')  sub='cible '+cibTxt+' · <b>'+nf((s.gap||0)/1e6,1)+' GWh</b> à basculer';
     else if(s.sansRef)    sub='cible '+cibTxt+' · pas de référence 2005';
     else                  sub='cible '+cibTxt+' · <b>'+nf(s.pct)+' %</b> du chemin';
     if(s.pctPort>0.5)     sub+=' <span class="add">+'+nf(s.pctPort)+' % portef.</span>';
-    const ttl=o.k==='dd'?'Indice de développement durable — cliquer pour le détail des cinq volets'
+    const ttl=o.k==='veg'?('Surfaces à créer repérées dans le plan ('+nf(s.n)+' bâtiment(s)) face à la cible 2030 — rien n\'est encore réalisé : cliquer pour voir ce que couvre chaque tranche de financement')
+      :o.k==='dd'?'Indice de développement durable — cliquer pour le détail des cinq volets'
       :(o.k==='pv'?('Puissance restant à installer pour que le photovoltaïque couvre '+nf(s.cible,1)+' % de l\'électricité consommée')
        :(o.k==='ren'?('Consommation thermique restant à basculer sur un agent non fossile pour atteindre '+nf(s.cible,1)+' %')
         :('Chemin parcouru depuis la référence 2005 vers la cible 2030'+
@@ -3570,6 +3648,38 @@ function renderDetail(){
       '<div id="ddHost"></div>';
     const src=$('ddTbl');if(src)$('ddHost').innerHTML=src.innerHTML;
     return}
+  if(indSel==='veg'){
+    const R=(typeof OBJRANK!=='undefined'&&OBJRANK&&OBJRANK.veg)?OBJRANK.veg:null;
+    const fr=R?R.franchiRang:null;
+    const coutFr=(function(){if(!R||!fr)return null;
+      const it=R.items[fr-1];return it?it.cumulInvest:null})();
+    const rows=[
+      [{h:'Objectif 2030',t:'Feuille « Objectifs PTE » du classeur — aucune cible n\'est codée dans l\'outil'},
+        s.sansCible?'—':nf(s.cible)+' m²'],
+      [{h:'Repéré dans le plan',t:'Colonne « Surface végétalisée ajoutée (m2) » du Plan_PTE — surfaces que les projets créeraient'},
+        nf(s.val)+' m²'],
+      [{h:'Part de l\'objectif couverte',t:'Si tous les projets repérés étaient financés'},
+        s.sansCible?'—':nf(s.couvert)+' %'],
+      [{h:'Bâtiments concernés',t:'Sous-sites portant une surface végétalisée dans le classeur'},
+        nf(s.n)+(s.nChiffres<s.n?(' <span style="font-weight:400;color:var(--ink3)">dont '+nf(s.nChiffres)+' chiffrés</span>'):'')],
+      [{h:'Coût total TTC des projets repérés',t:'Colonne « Coût végétalisation TTC [CHF] »'},
+        s.cout?nf(s.cout/1e6,1)+' MCHF':'—'],
+      [{h:'Coût moyen du m² créé',t:'Coût total ÷ surface totale — le classement, lui, va du m² le moins cher au plus cher'},
+        s.coutM2?nf(s.coutM2)+' CHF/m²':'—'],
+      [{h:'Bâtiments à financer pour la cible',t:'Rang de franchissement du classement Végétalisation, en commençant par le m² le moins cher'},
+        fr?(nf(fr)+' sur '+nf(R.items.length)):'cible non atteinte avec les projets repérés'],
+      [{h:'Montant correspondant',t:'Cumul des coûts TTC jusqu\'au rang de franchissement'},
+        coutFr?nf(coutFr/1e6,1)+' MCHF':'—']];
+    const moitieV=Math.ceil(rows.length/2);
+    el.innerHTML='<h3>Végétalisation — ce que chaque franc achète</h3>'+
+      '<p class="lead">'+(s.atteint?'<span class="tag ok">projets repérés suffisants</span> ':'')+
+      'Les projets sont financés du <b>m² le moins cher au plus cher</b> : la courbe montre la surface créée à mesure qu\'on descend le classement, et le rang où la cible est atteinte. '+
+      'Ni durée de vie ni actualisation — on achète une surface, pas un flux annuel.</p>'+
+      '<div id="indChart"></div>'+
+      '<div class="dgrid"><div>'+rows.slice(0,moitieV).map(drow).join('')+
+      '</div><div>'+rows.slice(moitieV).map(drow).join('')+'</div></div>'+
+      '<p class="mini" style="margin-top:8px;color:var(--ink3)">Sources : cible — feuille <code>Objectifs PTE</code> · surfaces et coûts — colonnes <code>Surface végétalisée ajoutée (m2)</code> et <code>Coût végétalisation TTC [CHF]</code> de <code>Plan_PTE</code>. Les surfaces sont à créer, aucune n\'est comptée comme réalisée.</p>';
+    drawIndic('veg');return}
   const rows=[];
   if(s.part){
     if(indSel==='ren'){rows.push(['Mesuré '+(s.annee||''),nf(s.val,1)+' %'],['Cible',nf(s.cible,1)+' %'],
@@ -3601,6 +3711,48 @@ function drawIndic(k){
   const host=$('indChart');if(!host)return;
   const s=indState(k),P=(typeof PARC_LIVE!=='undefined')?PARC_LIVE:null;
   const C=themeCols();
+  if(k==='veg'){
+    /* Pas de série annuelle : une cour d'école n'a pas d'historique de
+       consommation. Ce qui se trace, c'est la courbe d'achat — combien de m²
+       pour combien de francs, en commençant par le moins cher. */
+    const R=(typeof OBJRANK!=='undefined'&&OBJRANK&&OBJRANK.veg)?OBJRANK.veg:null;
+    if(!R||!R.items.length){host.innerHTML='<p class="mini">Aucun projet de végétalisation chiffré dans le classeur importé.</p>';return}
+    const it=R.items,W=920,H=250,L=62,Rm=64,T=16,B=34;
+    const nMax=it.length;
+    const cible=s.cible||0;
+    const surfMax=Math.max(cible,it[nMax-1].cumulGain)*1.06;
+    const coutMax=Math.max(1,it[nMax-1].cumulInvest)*1.06;
+    const x=function(i){return L+(W-L-Rm)*i/Math.max(1,nMax)};
+    const yS=function(v){return T+(H-T-B)*(1-v/surfMax)};
+    const yC=function(v){return T+(H-T-B)*(1-v/coutMax)};
+    let g='';
+    for(let i=0;i<=4;i++){const py=T+(H-T-B)*i/4;
+      g+='<line x1="'+L+'" y1="'+py+'" x2="'+(W-Rm)+'" y2="'+py+'" stroke="'+C.line+'"/>'+
+         txt(L-8,py+3,nf(surfMax*(1-i/4)/1000)+'k',{a:'end',s:9,c:C.ink3})+
+         txt(W-Rm+8,py+3,nf(coutMax*(1-i/4)/1e6)+'M',{a:'start',s:9,c:C.ink3})}
+    /* coût cumulé, en second plan */
+    let pc='M'+x(0)+','+yC(0);
+    it.forEach(function(o,i){pc+='L'+x(i+1)+','+yC(o.cumulInvest)});
+    g+='<path d="'+pc+'" fill="none" stroke="'+C.ink3+'" stroke-width="1.6" stroke-dasharray="4,3"/>';
+    /* surface cumulée */
+    let ps='M'+x(0)+','+yS(0);
+    it.forEach(function(o,i){ps+='L'+x(i+1)+','+yS(o.cumulGain)});
+    g+='<path d="'+ps+'" fill="none" stroke="'+C.acc+'" stroke-width="2.4"/>';
+    if(cible>0){
+      g+='<line x1="'+L+'" y1="'+yS(cible)+'" x2="'+(W-Rm)+'" y2="'+yS(cible)+'" stroke="'+C.ok+'" stroke-width="1.6" stroke-dasharray="5,4"/>'+
+         txt(L+4,yS(cible)-5,'cible '+nf(cible)+' m²',{s:9,c:C.ok,w:700})}
+    if(R.franchiRang){
+      /* l'étiquette se range du côté où il reste de la place : sinon elle
+         chevauche l'axe de droite dès que le franchissement est tardif */
+      const fx=x(R.franchiRang),droite=fx<(L+(W-L-Rm)*0.6);
+      g+='<line x1="'+fx+'" y1="'+T+'" x2="'+fx+'" y2="'+(H-B)+'" stroke="'+C.ok+'" stroke-width="1.4"/>'+
+         '<circle cx="'+fx+'" cy="'+yS(it[R.franchiRang-1].cumulGain)+'" r="4" fill="'+C.ok+'"/>'+
+         txt(fx+(droite?6:-6),T+12,R.franchiRang+' bâtiment(s) — '+nf(it[R.franchiRang-1].cumulInvest/1e6,1)+' MCHF',
+             {s:9,c:C.ok,w:700,a:droite?'start':'end'})}
+    g+=txt(L,H-8,'projets financés, du m² le moins cher au plus cher →',{s:9,c:C.ink3})+
+       txt(L-8,T-4,'m² créés',{a:'end',s:9,c:C.acc,w:700})+
+       txt(W-Rm+8,T-4,'CHF cumulés',{s:9,c:C.ink3,w:700});
+    host.innerHTML=svg(W,H,g);return}
   if(!s||s.part){ /* part : évolution du niveau atteint, comparée à la cible */
     const vals=sparkOf(k)||[];
     if(!vals.length){host.innerHTML='<p class="mini">Série annuelle indisponible pour cet indicateur.</p>';return}
