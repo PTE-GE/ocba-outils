@@ -10,7 +10,7 @@
 <style>
 :root{
   /* charte OCBA / DPTE — couleurs de marque */
-  --br1:#856EBE; --br2:#30E5D9; --br3:#06E9A8; --br4:#64F7A3; --br5:#6EF93C; --br6:#D7FF37;
+  --br1:#6B52A8; --br2:#30E5D9; --br3:#06E9A8; --br4:#64F7A3; --br5:#6EF93C; --br6:#D7FF37;
   /* couleurs fonctionnelles */
   --pri:#2C3E50;      /* ardoise */
   --sec:#005F73;      /* teal */
@@ -20,98 +20,100 @@
   --bg:#F2F5F7;
 }
 *{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#333;font-size:14px}
-.hdr{background:linear-gradient(120deg,var(--pri) 0%,var(--sec) 55%,#0E7C86 100%);border-bottom:3px solid var(--br2);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.hdr{background:linear-gradient(120deg,var(--surf-dark) 0%,var(--surf-acc) 55%,#0E7C86 100%);border-bottom:3px solid var(--br2);color:var(--on-surf-dark);padding:14px 20px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.3)}
 .hdr h1{font-size:1.15rem;font-weight:700}.hdr p{font-size:.76rem;opacity:.82;margin-top:2px}
 .tabs{display:flex;gap:3px;margin-top:8px;flex-wrap:wrap}
 .tab{padding:5px 13px;border-radius:6px 6px 0 0;cursor:pointer;font-size:.8rem;font-weight:600;background:rgba(255,255,255,.15);color:#fff;border:none;transition:.2s}
-.tab.on{background:#fff;color:var(--pri);box-shadow:inset 0 -3px 0 var(--br2)}.tab:hover:not(.on){background:rgba(255,255,255,.3)}
+.tab.on{background:var(--card);color:var(--pri);box-shadow:inset 0 -3px 0 var(--br2)}.tab:hover:not(.on){background:rgba(255,255,255,.3)}
 .pnl{display:none;max-width:1320px;margin:0 auto;padding:14px 22px 60px}.pnl.on{display:block}
-.cd{background:#fff;border-radius:10px;padding:12px 16px;box-shadow:0 1px 5px rgba(0,0,0,.07);margin-bottom:12px}
+.cd{background:var(--card);border-radius:10px;padding:12px 16px;box-shadow:0 1px 5px rgba(0,0,0,.07);margin-bottom:12px}
 .cd h3{font-size:.88rem;font-weight:700;color:var(--pri);margin-bottom:7px;border-bottom:2px solid var(--acc);padding-bottom:4px;display:flex;align-items:center;gap:6px}
 .sg{display:grid;grid-template-columns:140px 1fr 40px;align-items:center;gap:4px;margin-bottom:5px}
 .sg label{font-weight:600;font-size:.78rem}.sg input[type=range]{width:100%;accent-color:var(--sec)}.sg .v{text-align:center;font-weight:700;color:var(--sec);font-size:.9rem}
 table{width:100%;border-collapse:collapse;font-size:.72rem}
-th{background:var(--pri);color:#fff;padding:5px 4px;text-align:left;position:sticky;top:0;cursor:pointer;white-space:nowrap;user-select:none;font-size:.69rem}
-th:hover{background:var(--sec)}td{padding:4px;border-bottom:1px solid #e2e8f0;vertical-align:top}tr:hover td{background:#edf2f7}
-tr.row-click{cursor:pointer}tr.row-expanded>td{background:#eaf2f8;border-bottom:none}
+th{background:var(--surf-dark);color:var(--on-surf-dark);padding:5px 4px;text-align:left;position:sticky;top:0;cursor:pointer;white-space:nowrap;user-select:none;font-size:.69rem}
+th:hover{background:var(--surf-acc)}td{padding:4px;border-bottom:1px solid var(--line);vertical-align:top}tr:hover td{background:var(--soft)}
+tr.row-click{cursor:pointer}tr.row-expanded>td{background:var(--bg-info);border-bottom:none}
 /* la bande de la ligne dépliée est codée en clair : elle éblouit en mode nuit */
 body.night tr.row-expanded>td{background:rgba(63,182,198,.10)}
 body.night .detail-td{background:rgba(255,255,255,.02)}
 body.night .m-feas-tbl th{background:var(--soft);color:var(--ink)}
 body.night code{background:var(--soft);color:var(--ink)}
-.detail-td{background:#f4f7fa!important;padding:10px 16px!important;border-bottom:2px solid var(--acc)!important}
+.detail-td{background:var(--soft)!important;padding:10px 16px!important;border-bottom:2px solid var(--acc)!important}
 .bg{display:inline-block;padding:1px 6px;border-radius:9px;font-size:.65rem;font-weight:700;color:#fff;white-space:nowrap}
-.bg-p1{background:#e74c3c}.bg-p2{background:#e67e22}.bg-p3{background:#3498db}.bg-p4{background:#95a5a6}
+.bg-p1{background:#C0392B}.bg-p2{background:#B35F10}.bg-p3{background:#3498db}.bg-p4{background:#95a5a6}
 .sb{height:16px;border-radius:3px;background:#e2e8f0;overflow:hidden;min-width:60px}
 .sf{height:100%;border-radius:3px;transition:width .3s;display:flex;align-items:center;justify-content:flex-end;padding-right:3px;font-size:.63rem;font-weight:700;color:#fff}
-.kpi{text-align:center;padding:8px}.kpi .n{font-size:1.45rem;font-weight:800;color:var(--pri)}.kpi .l{font-size:.7rem;color:#666;margin-top:2px}
+.kpi{text-align:center;padding:8px}.kpi .n{font-size:1.45rem;font-weight:800;color:var(--pri)}.kpi .l{font-size:.7rem;color:var(--ink2);margin-top:2px}
 .fb{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
 .fb select,.fb input[type=text]{padding:4px 7px;border:1px solid #cbd5e0;border-radius:6px;font-size:.78rem}
 .bt{padding:5px 12px;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:.8rem;transition:.2s}
-.bt-p{background:var(--sec);color:#fff}.bt-p:hover{background:var(--pri)}
-.bt-i{background:#16a085;color:#fff}.bt-i:hover{background:#0e7c63}
-.bt-w{background:#e67e22;color:#fff}.bt-w:hover{background:#d35400}
+.bt-p{background:var(--sec);color:var(--on-acc)}.bt-p:hover{background:var(--pri)}
+body.night .bt-p:hover{background:var(--acc);color:var(--on-acc)}
+.bt-i{background:#0F7A62;color:#fff}.bt-i:hover{background:#0B5F4C}
+body.night .bt-i{background:#2FA98C;color:#0F1519}body.night .bt-i:hover{background:#4FC3A6}
+.bt-w{background:#B35F10;color:#fff}.bt-w:hover{background:#A34100}
 .bt-s{padding:3px 9px;font-size:.73rem}
-.bt-g{background:var(--grn);color:#fff}.bt-g:hover{background:#1e8449}
+.bt-g{background:var(--grn);color:#fff}.bt-g:hover{background:#1E8449}
 .wt{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
 .wt .ch{transition:transform .3s;font-size:1rem}.wt .ch.op{transform:rotate(180deg)}
 .wb{overflow:hidden;transition:max-height .35s ease,opacity .25s;max-height:0;opacity:0}.wb.op{max-height:6000px;opacity:1}
 .toast{position:fixed;bottom:16px;right:16px;z-index:2000;padding:8px 18px;border-radius:8px;color:#fff;font-weight:600;font-size:.82rem;box-shadow:0 3px 14px rgba(0,0,0,.2);transform:translateY(70px);opacity:0;transition:.4s}
-.toast.sh{transform:translateY(0);opacity:1}.toast.ok{background:var(--grn)}.toast.nf{background:var(--sec)}.toast.wr{background:#e67e22}
+.toast.sh{transform:translateY(0);opacity:1}.toast.ok{background:var(--grn)}.toast.nf{background:var(--surf-acc)}.toast.wr{background:#B35F10}
 .src-indicator{display:inline-flex;align-items:center;gap:4px;font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:600}
-.src-live{background:#d4edda;color:#155724}.src-file{background:#fff3cd;color:#856404}.src-none{background:#f8d7da;color:#721c24}
+.src-live{background:var(--bg-ok);color:var(--fg-ok)}.src-file{background:var(--bg-warn);color:var(--fg-warn)}.src-none{background:var(--bg-err);color:var(--fg-err)}
 .hdr-select{padding:4px 8px;border:1px solid rgba(255,255,255,.35);border-radius:6px;font-size:.78rem;background:rgba(255,255,255,.15);color:#fff;cursor:pointer;font-weight:600;max-width:220px}
-.hdr-select option{color:#333;background:#fff}
+.hdr-select option{color:#333;background:var(--card)}
 @media(max-width:768px){.sg{grid-template-columns:100px 1fr 32px}table{font-size:.65rem}th,td{padding:3px 2px}.pnl{padding:8px}.m-glossary{grid-template-columns:1fr}.m-flow{flex-direction:column}.m-flow-arrow{transform:rotate(90deg)}}
 a.tab{text-decoration:none;display:inline-flex;align-items:center;line-height:1}
 .bt-x{background:rgba(255,255,255,.18);color:#fff}.bt-x:hover{background:rgba(255,255,255,.32)}
 .bt-n{background:#8e44ad;color:#fff}.bt-n:hover{background:#6c3483}
-.pop{display:none;position:absolute;right:0;top:calc(100% + 7px);z-index:300;background:#fff;color:#333;border-radius:10px;box-shadow:0 6px 26px rgba(0,0,0,.28);padding:12px;width:275px;text-align:left}
+.pop{display:none;position:absolute;right:0;top:calc(100% + 7px);z-index:300;background:var(--card);color:#333;border-radius:10px;box-shadow:0 6px 26px rgba(0,0,0,.28);padding:12px;width:275px;text-align:left}
 .pop.on{display:block}
 .pop-l{display:block;font-size:.72rem;color:#555;font-weight:600;margin:6px 0 2px}
 .pop-in{width:100%;padding:5px 8px;border:1px solid #cbd5e0;border-radius:6px;font-size:.8rem}
 .pop-t{font-weight:700;color:var(--pri);font-size:.8rem;margin-bottom:5px}
 .pop-i{font-size:.72rem;color:#555;margin-bottom:8px}
-.pop-h{font-size:.64rem;color:#8a94a0;margin-top:9px;line-height:1.55}
-.libwarn{background:#fef5e7;border-bottom:1px solid #e8a838;color:#7a5900;font-size:.76rem;line-height:1.55;padding:0}
+.pop-h{font-size:.64rem;color:var(--ink3);margin-top:9px;line-height:1.55}
+.libwarn{background:var(--bg-warn);border-bottom:1px solid #e8a838;color:#7a5900;font-size:.76rem;line-height:1.55;padding:0}
 .libwarn-in{max-width:1320px;margin:0 auto;padding:9px 22px}
 .alert-card{padding:8px 12px;border-radius:8px;margin-bottom:6px;font-size:.75rem;display:flex;align-items:flex-start;gap:8px}
-.alert-card.al-err{background:#fdecea;border-left:3px solid #e74c3c}
-.alert-card.al-warn{background:#fef9e7;border-left:3px solid #e8a838}
-.m-hdr{background:linear-gradient(135deg,var(--pri),var(--sec));color:#fff;border-radius:12px;padding:24px 28px;margin-bottom:12px}
+.alert-card.al-err{background:var(--bg-err);border-left:3px solid #C0392B}
+.alert-card.al-warn{background:var(--bg-warn);border-left:3px solid #e8a838}
+.m-hdr{background:linear-gradient(135deg,var(--surf-dark),var(--surf-acc));color:var(--on-surf-dark);border-radius:12px;padding:24px 28px;margin-bottom:12px}
 .m-hdr h2{font-size:1.2rem;font-weight:700;margin-bottom:4px;color:#fff}.m-hdr p{opacity:.85;font-size:.8rem;margin:0}
 .m-hdr .m-ver{display:inline-block;margin-top:8px;background:rgba(255,255,255,.15);padding:3px 14px;border-radius:14px;font-size:.7rem}
-.m-num{background:var(--pri);color:#fff;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-right:4px}
+.m-num{background:var(--surf-dark);color:var(--on-surf-dark);width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-right:4px}
 .m-body{padding-top:10px;font-size:.82rem;line-height:1.7}
 .m-body p{margin-bottom:10px}
 .m-body h4{font-size:.84rem;font-weight:700;color:var(--pri);margin:14px 0 6px}
 .m-callout{padding:12px 16px;border-radius:8px;margin:12px 0;font-size:.78rem;display:flex;gap:10px;align-items:flex-start}
 .m-callout .m-ico{font-size:1.1rem;flex-shrink:0}
-.m-callout.info{background:#eaf2f8;border-left:3px solid var(--sec)}
-.m-callout.tip{background:#eafaf1;border-left:3px solid var(--grn)}
-.m-callout.warn{background:#fef5e7;border-left:3px solid var(--acc)}
+.m-callout.info{background:var(--bg-info);border-left:3px solid var(--sec)}
+.m-callout.tip{background:var(--bg-ok);border-left:3px solid var(--grn)}
+.m-callout.warn{background:var(--bg-warn);border-left:3px solid var(--acc)}
 .m-flow{display:flex;align-items:center;justify-content:center;gap:0;margin:16px 0;flex-wrap:wrap}
-.m-flow-step{background:var(--pri);color:#fff;padding:10px 14px;border-radius:8px;font-size:.73rem;font-weight:500;text-align:center;min-width:110px;max-width:160px}
+.m-flow-step{background:var(--surf-dark);color:var(--on-surf-dark);padding:10px 14px;border-radius:8px;font-size:.73rem;font-weight:500;text-align:center;min-width:110px;max-width:160px}
 .m-flow-arrow{font-size:1.2rem;color:var(--sec);padding:0 4px}
 .m-phase-tbl{width:100%;border-collapse:separate;border-spacing:0;margin:14px 0;font-size:.76rem}
-.m-phase-tbl th{background:var(--pri);color:#fff;padding:8px 12px;text-align:left;font-weight:600;font-size:.72rem}
+.m-phase-tbl th{background:var(--surf-dark);color:var(--on-surf-dark);padding:8px 12px;text-align:left;font-weight:600;font-size:.72rem}
 .m-phase-tbl th:first-child{border-radius:6px 0 0 0}.m-phase-tbl th:last-child{border-radius:0 6px 0 0}
-.m-phase-tbl td{padding:8px 12px;border-bottom:1px solid #e2e8f0}
-.m-phase-tbl tr:nth-child(even){background:#f4f7fa}
+.m-phase-tbl td{padding:8px 12px;border-bottom:1px solid var(--line)}
+.m-phase-tbl tr:nth-child(even){background:var(--soft)}
 .m-pb{display:inline-block;padding:2px 10px;border-radius:14px;font-weight:600;font-size:.68rem;color:#fff}
-.m-pb.p1{background:var(--red)}.m-pb.p2{background:#e67e22}.m-pb.p3{background:#f39c12}.m-pb.p4{background:var(--grn)}
+.m-pb.p1{background:var(--red)}.m-pb.p2{background:#B35F10}.m-pb.p3{background:#f39c12}.m-pb.p4{background:var(--grn)}
 .m-wbars{display:flex;flex-direction:column;gap:8px;margin:14px 0}
 .m-wrow{display:flex;align-items:center;gap:10px}
 .m-wlbl{width:100px;font-size:.73rem;font-weight:600;text-align:right;flex-shrink:0}
 .m-wtrack{flex:1;height:22px;background:#ecf0f1;border-radius:11px;overflow:hidden}
 .m-wfill{height:100%;border-radius:11px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-size:.68rem;font-weight:700}
 .m-glossary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
-.m-gitem{background:#f4f7fa;padding:10px 14px;border-radius:8px;border-left:3px solid var(--sec);font-size:.76rem}
+.m-gitem{background:var(--soft);padding:10px 14px;border-radius:8px;border-left:3px solid var(--sec);font-size:.76rem}
 .m-gitem strong{display:block;font-size:.74rem;color:var(--pri);margin-bottom:2px}
 .m-gitem span{color:#555}
 .m-steps{margin:14px 0}
 .m-step{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
-.m-step-n{width:30px;height:30px;background:var(--sec);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem;flex-shrink:0}
+.m-step-n{width:30px;height:30px;background:var(--surf-acc);color:var(--on-surf-acc);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem;flex-shrink:0}
 .m-step-c h5{font-size:.8rem;font-weight:600;margin-bottom:2px;color:var(--pri)}.m-step-c p{font-size:.76rem;color:#555;margin:0}
 .m-score-bars{display:flex;gap:6px;margin:16px 0;align-items:flex-end;height:160px;padding-bottom:24px;position:relative}
 .m-score-bars::after{content:'';position:absolute;bottom:22px;left:0;right:0;height:1px;background:#dee2e6}
@@ -119,39 +121,39 @@ a.tab{text-decoration:none;display:inline-flex;align-items:center;line-height:1}
 .m-bar{width:100%;max-width:80px;border-radius:6px 6px 0 0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.85rem;min-height:20px}
 .m-bar-lbl{margin-top:8px;font-size:.63rem;font-weight:600;text-align:center;line-height:1.3}
 .m-faq{margin:14px 0}
-.m-faq-item{margin-bottom:14px;padding:10px 14px;background:#f8fafc;border-radius:8px;border-left:3px solid var(--acc)}
+.m-faq-item{margin-bottom:14px;padding:10px 14px;background:var(--soft);border-radius:8px;border-left:3px solid var(--acc)}
 .m-faq-item .m-faq-q{font-weight:700;color:var(--pri);font-size:.8rem;margin-bottom:4px}
 .m-faq-item .m-faq-a{font-size:.76rem;color:#555}
 .m-feas-tbl{width:100%;border-collapse:separate;border-spacing:0;margin:10px 0;font-size:.76rem}
-.m-feas-tbl th{background:var(--sec);color:#fff;padding:6px 10px;text-align:left;font-weight:600;font-size:.72rem}
+.m-feas-tbl th{background:var(--surf-acc);color:var(--on-surf-acc);padding:6px 10px;text-align:left;font-weight:600;font-size:.72rem}
 .m-feas-tbl th:first-child{border-radius:6px 0 0 0}.m-feas-tbl th:last-child{border-radius:0 6px 0 0}
-.m-feas-tbl td{padding:6px 10px;border-bottom:1px solid #e2e8f0}
-.m-feas-tbl tr:nth-child(even){background:#f4f7fa}
+.m-feas-tbl td{padding:6px 10px;border-bottom:1px solid var(--line)}
+.m-feas-tbl tr:nth-child(even){background:var(--soft)}
 .me-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:10px}
-.me-k{background:#f4f7fa;border-radius:10px;padding:12px;text-align:center}
+.me-k{background:var(--soft);border-radius:10px;padding:12px;text-align:center}
 .me-k .n{font-size:1.9rem;font-weight:800;color:var(--pri);line-height:1.1}
-.me-k .l{font-size:.72rem;color:#5f6b76;margin-top:3px}
+.me-k .l{font-size:.72rem;color:var(--ink2);margin-top:3px}
 .me-p{font-size:.84rem;line-height:1.75;margin:8px 0}
 .me-flow{display:flex;align-items:stretch;gap:0;margin:14px 0;flex-wrap:wrap}
-.me-step{flex:1;min-width:150px;background:#f4f7fa;border-radius:10px;padding:12px 14px;border-top:3px solid var(--sec)}
-.me-n{width:24px;height:24px;border-radius:50%;background:var(--pri);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;margin-bottom:6px}
+.me-step{flex:1;min-width:150px;background:var(--soft);border-radius:10px;padding:12px 14px;border-top:3px solid var(--sec)}
+.me-n{width:24px;height:24px;border-radius:50%;background:var(--surf-dark);color:var(--on-surf-dark);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;margin-bottom:6px}
 .me-t{font-size:.82rem;font-weight:700;color:var(--pri);margin-bottom:3px}
-.me-d{font-size:.74rem;color:#5f6b76;line-height:1.55}
+.me-d{font-size:.74rem;color:var(--ink2);line-height:1.55}
 .me-ar{display:flex;align-items:center;padding:0 8px;font-size:1.3rem;color:var(--sec)}
 .me-crit{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
-.me-c{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:11px 13px}
+.me-c{background:var(--card);border:1px solid #e2e8f0;border-radius:10px;padding:11px 13px}
 .me-ch{display:flex;align-items:center;gap:7px;margin-bottom:6px}
 .me-ci{font-size:1.1rem}.me-cn{font-weight:700;font-size:.84rem;color:var(--pri);flex:1}
 .me-cw{color:#fff;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px}
 .me-cq{font-size:.78rem;font-weight:600;color:#34495e;margin-bottom:5px;line-height:1.5}
-.me-cd{font-size:.74rem;color:#5f6b76;line-height:1.6}
+.me-cd{font-size:.74rem;color:var(--ink2);line-height:1.6}
 .me-presets{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:10px 0 4px}
 .me-pl{font-size:.78rem;font-weight:600;color:var(--pri)}
 .me-sub{font-weight:400;opacity:.8;font-size:.7rem}
-.me-pt{flex-basis:100%;font-size:.76rem;color:#5f6b76;font-style:italic;line-height:1.6;margin-top:4px}
+.me-pt{flex-basis:100%;font-size:.76rem;color:var(--ink2);font-style:italic;line-height:1.6;margin-top:4px}
 .me-demo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
-.me-sliders{background:#f8fafc;border-radius:10px;padding:12px}
-.me-rank{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px}
+.me-sliders{background:var(--soft);border-radius:10px;padding:12px}
+.me-rank{background:var(--card);border:1px solid #e2e8f0;border-radius:10px;padding:12px}
 .me-rt{font-size:.82rem;font-weight:700;color:var(--pri);margin-bottom:7px}
 .me-row{display:flex;align-items:center;gap:7px;padding:4px 0;border-bottom:1px solid #f0f3f6;font-size:.75rem}
 .me-rk{width:20px;font-weight:800;color:var(--pri);text-align:right}
@@ -159,55 +161,55 @@ a.tab{text-decoration:none;display:inline-flex;align-items:center;line-height:1}
 .me-rn{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .me-rs{color:#fff;font-weight:700;font-size:.67rem;padding:1px 7px;border-radius:9px;min-width:38px;text-align:center}
 .me-up{color:var(--grn);font-weight:700;font-size:.68rem;width:34px;text-align:right}
-.me-dn{color:#e74c3c;font-weight:700;font-size:.68rem;width:34px;text-align:right}
+.me-dn{color:var(--red);font-weight:700;font-size:.68rem;width:34px;text-align:right}
 .me-eq{color:#c8ced6;font-size:.68rem;width:34px;text-align:right}
 .me-legend{font-size:.66rem;color:#9aa5b1;margin-top:7px;line-height:1.5}
 .me-wbars{margin-top:12px}
 .me-bt{font-size:.72rem;font-weight:600;color:var(--pri);margin-bottom:5px}
 .me-br{display:flex;align-items:center;gap:7px;margin-bottom:4px}
-.me-bl{width:108px;font-size:.7rem;text-align:right;color:#5f6b76;flex-shrink:0}
+.me-bl{width:108px;font-size:.7rem;text-align:right;color:var(--ink2);flex-shrink:0}
 .me-btr{flex:1;height:16px;background:#e6ebf0;border-radius:8px;overflow:hidden}
 .me-bf{height:100%;border-radius:8px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;color:#fff;font-size:.64rem;font-weight:700;transition:width .25s}
-.me-bv{width:34px;font-size:.66rem;font-weight:700;color:#5f6b76}
+.me-bv{width:34px;font-size:.66rem;font-weight:700;color:var(--ink2)}
 .me-ba{width:52px;font-size:.64rem;font-weight:700;text-align:right;flex-shrink:0}
 .me-two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0}
 .me-yes,.me-no{border-radius:10px;padding:12px 14px}
-.me-yes{background:#eafaf1;border-left:3px solid var(--grn)}
-.me-no{background:#fdecea;border-left:3px solid var(--red)}
+.me-yes{background:var(--bg-ok);border-left:3px solid var(--grn)}
+.me-no{background:var(--bg-err);border-left:3px solid var(--red)}
 .me-h{font-weight:700;font-size:.84rem;margin-bottom:6px;color:var(--pri)}
 .me-yes ul,.me-no ul{margin:0;padding-left:18px}
 .me-yes li,.me-no li{font-size:.76rem;line-height:1.65;margin-bottom:5px}
 @media(max-width:900px){.me-demo,.me-two{grid-template-columns:1fr}.me-flow{flex-direction:column}.me-ar{transform:rotate(90deg);padding:2px 0;justify-content:center}}
 
-.q-chip{display:inline-block;margin-left:4px;padding:1px 6px;border-radius:9px;font-size:.6rem;font-weight:700;background:#eef2f7;color:#41506b;cursor:help}
-.q-chip.q-in{background:var(--pri);color:#fff}.q-chip.q-p2{background:#d4edda;color:#155724}.q-chip.q-p1{background:#e8f5e9;color:#1e7e34}
-.q-chip.q-m1{background:#fff3cd;color:#856404}.q-chip.q-m2{background:#ffe0b2;color:#8a4b00}.q-chip.q-ex{background:#f8d7da;color:#a3212f}
+.q-chip{display:inline-block;margin-left:4px;padding:1px 6px;border-radius:9px;font-size:.6rem;font-weight:700;background:var(--soft);color:var(--ink2);cursor:help}
+.q-chip.q-in{background:var(--surf-dark);color:var(--on-surf-dark)}.q-chip.q-p2{background:var(--bg-ok);color:var(--fg-ok)}.q-chip.q-p1{background:var(--bg-ok);color:var(--fg-ok)}
+.q-chip.q-m1{background:var(--bg-warn);color:var(--fg-warn)}.q-chip.q-m2{background:#ffe0b2;color:#8a4b00}.q-chip.q-ex{background:var(--bg-err);color:#a3212f}
 .mc-key{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:middle;margin-right:3px}
 .q-box{background:#f6f8fb;border:1px solid #e2e8f0;border-radius:8px;padding:9px 11px;margin-bottom:9px}
 /* ---- prise en main ---- */
 .tour-mask{position:fixed;inset:0;background:rgba(15,25,40,.55);z-index:4000;display:none}
 .tour-mask.on{display:block}
 .tour-hole{position:fixed;border-radius:10px;box-shadow:0 0 0 4px var(--br6),0 0 0 9999px rgba(15,25,40,.55);z-index:4001;pointer-events:none;transition:all .25s ease}
-.tour-box{position:fixed;z-index:4002;max-width:390px;background:#fff;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.3);padding:15px 17px;font-size:.82rem;line-height:1.55}
+.tour-box{position:fixed;z-index:4002;max-width:390px;background:var(--card);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.3);padding:15px 17px;font-size:.82rem;line-height:1.55}
 .tour-box h4{margin:0 0 6px;color:var(--pri);font-size:.95rem}
 .tour-box p{margin:0 0 10px;color:#444}
 .tour-nav{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.tour-step{font-size:.68rem;color:#8a94a0;font-weight:600}
-.tour-keys{margin-top:8px;font-size:.66rem;color:#8a94a0;border-top:1px solid #eef2f7;padding-top:6px}
+.tour-step{font-size:.68rem;color:var(--ink3);font-weight:600}
+.tour-keys{margin-top:8px;font-size:.66rem;color:var(--ink3);border-top:1px solid #eef2f7;padding-top:6px}
 
 /* ---- fonctions 21.08 : recherche, fiche imprimable, comparateur ---- */
 .gsearch{position:relative}
 .gsearch input{padding:5px 9px;border:1px solid rgba(255,255,255,.45);border-radius:6px;font-size:.76rem;background:rgba(255,255,255,.14);color:#fff;width:190px}
 .gsearch input::placeholder{color:rgba(255,255,255,.72)}
-.gs-res{position:absolute;top:110%;right:0;background:#fff;border-radius:8px;box-shadow:0 8px 26px rgba(0,0,0,.28);min-width:330px;max-height:340px;overflow:auto;z-index:200;display:none}
+.gs-res{position:absolute;top:110%;right:0;background:var(--card);border-radius:8px;box-shadow:0 8px 26px rgba(0,0,0,.28);min-width:330px;max-height:340px;overflow:auto;z-index:200;display:none}
 .gs-res.on{display:block}
 .gs-it{padding:7px 11px;font-size:.78rem;color:#333;cursor:pointer;border-bottom:1px solid #f0f3f7}
-.gs-it:hover{background:#eef4fb}.gs-it b{color:var(--pri)}
-.gs-it .s{display:block;font-size:.66rem;color:#8a94a0}
+.gs-it:hover{background:var(--bg-info)}.gs-it b{color:var(--pri)}
+.gs-it .s{display:block;font-size:.66rem;color:var(--ink3)}
 .fresh{color:var(--ink3)}
 .fresh-old{color:var(--red);font-weight:600}
-.cmp-tbl td.d-pos{color:var(--grn);font-weight:700}.cmp-tbl td.d-neg{color:#e74c3c;font-weight:700}
-.qual-bar{height:9px;border-radius:5px;background:#eef2f7;overflow:hidden}
+.cmp-tbl td.d-pos{color:var(--grn);font-weight:700}.cmp-tbl td.d-neg{color:var(--red);font-weight:700}
+.qual-bar{height:9px;border-radius:5px;background:var(--soft);overflow:hidden}
 .qual-bar i{display:block;height:100%;background:var(--acc)}
 @media print{
   body *{visibility:hidden!important}
@@ -223,24 +225,41 @@ a.tab{text-decoration:none;display:inline-flex;align-items:center;line-height:1}
 .pres-mode .cd{padding:18px 20px}
 .pres-mode .tr-val{font-size:2.1rem}
 .pres-mode table.tblx{font-size:.92rem}
-.lock-chip{display:inline-block;padding:1px 7px;border-radius:9px;font-size:.62rem;font-weight:700;background:var(--pri);color:#fff;margin-left:5px}
+.lock-chip{display:inline-block;padding:1px 7px;border-radius:9px;font-size:.62rem;font-weight:700;background:var(--surf-dark);color:var(--on-surf-dark);margin-left:5px}
 
 /* ================= v10 — sobriété, hiérarchie, mode nuit ================= */
 :root{
-  --ink:#1D2733; --ink2:#5B6672; --ink3:#8C97A3;
+  --ink:#1D2733; --ink2:#5B6672; --ink3:#616B77;
   --line:#E4E8EC; --bg:#F6F7F9; --card:#FFFFFF; --soft:#EFF1F4;
   --acc:#005F73; --brand:#30E5D9;
-  --ok:#1A8554; --warn:#B58900; --red:#C0392B;
-  --pri:#1D2733; --sec:#005F73; --grn:#1A8554;
+  --ok:#17754A; --warn:#8A6800; --red:#C0392B;
+  /* texte porté par un aplat d'accent : blanc sur le teal foncé du jour */
+  --on-acc:#FFFFFF;
+  /* fonds d'état — déclinés en nuit plus bas, jamais codés en dur ailleurs */
+  --bg-err:#FDECEA; --bg-warn:#FEF9E7; --bg-ok:#EAFAF1; --bg-info:#EAF2F8;
+  --fg-err:#96271B; --fg-warn:#7A5C00; --fg-ok:#136B41; --fg-info:#1B4F72;
+  --pri:#1D2733; --sec:#005F73; --grn:#17754A;
+  /* surfaces sombres — en-têtes de tableau, pastilles, bandeaux : elles
+     restent sombres dans les deux thèmes, sinon le texte blanc qu'elles
+     portent devient illisible au passage en nuit */
+  --surf-dark:#1D2733; --on-surf-dark:#FFFFFF;
+  --surf-acc:#005F73;  --on-surf-acc:#FFFFFF;
   --shadow:0 1px 2px rgba(20,30,45,.05);
   --r:14px;
 }
 body.night{
-  --ink:#E8ECF1; --ink2:#A7B0BB; --ink3:#7A8593;
+  --ink:#E8ECF1; --ink2:#A7B0BB; --ink3:#949EAC;
   --line:#2A323C; --bg:#12171D; --card:#1A2026; --soft:#232B33;
   --acc:#3FB6C6; --brand:#30E5D9;
   --ok:#3DBF84; --warn:#D8AE3A; --red:#E5695C;
+  /* le teal du mode nuit est trop lumineux pour porter du blanc (2,4:1) :
+     ce qui repose dessus s'écrit en sombre (7,5:1) */
+  --on-acc:#0F1519;
+  --bg-err:#3A2220; --bg-warn:#332C16; --bg-ok:#17301F; --bg-info:#16262F;
+  --fg-err:#F0A69C; --fg-warn:#E8CB72; --fg-ok:#7FD9A9; --fg-info:#9DC9E8;
   --pri:#E8ECF1; --sec:#3FB6C6; --grn:#3DBF84;
+  --surf-dark:#232B33; --on-surf-dark:#E8ECF1;
+  --surf-acc:#0A4A57;  --on-surf-acc:#E8ECF1;
   --shadow:0 1px 2px rgba(0,0,0,.5);
 }
 body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
@@ -259,7 +278,7 @@ body.night svg text{fill:var(--ink2)}
 .btn{border:1px solid var(--line);background:var(--card);border-radius:9px;padding:6px 12px;font-size:12.5px;
      font-weight:500;color:var(--ink);cursor:pointer;font-family:inherit}
 .btn:hover{border-color:var(--ink3)}
-.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}
 .btn.ic{padding:6px 10px}
 .gsearch input{width:210px;padding:6px 10px;border:1px solid var(--line);border-radius:9px;background:var(--soft);
      color:var(--ink);font-size:12.5px;font-family:inherit}
@@ -367,23 +386,23 @@ body.night .errbox,body.night .warnbox{background:rgba(229,105,92,.10)}
 /* ---- carte ---- */
 #leafMap{z-index:1}
 .map-tooltip-custom{font-size:.75rem!important;line-height:1.5!important;padding:8px 12px!important}
-.map-legend{background:#fff;padding:8px 12px;border-radius:8px;box-shadow:0 1px 5px rgba(0,0,0,.2);font-size:.7rem;line-height:1.8}
+.map-legend{background:var(--card);padding:8px 12px;border-radius:8px;box-shadow:0 1px 5px rgba(0,0,0,.2);font-size:.7rem;line-height:1.8}
 .map-legend i{width:11px;height:11px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle}
 .geo-tip{background:#eaf7ed;border:1px solid #b7e4c7;border-radius:8px;padding:10px 14px;margin:8px 0;font-size:.76rem}
 .geo-tip b{color:var(--pri)}
-.tile-select{padding:4px 8px;border:1px solid #cbd5e0;border-radius:6px;font-size:.73rem;background:#fff;cursor:pointer;max-width:200px}
+.tile-select{padding:4px 8px;border:1px solid #cbd5e0;border-radius:6px;font-size:.73rem;background:var(--card);cursor:pointer;max-width:200px}
 .tile-status{font-size:.65rem;padding:2px 8px;border-radius:10px;font-weight:600;white-space:nowrap}
-.tile-ok{background:#d4edda;color:#155724}.tile-loading{background:#fff3cd;color:#856404}.tile-err{background:#f8d7da;color:#721c24}
+.tile-ok{background:var(--bg-ok);color:var(--fg-ok)}.tile-loading{background:var(--bg-warn);color:var(--fg-warn)}.tile-err{background:var(--bg-err);color:var(--fg-err)}
 .leaflet-container img,.leaflet-container img.leaflet-tile{max-width:none!important;max-height:none!important;padding:0!important;border:none!important;border-radius:0!important;box-shadow:none!important}
 /* ---- spécifique optimiseur ---- */
 .opt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-bottom:12px}
-.tr-card{background:#fff;border-radius:10px;padding:12px 14px;box-shadow:0 1px 6px rgba(0,0,0,.08);border-left:5px solid var(--sec)}
+.tr-card{background:var(--card);border-radius:10px;padding:12px 14px;box-shadow:0 1px 6px rgba(0,0,0,.08);border-left:5px solid var(--sec)}
 .tr-card.ok{border-left-color:var(--grn)}.tr-card.ko{border-left-color:var(--red)}.tr-card.mid{border-left-color:var(--acc)}
 .tr-h{font-size:.78rem;font-weight:700;color:var(--pri);display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .tr-badge{font-size:.62rem;padding:2px 7px;border-radius:9px;font-weight:700;color:#fff;background:var(--grn)}
 .tr-badge.ko{background:var(--red)}.tr-badge.mid{background:var(--acc)}
 .tr-val{font-size:1.5rem;font-weight:800;color:var(--pri);line-height:1.1}
-.tr-unit{font-size:.68rem;color:#777;font-weight:600}
+.tr-unit{font-size:.68rem;color:var(--ink3);font-weight:600}
 .tr-rows{margin-top:8px;font-size:.7rem;color:#555}
 .tr-rows div{display:flex;justify-content:space-between;padding:2px 0;border-top:1px dotted #e2e8f0}
 .tr-bar{height:9px;border-radius:5px;background:#e9eef4;margin-top:8px;overflow:hidden;position:relative}
@@ -392,23 +411,23 @@ body.night .errbox,body.night .warnbox{background:rgba(229,105,92,.10)}
 .sl-row label{width:132px;font-size:.75rem;font-weight:600;color:var(--pri)}
 .sl-row input[type=range]{flex:1;accent-color:var(--sec)}
 .sl-row .v{width:74px;text-align:right;font-size:.76rem;font-weight:700;color:var(--sec)}
-.chip{display:inline-block;font-size:.63rem;padding:2px 7px;border-radius:9px;background:#eaf2f8;color:var(--pri);font-weight:700;margin-right:4px}
+.chip{display:inline-block;font-size:.63rem;padding:2px 7px;border-radius:9px;background:var(--bg-info);color:var(--pri);font-weight:700;margin-right:4px}
 .fam-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
 .tblx{width:100%;border-collapse:collapse;font-size:.74rem}
-.tblx th{background:var(--pri);color:#fff;padding:6px 7px;text-align:left;font-weight:600;position:sticky;top:0;cursor:pointer;white-space:nowrap}
+.tblx th{background:var(--surf-dark);color:var(--on-surf-dark);padding:6px 7px;text-align:left;font-weight:600;position:sticky;top:0;cursor:pointer;white-space:nowrap}
 .tblx td{padding:5px 7px;border-bottom:1px solid #eef2f6}
-.tblx tr.sel{background:#eafaf1}.tblx tr.out{background:#fdf3f2;color:#888}
-.tblx tr.abs{background:#f5f0fa;color:#888}
+.tblx tr.sel{background:var(--bg-ok)}.tblx tr.out{background:var(--bg-err);color:var(--ink3)}
+.tblx tr.abs{background:#f5f0fa;color:var(--ink3)}
 .num{text-align:right;font-variant-numeric:tabular-nums}
 .seg{display:inline-flex;border:1px solid var(--sec);border-radius:7px;overflow:hidden}
-.seg button{border:0;background:var(--sec);color:#fff;padding:5px 11px;font-size:.72rem;cursor:pointer;font-weight:600}
-.seg button.on{background:#fff;color:var(--sec)}
-.warnbox{background:#fff8e6;border-left:4px solid var(--acc);padding:10px 13px;border-radius:0 8px 8px 0;font-size:.78rem;margin-bottom:10px;line-height:1.55}
+.seg button{border:0;background:var(--sec);color:var(--on-acc);padding:5px 11px;font-size:.72rem;cursor:pointer;font-weight:600}
+.seg button.on{background:var(--card);color:var(--ink)}
+.warnbox{background:var(--bg-warn);border-left:4px solid var(--acc);padding:10px 13px;border-radius:0 8px 8px 0;font-size:.78rem;margin-bottom:10px;line-height:1.55}
 .errbox{background:#fdf1f0;border-left:4px solid var(--red);padding:10px 13px;border-radius:0 8px 8px 0;font-size:.78rem;margin-bottom:10px;line-height:1.55}
 .okbox{background:#eefaf3;border-left:4px solid var(--grn);padding:10px 13px;border-radius:0 8px 8px 0;font-size:.78rem;margin-bottom:10px;line-height:1.55}
 h3.sec{font-size:.95rem;color:var(--pri);margin:0 0 9px;display:flex;align-items:center;gap:7px}
 h4.sub{font-size:.82rem;color:var(--sec);margin:14px 0 6px}
-.mini{font-size:.7rem;color:#666;line-height:1.5}
+.mini{font-size:.7rem;color:var(--ink2);line-height:1.5}
 svg .gl{stroke:#e2e8f0;stroke-width:1}
 svg text{font-family:Arial,Helvetica,sans-serif}
 </style>
@@ -464,7 +483,6 @@ svg text{font-family:Arial,Helvetica,sans-serif}
     <button class="btn ic" onclick="tglMenu(event)" title="Menu">☰</button>
     <div class="menu" id="mainMenu" onclick="event.stopPropagation()">
       <div class="grp">Données</div>
-      <a onclick="$('fIn').click()">Importer Plan_PTE.xlsx</a>
       <a onclick="tglNotes(event)">Notes et ajustements<span id="mNotes">CSV</span></a>
       <a onclick="goData()">Santé des données<span id="mAno">—</span></a>
       <div class="sep"></div>
@@ -491,6 +509,9 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <div class="pop-t">⚙️ Paramètres de calcul</div>
 <label class="pop-l">Durée de vie retenue (ans)</label>
 <input id="pDur" type="number" min="5" max="80" step="5" class="pop-in" title="Durée sur laquelle le gain annuel est cumulé pour calculer le coût de l'unité gagnée. Ce n'est pas une norme SIA : c'est la convention de calcul reprise de Priorisation_PTE.xlsx. La modifier change tous les classements par coût.">
+<div class="pop-t" style="margin-top:10px">⏳ Durée de vie par objectif</div>
+<div class="pop-h" style="margin-top:0;margin-bottom:6px">Une case vide reprend la valeur générale ci-dessus. Un équipement technique ne dure pas ce que dure une enveloppe : régler chaque objectif séparément évite d'avantager mécaniquement ceux dont les mesures durent le plus longtemps.</div>
+<div id="durObj"></div>
 <label class="pop-l">Productible photovoltaïque (kWh/kWc·an)</label>
 <input id="pPv" type="number" min="500" max="1400" step="10" class="pop-in" title="Production annuelle attendue par kWc installé, pour convertir une puissance en énergie et la comparer à la cible « 20 % de la consommation électrique ». Ordre de grandeur genevois : 900 à 1 000.">
 <label class="pop-l">Cible d'intensité thermique (MJ/m²·an)</label>
@@ -561,7 +582,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <option value="elec">⚡ Électricité</option>
 <option value="eau">💧 Eau</option>
 <option value="pv">☀️ Photovoltaïque</option>
-<option value="veg">Végétalisation</option>
+<option value="veg">🌱 Végétalisation</option>
 <option value="cee">💰 CEE</option>
 <option value="tous">📋 Tous les objectifs</option>
 </select>
@@ -572,7 +593,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <select id="fEt" onchange="renR()"><option value="all">État projet : tous</option></select>
 <input type="text" id="fSe" placeholder="🔍 Rechercher…" oninput="renR()">
 </div>
-<div id="objNote" style="font-size:.72rem;color:#666;margin:6px 2px 8px"></div>
+<div id="objNote" style="font-size:.72rem;color:var(--ink2);margin:6px 2px 8px"></div>
 <div id="objBody" style="overflow:auto;max-height:72vh"></div>
 </div>
 </div>
@@ -580,7 +601,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <div class="cd">
 <div class="wt" onclick="tglS('ufB','ufCh')"><h3 style="margin:0;border:none;padding:0">Matrice Urgence × Faisabilité</h3><span class="ch" id="ufCh">▼</span></div>
 <div class="wb" id="ufB"><div style="padding-top:8px">
-<p style="font-size:.72rem;color:#888;margin-bottom:4px">Quadrant <b>haut-droite</b> = urgent ET faisable → priorité maximale. Faisabilité = CECB+ (33) + Substitution (33) + Budget (34) − Protection patrimoniale (0 à −50).</p>
+<p style="font-size:.72rem;color:var(--ink3);margin-bottom:4px">Quadrant <b>haut-droite</b> = urgent ET faisable → priorité maximale. Faisabilité = CECB+ (33) + Substitution (33) + Budget (34) − Protection patrimoniale (0 à −50).</p>
 <div id="gUF" style="height:310px"></div>
 </div></div>
 </div>
@@ -591,7 +612,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <div class="cd">
 <div class="wt" onclick="tglS('distB','distCh')"><h3 style="margin:0;border:none;padding:0">Distribution et état SIA</h3><span class="ch" id="distCh">▼</span></div>
 <div class="wb" id="distB"><div style="padding-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-<div class="cd"><h3>Distribution <span style="font-weight:400;font-size:.65rem;color:#888">CEE, CHF/kWh</span></h3><div id="gHist" style="height:210px"></div></div>
+<div class="cd"><h3>Distribution <span style="font-weight:400;font-size:.65rem;color:var(--ink3)">CEE, CHF/kWh</span></h3><div id="gHist" style="height:210px"></div></div>
 <div class="cd"><h3>État SIA</h3><div id="gPie" style="height:210px"></div></div>
 </div></div>
 </div>
@@ -600,7 +621,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <div id="mapPnl" class="pnl">
 <div class="cd">
 <h3>Localisation des sites</h3>
-<p style="font-size:.76rem;color:#666;margin-bottom:4px">Carte interactive. Les <b>filtres Classement</b> et le <b>filtre RP</b> sont appliqués.</p>
+<p style="font-size:.76rem;color:var(--ink2);margin-bottom:4px">Carte interactive. Les <b>filtres Classement</b> et le <b>filtre RP</b> sont appliqués.</p>
 <div class="geo-tip" id="geoTip">💡 <b>Astuce :</b> Les adresses sans coordonnées sont géolocalisées une seule fois, puis mémorisées par le navigateur. Pour un résultat immédiat et définitif, ajoutez deux colonnes <b>Latitude</b> et <b>Longitude</b> au fichier source.</div>
 <div class="fb">
 <div class="fb">
@@ -614,7 +635,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 </div>
 <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
 <span id="mapCount" style="font-weight:600;color:var(--pri);font-size:.78rem"></span>
-<span id="mapFilterInfo" style="font-size:.72rem;color:#888"></span>
+<span id="mapFilterInfo" style="font-size:.72rem;color:var(--ink3)"></span>
 <span id="mapGeoStatus" style="font-size:.7rem;color:var(--sec);font-weight:600"></span>
 </div>
 <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
@@ -632,7 +653,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <span id="tileStatus" class="tile-status tile-loading">⏳ …</span>
 </div>
 <div id="leafMap" style="height:540px;border-radius:8px;border:1px solid #e2e8f0;background:#dde6f0"></div>
-<div id="mapWarn" style="font-size:.7rem;color:#e67e22;margin-top:4px"></div>
+<div id="mapWarn" style="font-size:.7rem;color:#B35F10;margin-top:4px"></div>
 </div>
 </div>
 
@@ -748,7 +769,7 @@ classements, alertes bâtiment par bâtiment, taux de remplissage, puis la liste
 </div>
 <div class="cd">
 <div class="wt" onclick="tglS('alB','alCh')">
-<h3 style="margin:0;border:none;padding:0">Alertes, bâtiment par bâtiment <span id="alCount" style="font-weight:400;color:#e67e22;font-size:.75rem"></span></h3>
+<h3 style="margin:0;border:none;padding:0">Alertes, bâtiment par bâtiment <span id="alCount" style="font-weight:400;color:var(--warn);font-size:.75rem"></span></h3>
 <div style="display:flex;align-items:center;gap:6px">
 <button class="bt bt-p bt-s" onclick="event.stopPropagation();exportAlerts()" title="Exporter toutes les alertes en CSV">Exporter les alertes</button>
 <span class="ch" id="alCh">▼</span>
@@ -782,7 +803,7 @@ classements, alertes bâtiment par bâtiment, taux de remplissage, puis la liste
 
 <!-- ===== MANUEL ===== -->
 <div id="manual" class="pnl">
-<div class="m-hdr"><h2>📐 Méthode &amp; données</h2><p>D'où vient chaque chiffre, comment il est calculé, et ce que l'outil ne peut pas dire</p><span class="m-ver">MAJ 24.08.2026</span></div>
+<div class="m-hdr"><h2>📐 Méthode &amp; données</h2><p>D'où vient chaque chiffre, comment il est calculé, et ce que l'outil ne peut pas dire</p><span class="m-ver">MAJ 25.08.2026</span></div>
 
 <div class="cd"><div class="wt" onclick="tglM(1)" title="Les colonnes du classeur réellement utilisées"><h3 style="margin:0;border:none;padding:0"><span class="m-num">1</span> D'où viennent les chiffres</h3><span class="ch" id="mCh1">▼</span></div><div class="wb" id="mB1"><div class="m-body">
 <p><b>Deux séries annuelles coexistent, et elles ne disent pas la même chose.</b> L'onglet
@@ -818,7 +839,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <b>Renouvelable</b> : gain = SRE × IDC, pour les bâtiments passant d'une énergie fossile à une énergie renouvelable.<br>
 <b>Coût unitaire</b> : montant ÷ (gain × durée de vie retenue). C'est le prix de l'unité gagnée, et c'est lui qui ordonne le classement, du moins cher au plus cher.<br>
 <b>Quel montant ?</b> celui de la colonne choisie dans le menu 💰 de l'en-tête — <code>Invest estim. CECB+</code>, <code>Invest ImmOBA</code> ou <code>Prévisionnel PTE GEI</code>. Le menu indique combien de montants chaque colonne contient réellement ; en changer recalcule tous les classements, tous les coûts unitaires et l'arbitrage.<br>
-<b>Durée de vie retenue</b> : 40 ans par défaut. <b>Ce n'est pas une norme SIA</b> — c'est la convention de calcul du coût de l'énergie économisée reprise de <code>Priorisation_PTE.xlsx</code>. Elle est modifiable dans le menu ⚙️ de l'en-tête, avec le productible photovoltaïque et la cible d'intensité thermique.<br>
+<b>Durée de vie retenue</b> : 40 ans par défaut, <b>et réglable objectif par objectif</b> (menu ⚙️ → « Durée de vie par objectif »). <b>Ce n'est pas une norme SIA</b> — c'est la convention de calcul du coût de l'énergie économisée reprise de <code>Priorisation_PTE.xlsx</code>. Une seule durée pour tous supposerait qu'une isolation d'enveloppe, une pompe à chaleur et une robinetterie s'amortissent pareil ; en régler une par objectif évite d'avantager mécaniquement celui dont les mesures durent le plus longtemps. La durée réellement appliquée est écrite en tête de colonne de chaque classement.<br>
 <b>Rang de franchissement</b> : le rang auquel le cumul des gains atteint l'écart restant à combler pour 2030.</div></div>
 <p><b>La végétalisation fait exception elle aussi</b>, dans l'autre sens : elle est chiffrée mais ne se rapporte à aucune durée de vie. Une cour d'école désimperméabilisée ne produit pas un flux annuel de kWh évités ; elle crée une surface, une fois. Son classement se fait donc au <b>coût du m² créé</b> — montant TTC du projet ÷ m² créés — du moins cher au plus cher, sans actualisation ni durée de vie. Le rang de franchissement garde le même sens : le rang auquel le cumul des surfaces atteint la cible 2030. Attention à la lecture des surfaces : la colonne du classeur porte ce que les projets <b>créeraient</b>, pas ce qui est déjà créé — l'écart à combler est donc l'objectif entier.</p>
 <p>Le photovoltaïque fait exception : sans coût fiable, il est classé par puissance décroissante — un classement d'intention. Sa cible est en revanche chiffrée : <b>20 % de la consommation électrique</b>, convertie en kWc avec le productible paramétrable.</p>
@@ -854,7 +875,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td><b>IDC</b></td><td>Indice de dépense de chaleur, en kWh/m²·an. La cible du programme s'exprime en 350 MJ/m²·an, soit environ 97 kWh/m²·an.</td></tr>
 <tr><td><b>IDE</b></td><td>Indice de dépense d'électricité, même logique que l'IDC.</td></tr>
 <tr><td><b>CECB+</b></td><td>Certificat énergétique cantonal des bâtiments, version avec rapport de conseil : il propose des variantes de rénovation (A, B, C), dont l'une est retenue.</td></tr>
-<tr><td><b>CEE</b></td><td>Coût de l'énergie économisée : le prix du kWh évité sur la durée de vie retenue (40 ans par défaut, modifiable ⚙️).</td></tr>
+<tr><td><b>CEE</b></td><td>Coût de l'énergie économisée : le prix du kWh évité sur la durée de vie retenue pour cet objectif (40 ans par défaut, modifiable ⚙️).</td></tr>
 <tr><td><b>Rang de franchissement</b></td><td>Rang auquel le cumul des gains atteint la cible 2030.</td></tr>
 <tr><td><b>État SIA</b></td><td>Phase du projet selon la norme SIA 112 (études, appel d'offres, réalisation…).</td></tr>
 <tr><td><b>Coefficient Stratus</b></td><td>Indicateur d'état du bâtiment : proche de 1 = bon état, proche de 0 = très dégradé.</td></tr>
@@ -898,7 +919,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 </div>
 </div>
 
-<div style="text-align:center;padding:16px;color:#999;font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v24.08.2026</div>
+<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v25.08.2026</div>
 <script>
 /* ================================================================
    NOYAU COMMUN — état, persistance, pondérations
@@ -1199,8 +1220,12 @@ function _sheetRows(doc,sst){
 const INV_MODES=[
   {k:'estim' ,f:'invEstim' ,lbl:'Estim PTE'    ,short:'Estim PTE'},
   {k:'immoba',f:'invImmOBA',lbl:'Invest ImmOBA',short:'Invest ImmOBA'},
-  {k:'ge'    ,f:'invGE'    ,lbl:'GE-Invest'    ,short:'GE-Invest'},
-  {k:'dg'    ,f:'invDG'    ,lbl:'DG (25%)'     ,short:'DG (25%)'}];
+  {k:'ge'    ,f:'invGE'    ,lbl:'GE-Invest'    ,short:'GE-Invest'}];
+/* « DG (25%) » a été retiré du menu le 25.08.2026 : ce n'était pas un
+   référentiel financier saisi mais 25 % du montant ImmOBA, calculé à la volée.
+   Le proposer à côté de trois colonnes réellement renseignées laissait croire
+   à une quatrième source. La colonne du classeur, elle, continue d'être lue :
+   c'est seulement le choix qui disparaît. */
 let invMode='estim';
 function invDef(){return INV_MODES.find(function(m){return m.k===invMode})||INV_MODES[0]}
 function invAvail(m){return S.some(function(s){const v=s[m.f];return v!==undefined&&v!==null&&v!==''})}
@@ -1439,12 +1464,12 @@ function fmtCHFt(v){
      (vide) · --- · à vérifier · en cours · var_A · var_B · var_C
    ================================================================ */
 const CECB_DEF={
-  none   :{pts:0 ,ico:'✗',txt:'' ,col:'#e74c3c',fam:'red'   ,lbl:'Aucun audit CECB+ réalisé / non prévu'},
-  pending:{pts:16,ico:'⏳',txt:'' ,col:'#e67e22',fam:'orange',lbl:'Audit CECB+ en cours de réalisation (crédit partiel)'},
-  check  :{pts:0 ,ico:'👤',txt:'' ,col:'#e67e22',fam:'orange',lbl:'Statut douteux, à confirmer manuellement'},
-  varA   :{pts:33,ico:'✓',txt:'A',col:'#27ae60',fam:'green' ,lbl:'Audit CECB+ réalisé — variante A retenue'},
-  varB   :{pts:33,ico:'✓',txt:'B',col:'#27ae60',fam:'green' ,lbl:'Audit CECB+ réalisé — variante B retenue'},
-  varC   :{pts:33,ico:'✓',txt:'C',col:'#27ae60',fam:'green' ,lbl:'Audit CECB+ réalisé — variante C retenue'}};
+  none   :{pts:0 ,ico:'✗',txt:'' ,col:'#C0392B',fam:'red'   ,lbl:'Aucun audit CECB+ réalisé / non prévu'},
+  pending:{pts:16,ico:'⏳',txt:'' ,col:'#B35F10',fam:'orange',lbl:'Audit CECB+ en cours de réalisation (crédit partiel)'},
+  check  :{pts:0 ,ico:'👤',txt:'' ,col:'#B35F10',fam:'orange',lbl:'Statut douteux, à confirmer manuellement'},
+  varA   :{pts:33,ico:'✓',txt:'A',col:'#1E8449',fam:'green' ,lbl:'Audit CECB+ réalisé — variante A retenue'},
+  varB   :{pts:33,ico:'✓',txt:'B',col:'#1E8449',fam:'green' ,lbl:'Audit CECB+ réalisé — variante B retenue'},
+  varC   :{pts:33,ico:'✓',txt:'C',col:'#1E8449',fam:'green' ,lbl:'Audit CECB+ réalisé — variante C retenue'}};
 function cecbStatus(v){
   const t=String(v==null?'':v).trim().toLowerCase();
   if(!t||t==='---'||t==='--'||t==='-'||t==='0')return'none';
@@ -1471,18 +1496,18 @@ function patBg(p){
   if(!p||p==='Non protégé')return'<span style="color:#c8ced6" title="Non protégé">—</span>';
   for(let i=0;i<PAT_MAP.length;i++)if(p.includes(PAT_MAP[i][0]))
     return'<span title="'+PAT_MAP[i][2]+'" style="cursor:help;font-size:.95rem">'+PAT_MAP[i][1]+'</span>';
-  return'<span style="color:#7b8794;font-size:.65rem" title="'+p+'">'+p+'</span>'}
+  return'<span style="color:var(--ink3);font-size:.65rem" title="'+p+'">'+p+'</span>'}
 function hBg(t){const f=String(t||'').toLowerCase().trim();
   const b=(c,x,ti)=>'<span class="bg" style="background:'+c+'"'+(ti?' title="'+ti+'"':'')+'>'+x+'</span>';
   if(!f)return b('#bbb','?','Type d’énergie non renseigné');
-  if(/inexistant|aucun|sans chauff/.test(f))return b('#7f8c8d','⛔ Inexistant','Aucune installation de chauffage');
-  if(f.includes('pac')&&f.includes('gaz'))return b('#d35400','🔥♻️ PAC+Gaz','Installation hybride pompe à chaleur + gaz');
-  if(f.includes('mazout'))return b('#c0392b','🔥 Mazout');
-  if(/cad|distance|cadiom/.test(f))return b('#2980b9','🔄 CAD','Chauffage à distance');
-  if(f.includes('gaz'))return b('#e67e22','🔥 Gaz');
-  if(f.includes('pac'))return b('#27ae60','♻️ PAC','Pompe à chaleur');
-  if(/bois|pellet|b[uû]che|palette|granul/.test(f))return b('#27ae60','🌲 Bois');
-  if(/electr|électr|^el\b|^el\./.test(f))return b('#856EBE','⚡ Élec.','Chauffage électrique direct');
+  if(/inexistant|aucun|sans chauff/.test(f))return b('#5F6A6B','⛔ Inexistant','Aucune installation de chauffage');
+  if(f.includes('pac')&&f.includes('gaz'))return b('#A34100','🔥♻️ PAC+Gaz','Installation hybride pompe à chaleur + gaz');
+  if(f.includes('mazout'))return b('#C0392B','🔥 Mazout');
+  if(/cad|distance|cadiom/.test(f))return b('#1F6391','🔄 CAD','Chauffage à distance');
+  if(f.includes('gaz'))return b('#B35F10','🔥 Gaz');
+  if(f.includes('pac'))return b('#1E8449','♻️ PAC','Pompe à chaleur');
+  if(/bois|pellet|b[uû]che|palette|granul/.test(f))return b('#1E8449','🌲 Bois');
+  if(/electr|électr|^el\b|^el\./.test(f))return b('#6B52A8','⚡ Élec.','Chauffage électrique direct');
   if(/solaire|thermique solaire/.test(f))return b('#f1c40f','☀️ Solaire');
   return b('#bbb','?',t)}
 
@@ -1624,18 +1649,18 @@ var sl=co>=0.70?0:co>=0.50?1:co>=0.35?2:3;
 return[[1,1,2,2],[2,2,3,3],[2,3,3,4],[3,3,4,4]][il][sl]}
 
 var TI_LABELS={1:'Suivi énergétique',2:'Entretien / renouvellement',3:'Gros travaux / rénovation partielle',4:'Rénovation complète'};
-function tiBg(v){if(!v&&v!==0)return'<span class="bg" style="background:#bbb">—</span>';v=Math.round(v);var cols={1:'#27ae60',2:'#f1c40f',3:'#e67e22',4:'#e74c3c'};return'<span class="bg" title="'+(TI_LABELS[v]||'')+'" style="background:'+(cols[v]||'#bbb')+';color:'+(v===2?'#333':'#fff')+'">T'+v+'</span>'}
+function tiBg(v){if(!v&&v!==0)return'<span class="bg" style="background:#bbb">—</span>';v=Math.round(v);var cols={1:'#1E8449',2:'#B8860B',3:'#B35F10',4:'#C0392B'};return'<span class="bg" title="'+(TI_LABELS[v]||'')+'" style="background:'+(cols[v]||'#bbb')+';color:'+(v===2?'#333':'#fff')+'">T'+v+'</span>'}
 
 function scored(rp,pat){let r=baseScored();if(rp&&rp!=='all')r=r.filter(s=>s.rp===rp);if(pat==='prot')r=r.filter(s=>isProt(s.pat));else if(pat==='nprot')r=r.filter(s=>!isProt(s.pat));else if(pat&&pat!=='all')r=r.filter(s=>(s.pat||'')===pat);return r}
 function isProt(p){return p&&(p.includes('Classé')||p.includes('Zone protégée')||p.includes('Inventaire')||p.includes('Objets')||p.includes('Ensembles'))}
 function isFos(t){const f=(t||'').toLowerCase();return(f.includes('gaz')||f.includes('mazout'))&&!f.startsWith('pac')&&!f.startsWith('bois')&&!f.startsWith('cad')}
-function scCol(v){return v>=70?'#27ae60':v>=50?'#e67e22':v>=30?'#e74c3c':'#95a5a6'}
+function scCol(v){return v>=70?'#1E8449':v>=50?'var(--warn)':v>=30?'var(--red)':'#95a5a6'}
 function fmtSRE(v){if(!v)return'—';return v.toLocaleString('fr-CH')}
 function fmtInv(v){if(!v||v<=0)return'—';if(v>=1e6)return(v/1e6).toFixed(1)+'M';return(v/1e3).toFixed(0)+'k'}
-function fmtIDCproj(v){if(!v&&v!==0)return'<span style="color:#aaa">—</span>';return'<span style="color:var(--grn);font-weight:600">'+v+'</span>'}
+function fmtIDCproj(v){if(!v&&v!==0)return'<span style="color:var(--ink3)">—</span>';return'<span style="color:var(--grn);font-weight:600">'+v+'</span>'}
 
 function compl(s){let t=9,f=0;if(s.sre)f++;if(s.idcC)f++;if(s.ht&&s.ht.length>1)f++;if(s.coeff!=null)f++;if(s.invVB&&s.invVB>0)f++;if(s.hsub&&s.hsub.length>2&&!/rien|maintien/i.test(s.hsub))f++;if(s.pat&&s.pat.length>1)f++;if(s.elec)f++;if(s.eau)f++;return Math.round(f/t*100)}
-function complBg(s){const p=compl(s);const c=p>=80?'#27ae60':p>=50?'#e67e22':'#e74c3c';return'<span title="'+p+'% des 9 champs clés renseignés" style="font-size:.7rem;font-weight:700;color:'+c+';cursor:help">'+p+'%</span>'}
+function complBg(s){const p=compl(s);const c=p>=80?'var(--ok)':p>=50?'var(--warn)':'var(--red)';return'<span title="'+p+'% des 9 champs clés renseignés" style="font-size:.7rem;font-weight:700;color:'+c+';cursor:help">'+p+'%</span>'}
 function patMalus(pat){if(!pat)return 0;if(pat.includes('Classé'))return -50;if(pat.includes('Zone protégée')||pat.includes('Zone prot'))return -40;if(pat.includes('Inventaire'))return -30;if(pat.includes('Ensembles'))return -20;if(pat.includes('Objets')||pat.includes("intérêt"))return -10;return 0}
 function feasib(s){let f=cecbInfo(s).pts;if(s.hsub&&s.hsub.length>3&&!/rien|maintien/i.test(s.hsub))f+=33;if(s.invVB&&s.invVB>0)f+=34;f+=patMalus(s.pat);return Math.max(0,Math.min(100,f))}
 function feasibBreak(s){const d=cecbInfo(s);let f=d.pts,parts=['CECB '+cecbBg(s)+' <b>+'+d.pts+'</b>'];
@@ -1686,10 +1711,10 @@ function ceeOk(s){
   return !!(s.cecb&&s.invVB>0&&s.idcVB!=null&&s.idcC>0&&s.sre>0&&(s.idcC-s.idcVB)>0)}
 function ceeCHFkWh(s){
   if(!ceeOk(s))return null;
-  return s.invVB/((s.idcC-s.idcVB)*s.sre*pDuree())}
+  return s.invVB/((s.idcC-s.idcVB)*s.sre*pDuree('cee'))}
 function sC(s){
   const c=ceeCHFkWh(s);
-  return c==null?null:Math.max(0,Math.min(100,100-c*pDuree()))}
+  return c==null?null:Math.max(0,Math.min(100,100-c*pDuree('cee')))}
 
 /* ---------- électricité, eau, vétusté : notés seulement si mesurés ---------- */
 function sE(s){let sc=25;
@@ -1778,7 +1803,7 @@ function pBg(p){
 function covBadge(sc){
   if(!sc||sc.t==null)return'';
   if(sc.cov>=99)return'';
-  const c=sc.cov>=70?'#e67e22':'#e74c3c';
+  const c=sc.cov>=70?'var(--warn)':'var(--red)';
   return'<span style="font-size:.6rem;color:'+c+';font-weight:700" title="Seuls '+sc.cov+
     ' % des critères sont documentés — les critères manquants ont été neutralisés et leur poids réparti"> '+sc.cov+'%</span>'}
 function scoreCell(s){
@@ -1802,7 +1827,7 @@ function popRPProject(){
 }
 
 
-const phColors={1:'#e74c3c',2:'#e67e22',3:'#3498db',4:'#95a5a6'};
+const phColors={1:'#C0392B',2:'#B35F10',3:'#2E86C1',4:'#6B7683'};
 const phPos=[{l:0,w:16.67},{l:16.67,w:25},{l:41.67,w:25},{l:66.67,w:33.33}];
 
 function assignFallbackCoords(){S.forEach(s=>{if(s.lat&&s.lng&&!s.geoFallback){if(s.geoQ!=='nominatim')s.geoQ='file';return}const npa=extractNPA(s.adr);if(npa&&GE_NPA[npa]){const[lat,lng]=GE_NPA[npa];s.lat=lat+(Math.random()-.5)*.004;s.lng=lng+(Math.random()-.5)*.004;s.geoQ='npa';s.geoFallback=true}else{s.lat=null;s.lng=null;s.geoQ='none';s.geoFallback=true}})}
@@ -1916,9 +1941,35 @@ function importFromRows(rows,includeAll){
    La durée de vie retenue n'est PAS une norme SIA : c'est la convention de
    calcul du coût de l'énergie économisée reprise de Priorisation_PTE.xlsx.
    Elle est ici explicite et modifiable, car elle change tous les classements. */
-const PARAMS_DEF={duree:40,pvProd:950,cibleMJ:350,plancher:50};
+/* La durée de vie sert à convertir un gain annuel en gain cumulé, donc à
+   calculer le coût de l'unité gagnée. Une seule valeur pour tous les objectifs
+   revient à supposer qu'une isolation d'enveloppe, une pompe à chaleur et un
+   remplacement de robinetterie durent aussi longtemps — ce qui est faux et
+   avantage systématiquement les objectifs à équipement long. « duree » reste
+   la valeur générale, et « dureeObj » la surcharge par objectif. */
+const DUREE_OBJ=[
+ {k:'co2' ,lbl:'CO₂'         ,aide:"Mesures de décarbonation : substitution de l'agent de chauffage et enveloppe confondues"},
+ {k:'th'  ,lbl:'Thermique'   ,aide:"Isolation, fenêtres, distribution — l'enveloppe tient plus longtemps qu'un équipement"},
+ {k:'ren' ,lbl:'Renouvelable',aide:'Durée de vie de la production de chaleur renouvelable (PAC, CAD, bois)'},
+ {k:'elec',lbl:'Électricité' ,aide:'Éclairage, ventilation, régulation — équipements à renouvellement plus rapide'},
+ {k:'eau' ,lbl:'Eau'         ,aide:'Robinetterie, appareils sanitaires, récupération'},
+ {k:'cee' ,lbl:'CEE'         ,aide:"Durée retenue pour le coût de l'énergie économisée (CHF par kWh évité)"}];
+const PARAMS_DEF={duree:40,pvProd:950,cibleMJ:350,plancher:50,dureeObj:{}};
 let PARAMS=Object.assign({},PARAMS_DEF);
-function pDuree(){return +PARAMS.duree>0?+PARAMS.duree:40}
+/* pDuree(k) : la durée de l'objectif k s'il en a une, sinon la valeur
+   générale. Appelée sans argument, elle rend la valeur générale — tous les
+   appels existants gardent donc leur comportement. */
+function pDuree(k){
+  const o=PARAMS.dureeObj||{};
+  if(k&&+o[k]>0)return +o[k];
+  return +PARAMS.duree>0?+PARAMS.duree:40}
+/* vrai dès qu'un objectif s'écarte de la valeur générale — sert à le signaler
+   dans le menu et dans l'onglet Méthode plutôt que de le laisser invisible */
+function dureeSurchargee(){
+  const o=PARAMS.dureeObj||{},g=pDuree();
+  return DUREE_OBJ.some(function(d){return +o[d.k]>0&&+o[d.k]!==g})}
+function dureeTxt(){
+  const g=pDuree();return g+' ans'+(dureeSurchargee()?' · réglée par objectif':'')}
 function pPvProd(){return +PARAMS.pvProd>0?+PARAMS.pvProd:950}
 let CIBLE_MJ_M2_OBJ=350.0;
 const PLANCHER_CHF_M2_OBJ=50.0;
@@ -1988,6 +2039,12 @@ function tglPar(e){if(e)e.stopPropagation();
   const on=p.classList.toggle('on');
   if(on){$('pDur').value=PARAMS.duree;$('pPv').value=PARAMS.pvProd;$('pMJ').value=PARAMS.cibleMJ;
     const w=ddPoids();
+    const dh=$('durObj');
+    if(dh)dh.innerHTML=DUREE_OBJ.map(function(d){
+      const v=(PARAMS.dureeObj&&+PARAMS.dureeObj[d.k]>0)?+PARAMS.dureeObj[d.k]:'';
+      return '<label class="pop-l" title="'+esc(d.aide)+'">'+d.lbl+'</label>'+
+        '<input class="pop-in" id="dur_'+d.k+'" type="number" min="5" max="80" step="5" '+
+        'placeholder="'+pDuree()+' (général)" value="'+v+'">'}).join('');
     $('ddW').innerHTML=DD_VOLETS.map(function(v){
       return '<label class="pop-l" title="'+esc(v.aide)+'">'+esc(v.lbl)+'</label>'+
         '<input class="pop-in" id="ddw_'+v.k+'" type="number" min="0" max="100" step="5" value="'+w[v.k]+'">'}).join('')}}
@@ -1997,10 +2054,16 @@ function paramsApply(){
   PARAMS.duree=d;PARAMS.pvProd=pv;PARAMS.cibleMJ=mj;CIBLE_MJ_M2_OBJ=mj;
   PARAMS.dd=PARAMS.dd||{};
   DD_VOLETS.forEach(function(v){const el=$('ddw_'+v.k);if(el&&el.value!=='')PARAMS.dd[v.k]=+el.value});
+  /* une case vidée efface la surcharge : l'objectif revient à la valeur
+     générale plutôt que de garder une ancienne valeur devenue invisible */
+  PARAMS.dureeObj=PARAMS.dureeObj||{};
+  DUREE_OBJ.forEach(function(o){const el=$('dur_'+o.k);if(!el)return;
+    if(el.value===''||!(+el.value>0))delete PARAMS.dureeObj[o.k];
+    else PARAMS.dureeObj[o.k]=+el.value});
   $('parPop').classList.remove('on');
   saveState();computeObjRanking();buildOpt();ren();runOpt();
-  toast('⚙️ Durée de vie : '+d+' ans · productible PV : '+pv+' kWh/kWc · cible '+mj+' MJ/m²','ok')}
-function paramsReset(){PARAMS=Object.assign({},PARAMS_DEF);CIBLE_MJ_M2_OBJ=PARAMS.cibleMJ;
+  toast('⚙️ Durée de vie : '+dureeTxt()+' · productible PV : '+pv+' kWh/kWc · cible '+mj+' MJ/m²','ok')}
+function paramsReset(){PARAMS=Object.assign({},PARAMS_DEF,{dd:{},dureeObj:{}});CIBLE_MJ_M2_OBJ=PARAMS.cibleMJ;
   $('pDur').value=PARAMS.duree;$('pPv').value=PARAMS.pvProd;$('pMJ').value=PARAMS.cibleMJ;paramsApply()}
 document.addEventListener('click',function(){const p=$('parPop');if(p)p.classList.remove('on')});
 
@@ -2213,9 +2276,10 @@ function buildContributionsObj(sites,coFactors){
 
 /* tri par coût unitaire croissant (CO2/Thermique/Renouvelable/Élec/Eau) —
    identique à rank_objective() en Python */
-function rankObjectiveObj(items,gap){
+function rankObjectiveObj(items,gap,key){
   items=items.map(it=>({...it}));
-  for(const it of items){it.coutUnit=it.estim/(it.gain*pDuree());it.plausible=plausibleObj(it.estim,it.sre)}
+  const dur=pDuree(key);
+  for(const it of items){it.coutUnit=it.estim/(it.gain*dur);it.duree=dur;it.plausible=plausibleObj(it.estim,it.sre)}
   items.sort((a,b)=>a.coutUnit-b.coutUnit||(a.id<b.id?-1:1));
   let cumG=0,cumI=0,franchiRang=null;
   items.forEach((it,i)=>{const k=i+1;cumG+=it.gain;cumI+=it.estim;it.rang=k;it.cumulGain=cumG;it.cumulInvest=cumI;
@@ -2302,11 +2366,11 @@ function computeObjRanking(){
   const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
   if(!OBJ_GAPS||!pop||!pop.length){OBJRANK=null;return}
   const contribs=buildContributionsObj(pop,OBJ_COFACTORS||{});
-  const co2=rankObjectiveObj(contribs.co2,OBJ_GAPS.co2.gap);
-  const th=rankObjectiveObj(contribs.th,OBJ_GAPS.th.gap);
-  const ren=rankObjectiveObj(contribs.ren,OBJ_GAPS.ren.gap);
-  const elec=rankObjectiveObj(contribs.elec,OBJ_GAPS.elec.gap);
-  const eau=rankObjectiveObj(contribs.eau,OBJ_GAPS.eau.gap);
+  const co2=rankObjectiveObj(contribs.co2,OBJ_GAPS.co2.gap,'co2');
+  const th=rankObjectiveObj(contribs.th,OBJ_GAPS.th.gap,'th');
+  const ren=rankObjectiveObj(contribs.ren,OBJ_GAPS.ren.gap,'ren');
+  const elec=rankObjectiveObj(contribs.elec,OBJ_GAPS.elec.gap,'elec');
+  const eau=rankObjectiveObj(contribs.eau,OBJ_GAPS.eau.gap,'eau');
   const pv=rankIntentionObj(contribs.pv,OBJ_GAPS.pv.gapKw);
   const veg=rankVegObj(contribs.veg,(OBJ_GAPS.veg&&OBJ_GAPS.veg.gap)||null);
   const co2ById={};for(const it of co2.items)co2ById[it.id]=it.gain;
@@ -2486,9 +2550,9 @@ try{
    remplace l'ancien histogramme du score composite. */
 const ceeVals=all.filter(ceeOk).map(s=>ceeCHFkWh(s)).filter(v=>v!=null&&isFinite(v));
 if(ceeVals.length){
-  Plotly.newPlot('gHist',[{x:ceeVals,type:'histogram',marker:{color:'#005F73'},nbinsx:15}],plotLay({margin:{t:5,b:28,l:35,r:5},bargap:.2,xaxis:{title:{text:'CHF/kWh ('+pDuree()+' ans)',font:{size:10}}},yaxis:{title:{text:'Nb bâtiments',font:{size:10}}},font:{size:9,color:themeCols().ink2}}),{responsive:true,displayModeBar:false});
+  Plotly.newPlot('gHist',[{x:ceeVals,type:'histogram',marker:{color:'#005F73'},nbinsx:15}],plotLay({margin:{t:5,b:28,l:35,r:5},bargap:.2,xaxis:{title:{text:'CHF/kWh ('+pDuree('cee')+' ans)',font:{size:10}}},yaxis:{title:{text:'Nb bâtiments',font:{size:10}}},font:{size:9,color:themeCols().ink2}}),{responsive:true,displayModeBar:false});
 }else{
-  $('gHist').innerHTML='<p style="color:#999;font-size:.75rem;text-align:center;padding-top:70px">Aucun bâtiment éligible CEE dans cette sélection.</p>';
+  $('gHist').innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:70px">Aucun bâtiment éligible CEE dans cette sélection.</p>';
 }
 const dist=etatDist(all);
 Plotly.newPlot('gPie',[{values:dist.map(x=>x[1]),labels:dist.map(x=>x[0]),type:'pie',textinfo:'value+percent',hole:.4}],plotLay({margin:{t:5,b:5,l:5,r:5},font:{size:9,color:themeCols().ink2},showlegend:true,legend:{font:{size:8}}}),{responsive:true,displayModeBar:false});
@@ -2512,7 +2576,7 @@ const _rest=all.filter(s=>{const q=qualiOf(s.id);return !(q&&(q.p==='in'||q.p===
 const fos=_rest.filter(s=>isFos(s.ht)),pro=_rest.filter(s=>isProt(s.pat)&&!isFos(s.ht)),oth=_rest.filter(s=>!isProt(s.pat)&&!isFos(s.ht));
 
 try{if(window.Plotly)Plotly.purge('gUF')}catch(e){}
-Plotly.newPlot('gUF',[mkUF(oth,'Autres','#005F73'),mkUF(fos,'🔥 Fossiles','#C0392B'),mkUF(pro,'🏛 Protégés','#856EBE'),mkUF(adjIn,'⏫ Imposés','#2C3E50','star'),mkUF(adjEx,'⛔ Exclus','#b0b7c3','x')],plotLay({margin:{t:5,b:35,l:40,r:10},xaxis:{title:{text:'Faisabilité (0–100)',font:{size:10}},range:[-5,105]},yaxis:{title:{text:'Priorité (classements par objectif)',font:{size:10}},range:[0,100]},font:{size:9,color:themeCols().ink2},legend:{font:{size:8},orientation:'h',y:1.12},shapes:[{type:'line',x0:50,x1:50,y0:0,y1:100,line:{color:'#ccc',dash:'dot'}},{type:'line',x0:0,x1:100,y0:50,y1:50,line:{color:'#ccc',dash:'dot'}}],annotations:[{x:90,y:95,text:'🎯 Urgent+Faisable',showarrow:false,font:{size:8,color:'#27ae60'}},{x:10,y:95,text:'⚡ Urgent, à préparer',showarrow:false,font:{size:8,color:'#e67e22'}}]}),{responsive:true,displayModeBar:false});
+Plotly.newPlot('gUF',[mkUF(oth,'Autres','#005F73'),mkUF(fos,'🔥 Fossiles','#C0392B'),mkUF(pro,'🏛 Protégés','#6B52A8'),mkUF(adjIn,'⏫ Imposés','#2C3E50','star'),mkUF(adjEx,'⛔ Exclus','#b0b7c3','x')],plotLay({margin:{t:5,b:35,l:40,r:10},xaxis:{title:{text:'Faisabilité (0–100)',font:{size:10}},range:[-5,105]},yaxis:{title:{text:'Priorité (classements par objectif)',font:{size:10}},range:[0,100]},font:{size:9,color:themeCols().ink2},legend:{font:{size:8},orientation:'h',y:1.12},shapes:[{type:'line',x0:50,x1:50,y0:0,y1:100,line:{color:'#ccc',dash:'dot'}},{type:'line',x0:0,x1:100,y0:50,y1:50,line:{color:'#ccc',dash:'dot'}}],annotations:[{x:90,y:95,text:'🎯 Urgent+Faisable',showarrow:false,font:{size:8,color:'#1E8449'}},{x:10,y:95,text:'⚡ Urgent, à préparer',showarrow:false,font:{size:8,color:'#B35F10'}}]}),{responsive:true,displayModeBar:false});
 }catch(e){}
 try{renAlerts(all)}catch(e){}
 try{renTop(all)}catch(e){}
@@ -2534,16 +2598,16 @@ function renTop(all){
   if(tt)tt.textContent=lbl+(rp!=='all'?' · '+rp:'');
   try{if(window.Plotly)Plotly.purge(el)}catch(e){}
   if(!OBJRANK||!OBJRANK[key]||!OBJRANK[key].items.length){
-    el.innerHTML='<p style="color:#999;font-size:.75rem;text-align:center;padding-top:60px">Aucun bâtiment classable pour cet objectif.</p>';return}
+    el.innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:60px">Aucun bâtiment classable pour cet objectif.</p>';return}
   const byId={};(all||[]).forEach(function(s){byId[s.id]=s});
   const items=applyQuali(OBJRANK[key].items,key)
     .filter(function(it){return rp==='all'?true:(byId[it.id]&&byId[it.id].rp===rp)})
     .slice(0,20);
-  if(!items.length){el.innerHTML='<p style="color:#999;font-size:.75rem;text-align:center;padding-top:60px">Aucun bâtiment de ce portefeuille dans ce classement.</p>';return}
+  if(!items.length){el.innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:60px">Aucun bâtiment de ce portefeuille dans ce classement.</p>';return}
   const top=items.slice().reverse();
   const unit=OBJ_UNIT[key]||'';
   const val=function(it){return key==='cee'?it.cee:(key==='pv'?it.gain:it.coutUnit)};
-  const axis=key==='cee'?'CHF/kWh':(key==='pv'?'kWc':(key==='veg'?'CHF par m² créé':'coût par unité gagnée ('+pDuree()+' ans)'));
+  const axis=key==='cee'?('CHF/kWh ('+pDuree('cee')+' ans)'):(key==='pv'?'kWc':(key==='veg'?'CHF par m² créé':'coût par unité gagnée ('+pDuree(key)+' ans)'));
   /* Plotly.purge ne vide pas le message « aucun bâtiment » écrit par un rendu
      précédent : il resterait visible sous le graphique. */
   el.innerHTML='';
@@ -2558,7 +2622,7 @@ function renTop(all){
       plotLay({margin:{t:5,b:34,l:210,r:12},xaxis:{title:{text:axis,font:{size:10}}},
        yaxis:{automargin:true,tickfont:{size:9}},height:Math.max(280,26*top.length)}),
       {displayModeBar:false,responsive:true});
-  }catch(e){el.innerHTML='<p style="color:#999;font-size:.75rem;text-align:center;padding-top:60px">Graphique indisponible (bibliothèque non chargée).</p>'}}
+  }catch(e){el.innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:60px">Graphique indisponible (bibliothèque non chargée).</p>'}}
 
 function renAlerts(all){
 const al=detectAlerts(all);lastAlerts=al;
@@ -2570,11 +2634,11 @@ function renCompleteness(all){
 const el=$('cpList');if(!el)return;const n=all.length||1;
 const fields=[['📐 SRE',s=>!!s.sre],['🔥 IDC',s=>!!s.idcC],['♨️ Chauffage',s=>!!(s.ht&&s.ht.length>1)],['🏚️ Coeff Stratus',s=>s.coeff!=null],['💰 Investissement',s=>!!(s.invVB&&s.invVB>0)],['🔄 Substitution',s=>!!(s.hsub&&s.hsub.length>2&&!/rien|maintien/i.test(s.hsub))],['🏛️ Patrimoine',s=>!!(s.pat&&s.pat.length>1)],['⚡ Électricité',s=>!!s.elec],['💧 Eau',s=>!!s.eau]];
 let tot=0,h='';
-fields.forEach(f=>{const p=Math.round(all.filter(f[1]).length/n*100);tot+=p;const col=p>=80?'#27ae60':p>=50?'#e67e22':'#e74c3c';
+fields.forEach(f=>{const p=Math.round(all.filter(f[1]).length/n*100);tot+=p;const col=p>=80?'var(--ok)':p>=50?'var(--warn)':'var(--red)';
 h+='<div style="display:grid;grid-template-columns:150px 1fr 44px;align-items:center;gap:8px;margin-bottom:5px"><span style="font-size:.73rem;font-weight:600">'+f[0]+'</span><div class="sb" style="height:14px"><div class="sf" style="width:'+p+'%;background:'+col+'"></div></div><span style="font-size:.73rem;font-weight:700;color:'+col+'">'+p+'%</span></div>'});
 const avg=Math.round(tot/fields.length);const cp=$('cpPct');if(cp)cp.textContent='(moyenne : '+avg+'%)';
 const worst=all.map(s=>({s:s,p:compl(s)})).filter(x=>x.p<50).sort((a,b)=>a.p-b.p).slice(0,10);
-if(worst.length){h+='<div style="margin-top:10px;font-size:.75rem;font-weight:600;color:var(--pri)">🔴 Sites les moins documentés (&lt;50%) — priorité de collecte :</div>'+worst.map(x=>'<div style="font-size:.72rem;padding:2px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between"><span><b>'+x.s.id+'</b> '+x.s.nom.substring(0,32)+'</span><span style="color:#e74c3c;font-weight:700">'+x.p+'%</span></div>').join('')}
+if(worst.length){h+='<div style="margin-top:10px;font-size:.75rem;font-weight:600;color:var(--pri)">🔴 Sites les moins documentés (&lt;50%) — priorité de collecte :</div>'+worst.map(x=>'<div style="font-size:.72rem;padding:2px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between"><span><b>'+x.s.id+'</b> '+x.s.nom.substring(0,32)+'</span><span style="color:var(--red);font-weight:700">'+x.p+'%</span></div>').join('')}
 else h+='<p style="font-size:.73rem;color:var(--grn);margin-top:8px">✅ Aucun site sous 50 % de complétude.</p>';
 el.innerHTML=h}
 
@@ -2606,9 +2670,11 @@ const OBJ_META={
   veg:{lbl:'Végétalisation',lblCourt:'Végét.',unit:'m²'}};
 function objFmtNum(v,d){if(v==null||isNaN(v))return'—';return Number(v).toLocaleString('fr-CH',{maximumFractionDigits:d==null?0:d})}
 
+/* Les fonds de ligne passent par des jetons : en mode nuit, un vert pâle codé
+   en dur recevait du texte clair — ratio 1,1, illisible. */
 function objRowStyle(it,franchiRang){
-  if(it.rang===franchiRang)return'background:#d5f5e3;font-weight:700;border-top:2px solid #27ae60;border-bottom:2px solid #27ae60';
-  return it.franchi?'background:#eafaf0':'color:#888'}
+  if(it.rang===franchiRang)return'background:var(--bg-ok);color:var(--fg-ok);font-weight:700;border-top:2px solid var(--ok);border-bottom:2px solid var(--ok)';
+  return it.franchi?'background:var(--bg-ok);color:var(--fg-ok)':'color:var(--ink3)'}
 
 /* Indice de fiabilité — même principe que Priorisation_PTE.xlsx et
    pte-optimiseur.html (colonne « Alerte »), porté ici pour éviter les
@@ -2633,7 +2699,7 @@ function alertsFor(s){
 function alerteChip(al){
   if(!al||!al.length)return'';
   const txt=al.join(' ; ').replace(/'/g,"\\'").replace(/\n/g,' ');
-  return'<span class="bg" style="background:#fdecea;color:#c0392b;cursor:pointer" onclick="event.stopPropagation();toast(\''+txt+'\',\'wr\')">⚠ '+al.length+'</span>'}
+  return'<span class="bg" style="background:var(--bg-err);color:var(--fg-err);cursor:pointer" onclick="event.stopPropagation();toast(\''+txt+'\',\'wr\')">⚠ '+al.length+'</span>'}
 
 /* Population filtrée par les sélecteurs communs du bloc Classement,
    appliquée à l'affichage seulement — rang, cumul et % cible restent
@@ -2679,27 +2745,27 @@ function objTable(key,R,meta,bySiteId,f){
     '<th style="text-align:right">Cumul<br>['+meta.unit+']</th>'+
     '<th style="text-align:right">% cible<br>comblé</th>'+
     '<th style="text-align:right" title="'+(key==='veg'?'Coût TTC du projet de végétalisation, colonne « Coût végétalisation TTC [CHF] » — sans rapport avec le référentiel financier de la rénovation énergétique':'Colonne d\'où viennent les montants — menu « Montants » au-dessus')+'">'+(key==='veg'?'Coût TTC<br>végétalisation':esc(invDef().short))+'</th>'+
-    '<th style="text-align:right">'+(key==='pv'?'—':key==='cee'?'CHF/kWh<br>(tri)':key==='veg'?'CHF/m²<br>créé (tri)':'CHF/unité<br>('+pDuree()+' ans)')+'</th>'+
+    '<th style="text-align:right">'+(key==='pv'?'—':key==='cee'?('CHF/kWh<br>('+pDuree('cee')+' ans)'):key==='veg'?'CHF/m²<br>créé (tri)':'CHF/unité<br>('+pDuree(key)+' ans)')+'</th>'+
     '<th>Alerte</th></tr></thead><tbody>';
   for(const it of rankedRows){
     const s=bySiteId[it.id];
     const gainDisp=key==='cee'?objFmtNum(it.co2Gain,0):objFmtNum(it.gain,0);
     const coutDisp=key==='pv'?'—':objFmtNum(key==='cee'?it.cee:it.coutUnit,key==='cee'?3:(key==='veg'?0:4));
     html+='<tr class="row-click'+((it.rangAdj||it.rang)===R.franchiRang?' franchi-row':'')+'" data-id="'+it.id+'" onclick="toggleDetail(\''+it.id+'\')" style="'+objRowStyle(Object.assign({},it,{rang:(it.rangAdj||it.rang)}),R.franchiRang)+'">'+
-      '<td>'+(it.rangAdj||it.rang)+((it.rangAdj&&rangObj[it.id]&&it.rangAdj!==rangObj[it.id])?'<br><span style="font-size:.6rem;color:#8a94a0" title="rang du classement arithmétique, avant ajustement">obj. '+rangObj[it.id]+'</span>':'')+
-      (snapCur()?('<br>'+snapDelta(key,it.id,(it.rangAdj||it.rang))):'')+'</td><td><b>'+it.id+'</b></td><td>'+(it.nom||'')+'<br><span style="color:#888;font-size:.63rem">'+(s.rp||'—')+'</span></td>'+
+      '<td>'+(it.rangAdj||it.rang)+((it.rangAdj&&rangObj[it.id]&&it.rangAdj!==rangObj[it.id])?'<br><span style="font-size:.6rem;color:var(--ink3)" title="rang du classement arithmétique, avant ajustement">obj. '+rangObj[it.id]+'</span>':'')+
+      (snapCur()?('<br>'+snapDelta(key,it.id,(it.rangAdj||it.rang))):'')+'</td><td><b>'+it.id+'</b></td><td>'+(it.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem">'+(s.rp||'—')+'</span></td>'+
       '<td style="font-size:.63rem">'+(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td>'+
       '<td style="text-align:right">'+gainDisp+'</td><td style="text-align:right">'+objFmtNum(it.cumulGain,0)+'</td>'+
       '<td style="text-align:right">'+(it.pctGap!=null?Math.round(it.pctGap*100)+'%':'—')+'</td>'+
       '<td style="text-align:right">'+objFmtNum(it.estim,0)+'</td><td style="text-align:right">'+coutDisp+'</td>'+
       '<td>'+alerteChip(alertsFor(s))+qualiChip(it.id)+(lockHas(it.id)?'<span class="lock-chip" title="Bâtiment du portefeuille validé">🔒</span>':'')+'</td></tr>'}
   if(restRows.length){
-    html+='<tr><td colspan="13" style="background:#f4f6f8;color:#777;font-size:.68rem;font-style:italic;padding:5px 8px">'+
+    html+='<tr><td colspan="13" style="background:var(--soft);color:var(--ink3);font-size:.68rem;font-style:italic;padding:5px 8px">'+
       (key==='veg'?'Aucun projet de végétalisation renseigné pour ces sous-sites — ils ne sont pas classables ici tant que la colonne « Surface végétalisée ajoutée (m2) » reste vide. L\'ordre ci-dessous est celui du score composite de repli.'
                   :'Classement de repli — non mesurable pour cet objectif via CECB+, trié par score composite provisoire (voir « Pondérations du classement de repli » ci-dessus)')+'</td></tr>';
     for(const{s,sc}of restRows)
-      html+='<tr class="row-click" data-id="'+s.id+'" onclick="toggleDetail(\''+s.id+'\')" style="color:#888">'+
-        '<td>'+(sc.t!=null?'repli':'—')+'</td><td><b>'+s.id+'</b></td><td>'+(s.nom||'')+'<br><span style="color:#aaa;font-size:.63rem">'+(s.rp||'—')+'</span></td>'+
+      html+='<tr class="row-click" data-id="'+s.id+'" onclick="toggleDetail(\''+s.id+'\')" style="color:var(--ink3)">'+
+        '<td>'+(sc.t!=null?'repli':'—')+'</td><td><b>'+s.id+'</b></td><td>'+(s.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem">'+(s.rp||'—')+'</span></td>'+
         '<td style="font-size:.63rem">'+(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td>'+
         '<td colspan="4" style="text-align:center;font-size:.66rem">'+(key==='veg'?'surface végétalisée non renseignée'
            :((+s.sre&&+s.idcC)?('conso estimée '+objFmtNum(s.sre*s.idcC,0)+' kWh/an'):'données insuffisantes'))+'</td>'+
@@ -2709,7 +2775,7 @@ function objTable(key,R,meta,bySiteId,f){
   return html}
 
 function objTousTable(bySiteId,f){
-  if(!OBJRANK)return'<p style="color:#999;font-style:italic">Importez Plan_PTE.xlsx pour calculer le classement par objectif.</p>';
+  if(!OBJRANK)return'<p style="color:var(--ink3);font-style:italic">Importez Plan_PTE.xlsx pour calculer le classement par objectif.</p>';
   const R=OBJRANK,keys=['co2','th','ren','elec','eau','cee'];
   const idxByKey={};for(const k of keys){idxByKey[k]={};for(const it of R[k].items)idxByKey[k][it.id]=it}
   const union=new Map();
@@ -2734,13 +2800,13 @@ function objTousTable(bySiteId,f){
   for(const k of keys)html+='<th style="text-align:right">'+OBJ_META[k].lblCourt+'</th>';
   html+='<th style="text-align:right">Objectifs<br>servis</th><th style="text-align:right">'+esc(invDef().short)+'</th><th>Alerte</th></tr></thead><tbody>';
   rows.forEach((row,i)=>{
-    html+='<tr class="row-click" data-id="'+row.id+'" onclick="toggleDetail(\''+row.id+'\')"><td>'+(i+1)+'</td><td><b>'+row.id+'</b></td><td>'+(row.nom||'')+'<br><span style="color:#888;font-size:.63rem">'+(row.s.rp||'—')+'</span></td>'+
+    html+='<tr class="row-click" data-id="'+row.id+'" onclick="toggleDetail(\''+row.id+'\')"><td>'+(i+1)+'</td><td><b>'+row.id+'</b></td><td>'+(row.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem">'+(row.s.rp||'—')+'</span></td>'+
       '<td style="font-size:.63rem">'+(row.s.drt||'—')+'</td><td>'+cecbBg(row.s)+'</td>';
     for(const k of keys){
       const g=row.gains[k];
       if(g==null)html+='<td style="color:#ddd;text-align:right">—</td>';
-      else{const col=row.franchis[k]?'#1e8449':'#999',wt=row.franchis[k]?'700':'400';
-        html+='<td style="color:'+col+';font-weight:'+wt+';text-align:right">'+objFmtNum(g,0)+' <span style="font-size:.6rem;color:#aaa">(#'+row.rangs[k]+')</span></td>'}}
+      else{const col=row.franchis[k]?'var(--ok)':'var(--ink3)',wt=row.franchis[k]?'700':'400';
+        html+='<td style="color:'+col+';font-weight:'+wt+';text-align:right">'+objFmtNum(g,0)+' <span style="font-size:.6rem;color:var(--ink3)">(#'+row.rangs[k]+')</span></td>'}}
     html+='<td style="text-align:right;font-weight:700">'+row.servis+'</td><td style="text-align:right">'+objFmtNum(row.estim,0)+'</td>'+
       '<td>'+alerteChip(alertsFor(row.s))+qualiChip(row.id)+'</td></tr>'});
   html+='</tbody></table>';
@@ -2755,7 +2821,7 @@ function renR(){
   const bySiteId={};pop.forEach(s=>{bySiteId[s.id]=s});
   const f=rankFilters();
   if(key==='tous'){
-    if(note)note.innerHTML=OBJRANK?'Un bâtiment peut servir plusieurs objectifs à la fois — trié par nombre d’objectifs servis avant leur propre seuil, puis par coût moyen croissant sur les objectifs où il contribue. <b style="color:#1e8449">Vert</b> = le bâtiment fait partie de ceux à financer pour atteindre CETTE cible précise (avant son propre seuil, « # » = son rang dans ce classement) ; <b style="color:#999">gris</b> = après. Photovoltaïque exclu (pas de coût isolable) et végétalisation exclue (elle se classe au m² créé, pas à l’unité gagnée sur 40 ans) — voir leurs classements dédiés.':'';
+    if(note)note.innerHTML=OBJRANK?'Un bâtiment peut servir plusieurs objectifs à la fois — trié par nombre d’objectifs servis avant leur propre seuil, puis par coût moyen croissant sur les objectifs où il contribue. <b style="color:var(--ok)">Vert</b> = le bâtiment fait partie de ceux à financer pour atteindre CETTE cible précise (avant son propre seuil, « # » = son rang dans ce classement) ; <b style="color:var(--ink3)">gris</b> = après. Photovoltaïque exclu (pas de coût isolable) et végétalisation exclue (elle se classe au m² créé, pas à l’unité gagnée sur une durée de vie) — voir leurs classements dédiés.':'';
     box.innerHTML=objTousTable(bySiteId,f);
     return}
   const meta=OBJ_META[key];
@@ -2766,12 +2832,12 @@ function renR(){
       const gap=key==='pv'?OBJ_GAPS.pv.gapKw:(key==='cee'?OBJ_GAPS.co2.gap:OBJ_GAPS[key].gap);
       const nR=R.items.length;
       note.innerHTML=(key==='cee'
-        ?'Trié par CHF/kWh croissant (référentiel actif, 40 ans). Pas d’écart résiduel propre au CEE : cible reprise du CO₂, cumul du gain CO₂ (pas du kWh) dans cet ordre : '+objFmtNum(gap,0)+' kg CO2/an à combler. '
+        ?'Trié par CHF/kWh croissant (référentiel actif, '+pDuree('cee')+' ans). Pas d’écart résiduel propre au CEE : cible reprise du CO₂, cumul du gain CO₂ (pas du kWh) dans cet ordre : '+objFmtNum(gap,0)+' kg CO2/an à combler. '
         :key==='veg'
         ?'Trié par <b>coût du m² créé</b> croissant, du moins cher au plus cher. Ni durée de vie ni actualisation : on achète une surface, pas un flux annuel. Objectif 2030 : '+objFmtNum(gap,0)+' m² à créer — les surfaces de la colonne du classeur sont à créer, aucune n’est comptée comme réalisée. '
         :key==='pv'
         ?'Trié par puissance décroissante (classement d’intention, aucune donnée n’isole le coût d’une installation PV du coût de rénovation du bâtiment). Objectif : +'+objFmtNum(gap,0)+' kWc. '
-        :'Trié par CHF par '+meta.unit.replace('/an','')+' croissant, sur 40 ans. Écart résiduel à combler : '+objFmtNum(gap,0)+' '+meta.unit+'. ')
+        :'Trié par CHF par '+meta.unit.replace('/an','')+' croissant, sur '+pDuree(key)+' ans'+((PARAMS.dureeObj&&+PARAMS.dureeObj[key]>0&&+PARAMS.dureeObj[key]!==pDuree())?' (durée propre à cet objectif)':'')+'. Écart résiduel à combler : '+objFmtNum(gap,0)+' '+meta.unit+'. ')
         +(R.franchiRang?('Rang de franchissement : <b>'+R.franchiRang+'</b> sur '+nR+' bâtiment(s) mesurable(s) — au-delà, non nécessaires pour cette seule cible.')
                         :('Cible non atteinte avec les '+nR+' bâtiment(s) mesurable(s) disponibles.'))
         +(key==='elec'||key==='eau'?' ⚠ Donnée legacy (méthode par familles abandonnée), non recalculée via CECB+ — à vérifier avant décision.':'')}}
@@ -2796,11 +2862,11 @@ det.innerHTML='<td colspan="'+colspan+'" class="detail-td"><div style="display:f
   '<span>🎯 IDC projeté ('+(site.cecbRaw?site.cecbRaw.replace('var_','var. '):'—')+') : <b>'+(site.idcVB!=null?Math.round(site.idcVB):'—')+'</b></span>'+
   '<span>🔄 Substitution : <b>'+(site.hsub||'—')+'</b></span>'+
   '<span>🏗 État du projet (SIA) : <b>'+(site.etat||'—')+'</b></span>'+
-  '<span>💰 Invest actif : <b>'+fmtInv(site.invVB)+'</b> <span style="font-size:.63rem;color:#888">('+invDef().short+')</span></span>'+
+  '<span>💰 Invest actif : <b>'+fmtInv(site.invVB)+'</b> <span style="font-size:.63rem;color:var(--ink3)">('+invDef().short+')</span></span>'+
   '<span>📊 Complétude : <b>'+cp+'%</b> '+(cp>=80?'🟢':cp>=50?'🟡':'🔴')+'</span>'+
   (sc.t!=null?'<span>⚖️ Priorité (classements par objectif) : <b>'+sc.t+'</b></span>':'')+
   '</div>'+
-  (al.length?'<div style="font-size:.73rem;color:#c0392b;margin-bottom:8px">⚠ '+al.join(' ; ')+'</div>':'')+
+  (al.length?'<div style="font-size:.73rem;color:var(--fg-err);margin-bottom:8px">⚠ '+al.join(' ; ')+'</div>':'')+
   '<div style="display:flex;justify-content:flex-end;margin-bottom:6px"><button class="bt bt-i bt-s" onclick="printSite(\''+id+'\')" title="Imprimer ou enregistrer en PDF une fiche d\'une page pour ce bâtiment">🖨 Fiche imprimable</button></div>'+
   '<div class="q-box"><div style="font-size:.75rem;font-weight:600;color:var(--pri);margin-bottom:4px">⚖️ Facteur non mesurable (choix politique, urgence, vente prévue, contrainte technique…)</div>'+
   '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'+
@@ -3092,7 +3158,7 @@ const TITLES=[
  ['#k6','Somme des montants du référentiel financier actif'],
  ['#alList','Anomalies détectées dans les données — à corriger dans le classeur, pas dans l\'outil'],
  ['#cpList','Complétude des colonnes clés : un classement ne vaut que ce que valent ses données'],
- ['#gHist','Distribution du coût de l\'énergie économisée sur 40 ans'],
+ ['#gHist','Distribution du coût de l\'énergie économisée sur la durée retenue pour le CEE'],
  ['#gPie','Répartition des bâtiments par état d\'avancement SIA'],
  ['#gUF','Chaque point est un bâtiment : priorité en hauteur, faisabilité en largeur'],
  ['#gTop','Les 20 premiers du classement de l\'objectif sélectionné dans l\'onglet Classement'],
@@ -3186,7 +3252,7 @@ function printSite(id){
     '<div style="border-bottom:3px solid #1e3a5f;padding-bottom:8px;margin-bottom:12px">'+
     '<div style="font-size:1.35rem;font-weight:800;color:var(--pri)">'+esc(s.id)+' — '+esc(s.nom||'')+'</div>'+
     '<div style="font-size:.8rem;color:#555">'+esc(s.adr||'')+' · '+esc(s.pol||'')+'</div>'+
-    '<div style="font-size:.7rem;color:#888;margin-top:3px">Fiche éditée le '+dt+' — Programme de Transition Écologique, loi 13210'+
+    '<div style="font-size:.7rem;color:var(--ink3);margin-top:3px">Fiche éditée le '+dt+' — Programme de Transition Écologique, loi 13210'+
     (lastFileName?(' · données : '+esc(lastFileName)):'')+'</div></div>';
   const row=function(k,v){return '<tr><td style="padding:3px 8px;color:#555">'+k+'</td><td style="padding:3px 8px;font-weight:700">'+v+'</td></tr>'};
   h+='<table style="width:100%;font-size:.82rem;border-collapse:collapse"><tbody>'+
@@ -3205,7 +3271,7 @@ function printSite(id){
      '</tbody></table>';
   if(R.length){
     h+='<h3 style="font-size:.95rem;color:var(--pri);margin:14px 0 6px">Contribution aux objectifs 2030</h3>'+
-       '<table style="width:100%;font-size:.8rem;border-collapse:collapse"><thead><tr style="background:var(--pri);color:#fff">'+
+       '<table style="width:100%;font-size:.8rem;border-collapse:collapse"><thead><tr style="background:var(--surf-dark);color:var(--on-surf-dark)">'+
        '<th style="text-align:left;padding:5px 8px">Objectif</th><th style="text-align:right;padding:5px 8px">Rang</th>'+
        '<th style="text-align:right;padding:5px 8px">Contribution / an</th><th style="text-align:right;padding:5px 8px">Coût unitaire</th></tr></thead><tbody>';
     R.forEach(function(o,i){h+='<tr style="background:'+(i%2?'#f4f7fa':'#fff')+'">'+
@@ -3214,15 +3280,15 @@ function printSite(id){
       '<td style="padding:4px 8px;text-align:right">'+objFmtNum(o.gain,0)+' '+esc(o.unit||'')+'</td>'+
       '<td style="padding:4px 8px;text-align:right">'+(o.cout!=null?objFmtNum(o.cout,4):'—')+'</td></tr>'});
     h+='</tbody></table>'}
-  else h+='<p style="font-size:.8rem;color:#888;margin-top:12px">Ce bâtiment n\'est classé dans aucun objectif : audit CECB+ ou montant manquant.</p>';
+  else h+='<p style="font-size:.8rem;color:var(--ink3);margin-top:12px">Ce bâtiment n\'est classé dans aucun objectif : audit CECB+ ou montant manquant.</p>';
   if(q&&q.p&&q.p!=='0')
     h+='<div style="margin-top:12px;border-left:4px solid #e8a838;background:#fdf6e7;padding:8px 12px;font-size:.82rem">'+
        '<b>Facteur non mesurable :</b> '+esc(qualiDef(q.p).lbl)+'<br><b>Motif :</b> '+esc(q.m||'—')+'</div>';
   if(al.length)
-    h+='<div style="margin-top:10px;border-left:4px solid #e74c3c;background:#fdecea;padding:8px 12px;font-size:.8rem"><b>Alertes de cohérence :</b> '+esc(al.join(' ; '))+'</div>';
+    h+='<div style="margin-top:10px;border-left:4px solid #C0392B;background:var(--bg-err);padding:8px 12px;font-size:.8rem"><b>Alertes de cohérence :</b> '+esc(al.join(' ; '))+'</div>';
   if(siteNotes[id])
     h+='<div style="margin-top:10px;border:1px solid #e2e8f0;border-radius:6px;padding:8px 12px;font-size:.82rem;white-space:pre-wrap"><b>Notes :</b>\n'+esc(siteNotes[id])+'</div>';
-  h+='<p style="margin-top:16px;font-size:.66rem;color:#999">Les rangs sont ceux du parc entier pour l\'objectif considéré, ajustements non mesurables compris. Un rang n\'est pas une décision.</p></div>';
+  h+='<p style="margin-top:16px;font-size:.66rem;color:var(--ink3)">Les rangs sont ceux du parc entier pour l\'objectif considéré, ajustements non mesurables compris. Un rang n\'est pas une décision.</p></div>';
   const c=$('printCard');c.innerHTML=h;c.classList.add('on');
   setTimeout(function(){window.print();setTimeout(function(){c.classList.remove('on');c.innerHTML=''},400)},120)}
 
@@ -3307,7 +3373,7 @@ function renDD(){
   const P=ddParc(pop),w=ddPoids();
   let h='<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:8px">'+
     '<div style="font-size:1.9rem;font-weight:800;color:var(--pri)">'+(P.score==null?'—':nf(P.score))+
-    '<span style="font-size:.8rem;font-weight:600;color:#8a94a0"> / 100</span></div>'+
+    '<span style="font-size:.8rem;font-weight:600;color:var(--ink3)"> / 100</span></div>'+
     '<div class="mini">couverture des données : <b>'+nf(P.couverture)+' %</b><br>'+
     'engagé : <b>'+nf(P.eng/1e6,1)+' M</b> sur '+nf(DD_ENVELOPPE/1e6)+' M · prévu : '+nf(P.prev/1e6,1)+' M</div></div>';
   h+='<table class="tblx"><thead><tr><th>Volet</th><th class="num">Poids</th><th class="num">Bâtiments documentés</th><th class="num">Niveau moyen</th><th>Ce qui est mesuré</th></tr></thead><tbody>';
@@ -3355,7 +3421,7 @@ function drawPathYears(){
   yrs.forEach(function(y,i){s+=txt(x(i),H-B+16,String(y),{a:'middle',s:9,c:'#444'})});
   const path=function(arr,col,dash){let p='';arr.forEach(function(v,i){p+=(i?'L':'M')+x(i)+','+yy(v)});
     return '<path d="'+p+'" fill="none" stroke="'+col+'" stroke-width="2.4"'+(dash?' stroke-dasharray="6,4"':'')+'/>'};
-  s+=path(requis,'#8a94a0',true)+path(port,'#C0392B',false);
+  s+=path(requis,'#8a94a0',true)+path(port,'var(--red)',false);
   s+='<line x1="'+L+'" y1="'+yy(cible)+'" x2="'+(W-R)+'" y2="'+yy(cible)+'" stroke="#1A8554" stroke-width="1.6" stroke-dasharray="4,4"/>'+
      txt(W-R-2,yy(cible)-4,'cible 2030 : '+nf(cible/1000)+' t',{a:'end',s:9,c:'#1A8554',w:700});
   port.forEach(function(v,i){s+='<circle cx="'+x(i)+'" cy="'+yy(v)+'" r="3" fill="#C0392B"><title>'+yrs[i]+' : '+nf(v/1000)+' t</title></circle>'});
@@ -3409,7 +3475,7 @@ function renAnomalies(){
   const A=anomalies(),R=regressions();
   const parType={};A.forEach(function(r){parType[r[0]]=(parType[r[0]]||0)+1});
   let h='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:6px">';
-  Object.keys(parType).forEach(function(k){h+='<span class="chip" style="background:#eef2f7;color:#41506b">'+esc(k)+' : <b>'+parType[k]+'</b></span>'});
+  Object.keys(parType).forEach(function(k){h+='<span class="chip" style="background:var(--soft);color:var(--ink2)">'+esc(k)+' : <b>'+parType[k]+'</b></span>'});
   h+='</div>';
   if(R.length)h+='<div class="warnbox"><b>Consommations en hausse :</b><br>'+R.map(function(r){
     return esc(r.serie)+' : +'+nf(r.pct,1)+' % entre '+r.de+' et '+r.a+' ('+nf(r.avant/1e6,1)+' → '+nf(r.apres/1e6,1)+' M)'}).join('<br>')+'</div>';
@@ -3886,7 +3952,7 @@ function renRPF(){
     h+='<tr><td><b>'+esc(k)+'</b></td><td class="num">'+nf(b.n)+'</td><td class="num">'+nf(b.chif)+'</td>'+
        '<td class="num">'+nf(b.inv/1e6,1)+' M</td><td class="num">'+nf(b.co2/1000,1)+' t</td><td class="num">'+nf(b.th/1000)+' MWh</td>'+
        '<td class="num">'+(ct?nf(ct):'—')+'</td><td class="num" style="font-weight:700">'+nf(b.top)+'</td>'+
-       '<td class="num">'+(b.al?('<span class="chip" style="background:#fdecea;color:#c0392b">'+b.al+'</span>'):'—')+'</td>'+
+       '<td class="num">'+(b.al?('<span class="chip" style="background:var(--bg-err);color:var(--fg-err)">'+b.al+'</span>'):'—')+'</td>'+
        '<td class="num">'+(b.adj?('⚖ '+b.adj):'—')+'</td>'+
        '<td><button class="bt bt-s bt-i" onclick="rpfFocus(\''+esc(k).replace(/'/g,"\\'")+'\')" title="Filtrer tout l\'outil sur ce portefeuille">Filtrer</button></td></tr>'});
   h+='</tbody></table><p class="mini" style="margin-top:6px">« Dans le 1er cinquième » : nombre de bâtiments du portefeuille figurant dans les 20 % de tête d\'au moins un classement par objectif — c\'est là que se joue l\'essentiel du résultat 2030.</p>';
@@ -3940,8 +4006,8 @@ function renQual(){
   rows.slice(0,10).forEach(function(r){
     const cov=Math.round(100*(n-r.miss)/n);
     h+='<tr><td><b>'+esc(r.F.lbl)+'</b></td><td class="num">'+nf(r.miss)+'</td>'+
-       '<td style="min-width:120px"><div class="qual-bar"><i style="width:'+cov+'%;background:'+(cov>=80?'#27ae60':cov>=50?'#e8a838':'#e74c3c')+'"></i></div><span class="mini">'+cov+' %</span></td>'+
-       '<td class="num" style="font-weight:800;color:'+(r.unlock>0?'#c0392b':'#8a94a0')+'">'+(r.unlock>0?('+'+nf(r.unlock)):'—')+'</td>'+
+       '<td style="min-width:120px"><div class="qual-bar"><i style="width:'+cov+'%;background:'+(cov>=80?'#1E8449':cov>=50?'#e8a838':'var(--red)')+'"></i></div><span class="mini">'+cov+' %</span></td>'+
+       '<td class="num" style="font-weight:800;color:'+(r.unlock>0?'var(--red)':'var(--ink3)')+'">'+(r.unlock>0?('+'+nf(r.unlock)):'—')+'</td>'+
        '<td class="mini">'+esc(r.F.eff)+'</td></tr>'});
   h+='</tbody></table><p class="mini" style="margin-top:6px">« Débloquerait » = nombre de bâtiments à qui il ne manque <b>que cette colonne</b> pour être classables. Ce sont les saisies les plus rentables : une cellule remplie, un bâtiment qui entre dans les classements.</p>';
   el.innerHTML=h}
@@ -3978,10 +4044,10 @@ function snapCur(){
 function snapDelta(key,id,rang){
   const s=snapCur();if(!s||!s.r||!s.r[key])return '';
   const old=s.r[key][id];
-  if(old==null)return '<span class="chip" style="background:#eef2f7;color:#41506b" title="absent de l\'instantané du '+esc(s.lbl)+'">nouveau</span>';
+  if(old==null)return '<span class="chip" style="background:var(--soft);color:var(--ink2)" title="absent de l\'instantané du '+esc(s.lbl)+'">nouveau</span>';
   const d=old-rang;
-  if(d===0)return '<span class="mini" style="color:#8a94a0" title="rang inchangé depuis le '+esc(s.lbl)+'">=</span>';
-  return '<span style="font-weight:700;color:'+(d>0?'#27ae60':'#e74c3c')+'" title="rang '+old+' le '+esc(s.lbl)+'">'+(d>0?'▲ +'+d:'▼ '+d)+'</span>'}
+  if(d===0)return '<span class="mini" style="color:var(--ink3)" title="rang inchangé depuis le '+esc(s.lbl)+'">=</span>';
+  return '<span style="font-weight:700;color:'+(d>0?'var(--ok)':'var(--red)')+'" title="rang '+old+' le '+esc(s.lbl)+'">'+(d>0?'▲ +'+d:'▼ '+d)+'</span>'}
 
 /* ---------- comparateur de portefeuilles ---------- */
 let CMP={A:null,B:null};
@@ -4036,7 +4102,7 @@ function cmpRender(){
   h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">'+
      '<div><div class="mini" style="font-weight:700;color:var(--grn)">Entrent dans B ('+inB.length+')</div><div class="mini">'+
        (inB.length?inB.slice(0,25).map(nom).map(esc).join('<br>'):'—')+(inB.length>25?'<br>…':'')+'</div></div>'+
-     '<div><div class="mini" style="font-weight:700;color:#e74c3c">Sortent en B ('+outB.length+')</div><div class="mini">'+
+     '<div><div class="mini" style="font-weight:700;color:var(--red)">Sortent en B ('+outB.length+')</div><div class="mini">'+
        (outB.length?outB.slice(0,25).map(nom).map(esc).join('<br>'):'—')+(outB.length>25?'<br>…':'')+'</div></div></div>';
   h+='<p class="mini" style="margin-top:8px">Des gains identiques avec des budgets différents ne sont pas une erreur : cela signifie que les deux portefeuilles retiennent les mêmes bâtiments chiffrables, et que le supplément d\'enveloppe finance des bâtiments dont le gain n\'est pas documenté. La contrainte est alors la donnée, pas l\'argent.</p>';
   el.innerHTML=h}
@@ -4096,7 +4162,7 @@ function initMap(){
 
     lMarkers=L.layerGroup().addTo(lMap);
     var leg=L.control({position:'bottomright'});
-    leg.onAdd=function(){var d=L.DomUtil.create('div','map-legend');d.innerHTML='<b>Audit CECB+</b><br><i style="background:var(--grn)"></i> Réalisé (var. A/B/C)<br><i style="background:#e67e22"></i> En cours / à vérifier<br><i style="background:#e74c3c"></i> Aucun audit';return d};
+    leg.onAdd=function(){var d=L.DomUtil.create('div','map-legend');d.innerHTML='<b>Audit CECB+</b><br><i style="background:var(--grn)"></i> Réalisé (var. A/B/C)<br><i style="background:#B35F10"></i> En cours / à vérifier<br><i style="background:#C0392B"></i> Aucun audit';return d};
     leg.addTo(lMap);
     mapReady=true;
     lMap.on('layeradd',patchTileImages);
@@ -4171,10 +4237,10 @@ function renM(){
   if(!mapReady||!lMap||!lMarkers)return;lMarkers.clearLayers();
   const f=getFilteredForMap();const bounds=[];
   const fileG=f.filter(s=>s.lat&&s.lng&&s.geoQ==='file');const nomiG=f.filter(s=>s.lat&&s.lng&&s.geoQ==='nominatim');const npaG=f.filter(s=>s.lat&&s.lng&&s.geoQ==='npa');const none=f.filter(s=>!s.lat||!s.lng||s.geoQ==='none');
-  $('mapCount').innerHTML='📍 <b>'+fileG.length+'</b> fichier · <b>'+nomiG.length+'</b> Nominatim · <b>'+npaG.length+'</b> ≈NPA'+(none.length?' · <span style="color:#e67e22">'+none.length+' sans</span>':'');
+  $('mapCount').innerHTML='📍 <b>'+fileG.length+'</b> fichier · <b>'+nomiG.length+'</b> Nominatim · <b>'+npaG.length+'</b> ≈NPA'+(none.length?' · <span style="color:#B35F10">'+none.length+' sans</span>':'');
   if(fileG.length>0)$('geoTip').style.display='none';
   const addM=(arr,border,op)=>{arr.forEach(s=>{const c=cecbInfo(s).col;const m=L.circleMarker([s.lat,s.lng],{radius:7,fillColor:c,color:border,weight:2,opacity:1,fillOpacity:op}).addTo(lMarkers);m.bindTooltip(mkTip(s),{direction:'top',className:'map-tooltip-custom'});bounds.push([s.lat,s.lng])})};
-  addM(fileG,'#27ae60',.9);addM(nomiG,'#fff',.85);addM(npaG,'#888',.35);
+  addM(fileG,'#1E8449',.9);addM(nomiG,'#fff',.85);addM(npaG,'#888',.35);
   if(bounds.length>1)lMap.fitBounds(bounds,{padding:[30,30],maxZoom:15});else if(bounds.length===1)lMap.setView(bounds[0],14);
   setTimeout(patchTileImages,200);
   setTimeout(patchTileImages,800);
@@ -4267,7 +4333,7 @@ const IDC_MIN=15,IDC_MAX=500,REDUC_MAX=0.85,RATIO_MIN=0.3,RATIO_MAX=5;
 
 /* Politiques publiques — palette stable par hachage de nom, pour que
    la même politique garde toujours la même couleur d'une session à l'autre. */
-const PAL=['#c0392b','#2d6a9f','#e8a838','#27ae60','#7d3c98','#16a085','#f39c12','#856EBE','#2980b9','#d35400','#1abc9c','#34495e'];
+const PAL=['#c0392b','#2d6a9f','#e8a838','#1E8449','#7d3c98','#16a085','#f39c12','#6B52A8','#1F6391','#A34100','#1abc9c','#34495e'];
 function polColor(name){let h=0;const s=String(name||'?');for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return PAL[h%PAL.length]}
 
 /* ================================================================
@@ -4570,8 +4636,8 @@ function renderGap(){
   let h='<table class="tblx"><tr><th>Objectif</th><th class="num">Bâtiments classés</th><th>Fiabilité</th></tr>';
   OBJS.forEach(function(o){const b=by[o.k];
     h+='<tr><td>'+o.lbl+'</td><td class="num">'+nf(b.n)+'</td><td>'+(o.fiab==='CECB+'?
-      '<span class="chip" style="background:#eafaf1;color:#1e8449">calcul CECB+</span>':
-      '<span class="chip" style="background:#fff8e6;color:#b9770e">donnée legacy — à vérifier</span>')+'</td></tr>'});
+      '<span class="chip" style="background:var(--bg-ok);color:var(--fg-ok)">calcul CECB+</span>':
+      '<span class="chip" style="background:var(--bg-warn);color:var(--fg-warn)">donnée legacy — à vérifier</span>')+'</td></tr>'});
   h+='</table><p class="mini" style="margin-top:6px">Photovoltaïque (classement d\'intention, sans coût) et Développement durable (aucune donnée) ne figurent pas dans cet arbitrage — voir <code>Classements_Objectifs_PTE.xlsx</code>.</p>';
   $('gapBox').innerHTML=h}
 
@@ -4601,12 +4667,12 @@ function renderList(){
     const ct=g.co>0&&s.c?s.c/(g.co/1000):null;
     h+='<tr class="'+(s.st||'out')+'"><td><b>'+esc(s.id)+'</b> '+esc(s.nom.substring(0,34))+'</td>'+
       '<td><span class="fam-dot" style="background:'+polColor(s.pol)+'"></span>'+esc(String(s.pol).substring(0,22))+'</td>'+
-      '<td class="num">'+(s.c?nf(s.c/1e6,2)+' M'+(costRef(s)>0?'':' <span class="chip">est.</span>'):'<span class="chip" style="background:#fdecea;color:#c0392b">inconnu</span>')+'</td>'+
+      '<td class="num">'+(s.c?nf(s.c/1e6,2)+' M'+(costRef(s)>0?'':' <span class="chip">est.</span>'):'<span class="chip" style="background:var(--bg-err);color:var(--fg-err)">inconnu</span>')+'</td>'+
       '<td class="num">'+(s.ratio!=null?nf(s.ratio,3):'—')+'</td>'+
       '<td class="num">'+nf(g.co/1000,1)+'</td>'+
       '<td class="num">'+(ct?nf(ct):'—')+'</td>'+
       '<td class="num">'+nf(g.th/1000)+'</td>'+
-      '<td>'+(s.alerts.length?'<span class="chip" style="background:#fdecea;color:#c0392b;cursor:pointer" onclick="event.stopPropagation();toast(\''+esc(s.alerts.join(' ; ')).replace(/'/g,"\\'")+'\',\'err\')" title="'+esc(s.alerts.join(' ; '))+'">⚠ '+s.alerts.length+'</span>':'')+'</td>'+
+      '<td>'+(s.alerts.length?'<span class="chip" style="background:var(--bg-err);color:var(--fg-err);cursor:pointer" onclick="event.stopPropagation();toast(\''+esc(s.alerts.join(' ; ')).replace(/'/g,"\\'")+'\',\'err\')" title="'+esc(s.alerts.join(' ; '))+'">⚠ '+s.alerts.length+'</span>':'')+'</td>'+
       '<td class="num">'+(s.yr||'—')+'</td>'+
       '<td>'+{sel:'✅ retenu',out:'⭕ écarté'}[s.st||'out']+'</td></tr>'});
   $('tblAct').innerHTML=h}
@@ -4626,9 +4692,9 @@ function drawTrend(){
   const W=920,H=300,L=52,R=14,T=14,B=34;
   const yrs=P.yrs;
   const series=[
-    {k:'ThTOT',lbl:'Thermique (GWh)',c:'#C0392B',d:1e6},
+    {k:'ThTOT',lbl:'Thermique (GWh)',c:'var(--red)',d:1e6},
     {k:'ELEC',lbl:'Électricité (GWh)',c:'#005F73',d:1e6},
-    {k:'CO2 Scope 1+2',lbl:'CO₂ (kt)',c:'#856EBE',d:1e6},
+    {k:'CO2 Scope 1+2',lbl:'CO₂ (kt)',c:'#6B52A8',d:1e6},
     {k:'ThRenouv',lbl:'Th. renouvelable (GWh)',c:'#06E9A8',d:1e6}];
   let max=0;
   series.forEach(function(s){yrs.forEach(function(y,i){
@@ -4668,8 +4734,8 @@ function drawPath(){
   for(let i=0;i<=5;i++){const y=T+(H-T-B)*i/5;g+=ax(L,y,W-R,y)+txt(L-6,y+3,nf(max*(1-i/5)),{a:'end',s:9})}
   yrs.forEach(function(y,i){if(i%2===0)g+=txt(L+i*xw,H-10,y,{a:'middle',s:9})});
   const yc=T+(H-T-B)*(1-cible/max);
-  g+='<line x1="'+L+'" y1="'+yc+'" x2="'+(W-R)+'" y2="'+yc+'" stroke="#27ae60" stroke-width="1.6" stroke-dasharray="5,4"/>'+
-     txt(W-R+6,yc+4,'cible 2030 · '+nf(cible)+' t',{c:'#27ae60',s:10,w:700});
+  g+='<line x1="'+L+'" y1="'+yc+'" x2="'+(W-R)+'" y2="'+yc+'" stroke="var(--ok)" stroke-width="1.6" stroke-dasharray="5,4"/>'+
+     txt(W-R+6,yc+4,'cible 2030 · '+nf(cible)+' t',{c:'var(--ok)',s:10,w:700});
   const x30=L+(YT-Y0)*xw;
   g+='<line x1="'+x30+'" y1="'+T+'" x2="'+x30+'" y2="'+(H-B)+'" stroke="#e8a838" stroke-width="1.4" stroke-dasharray="3,3"/>'+txt(x30+4,T+11,'2030',{c:'#e8a838',s:10,w:700});
   let p='';vals.forEach(function(v,i){const x=L+i*xw,y=T+(H-T-B)*(1-v/max);p+=(i?'L':'M')+x+','+y});
@@ -4730,7 +4796,7 @@ function drawMaccSimple(L){
   use.forEach(function(o,i){
     const hh=(H-T-B)*o.t/maxT,y=H-B-hh;
     const cheap=o.b[1]<=50e3,mid=o.b[1]<=150e3;
-    const col=cheap?'#1A8554':(mid?'#B58900':'#C0392B');
+    const col=cheap?'#1A8554':(mid?'#B58900':'var(--red)');
     g+='<rect x="'+(Lm+x+4)+'" y="'+y+'" width="'+(bw-8)+'" height="'+Math.max(1,hh)+'" fill="'+col+'" rx="3" opacity=".9">'+
        '<title>'+maccBandLbl(o.b)+' CHF/t·an — '+o.n+' bâtiment(s) · '+nf(o.t)+' t/an évitées · '+nf(o.c/1e6,1)+' M CHF</title></rect>';
     g+=txt(Lm+x+bw/2,y-5,nf(o.t)+' t',{a:'middle',s:9,w:700,c:'#333'});
@@ -4834,7 +4900,7 @@ function renDashWarn(){
     '<a href="#" onclick="goData();return false">Données</a>'+
     (n?(' — <b>'+n+'</b> point'+(n>1?'s':'')+' d\'attention en ce moment.'):' — rien à signaler pour l\'instant.');
   const m=$('mAno');if(m)m.textContent=n?String(n):'—';
-  const d=$('mDur');if(d)d.textContent=pDuree()+' ans'}
+  const d=$('mDur');if(d)d.textContent=dureeTxt()}
 function onPanelShown(id){
   /* Les onglets lourds ne se dessinent qu'au moment où on les regarde :
      un SVG tracé dans un panneau caché a une largeur nulle, et Leaflet

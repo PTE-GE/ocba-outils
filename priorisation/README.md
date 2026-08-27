@@ -79,7 +79,15 @@ photovoltaïque, cible d'intensité thermique, poids des cinq volets de l'indice
 durable. Rien n'est figé dans le code ; les valeurs actives sont rappelées dans l'onglet
 Méthode et mémorisées dans le navigateur.
 
+La durée de vie se règle aussi **objectif par objectif** — une isolation d'enveloppe, une pompe à
+chaleur et une robinetterie ne s'amortissent pas sur la même durée, et imposer 40 ans partout
+avantage mécaniquement les objectifs dont les mesures durent le plus longtemps. Une case laissée
+vide reprend la valeur générale, et la durée réellement appliquée est écrite en tête de colonne de
+chaque classement.
+
 Menu **☰ → Affichage** : mode nuit, mode présentation (chiffres agrandis pour la projection).
+Les deux modes respectent le niveau **WCAG 2.1 AA** — 4,5:1 pour le texte courant, 3:1 pour le
+grand texte et les éléments d'interface, vérifié automatiquement sur les six onglets.
 
 ## Source des données
 
@@ -113,6 +121,9 @@ Ces fichiers restent dans `01_Donnees` — ils ne sont jamais copiés dans ce d�
 - **Le montant retenu dépend du référentiel choisi** dans le menu « Montants » (Estim PTE,
   Invest ImmOBA, GE-Invest). Les trois n'ont ni le même nombre de bâtiments chiffrés ni les
   mêmes montants : en changer recalcule tous les classements, et l'ordre n'est pas le même.
+  La colonne « DG (25 %) » a été retirée du menu : ce n'était pas un référentiel saisi mais 25 %
+  du montant ImmOBA calculé à la volée, et la proposer à côté de trois colonnes réellement
+  renseignées laissait croire à une quatrième source.
 - **Un bâtiment sans coût n'est pas classable.** Ce n'est pas l'argent qui limite le résultat
   2030 mais la donnée : l'onglet Données indique quelles saisies débloqueraient le plus de
   bâtiments.
