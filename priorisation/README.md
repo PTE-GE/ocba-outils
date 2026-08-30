@@ -9,7 +9,7 @@ atteindre les objectifs 2030, au meilleur coût ?**
 1. Ouvrir `priorisation-pte.html` dans un navigateur (aucune installation requise).
 2. Cliquer **Importer** et choisir `Plan_PTE_optimise.xlsx` (ou `Plan_PTE.xlsx`). Un seul
    import alimente les six onglets.
-3. Au premier usage, une **visite guidée** de 18 étapes se lance ; elle est relançable à tout
+3. Au premier usage, une **visite guidée** de 19 étapes se lance ; elle est relançable à tout
    moment par le menu **☰ → Visite guidée**.
 4. Avant de partager ou de committer ce fichier (dépôt Git, envoi par mail) : menu
    **☰ → Réinitialiser les données**, qui efface tout ce qui a été importé et remet l'outil à
@@ -43,9 +43,14 @@ de collaborateur réels ne figurent dans le fichier.
   segment clair de la barre est ce que le portefeuille arrêté ajouterait. Cliquer une tuile
   ouvre sa trajectoire.
 - **Classement** — objectif par objectif, du **coût de l'unité gagnée** le plus faible au plus
-  élevé (CHF par kg de CO₂, par kWh, par m³…), sur la durée de vie retenue. La ligne encadrée
+  élevé (CHF par kg de CO₂, par kWh, par m³…), sur la durée de vie retenue. Chaque ligne montre
+  l'agent de chauffage actuel **et la substitution prévue** — c'est cette bascule qui produit le
+  gain CO₂. La ligne encadrée
   de vert est le **rang de franchissement** : celui où le cumul des gains atteint la cible 2030
   si l'on finance dans cet ordre. Cliquer une ligne déplie la fiche du bâtiment.
+  La colonne « **% de l'écart comblé** » dit, à chaque rang, quelle part de l'écart **restant**
+  le cumul a couverte. Ce n'est pas le pourcentage de la tuile, qui mesure le chemin parcouru
+  **depuis 2005** — voir « Deux pourcentages, deux dénominateurs » ci-dessous.
   La **végétalisation** fait exception : une cour d'école n'a pas de durée de vie au sens
   énergétique, on n'y achète pas un flux annuel mais une surface, une fois. Elle se classe donc
   au **coût du m² créé**, du moins cher au plus cher, sans actualisation ; le rang de
@@ -59,6 +64,45 @@ de collaborateur réels ne figurent dans le fichier.
   de remplissage, liste des sous-sites retenus et écartés.
 - **Méthode** — d'où vient chaque chiffre, comment il est calculé, et ce que l'outil ne peut
   pas dire.
+
+## Deux pourcentages, deux dénominateurs
+
+La tuile de la Vue d'ensemble et la colonne du classement affichent toutes deux un « % », et ils
+ne coïncident pas : sur le CO₂, la tuile dit **65 %** quand le classement plafonne à **37 %**.
+Ce n'est pas une erreur, ce sont deux mesures différentes.
+
+| | ce qu'il mesure | dénominateur |
+|---|---|---|
+| tuile | chemin parcouru depuis la référence 2005 | réf 2005 − cible 2030 |
+| classement | part de l'écart **qui reste** que le cumul comble | mesuré − cible 2030 |
+
+Les deux se composent : 65 % du chemin fait, puis 37 % des 35 % restants — **78 % du chemin
+total**, ce que le panneau de trajectoire affiche par ailleurs.
+
+L'outil ne l'explique pas par une phrase, il le **montre**. Les trois quantités sont trois
+segments de la même règle, alors elles sont dessinées comme telles :
+
+- un **ruban vertical** à droite de chaque graphique de trajectoire, calé sur l'axe des valeurs
+  du graphique lui-même : la bande verte va du niveau 2005 au point mesuré, la bande foncée
+  couvre la part de l'écart que les bâtiments classables comblent, les hachures le reste. Les
+  repères « réf. 2005 / aujourd'hui / cible 2030 » tombent en face des frontières ;
+- une **jauge horizontale** au-dessus du classement, les mêmes trois zones à plat ;
+
+
+**Chaque zone se survole** et donne alors son chiffre, son dénominateur et sa phrase. Un chevron
+« × 3,8 » signale un potentiel qui dépasse l'écart, un ⚠ une zone que rien ne couvre faute de
+donnée.
+
+Trois cas particuliers, tous dits explicitement :
+
+- **Électricité et eau affichent 0 %** non parce qu'il n'y a rien à gagner, mais parce
+  qu'**aucun bâtiment n'est classable** : les colonnes `Gain Electricité (Max) - kWh` et
+  `Gain Eau (Max) - m3` sont vides. Une donnée absente, pas un gain nul.
+- **Renouvelable et photovoltaïque** dépassent 100 % (381 % et 367 %) : leur tuile n'affiche pas
+  un chemin mais un **niveau atteint** — il n'y a pas de référence 2005 pour une part — et le
+  potentiel repéré vaut près de quatre fois l'écart restant. La colonne est plafonnée à 100 %
+  ligne à ligne, la note donne le total.
+- **Végétalisation** couvre 120 % de la cible : objectif cumulatif, rien n'est encore réalisé.
 
 ## Ce que les chiffres ne voient pas
 
@@ -74,16 +118,60 @@ deux, puis le réimporter. C'est ainsi qu'on partage sans droit d'écriture sur 
 
 ## Réglages
 
-Menu **☰ → Paramètres de calcul** : durée de vie retenue (40 ans par défaut), productible
-photovoltaïque, cible d'intensité thermique, poids des cinq volets de l'indice développement
-durable. Rien n'est figé dans le code ; les valeurs actives sont rappelées dans l'onglet
-Méthode et mémorisées dans le navigateur.
+Menu **☰ → Paramètres de calcul**, en quatre sections repliables : durée de vie, cibles
+d'intensité thermique, productible photovoltaïque, poids des cinq volets de l'indice
+développement durable. Rien n'est figé dans le code ; les valeurs actives sont rappelées dans
+l'onglet Méthode et mémorisées dans le navigateur.
+
+Les **cibles d'intensité thermique** s'expriment en kWh/m²·an — l'unité des audits — et il y en
+a deux : **97 kWh/m²·an pour 2030** (350 MJ) et **63 kWh/m²·an pour 2050** (227 MJ). Le classement
+Thermique affiche les deux colonnes « % cible comblé » et met en évidence les deux rangs de
+franchissement : vert pour 2030, bleu pour 2050. La note du classement dit laquelle des deux
+cibles est la plus exigeante — sur le parc actuel, c'est celle de 2030, la baisse de −60 % depuis
+2005 descendant plus bas que l'intensité visée pour 2050.
 
 La durée de vie se règle aussi **objectif par objectif** — une isolation d'enveloppe, une pompe à
 chaleur et une robinetterie ne s'amortissent pas sur la même durée, et imposer 40 ans partout
 avantage mécaniquement les objectifs dont les mesures durent le plus longtemps. Une case laissée
 vide reprend la valeur générale, et la durée réellement appliquée est écrite en tête de colonne de
 chaque classement.
+
+## Filtrer le périmètre
+
+Le filtre **Portefeuille** de la ligne de contexte accepte un **choix multiple** : cocher trois
+ou quatre responsables sans les autres, pour préparer une séance commune. Aucune case cochée =
+tout le parc. Le filtre restreint l'affichage de tout l'outil — classement, arbitrage, carte,
+indicateurs — mais **jamais les rangs**, calculés sur l'ensemble du parc : on voit la place de
+ses bâtiments dans le tout, pas un classement interne. Dans l'onglet Données, le bouton
+« Filtrer » de chaque portefeuille bascule dessus ; **Maj+clic** l'ajoute à la sélection en cours.
+
+## « Hors chiffrage » : voir où est la matière
+
+Le classement par coût unitaire a un effet secondaire lourd — **un bâtiment sans montant saisi
+n'est pas classable du tout**. Sur le CO₂, 43 bâtiments sur 582 franchissent ce filtre : l'ordre
+obtenu ne dit rien des 539 autres, dont plusieurs pèsent lourd.
+
+Le menu **Montants** porte donc un quatrième choix qui n'est pas un référentiel : **Hors
+chiffrage** déclare le **coût unitaire identique pour tous les bâtiments**, sans lire aucune
+colonne du classeur. Le coût cesse alors de départager quoi que ce soit, et le seul critère qui
+subsiste est la **contribution** : le classement va du plus gros contributeur au plus petit, et
+le rang de franchissement y devient le **nombre minimal de bâtiments** qui comblent l'écart. Les
+colonnes Montant et CHF/unité n'ont plus de contenu (« — » et « = »). Le CEE se classe alors aux
+kWh économisés ; la végétalisation n'est pas concernée, son coût du m² venant de sa propre
+colonne.
+
+Sur le CO₂ la population classable passe de 43 à 65 bâtiments, sur le thermique de 97 à 151, sur
+le renouvelable de 101 à 158.
+
+C'est la lecture « **où est la matière** », à mettre à côté de « où est le meilleur franc », pas à
+la place. L'onglet Arbitrage est inopérant tant que le mode est actif — sans montants, il n'y a
+pas de budget à répartir — et l'outil le signale par un bandeau dans le Classement comme dans
+l'Arbitrage, plus une pastille orange dans la ligne de contexte.
+
+**Ce que ce mode ne débloque pas.** Il lève le verrou du **coût**, pas celui de l'**audit**. Un
+bâtiment sans CECB+ n'a pas d'IDC projeté, donc aucune contribution calculable, donc aucun rang —
+dans ce mode comme dans les autres. C'est pourquoi on passe à 65 bâtiments et non à 582 ; le
+bandeau du classement dit à chaque fois combien manquent et pourquoi.
 
 Menu **☰ → Affichage** : mode nuit, mode présentation (chiffres agrandis pour la projection).
 Les deux modes respectent le niveau **WCAG 2.1 AA** — 4,5:1 pour le texte courant, 3:1 pour le
@@ -123,7 +211,9 @@ Ces fichiers restent dans `01_Donnees` — ils ne sont jamais copiés dans ce d�
   mêmes montants : en changer recalcule tous les classements, et l'ordre n'est pas le même.
   La colonne « DG (25 %) » a été retirée du menu : ce n'était pas un référentiel saisi mais 25 %
   du montant ImmOBA calculé à la volée, et la proposer à côté de trois colonnes réellement
-  renseignées laissait croire à une quatrième source.
+  renseignées laissait croire à une quatrième source. Le quatrième choix du menu, « Hors
+  chiffrage », n'est pas non plus un référentiel : il neutralise le coût au lieu d'en fournir un,
+  et ne sert qu'à classer, jamais à budgéter.
 - **Un bâtiment sans coût n'est pas classable.** Ce n'est pas l'argent qui limite le résultat
   2030 mais la donnée : l'onglet Données indique quelles saisies débloqueraient le plus de
   bâtiments.

@@ -68,13 +68,29 @@ body.night .bt-i{background:#2FA98C;color:#0F1519}body.night .bt-i:hover{backgro
 a.tab{text-decoration:none;display:inline-flex;align-items:center;line-height:1}
 .bt-x{background:rgba(255,255,255,.18);color:#fff}.bt-x:hover{background:rgba(255,255,255,.32)}
 .bt-n{background:#8e44ad;color:#fff}.bt-n:hover{background:#6c3483}
-.pop{display:none;position:absolute;right:0;top:calc(100% + 7px);z-index:300;background:var(--card);color:#333;border-radius:10px;box-shadow:0 6px 26px rgba(0,0,0,.28);padding:12px;width:275px;text-align:left}
+.pop{display:none;position:absolute;right:0;top:calc(100% + 7px);z-index:300;background:var(--card);color:var(--ink);border-radius:10px;box-shadow:0 6px 26px rgba(0,0,0,.28);padding:12px;width:275px;text-align:left}
 .pop.on{display:block}
-.pop-l{display:block;font-size:.72rem;color:#555;font-weight:600;margin:6px 0 2px}
+.pop-l{display:block;font-size:.72rem;color:var(--ink2);font-weight:600;margin:6px 0 2px}
 .pop-in{width:100%;padding:5px 8px;border:1px solid #cbd5e0;border-radius:6px;font-size:.8rem}
 .pop-t{font-weight:700;color:var(--pri);font-size:.8rem;margin-bottom:5px}
-.pop-i{font-size:.72rem;color:#555;margin-bottom:8px}
+.pop-i{font-size:.72rem;color:var(--ink2);margin-bottom:8px}
 .pop-h{font-size:.64rem;color:var(--ink3);margin-top:9px;line-height:1.55}
+/* Un panneau qui grandit avec les réglages finit par sortir de l'écran : le
+   corps défile, les boutons restent ancrés en bas. */
+#parPop{width:430px;padding:12px 12px 0;display:none;flex-direction:column;max-height:min(80vh,660px)}
+#parPop.on{display:flex}
+.pop-body{overflow-y:auto;overscroll-behavior:contain;padding-right:4px;margin-right:-4px;flex:1;min-height:0}
+.pop-foot{border-top:1px solid var(--line);padding:9px 0 11px;background:var(--card);position:sticky;bottom:0}
+.pset{border:1px solid var(--line);border-radius:8px;margin-bottom:7px;background:var(--card)}
+.pset>summary{cursor:pointer;list-style:none;padding:7px 11px;font-size:.76rem;font-weight:700;
+  color:var(--pri);display:flex;align-items:center;gap:6px;border-radius:8px}
+.pset>summary::-webkit-details-marker{display:none}
+.pset>summary::after{content:'▾';margin-left:auto;color:var(--ink3);font-size:.7rem;transition:transform .15s}
+.pset[open]>summary::after{transform:rotate(180deg)}
+.pset>summary:hover{background:var(--soft)}
+.pset-in{padding:2px 11px 10px}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:2px 10px}
+.pgrid .pop-l{margin-top:4px}
 .libwarn{background:var(--bg-warn);border-bottom:1px solid #e8a838;color:#7a5900;font-size:.76rem;line-height:1.55;padding:0}
 .libwarn-in{max-width:1320px;margin:0 auto;padding:9px 22px}
 .alert-card{padding:8px 12px;border-radius:8px;margin-bottom:6px;font-size:.75rem;display:flex;align-items:flex-start;gap:8px}
@@ -244,6 +260,10 @@ a.tab{text-decoration:none;display:inline-flex;align-items:center;line-height:1}
      portent devient illisible au passage en nuit */
   --surf-dark:#1D2733; --on-surf-dark:#FFFFFF;
   --surf-acc:#005F73;  --on-surf-acc:#FFFFFF;
+  /* Les deux surfaces du ruban « où en est le chemin ». Comme --surf-acc,
+     elles restent foncées dans les deux thèmes : ce sont des fonds qui
+     portent du texte, pas des couleurs de trait. */
+  --surf-fait:#17754A; --on-surf-fait:#FFFFFF;
   --shadow:0 1px 2px rgba(20,30,45,.05);
   --r:14px;
 }
@@ -260,6 +280,7 @@ body.night{
   --pri:#E8ECF1; --sec:#3FB6C6; --grn:#3DBF84;
   --surf-dark:#232B33; --on-surf-dark:#E8ECF1;
   --surf-acc:#0A4A57;  --on-surf-acc:#E8ECF1;
+  --surf-fait:#14563A; --on-surf-fait:#E8ECF1;
   --shadow:0 1px 2px rgba(0,0,0,.5);
 }
 body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
@@ -303,7 +324,47 @@ body.night svg text{fill:var(--ink2)}
   background-image:linear-gradient(45deg,transparent 50%,var(--ink3) 50%),linear-gradient(135deg,var(--ink3) 50%,transparent 50%);
   background-position:calc(100% - 7px) 55%,calc(100% - 3px) 55%;background-size:4px 4px,4px 4px;background-repeat:no-repeat}
 .cx-sel select{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;cursor:pointer;font:inherit}
+.cx-btn{border:0;background:none;font:inherit;cursor:pointer;text-align:left}
+/* Le choix multiple de portefeuilles : une liste de cases, pas un <select
+   multiple> — illisible dans une barre de contexte de 30 pixels de haut. */
+.rp-pop{display:none;position:absolute;left:0;top:calc(100% + 6px);z-index:320;width:290px;
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  box-shadow:0 6px 26px rgba(0,0,0,.28);padding:10px;text-align:left}
+.rp-pop.on{display:block}
+.rp-h{font-size:.64rem;color:var(--ink3);line-height:1.5;margin-bottom:7px}
+.rp-list{max-height:260px;overflow-y:auto;overscroll-behavior:contain;margin:0 -4px;padding:0 4px}
+.rp-i{display:flex;align-items:center;gap:7px;padding:4px 5px;border-radius:6px;cursor:pointer;
+  font-size:.76rem;color:var(--ink)}
+.rp-i:hover{background:var(--soft)}
+.rp-i input{margin:0;cursor:pointer;flex:none}
+.rp-i .n{margin-left:auto;font-size:.66rem;color:var(--ink3);font-variant-numeric:tabular-nums}
+.rp-f{display:flex;gap:6px;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
 .cx-sel:hover .cx-txt{color:var(--acc);background-color:var(--soft)}
+/* Le mode hors chiffrage doit se voir sans avoir à déplier le menu : le
+   montant affiché partout ailleurs dans l'outil n'est plus une donnée. */
+.cx-txt.cx-conv{color:var(--fg-warn);background-color:var(--bg-warn)}
+/* ── Le ruban « où en est le chemin », version horizontale ─────────────────
+   Trois zones sur une seule règle : ce qui est acquis, ce que le classement
+   peut encore combler, ce que rien d'identifié ne couvre. Chaque zone porte
+   son explication en survol — le texte ne s'impose qu'à qui le demande. */
+.jbloc{margin:8px 2px 10px;max-width:760px}
+.jauge{display:flex;height:24px;border-radius:7px;overflow:hidden;border:1px solid var(--line)}
+.jz{display:flex;align-items:center;justify-content:center;font-size:.63rem;font-weight:700;
+  white-space:nowrap;overflow:hidden;cursor:help;min-width:0}
+.jz:hover{filter:brightness(1.15)}
+.jz-fait{background:var(--surf-fait);color:var(--on-surf-fait)}
+.jz-couv{background:var(--surf-acc);color:var(--on-surf-acc)}
+.jz-reste{color:var(--ink3);
+  background:repeating-linear-gradient(45deg,var(--soft),var(--soft) 5px,var(--line) 5px,var(--line) 10px)}
+.jlbl{position:relative;height:15px;margin-top:3px;font-size:.62rem;color:var(--ink3)}
+.jlbl span{position:absolute;white-space:nowrap;top:0}
+.jlbl span b{color:var(--ink2)}
+.jleg{font-size:.63rem;color:var(--ink3);margin-top:7px;display:flex;gap:14px;flex-wrap:wrap}
+.jleg i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.jleg .h{background:repeating-linear-gradient(45deg,var(--soft),var(--soft) 3px,var(--line) 3px,var(--line) 6px)}
+.pcell{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.flat-warn{display:none;background:var(--bg-warn);color:var(--fg-warn);border:1px solid var(--warn);
+  border-radius:8px;padding:7px 10px;font-size:.72rem;line-height:1.5;margin:0 0 10px}
 .cx-sel select:focus+.cx-txt,.cx-sel:focus-within .cx-txt{outline:2px solid var(--acc);outline-offset:1px}
 .ctx{margin-left:auto;display:flex;gap:7px;align-items:center;flex-wrap:wrap}
 .pill{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:3px 11px;font-size:11.5px;color:var(--ink2)}
@@ -507,22 +568,45 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <div class="pop-h">Fichier indépendant des données : colonnes <b>N°</b> et <b>Note</b>. Les notes existantes sont complétées, jamais effacées, et survivent aux mises à jour du fichier Excel.</div>
 </div><div class="pop" id="parPop" onclick="event.stopPropagation()">
 <div class="pop-t">⚙️ Paramètres de calcul</div>
-<label class="pop-l">Durée de vie retenue (ans)</label>
+<div class="pop-body">
+
+<details class="pset" open><summary>⏳ Durée de vie</summary>
+<div class="pset-in">
+<label class="pop-l">Valeur générale (ans)</label>
 <input id="pDur" type="number" min="5" max="80" step="5" class="pop-in" title="Durée sur laquelle le gain annuel est cumulé pour calculer le coût de l'unité gagnée. Ce n'est pas une norme SIA : c'est la convention de calcul reprise de Priorisation_PTE.xlsx. La modifier change tous les classements par coût.">
-<div class="pop-t" style="margin-top:10px">⏳ Durée de vie par objectif</div>
-<div class="pop-h" style="margin-top:0;margin-bottom:6px">Une case vide reprend la valeur générale ci-dessus. Un équipement technique ne dure pas ce que dure une enveloppe : régler chaque objectif séparément évite d'avantager mécaniquement ceux dont les mesures durent le plus longtemps.</div>
-<div id="durObj"></div>
-<label class="pop-l">Productible photovoltaïque (kWh/kWc·an)</label>
+<div class="pop-h" style="margin:7px 0 3px">Par objectif — une case vide reprend la valeur générale. Un équipement technique ne dure pas ce que dure une enveloppe : régler chaque objectif séparément évite d'avantager mécaniquement ceux dont les mesures durent le plus longtemps.</div>
+<div id="durObj" class="pgrid"></div>
+</div></details>
+
+<details class="pset"><summary>🔥 Cibles d'intensité thermique</summary>
+<div class="pset-in">
+<div class="pop-h" style="margin:0 0 3px">En kWh par m² et par an. La cible 2030 retenue reste la plus contraignante entre la baisse de −60 % depuis 2005 et cette intensité ; la cible 2050 est une intensité pure.</div>
+<div class="pgrid">
+<div><label class="pop-l">Cible 2030</label>
+<input id="pK30" type="number" min="40" max="250" step="1" class="pop-in" title="Référentiel 2030 : 97 kWh/m²·an, soit 350 MJ/m²·an."></div>
+<div><label class="pop-l">Cible 2050</label>
+<input id="pK50" type="number" min="30" max="200" step="1" class="pop-in" title="Référentiel 2050 : 63 kWh/m²·an, soit environ 227 MJ/m²·an."></div>
+</div>
+<div class="pop-h" id="pKmj" style="margin-top:5px"></div>
+</div></details>
+
+<details class="pset"><summary>☀️ Photovoltaïque</summary>
+<div class="pset-in">
+<label class="pop-l">Productible (kWh/kWc·an)</label>
 <input id="pPv" type="number" min="500" max="1400" step="10" class="pop-in" title="Production annuelle attendue par kWc installé, pour convertir une puissance en énergie et la comparer à la cible « 20 % de la consommation électrique ». Ordre de grandeur genevois : 900 à 1 000.">
-<label class="pop-l">Cible d'intensité thermique (MJ/m²·an)</label>
-<input id="pMJ" type="number" min="150" max="600" step="10" class="pop-in" title="Cible d'intensité du référentiel 2030 (350 MJ/m²·an ≈ 97 kWh/m²·an).">
-<div class="pop-t" style="margin-top:10px">🌱 Poids de l'indice développement durable</div>
-<div id="ddW"></div>
-<div style="display:flex;gap:6px;margin-top:8px">
+</div></details>
+
+<details class="pset"><summary>🌱 Poids de l'indice développement durable</summary>
+<div class="pset-in"><div id="ddW" class="pgrid"></div></div></details>
+
+</div>
+<div class="pop-foot">
+<div style="display:flex;gap:6px">
 <button class="bt bt-p bt-s" style="flex:1" onclick="paramsApply()">Appliquer</button>
 <button class="bt bt-s" onclick="paramsReset()" title="Revenir aux valeurs par défaut">Défaut</button>
 </div>
-<div class="pop-h">Ces réglages sont mémorisés dans ce navigateur et s'appliquent à tous les onglets. Ils sont rappelés dans l'onglet Méthode.</div>
+<div class="pop-h" style="margin-top:6px">Mémorisés dans ce navigateur, appliqués à tous les onglets, rappelés dans l'onglet Méthode.</div>
+</div>
 </div>
 <div class="navbar">
   <div class="seg">
@@ -541,8 +625,14 @@ svg text{font-family:Arial,Helvetica,sans-serif}
   <label class="cx-l" title="Colonne d'où viennent les montants — en changer recalcule tous les classements">Montants
     <span class="cx-sel"><span class="cx-txt" id="gInvTxt">—</span><select id="gInv" onchange="onInvChange()"></select></span></label>
   <span class="cx-s">·</span>
-  <label class="cx-l" title="Restreindre tout l'outil à un portefeuille">Portefeuille
-    <span class="cx-sel"><span class="cx-txt" id="gRPTxt">tous</span><select id="gRP" onchange="onRPChange()"><option value="all">tous</option></select></span></label>
+  <label class="cx-l" title="Restreindre tout l'outil à un ou plusieurs portefeuilles">Portefeuille
+    <span class="cx-sel"><button type="button" class="cx-txt cx-btn" id="gRPTxt" onclick="tglRP(event)">tous</button>
+      <div class="rp-pop" id="gRPPop" onclick="event.stopPropagation()">
+        <div class="rp-h">Cochez un ou plusieurs portefeuilles. Aucune case cochée = tout le parc.</div>
+        <div class="rp-list" id="gRPList"></div>
+        <div class="rp-f"><button class="bt bt-s" onclick="rpAll(false)">Tout décocher</button>
+          <button class="bt bt-p bt-s" style="flex:1" onclick="rpApply()">Appliquer</button></div>
+      </div></span></label>
 </div></div>
 <!-- ===== DASHBOARD ===== -->
 <div id="dash" class="pnl on">
@@ -567,7 +657,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <div class="cd" id="objRankCard">
 <div class="wt op" onclick="tglS('objRankBody','objRankCh')" title="Cliquer pour déplier ou replier le classement"><h3 style="margin:0;border:none;padding:0">Classement par objectif</h3><span class="ch op" id="objRankCh">▼</span></div>
 <div class="wb op" id="objRankBody">
-<p class="lead">Coût par unité gagnée sur la durée de vie retenue — au <b>m² créé</b> pour la végétalisation, à la puissance pour le photovoltaïque. Le rang de franchissement de la cible 2030 est mis en évidence. Cliquer une ligne ouvre le détail du bâtiment, ses notes et son ajustement qualitatif.</p>
+<p class="lead">Coût par unité gagnée sur la durée de vie retenue — au <b>m² créé</b> pour la végétalisation, à la puissance pour le photovoltaïque. Le rang de franchissement de la cible est mis en évidence — <b style="color:var(--ok)">vert</b> pour 2030, et <b style="color:var(--acc)">bleu</b> pour la cible 2050 du thermique. Cliquer une ligne ouvre le détail du bâtiment, ses notes et son ajustement qualitatif.</p>
 <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:2px 0 6px">
 <button class="bt bt-i bt-s" onclick="snapSave()" title="Enregistrer l'état des classements du jour, pour pouvoir comparer plus tard">📌 Instantané</button>
 <select id="snapSel" onchange="renR()" style="padding:5px 8px;border:1px solid #cbd5e0;border-radius:6px;font-size:.76rem" title="Comparer les rangs actuels à ceux d'un instantané précédent"><option value="">Comparer avec…</option></select>
@@ -593,7 +683,9 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <select id="fEt" onchange="renR()"><option value="all">État projet : tous</option></select>
 <input type="text" id="fSe" placeholder="🔍 Rechercher…" oninput="renR()">
 </div>
+<div class="flat-warn" id="rankFlatWarn"></div>
 <div id="objNote" style="font-size:.72rem;color:var(--ink2);margin:6px 2px 8px"></div>
+<div id="objJauge"></div>
 <div id="objBody" style="overflow:auto;max-height:72vh"></div>
 </div>
 </div>
@@ -664,6 +756,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <div id="arb" class="pnl">
 <div class="cd">
 <h3 class="sec">Vos arbitrages</h3>
+<div class="flat-warn" id="arbFlatWarn">⚠ <b>Montants « hors chiffrage »</b> — dans ce mode le coût unitaire est déclaré identique pour tous les bâtiments, et <b>aucune colonne financière n'est lue</b>. Il n'y a donc pas de budget à arbitrer ici : l'enveloppe, le prix de la tonne évitée et le phasage n'ont pas de sens tant qu'il est actif. Revenez à <b>Estim PTE</b>, <b>Invest ImmOBA</b> ou <b>GE-Invest</b> pour arbitrer.</div>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px">
 <div>
 <h4 class="sub">Enveloppe et rythme</h4>
@@ -803,7 +896,7 @@ classements, alertes bâtiment par bâtiment, taux de remplissage, puis la liste
 
 <!-- ===== MANUEL ===== -->
 <div id="manual" class="pnl">
-<div class="m-hdr"><h2>📐 Méthode &amp; données</h2><p>D'où vient chaque chiffre, comment il est calculé, et ce que l'outil ne peut pas dire</p><span class="m-ver">MAJ 25.08.2026</span></div>
+<div class="m-hdr"><h2>📐 Méthode &amp; données</h2><p>D'où vient chaque chiffre, comment il est calculé, et ce que l'outil ne peut pas dire</p><span class="m-ver">MAJ 29.08.2026 · c</span></div>
 
 <div class="cd"><div class="wt" onclick="tglM(1)" title="Les colonnes du classeur réellement utilisées"><h3 style="margin:0;border:none;padding:0"><span class="m-num">1</span> D'où viennent les chiffres</h3><span class="ch" id="mCh1">▼</span></div><div class="wb" id="mB1"><div class="m-body">
 <p><b>Deux séries annuelles coexistent, et elles ne disent pas la même chose.</b> L'onglet
@@ -872,7 +965,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <div class="cd"><div class="wt" onclick="tglM(5)" title="Vocabulaire"><h3 style="margin:0;border:none;padding:0"><span class="m-num">5</span> Glossaire</h3><span class="ch" id="mCh5">▼</span></div><div class="wb" id="mB5"><div class="m-body">
 <table class="m-feas-tbl"><thead><tr><th>Terme</th><th>Définition</th></tr></thead><tbody>
 <tr><td><b>SRE</b></td><td>Surface de référence énergétique, en m² — la surface chauffée servant de base à tous les ratios.</td></tr>
-<tr><td><b>IDC</b></td><td>Indice de dépense de chaleur, en kWh/m²·an. La cible du programme s'exprime en 350 MJ/m²·an, soit environ 97 kWh/m²·an.</td></tr>
+<tr><td><b>IDC</b></td><td>Indice de dépense de chaleur, en kWh/m²·an. Deux cibles : <b>97 kWh/m²·an en 2030</b> (350 MJ/m²·an) et <b>63 kWh/m²·an en 2050</b> (environ 227 MJ). Toutes deux réglables dans le menu ⚙️.</td></tr>
 <tr><td><b>IDE</b></td><td>Indice de dépense d'électricité, même logique que l'IDC.</td></tr>
 <tr><td><b>CECB+</b></td><td>Certificat énergétique cantonal des bâtiments, version avec rapport de conseil : il propose des variantes de rénovation (A, B, C), dont l'une est retenue.</td></tr>
 <tr><td><b>CEE</b></td><td>Coût de l'énergie économisée : le prix du kWh évité sur la durée de vie retenue pour cet objectif (40 ans par défaut, modifiable ⚙️).</td></tr>
@@ -888,6 +981,9 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 
 <h4 class="sub">1. L'unité de décision est le bâtiment, pas la mesure</h4>
 <p class="mini">Chaque sous-site audité par CECB+ a une variante retenue, un IDC après travaux et un investissement — <b>un seul chiffre</b>, celui de la colonne choisie dans le menu <b>Montants</b> de la ligne de contexte (<code>Estim PTE</code>, <code>Invest ImmOBA</code> ou <code>Prévisionnel PTE GEI</code>), qui porte déjà le remplacement de chaufferie quand il y en a un. <b>Changer de colonne recalcule tous les classements</b> : les trois n'ont ni le même nombre de bâtiments chiffrés ni les mêmes montants, donc pas le même ordre. L'outil ne décompose pas le site en gestes séparés (chaufferie, éclairage, ventilation…) qu'on financerait indépendamment : il finance ou non le bâtiment entier, à ce prix, et récupère au passage tout ce que la rénovation apporte — thermique, CO₂, et le cas échéant une substitution d'agent renouvelable.</p>
+<p class="mini">Le menu porte un quatrième choix qui n'est pas un référentiel : <b>Hors chiffrage</b>. Il <b>déclare le coût unitaire identique pour tous les bâtiments</b> — aucune colonne du classeur n'est lue. Le coût cesse alors de départager quoi que ce soit, et le seul critère qui subsiste est la <b>contribution</b> : le classement va du plus gros contributeur au plus petit, et le rang de franchissement y devient le <b>nombre minimal de bâtiments</b> qui comblent l'écart. Les colonnes Montant et CHF/unité n'ont plus de contenu.</p>
+<p class="mini">C'est la réponse à une limite gênante du classement par coût unitaire : un bâtiment sans montant saisi en est purement absent, si bien que l'ordre obtenu ne dit rien de lui. Hors chiffrage répond à « où est la matière », le référentiel financier à « où est le meilleur franc » ; les deux lectures se complètent et ne se remplacent pas. L'onglet Arbitrage est inopérant tant que le mode est actif : sans montants, il n'y a pas de budget à répartir.</p>
+<p class="mini"><b>Ce que ce mode ne débloque pas.</b> Il lève le verrou du <b>coût</b>, pas celui de l'<b>audit</b>. Un bâtiment sans CECB+ n'a pas d'IDC projeté, donc aucune contribution calculable, donc aucun rang — dans ce mode comme dans les autres. Sur le CO₂ la population classable passe de 43 à 65 bâtiments, pas à 582 ; le bandeau du classement dit à chaque fois combien manquent et pourquoi. Un forfait interne subsiste dans le code pour rendre éligible un bâtiment sans montant, la construction des contributions exigeant un coût pour retenir un bâtiment — il n'est affiché nulle part, et n'entre dans aucun calcul de classement.</p>
 
 <h4 class="sub">2. Un seul montant par bâtiment, jamais d'addition</h4>
 <p class="mini">Un bâtiment peut contribuer à plusieurs objectifs à la fois — thermique et CO₂ quand l'IDC baisse, renouvelable en plus quand l'agent change. Son coût n'est compté <b>qu'une seule fois</b>, celui du référentiel actif : rien ne s'ajoute par objectif. C'est la règle validée le 11 août 2026, reprise à l'identique de <code>Classements_Objectifs_PTE.xlsx</code>.</p>
@@ -919,7 +1015,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 </div>
 </div>
 
-<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v25.08.2026</div>
+<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v29.08.2026c</div>
 <script>
 /* ================================================================
    NOYAU COMMUN — état, persistance, pondérations
@@ -964,8 +1060,16 @@ const STORE=(function(){
 const HAS_LS=STORE.kind==='local';
 let _lsWriting=false;
 function saveData(){try{_lsWriting=true;STORE.set(LS_DATA,JSON.stringify({sites:S,sitesAll:S_ALL,fileName:lastFileName,fileTime:lastFileTime,ts:Date.now(),objGaps:OBJ_GAPS,objCoFactors:OBJ_COFACTORS}))}catch(e){toast('⚠️ Jeu de données trop volumineux pour la mémoire du navigateur','wr')}finally{_lsWriting=false}}
-function saveState(){try{_lsWriting=true;STORE.set(LS_STATE,JSON.stringify({night:nightOn,params:PARAMS,tourSeen:tourSeen,phaseOverrides:phaseOverrides,siteNotes:siteNotes,siteQuali:siteQuali,inv:invMode,co2c:co2Conv,rp:(($('gRP')||{}).value)||'all'}))}catch(e){}finally{_lsWriting=false}}
-function loadState(){try{const o=JSON.parse(STORE.get(LS_STATE)||'null');if(!o)return null;if(o.night){nightOn=true;document.body.classList.add('night')}if(o.params){PARAMS=Object.assign({},PARAMS_DEF,o.params);CIBLE_MJ_M2_OBJ=+PARAMS.cibleMJ||350}if(o.tourSeen)tourSeen=true;if(o.siteQuali)siteQuali=o.siteQuali;if(o.phaseOverrides)phaseOverrides=o.phaseOverrides;if(o.siteNotes)siteNotes=o.siteNotes;if(o.inv&&INV_MODES.some(m=>m.k===o.inv))invMode=o.inv;if(o.co2c&&CO2_CONV.some(c=>c.k===o.co2c))co2Conv=o.co2c;return o}catch(e){return null}}
+function saveState(){try{_lsWriting=true;STORE.set(LS_STATE,JSON.stringify({night:nightOn,params:PARAMS,tourSeen:tourSeen,phaseOverrides:phaseOverrides,siteNotes:siteNotes,siteQuali:siteQuali,inv:invMode,co2c:co2Conv,rpSel:RP_SEL}))}catch(e){}finally{_lsWriting=false}}
+function loadState(){try{const o=JSON.parse(STORE.get(LS_STATE)||'null');if(!o)return null;if(o.night){nightOn=true;document.body.classList.add('night')}if(o.params){PARAMS=Object.assign({},PARAMS_DEF,o.params);
+    /* un état enregistré avant le 27.08 ne connaît que « cibleMJ » : on le
+       convertit plutôt que de le perdre */
+    if(PARAMS.cibleMJ&&!o.params.cibleKwh30)PARAMS.cibleKwh30=Math.round(+PARAMS.cibleMJ/3.6);
+    delete PARAMS.cibleMJ;
+    CIBLE_MJ_M2_OBJ=pCible30()*3.6}if(o.tourSeen)tourSeen=true;if(o.siteQuali)siteQuali=o.siteQuali;if(o.phaseOverrides)phaseOverrides=o.phaseOverrides;if(o.siteNotes)siteNotes=o.siteNotes;if(o.inv&&INV_MODES.some(m=>m.k===o.inv))invMode=o.inv;if(o.co2c&&CO2_CONV.some(c=>c.k===o.co2c))co2Conv=o.co2c;
+    if(Array.isArray(o.rpSel))RP_SEL=o.rpSel.slice();
+    else if(o.rp&&o.rp!=='all')RP_SEL=[o.rp];   /* état enregistré avant le 28.08 */
+    return o}catch(e){return null}}
 /* objGaps/objCoFactors : cibles PTE et facteurs CO2 calculés au dernier import
    .xlsx (feuilles Data / Consommation par site / Objectifs PTE, non conservées
    telles quelles — trop volumineuses). Persistés à part pour que le classement
@@ -976,8 +1080,47 @@ function clearAllData(){if(!confirm('Effacer les données importées et revenir 
 
 /* ---------- PONDÉRATIONS ---------- */
 
-function getGlobalRP(){return ($('gRP')||{}).value||'all'}
+/* Sélection de portefeuilles. Vide = tout le parc : c'est le seul état qui
+   vaut « pas de filtre », ce qui évite d'avoir à distinguer « rien coché » de
+   « tout coché ». Tout le filtrage de l'outil passe par rpMatch(). */
+let RP_SEL=[];
+function rpMatch(v){return !RP_SEL.length||RP_SEL.indexOf(v||'')>=0}
+function rpActif(){return RP_SEL.length>0}
+/* Conservé pour l'affichage et les titres : rend le nom quand un seul
+   portefeuille est retenu, « all » sinon. Plus aucun filtrage ne s'y appuie. */
+function getGlobalRP(){return RP_SEL.length===1?RP_SEL[0]:'all'}
+function rpLabel(){
+  if(!RP_SEL.length)return'tous';
+  if(RP_SEL.length===1)return RP_SEL[0];
+  return RP_SEL.length+' portefeuilles'}
+function tglRP(e){if(e)e.stopPropagation();
+  const p=$('gRPPop');if(!p)return;
+  const on=p.classList.toggle('on');
+  if(on)rpFill()}
+function rpFill(){
+  const el=$('gRPList');if(!el)return;
+  const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
+  const cnt={};(pop||[]).forEach(function(s){const r=s.rp||'—';cnt[r]=(cnt[r]||0)+1});
+  const noms=Object.keys(cnt).sort(function(a,b){return a.localeCompare(b,'fr')});
+  el.innerHTML=noms.map(function(r,i){
+    return '<label class="rp-i"><input type="checkbox" value="'+esc(r)+'"'+
+      (RP_SEL.indexOf(r)>=0?' checked':'')+'>'+esc(r)+
+      '<span class="n">'+cnt[r]+'</span></label>'}).join('')||
+    '<div class="rp-h">Aucun portefeuille dans le fichier importé.</div>'}
+function rpAll(v){
+  const el=$('gRPList');if(!el)return;
+  el.querySelectorAll('input').forEach(function(i){i.checked=!!v})}
+function rpApply(){
+  const el=$('gRPList');
+  RP_SEL=el?[...el.querySelectorAll('input:checked')].map(function(i){return i.value}):[];
+  /* tout cocher revient à ne rien filtrer : on normalise pour que l'étiquette
+     dise « tous » plutôt que « 12 portefeuilles » */
+  const tot=el?el.querySelectorAll('input').length:0;
+  if(tot&&RP_SEL.length===tot)RP_SEL=[];
+  const p=$('gRPPop');if(p)p.classList.remove('on');
+  onRPChange()}
 function onRPChange(){cxSync();saveState();ren()}
+document.addEventListener('click',function(){const p=$('gRPPop');if(p)p.classList.remove('on')});
 
 /* ---------- NAVIGATION INTERNE (onglets d'une même page) ---------- */
 function sw(id,b){
@@ -1217,37 +1360,58 @@ function _sheetRows(doc,sst){
    un seul montant par bâtiment, le remplacement de chaufferie déjà compris.
    Les trois autres servent à comparer, comme avant.
    ================================================================ */
+/* Forfait du mode « hors chiffrage ». Rond à dessein : 1 M par bâtiment
+   rend le cumul en millions directement lisible comme un nombre de
+   bâtiments, et interdit de confondre ce chiffre avec une estimation. */
+const INV_FORFAIT=1000000;
 const INV_MODES=[
   {k:'estim' ,f:'invEstim' ,lbl:'Estim PTE'    ,short:'Estim PTE'},
   {k:'immoba',f:'invImmOBA',lbl:'Invest ImmOBA',short:'Invest ImmOBA'},
-  {k:'ge'    ,f:'invGE'    ,lbl:'GE-Invest'    ,short:'GE-Invest'}];
+  {k:'ge'    ,f:'invGE'    ,lbl:'GE-Invest'    ,short:'GE-Invest'},
+  /* Aucune colonne source : le montant est une convention de l'outil, pas
+     une donnée du classeur. flat porte le forfait, f reste nul. */
+  {k:'flat'  ,f:null       ,lbl:'Hors chiffrage',short:'Hors chiffrage',flat:INV_FORFAIT}];
 /* « DG (25%) » a été retiré du menu le 25.08.2026 : ce n'était pas un
    référentiel financier saisi mais 25 % du montant ImmOBA, calculé à la volée.
    Le proposer à côté de trois colonnes réellement renseignées laissait croire
    à une quatrième source. La colonne du classeur, elle, continue d'être lue :
    c'est seulement le choix qui disparaît. */
 let invMode='estim';
+function invFlat(){const d=invDef();return d&&d.flat?d.flat:0}
+function invHorsChiffrage(){return invMode==='flat'}
 function invDef(){return INV_MODES.find(function(m){return m.k===invMode})||INV_MODES[0]}
-function invAvail(m){return S.some(function(s){const v=s[m.f];return v!==undefined&&v!==null&&v!==''})}
+function invAvail(m){
+  if(m.flat)return true;   /* le forfait ne dépend d'aucune colonne */
+  return S.some(function(s){const v=s[m.f];return v!==undefined&&v!==null&&v!==''})}
 /* Dérive le montant actif. Une valeur absente reste inconnue : aucun
    report sur une autre colonne, conformément au comportement d'origine. */
 function applyInvMode(){
-  const f=invDef().f;
-  const upd=function(s){const v=s[f];s.invVB=(v===undefined||v===null||v==='')?null:v};
+  const d=invDef(),f=d.f,flat=d.flat||0;
+  const upd=flat
+    ?function(s){s.invVB=flat}
+    :function(s){const v=s[f];s.invVB=(v===undefined||v===null||v==='')?null:v};
   S.forEach(upd);
   /* S_ALL (582 sous-sites, classement par objectif) doit suivre le même
      référentiel actif que S — sinon son critère CEE resterait bloqué sur
      l'ancienne colonne Invest ImmOBA brute importée. */
   if(typeof S_ALL!=='undefined'&&S_ALL&&S_ALL.length)S_ALL.forEach(upd);
   const th=$('thInv');
-  if(th)th.title='Montant issu de la colonne « '+invDef().short+' »';
+  if(th)th.title=flat
+    ?'Aucun montant dans ce mode : le coût unitaire est déclaré identique pour tous, le classement se fait sur la seule contribution'
+    :('Montant issu de la colonne « '+d.short+' »');
   const lb=$('invLbl');
-  if(lb)lb.textContent=invDef().short}
+  if(lb){lb.textContent=flat?'hors chiffrage — sans montant':d.short;
+    lb.title=flat?'Aucune colonne financière n\'est lue dans ce mode : le total investi n\'a pas de sens':''}
+  const k6=$('k6');
+  if(k6&&flat)k6.textContent='—';
+  const wr=$('arbFlatWarn');if(wr)wr.style.display=flat?'block':'none';
+  const wr2=$('rankFlatWarn');if(wr2)wr2.style.display=flat?'block':'none'}
 /* Diagnostic : combien de montants chaque colonne contient-elle réellement,
    et pour quel total ? Deux colonnes censées porter les mêmes données doivent
    afficher exactement les mêmes chiffres — sinon le fichier source diffère. */
 let invCols={immoba:null,ge:null,dg:null};
 function invStats(m){
+  if(m.flat)return{n:S.length,sum:S.length*m.flat};
   let n=0,sum=0;
   S.forEach(function(s){const v=s[m.f];
     if(v!==undefined&&v!==null&&v!==''&&!isNaN(+v)&&+v>0){n++;sum+=+v}});
@@ -1256,6 +1420,8 @@ function invFmt(v){return v>=1e6?(v/1e6).toFixed(0)+' M':(v>=1e3?(v/1e3).toFixed
 function invDiag(){
   return INV_MODES.map(function(m){
     const st=invStats(m);
+    if(m.flat)return m.short+' : coût unitaire déclaré identique pour tous — aucune colonne lue, '
+      +'le classement se fait sur la seule contribution';
     return m.short+' : '+(invAvail(m)?(st.n+' montants > 0, total '+invFmt(st.sum)
       +(invCols[m.k]?' (colonne « '+invCols[m.k]+' »)':'')):'colonne absente')}).join('\n')}
 function popInv(){
@@ -1264,7 +1430,10 @@ function popInv(){
   INV_MODES.forEach(function(m){
     const o=document.createElement('option');o.value=m.k;
     const av=invAvail(m);
-    if(av){const st=invStats(m);
+    if(m.flat){
+      o.textContent=m.lbl+' · coût unitaire identique partout';
+      o.title='Aucune colonne financière n\'est lue : le coût unitaire est déclaré le même pour tous les bâtiments, si bien qu\'il ne départage plus rien. Le classement se fait alors sur la seule contribution, du plus gros contributeur au plus petit, et tout bâtiment dont la contribution est mesurable y figure — chiffré ou non.'}
+    else if(av){const st=invStats(m);
       o.textContent=m.lbl+' · '+st.n+' montants · '+invFmt(st.sum);
       /* le menu de la ligne de contexte doit rester court : le détail
          complet reste dans l'infobulle du menu */
@@ -1497,6 +1666,16 @@ function patBg(p){
   for(let i=0;i<PAT_MAP.length;i++)if(p.includes(PAT_MAP[i][0]))
     return'<span title="'+PAT_MAP[i][2]+'" style="cursor:help;font-size:.95rem">'+PAT_MAP[i][1]+'</span>';
   return'<span style="color:var(--ink3);font-size:.65rem" title="'+p+'">'+p+'</span>'}
+/* Substitution prévue : même vocabulaire visuel que l'agent actuel, pour
+   qu'on lise la bascule d'un coup d'œil. « Maintien en l'état » et
+   « Optimisation ECS » ne sont pas des substitutions — l'outil ne leur
+   attribue aucun gain de décarbonation, et le tableau le dit. */
+function subBg(v){
+  const t=String(v||'').trim();
+  if(!t)return'<span class="bg" style="background:#bbb" title="Substitution non renseignée">?</span>';
+  if(SUBST_NULLE_OBJ.has(t))
+    return'<span class="bg" style="background:#5F6A6B" title="'+esc(t)+' — aucune substitution d\'agent, donc aucun gain de décarbonation attribué">— '+esc(t.length>16?t.slice(0,15)+'…':t)+'</span>';
+  return hBg(t)}
 function hBg(t){const f=String(t||'').toLowerCase().trim();
   const b=(c,x,ti)=>'<span class="bg" style="background:'+c+'"'+(ti?' title="'+ti+'"':'')+'>'+x+'</span>';
   if(!f)return b('#bbb','?','Type d’énergie non renseigné');
@@ -1651,7 +1830,7 @@ return[[1,1,2,2],[2,2,3,3],[2,3,3,4],[3,3,4,4]][il][sl]}
 var TI_LABELS={1:'Suivi énergétique',2:'Entretien / renouvellement',3:'Gros travaux / rénovation partielle',4:'Rénovation complète'};
 function tiBg(v){if(!v&&v!==0)return'<span class="bg" style="background:#bbb">—</span>';v=Math.round(v);var cols={1:'#1E8449',2:'#B8860B',3:'#B35F10',4:'#C0392B'};return'<span class="bg" title="'+(TI_LABELS[v]||'')+'" style="background:'+(cols[v]||'#bbb')+';color:'+(v===2?'#333':'#fff')+'">T'+v+'</span>'}
 
-function scored(rp,pat){let r=baseScored();if(rp&&rp!=='all')r=r.filter(s=>s.rp===rp);if(pat==='prot')r=r.filter(s=>isProt(s.pat));else if(pat==='nprot')r=r.filter(s=>!isProt(s.pat));else if(pat&&pat!=='all')r=r.filter(s=>(s.pat||'')===pat);return r}
+function scored(rp,pat){let r=baseScored();if(rpActif())r=r.filter(s=>rpMatch(s.rp));if(pat==='prot')r=r.filter(s=>isProt(s.pat));else if(pat==='nprot')r=r.filter(s=>!isProt(s.pat));else if(pat&&pat!=='all')r=r.filter(s=>(s.pat||'')===pat);return r}
 function isProt(p){return p&&(p.includes('Classé')||p.includes('Zone protégée')||p.includes('Inventaire')||p.includes('Objets')||p.includes('Ensembles'))}
 function isFos(t){const f=(t||'').toLowerCase();return(f.includes('gaz')||f.includes('mazout'))&&!f.startsWith('pac')&&!f.startsWith('bois')&&!f.startsWith('cad')}
 function scCol(v){return v>=70?'#1E8449':v>=50?'var(--warn)':v>=30?'var(--red)':'#95a5a6'}
@@ -1814,7 +1993,12 @@ function scoreCell(s){
     s.sc.t+'</div></div>'+covBadge(s.sc)+'</td>'}
 
 
-function popRP(){const s=new Set();S.forEach(si=>{if(si.rp)s.add(si.rp)});const sorted=[...s].sort();const el=$('gRP');const cur=el.value;el.innerHTML='<option value="all">tous</option>';sorted.forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;el.appendChild(o)});el.value=cur||'all';cxSync()}
+/* Après un import, une sélection mémorisée peut désigner des portefeuilles
+   absents du nouveau fichier : on la restreint à ce qui existe. */
+function popRP(){
+  const s=new Set();((S_ALL&&S_ALL.length)?S_ALL:S).forEach(function(si){if(si.rp)s.add(si.rp)});
+  RP_SEL=RP_SEL.filter(function(r){return s.has(r)});
+  rpFill();cxSync()}
 
 function popRPProject(){
   const s=new Set();S.forEach(si=>{if(si.drt)s.add(si.drt)});
@@ -1954,7 +2138,10 @@ const DUREE_OBJ=[
  {k:'elec',lbl:'Électricité' ,aide:'Éclairage, ventilation, régulation — équipements à renouvellement plus rapide'},
  {k:'eau' ,lbl:'Eau'         ,aide:'Robinetterie, appareils sanitaires, récupération'},
  {k:'cee' ,lbl:'CEE'         ,aide:"Durée retenue pour le coût de l'énergie économisée (CHF par kWh évité)"}];
-const PARAMS_DEF={duree:40,pvProd:950,cibleMJ:350,plancher:50,dureeObj:{}};
+/* Cibles d'intensité thermique, en kWh/m²·an — l'unité des rapports et des
+   audits. Le référentiel les exprime en MJ (350 et 227) ; la conversion est
+   faite ici une fois pour toutes, ÷ 3,6. */
+const PARAMS_DEF={duree:40,pvProd:950,cibleKwh30:97,cibleKwh50:63,plancher:50,dureeObj:{}};
 let PARAMS=Object.assign({},PARAMS_DEF);
 /* pDuree(k) : la durée de l'objectif k s'il en a une, sinon la valeur
    générale. Appelée sans argument, elle rend la valeur générale — tous les
@@ -1971,7 +2158,10 @@ function dureeSurchargee(){
 function dureeTxt(){
   const g=pDuree();return g+' ans'+(dureeSurchargee()?' · réglée par objectif':'')}
 function pPvProd(){return +PARAMS.pvProd>0?+PARAMS.pvProd:950}
-let CIBLE_MJ_M2_OBJ=350.0;
+function pCible30(){return +PARAMS.cibleKwh30>0?+PARAMS.cibleKwh30:97}
+function pCible50(){return +PARAMS.cibleKwh50>0?+PARAMS.cibleKwh50:63}
+/* conservé pour l'affichage : certains libellés parlent encore en MJ */
+let CIBLE_MJ_M2_OBJ=97*3.6;
 const PLANCHER_CHF_M2_OBJ=50.0;
 const FOSSILE_OBJ=new Set(['Gaz','Mazout','CADIOM','Bûches','PAC+Gaz']);
 const SUBST_NULLE_OBJ=new Set(["Maintien en l'état","Optimisation ECS"]);
@@ -2037,21 +2227,30 @@ function cibleCO2FromSheet(rows){
 function tglPar(e){if(e)e.stopPropagation();
   const p=$('parPop');if(!p)return;
   const on=p.classList.toggle('on');
-  if(on){$('pDur').value=PARAMS.duree;$('pPv').value=PARAMS.pvProd;$('pMJ').value=PARAMS.cibleMJ;
+  if(on){$('pDur').value=PARAMS.duree;$('pPv').value=PARAMS.pvProd;
+    $('pK30').value=pCible30();$('pK50').value=pCible50();parKmj();
     const w=ddPoids();
     const dh=$('durObj');
     if(dh)dh.innerHTML=DUREE_OBJ.map(function(d){
       const v=(PARAMS.dureeObj&&+PARAMS.dureeObj[d.k]>0)?+PARAMS.dureeObj[d.k]:'';
-      return '<label class="pop-l" title="'+esc(d.aide)+'">'+d.lbl+'</label>'+
+      return '<div><label class="pop-l" title="'+esc(d.aide)+'">'+d.lbl+'</label>'+
         '<input class="pop-in" id="dur_'+d.k+'" type="number" min="5" max="80" step="5" '+
-        'placeholder="'+pDuree()+' (général)" value="'+v+'">'}).join('');
+        'placeholder="'+pDuree()+'" value="'+v+'"></div>'}).join('');
     $('ddW').innerHTML=DD_VOLETS.map(function(v){
-      return '<label class="pop-l" title="'+esc(v.aide)+'">'+esc(v.lbl)+'</label>'+
-        '<input class="pop-in" id="ddw_'+v.k+'" type="number" min="0" max="100" step="5" value="'+w[v.k]+'">'}).join('')}}
+      return '<div><label class="pop-l" title="'+esc(v.aide)+'">'+esc(v.lbl)+'</label>'+
+        '<input class="pop-in" id="ddw_'+v.k+'" type="number" min="0" max="100" step="5" value="'+w[v.k]+'"></div>'}).join('')}}
+/* rappel de l'équivalence en MJ : c'est l'unité des documents du référentiel,
+   celle en kWh est celle des audits — on affiche les deux plutôt que d'obliger
+   à convertir de tête */
+function parKmj(){const e=$('pKmj');if(!e)return;
+  const a=+($('pK30')||{}).value||pCible30(),b=+($('pK50')||{}).value||pCible50();
+  e.innerHTML='Soit <b>'+nf(a*3.6)+' MJ/m²·an</b> en 2030 et <b>'+nf(b*3.6)+' MJ/m²·an</b> en 2050.'}
 function paramsApply(){
-  const d=+$('pDur').value,pv=+$('pPv').value,mj=+$('pMJ').value;
-  if(!(d>0)||!(pv>0)||!(mj>0)){toast('⚠️ Valeurs invalides','wr');return}
-  PARAMS.duree=d;PARAMS.pvProd=pv;PARAMS.cibleMJ=mj;CIBLE_MJ_M2_OBJ=mj;
+  const d=+$('pDur').value,pv=+$('pPv').value,k30=+$('pK30').value,k50=+$('pK50').value;
+  if(!(d>0)||!(pv>0)||!(k30>0)||!(k50>0)){toast('⚠️ Valeurs invalides','wr');return}
+  if(k50>k30){toast('⚠️ La cible 2050 doit être plus basse que celle de 2030','wr');return}
+  PARAMS.duree=d;PARAMS.pvProd=pv;PARAMS.cibleKwh30=k30;PARAMS.cibleKwh50=k50;
+  CIBLE_MJ_M2_OBJ=k30*3.6;
   PARAMS.dd=PARAMS.dd||{};
   DD_VOLETS.forEach(function(v){const el=$('ddw_'+v.k);if(el&&el.value!=='')PARAMS.dd[v.k]=+el.value});
   /* une case vidée efface la surcharge : l'objectif revient à la valeur
@@ -2061,10 +2260,17 @@ function paramsApply(){
     if(el.value===''||!(+el.value>0))delete PARAMS.dureeObj[o.k];
     else PARAMS.dureeObj[o.k]=+el.value});
   $('parPop').classList.remove('on');
-  saveState();computeObjRanking();buildOpt();ren();runOpt();
-  toast('⚙️ Durée de vie : '+dureeTxt()+' · productible PV : '+pv+' kWh/kWc · cible '+mj+' MJ/m²','ok')}
-function paramsReset(){PARAMS=Object.assign({},PARAMS_DEF,{dd:{},dureeObj:{}});CIBLE_MJ_M2_OBJ=PARAMS.cibleMJ;
-  $('pDur').value=PARAMS.duree;$('pPv').value=PARAMS.pvProd;$('pMJ').value=PARAMS.cibleMJ;paramsApply()}
+  /* les cibles d'intensité entrent dans le calcul des écarts : il faut
+     reprendre computeGapsObj, pas seulement les classements */
+  saveState();
+  try{if(_lastXlsxSheets){const g=computeGapsObj(_lastXlsxSheets);if(g)OBJ_GAPS=g}}catch(e){}
+  computeObjRanking();buildOpt();ren();runOpt();
+  toast('⚙️ Durée de vie : '+dureeTxt()+' · productible PV : '+pv+' kWh/kWc · cibles '+k30+' / '+k50+' kWh/m²·an','ok')}
+function paramsReset(){PARAMS=Object.assign({},PARAMS_DEF,{dd:{},dureeObj:{}});CIBLE_MJ_M2_OBJ=pCible30()*3.6;
+  $('pDur').value=PARAMS.duree;$('pPv').value=PARAMS.pvProd;
+  $('pK30').value=PARAMS.cibleKwh30;$('pK50').value=PARAMS.cibleKwh50;
+  DUREE_OBJ.forEach(function(o){const el=$('dur_'+o.k);if(el)el.value=''});
+  paramsApply()}
 document.addEventListener('click',function(){const p=$('parPop');if(p)p.classList.remove('on')});
 
 /* Références du programme, lues dans l'onglet « Objectifs PTE » : chaque
@@ -2169,7 +2375,12 @@ function computeGapsObj(sheets){
   const cEa =R.eau ?R.eau.ref *(1-R.eau.pct ):null;
   /* thermique : cible absolue issue de 2005 ET cible d'intensité du référentiel ;
      on retient la plus contraignante des deux, exprimée en kWh/an. */
-  const cThI=CIBLE_MJ_M2_OBJ*S/3.6;
+  /* Deux cibles d'intensité : celle de 2030 et celle de 2050, toutes deux en
+     kWh/m²·an, converties en kWh/an par la surface du parc. La cible 2030
+     retenue reste la plus contraignante entre la baisse de −60 % depuis 2005
+     et l'intensité ; celle de 2050 est une intensité pure. */
+  const cThI=pCible30()*S;
+  const cTh50=pCible50()*S;
   const cThRetenue=(cTh!=null)?Math.min(cTh,cThI):cThI;
   const partRen=R.ren?R.ren.part:0.5;
   const cRen=partRen*(renTh||th.v||0);
@@ -2182,7 +2393,9 @@ function computeGapsObj(sheets){
          gap:g(co2.v,cCo2),surface:S,unit:'kg CO₂'},
     th:{mesure:th.v,annee:th.y,cible:cThRetenue,cibleAbs:cTh,cibleIntens:cThI,ref2005:R.th?R.th.ref:null,
         pct:R.th?R.th.pct:null,gap:g(th.v,cThRetenue),surface:S,unit:'kWh',
-        intensite:(th.v?th.v/S:null),cibleMJ:CIBLE_MJ_M2_OBJ},
+        cible2050:cTh50,gap2050:g(th.v,cTh50),
+        kwh30:pCible30(),kwh50:pCible50(),
+        intensite:(th.v?th.v/S:null),cibleMJ:pCible30()*3.6},
     ren:{part:(renTh?(renTr||0)/renTh:null),ciblePart:partRen,mesure:renTr,annee:renY,cible:cRen,
          gap:Math.max(0,cRen-(tr.v||0)),surface:S,unit:'kWh'},
     elec:{mesure:el.v,annee:el.y,cible:cEl,ref2005:R.elec?R.elec.ref:null,pct:R.elec?R.elec.pct:null,
@@ -2213,6 +2426,10 @@ function vegGap(R){
          gap:cible,couvert:(cible?surf/cible:null),
          coutM2:(surf>0&&cout>0?cout/surf:null),unit:'m²'}}
 function plausibleObj(estim,sre){
+  /* Un forfait identique pour tous serait signalé « invraisemblable » sur
+     tous les petits bâtiments : le contrôle porte sur une saisie, pas sur
+     une convention. */
+  if(typeof invHorsChiffrage==='function'&&invHorsChiffrage())return true;
   if(estim==null)return null;
   if(!sre||sre<=0)return true;
   return estim>=Math.max(10000,PLANCHER_CHF_M2_OBJ*sre)}
@@ -2276,17 +2493,33 @@ function buildContributionsObj(sites,coFactors){
 
 /* tri par coût unitaire croissant (CO2/Thermique/Renouvelable/Élec/Eau) —
    identique à rank_objective() en Python */
-function rankObjectiveObj(items,gap,key){
+/* gap2 est facultatif : le thermique a deux écarts à combler — celui de 2030
+   et celui, bien plus profond, de 2050. Les deux rangs de franchissement sont
+   calculés dans le même passage, sur le même ordre de financement. */
+function rankObjectiveObj(items,gap,key,gap2){
   items=items.map(it=>({...it}));
   const dur=pDuree(key);
-  for(const it of items){it.coutUnit=it.estim/(it.gain*dur);it.duree=dur;it.plausible=plausibleObj(it.estim,it.sre)}
-  items.sort((a,b)=>a.coutUnit-b.coutUnit||(a.id<b.id?-1:1));
-  let cumG=0,cumI=0,franchiRang=null;
-  items.forEach((it,i)=>{const k=i+1;cumG+=it.gain;cumI+=it.estim;it.rang=k;it.cumulGain=cumG;it.cumulInvest=cumI;
+  /* Hors chiffrage : le coût unitaire est déclaré identique pour tous. Il ne
+     départage donc plus rien, et le seul critère qui reste est la
+     contribution — du plus gros contributeur au plus petit. Le rang de
+     franchissement devient alors le nombre MINIMAL de bâtiments qui
+     comblent l'écart. */
+  const plat=(typeof invHorsChiffrage==='function')&&invHorsChiffrage();
+  for(const it of items){
+    it.coutUnit=plat?null:it.estim/(it.gain*dur);
+    it.duree=dur;it.plausible=plausibleObj(it.estim,it.sre)}
+  if(plat)items.sort((a,b)=>b.gain-a.gain||(a.id<b.id?-1:1));
+  else items.sort((a,b)=>a.coutUnit-b.coutUnit||(a.id<b.id?-1:1));
+  let cumG=0,cumI=0,franchiRang=null,franchiRang2=null;
+  items.forEach((it,i)=>{const k=i+1;cumG+=it.gain;cumI+=it.estim;it.rang=k;it.cumulGain=cumG;
+    it.cumulInvest=plat?null:cumI;
     it.pctGap=gap?cumG/gap:null;
+    it.pctGap2=gap2?cumG/gap2:null;
     if(franchiRang==null&&gap&&cumG>=gap)franchiRang=k;
-    it.franchi=franchiRang!=null&&k<=franchiRang});
-  return{items,franchiRang}}
+    if(franchiRang2==null&&gap2&&cumG>=gap2)franchiRang2=k;
+    it.franchi=franchiRang!=null&&k<=franchiRang;
+    it.franchi2=franchiRang2!=null&&k<=franchiRang2});
+  return{items,franchiRang,franchiRang2,gap:gap,gap2:gap2}}
 
 /* tri par puissance décroissante (Photovoltaïque, classement d'intention,
    sans coût) — identique à rank_intention() en Python */
@@ -2340,14 +2573,20 @@ function rankCEEObj(sites,gapCo2,co2ById){
     if(!ceeOk(s))continue;
     const cee=ceeCHFkWh(s);if(cee==null)continue;
     items.push({id:s.id,nom:s.nom,estim:s.invVB,sre:s.sre,cee:cee,
+      /* kWh économisés sur la durée retenue — dénominateur du CHF/kWh, et
+         seul critère qui subsiste quand le coût est neutralisé */
+      kwh:(s.idcC-s.idcVB)*s.sre*pDuree('cee'),
       co2Gain:co2ById[s.id]!=null?co2ById[s.id]:null,
       plausible:plausibleObj(s.invVB,s.sre)});
   }
-  items.sort((a,b)=>a.cee-b.cee||(a.id<b.id?-1:1));
+  const platC=(typeof invHorsChiffrage==='function')&&invHorsChiffrage();
+  if(platC){items.forEach(function(it){it.cee=null});
+    items.sort((a,b)=>b.kwh-a.kwh||(a.id<b.id?-1:1))}
+  else items.sort((a,b)=>a.cee-b.cee||(a.id<b.id?-1:1));
   let cumG=0,cumI=0,franchiRang=null;
   items.forEach((it,i)=>{const k=i+1;cumI+=it.estim;it.rang=k;
     if(it.co2Gain!=null)cumG+=it.co2Gain;
-    it.cumulGain=cumG;it.cumulInvest=cumI;it.pctGap=gapCo2?cumG/gapCo2:null;
+    it.cumulGain=cumG;it.cumulInvest=platC?null:cumI;it.pctGap=gapCo2?cumG/gapCo2:null;
     if(franchiRang==null&&gapCo2&&cumG>=gapCo2)franchiRang=k;
     it.franchi=franchiRang!=null&&k<=franchiRang});
   return{items,franchiRang}}
@@ -2367,7 +2606,7 @@ function computeObjRanking(){
   if(!OBJ_GAPS||!pop||!pop.length){OBJRANK=null;return}
   const contribs=buildContributionsObj(pop,OBJ_COFACTORS||{});
   const co2=rankObjectiveObj(contribs.co2,OBJ_GAPS.co2.gap,'co2');
-  const th=rankObjectiveObj(contribs.th,OBJ_GAPS.th.gap,'th');
+  const th=rankObjectiveObj(contribs.th,OBJ_GAPS.th.gap,'th',OBJ_GAPS.th.gap2050||null);
   const ren=rankObjectiveObj(contribs.ren,OBJ_GAPS.ren.gap,'ren');
   const elec=rankObjectiveObj(contribs.elec,OBJ_GAPS.elec.gap,'elec');
   const eau=rankObjectiveObj(contribs.eau,OBJ_GAPS.eau.gap,'eau');
@@ -2491,7 +2730,6 @@ function boot(){
   if(hasData){
     dataVersion++;normSites();popInv();applyInvMode();computeObjRanking();buildOpt();detectGeoContext();assignFallbackCoords();
     popRP();popRPProject();popEtat();
-    if(st&&st.rp&&$('gRP')){const o=[...$('gRP').options].find(x=>x.value===st.rp);if(o)$('gRP').value=st.rp}
     updateSourceInfo(S.length,lastFileName,'file');ren();
   }else{
     loadSample();ren();
@@ -2543,16 +2781,24 @@ function setTxt(id,v){const e=$(id);if(e)e.textContent=v;return !!e}
 function renD(){
 const rp=getGlobalRP();const all=scored(rp);const n=all.length;
 setTxt('k1',n);setTxt('k2',all.filter(s=>isFos(s.ht)).length);setTxt('k3',all.filter(s=>isProt(s.pat)).length);setTxt('k4',all.filter(s=>s.cecb).length);
-const inv=all.reduce((a,s)=>a+(s.invVB||0),0);setTxt('k6',inv>0?nf(inv/1e6):'N/D');
+/* hors chiffrage, aucune colonne financière n'est lue : un total investi
+   serait une invention */
+const inv=all.reduce((a,s)=>a+(s.invVB||0),0);
+setTxt('k6',invHorsChiffrage()?'—':(inv>0?nf(inv/1e6):'N/D'));
 try{
 /* Distribution du coût d'efficacité CEE (CHF/kWh, durée retenue, référentiel actif)
    sur les bâtiments éligibles — reflète la méthode CECB+/Estim PTE en vigueur,
    remplace l'ancien histogramme du score composite. */
-const ceeVals=all.filter(ceeOk).map(s=>ceeCHFkWh(s)).filter(v=>v!=null&&isFinite(v));
+/* hors chiffrage, ce coût serait celui du forfait interne : on n'affiche pas
+   une distribution de chiffres qui n'existent pas */
+const ceeVals=invHorsChiffrage()?[]:all.filter(ceeOk).map(s=>ceeCHFkWh(s)).filter(v=>v!=null&&isFinite(v));
 if(ceeVals.length){
   Plotly.newPlot('gHist',[{x:ceeVals,type:'histogram',marker:{color:'#005F73'},nbinsx:15}],plotLay({margin:{t:5,b:28,l:35,r:5},bargap:.2,xaxis:{title:{text:'CHF/kWh ('+pDuree('cee')+' ans)',font:{size:10}}},yaxis:{title:{text:'Nb bâtiments',font:{size:10}}},font:{size:9,color:themeCols().ink2}}),{responsive:true,displayModeBar:false});
 }else{
-  $('gHist').innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:70px">Aucun bâtiment éligible CEE dans cette sélection.</p>';
+  $('gHist').innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:70px">'
+    +(invHorsChiffrage()
+      ?'Sans objet en mode « hors chiffrage » : le coût unitaire est déclaré identique pour tous, il n\'y a donc pas de distribution à montrer.'
+      :'Aucun bâtiment éligible CEE dans cette sélection.')+'</p>';
 }
 const dist=etatDist(all);
 Plotly.newPlot('gPie',[{values:dist.map(x=>x[1]),labels:dist.map(x=>x[0]),type:'pie',textinfo:'value+percent',hole:.4}],plotLay({margin:{t:5,b:5,l:5,r:5},font:{size:9,color:themeCols().ink2},showlegend:true,legend:{font:{size:8}}}),{responsive:true,displayModeBar:false});
@@ -2595,19 +2841,22 @@ function renTop(all){
   const lbl=(typeof OBJ_META!=='undefined'&&OBJ_META[key])?OBJ_META[key].lbl:key;
   const tt=$('topTitle');
   const rp=getGlobalRP();
-  if(tt)tt.textContent=lbl+(rp!=='all'?' · '+rp:'');
+  if(tt)tt.textContent=lbl+(rpActif()?' · '+rpLabel():'');
   try{if(window.Plotly)Plotly.purge(el)}catch(e){}
   if(!OBJRANK||!OBJRANK[key]||!OBJRANK[key].items.length){
     el.innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:60px">Aucun bâtiment classable pour cet objectif.</p>';return}
   const byId={};(all||[]).forEach(function(s){byId[s.id]=s});
   const items=applyQuali(OBJRANK[key].items,key)
-    .filter(function(it){return rp==='all'?true:(byId[it.id]&&byId[it.id].rp===rp)})
+    .filter(function(it){return !rpActif()||(byId[it.id]&&rpMatch(byId[it.id].rp))})
     .slice(0,20);
   if(!items.length){el.innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:60px">Aucun bâtiment de ce portefeuille dans ce classement.</p>';return}
   const top=items.slice().reverse();
   const unit=OBJ_UNIT[key]||'';
-  const val=function(it){return key==='cee'?it.cee:(key==='pv'?it.gain:it.coutUnit)};
-  const axis=key==='cee'?('CHF/kWh ('+pDuree('cee')+' ans)'):(key==='pv'?'kWc':(key==='veg'?'CHF par m² créé':'coût par unité gagnée ('+pDuree(key)+' ans)'));
+  const platT=invHorsChiffrage()&&key!=='veg';
+  const val=function(it){return platT?(key==='cee'?it.kwh:it.gain)
+    :(key==='cee'?it.cee:(key==='pv'?it.gain:it.coutUnit))};
+  const axis=platT?('contribution ['+(key==='cee'?'kWh':unit)+'] — hors chiffrage, le coût ne départage plus')
+    :(key==='cee'?('CHF/kWh ('+pDuree('cee')+' ans)'):(key==='pv'?'kWc':(key==='veg'?'CHF par m² créé':'coût par unité gagnée ('+pDuree(key)+' ans)')));
   /* Plotly.purge ne vide pas le message « aucun bâtiment » écrit par un rendu
      précédent : il resterait visible sous le graphique. */
   el.innerHTML='';
@@ -2672,9 +2921,14 @@ function objFmtNum(v,d){if(v==null||isNaN(v))return'—';return Number(v).toLoca
 
 /* Les fonds de ligne passent par des jetons : en mode nuit, un vert pâle codé
    en dur recevait du texte clair — ratio 1,1, illisible. */
-function objRowStyle(it,franchiRang){
+/* Trois zones plutôt que deux quand un objectif a deux cibles : ce qui suffit
+   pour 2030 (vert), ce qu'il faut y ajouter pour 2050 (bleu), et le reste. */
+function objRowStyle(it,franchiRang,franchiRang2){
   if(it.rang===franchiRang)return'background:var(--bg-ok);color:var(--fg-ok);font-weight:700;border-top:2px solid var(--ok);border-bottom:2px solid var(--ok)';
-  return it.franchi?'background:var(--bg-ok);color:var(--fg-ok)':'color:var(--ink3)'}
+  if(franchiRang2&&it.rang===franchiRang2)return'background:var(--bg-info);color:var(--fg-info);font-weight:700;border-top:2px solid var(--acc);border-bottom:2px solid var(--acc)';
+  if(it.franchi)return'background:var(--bg-ok);color:var(--fg-ok)';
+  if(it.franchi2)return'background:var(--bg-info);color:var(--fg-info)';
+  return'color:var(--ink3)'}
 
 /* Indice de fiabilité — même principe que Priorisation_PTE.xlsx et
    pte-optimiseur.html (colonne « Alerte »), porté ici pour éviter les
@@ -2705,10 +2959,10 @@ function alerteChip(al){
    appliquée à l'affichage seulement — rang, cumul et % cible restent
    ceux du classement global (calculés une fois dans computeObjRanking). */
 function rankFilters(){
-  return{rp:getGlobalRP(),fo:$('fFo')?.value||'all',pa:$('fPa')?.value||'all',rpj:$('fRpj')?.value||'all',
+  return{fo:$('fFo')?.value||'all',pa:$('fPa')?.value||'all',rpj:$('fRpj')?.value||'all',
          ce:$('fCe')?.value||'all',et:$('fEt')?.value||'all',se:($('fSe')?.value||'').toLowerCase()}}
 function passRankFilters(s,f){
-  if(f.rp&&f.rp!=='all'&&(s.rp||'')!==f.rp)return false;
+  if(!rpMatch(s.rp))return false;
   if(f.fo==='fos'&&!isFos(s.ht))return false;
   if(f.fo==='ren'){const t=(s.ht||'').toLowerCase();if(!(t.includes('pac')||t.includes('bois')||t.includes('cad')))return false}
   if(f.pa!=='all'&&(s.pat||'')!==f.pa)return false;
@@ -2731,6 +2985,186 @@ function repliSorted(sites){
       _imp:(q&&q.p==='in')?0:1,_c:(+s.sre||0)*(+s.idcC||0)}})
     .sort(function(a,b){return (a._imp-b._imp)||(b._c-a._c)})}
 
+/* Le thermique porte deux cibles, et il faut dire laquelle mord.
+   Celle de 2030 est la plus contraignante des deux règles du programme
+   (−60 % depuis 2005, ou l'intensité) ; celle de 2050 est une intensité pure.
+   Selon la surface du parc et la consommation mesurée, l'une ou l'autre peut
+   se trouver devant — on l'écrit plutôt que de laisser deviner. */
+function thNote2Cibles(R){
+  const t=OBJ_GAPS&&OBJ_GAPS.th;if(!t||!t.gap2050)return'';
+  const g30=t.gap||0,g50=t.gap2050||0;
+  let s='<b>Deux cibles.</b> <b>2030</b> : '+objFmtNum(t.kwh30,0)+' kWh/m²·an — écart '+
+        objFmtNum(g30,0)+' kWh/an. <b>2050</b> : '+objFmtNum(t.kwh50,0)+' kWh/m²·an — écart '+
+        objFmtNum(g50,0)+' kWh/an. ';
+  s+= (g30>g50)
+    ? ('Ici la cible <b>2030 est la plus exigeante des deux</b> : la baisse de −'+
+       Math.round((t.pct||0)*100)+' % depuis 2005 descend plus bas que l\'intensité de '+
+       objFmtNum(t.kwh50,0)+' kWh/m²·an visée pour 2050. Franchir 2030, c\'est franchir 2050. ')
+    : ('La cible <b>2050 est la plus exigeante</b> : elle demande '+objFmtNum(g50-g30,0)+
+       ' kWh/an de plus que celle de 2030. ');
+  const c=[];
+  if(R.franchiRang) c.push('cible 2030 franchie au rang <b>'+R.franchiRang+'</b> (ligne <b style="color:var(--ok)">verte</b>)');
+  else c.push('cible 2030 <b>non atteinte</b> avec les bâtiments mesurables');
+  if(R.franchiRang2)c.push('cible 2050 franchie au rang <b>'+R.franchiRang2+'</b> (ligne <b style="color:var(--acc)">bleue</b>)');
+  else c.push('cible 2050 <b>non atteinte</b>');
+  return s+c.join(' · ')+'. '}
+
+/* ------------------------------------------------------------------
+   Le pont entre les deux pourcentages.
+   La tuile et la colonne du classement affichent toutes deux un « % »
+   sans dire lequel : l'écart entre les deux se lit alors comme une
+   erreur de calcul. Cette phrase pose les deux dénominateurs et fait
+   l'addition — c'est du langage, pas de l'arithmétique nouvelle.
+   ------------------------------------------------------------------ */
+const OBJ_COL_GAIN={elec:'Gain Electricité (Max) - kWh',eau:'Gain Eau (Max) - m3',veg:'Surface végétalisée ajoutée (m2)'};
+/* Les trois quantités, calculées une fois, servies au texte comme au dessin.
+   type : 'chemin' (réduction depuis une référence 2005), 'niveau' (une part,
+   sans référence donc sans chemin), 'cumul' (on crée, rien n'est réalisé). */
+function pontData(key){
+  if(key==='cee'||key==='tous'||typeof OBJ_GAPS==='undefined'||!OBJ_GAPS)return null;
+  const meta=(typeof OBJ_META!=='undefined'&&OBJ_META[key])?OBJ_META[key]:{lbl:key,unit:''};
+  const R=(typeof OBJRANK!=='undefined'&&OBJRANK&&OBJRANK[key])?OBJRANK[key]:null;
+  const items=R?R.items:[];
+  const G=OBJ_GAPS[key]||{};
+  const gap=(key==='pv')?G.gapKw:G.gap;
+  let cum=0;items.forEach(function(it){if(it.cumulGain>cum)cum=it.cumulGain});
+  let s=null;try{s=indState(key)}catch(e){}
+  if(!s)return null;
+  const type=s.niveau?'niveau':(s.cumul?'cumul':'chemin');
+  /* Végétalisation : les surfaces sont à créer, aucune n'est réalisée. La
+     part « acquise » est donc nulle, et tout ce qui est repéré appartient à
+     ce que le classement couvre. */
+  const pct=(type==='cumul')?0:(s.sansRef?null:s.pct);
+  return{key:key,lbl:meta.lbl,unit:meta.unit,type:type,
+    nR:items.length,gap:gap,cum:cum,
+    couv:(gap>0)?cum/gap:null,couvC:(gap>0)?Math.min(1,cum/gap):0,
+    pct:pct,val:s.val,cible:s.cible,ref:s.ref2005,mesure:s.mesure,
+    franchi:R?R.franchiRang:null,
+    vide:items.length===0,col:OBJ_COL_GAIN[key]||null,s:s}}
+
+/* Les libellés des trois zones — partagés par le ruban, la jauge et les
+   survols, pour que rien ne diverge entre le dessin et le texte. */
+function pontZones(D){
+  if(!D)return null;
+  const pc=function(v){return nf(v)+' %'};
+  /* sans référence 2005, il n'y a pas de chemin parcouru : la part acquise
+     vaut zéro plutôt que NaN, et tout l'objectif reste devant */
+  const P0=(D.pct==null?0:D.pct);
+  const restePc=100-P0-(100-P0)*D.couvC;
+  const acquis=(D.type==='niveau')
+    ?{t:'niveau atteint',d:'Niveau déjà atteint : '+nf(D.val,1)+' % pour une cible de '+nf(D.cible,1)+' %, soit '+pc(P0)+' de l\'objectif. Il n\'y a pas de référence 2005 pour une part : ce n\'est pas un chemin parcouru, c\'est un niveau.'}
+    :{t:'chemin parcouru',d:(D.pct==null
+        ?'Aucune référence 2005 dans le classeur pour cet objectif : le chemin parcouru n\'est pas calculable, seul l\'écart restant l\'est.'
+        :'Chemin parcouru depuis la référence 2005 : '+pc(P0)+'. C\'est le pourcentage affiché sur la tuile de la Vue d\'ensemble.')};
+  const couvert=D.vide
+    ?{t:'aucun bâtiment classable',d:'Aucun bâtiment n\'est classable pour cet objectif : la colonne « '+(D.col||'de gain')+' » du classeur n\'est renseignée pour aucun sous-site. Ce n\'est pas un gain nul, c\'est une donnée absente — voir l\'onglet Données.'}
+    :{t:'couvert par le classement',d:'Ce que les '+D.nR+' bâtiments classables comblent de l\'écart restant : '+nf(D.couv*100)+' %'
+        +(D.couv>1?(', soit '+nf(D.couv,1)+' fois l\'écart — le potentiel repéré dépasse largement l\'objectif.'):'.')
+        +' C\'est le pourcentage de la colonne « % de l\'écart comblé », et son dénominateur est l\'écart qui reste, pas le chemin total.'};
+  const reste={t:'non couvert',d:'Ce que ni les travaux déjà faits ni les bâtiments classables ne couvrent : '+pc(restePc)+' du chemin total.'
+    +(D.vide?' Tout l\'écart restant est dans ce cas, faute de donnée.':'')};
+  return{acquis:acquis,couvert:couvert,reste:reste,restePc:restePc}}
+
+function objPont(key,R){
+  if(key==='cee'||key==='tous'||typeof OBJ_GAPS==='undefined'||!OBJ_GAPS)return'';
+  const meta=(typeof OBJ_META!=='undefined'&&OBJ_META[key])?OBJ_META[key]:{lbl:key,unit:''};
+  const nR=(R&&R.items)?R.items.length:0;
+  const G=OBJ_GAPS[key]||{};
+  const gap=(key==='pv')?G.gapKw:G.gap;
+  let cum=0;if(nR)R.items.forEach(function(it){if(it.cumulGain>cum)cum=it.cumulGain});
+  const couv=(gap>0)?cum/gap:null;
+  let s=null;try{s=indState(key)}catch(e){}
+  /* Aucun bâtiment classable : le zéro affiché jusqu'ici se lisait comme
+     « rien à gagner », alors qu'il veut dire « rien de mesuré ». */
+  if(!nR){
+    return' <b>Aucun bâtiment n\'est classable pour cet objectif</b> — ce n\'est pas un gain nul, c\'est une donnée absente : la colonne <code>'
+      +(OBJ_COL_GAIN[key]||'de gain')+'</code> du classeur n\'est renseignée pour aucun sous-site.'
+      +((s&&!s.niveau&&!s.cumul&&s.pct!=null&&!s.sansRef)
+        ?(' La tuile affiche pourtant <b>'+nf(s.pct)+' %</b> du chemin parcouru depuis 2005 : le parc a bel et bien progressé, mais rien ici ne permet de dire par quel bâtiment continuer.')
+        :'')
+      +' Voir l\'onglet <b>Données</b> : c\'est cette saisie-là qui débloquerait le classement.';}
+  const pcCouv=(couv==null)?null:couv*100;
+  /* « écart » pour un objectif de réduction, « cible » pour un objectif
+     cumulatif : la végétalisation ne comble pas un écart, elle crée. */
+  const mot=(key==='veg')?'la cible':'l\'écart';
+  const surplus=(couv!=null&&couv>1)
+    ?(' — soit <b>'+nf(couv,1)+' fois</b> '+mot+' : le potentiel repéré dépasse largement l\'objectif, et la colonne est plafonnée à 100 % ligne à ligne')
+    :'';
+  /* Renouvelable et photovoltaïque : la tuile dit un niveau atteint, pas un
+     chemin parcouru. Il n'y a pas de référence 2005 à laquelle se comparer. */
+  if(s&&s.niveau)
+    return' <b>Deux pourcentages, deux dénominateurs.</b> La tuile « '+esc(meta.lbl)+' » affiche un <b>niveau atteint</b> ('
+      +nf(s.val,1)+' % pour une cible de '+nf(s.cible,1)+' %), pas un chemin parcouru : sans référence 2005, il n\'y a pas de chemin à mesurer. Cette colonne dit tout autre chose — la part de l\'<b>écart restant</b> que le cumul comble. Les '
+      +nR+' bâtiments repérés en couvrent <b>'+nf(pcCouv)+' %</b>'+surplus+'.';
+  /* Végétalisation : objectif cumulatif, rien n'est encore réalisé. */
+  if(s&&s.cumul)
+    return' <b>Deux pourcentages, deux dénominateurs.</b> La tuile « '+esc(meta.lbl)+' » n\'affiche pas un chemin parcouru : aucune surface n\'est encore créée. Elle dit quelle part de la cible 2030 les projets repérés couvriraient s\'ils étaient tous financés. Cette colonne suit le même cumul, projet par projet, du m² le moins cher au plus cher : les '
+      +nR+' projets chiffrés en couvrent <b>'+nf(pcCouv)+' %</b>'+surplus+'.';
+  if(!s||s.sansRef||s.pct==null||couv==null)return'';
+  const tot=s.pct+(100-s.pct)*Math.min(1,couv);
+  return' <b>Deux pourcentages, deux dénominateurs.</b> La tuile « '+esc(meta.lbl)+' » de la Vue d\'ensemble affiche <b>'
+    +nf(s.pct)+' %</b> : le chemin parcouru <b>depuis la référence 2005</b>. Cette colonne mesure la part de l\'<b>écart qui reste</b> ('
+    +objFmtNum(gap,0)+' '+esc(meta.unit)+'), pas du chemin total. Les '+nR+' bâtiments classables en couvrent <b>'
+    +nf(pcCouv)+' %</b>'+surplus+', ce qui porte l\'ensemble à <b>'+nf(tot)+' % du chemin</b> depuis 2005 ('
+    +nf(s.pct)+' % + '+nf(Math.min(100,pcCouv))+' % des '+nf(100-s.pct)+' % restants). Les deux chiffres ne se contredisent pas : ils se composent.'}
+
+/* La jauge horizontale : la même règle que le ruban du graphique, mise à
+   plat. Sert sous le classement, où il n'y a pas de courbe pour l'accueillir. */
+/* Le chiffre seul : la barre testée le 29.08 chargeait un tableau déjà dense
+   sans rien apprendre de plus. L'accumulation se lit dans la jauge au-dessus
+   du tableau, une fois, plutôt que répétée à chaque ligne. */
+function pctCell(v,alt){
+  if(v==null)return'<td class="pcell">—</td>';
+  const p=Math.min(1,v)*100;
+  return'<td class="pcell" title="'+Math.round(p)+' % de l\'écart RESTANT comblé à ce rang'
+    +(alt?' (cible 2050)':'')+' — cumul des gains ÷ écart à combler">'
+    +Math.round(p)+'%</td>'}
+
+/* Le bandeau du mode hors chiffrage, écrit avec les chiffres du classement
+   affiché : combien de bâtiments sont retenus, combien le mode a fait
+   entrer, et combien manquent encore — avec la raison, qui n'est pas
+   financière. */
+function flatNote(key){
+  const R=(typeof OBJRANK!=='undefined'&&OBJRANK&&OBJRANK[key])?OBJRANK[key]:null;
+  const nR=R&&R.items?R.items.length:0;
+  const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
+  const nTot=(pop||[]).length;
+  const crit=(key==='cee')?'les kWh économisés':'la contribution';
+  if(key==='tous')
+    return'⚠ <b>Montants « hors chiffrage »</b> — le coût unitaire est déclaré identique pour tous les bâtiments : il ne départage plus rien. Cette vue d\'ensemble ordonne donc par <b>nombre d\'objectifs servis</b>, puis par <b>rang moyen</b> au lieu du coût moyen.';
+  if(key==='veg')
+    return'⚠ <b>Montants « hors chiffrage »</b> — sans effet sur ce classement : la végétalisation se classe au <b>coût du m² créé</b>, qui vient de sa propre colonne du classeur (<code>Coût végétalisation TTC</code>) et non du menu Montants.';
+  return'⚠ <b>Montants « hors chiffrage »</b> — le coût unitaire est <b>déclaré identique pour tous les bâtiments</b>, donc il ne départage plus rien : ce classement est trié sur '+crit
+    +' seule, du plus gros contributeur au plus petit, et les colonnes financières sont sans objet. Le <b>rang de franchissement</b> y devient le <b>nombre minimal de bâtiments</b> qui comblent l\'écart.'
+    +'<br><b>'+nR+' bâtiments</b> sur '+nTot+' y figurent, chiffrés ou non. Les '+(nTot-nR)
+    +' autres restent absents pour une raison qui n\'est pas financière : sans <b>audit CECB+</b> il n\'y a pas d\'IDC projeté, donc aucune contribution calculable. Ce mode lève le verrou du <b>coût</b>, pas celui de l\'<b>audit</b> — voir l\'onglet <b>Données</b>.'}
+
+function jaugeHtml(key){
+  const D=pontData(key);if(!D)return'';
+  const Z=pontZones(D);
+  const wF=Math.max(0,D.pct||0);   /* pas de référence 2005 → pas de part acquise */
+  const wC=(100-wF)*D.couvC;
+  const wR=Math.max(0,100-wF-wC);
+  const lblFin=(D.type==='niveau')?'cible':(D.type==='cumul'?'cible 2030':'cible 2030');
+  const lblDeb=(D.type==='niveau')?'0 %':(D.type==='cumul'?'rien de créé':'réf. 2005');
+  const lblMil=(D.type==='niveau')?'aujourd\'hui':(D.type==='cumul'?'':'aujourd\'hui');
+  const seuil=9;   /* en deçà, la zone est trop étroite pour porter son chiffre */
+  const z=function(cls,w,texte,titre){
+    return w<=0.2?'':'<div class="jz '+cls+'" style="width:'+w.toFixed(2)+'%" title="'+esc(titre)+'">'
+      +(w>=seuil?esc(texte):'')+'</div>'};
+  return'<div class="jbloc" title="'+esc('Les deux pourcentages de l\'outil sur une seule règle : la tuile mesure le premier segment, le classement une part du second.')+'">'
+    +'<div class="jauge">'
+    +z('jz-fait',wF,nf(wF)+' %',Z.acquis.t.charAt(0).toUpperCase()+Z.acquis.t.slice(1)+' — '+Z.acquis.d)
+    +z('jz-couv',wC,nf(D.couv*100)+' % de l\'écart',Z.couvert.t.charAt(0).toUpperCase()+Z.couvert.t.slice(1)+' — '+Z.couvert.d)
+    +z('jz-reste',wR,nf(Z.restePc)+' %',Z.reste.t.charAt(0).toUpperCase()+Z.reste.t.slice(1)+' — '+Z.reste.d)
+    +'</div>'
+    +'<div class="jlbl"><span style="left:0">'+esc(lblDeb)+'</span>'
+    +((lblMil&&wF>6&&wF<94)?('<span style="left:'+wF.toFixed(2)+'%;transform:translateX(-50%)"><b>'+esc(lblMil)+'</b></span>'):'')
+    +'<span style="right:0">'+esc(lblFin)+'</span></div>'
+    +'<div class="jleg"><span><i style="background:var(--surf-fait)"></i>'+esc(Z.acquis.t)+'</span>'
+    +'<span><i style="background:var(--surf-acc)"></i>'+esc(Z.couvert.t)+'</span>'
+    +'<span><i class="h"></i>'+esc(Z.reste.t)+'</span></div></div>'}
+
 function objTable(key,R,meta,bySiteId,f){
   const rankedIds=new Set(R.items.map(x=>x.id));
   const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
@@ -2740,34 +3174,53 @@ function objTable(key,R,meta,bySiteId,f){
   const rankedRows=adj.filter(it=>{const s=bySiteId[it.id];return s&&passRankFilters(s,f)});
   const restRows=repliSorted(restAll).filter(x=>passRankFilters(x.s,f));
   let html='<table><thead><tr>'+
-    '<th>Rang</th><th>N°</th><th>Sous-site</th><th>Rp</th><th>Pat.</th><th>CECB+</th><th>Chauffage</th>'+
-    '<th style="text-align:right">'+(key==='pv'?'Puissance':'Contribution')+'<br>['+meta.unit+']</th>'+
+    '<th>Rang</th><th>N°</th><th>Sous-site</th><th>Rp</th><th>Pat.</th><th>CECB+</th>'+
+    '<th title="Agent de chauffage actuel">Chauffage</th>'+
+    '<th title="Agent de chauffage prévu après travaux — c\'est cette bascule qui produit le gain CO₂">Substitution</th>'+
+    '<th style="text-align:right"'+(invHorsChiffrage()&&key!=='veg'&&key!=='pv'
+      ?' title="Critère de tri en mode hors chiffrage : le classement va du plus gros contributeur au plus petit"'
+      :'')+'>'+(key==='pv'?'Puissance':'Contribution')
+      +((invHorsChiffrage()&&key!=='veg'&&key!=='pv')?' ▼':'')+'<br>['+meta.unit+']</th>'+
     '<th style="text-align:right">Cumul<br>['+meta.unit+']</th>'+
-    '<th style="text-align:right">% cible<br>comblé</th>'+
+    (key==='th'
+      ? '<th style="text-align:right" title="Part de l\'écart RESTANT à 2030 que le cumul comble, en descendant le classement — pas le chemin depuis 2005, que donne la tuile de la Vue d\'ensemble">% écart<br>2030</th>'+
+        '<th style="text-align:right" title="Part de l\'écart RESTANT à 2050 que le cumul comble — cible d\'intensité de 63 kWh/m²·an">% écart<br>2050</th>'
+      : '<th style="text-align:right" title="Part de l\'écart RESTANT (mesuré − cible) que le cumul comble, en descendant le classement. Ce n\'est pas le chemin parcouru depuis 2005, que donne la tuile de la Vue d\'ensemble : les deux s\'additionnent, et la jauge au-dessus du tableau montre comment.">% de l\'écart<br>comblé</th>')+
     '<th style="text-align:right" title="'+(key==='veg'?'Coût TTC du projet de végétalisation, colonne « Coût végétalisation TTC [CHF] » — sans rapport avec le référentiel financier de la rénovation énergétique':'Colonne d\'où viennent les montants — menu « Montants » au-dessus')+'">'+(key==='veg'?'Coût TTC<br>végétalisation':esc(invDef().short))+'</th>'+
-    '<th style="text-align:right">'+(key==='pv'?'—':key==='cee'?('CHF/kWh<br>('+pDuree('cee')+' ans)'):key==='veg'?'CHF/m²<br>créé (tri)':'CHF/unité<br>('+pDuree(key)+' ans)')+'</th>'+
+    '<th style="text-align:right"'+((invHorsChiffrage()&&key!=='veg'&&key!=='pv')
+      ?' title="Déclaré identique pour tous les bâtiments en mode hors chiffrage : ce n\'est plus un critère de tri"':'')
+      +'>'+((invHorsChiffrage()&&key!=='veg'&&key!=='pv')?'Coût unitaire<br>(identique)'
+        :(key==='pv'?'—':key==='cee'?('CHF/kWh<br>('+pDuree('cee')+' ans)'):key==='veg'?'CHF/m²<br>créé (tri)':'CHF/unité<br>('+pDuree(key)+' ans)'))+'</th>'+
     '<th>Alerte</th></tr></thead><tbody>';
   for(const it of rankedRows){
     const s=bySiteId[it.id];
     const gainDisp=key==='cee'?objFmtNum(it.co2Gain,0):objFmtNum(it.gain,0);
-    const coutDisp=key==='pv'?'—':objFmtNum(key==='cee'?it.cee:it.coutUnit,key==='cee'?3:(key==='veg'?0:4));
-    html+='<tr class="row-click'+((it.rangAdj||it.rang)===R.franchiRang?' franchi-row':'')+'" data-id="'+it.id+'" onclick="toggleDetail(\''+it.id+'\')" style="'+objRowStyle(Object.assign({},it,{rang:(it.rangAdj||it.rang)}),R.franchiRang)+'">'+
+    /* Hors chiffrage : le montant n'existe pas et le coût unitaire est le
+       même pour tous. Un « = » le dit mieux qu'un nombre répété. */
+    const plat=invHorsChiffrage()&&key!=='veg';
+    const coutDisp=plat?'<span title="Coût unitaire déclaré identique pour tous les bâtiments : il ne départage plus le classement, qui est trié sur la seule contribution" style="color:var(--ink3)">=</span>'
+      :(key==='pv'?'—':objFmtNum(key==='cee'?it.cee:it.coutUnit,key==='cee'?3:(key==='veg'?0:4)));
+    const estimDisp=plat?'<span title="Aucun montant : le mode hors chiffrage ne lit aucune colonne financière" style="color:var(--ink3)">—</span>'
+      :objFmtNum(it.estim,0);
+    const _r=(it.rangAdj||it.rang);
+    html+='<tr class="row-click'+(_r===R.franchiRang?' franchi-row':'')+(_r===R.franchiRang2?' franchi-row-50':'')+'" data-id="'+it.id+'" onclick="toggleDetail(\''+it.id+'\')" style="'+objRowStyle(Object.assign({},it,{rang:_r}),R.franchiRang,R.franchiRang2)+'">'+
       '<td>'+(it.rangAdj||it.rang)+((it.rangAdj&&rangObj[it.id]&&it.rangAdj!==rangObj[it.id])?'<br><span style="font-size:.6rem;color:var(--ink3)" title="rang du classement arithmétique, avant ajustement">obj. '+rangObj[it.id]+'</span>':'')+
       (snapCur()?('<br>'+snapDelta(key,it.id,(it.rangAdj||it.rang))):'')+'</td><td><b>'+it.id+'</b></td><td>'+(it.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem">'+(s.rp||'—')+'</span></td>'+
-      '<td style="font-size:.63rem">'+(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td>'+
+      '<td style="font-size:.63rem">'+(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td><td>'+subBg(s.hsub)+'</td>'+
       '<td style="text-align:right">'+gainDisp+'</td><td style="text-align:right">'+objFmtNum(it.cumulGain,0)+'</td>'+
-      '<td style="text-align:right">'+(it.pctGap!=null?Math.round(it.pctGap*100)+'%':'—')+'</td>'+
-      '<td style="text-align:right">'+objFmtNum(it.estim,0)+'</td><td style="text-align:right">'+coutDisp+'</td>'+
+      pctCell(it.pctGap,false)+
+      (key==='th'?pctCell(it.pctGap2,true):'')+
+      '<td style="text-align:right">'+estimDisp+'</td><td style="text-align:right">'+coutDisp+'</td>'+
       '<td>'+alerteChip(alertsFor(s))+qualiChip(it.id)+(lockHas(it.id)?'<span class="lock-chip" title="Bâtiment du portefeuille validé">🔒</span>':'')+'</td></tr>'}
   if(restRows.length){
-    html+='<tr><td colspan="13" style="background:var(--soft);color:var(--ink3);font-size:.68rem;font-style:italic;padding:5px 8px">'+
+    html+='<tr><td colspan="'+(key==='th'?15:14)+'" style="background:var(--soft);color:var(--ink3);font-size:.68rem;font-style:italic;padding:5px 8px">'+
       (key==='veg'?'Aucun projet de végétalisation renseigné pour ces sous-sites — ils ne sont pas classables ici tant que la colonne « Surface végétalisée ajoutée (m2) » reste vide. L\'ordre ci-dessous est celui du score composite de repli.'
                   :'Classement de repli — non mesurable pour cet objectif via CECB+, trié par score composite provisoire (voir « Pondérations du classement de repli » ci-dessus)')+'</td></tr>';
     for(const{s,sc}of restRows)
       html+='<tr class="row-click" data-id="'+s.id+'" onclick="toggleDetail(\''+s.id+'\')" style="color:var(--ink3)">'+
         '<td>'+(sc.t!=null?'repli':'—')+'</td><td><b>'+s.id+'</b></td><td>'+(s.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem">'+(s.rp||'—')+'</span></td>'+
-        '<td style="font-size:.63rem">'+(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td>'+
-        '<td colspan="4" style="text-align:center;font-size:.66rem">'+(key==='veg'?'surface végétalisée non renseignée'
+        '<td style="font-size:.63rem">'+(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td><td>'+subBg(s.hsub)+'</td>'+
+        '<td colspan="'+(key==='th'?5:4)+'" style="text-align:center;font-size:.66rem">'+(key==='veg'?'surface végétalisée non renseignée'
            :((+s.sre&&+s.idcC)?('conso estimée '+objFmtNum(s.sre*s.idcC,0)+' kWh/an'):'données insuffisantes'))+'</td>'+
         '<td style="text-align:right">'+(key==='veg'?'—':objFmtNum(s.invEstim,0))+'</td>'+
         '<td>'+alerteChip(alertsFor(s))+qualiChip(s.id)+'</td></tr>'}
@@ -2781,13 +3234,17 @@ function objTousTable(bySiteId,f){
   const union=new Map();
   for(const k of keys)for(const it of R[k].items)if(!union.has(it.id))union.set(it.id,{id:it.id,nom:it.nom,estim:it.estim});
   let rows=[];
+  const platTous=invHorsChiffrage();
   for(const[id,base]of union){
     const s=bySiteId[id];if(!s||!passRankFilters(s,f))continue;
     const rangs={},gains={},franchis={};let servis=0,coutSum=0,coutN=0;
     for(const k of keys){
       const it=idxByKey[k][id];
       if(it){rangs[k]=it.rang;gains[k]=k==='cee'?it.co2Gain:it.gain;franchis[k]=it.franchi;if(it.franchi)servis++;
-        const cu=k==='cee'?it.cee:it.coutUnit;if(cu!=null){coutSum+=cu;coutN++}}
+        /* hors chiffrage il n'y a plus de coût unitaire : le rang moyen
+           joue le même rôle de départage, croissant lui aussi */
+        const cu=platTous?it.rang:(k==='cee'?it.cee:it.coutUnit);
+        if(cu!=null){coutSum+=cu;coutN++}}
       else{rangs[k]=null;gains[k]=null;franchis[k]=null}}
     rows.push({id,nom:base.nom,estim:base.estim,s,rangs,gains,franchis,servis,coutMoy:coutN?coutSum/coutN:Infinity})}
   /* les ajustements non mesurables s'appliquent aussi à la vue d'ensemble */
@@ -2821,7 +3278,11 @@ function renR(){
   const bySiteId={};pop.forEach(s=>{bySiteId[s.id]=s});
   const f=rankFilters();
   if(key==='tous'){
-    if(note)note.innerHTML=OBJRANK?'Un bâtiment peut servir plusieurs objectifs à la fois — trié par nombre d’objectifs servis avant leur propre seuil, puis par coût moyen croissant sur les objectifs où il contribue. <b style="color:var(--ok)">Vert</b> = le bâtiment fait partie de ceux à financer pour atteindre CETTE cible précise (avant son propre seuil, « # » = son rang dans ce classement) ; <b style="color:var(--ink3)">gris</b> = après. Photovoltaïque exclu (pas de coût isolable) et végétalisation exclue (elle se classe au m² créé, pas à l’unité gagnée sur une durée de vie) — voir leurs classements dédiés.':'';
+    if(note)note.innerHTML=OBJRANK?'Un bâtiment peut servir plusieurs objectifs à la fois — trié par nombre d’objectifs servis avant leur propre seuil, puis par coût moyen croissant sur les objectifs où il contribue (par rang moyen en mode hors chiffrage, où le coût ne départage plus). <b style="color:var(--ok)">Vert</b> = le bâtiment fait partie de ceux à financer pour atteindre CETTE cible précise (avant son propre seuil, « # » = son rang dans ce classement) ; <b style="color:var(--ink3)">gris</b> = après. Photovoltaïque exclu (pas de coût isolable) et végétalisation exclue (elle se classe au m² créé, pas à l’unité gagnée sur une durée de vie) — voir leurs classements dédiés.':'';
+    const jh0=$('objJauge');if(jh0)jh0.innerHTML='';
+    const fw0=$('rankFlatWarn');
+    if(fw0){fw0.innerHTML=invHorsChiffrage()?flatNote('tous'):'';
+      fw0.style.display=invHorsChiffrage()?'block':'none'}
     box.innerHTML=objTousTable(bySiteId,f);
     return}
   const meta=OBJ_META[key];
@@ -2831,16 +3292,29 @@ function renR(){
     else{
       const gap=key==='pv'?OBJ_GAPS.pv.gapKw:(key==='cee'?OBJ_GAPS.co2.gap:OBJ_GAPS[key].gap);
       const nR=R.items.length;
+      const fr50='';
       note.innerHTML=(key==='cee'
-        ?'Trié par CHF/kWh croissant (référentiel actif, '+pDuree('cee')+' ans). Pas d’écart résiduel propre au CEE : cible reprise du CO₂, cumul du gain CO₂ (pas du kWh) dans cet ordre : '+objFmtNum(gap,0)+' kg CO2/an à combler. '
+        ?(invHorsChiffrage()?'Trié par <b>kWh économisés décroissants</b> — le coût unitaire étant déclaré identique pour tous, le CHF/kWh ne départage plus. ':'Trié par CHF/kWh croissant (référentiel actif, '+pDuree('cee')+' ans). ')+' Pas d’écart résiduel propre au CEE : cible reprise du CO₂, cumul du gain CO₂ (pas du kWh) dans cet ordre : '+objFmtNum(gap,0)+' kg CO2/an à combler. '
         :key==='veg'
         ?'Trié par <b>coût du m² créé</b> croissant, du moins cher au plus cher. Ni durée de vie ni actualisation : on achète une surface, pas un flux annuel. Objectif 2030 : '+objFmtNum(gap,0)+' m² à créer — les surfaces de la colonne du classeur sont à créer, aucune n’est comptée comme réalisée. '
         :key==='pv'
         ?'Trié par puissance décroissante (classement d’intention, aucune donnée n’isole le coût d’une installation PV du coût de rénovation du bâtiment). Objectif : +'+objFmtNum(gap,0)+' kWc. '
-        :'Trié par CHF par '+meta.unit.replace('/an','')+' croissant, sur '+pDuree(key)+' ans'+((PARAMS.dureeObj&&+PARAMS.dureeObj[key]>0&&+PARAMS.dureeObj[key]!==pDuree())?' (durée propre à cet objectif)':'')+'. Écart résiduel à combler : '+objFmtNum(gap,0)+' '+meta.unit+'. ')
-        +(R.franchiRang?('Rang de franchissement : <b>'+R.franchiRang+'</b> sur '+nR+' bâtiment(s) mesurable(s) — au-delà, non nécessaires pour cette seule cible.')
+        :invHorsChiffrage()
+        ?'Trié par <b>contribution décroissante</b> — le coût unitaire étant déclaré identique pour tous, il ne départage plus. Écart résiduel à combler : '+objFmtNum(gap,0)+' '+meta.unit+'. '
+        :'Trié par CHF par '+meta.unit.replace('/an','')+' croissant, sur '+pDuree(key)+' ans'+((PARAMS.dureeObj&&+PARAMS.dureeObj[key]>0&&+PARAMS.dureeObj[key]!==pDuree())?' (durée propre à cet objectif)':'')+'. Écart résiduel à combler : '+objFmtNum(gap,0)+' '+meta.unit+'. '
+          +(key==='th'?thNote2Cibles(R):''))
+        /* le thermique a sa propre phrase de franchissement, qui couvre les
+           deux cibles : la générique ferait doublon */
+        +(key==='th'?('Population mesurable : '+nR+' bâtiment(s).')
+          :nR===0?''
+          :R.franchiRang?('Rang de franchissement : <b>'+R.franchiRang+'</b> sur '+nR+' bâtiment(s) mesurable(s) — au-delà, non nécessaires pour cette seule cible.')
                         :('Cible non atteinte avec les '+nR+' bâtiment(s) mesurable(s) disponibles.'))
+        +(nR===0?objPont(key,R):'')
         +(key==='elec'||key==='eau'?' ⚠ Donnée legacy (méthode par familles abandonnée), non recalculée via CECB+ — à vérifier avant décision.':'')}}
+  const fw=$('rankFlatWarn');
+  if(fw){fw.innerHTML=invHorsChiffrage()?flatNote(key):'';
+    fw.style.display=invHorsChiffrage()?'block':'none'}
+  const jh=$('objJauge');if(jh)jh.innerHTML=jaugeHtml(key);
   box.innerHTML=objTable(key,R,meta,bySiteId,f)}
 
 function toggleDetail(id){
@@ -2921,8 +3395,12 @@ function setQuali(id){
    le photovoltaïque : l'ajustement doit agir sur LA clé du classement affiché,
    sinon il reste sans effet (constaté sur CEE et PV le 20.08.2026). */
 function qualiSortKey(key){
-  if(key==='cee')return{f:function(it){return it.cee},desc:false};
   if(key==='pv')return{f:function(it){return it.gain},desc:true};
+  /* hors chiffrage, la clé du classement est la contribution : l'ajustement
+     doit agir sur elle, sinon il resterait sans effet */
+  if((typeof invHorsChiffrage==='function')&&invHorsChiffrage()&&key!=='veg')
+    return{f:function(it){return key==='cee'?it.kwh:it.gain},desc:true};
+  if(key==='cee')return{f:function(it){return it.cee},desc:false};
   return{f:function(it){return it.coutUnit},desc:false}}
 function applyQuali(items,key){
   if(!items||!items.length)return items;
@@ -2969,13 +3447,15 @@ const TOUR=[
  {sel:'#objDetail',t:'Une tuile, une trajectoire',panel:'dash',
   d:"Cliquez une tuile : le graphique dessous montre la série mesurée depuis 2005, le rythme qu'il faudrait tenir jusqu'en 2030, et l'effet du portefeuille que vous aurez arrêté dans l'onglet Arbitrage. La ligne de sources, en bas, dit de quelle feuille vient chaque chiffre."},
  {sel:'#gInv',t:"D'où viennent les montants",
-  d:"Tous les coûts affichés proviennent de la colonne choisie ici — <b>Estim PTE</b>, <b>Invest ImmOBA</b> ou <b>GE-Invest</b>. En changer <b>recalcule tous les classements</b> : le nombre de bâtiments chiffrés n'est pas le même d'une colonne à l'autre, donc l'ordre non plus. Le nombre de montants disponibles est indiqué à côté de chaque choix."},
- {sel:'#gRP',t:'Se limiter à un portefeuille',
-  d:"Ce filtre restreint <b>tout l'outil</b> — classement, arbitrage, carte, indicateurs — au périmètre d'un responsable de portefeuille. Les rangs affichés restent ceux du classement global : on voit la place de ses bâtiments dans l'ensemble du parc, pas un classement interne. « tous » rétablit le parc entier."},
+  d:"Tous les coûts affichés proviennent de la colonne choisie ici — <b>Estim PTE</b>, <b>Invest ImmOBA</b> ou <b>GE-Invest</b>. En changer <b>recalcule tous les classements</b> : le nombre de bâtiments chiffrés n'est pas le même d'une colonne à l'autre, donc l'ordre non plus. Le nombre de montants disponibles est indiqué à côté de chaque choix.<br><br><b>Hors chiffrage</b>, en bas de la liste, n'est pas une quatrième colonne : il déclare le coût unitaire <b>identique pour tous</b>. Le coût ne départage alors plus rien et le classement se fait sur la <b>seule contribution</b>, du plus gros contributeur au plus petit — y compris pour les bâtiments qu'aucun montant ne rend classables aujourd'hui. À lire comme « où est la matière », le référentiel financier disant « où est le meilleur franc »."},
+ {sel:'#gRPTxt',t:'Se limiter à un ou plusieurs portefeuilles',
+  d:"Ce filtre restreint <b>tout l'outil</b> — classement, arbitrage, carte, indicateurs — au périmètre choisi. On peut cocher <b>plusieurs portefeuilles</b> : trois responsables sans les autres, par exemple, pour préparer une séance commune. Les rangs affichés restent ceux du classement global : on voit la place de ces bâtiments dans l'ensemble du parc, pas un classement interne. Aucune case cochée rétablit le parc entier."},
  {sel:'#objSel',t:'Un objectif à la fois',open:'objRankBody',panel:'rank',
   d:"Le classement se fait objectif par objectif : CO₂, thermique, renouvelable, électricité, eau, photovoltaïque, végétalisation, coût de l'énergie économisée. Chaque bâtiment est classé par <b>coût de l'unité gagnée</b> sur la durée de vie retenue — pas par un score composite. La végétalisation fait exception : elle se classe au <b>coût du m² créé</b>, car une cour d'école n'a pas de durée de vie au sens énergétique."},
  {sel:'#objBody tr.franchi-row, #objNote',t:'Le rang de franchissement',open:'objRankBody',panel:'rank',
   act:tourToFranchi,d:tourFranchiTxt},
+ {sel:'#objJauge',t:'Deux pourcentages, une seule règle',open:'objRankBody',panel:'rank',
+  d:"Cette jauge répond à la question qui revient toujours : pourquoi la tuile CO₂ annonce <b>65 %</b> quand ce classement plafonne à <b>37 %</b>. Les deux mesurent des morceaux différents du même trajet. Le segment vert est le chemin <b>déjà parcouru depuis 2005</b> — c'est le chiffre de la tuile. Le segment foncé est la part de <b>ce qui reste</b> que les bâtiments classables combleraient — c'est le chiffre de la colonne. Les hachures sont ce que ni l'un ni l'autre ne couvre. <b>Survolez chaque zone</b> : elle dit son dénominateur et son chiffre. Le même ruban se retrouve à droite de chaque graphique de trajectoire, calé sur son axe."},
  {sel:'#detRow',t:"La fiche d'un bâtiment",open:'objRankBody',panel:'rank',act:tourOpenFiche,
   d:"Cliquer une ligne la déplie. On y lit la <b>SRE</b>, l'<b>IDC actuel</b> et l'<b>IDC projeté</b> avec la variante CECB+ retenue — c'est l'écart entre les deux qui fait le gain —, la substitution de chaufferie prévue, la complétude des données et les alertes du bâtiment."},
  {sel:'#detRow .q-box',t:'Ce que les chiffres ne voient pas',open:'objRankBody',panel:'rank',act:tourOpenFiche,
@@ -2983,13 +3463,16 @@ const TOUR=[
  {sel:'#optObj',t:'Arbitrer une enveloppe',panel:'arb',
   d:"Fixez l'enveloppe et le plafond annuel, choisissez la cible à servir : l'outil constitue le portefeuille qui en fait le plus par franc dépensé, et l'étale année par année."},
  {sel:'#maccBody',t:'Le prix de la tonne évitée',open:'maccBody',panel:'arb',
-  d:"Le parc est rangé du CO₂ le moins cher au plus cher. L'aire sous la courbe jusqu'au trait vertical est ce que votre enveloppe achète réellement. Le tableau dessous donne le prix moyen par politique publique : l'écart entre la moins chère et la plus chère mesure l'enjeu de l'ordre de financement."},
+  /* Le texte commente la courbe bâtiment par bâtiment : sans ce basculement,
+     l'étape montrait les tranches de prix et parlait d'autre chose. */
+  act:function(){try{setMacc('detail')}catch(e){}},
+  d:"Vue <b>Bâtiment par bâtiment</b> : le parc est rangé du CO₂ le moins cher au plus cher, une barre par bâtiment — largeur = tonnes évitées, hauteur = prix de la tonne. <b>L'aire sous la courbe jusqu'au trait vertical est ce que votre enveloppe achète réellement.</b> Le bouton <b>Vue d'ensemble</b>, en haut, regroupe les mêmes bâtiments par tranche de prix quand le détail devient illisible. Le tableau dessous donne le prix moyen par politique publique : l'écart entre la moins chère et la plus chère mesure l'enjeu de l'ordre de financement."},
  {sel:'#anoCard',t:'Ce qui manque, et ce que cela coûte',panel:'data',
   d:"L'onglet <b>Données</b> réunit tout ce qui limite les calculs : séries annuelles suspectes, colonnes qui bloquent les classements, alertes bâtiment par bâtiment, taux de remplissage. « Ce qui bloque les classements » indique les saisies les plus rentables — une cellule remplie, un bâtiment qui entre au classement."},
  {sel:'#mainMenu a[onclick*="tglNotes"]',t:'Emporter vos décisions',menu:true,
   d:"Notes et facteurs non mesurables s'exportent dans un <b>même fichier CSV</b>. Ce fichier s'ouvre dans Excel : on peut le compléter hors de l'outil, l'envoyer à un collègue, récupérer le sien, fusionner les deux — puis le réimporter ici. C'est ainsi qu'on partage sans droit d'écriture sur le classeur."},
  {sel:'#mainMenu a[onclick*="tglPar"]',t:'Les hypothèses sont des réglages',menu:true,
-  d:"Durée de vie retenue, productible photovoltaïque, cible d'intensité thermique, poids des cinq volets du développement durable : rien n'est figé dans le code. Ces réglages sont rappelés dans l'onglet Méthode et mémorisés dans ce navigateur."},
+  d:"Durée de vie — générale et par objectif —, productible photovoltaïque, <b>cibles d'intensité thermique 2030 et 2050</b>, poids des cinq volets du développement durable : rien n'est figé dans le code. Le panneau est en sections repliables ; les réglages sont rappelés dans l'onglet Méthode et mémorisés dans ce navigateur."},
  {sel:'#mainMenu a[onclick*="tglTheme"]',t:'Mode nuit',menu:true,
   d:"L'outil s'affiche aussi en sombre — graphiques compris. Le choix est mémorisé sur ce poste. Le <b>mode présentation</b>, juste dessous, agrandit les chiffres pour la projection en séance."}];
 let _tourI=-1,tourSeen=false;
@@ -3022,7 +3505,9 @@ function tourFranchiTxt(){
     return "Voici la ligne décisive, encadrée de vert, sur l'objectif <b>"+esc(String(lbl))+"</b> : "+
       "c'est le rang <b>"+R.franchiRang+"</b>, celui où le cumul des gains <b>atteint la cible 2030</b> si l'on "+
       "finance les bâtiments dans cet ordre. Tout ce qui est au-dessus est nécessaire ; en dessous, c'est du "+
-      "surplus pour cette cible-là. La colonne « % cible comblé » donne le chemin parcouru à chaque rang."}
+      "surplus pour cette cible-là. La colonne « % de l'écart comblé » dit, à chaque rang, quelle part de l'écart "+
+      "<b>restant</b> le cumul a comblée — pas le chemin depuis 2005, que donne la tuile de la Vue d'ensemble. "+
+      "La jauge au-dessus du tableau met les deux bout à bout."}
   return "Normalement, une ligne encadrée de vert marque le <b>rang de franchissement</b> : celui où le cumul des "+
     "gains atteint la cible 2030. <b>Aucun objectif ne l'atteint aujourd'hui</b> avec les bâtiments qui portent un "+
     "coût dans le référentiel actif — c'est écrit sous les filtres. Ce n'est pas un défaut de l'outil, c'est le "+
@@ -3054,6 +3539,9 @@ function tourEl(s){
   return null}
 function tourStart(){_tourI=-1;$('tourMask').classList.add('on');tourNext(1)}
 function tourEnd(){_tourI=-1;const m=$('tourMask');if(m)m.classList.remove('on');
+  /* l'étape 14 bascule le graphique d'abattement en vue détaillée : on rend
+     à l'utilisateur l'affichage par défaut en sortant */
+  try{if(typeof maccMode!=='undefined'&&maccMode!=='simple')setMacc('simple')}catch(e){}
   const mm=$('mainMenu');if(mm)mm.classList.remove('on');
   const h=$('tourHole'),b=$('tourBox');if(h)h.style.display='none';if(b)b.style.display='none';
   tourSeen=true;try{saveState()}catch(e){}}
@@ -3132,12 +3620,12 @@ window.addEventListener('resize',function(){if(_tourI>=0)tourShow(TOUR[_tourI])}
    attribut title, comme les boutons de l'en-tête.                         */
 const TITLES=[
  ['.tabs','Navigation — les onglets partagent le fichier importé'],
- ['#gRP','Filtre par responsable de portefeuille : restreint l\'affichage, jamais les rangs, qui sont calculés sur tout le parc'],
+ ['#gRPTxt','Filtre par responsable de portefeuille, un ou plusieurs à la fois : restreint l\'affichage, jamais les rangs, qui sont calculés sur tout le parc'],
  ['#gInv',"Colonne d'où proviennent les montants affichés — en changer recalcule tous les coûts unitaires"],
  ['#gCo2','Base de comptabilité CO₂ : valeurs mesurées du parc, ou facteurs de la convention légale'],
  ['#objSel','Objectif servi par le classement — un objectif, un classement par coût unitaire croissant'],
  ['#objNote','Méthode appliquée : source de la cible, écart restant à combler, population retenue'],
- ['#objBody','Rang, contribution annuelle, cumul, part de la cible comblée, coût unitaire. Ligne verte = rang de franchissement de la cible 2030'],
+ ['#objBody','Rang, contribution annuelle, cumul, part de l\'écart RESTANT comblée (pas le chemin depuis 2005), coût unitaire. Ligne verte = rang de franchissement de la cible 2030'],
  ['#objRankCard h3','Cliquer pour replier ou déplier le classement'],
  ['#bBud',"Enveloppe totale disponible sur l'horizon 2025–2037"],
  ['#bCap','Plafond de dépense annuelle : ce qui étale les projets dans le temps'],
@@ -3526,9 +4014,11 @@ function renLock(){
 function cxSync(){
   const a=$('gInv'),ta=$('gInvTxt');
   if(a&&ta){const o=a.options[a.selectedIndex];ta.textContent=o?o.textContent.split(' · ')[0]:'—';
-    ta.title=o?o.textContent:''}
-  const b=$('gRP'),tb=$('gRPTxt');
-  if(b&&tb){const o=b.options[b.selectedIndex];tb.textContent=o?o.textContent:'tous'}}
+    ta.title=o?o.textContent:'';
+    ta.classList.toggle('cx-conv',invMode==='flat')}
+  const tb=$('gRPTxt');
+  if(tb){tb.textContent=rpLabel();
+    tb.title=RP_SEL.length?('Périmètre restreint à : '+RP_SEL.join(', ')):'Tout le parc'}}
 function tglMenu(e){if(e)e.stopPropagation();const m=$('mainMenu');if(m)m.classList.toggle('on')}
 document.addEventListener('click',function(){
   /* pendant la visite guidée, c'est elle qui décide de l'ouverture du menu */
@@ -3575,7 +4065,10 @@ function themeCols(){
   const g=function(n,d){const v=c.getPropertyValue(n);return v?v.trim():d};
   return{ink:g('--ink','#1D2733'),ink2:g('--ink2','#5B6672'),ink3:g('--ink3','#8C97A3'),
          line:g('--line','#E4E8EC'),acc:g('--acc','#005F73'),ok:g('--ok','#1A8554'),
-         warn:g('--warn','#B58900'),red:g('--red','#C0392B'),card:g('--card','#fff')}}
+         warn:g('--warn','#B58900'),red:g('--red','#C0392B'),card:g('--card','#fff'),
+         fait:g('--surf-fait','#17754A'),onFait:g('--on-surf-fait','#FFFFFF'),
+         couv:g('--surf-acc','#005F73'),onCouv:g('--on-surf-acc','#FFFFFF'),
+         soft:g('--soft','#F2F5F7')}}
 
 /* ---------- les 7 indicateurs ---------- */
 const IND=[
@@ -3747,6 +4240,7 @@ function renderDetail(){
       '<div id="indChart"></div>'+
       '<div class="dgrid"><div>'+rows.slice(0,moitieV).map(drow).join('')+
       '</div><div>'+rows.slice(moitieV).map(drow).join('')+'</div></div>'+
+      pontLegende('veg')+
       '<p class="mini" style="margin-top:8px;color:var(--ink3)">Sources : cible — feuille <code>Objectifs PTE</code> · surfaces et coûts — colonnes <code>Surface végétalisée ajoutée (m2)</code> et <code>Coût végétalisation TTC [CHF]</code> de <code>Plan_PTE</code>. Les surfaces sont à créer, aucune n\'est comptée comme réalisée.</p>';
     drawIndic('veg');return}
   const rows=[];
@@ -3773,8 +4267,21 @@ function renderDetail(){
     '<div id="indChart"></div>'+
     '<div class="dgrid"><div>'+rows.slice(0,moitie).map(drow).join('')+
     '</div><div>'+rows.slice(moitie).map(drow).join('')+'</div></div>'+
+    /* Le pont entre les deux pourcentages n'est plus un pavé de texte : il est
+       dessiné dans le graphique lui-même, à droite de la courbe, et chaque
+       zone porte son explication en survol. Ne reste ici que la légende. */
+    pontLegende(indSel)+
     '<p class="mini" style="margin-top:8px;color:var(--ink3)">'+indSource(indSel)+'</p>';
   drawIndic(indSel)}
+function pontLegende(k){
+  const D=pontData(k);if(!D)return'';
+  const Z=pontZones(D);
+  const item=function(sw,t,d){return'<span title="'+esc(d)+'" style="cursor:help">'+sw+esc(t)+'</span>'};
+  return'<p class="jleg" style="margin-top:9px">'
+    +'<span style="color:var(--ink2);font-weight:600">Ruban de droite :</span>'
+    +item('<i style="background:var(--surf-fait)"></i>',Z.acquis.t,Z.acquis.d)
+    +item('<i style="background:var(--surf-acc)"></i>',Z.couvert.t,Z.couvert.d)
+    +item('<i class="h"></i>',Z.reste.t,Z.reste.d)+'</p>'}
 /* graphique d'un indicateur : mesuré, rythme requis, effet du portefeuille */
 function drawIndic(k){
   const host=$('indChart');if(!host)return;
@@ -3786,7 +4293,7 @@ function drawIndic(k){
        pour combien de francs, en commençant par le moins cher. */
     const R=(typeof OBJRANK!=='undefined'&&OBJRANK&&OBJRANK.veg)?OBJRANK.veg:null;
     if(!R||!R.items.length){host.innerHTML='<p class="mini">Aucun projet de végétalisation chiffré dans le classeur importé.</p>';return}
-    const it=R.items,W=920,H=250,L=62,Rm=64,T=16,B=34;
+    const it=R.items,W=920,H=250,L=62,Rm=150,T=16,B=34;
     const nMax=it.length;
     const cible=s.cible||0;
     const surfMax=Math.max(cible,it[nMax-1].cumulGain)*1.06;
@@ -3821,11 +4328,14 @@ function drawIndic(k){
     g+=txt(L,H-8,'projets financés, du m² le moins cher au plus cher →',{s:9,c:C.ink3})+
        txt(L-8,T-4,'m² créés',{a:'end',s:9,c:C.acc,w:700})+
        txt(W-Rm+8,T-4,'CHF cumulés',{s:9,c:C.ink3,w:700});
+    /* Rien n'est réalisé : le ruban n'a pas de segment « acquis », il montre
+       quelle part de la cible les projets repérés couvriraient. */
+    if(cible>0)g+=rubanV('veg',W-Rm+58,yS(0),yS(0),yS(cible),C,'rien de créé','','cible 2030');
     host.innerHTML=svg(W,H,g);return}
   if(!s||s.part){ /* part : évolution du niveau atteint, comparée à la cible */
     const vals=sparkOf(k)||[];
     if(!vals.length){host.innerHTML='<p class="mini">Série annuelle indisponible pour cet indicateur.</p>';return}
-    const W=920,H=220,L=54,R=16,T=14,B=30;
+    const W=920,H=220,L=54,R=150,T=14,B=30;
     const max=Math.max(s.cible,Math.max.apply(null,vals))*1.1;
     const x=function(i){return L+(W-L-R)*i/Math.max(1,vals.length-1)},y=function(v){return T+(H-T-B)*(1-v/max)};
     let g='';
@@ -3834,6 +4344,9 @@ function drawIndic(k){
     g+='<path d="'+p+'" fill="none" stroke="'+C.acc+'" stroke-width="2.4"/>';
     g+='<line x1="'+L+'" y1="'+y(s.cible)+'" x2="'+(W-R)+'" y2="'+y(s.cible)+'" stroke="'+C.ok+'" stroke-width="1.6" stroke-dasharray="5,4"/>'+
        txt(W-R-2,y(s.cible)-5,'cible '+nf(s.cible,1)+' %',{a:'end',s:9,c:C.ok,w:700});
+    /* Ici le ruban part de zéro : une part n'a pas de référence 2005, donc
+       pas de chemin parcouru — seulement un niveau atteint. */
+    if(s.cible>0)g+=rubanV(k,W-R+34,y(0),y(s.val),y(s.cible),C,'0 %','aujourd\'hui','cible');
     host.innerHTML=svg(W,H,g);return}
   /* indicateurs absolus : historique mesuré, puis projection jusqu'en 2030 */
   const o=IND.find(function(z){return z.k===k}),d=o.div||1;
@@ -3862,7 +4375,9 @@ function drawIndic(k){
   const parAn={},champ={co2:'co',th:'th',elec:'el',eau:'ea'}[k];
   if(RES&&RES.sel)RES.sel.forEach(function(x){const yy=x.yr||y1;parAn[yy]=(parAn[yy]||0)+G(x)[champ]});
   let cum=0;const port=fut.map(function(yy){cum+=(parAn[yy]||0);return Math.max(0,s.mesure-cum)});
-  const W=920,H=250,L=64,R=16,T=14,B=34;
+  /* R élargi : le ruban « où en est le chemin » se loge à droite, calé sur
+     la même échelle verticale que la courbe — c'est ce calage qui explique. */
+  const W=920,H=250,L=64,R=150,T=14,B=34;
   const allV=hist.map(function(p){return p.v}).concat(req,port,[s.cible]);
   const max=Math.max.apply(null,allV)*1.08||1;
   const x=function(yr){return L+(W-L-R)*(yr-y0)/Math.max(1,y1-y0)},
@@ -3889,6 +4404,9 @@ function drawIndic(k){
   g+=path(fut.map(function(yy,i){return{y:yy,v:port[i]}}),C.acc,false);
   g+='<line x1="'+L+'" y1="'+y(s.cible)+'" x2="'+(W-R)+'" y2="'+y(s.cible)+'" stroke="'+C.ok+'" stroke-width="1.6" stroke-dasharray="5,4"/>'+
      txt(L+4,y(s.cible)-6,'cible 2030 : '+nf(s.cible/d,o.dec)+' '+o.unit.split('/')[0],{s:9,c:C.ok,w:700});
+  /* le ruban, à droite de l'aire de tracé, sur l'axe des valeurs */
+  if(s.ref2005!=null&&s.ref2005>s.cible)
+    g+=rubanV(k,W-R+34,y(s.ref2005),y(s.mesure),y(s.cible),C,'réf. 2005','aujourd\'hui','cible 2030');
   hist.forEach(function(q){g+='<circle cx="'+x(q.y)+'" cy="'+y(q.v)+'" r="2.6" fill="'+C.ink+'"><title>'+q.y+' : '+nf(q.v/d,o.dec)+' '+esc(o.unit.split('/')[0])+' ('+srcHist+')</title></circle>'});
   g+='<circle cx="'+x(yM)+'" cy="'+y(s.mesure)+'" r="4.6" fill="none" stroke="'+C.ink+'" stroke-width="1.8">'+
      '<title>'+yM+' : '+nf(s.mesure/d,o.dec)+' '+esc(o.unit.split('/')[0])+' — total recalculé bâtiment par bâtiment, base de l\'écart à combler</title></circle>';
@@ -3954,14 +4472,17 @@ function renRPF(){
        '<td class="num">'+(ct?nf(ct):'—')+'</td><td class="num" style="font-weight:700">'+nf(b.top)+'</td>'+
        '<td class="num">'+(b.al?('<span class="chip" style="background:var(--bg-err);color:var(--fg-err)">'+b.al+'</span>'):'—')+'</td>'+
        '<td class="num">'+(b.adj?('⚖ '+b.adj):'—')+'</td>'+
-       '<td><button class="bt bt-s bt-i" onclick="rpfFocus(\''+esc(k).replace(/'/g,"\\'")+'\')" title="Filtrer tout l\'outil sur ce portefeuille">Filtrer</button></td></tr>'});
+       '<td><button class="bt bt-s bt-i" onclick="rpfFocus(\''+esc(k).replace(/'/g,"\\'")+'\',event)" title="Filtrer tout l\'outil sur ce portefeuille — Maj+clic pour l\'ajouter à la sélection en cours">Filtrer</button></td></tr>'});
   h+='</tbody></table><p class="mini" style="margin-top:6px">« Dans le 1er cinquième » : nombre de bâtiments du portefeuille figurant dans les 20 % de tête d\'au moins un classement par objectif — c\'est là que se joue l\'essentiel du résultat 2030.</p>';
   el.innerHTML=h}
-function rpfFocus(rp){
-  const el=$('gRP');if(!el)return;
-  const opt=[].slice.call(el.options).find(function(o){return o.value===rp});
-  el.value=opt?rp:'all';saveState();ren();
-  toast(opt?('Filtré sur '+rp):'Portefeuille non filtrable','ok')}
+function rpfFocus(rp,ev){
+  if(!rp)return;
+  if(ev&&ev.shiftKey){
+    const i=RP_SEL.indexOf(rp);
+    if(i>=0)RP_SEL.splice(i,1);else RP_SEL.push(rp)}
+  else RP_SEL=[rp];
+  onRPChange();
+  toast(RP_SEL.length?('Filtré sur '+rpLabel()):'Filtre portefeuille levé','ok')}
 
 /* ---------- contrôle qualité : ce qui bloque les classements ---------- */
 const QUAL_FIELDS=[
@@ -4292,7 +4813,9 @@ const PARC={
 const OBJ={
   /* valeurs reprises telles quelles de l'onglet « Objectifs PTE », en kg */
   co2 :{base2005:44211675.23642368,y2030:17684670.09456947,y2050:4421167.523642369,lbl:'CO₂',u:'t/an',red:0.60},
-  thI :{cibleMJ:350,lbl:'Thermique',u:'MJ/m²·an'},
+  /* la cible d'intensité vit désormais dans les paramètres (pCible30, en
+     kWh/m²·an) : ce bloc ne garde qu'un libellé et une unité */
+  thI :{lbl:'Thermique',u:'kWh/m²·an'},
   el  :{red:0.20,lbl:'Électricité',u:'GWh/an'},
   eau :{red:0.60,lbl:'Eau',u:'m³/an'},
   ren :{cible:0.50,lbl:'Part renouvelable'}
@@ -4447,7 +4970,7 @@ function weights(){
 function gaps(){
   const i=PARC.yrs.length-1;
   const co2=(PARC.co2[i]-OBJ.co2.y2030)/PARC.co2[i];
-  const thI=PARC.th[i]/PARC.sre*3.6,th=(thI-OBJ.thI.cibleMJ)/thI;
+  const thI=PARC.th[i]/PARC.sre,th=(thI-pCible30())/thI;
   const el=OBJ.el.red,ea=OBJ.eau.red;
   return {co:Math.max(0,co2),th:Math.max(0,th),el:el,ea:ea}}
 
@@ -4536,7 +5059,7 @@ function renderTraj(){
   /* Thermique */
   var h=g.th,mesh=h.mesure||0,apresh=Math.max(0,mesh-(t.th||0));
   cards.push(card('🔥 Thermique','GWh/an',apresh/1e6,(h.cible||0)/1e6,mesh/1e6,
-    (h.ref2005!=null?('Référence 2005 : '+nf(h.ref2005/1e6,1)+' GWh · cible −'+Math.round(h.pct*100)+' % ⇒ '+nf((h.cibleAbs||0)/1e6,1)+' GWh ; cible d\'intensité '+nf(h.cibleMJ)+' MJ/m²·an ⇒ '+nf((h.cibleIntens||0)/1e6,1)+' GWh — la plus contraignante est retenue'):'Référence 2005 absente'),
+    (h.ref2005!=null?('Référence 2005 : '+nf(h.ref2005/1e6,1)+' GWh · cible −'+Math.round(h.pct*100)+' % ⇒ '+nf((h.cibleAbs||0)/1e6,1)+' GWh ; cible d\'intensité 2030 '+nf(h.kwh30||pCible30())+' kWh/m²·an ⇒ '+nf((h.cibleIntens||0)/1e6,1)+' GWh — la plus contraignante est retenue · cible 2050 '+nf(h.kwh50||pCible50())+' kWh/m²·an ⇒ '+nf((h.cible2050||0)/1e6,1)+' GWh'):'Référence 2005 absente'),
     apresh<=(h.cible||0),
     [['Mesuré '+(h.annee||''),nf(mesh/1e6,1)+' GWh'],['Gain du portefeuille','−'+nf((t.th||0)/1e6,1)+' GWh'],
      ['Après travaux',nf(apresh/1e6,1)+' GWh'],['Cible retenue',nf((h.cible||0)/1e6,1)+' GWh'],
@@ -4682,6 +5205,67 @@ function renderList(){
    ================================================================ */
 function draw(){if(!SITES.length)return;drawFam();drawMacc();drawMaccTbl();try{renderTiles();renderPortKpi()}catch(e){}}
 
+/* Le ruban vertical, calé sur l'axe des valeurs du graphique qui l'accueille.
+   yA / yB / yC sont les pixels des trois repères : origine, position actuelle,
+   cible. Le ruban n'invente aucune échelle — il emprunte celle de la courbe,
+   et c'est de là que vient sa force démonstrative. */
+/* Écarte des étiquettes trop proches sans toucher aux traits de rappel, qui
+   restent, eux, à la hauteur exacte de leur repère : on décale le mot, jamais
+   la mesure. */
+function spreadY(ys,mini){
+  const idx=ys.map(function(v,i){return{v:v,i:i}}).sort(function(a,b){return a.v-b.v});
+  for(let k=1;k<idx.length;k++)
+    if(idx[k].v-idx[k-1].v<mini)idx[k].v=idx[k-1].v+mini;
+  const out=[];idx.forEach(function(o){out[o.i]=o.v});return out}
+
+function rubanV(key,x0,yDeb,yAuj,yCib,C,lblDeb,lblAuj,lblCib){
+  const D=pontData(key);if(!D)return'';
+  const Z=pontZones(D);
+  const w=28,xt=x0+w+7;
+  const hEcart=yCib-yAuj;
+  const yCouv=yAuj+hEcart*D.couvC;
+  /* les pourcentages qui ne tiennent pas dans leur bande passent à gauche */
+  const dehors=[];
+  const band=function(y1,y2,fill,label,titre,fg,col){
+    const a=Math.min(y1,y2),b=Math.max(y1,y2),ht=b-a;
+    if(ht<0.6)return'';
+    if(label&&ht<13)dehors.push({y:a+ht/2,t:label,c:col});
+    return'<g><rect x="'+x0+'" y="'+a.toFixed(1)+'" width="'+w+'" height="'+ht.toFixed(1)+'" fill="'+fill+'"/>'
+      +((label&&ht>=13)?('<text x="'+(x0+w/2)+'" y="'+(a+ht/2+3).toFixed(1)+'" font-size="8.5" font-weight="700" fill="'+fg+'" text-anchor="middle">'+label+'</text>'):'')
+      +'<title>'+esc(titre)+'</title></g>'};
+  let g='<defs><pattern id="hatchR" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">'
+    +'<rect width="6" height="6" fill="'+C.soft+'"/><line x1="0" y1="0" x2="0" y2="6" stroke="'+C.line+'" stroke-width="3"/></pattern></defs>';
+  g+=band(yDeb,yAuj,C.fait,nf(D.pct==null?0:D.pct)+' %',
+        Z.acquis.t.charAt(0).toUpperCase()+Z.acquis.t.slice(1)+' — '+Z.acquis.d,C.onFait,C.fait);
+  g+=band(yAuj,yCouv,C.couv,nf(Math.min(100,D.couv*100))+' %',
+        Z.couvert.t.charAt(0).toUpperCase()+Z.couvert.t.slice(1)+' — '+Z.couvert.d,C.onCouv,C.couv);
+  g+=band(yCouv,yCib,'url(#hatchR)','',
+        Z.reste.t.charAt(0).toUpperCase()+Z.reste.t.slice(1)+' — '+Z.reste.d,C.ink3,C.ink3);
+  g+='<rect x="'+x0+'" y="'+Math.min(yDeb,yCib).toFixed(1)+'" width="'+w+'" height="'+Math.abs(yCib-yDeb).toFixed(1)
+    +'" fill="none" stroke="'+C.line+'" stroke-width="1" rx="3"/>';
+  /* Repères : le trait garde la hauteur juste, le mot s'écarte si besoin. */
+  const rep=[[yDeb,lblDeb],[yAuj,lblAuj],[yCib,lblCib]].filter(function(r){return !!r[1]});
+  const ye=spreadY(rep.map(function(r){return r[0]}),11);
+  rep.forEach(function(r,i){
+    g+='<line x1="'+(x0-7)+'" y1="'+r[0].toFixed(1)+'" x2="'+x0+'" y2="'+r[0].toFixed(1)+'" stroke="'+C.ink3+'" stroke-width="1"/>'
+      +(Math.abs(ye[i]-r[0])>1.5
+        ?('<line x1="'+x0+'" y1="'+r[0].toFixed(1)+'" x2="'+(xt-2)+'" y2="'+ye[i].toFixed(1)+'" stroke="'+C.line+'" stroke-width="1"/>')
+        :'')
+      +txt(xt,ye[i]+3,r[1],{s:8.5,c:C.ink3})});
+  /* pourcentages expulsés de leur bande, à gauche du ruban */
+  if(dehors.length){
+    const yd=spreadY(dehors.map(function(o){return o.y}),10);
+    dehors.forEach(function(o,i){g+=txt(x0-10,yd[i]+3,o.t,{a:'end',s:8.5,c:o.c,w:700})})}
+  /* Le potentiel dépasse l'écart : un chevron le dit sans fausser l'échelle.
+     Il se pose du côté où le ruban se termine — la cible est en bas pour un
+     objectif de réduction, en haut pour une part ou une surface à créer. */
+  if(D.couv>1.02){
+    const desc=yCib>yDeb;
+    g+='<text x="'+(x0+w/2)+'" y="'+(yCib+(desc?12:-5)).toFixed(1)+'" font-size="8.5" font-weight="700" fill="'+C.couv
+      +'" text-anchor="middle">× '+nf(D.couv,1)+'<title>'+esc('Le potentiel repéré vaut '+nf(D.couv,1)+' fois l\'écart restant : le ruban est plein bien avant le dernier bâtiment classable.')+'</title></text>'}
+  if(D.vide)g+='<text x="'+(x0+w/2)+'" y="'+((yAuj+yCib)/2+4).toFixed(1)+'" font-size="12" fill="'+C.warn
+    +'" text-anchor="middle">⚠<title>'+esc(Z.couvert.d)+'</title></text>';
+  return g}
 function svg(w,h,inner){return '<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:auto;max-height:'+h+'px">'+inner+'</svg>'}
 function ax(x0,y0,x1,y1){return '<line class="gl" x1="'+x0+'" y1="'+y0+'" x2="'+x1+'" y2="'+y1+'"/>'}
 function txt(x,y,s,o){o=o||{};return '<text x="'+x+'" y="'+y+'" font-size="'+(o.s||10)+'" fill="'+(o.c||'#555')+'" text-anchor="'+(o.a||'start')+'"'+(o.w?' font-weight="'+o.w+'"':'')+'>'+s+'</text>'}
