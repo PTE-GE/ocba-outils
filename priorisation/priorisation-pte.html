@@ -389,7 +389,7 @@ body.night svg text{fill:var(--ink2)}
 .dash-foot{margin-top:16px;color:var(--ink3)}
 .dash-foot a{color:var(--acc);text-decoration:none;border-bottom:1px solid currentColor}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(214px,1fr));gap:12px}
-/* Les huit indicateurs forment une bande unique : on les lit d'un coup d'œil,
+/* Les sept indicateurs forment une bande unique : on les lit d'un coup d'œil,
    sans qu'un septième isolé donne l'impression d'un indicateur à part. */
 #objTiles{grid-template-columns:repeat(8,1fr);gap:8px}
 #objTiles .tile{padding:11px 11px 12px}
@@ -519,7 +519,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <div class="wt op" onclick="tglS('pathBody','pathCh')" title="Ce que le portefeuille produit année par année, comparé au rythme qu'il faudrait tenir"><h3 style="margin:0;border:none;padding:0">Trajectoire annuelle jusqu'en 2030</h3><span class="ch op" id="pathCh">▼</span></div>
 <div class="wb op" id="pathBody"><div id="trYears"></div></div>
 </div><div class="cd" id="ddCard">
-<div class="wt" onclick="tglS('ddBody','ddCh')" title="Indice de développement durable : cinq volets pondérables, couverture des données affichée"><h3 style="margin:0;border:none;padding:0">Développement durable</h3><span class="ch" id="ddCh">▼</span></div>
+<div class="wt" onclick="tglS('ddBody','ddCh')" title="Indice de développement durable : somme pondérée des taux d'atteinte des volets décrits dans « Objectifs PTE »"><h3 style="margin:0;border:none;padding:0">Développement durable</h3><span class="ch" id="ddCh">▼</span></div>
 <div class="wb" id="ddBody"><div id="ddTbl"></div></div>
 </div></div>
 <div class="toast" id="toast"></div>
@@ -596,8 +596,6 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <input id="pPv" type="number" min="500" max="1400" step="10" class="pop-in" title="Production annuelle attendue par kWc installé, pour convertir une puissance en énergie et la comparer à la cible « 20 % de la consommation électrique ». Ordre de grandeur genevois : 900 à 1 000.">
 </div></details>
 
-<details class="pset"><summary>🌱 Poids de l'indice développement durable</summary>
-<div class="pset-in"><div id="ddW" class="pgrid"></div></div></details>
 
 </div>
 <div class="pop-foot">
@@ -896,7 +894,7 @@ classements, alertes bâtiment par bâtiment, taux de remplissage, puis la liste
 
 <!-- ===== MANUEL ===== -->
 <div id="manual" class="pnl">
-<div class="m-hdr"><h2>📐 Méthode &amp; données</h2><p>D'où vient chaque chiffre, comment il est calculé, et ce que l'outil ne peut pas dire</p><span class="m-ver">MAJ 29.08.2026 · c</span></div>
+<div class="m-hdr"><h2>📐 Méthode &amp; données</h2><p>D'où vient chaque chiffre, comment il est calculé, et ce que l'outil ne peut pas dire</p><span class="m-ver">MAJ 01.09.2026</span></div>
 
 <div class="cd"><div class="wt" onclick="tglM(1)" title="Les colonnes du classeur réellement utilisées"><h3 style="margin:0;border:none;padding:0"><span class="m-num">1</span> D'où viennent les chiffres</h3><span class="ch" id="mCh1">▼</span></div><div class="wb" id="mB1"><div class="m-body">
 <p><b>Deux séries annuelles coexistent, et elles ne disent pas la même chose.</b> L'onglet
@@ -918,8 +916,9 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td>Facteurs d'émission</td><td>onglet <code>Data</code> du classeur</td></tr>
 <tr><td>Références 2005 et cibles 2030</td><td>onglet <code>Objectifs PTE</code> : ligne de pourcentage (CO₂ −60 %, thermique −60 %, eau −60 %, électricité −20 %, renouvelable 50 %, PV 20 %) puis série annuelle démarrant en 2005. Aucune cible n'est codée dans l'outil.</td></tr>
 <tr><td>Séries mesurées du parc</td><td>onglet <code>Consommation par site</code> (2017 → dernière année fiable), surfaces comprises</td></tr>
-<tr><td>Indice développement durable</td><td>colonnes <code>DD …</code> du classeur, pondérées par les cinq volets réglables (menu ☰ → Paramètres)</td></tr>
-<tr><td>Végétalisation</td><td><code>Surface végétalisée ajoutée (m2)</code> et <code>Coût végétalisation TTC [CHF]</code> de <code>Plan_PTE</code> ; cible 2030 dans <code>Objectifs PTE</code>, ligne <code>Végétalisation [m2]</code></td></tr>
+<tr><td>Indice développement durable</td><td>feuille <code>Objectifs PTE</code> : un volet par bloc de deux lignes — cible en colonne B, pondération en colonne C, réalisé sur la ligne suivante. Trois volets aujourd'hui : <code>Végétalisation [m2]</code>, <code>Toitures vivantes</code>, <code>Déchets et tri</code></td></tr>
+<tr><td>Projeté par volet</td><td><code>Surface végétalisée ajoutée (m2)</code>, <code>DD Toiture végétalisée projetée [m2]</code>, <code>DD Points de tri projetés [nb]</code> de <code>Plan_PTE</code> — ce que les projets repérés ajouteraient, bâtiment par bâtiment</td></tr>
+<tr><td>Classement Végétalisation</td><td><code>Surface végétalisée ajoutée (m2)</code> et <code>Coût végétalisation TTC [CHF]</code> de <code>Plan_PTE</code> ; cible 2030 dans <code>Objectifs PTE</code>, ligne <code>Végétalisation [m2]</code></td></tr>
 <tr><td>Périmètre des portefeuilles</td><td><code>Responsable Portefeuille</code></td></tr>
 </tbody></table>
 </div></div></div>
@@ -994,13 +993,18 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <h4 class="sub">4. L'objectif thermique est exprimé en intensité</h4>
 <p class="mini">La base 2005 de 193 GWh n'est pas comparable au parc actuel : la consommation thermique mesurée en 2025 est de 158 GWh sur 1,53 Mm², soit <b>371 MJ/m²·an</b>. Comparer des valeurs absolues à vingt ans d'écart, sur un parc dont le périmètre a bougé, ne dit rien d'utile. L'outil retient donc la cible <b>&lt; 350 MJ/m²·an</b>, qui figure au même référentiel d'objectifs 2030, qui est exprimée en intensité, et qui est mesurable chaque année.</p>
 
-<h4 class="sub">5. Ce que les données ne permettent pas encore de décider</h4>
+<h4 class="sub">5. L'indice développement durable est entièrement décrit dans le classeur</h4>
+<p class="mini">Il vaut <b>la somme des pondération × min(1, réalisé ÷ cible)</b> sur les volets décrits dans la feuille <code>Objectifs PTE</code>. Chaque volet s'y écrit sur deux lignes : le libellé porte la <b>cible</b> en colonne B et la <b>pondération</b> en colonne C, la ligne suivante porte le <b>réalisé</b>. Trois volets aujourd'hui — <b>Végétalisation</b> (60 %), <b>Toitures vivantes</b> (20 %), <b>Déchets et tri</b> (20 %). Ni les volets, ni leurs poids, ni leurs cibles ne sont réglables dans l'outil : ce sont des décisions du programme, elles vivent avec les autres objectifs.</p>
+<p class="mini">Le plafond est <b>volet par volet</b> : un volet dépassé ne rachète pas un volet en retard, faute de quoi la végétalisation — qui pèse 60 % et dont rien n'est réalisé — se ferait compenser par des points de tri. C'est pourquoi l'indice vaut 8,6 aujourd'hui malgré 42 % des points de tri déployés.</p>
+<p class="mini">À côté du réalisé, chaque volet porte le <b>projeté</b> : la somme, bâtiment par bâtiment, de ce que les projets repérés au plan ajouteraient — colonnes <code>Surface végétalisée ajoutée (m2)</code>, <code>DD Toiture végétalisée projetée [m2]</code> et <code>DD Points de tri projetés [nb]</code> de <code>Plan_PTE</code>. Le réalisé dit où en est le parc, le projeté ce qu'il atteindrait si tout se faisait, et l'écart entre les deux est ce qu'il y a à arbitrer. La <b>végétalisation</b> n'a plus de tuile propre : elle est devenue le volet le plus lourd de cet indice, et son classement au coût du m² créé reste dans l'onglet Classement.</p>
+
+<h4 class="sub">6. Ce que les données ne permettent pas encore de décider</h4>
 <div id="gapBox"></div>
 
-<h4 class="sub">6. L'indice de fiabilité — une donnée présente n'est pas forcément une bonne donnée</h4>
+<h4 class="sub">7. L'indice de fiabilité — une donnée présente n'est pas forcément une bonne donnée</h4>
 <p class="mini">Chaque bâtiment est recroisé sur quatre signaux, identiques à ceux de l'onglet <code>Paramètres</code> de <code>Priorisation_PTE.xlsx</code> : un investissement inférieur à 50 CHF/m² de SRE (et à 10 000 CHF en absolu — profil de chiffre d'attente plutôt que de budget réel), un IDC actuel hors de la plage 15–500 kWh/m²·an, une réduction promise de plus de 85 %, ou une consommation mesurée (<code>CONSO [kWh]</code>) incohérente avec le calcul SRE × IDC. Rien n'est retiré du classement par défaut : la ligne reste, l'alerte s'affiche. La case « Écarter les bâtiments au montant suspect », dans l'onglet <b>Arbitrage</b>, permet de les exclure explicitement si vous le souhaitez — c'est un choix, pas un filtre caché.</p>
 
-<h4 class="sub">7. Deux anomalies à vérifier avant de publier un chiffre</h4>
+<h4 class="sub">8. Deux anomalies à vérifier avant de publier un chiffre</h4>
 <div class="errbox">
 <b>La consommation d'eau 2025 est inexploitable.</b><br>
 8 527 000 m³ relevés en 2025 contre 688 000 m³ en 2024, soit un facteur 12. Il s'agit d'une erreur de saisie ou d'unité, pas d'une dérive. L'indicateur eau est donc affiché sur 2024 et signalé comme tel.
@@ -1009,13 +1013,13 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <b>Quatre sous-sites portent un montant <code>Estim PTE</code> sans rapport avec leur surface</b> — 999, 32 000, 36 000 et 40 000 CHF pour des bâtiments dont la SRE impliquerait un chantier bien plus cher. L'indice de fiabilité (§ 6) les signale ; ils restent visibles par défaut, à vérifier avant de leur faire porter une décision.
 </div>
 
-<h4 class="sub">8. Ce que l'outil ne fait pas</h4>
+<h4 class="sub">9. Ce que l'outil ne fait pas</h4>
 <p class="mini">Il ne calcule ni le retour sur investissement, ni le coût complet du cycle de vie, ni le carbone gris des travaux — l'article 117-118 LCI porte sur le carbone des matériaux et relève d'un autre référentiel. Il ne modélise pas les interactions de chantier entre sites voisins, ni la capacité réelle des équipes à absorber le rythme retenu : le plafond annuel est un garde-fou, pas une planification de charge. Il ne classe pas le Photovoltaïque par coût (aucune donnée n'isole le coût d'une installation PV du coût de rénovation du bâtiment) ni le Développement durable (aucun indicateur chiffré n'existe encore) — voir <code>Classements_Objectifs_PTE.xlsx</code> pour le détail de ces deux objectifs.</p>
 </div>
 </div>
 </div>
 
-<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v29.08.2026c</div>
+<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v01.09.2026</div>
 <script>
 /* ================================================================
    NOYAU COMMUN — état, persistance, pondérations
@@ -2056,6 +2060,11 @@ function importFromRows(rows,includeAll){
     ddVegCout:fc(h,['Coût végétalisation TTC [CHF]','Cout végétalisation TTC [CHF]','Coût végétalisation TTC']),
     ddArbres:fc(h,["Indicateur Biodiversité 3 Nombre d'arbres plantés","Nombre d'arbres plantés"]),
     ddCour:fc(h,["DD Cour d'école traitée"]),ddTri:fc(h,['DD Points de tri installés [nb]']),
+    /* les deux colonnes projetées par bâtiment, ajoutées au classeur le
+       01.09.2026 — le pendant, pour les toitures et le tri, de la colonne
+       « Surface végétalisée ajoutée (m2) » qui existait déjà */
+    ddToitProj:fc(h,['DD Toiture végétalisée projetée [m2]']),
+    ddTriProj:fc(h,['DD Points de tri projetés [nb]']),
     ddTriOk:fc(h,['DD Tri conforme']),ddMat:fc(h,['DD Exigence matériaux']),ddLci:fc(h,['DD LCI 117-118']),idcpB:fc(h,['IDC projeté VB [kWh]','IDC projeté VB']),idcpC:fc(h,['IDC projeté VC [kWh]','IDC projeté VC']),idcpGen:fc(h,['IDC projeté','IDCprojeté']),invEstim:fc(h,['Invest estim. CECB+','Estim PTE','EstimPTE']),invVB:fc(h,['Invest ImmOBA','InvestImmOBA','Invest VB']),invGE:fc(h,['Prévisionnel PTE GEI','GE-Invest','GEInvest','GE Invest','Invest GE']),invDG:fc(h,['DG (25%)','DG(25%)','DG 25%','DG25','Invest DG','DG']),lat:fc(h,['Latitude','Lat','GPS_Lat','YCOOR']),lng:fc(h,['Longitude','Long','Lng','GPS_Lng','XCOOR','lon']),notes:fc(h,['Notes','Commentaires','Remarques']),etat:fc(h,['Etat du projet (SIA)','État du projet (SIA)','Etat du projet','État du projet','Etat projet','EtatSIA']),gainElec:fc(h,['Gain Electricité (Max) - kWh','Gain Électricité (Max) - kWh']),gainEau:fc(h,['Gain Eau (Max) - m3']),pvKwc:fc(h,['Futur projet PV - puissance estimée (kWc)']),pvM2:fc(h,['Futur projet PV - surface toiture PV estimée (m2)'])};
   /* Garde-fou anti-collision : si la colonne « RP » détectée contient des nombres
      (ex. Facteur protection 0.5/1), on la rejette et on cherche une colonne
@@ -2108,6 +2117,7 @@ function importFromRows(rows,includeAll){
     ddToitVeg:pn(gvr(R,c.ddToitVeg)),ddToitType:gv(R,c.ddToitType),ddToitSurf:pn(gvr(R,c.ddToitSurf)),
     ddPerm:pn(gvr(R,c.ddPerm)),ddVeget:pn(gvr(R,c.ddVeget)),ddVegCout:pn(gvr(R,c.ddVegCout)),ddArbres:pn(gvr(R,c.ddArbres)),
     ddCour:gv(R,c.ddCour),ddTri:pn(gvr(R,c.ddTri)),ddTriOk:gv(R,c.ddTriOk),
+    ddToitProj:pn(gvr(R,c.ddToitProj)),ddTriProj:pn(gvr(R,c.ddTriProj)),
     ddMat:gv(R,c.ddMat),ddLci:gv(R,c.ddLci),pvKwc:pn(gvr(R,c.pvKwc)),pvM2:pn(gvr(R,c.pvM2)),lat:fLat,lng:fLng,geoQ:fQ,geoFallback:fQ==='none'})}
   return sites}
 
@@ -2229,16 +2239,12 @@ function tglPar(e){if(e)e.stopPropagation();
   const on=p.classList.toggle('on');
   if(on){$('pDur').value=PARAMS.duree;$('pPv').value=PARAMS.pvProd;
     $('pK30').value=pCible30();$('pK50').value=pCible50();parKmj();
-    const w=ddPoids();
     const dh=$('durObj');
     if(dh)dh.innerHTML=DUREE_OBJ.map(function(d){
       const v=(PARAMS.dureeObj&&+PARAMS.dureeObj[d.k]>0)?+PARAMS.dureeObj[d.k]:'';
       return '<div><label class="pop-l" title="'+esc(d.aide)+'">'+d.lbl+'</label>'+
         '<input class="pop-in" id="dur_'+d.k+'" type="number" min="5" max="80" step="5" '+
-        'placeholder="'+pDuree()+'" value="'+v+'"></div>'}).join('');
-    $('ddW').innerHTML=DD_VOLETS.map(function(v){
-      return '<div><label class="pop-l" title="'+esc(v.aide)+'">'+esc(v.lbl)+'</label>'+
-        '<input class="pop-in" id="ddw_'+v.k+'" type="number" min="0" max="100" step="5" value="'+w[v.k]+'"></div>'}).join('')}}
+        'placeholder="'+pDuree()+'" value="'+v+'"></div>'}).join('')}}
 /* rappel de l'équivalence en MJ : c'est l'unité des documents du référentiel,
    celle en kWh est celle des audits — on affiche les deux plutôt que d'obliger
    à convertir de tête */
@@ -2251,8 +2257,6 @@ function paramsApply(){
   if(k50>k30){toast('⚠️ La cible 2050 doit être plus basse que celle de 2030','wr');return}
   PARAMS.duree=d;PARAMS.pvProd=pv;PARAMS.cibleKwh30=k30;PARAMS.cibleKwh50=k50;
   CIBLE_MJ_M2_OBJ=k30*3.6;
-  PARAMS.dd=PARAMS.dd||{};
-  DD_VOLETS.forEach(function(v){const el=$('ddw_'+v.k);if(el&&el.value!=='')PARAMS.dd[v.k]=+el.value});
   /* une case vidée efface la surcharge : l'objectif revient à la valeur
      générale plutôt que de garder une ancienne valeur devenue invisible */
   PARAMS.dureeObj=PARAMS.dureeObj||{};
@@ -2305,7 +2309,43 @@ function refsFromObjectifs(rows){
     else if(L.indexOf('pv')===0&&v!=null&&v>0){const s=next('total production');
       R.pv={part:v,serie:s?serie(s):null,unit:'kWh'}}
   }
+  /* ── les volets de l'indice développement durable ────────────────────────
+     Trois blocs de deux lignes : cible en B, pondération en C, réalisé sur la
+     ligne suivante. On nomme les lignes attendues plutôt que de les deviner :
+     « GainTH théorique » porte lui aussi un nombre en B et 0,1454 en C, et
+     une règle structurelle l'avalerait. */
+  R.dd=ddDepuisObjectifs(rows,c2005,num,lbl);
   return R}
+
+const DD_LIGNES=[
+ {k:'veg' ,cle:['végétalis','vegetalis']  ,defUnit:'m²'},
+ {k:'toit',cle:['toitures vivantes']      ,defUnit:'m²'},
+ {k:'dech',cle:['déchets et tri','dechets et tri'],defUnit:'points de tri'}];
+function ddDepuisObjectifs(rows,c2005,num,lbl){
+  const volets=[];
+  for(let i=0;i<rows.length;i++){
+    const L=lbl(rows[i]);
+    const def=DD_LIGNES.find(function(d){
+      return d.cle.some(function(c){return L.indexOf(c)===0})});
+    if(!def)continue;
+    const cible=num(rows[i][c2005]), poids=num(rows[i][c2005+1]);
+    /* sans pondération, la ligne n'est pas un volet de l'indice — c'est le cas
+       de la végétalisation tant que la colonne C n'est pas renseignée */
+    if(!(cible>0)||!(poids>0))continue;
+    const suivant=rows[i+1];
+    const reel=suivant?num(suivant[c2005]):null;
+    /* le libellé et l'unité viennent du classeur : « Végétalisation [m2] »
+       donne le nom « Végétalisation » et l'unité « m2 » */
+    const brut=String(rows[i][0]||'').trim();
+    const mu=brut.match(/\[([^\]]+)\]\s*$/);
+    volets.push({k:def.k,
+      lbl:brut.replace(/\s*\[[^\]]*\]\s*$/,'').trim()||def.k,
+      unit:mu?mu[1].replace(/m2/i,'m²').replace(/m3/i,'m³'):def.defUnit,
+      cible:cible,poids:poids,reel:reel!=null?reel:0,
+      reelLbl:suivant?String(suivant[0]||'').trim():''})}
+  if(!volets.length)return null;
+  const somme=volets.reduce(function(a,v){return a+v.poids},0);
+  return{volets:volets,somme:somme}}
 
 /* Fiabilité des séries de « Consommation par site » : une colonne annuelle
    recopiée d'une autre année, ou polluée par une autre série, donne un total
@@ -2404,7 +2444,8 @@ function computeGapsObj(sheets){
          gap:g(ea.v,cEa),surface:S,unit:'m³'},
     pv:{actuelKw:P.pvKw||0,prod:pvProd2025,ciblePart:partPv,cibleKwh:cPvKwh,gapKwh:gapPvKwh,
         gapKw:gapPvKwh/pPvProd(),cibleKw:(cPvKwh/pPvProd()),elec:el.v,surface:S,unit:'kWc'},
-    veg:vegGap(R)}}
+    veg:vegGap(R),
+    dd:(R&&R.dd)?R.dd:null}}
 
 /* Végétalisation : la cible vient de la feuille « Objectifs PTE » ; le réalisé
    et le prévu viennent de la colonne « Surface végétalisée ajoutée (m2) » du
@@ -3442,8 +3483,8 @@ const TOUR=[
   d:"<b>Vue d'ensemble</b> : où en est le parc face aux cibles 2030. <b>Classement</b> : par quoi commencer. <b>Arbitrage</b> : ce qu'une enveloppe permet vraiment, et le prix de la tonne évitée. <b>Carte</b> : où sont les bâtiments. <b>Données</b> : ce qui manque et ce que cela empêche de calculer. <b>Méthode</b> : d'où vient chaque chiffre."},
  {sel:'.gsearch',t:'Retrouver un bâtiment',
   d:"Tapez un <b>numéro de sous-site</b> ou un <b>nom</b> : la liste propose les correspondances avec leur responsable de portefeuille et leur priorité. <b>Entrée</b> ouvre directement la fiche du bâtiment dans le classement, quel que soit l'onglet où vous étiez."},
- {sel:'#objTiles',t:'Huit indicateurs, un seul écran',panel:'dash',
-  d:"Chaque tuile porte la <b>valeur mesurée</b> du parc, la cible 2030 et le chemin déjà parcouru depuis la référence 2005. Le segment clair de la barre est ce que le portefeuille arrêté ajouterait. La couleur juge l'ensemble : vert si la cible est en vue, rouge si le compte n'y est pas."},
+ {sel:'#objTiles',t:'Sept indicateurs, un seul écran',panel:'dash',
+  d:"Chaque tuile porte la <b>valeur mesurée</b> du parc, la cible 2030 et le chemin déjà parcouru depuis la référence 2005. Le segment clair de la barre est ce que le portefeuille arrêté ajouterait. La couleur juge l'ensemble : vert si la cible est en vue, rouge si le compte n'y est pas. La <b>végétalisation</b> n'a plus de tuile propre : elle est devenue le volet le plus lourd de l'indice <b>développement durable</b>, et se lit là — son classement dédié, lui, reste dans l'onglet Classement."},
  {sel:'#objDetail',t:'Une tuile, une trajectoire',panel:'dash',
   d:"Cliquez une tuile : le graphique dessous montre la série mesurée depuis 2005, le rythme qu'il faudrait tenir jusqu'en 2030, et l'effet du portefeuille que vous aurez arrêté dans l'onglet Arbitrage. La ligne de sources, en bas, dit de quelle feuille vient chaque chiffre."},
  {sel:'#gInv',t:"D'où viennent les montants",
@@ -3472,7 +3513,7 @@ const TOUR=[
  {sel:'#mainMenu a[onclick*="tglNotes"]',t:'Emporter vos décisions',menu:true,
   d:"Notes et facteurs non mesurables s'exportent dans un <b>même fichier CSV</b>. Ce fichier s'ouvre dans Excel : on peut le compléter hors de l'outil, l'envoyer à un collègue, récupérer le sien, fusionner les deux — puis le réimporter ici. C'est ainsi qu'on partage sans droit d'écriture sur le classeur."},
  {sel:'#mainMenu a[onclick*="tglPar"]',t:'Les hypothèses sont des réglages',menu:true,
-  d:"Durée de vie — générale et par objectif —, productible photovoltaïque, <b>cibles d'intensité thermique 2030 et 2050</b>, poids des cinq volets du développement durable : rien n'est figé dans le code. Le panneau est en sections repliables ; les réglages sont rappelés dans l'onglet Méthode et mémorisés dans ce navigateur."},
+  d:"Durée de vie — générale et par objectif —, productible photovoltaïque, <b>cibles d'intensité thermique 2030 et 2050</b> : rien n'est figé dans le code. Le panneau est en sections repliables ; les réglages sont rappelés dans l'onglet Méthode et mémorisés dans ce navigateur. Les <b>pondérations du développement durable</b>, elles, ne s'y règlent pas : elles viennent de la feuille <code>Objectifs PTE</code>, comme les cibles."},
  {sel:'#mainMenu a[onclick*="tglTheme"]',t:'Mode nuit',menu:true,
   d:"L'outil s'affiche aussi en sombre — graphiques compris. Le choix est mémorisé sur ce poste. Le <b>mode présentation</b>, juste dessous, agrandit les chiffres pour la projection en séance."}];
 let _tourI=-1,tourSeen=false;
@@ -3781,102 +3822,85 @@ function printSite(id){
   setTimeout(function(){window.print();setTimeout(function(){c.classList.remove('on');c.innerHTML=''},400)},120)}
 
 
-/* ================================================================
-   INDICE DÉVELOPPEMENT DURABLE
-   Cinq volets, chacun mesurable séparément et pondérable par
-   l'utilisateur (⚙️). Un volet sans donnée ne pénalise pas le
-   bâtiment : il sort du calcul et fait baisser la COUVERTURE, qui
-   est affichée à côté de l'indice — un score de 80 sur 30 % du
-   parc ne dit pas la même chose qu'un 80 sur 100 %.
-   ================================================================ */
-const DD_VOLETS=[
- {k:'toit',lbl:'Toitures vivantes',def:30,
-  aide:'m² de toiture végétalisée ou biosolaire réalisés, rapportés à la surface de toiture plate éligible'},
- {k:'ilot',lbl:'Îlots de fraîcheur',def:25,
-  aide:'m² désimperméabilisés et végétalisés au sol, arbres plantés (1 arbre ≈ 25 m² d\'ombrage), cours d\'écoles en priorité'},
- {k:'dech',lbl:'Déchets et tri',def:20,
-  aide:'points de tri déployés et conformité au tri à 5 flux'},
- {k:'mat' ,lbl:'Matériaux et LCI 117-118',def:15,
-  aide:'exigences carbone des matériaux et conformité aux articles 117-118 LCI'},
- {k:'fin' ,lbl:'Engagement financier',def:10,
-  aide:'montant DD engagé, rapporté à l\'enveloppe de 30 MCHF'}];
-const DD_ENVELOPPE=30e6;
-function ddPoids(){
-  const w={};DD_VOLETS.forEach(function(v){w[v.k]=(PARAMS.dd&&PARAMS.dd[v.k]!=null)?+PARAMS.dd[v.k]:v.def});
-  return w}
-function ddTotalPoids(){const w=ddPoids();let s=0;for(const k in w)s+=w[k];return s||100}
-function _oui(v){const s=String(v||'').trim().toLowerCase();return s==='oui'||s==='conforme'||s==='vrai'||s==='x'||s==='1'}
-function _partiel(v){const s=String(v||'').trim().toLowerCase();return s==='partiel'||s==='en cours'}
-/* volets d'un bâtiment : {score 0..1, has:bool} */
-function ddVolets(s){
-  const out={};
-  /* 1. toitures vivantes */
-  const plate=/plate|mixte|shed/i.test(String(s.ddToitType||''));
-  const surfT=+s.ddToitSurf||0,veg=+s.ddToitVeg||0;
-  if(veg>0||(plate&&surfT>0))out.toit={v:surfT>0?Math.min(1,veg/surfT):(veg>0?1:0),has:true};
-  else out.toit={v:0,has:false};
-  /* 2. îlots de fraîcheur : surfaces + arbres, ramenés à la SRE */
-  const perm=+s.ddPerm||0,vg=+s.ddVeget||0,arb=+s.ddArbres||0;
-  const m2=perm+vg+arb*25;
-  if(m2>0||_oui(s.ddCour))out.ilot={v:Math.min(1,(m2/Math.max(200,(+s.sre||0)*0.1))+(_oui(s.ddCour)?0.25:0)),has:true};
-  else out.ilot={v:0,has:false};
-  /* 3. déchets */
-  if(s.ddTri!=null||s.ddTriOk)out.dech={v:(_oui(s.ddTriOk)?1:(_partiel(s.ddTriOk)?0.5:(+s.ddTri>0?0.5:0))),has:true};
-  else out.dech={v:0,has:false};
-  /* 4. matériaux + LCI */
-  if(s.ddMat||s.ddLci){
-    const a=_oui(s.ddMat)?1:(_partiel(s.ddMat)?0.5:0), b=_oui(s.ddLci)?1:0;
-    out.mat={v:(a+b)/2,has:true}}
-  else out.mat={v:0,has:false};
-  /* 5. engagement financier — mesuré au niveau du parc, pas du bâtiment */
-  const eng=+s.ddEng||0;
-  out.fin={v:eng>0?1:0,has:eng>0||(+s.ddPrev||0)>0};
-  return out}
-function ddScore(s){
-  const w=ddPoids(),V=ddVolets(s);
-  let num=0,den=0,cov=0,tot=0;
-  DD_VOLETS.forEach(function(v){
-    tot+=w[v.k];
-    if(V[v.k].has){num+=V[v.k].v*w[v.k];den+=w[v.k];cov+=w[v.k]}});
-  return{score:den>0?100*num/den:null,couverture:tot?100*cov/tot:0,volets:V}}
+/* ── L'indice développement durable ───────────────────────────────────────
+   Trois volets, tous décrits dans la feuille « Objectifs PTE » : une cible,
+   une pondération, un réalisé. Rien n'est réglable dans l'outil et rien n'y
+   est codé en dur — ce sont des décisions du programme, elles vivent dans le
+   classeur avec les autres objectifs.
+
+       indice = Σ pondération × min(1, réalisé / cible)
+
+   Le plafond est volet par volet : un volet dépassé ne rachète pas un volet
+   en retard, sinon la végétalisation, qui pèse 60 %, se ferait compenser par
+   des points de tri.
+
+   À côté du réalisé, chaque volet porte le PROJETÉ — la somme, bâtiment par
+   bâtiment, de ce que les projets repérés au plan ajouteraient. Le réalisé
+   dit où en est le parc, le projeté ce qu'il atteindrait si tout se faisait.
+   L'écart entre les deux est ce qu'il y a à arbitrer.                      */
+const DD_PROJ={veg:'ddVeget',toit:'ddToitProj',dech:'ddTriProj'};
+const DD_COL_PROJ={veg:'Surface végétalisée ajoutée (m2)',
+                   toit:'DD Toiture végétalisée projetée [m2]',
+                   dech:'DD Points de tri projetés [nb]'};
+function ddVoletsDef(){
+  return (typeof OBJ_GAPS!=='undefined'&&OBJ_GAPS&&OBJ_GAPS.dd&&OBJ_GAPS.dd.volets)
+    ?OBJ_GAPS.dd.volets:[]}
 function ddParc(pop){
-  const w=ddPoids();
-  const agg={};DD_VOLETS.forEach(function(v){agg[v.k]={n:0,som:0}});
-  let eng=0,prev=0;
+  const V=ddVoletsDef();
+  if(!V.length)return{score:null,scoreProj:null,couverture:0,volets:[],somme:0,n:(pop||[]).length};
+  const proj={},nProj={};
+  V.forEach(function(v){proj[v.k]=0;nProj[v.k]=0});
   (pop||[]).forEach(function(s){
-    const V=ddVolets(s);
-    DD_VOLETS.forEach(function(v){if(V[v.k].has){agg[v.k].n++;agg[v.k].som+=V[v.k].v}});
-    eng+=+s.ddEng||0;prev+=+s.ddPrev||0});
-  let num=0,den=0;
-  DD_VOLETS.forEach(function(v){
-    if(v.k==='fin')return;
-    if(agg[v.k].n){num+=(agg[v.k].som/agg[v.k].n)*w[v.k];den+=w[v.k]}});
-  /* le volet financier se mesure sur l'enveloppe, pas en moyenne de bâtiments */
-  if(eng>0||prev>0){num+=Math.min(1,eng/DD_ENVELOPPE)*w.fin;den+=w.fin}
-  const totW=ddTotalPoids();
-  return{score:den>0?100*num/den:null,couverture:100*den/totW,agg:agg,eng:eng,prev:prev,n:(pop||[]).length}}
+    V.forEach(function(v){
+      const f=DD_PROJ[v.k];if(!f)return;
+      const x=+s[f]||0;if(x>0){proj[v.k]+=x;nProj[v.k]++}})});
+  let num=0,numP=0,den=0,tot=0;
+  const out=V.map(function(v){
+    tot+=v.poids;
+    const taux =v.cible>0?Math.min(1,(v.reel||0)/v.cible):null;
+    const tauxP=v.cible>0?Math.min(1,((v.reel||0)+proj[v.k])/v.cible):null;
+    if(taux!=null){num+=taux*v.poids;numP+=tauxP*v.poids;den+=v.poids}
+    return{k:v.k,lbl:v.lbl,unit:v.unit,cible:v.cible,poids:v.poids,reel:v.reel||0,
+           reelLbl:v.reelLbl,taux:taux,proj:proj[v.k],nProj:nProj[v.k],
+           tauxProj:tauxP,brut:v.cible>0?((v.reel||0)+proj[v.k])/v.cible:null,
+           col:DD_COL_PROJ[v.k]||null}});
+  return{score:den>0?100*num/den:null,scoreProj:den>0?100*numP/den:null,
+         couverture:tot?100*den/tot:0,volets:out,somme:tot,n:(pop||[]).length}}
 function renDD(){
   const el=$('ddTbl');if(!el)return;
   const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
-  const P=ddParc(pop),w=ddPoids();
-  let h='<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:8px">'+
-    '<div style="font-size:1.9rem;font-weight:800;color:var(--pri)">'+(P.score==null?'—':nf(P.score))+
+  const P=ddParc(pop);
+  if(!P.volets.length){
+    el.innerHTML='<p class="mini">Aucun volet trouvé dans la feuille <code>Objectifs PTE</code>. '+
+      'Chaque volet s\'y écrit sur deux lignes : le libellé avec sa cible en colonne B et sa pondération en colonne C, '+
+      'puis le réalisé sur la ligne suivante.</p>';return}
+  const gain=(P.scoreProj!=null&&P.score!=null)?(P.scoreProj-P.score):0;
+  let h='<div style="display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;margin-bottom:10px">'+
+    '<div style="font-size:1.9rem;font-weight:800;color:var(--pri)">'+(P.score==null?'—':nf(P.score,1))+
     '<span style="font-size:.8rem;font-weight:600;color:var(--ink3)"> / 100</span></div>'+
-    '<div class="mini">couverture des données : <b>'+nf(P.couverture)+' %</b><br>'+
-    'engagé : <b>'+nf(P.eng/1e6,1)+' M</b> sur '+nf(DD_ENVELOPPE/1e6)+' M · prévu : '+nf(P.prev/1e6,1)+' M</div></div>';
-  h+='<table class="tblx"><thead><tr><th>Volet</th><th class="num">Poids</th><th class="num">Bâtiments documentés</th><th class="num">Niveau moyen</th><th>Ce qui est mesuré</th></tr></thead><tbody>';
-  DD_VOLETS.forEach(function(v){
-    const a=P.agg[v.k];
-    h+='<tr><td><b>'+esc(v.lbl)+'</b></td><td class="num">'+w[v.k]+'</td>'+
-       '<td class="num">'+(v.k==='fin'?'—':nf(a.n))+'</td>'+
-       '<td class="num">'+(a.n?nf(100*a.som/a.n)+' %':(v.k==='fin'?(P.eng>0?nf(100*Math.min(1,P.eng/DD_ENVELOPPE))+' %':'—'):'—'))+'</td>'+
-       '<td class="mini">'+esc(v.aide)+'</td></tr>'});
+    '<div class="mini">réalisé aujourd\'hui'+
+    (gain>0.05?(' · <b style="color:var(--ok)">'+nf(P.scoreProj,1)+'</b> si les projets repérés au plan se font (+'+nf(gain,1)+')'):'')+
+    '</div></div>';
+  h+='<table class="tblx"><thead><tr><th>Volet</th><th class="num">Pondération</th>'+
+     '<th class="num">Cible 2030</th><th class="num">Réalisé</th><th class="num">Atteint</th>'+
+     '<th class="num">Projeté au plan</th><th class="num">Avec les projets</th></tr></thead><tbody>';
+  P.volets.forEach(function(v){
+    const dep=v.brut!=null&&v.brut>1.02;
+    h+='<tr><td><b>'+esc(v.lbl)+'</b><br><span class="mini">'+esc(v.reelLbl||'')+'</span></td>'+
+       '<td class="num">'+nf(v.poids*100)+' %</td>'+
+       '<td class="num">'+nf(v.cible)+' '+esc(v.unit)+'</td>'+
+       '<td class="num">'+nf(v.reel)+'</td>'+
+       '<td class="num"><b>'+(v.taux==null?'—':nf(v.taux*100,1)+' %')+'</b></td>'+
+       '<td class="num" title="'+esc(v.col?('Colonne « '+v.col+' » de Plan_PTE, sommée sur '+nf(v.nProj)+' bâtiment(s)'):'')+'">'+
+         (v.proj>0?(nf(v.proj)+' <span class="mini">('+nf(v.nProj)+' bât.)</span>'):'—')+'</td>'+
+       '<td class="num">'+(v.tauxProj==null?'—':(nf(v.tauxProj*100,1)+' %'+
+         (dep?(' <span class="mini" title="Le potentiel repéré vaut '+nf(v.brut,1)+' fois la cible">× '+nf(v.brut,1)+'</span>'):'')))+'</td></tr>'});
   h+='</tbody></table>';
-  h+='<p class="mini" style="margin-top:6px">Les poids se règlent dans le menu ⚙️ de l\'en-tête (total actuel : '+ddTotalPoids()+' points). '+
-     'Un volet sans donnée ne pénalise pas : il sort du calcul et fait baisser la couverture. '+
-     'Colonnes attendues dans <code>Plan_PTE</code> : <code>DD Toiture végétalisée réalisée [m2]</code>, les trois colonnes Biodiversité, '+
-     '<code>DD Cour d\'école traitée</code>, <code>DD Points de tri installés [nb]</code>, <code>DD Tri conforme</code>, '+
-     '<code>DD Exigence matériaux</code>, <code>DD LCI 117-118</code>, <code>Montant DD engagé [CHF]</code>.</p>';
+  h+='<p class="mini" style="margin-top:7px">Indice = somme des <b>pondération × min(1, réalisé ÷ cible)</b>. Le plafond est volet par volet : '+
+     'un volet dépassé ne rachète pas un volet en retard. Cibles, pondérations et réalisés viennent tous de la feuille '+
+     '<code>Objectifs PTE</code> — rien n\'est réglable ici. Le <b>projeté</b> est la somme, bâtiment par bâtiment, des colonnes '+
+     P.volets.map(function(v){return v.col?'<code>'+esc(v.col)+'</code>':null}).filter(Boolean).join(', ')+
+     ' de <code>Plan_PTE</code> : c\'est ce que le parc atteindrait si tous les projets repérés se faisaient.</p>';
   el.innerHTML=h}
 
 
@@ -4078,8 +4102,10 @@ const IND=[
  {k:'eau' ,lbl:'Eau'            ,unit:'m³/an'           ,div:1   ,dec:0},
  {k:'ren' ,lbl:'Renouvelable'   ,unit:'% du thermique'  ,div:1   ,dec:1,part:true},
  {k:'pv'  ,lbl:'Photovoltaïque' ,unit:"% de l'électricité",div:1  ,dec:1,part:true},
- {k:'veg' ,lbl:'Végétalisation'   ,unit:'m²'              ,div:1   ,dec:0,cumul:true},
- {k:'dd'  ,lbl:'Développement durable',unit:'/ 100'     ,div:1   ,dec:0,dd:true}];
+ /* La végétalisation n'a plus sa tuile : elle est devenue le volet le plus
+    lourd (60 %) de l'indice développement durable, et se lit là. Son
+    classement dédié, lui, reste dans l'onglet Classement. */
+ {k:'dd'  ,lbl:'Développement durable',unit:'/ 100'     ,div:1   ,dec:1,dd:true}];
 const SERIE_OF={co2:'CO2 Scope 1+2',th:'ThTOT',elec:'ELEC',eau:'EAU',ren:'ThRenouv'};
 let indSel='co2';
 function indState(k){
@@ -4087,6 +4113,9 @@ function indState(k){
   const t=RES?RES.tot:{th:0,co:0,el:0,ea:0};
   if(k==='dd'){const P=ddParc((S_ALL&&S_ALL.length)?S_ALL:S);
     return{val:P.score,cible:100,ref:0,part:false,pct:P.score==null?0:P.score,
+           /* le segment clair de la barre, c'est ce que les projets repérés
+              ajouteraient — même convention que « + portefeuille » ailleurs */
+           pctPort:(P.scoreProj!=null&&P.score!=null)?Math.max(0,Math.min(100-P.score,P.scoreProj-P.score)):0,
            lbl:'Développement durable',unit:'/ 100',couv:P.couverture,dd:P}}
   if(k==='veg'){const v=g.veg||{};
     /* Objectif cumulatif : on ne réduit pas, on crée. Le « chemin » n'est donc
@@ -4155,16 +4184,17 @@ function renderTiles(){
     const val=(s.val==null)?'—':nf(s.val/(o.div||1),o.dec);
     const cibTxt=s.part?(nf(s.cible,1)+' %'):(nf(s.cible/(o.div||1),o.dec)+' '+o.unit.split('/')[0]);
     let sub;
-    if(o.k==='dd')        sub='couverture des données '+nf(s.couv)+' %';
-    else if(o.k==='veg')  sub=(s.sansCible?'objectif absent de la feuille'
-                              :('cible '+nf(s.cible)+' m² · <b>'+nf(s.couvert)+' %</b> repérés'));
+    if(o.k==='dd')        sub=(!s.dd||!s.dd.volets.length)
+                              ?'volets absents de la feuille « Objectifs PTE »'
+                              :((s.dd.volets.length)+' volets · <b>'+nf(s.dd.scoreProj,1)+'</b> avec les projets repérés');
     else if(o.k==='pv')   sub='cible '+cibTxt+' · <b>'+nf(s.gapKw)+' kWc</b> à installer';
     else if(o.k==='ren')  sub='cible '+cibTxt+' · <b>'+nf((s.gap||0)/1e6,1)+' GWh</b> à basculer';
     else if(s.sansRef)    sub='cible '+cibTxt+' · pas de référence 2005';
     else                  sub='cible '+cibTxt+' · <b>'+nf(s.pct)+' %</b> du chemin';
-    if(s.pctPort>0.5)     sub+=' <span class="add">+'+nf(s.pctPort)+' % portef.</span>';
-    const ttl=o.k==='veg'?('Surfaces à créer repérées dans le plan ('+nf(s.n)+' bâtiment(s)) face à la cible 2030 — rien n\'est encore réalisé : cliquer pour voir ce que couvre chaque tranche de financement')
-      :o.k==='dd'?'Indice de développement durable — cliquer pour le détail des cinq volets'
+    /* sur l'indice DD, le segment clair n'est pas le portefeuille arrêté mais
+       les projets repérés — le sous-titre le dit déjà, ne le répétons pas */
+    if(s.pctPort>0.5&&o.k!=='dd')sub+=' <span class="add">+'+nf(s.pctPort)+' % portef.</span>';
+    const ttl=o.k==='dd'?'Indice de développement durable : somme pondérée des taux d\'atteinte des volets décrits dans « Objectifs PTE » — cliquer pour le détail'
       :(o.k==='pv'?('Puissance restant à installer pour que le photovoltaïque couvre '+nf(s.cible,1)+' % de l\'électricité consommée')
        :(o.k==='ren'?('Consommation thermique restant à basculer sur un agent non fossile pour atteindre '+nf(s.cible,1)+' %')
         :('Chemin parcouru depuis la référence 2005 vers la cible 2030'+
@@ -4178,7 +4208,10 @@ function renderTiles(){
       '<div class="s">'+sub+'</div>'+
       (sparkSvg(sparkOf(o.k),col)||'<div class="nospark" title="Pas encore de série annuelle pour cet indicateur">—</div>')+'</div>'}).join('');
   renderDetail()}
-function selInd(k){indSel=k;renderTiles()}
+function selInd(k){
+  /* « veg » n'a plus de tuile : un état enregistré avant le 01.09.2026 peut
+     encore le désigner, on le renvoie sur l'indice qui l'a absorbé */
+  indSel=(k==='veg')?'dd':k;renderTiles()}
 /* d'où viennent les chiffres affichés pour cet indicateur */
 function indSource(k){
   const RS=(typeof OBJ_REFS!=='undefined'&&OBJ_REFS&&OBJ_REFS[k])?OBJ_REFS[k].serie:null;
@@ -4199,50 +4232,59 @@ function indSource(k){
 function drow(r){
   const L=r[0],lbl=(L&&L.h!=null)?L.h:L,tip=(L&&L.t)?' title="'+esc(L.t)+'"':'';
   return '<div class="drow"'+tip+'><span'+(tip?' style="border-bottom:1px dotted var(--line);cursor:help"':'')+'>'+lbl+'</span><b>'+r[1]+'</b></div>'}
+/* Le volet qui pèse le plus lourd et dont rien n'est réalisé mérite son
+   détail : la courbe d'achat des projets repérés, du m² le moins cher au plus
+   cher, et le rang où la cible serait atteinte. C'est le contenu de l'ancienne
+   tuile Végétalisation, replacé sous le volet auquel il appartient. */
+function ddVegBloc(){
+  let s=null;try{s=indState('veg')}catch(e){}
+  if(!s||s.sansCible)return'';
+  const R=(typeof OBJRANK!=='undefined'&&OBJRANK&&OBJRANK.veg)?OBJRANK.veg:null;
+  if(!R||!R.items.length)return'';
+  const fr=R.franchiRang;
+  const it=fr?R.items[fr-1]:null;
+  const coutFr=it?it.cumulInvest:null;
+  const rows=[
+    [{h:'Repéré dans le plan',t:'Colonne « Surface végétalisée ajoutée (m2) » du Plan_PTE — surfaces que les projets créeraient'},
+      nf(s.val)+' m² sur une cible de '+nf(s.cible)+' m²'],
+    [{h:'Bâtiments concernés',t:'Sous-sites portant une surface végétalisée dans le classeur'},
+      nf(s.n)+(s.nChiffres<s.n?(' <span style="font-weight:400;color:var(--ink3)">dont '+nf(s.nChiffres)+' chiffrés</span>'):'')],
+    [{h:'Coût total TTC des projets repérés',t:'Colonne « Coût végétalisation TTC [CHF] »'},
+      s.cout?nf(s.cout/1e6,1)+' MCHF':'—'],
+    [{h:'Coût moyen du m² créé',t:'Coût total ÷ surface totale — le classement, lui, va du m² le moins cher au plus cher'},
+      s.coutM2?nf(s.coutM2)+' CHF/m²':'—'],
+    [{h:'Bâtiments à financer pour la cible',t:'Rang de franchissement du classement Végétalisation, en commençant par le m² le moins cher'},
+      fr?(nf(fr)+' sur '+nf(R.items.length)):'cible non atteinte avec les projets repérés'],
+    [{h:'Montant correspondant',t:'Cumul des coûts TTC jusqu\'au rang de franchissement'},
+      coutFr?nf(coutFr/1e6,1)+' MCHF':'—']];
+  const m=Math.ceil(rows.length/2);
+  return'<h4 class="sub" style="margin-top:18px">Végétalisation — ce que chaque franc achète</h4>'+
+    '<p class="lead">Le volet le plus lourd de l\'indice, et celui dont <b>rien n\'est encore réalisé</b>. '+
+    'Les projets se financent du <b>m² le moins cher au plus cher</b> : la courbe montre la surface créée à mesure '+
+    'qu\'on descend le classement, et le rang où la cible est atteinte. Ni durée de vie ni actualisation — on achète '+
+    'une surface, pas un flux annuel.</p>'+
+    '<div id="indChart"></div>'+
+    '<div class="dgrid"><div>'+rows.slice(0,m).map(drow).join('')+
+    '</div><div>'+rows.slice(m).map(drow).join('')+'</div></div>'+
+    pontLegende('veg')+
+    '<p class="mini" style="margin-top:8px;color:var(--ink3)">Le classement complet, bâtiment par bâtiment, '+
+    'est dans l\'onglet <b>Classement</b> → objectif <b>Végétalisation</b>.</p>'}
+
 function renderDetail(){
   const el=$('objDetail');if(!el)return;
   const o=IND.find(function(x){return x.k===indSel})||IND[0];
   const s=indState(indSel);if(!s){el.innerHTML='';return}
   if(indSel==='dd'){
     renDD();
-    el.innerHTML='<h3>Développement durable</h3><p class="lead">Cinq volets pondérables (menu ☰ → Paramètres). '+
-      'Un volet sans donnée ne pénalise pas : il sort du calcul et fait baisser la couverture.</p>'+
-      '<div id="ddHost"></div>';
+    const P=s.dd||{volets:[]};
+    el.innerHTML='<h3>Développement durable</h3>'+
+      '<p class="lead">Somme pondérée des taux d\'atteinte de <b>'+P.volets.length+' volets</b>. '+
+      'Cibles, pondérations et réalisés viennent tous de la feuille <code>Objectifs PTE</code> — rien n\'est réglable dans l\'outil. '+
+      'La colonne « projeté au plan » dit ce que les projets déjà repérés ajouteraient.</p>'+
+      '<div id="ddHost"></div>'+ddVegBloc();
     const src=$('ddTbl');if(src)$('ddHost').innerHTML=src.innerHTML;
+    if(document.getElementById('indChart'))drawIndic('veg');
     return}
-  if(indSel==='veg'){
-    const R=(typeof OBJRANK!=='undefined'&&OBJRANK&&OBJRANK.veg)?OBJRANK.veg:null;
-    const fr=R?R.franchiRang:null;
-    const coutFr=(function(){if(!R||!fr)return null;
-      const it=R.items[fr-1];return it?it.cumulInvest:null})();
-    const rows=[
-      [{h:'Objectif 2030',t:'Feuille « Objectifs PTE » du classeur — aucune cible n\'est codée dans l\'outil'},
-        s.sansCible?'—':nf(s.cible)+' m²'],
-      [{h:'Repéré dans le plan',t:'Colonne « Surface végétalisée ajoutée (m2) » du Plan_PTE — surfaces que les projets créeraient'},
-        nf(s.val)+' m²'],
-      [{h:'Part de l\'objectif couverte',t:'Si tous les projets repérés étaient financés'},
-        s.sansCible?'—':nf(s.couvert)+' %'],
-      [{h:'Bâtiments concernés',t:'Sous-sites portant une surface végétalisée dans le classeur'},
-        nf(s.n)+(s.nChiffres<s.n?(' <span style="font-weight:400;color:var(--ink3)">dont '+nf(s.nChiffres)+' chiffrés</span>'):'')],
-      [{h:'Coût total TTC des projets repérés',t:'Colonne « Coût végétalisation TTC [CHF] »'},
-        s.cout?nf(s.cout/1e6,1)+' MCHF':'—'],
-      [{h:'Coût moyen du m² créé',t:'Coût total ÷ surface totale — le classement, lui, va du m² le moins cher au plus cher'},
-        s.coutM2?nf(s.coutM2)+' CHF/m²':'—'],
-      [{h:'Bâtiments à financer pour la cible',t:'Rang de franchissement du classement Végétalisation, en commençant par le m² le moins cher'},
-        fr?(nf(fr)+' sur '+nf(R.items.length)):'cible non atteinte avec les projets repérés'],
-      [{h:'Montant correspondant',t:'Cumul des coûts TTC jusqu\'au rang de franchissement'},
-        coutFr?nf(coutFr/1e6,1)+' MCHF':'—']];
-    const moitieV=Math.ceil(rows.length/2);
-    el.innerHTML='<h3>Végétalisation — ce que chaque franc achète</h3>'+
-      '<p class="lead">'+(s.atteint?'<span class="tag ok">projets repérés suffisants</span> ':'')+
-      'Les projets sont financés du <b>m² le moins cher au plus cher</b> : la courbe montre la surface créée à mesure qu\'on descend le classement, et le rang où la cible est atteinte. '+
-      'Ni durée de vie ni actualisation — on achète une surface, pas un flux annuel.</p>'+
-      '<div id="indChart"></div>'+
-      '<div class="dgrid"><div>'+rows.slice(0,moitieV).map(drow).join('')+
-      '</div><div>'+rows.slice(moitieV).map(drow).join('')+'</div></div>'+
-      pontLegende('veg')+
-      '<p class="mini" style="margin-top:8px;color:var(--ink3)">Sources : cible — feuille <code>Objectifs PTE</code> · surfaces et coûts — colonnes <code>Surface végétalisée ajoutée (m2)</code> et <code>Coût végétalisation TTC [CHF]</code> de <code>Plan_PTE</code>. Les surfaces sont à créer, aucune n\'est comptée comme réalisée.</p>';
-    drawIndic('veg');return}
   const rows=[];
   if(s.part){
     if(indSel==='ren'){rows.push(['Mesuré '+(s.annee||''),nf(s.val,1)+' %'],['Cible',nf(s.cible,1)+' %'],

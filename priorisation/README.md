@@ -37,8 +37,8 @@ de collaborateur réels ne figurent dans le fichier.
 
 ## Les six onglets
 
-- **Vue d'ensemble** — huit indicateurs sur une ligne : CO₂, thermique, électricité, eau,
-  renouvelable, photovoltaïque, végétalisation, développement durable. Chaque tuile porte la
+- **Vue d'ensemble** — sept indicateurs sur une ligne : CO₂, thermique, électricité, eau,
+  renouvelable, photovoltaïque, développement durable. Chaque tuile porte la
   valeur mesurée du parc, la cible 2030 et le chemin parcouru depuis la référence 2005 ; le
   segment clair de la barre est ce que le portefeuille arrêté ajouterait. Cliquer une tuile
   ouvre sa trajectoire.
@@ -116,12 +116,41 @@ Ces ajustements et les notes s'exportent dans un **même fichier CSV**, qui s'ou
 on peut le compléter hors de l'outil, l'envoyer à un collègue, récupérer le sien, fusionner les
 deux, puis le réimporter. C'est ainsi qu'on partage sans droit d'écriture sur le classeur.
 
+## L'indice développement durable
+
+Il vaut **la somme des pondération × min(1, réalisé ÷ cible)** sur les volets décrits dans la
+feuille `Objectifs PTE`. Chaque volet s'y écrit sur deux lignes : le libellé porte la **cible**
+en colonne B et la **pondération** en colonne C, la ligne suivante porte le **réalisé**.
+
+| volet | cible 2030 | pondération | réalisé |
+|---|---|---|---|
+| Végétalisation | 350 000 m² | 60 % | 0 |
+| Toitures vivantes | 20 000 m² | 20 % | 250 |
+| Déchets et tri | 6 000 points de tri | 20 % | 2 500 |
+
+Ni les volets, ni leurs poids, ni leurs cibles ne se règlent dans l'outil : ce sont des décisions
+du programme, elles vivent dans le classeur avec les autres objectifs. Le plafond est **volet par
+volet** — un volet dépassé ne rachète pas un volet en retard, faute de quoi la végétalisation,
+qui pèse 60 % et dont rien n'est réalisé, se ferait compenser par des points de tri. L'indice
+vaut donc **8,6 / 100** aujourd'hui malgré 42 % des points de tri déployés.
+
+À côté du réalisé, chaque volet porte le **projeté** : la somme, bâtiment par bâtiment, de ce que
+les projets repérés au plan ajouteraient — colonnes `Surface végétalisée ajoutée (m2)`,
+`DD Toiture végétalisée projetée [m2]` et `DD Points de tri projetés [nb]` de `Plan_PTE`. Le
+réalisé dit où en est le parc, le projeté ce qu'il atteindrait si tout se faisait : **68,6 / 100**.
+L'écart entre les deux est ce qu'il y a à arbitrer.
+
+La **végétalisation n'a plus de tuile propre** : elle est devenue le volet le plus lourd de cet
+indice, et le détail de la tuile porte sa courbe d'achat — les projets financés du m² le moins
+cher au plus cher, et le rang où la cible est atteinte. Son classement dédié, lui, reste dans
+l'onglet Classement.
+
 ## Réglages
 
-Menu **☰ → Paramètres de calcul**, en quatre sections repliables : durée de vie, cibles
-d'intensité thermique, productible photovoltaïque, poids des cinq volets de l'indice
-développement durable. Rien n'est figé dans le code ; les valeurs actives sont rappelées dans
-l'onglet Méthode et mémorisées dans le navigateur.
+Menu **☰ → Paramètres de calcul**, en trois sections repliables : durée de vie, cibles
+d'intensité thermique, productible photovoltaïque. Rien n'est figé dans le code ; les valeurs
+actives sont rappelées dans l'onglet Méthode et mémorisées dans le navigateur. Les pondérations
+du développement durable, elles, ne s'y règlent pas — elles viennent du classeur.
 
 Les **cibles d'intensité thermique** s'expriment en kWh/m²·an — l'unité des audits — et il y en
 a deux : **97 kWh/m²·an pour 2030** (350 MJ) et **63 kWh/m²·an pour 2050** (227 MJ). Le classement
@@ -184,7 +213,7 @@ Classeur `Plan_PTE_optimise.xlsx` (ou `Plan_PTE.xlsx`), cinq onglets :
 | Onglet | Ce qu'il apporte |
 |---|---|
 | `Plan_PTE` | une ligne par sous-site : SRE, IDC actuel et projeté, variante CECB+, agent de chauffage actuel et prévu, montants, patrimoine, portefeuille, surface végétalisée à créer et son coût TTC |
-| `Objectifs PTE` | références 2005 et pourcentages de réduction, la cible de végétalisation 2030, puis la série annuelle du suivi officiel |
+| `Objectifs PTE` | références 2005 et pourcentages de réduction, les volets de l'indice développement durable (cible, pondération, réalisé), puis la série annuelle du suivi officiel |
 | `Consommation par site` | totaux recalculés bâtiment par bâtiment, 2017 → dernière année fiable, surfaces comprises |
 | `Data` | facteurs d'émission CO₂ par agent énergétique |
 | `Tableau_de_suivi_CECB` | IDC, IDE et CO₂ projetés de la variante retenue |
@@ -221,5 +250,7 @@ Ces fichiers restent dans `01_Donnees` — ils ne sont jamais copiés dans ce d�
   les projets ajouteraient ; rien n'y est compté comme réalisé. L'écart à combler est donc
   l'objectif entier, et le pourcentage affiché sur la tuile dit seulement quelle part de la
   cible les projets déjà repérés couvriraient s'ils étaient tous financés.
-- L'indice **développement durable** est en place mais la plupart de ses colonnes sources ne
-  sont pas encore renseignées ; il affiche donc une couverture de données partielle.
+- L'indice **développement durable** ne connaît le **projeté** que pour la végétalisation : les
+  colonnes `DD Toiture végétalisée projetée [m2]` et `DD Points de tri projetés [nb]` viennent
+  d'être créées dans `Plan_PTE` et sont encore vides. Tant qu'elles le restent, ces deux volets
+  n'affichent que leur réalisé.
