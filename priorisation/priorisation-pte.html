@@ -365,6 +365,28 @@ body.night svg text{fill:var(--ink2)}
 .pcell{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 .flat-warn{display:none;background:var(--bg-warn);color:var(--fg-warn);border:1px solid var(--warn);
   border-radius:8px;padding:7px 10px;font-size:.72rem;line-height:1.5;margin:0 0 10px}
+/* Le bloc des exclus. Il est toujours là dès qu'une exclusion existe — c'est
+   sa raison d'être : une décision qu'on ne retrouve plus n'est pas une
+   décision, c'est un oubli. Replié il tient sur une ligne. */
+.excl{border:1px solid var(--red);border-radius:8px;margin:0 0 10px;background:var(--bg-err);overflow:hidden}
+.excl-h{display:flex;align-items:center;gap:8px;padding:7px 10px;cursor:pointer;font-size:.72rem;
+  color:var(--fg-err);user-select:none;line-height:1.5}
+.excl-h b{font-weight:700}
+.excl-h .ch{margin-left:auto;transition:transform .25s;font-size:.66rem}
+.excl.op .excl-h .ch{transform:rotate(180deg)}
+.excl-b{display:none;padding:0 10px 10px}
+.excl.op .excl-b{display:block}
+.excl-b table{width:100%;border-collapse:collapse;font-size:.72rem;background:var(--card);
+  border-radius:6px;overflow:hidden}
+.excl-b th{background:var(--surf-dark);color:var(--on-surf-dark);text-align:left;
+  padding:5px 7px;font-size:.66rem;font-weight:600}
+.excl-b td{padding:6px 7px;border-top:1px solid var(--line);vertical-align:top;color:var(--ink)}
+.excl-mot{color:var(--ink);font-style:italic}
+.excl-f{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:5px}
+.excl-f select,.excl-f input{padding:4px 7px;border:1px solid var(--line);border-radius:6px;
+  font-size:.72rem;background:var(--card);color:var(--ink)}
+.excl-f input{flex:1;min-width:190px}
+.excl-vide{font-size:.72rem;color:var(--ink3);font-style:italic;padding:6px 2px}
 .cx-sel select:focus+.cx-txt,.cx-sel:focus-within .cx-txt{outline:2px solid var(--acc);outline-offset:1px}
 .ctx{margin-left:auto;display:flex;gap:7px;align-items:center;flex-wrap:wrap}
 .pill{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:3px 11px;font-size:11.5px;color:var(--ink2)}
@@ -684,6 +706,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <div class="flat-warn" id="rankFlatWarn"></div>
 <div id="objNote" style="font-size:.72rem;color:var(--ink2);margin:6px 2px 8px"></div>
 <div id="objJauge"></div>
+<div id="objExclus"></div>
 <div id="objBody" style="overflow:auto;max-height:72vh"></div>
 </div>
 </div>
@@ -948,9 +971,10 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td>+ Priorité</td><td>compte comme 1,5× moins cher</td></tr>
 <tr><td>− Déprioriser</td><td>compte comme 1,5× plus cher</td></tr>
 <tr><td>−− Déprioriser fortement</td><td>compte comme 2,5× plus cher</td></tr>
-<tr><td>⛔ Exclu</td><td>retiré des classements et de l'arbitrage</td></tr>
+<tr><td>⛔ Exclu</td><td>retiré des classements, du classement de repli, de la vue d'ensemble et de l'arbitrage — mais listé dans le bloc <b>⛔ Exclus du programme</b>, au-dessus du tableau du Classement</td></tr>
 </tbody></table>
 <p>La donnée du classeur n'est jamais modifiée. Le rang arithmétique d'origine reste affiché sous le rang ajusté, et le motif apparaît au survol de la pastille. Tout s'exporte avec les notes dans un même CSV, qui se complète dans Excel, se partage et se réimporte.</p>
+<p><b>Une exclusion reste réversible.</b> Elle vaut pour le programme entier, pas pour un objectif : le bloc <b>⛔ Exclus du programme</b> affiche donc les mêmes bâtiments quel que soit le classement à l'écran, et aucun filtre de la barre ne peut l'amputer. Chaque ligne y rappelle le motif écrit au moment de la décision et le rang que le bâtiment tenait avant d'en sortir, et porte de quoi rejuger sur place — changer l'ajustement, ou <b>réintégrer</b>. Le bâtiment reste par ailleurs visible sur la carte et dans sa fiche.</p>
 </div></div></div>
 
 <div class="cd"><div class="wt" onclick="tglM(4)" title="Ce que l'outil ne peut pas dire"><h3 style="margin:0;border:none;padding:0"><span class="m-num">4</span> Limites connues</h3><span class="ch" id="mCh4">▼</span></div><div class="wb" id="mB4"><div class="m-body">
@@ -1019,7 +1043,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 </div>
 </div>
 
-<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v01.09.2026</div>
+<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v02.09.2026</div>
 <script>
 /* ================================================================
    NOYAU COMMUN — état, persistance, pondérations
@@ -3213,7 +3237,10 @@ function objTable(key,R,meta,bySiteId,f){
   const adj=applyQuali(R.items,key);
   const rangObj={};R.items.forEach(function(it){rangObj[it.id]=it.rang});
   const rankedRows=adj.filter(it=>{const s=bySiteId[it.id];return s&&passRankFilters(s,f)});
-  const restRows=repliSorted(restAll).filter(x=>passRankFilters(x.s,f));
+  /* un exclu sort de PARTOUT : le repli le laissait passer, ce qui rendait
+     l'exclusion visible ici et invisible là-haut. Il est dans le bloc « Exclus ». */
+  const restRows=repliSorted(restAll).filter(function(x){
+    const q=qualiOf(x.s.id);return passRankFilters(x.s,f)&&!(q&&q.p==='ex')});
   let html='<table><thead><tr>'+
     '<th>Rang</th><th>N°</th><th>Sous-site</th><th>Rp</th><th>Pat.</th><th>CECB+</th>'+
     '<th title="Agent de chauffage actuel">Chauffage</th>'+
@@ -3315,7 +3342,8 @@ function renR(){
   expandedRow=null;
   const sel=$('objSel');const key=sel?sel.value:'co2';
   const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
-  if(!pop||!pop.length){box.innerHTML='';if(note)note.textContent='';return}
+  if(!pop||!pop.length){box.innerHTML='';if(note)note.textContent='';
+    const hx0=$('objExclus');if(hx0)hx0.innerHTML='';return}
   const bySiteId={};pop.forEach(s=>{bySiteId[s.id]=s});
   const f=rankFilters();
   if(key==='tous'){
@@ -3324,6 +3352,7 @@ function renR(){
     const fw0=$('rankFlatWarn');
     if(fw0){fw0.innerHTML=invHorsChiffrage()?flatNote('tous'):'';
       fw0.style.display=invHorsChiffrage()?'block':'none'}
+    const hx1=$('objExclus');if(hx1)hx1.innerHTML=exclusHtml('tous',bySiteId);
     box.innerHTML=objTousTable(bySiteId,f);
     return}
   const meta=OBJ_META[key];
@@ -3356,6 +3385,7 @@ function renR(){
   if(fw){fw.innerHTML=invHorsChiffrage()?flatNote(key):'';
     fw.style.display=invHorsChiffrage()?'block':'none'}
   const jh=$('objJauge');if(jh)jh.innerHTML=jaugeHtml(key);
+  const hx=$('objExclus');if(hx)hx.innerHTML=exclusHtml(key,bySiteId);
   box.innerHTML=objTable(key,R,meta,bySiteId,f)}
 
 function toggleDetail(id){
@@ -3421,16 +3451,25 @@ function qualiChip(id){
   const d=qualiDef(q.p);
   return '<span class="q-chip '+d.cls+'" title="'+esc(q.m||'motif non renseigné')+'">'+esc(d.lbl.split(' —')[0])+'</span>'}
 function qualiCount(){return Object.keys(siteQuali).filter(function(id){return qualiOf(id)}).length}
-function setQuali(id){
-  const sel=$('qSel'),mot=$('qMot');if(!sel)return;
+/* Le formulaire de la fiche n'est plus le seul : celui du bloc des exclus
+   porte les mêmes champs sous d'autres identifiants. La logique est ici, les
+   deux appelants n'en diffèrent que par où ils lisent. */
+function setQualiFrom(id,selId,motId){
+  const sel=$(selId),mot=$(motId);if(!sel)return;
   const p=sel.value,m=mot?mot.value.trim():'';
   if(p==='0'&&!m){delete siteQuali[String(id)]}
   else{
     if(p!=='0'&&!m){toast('⚠️ Indiquez le motif — un ajustement sans motif n\'est pas traçable','wr');
       if(mot)mot.focus();return}
     siteQuali[String(id)]={p:p,m:m}}
+  /* exclure fait disparaître la ligne : on ouvre le bloc qui la recueille,
+     et on dit où elle est partie — sinon l'écran se contente de la perdre */
+  if(p==='ex')exclOuvert=true;
   saveState();_prioCache=null;renR();renD();
-  toast('⚖️ Ajustement enregistré','ok')}
+  toast(p==='ex'
+    ?'⛔ '+id+' retiré des classements — motif conservé dans le bloc « Exclus du programme », au-dessus du tableau'
+    :'⚖️ Ajustement enregistré','ok')}
+function setQuali(id){return setQualiFrom(id,'qSel','qMot')}
 /* Ordre ajusté. Chaque classement a sa propre clé de tri — coût unitaire pour
    les cinq objectifs de gain, CHF/kWh pour le CEE, puissance décroissante pour
    le photovoltaïque : l'ajustement doit agir sur LA clé du classement affiché,
@@ -3459,6 +3498,96 @@ function applyQuali(items,key){
     return (sk.desc?(b._cu-a._cu):(a._cu-b._cu))||(a.id<b.id?-1:1)});
   dec.forEach(function(it,i){it.rangAdj=i+1});
   return dec}
+/* ================================================================
+   LES EXCLUS RESTENT VISIBLES  (02.09.2026)
+   Une exclusion vaut pour le PROGRAMME, pas pour un objectif : le bloc
+   affiche donc les mêmes bâtiments quel que soit le classement à
+   l'écran, et ne se laisse pas filtrer par la barre de filtres — un
+   bâtiment qu'un filtre pourrait cacher serait de nouveau introuvable.
+   Chaque ligne porte le motif écrit au moment de la décision, le rang
+   que le bâtiment tenait dans le classement arithmétique avant d'en
+   sortir, et un formulaire pour rejuger sur place.
+   ================================================================ */
+let exclOuvert=false;
+function exclusIds(){
+  return Object.keys(siteQuali).filter(function(id){
+    const q=qualiOf(id);return !!(q&&q.p==='ex')})}
+function exclusCount(){return exclusIds().length}
+function tglExclus(){
+  const b=$('exclBox');if(!b)return;
+  exclOuvert=!b.classList.contains('op');
+  b.classList.toggle('op')}
+/* Réintégrer, c'est effacer le motif : on le répète dans le message pour
+   qu'un clic malheureux ne l'emporte pas en silence. */
+function reintegrer(id){
+  const q=siteQuali[String(id)]||{},m=q.m||'';
+  delete siteQuali[String(id)];
+  saveState();_prioCache=null;renR();renD();
+  toast('↩︎ '+id+' réintégré dans les classements'+(m?' — motif effacé : « '+m+' »':''),'ok')}
+
+function exclusHtml(key,bySiteId){
+  const host=$('objExclus');
+  const ids=exclusIds();
+  if(!ids.length)return'';
+  const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
+  const by=bySiteId||{};(pop||[]).forEach(function(s){if(!by[s.id])by[s.id]=s});
+  const tous=(key==='tous');
+  const R=(!tous&&OBJRANK&&OBJRANK[key])?OBJRANK[key]:null;
+  const meta=(!tous&&typeof OBJ_META!=='undefined'&&OBJ_META[key])?OBJ_META[key]:null;
+  const rangById={};
+  if(R)R.items.forEach(function(it){rangById[it.id]=it});
+  /* en « Tous les objectifs » il n'y a pas UN rang : on dit sur combien
+     d'objectifs le bâtiment était classable, ce qui mesure ce qu'on perd */
+  const dansObj={};
+  if(tous&&OBJRANK)['co2','th','ren','elec','eau','cee'].forEach(function(k){
+    if(OBJRANK[k])OBJRANK[k].items.forEach(function(it){dansObj[it.id]=(dansObj[it.id]||0)+1})});
+
+  const n=ids.length,pl=n>1?'s':'';
+  let html='<div class="excl'+(exclOuvert?' op':'')+'" id="exclBox">'+
+    '<div class="excl-h" onclick="tglExclus()" role="button" tabindex="0" aria-expanded="'+(exclOuvert?'true':'false')+'" '+
+      'onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();tglExclus()}" '+
+      'title="Ces bâtiments sont retirés de tous les classements, de la vue d\'ensemble et de l\'arbitrage. Ils restent listés ici — avec le motif écrit au moment de la décision — pour que celle-ci reste explicable et révisable.">'+
+    '<span>⛔ <b>'+n+' bâtiment'+pl+' exclu'+pl+' du programme</b> — retiré'+pl+' de tous les classements. '+
+    'Motif'+pl+' et réajustement ici.</span><span class="ch">▼</span></div>'+
+    '<div class="excl-b"><table><thead><tr>'+
+    '<th style="width:66px">N°</th><th style="width:26%">Sous-site</th>'+
+    '<th style="width:32%">Motif de l\'exclusion</th>'+
+    '<th style="width:22%">'+(tous?'Classable avant exclusion':'Rang arithmétique — '+(meta?esc(meta.lbl||key):key))+'</th>'+
+    '</tr></thead><tbody>';
+
+  ids.sort(function(a,b){return String(a).localeCompare(String(b),'fr',{numeric:true})});
+  ids.forEach(function(id,i){
+    const q=siteQuali[String(id)]||{},s=by[id]||null;
+    const it=rangById[id]||null;
+    let rangTxt;
+    if(tous)rangTxt=dansObj[id]?('classable sur <b>'+dansObj[id]+'</b> objectif'+(dansObj[id]>1?'s':'')):'<span style="color:var(--ink3)">non classable</span>';
+    else if(it)rangTxt='<b>#'+it.rang+'</b> sur '+R.items.length+
+      '<br><span style="color:var(--ink3);font-size:.66rem">'+
+      objFmtNum(key==='cee'?it.co2Gain:it.gain,0)+(meta?(' '+esc(meta.unit)):'')+'</span>';
+    else rangTxt='<span style="color:var(--ink3)">non mesurable pour cet objectif</span>';
+    html+='<tr><td><b>'+esc(id)+'</b></td>'+
+      '<td>'+esc(s?(s.nom||''):'—')+
+        '<br><span style="color:var(--ink3);font-size:.66rem">'+esc(s?(s.rp||'—'):'—')+'</span></td>'+
+      '<td class="excl-mot">'+(q.m?('« '+esc(q.m)+' »'):'<span style="color:var(--fg-err)">motif non renseigné</span>')+'</td>'+
+      '<td>'+rangTxt+'</td></tr>'+
+      '<tr><td colspan="4" style="border-top:0;padding-top:0">'+
+      '<div class="excl-f">'+
+      '<select id="exS'+i+'" title="Remplacer l\'exclusion par un autre ajustement">'+
+      QUALI_DEF.map(function(d){return '<option value="'+d.k+'"'+((q.p||'ex')===d.k?' selected':'')+'>'+esc(d.lbl)+'</option>'}).join('')+
+      '</select>'+
+      '<input id="exM'+i+'" value="'+esc(q.m||'')+'" placeholder="Motif (obligatoire)" '+
+      'title="Le motif reste obligatoire pour tout ajustement — c\'est lui qui rend la décision traçable">'+
+      '<button class="bt bt-p bt-s" onclick="setQualiFrom(\''+id+'\',\'exS'+i+'\',\'exM'+i+'\')">Appliquer</button>'+
+      '<button class="bt bt-i bt-s" onclick="reintegrer(\''+id+'\')" '+
+      'title="Annuler l\'exclusion et remettre le bâtiment dans tous les classements, sans aucun ajustement. Le motif sera effacé.">↩︎ Réintégrer</button>'+
+      '</div></td></tr>'});
+
+  html+='</tbody></table>'+
+    '<p class="mini" style="margin-top:6px;color:var(--ink3)">Les exclusions sont enregistrées avec les notes '+
+    'et reprises dans l\'export <b>📝 Notes</b> — motif compris. Elles restent visibles sur la carte, '+
+    'où le bâtiment existe toujours.</p></div></div>';
+  return html}
+
 /* nombre de bâtiments ajustés, pour l'affichage */
 function qualiSummary(){
   const out={in:0,ex:0,up:0,down:0};
@@ -3500,7 +3629,7 @@ const TOUR=[
  {sel:'#detRow',t:"La fiche d'un bâtiment",open:'objRankBody',panel:'rank',act:tourOpenFiche,
   d:"Cliquer une ligne la déplie. On y lit la <b>SRE</b>, l'<b>IDC actuel</b> et l'<b>IDC projeté</b> avec la variante CECB+ retenue — c'est l'écart entre les deux qui fait le gain —, la substitution de chaufferie prévue, la complétude des données et les alertes du bâtiment."},
  {sel:'#detRow .q-box',t:'Ce que les chiffres ne voient pas',open:'objRankBody',panel:'rank',act:tourOpenFiche,
-  d:"Dans cette même fiche, le bloc <b>Facteur non mesurable</b> permet de remonter un bâtiment, de le descendre, de l'imposer en tête ou de l'exclure — choix politique, urgence, vente prévue, contrainte patrimoniale. Le motif est obligatoire, le rang arithmétique d'origine reste affiché à côté du nouveau, et l'ajustement s'exporte avec les notes."},
+  d:"Dans cette même fiche, le bloc <b>Facteur non mesurable</b> permet de remonter un bâtiment, de le descendre, de l'imposer en tête ou de l'exclure — choix politique, urgence, vente prévue, contrainte patrimoniale. Le motif est obligatoire, le rang arithmétique d'origine reste affiché à côté du nouveau, et l'ajustement s'exporte avec les notes. <b>⛔ Exclu</b> retire le bâtiment de tous les classements : il ne disparaît pas pour autant, un bandeau rouge <b>⛔ Exclus du programme</b> apparaît au-dessus du tableau et le garde à portée, avec son motif et de quoi revenir sur la décision."},
  {sel:'#optObj',t:'Arbitrer une enveloppe',panel:'arb',
   d:"Fixez l'enveloppe et le plafond annuel, choisissez la cible à servir : l'outil constitue le portefeuille qui en fait le plus par franc dépensé, et l'étale année par année."},
  {sel:'#maccBody',t:'Le prix de la tonne évitée',open:'maccBody',panel:'arb',

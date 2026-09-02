@@ -112,6 +112,28 @@ l'imposer en tête ou de l'exclure, **avec motif obligatoire**. L'ajustement ne 
 la donnée — il déplace le bâtiment dans le classement, le rang arithmétique d'origine reste
 affiché à côté du nouveau.
 
+### Exclure sans perdre de vue
+
+`⛔ Exclu — hors programme` retire le bâtiment de tous les classements, du classement de repli,
+de la vue d'ensemble et de l'arbitrage. Il ne disparaît pas pour autant : un bandeau
+**⛔ Exclus du programme** s'affiche au-dessus du tableau du Classement et les rassemble tous.
+
+Une exclusion vaut pour le **programme entier**, pas pour un objectif : le bandeau montre donc
+les mêmes bâtiments quel que soit le classement à l'écran, et **aucun filtre de la barre ne peut
+l'amputer** — un bâtiment qu'un filtre pourrait cacher serait de nouveau introuvable. Chaque
+ligne y porte :
+
+- le **motif** écrit au moment de la décision — c'est lui qui rend l'exclusion explicable ;
+- le **rang arithmétique** que le bâtiment tenait avant d'en sortir, et sa contribution, pour
+  mesurer ce qu'on laisse de côté (en « Tous les objectifs » : sur combien d'objectifs il était
+  classable) ;
+- un formulaire pour **rejuger sur place** — remplacer l'exclusion par un autre ajustement, ou
+  **↩︎ Réintégrer**, qui la lève entièrement. Le motif effacé est répété dans le message de
+  confirmation, pour qu'un clic malheureux ne l'emporte pas en silence.
+
+Le bâtiment reste par ailleurs visible sur la carte et dans sa fiche, et l'exclusion part dans
+l'export des notes, motif compris.
+
 Ces ajustements et les notes s'exportent dans un **même fichier CSV**, qui s'ouvre dans Excel :
 on peut le compléter hors de l'outil, l'envoyer à un collègue, récupérer le sien, fusionner les
 deux, puis le réimporter. C'est ainsi qu'on partage sans droit d'écriture sur le classeur.
