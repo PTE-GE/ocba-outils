@@ -368,6 +368,13 @@ body.night svg text{fill:var(--ink2)}
 /* Le bloc des exclus. Il est toujours là dès qu'une exclusion existe — c'est
    sa raison d'être : une décision qu'on ne retrouve plus n'est pas une
    décision, c'est un oubli. Replié il tient sur une ligne. */
+/* Le franc partagé : une pastille discrète, et un bandeau qui dit une fois
+   pour toutes ce que le tableau ne peut pas dire ligne à ligne. */
+.srv-chip{display:inline-block;margin-right:4px;padding:1px 5px;border-radius:9px;font-size:.6rem;
+  font-weight:700;background:var(--bg-info);color:var(--fg-info);cursor:help}
+.part-warn{background:var(--bg-info);color:var(--fg-info);border:1px solid var(--acc);
+  border-radius:8px;padding:7px 10px;font-size:.72rem;line-height:1.5;margin:0 0 10px}
+.part-warn b{font-weight:700}
 .excl{border:1px solid var(--red);border-radius:8px;margin:0 0 10px;background:var(--bg-err);overflow:hidden}
 .excl-h{display:flex;align-items:center;gap:8px;padding:7px 10px;cursor:pointer;font-size:.72rem;
   color:var(--fg-err);user-select:none;line-height:1.5}
@@ -513,6 +520,100 @@ h4.sub{font-size:.82rem;color:var(--sec);margin:14px 0 6px}
 .mini{font-size:.7rem;color:var(--ink2);line-height:1.5}
 svg .gl{stroke:#e2e8f0;stroke-width:1}
 svg text{font-family:Arial,Helvetica,sans-serif}
+
+
+/* ══════════════════════════════════════════════════════════════
+   REVUE DU CABINET — 03.09.2026, Théo Trait
+   Onze corrections de mise en page, en fin de feuille pour que la
+   cascade fasse le travail sans toucher aux règles existantes.
+   ══════════════════════════════════════════════════════════════ */
+/* ============================================================
+   Priorisation PTE — corrections de mise en page
+   Théo Trait · 03.09.2026
+   À coller À LA FIN du <style> de index.html (ligne ~515),
+   pour que la cascade fasse le travail sans toucher au reste.
+   Chaque bloc est indépendant : « fais la 3 et la 7 » fonctionne.
+   ============================================================ */
+
+/* --- 1 · Le classement cesse d'être écrit en gris de légende ---------- */
+/* objRowStyle() pose color:var(--ink3) en style inline sur chaque <tr> non
+   franchi. Quand la cible n'est pas atteinte, AUCUNE ligne n'est franchie :
+   les 491 lignes passent en gris tertiaire. On rend le texte au tableau,
+   sans casser le vert/bleu des lignes de franchissement.               */
+#objBody tbody tr[style*="var(--ink3)"]{color:var(--ink)!important}
+#objBody table{font-size:12.5px}
+#objBody table th{font-size:11.5px;letter-spacing:.2px;padding:7px 6px}
+#objBody table td{padding:6px 6px;font-variant-numeric:tabular-nums}
+
+/* --- 2 · La colonne qui décide se lit en premier --------------------- */
+/* CHF/unité est la clé de tri et la 13e colonne sur 14, en gris, 66 px de
+   large — pendant qu'Invest ImmOBA, que personne ne trie, en prend 93.  */
+#objBody tbody td:nth-last-child(2){color:var(--ink)!important;font-weight:600;font-size:13px}
+#objBody thead th:nth-last-child(2){color:var(--ink);box-shadow:inset 0 -2px 0 var(--acc)}
+/* Rp : colonne quasi vide à 112 px, plus large que la clé de tri.       */
+#objBody thead th:nth-child(4),#objBody tbody td:nth-child(4){max-width:74px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* --- 3 · Grille des sept indicateurs -------------------------------- */
+/* repeat(8,1fr) pour 7 tuiles : 155 px de colonne morte à droite,
+   à toutes les largeurs ≥ 1241 px.                                     */
+#objTiles{grid-template-columns:repeat(7,1fr)}
+
+/* --- 4 · Les six tuiles « Résultat » : 3 × 2, pas 5 + 1 orphelin ----- */
+#kpis{grid-template-columns:repeat(3,1fr)}
+@media(max-width:900px){#kpis{grid-template-columns:repeat(2,1fr)}}
+.tr-val{font-weight:600;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.tr-card{border:1px solid var(--line);border-left:3px solid var(--sec);box-shadow:var(--shadow);border-radius:var(--r)}
+
+/* --- 5 · Le liseré teal autour du menu : fuite de l'ancien CSS ------- */
+/* .seg est déclaré deux fois (l. 308 v10, l. 505 optimiseur). Le second
+   ajoute border:1px solid var(--sec) au groupe d'onglets.              */
+.navbar .seg{border:0;border-radius:10px;padding:3px}
+
+/* --- 6 · Deux pastilles sous WCAG AA -------------------------------- */
+/* hBg() code ses fonds en dur, hors jetons : ils échappent à l'audit.
+   #bbb + blanc = 1,96:1 · #f1c40f + blanc = 1,70:1.                    */
+.bg[style*="#bbb"]{background:#5F6A6B!important}
+.bg[style*="#f1c40f"]{background:#8A6800!important}
+.bg{font-size:11px;padding:1px 7px;font-weight:600}
+
+/* --- 7 · CECB+ : la lettre porte l'information, pas l'aplat --------- */
+/* varA, varB, varC ont le MÊME vert #1E8449 : la couleur ne distingue
+   rien, elle ne fait que crier. On garde le rouge/orange (audit absent
+   ou en cours), on éteint le vert en jeton discret.                    */
+#objBody td:nth-child(6) .bg{background:transparent!important;color:var(--ok);
+  border:1px solid currentColor;font-weight:700}
+#objBody td:nth-child(6) .bg[style*="#C0392B"]{color:var(--red)}
+#objBody td:nth-child(6) .bg[style*="#B35F10"]{color:var(--warn)}
+/* 7 bis (facultatif) — même logique sur Chauffage et Substitution :
+   l'aplat plein signale le fossile, le contour signale le propre.
+   Le tableau devient lisible en noir et blanc.                        */
+#objBody td:nth-child(7) .bg[style*="#1E8449"],
+#objBody td:nth-child(8) .bg[style*="#1E8449"]{background:transparent!important;
+  color:var(--ok);border:1px solid currentColor}
+
+/* --- 8 · La mesure du texte : 183 caractères par ligne -------------- */
+.m-body p,.m-body li,.me-p,.me-cd,.me-cq,.m-faq-a,.m-gitem,.detail .lead{max-width:80ch}
+.m-callout>div{max-width:78ch}
+
+/* --- 9 · Boutons « Filtrer » : neuf aplats verts en colonne --------- */
+.tblx td>.bt-i{background:none;color:var(--acc);border:1px solid var(--line);font-weight:500}
+.tblx td>.bt-i:hover{background:var(--soft);border-color:var(--acc)}
+body.night .tblx td>.bt-i{background:none;color:var(--acc)}
+
+/* --- 10 · Rythme vertical : une seule échelle 8 / 12 / 16 / 24 ------ */
+.cd{padding:16px 20px;margin-bottom:16px}
+.sec-h{margin:32px 0 12px}
+.tiles{gap:12px}
+#objTiles{gap:12px}
+.opt-grid,.me-kpi,.me-crit{gap:12px}
+.detail{padding:20px 24px;margin-top:16px}
+
+/* --- 11 · Top 20 : 520 px pour vingt barres presque identiques ------ */
+/* Le CSS plafonne la boîte ; le sens du graphique se corrige côté JS
+   (voir la note : autorange:'reversed' + x = gain, pas coût unitaire). */
+#gTop{height:360px!important}
+#gTop .svg-container,#gTop .main-svg{max-height:360px}
+
 </style>
 </head>
 <body>
@@ -577,7 +678,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
       <a onclick="tglPres()">Mode présentation</a>
       <a onclick="tourStart()">Visite guidée</a>
       <div class="sep"></div>
-      <a onclick="clearAllData()" style="color:var(--red)">Réinitialiser les données</a>
+      <a onclick="clearAllData()" style="color:var(--red)">Effacer les données de ce navigateur</a>
     </div>
   </span>
 </div>
@@ -661,7 +762,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
     <span title="Sous-sites (bâtiments) présents dans le fichier"><b id="k1">—</b> sous-sites</span>
     <span title="Sous-sites encore chauffés au mazout ou au gaz"><b id="k2">—</b> fossiles</span>
     <span title="Sous-sites protégés (patrimoine) : contraintes de rénovation"><b id="k3">—</b> protégés</span>
-    <span title="Sous-sites disposant d'un audit CECB+"><b id="k4">—</b> audités CECB+</span>
+    <span title="Audit énergétique officiel du bâtiment, assorti d'un rapport de conseil qui chiffre plusieurs scénarios de rénovation. Sans lui, l'outil ne connaît ni la consommation après travaux ni le gain, et le bâtiment ne peut pas être classé."><b id="k4">—</b> audités CECB+</span>
     <span title="Investissement total du référentiel actif"><b id="k6">—</b> M CHF · <span id="invLbl">référentiel</span></span>
   </div>
   <div class="tiles" id="objTiles"></div>
@@ -693,7 +794,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <option value="eau">💧 Eau</option>
 <option value="pv">☀️ Photovoltaïque</option>
 <option value="veg">🌱 Végétalisation</option>
-<option value="cee">💰 CEE</option>
+<option value="cee" title="Coût de l'énergie économisée : ce que revient chaque unité d'énergie évitée, une fois l'investissement réparti sur la durée de vie retenue. Le classement va du moins cher au plus cher.">💰 CEE</option>
 <option value="tous">📋 Tous les objectifs</option>
 </select>
 <select id="fFo" onchange="renR()"><option value="all">Tout chauffage</option><option value="fos">🔥 Fossiles</option><option value="ren">♻️ Renouvelables</option></select>
@@ -704,6 +805,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <input type="text" id="fSe" placeholder="🔍 Rechercher…" oninput="renR()">
 </div>
 <div class="flat-warn" id="rankFlatWarn"></div>
+<div id="objPartage"></div>
 <div id="objNote" style="font-size:.72rem;color:var(--ink2);margin:6px 2px 8px"></div>
 <div id="objJauge"></div>
 <div id="objExclus"></div>
@@ -735,7 +837,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <div class="cd">
 <h3>Localisation des sites</h3>
 <p style="font-size:.76rem;color:var(--ink2);margin-bottom:4px">Carte interactive. Les <b>filtres Classement</b> et le <b>filtre RP</b> sont appliqués.</p>
-<div class="geo-tip" id="geoTip">💡 <b>Astuce :</b> Les adresses sans coordonnées sont géolocalisées une seule fois, puis mémorisées par le navigateur. Pour un résultat immédiat et définitif, ajoutez deux colonnes <b>Latitude</b> et <b>Longitude</b> au fichier source.</div>
+<div class="geo-tip" id="geoTip">💡 <b>Astuce :</b> Les adresses sans coordonnées peuvent être géolocalisées sur demande (bouton ci-dessous) : elles sont alors envoyées à OpenStreetMap, service tiers, puis le résultat est mémorisé par le navigateur. Pour un résultat immédiat et définitif, ajoutez deux colonnes <b>Latitude</b> et <b>Longitude</b> au fichier source.</div>
 <div class="fb">
 <div class="fb">
 <select id="mFo" onchange="renM()"><option value="all">Tout chauffage</option><option value="fos">🔥 Fossiles</option><option value="ren">♻️ Renouvelables</option></select>
@@ -750,6 +852,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 <span id="mapCount" style="font-weight:600;color:var(--pri);font-size:.78rem"></span>
 <span id="mapFilterInfo" style="font-size:.72rem;color:var(--ink3)"></span>
 <span id="mapGeoStatus" style="font-size:.7rem;color:var(--sec);font-weight:600"></span>
+<button id="geoBtn" class="bt bt-s bt-x" style="display:none;color:var(--ink)" onclick="geocodeAsk()" title="Envoie les adresses sans coordonnées à nominatim.openstreetmap.org — service tiers. Rien ne part sans ce clic."></button>
 </div>
 <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
 <label style="font-size:.73rem;font-weight:600;color:var(--pri)">🗺️ Fond de carte :</label>
@@ -992,9 +1095,14 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td><b>IDE</b></td><td>Indice de dépense d'électricité, même logique que l'IDC.</td></tr>
 <tr><td><b>CECB+</b></td><td>Certificat énergétique cantonal des bâtiments, version avec rapport de conseil : il propose des variantes de rénovation (A, B, C), dont l'une est retenue.</td></tr>
 <tr><td><b>CEE</b></td><td>Coût de l'énergie économisée : le prix du kWh évité sur la durée de vie retenue pour cet objectif (40 ans par défaut, modifiable ⚙️).</td></tr>
+<tr><td><b>CAD</b></td><td>Chauffage à distance : réseau qui livre au bâtiment de la chaleur produite ailleurs, à la place d'une chaudière sur place. Un bâtiment raccordé cesse d'être compté parmi les agents fossiles et reçoit la contribution CO₂ de la substitution, sans que son IDC baisse pour autant. Genève impose le raccordement au-delà de 50 kW.</td></tr>
+<tr><td><b>PAC</b></td><td>Pompe à chaleur : machine qui prélève de la chaleur dans l'air, le sol ou l'eau et la relève à la température du chauffage, en consommant de l'électricité. Elle sort le bâtiment des agents fossiles et déplace une part de sa consommation vers l'électricité — sauf en version hybride <b>PAC + Gaz</b>, que le classeur range encore parmi les fossiles.</td></tr>
+<tr><td><b>Substitution de chaufferie</b></td><td>Remplacement de l'agent de chauffage d'un bâtiment par un autre — mazout ou gaz vers réseau de chaleur, pompe à chaleur ou bois. Elle est portée par la colonne <code>Chauffage de substitution</code> ; quand elle est absente ou notée « maintien en l'état », aucun gain de décarbonation n'est attribué au bâtiment.</td></tr>
 <tr><td><b>Rang de franchissement</b></td><td>Rang auquel le cumul des gains atteint la cible 2030.</td></tr>
 <tr><td><b>État SIA</b></td><td>Phase du projet selon la norme SIA 112 (études, appel d'offres, réalisation…).</td></tr>
-<tr><td><b>Coefficient Stratus</b></td><td>Indicateur d'état du bâtiment : proche de 1 = bon état, proche de 0 = très dégradé.</td></tr>
+<tr><td><b>Coefficient Stratus</b></td><td>Note d'état du bâtiment comprise entre 0 et 1 : 0 pour un bâtiment très dégradé, 1 pour un bâtiment en bon état. Elle vient du relevé Stratus et ne dit rien de la performance énergétique — un bâtiment en bon état peut très bien être en tête du classement.</td></tr>
+<tr><td><b>Instantané</b></td><td>Copie datée des rangs du classement, enregistrée dans ce navigateur d'un clic sur 📌. Elle sert à comparer les rangs du jour à ceux d'une séance précédente — ce qui est monté, descendu ou nouveau ; les douze derniers instantanés sont conservés.</td></tr>
+<tr><td><b>Hors périmètre</b></td><td>Valeur que porte la colonne <code>Responsables Portefeuille</code> pour les sous-sites qui ne sont suivis par aucun portefeuille. Ils restent dans les classements par objectif — ils ont un coût et une contribution réels — mais sortent du classement composite et de tout ce que le filtre Portefeuille restreint.</td></tr>
 </tbody></table>
 </div></div></div>
 
@@ -1043,7 +1151,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 </div>
 </div>
 
-<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v02.09.2026</div>
+<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v03.09.2026</div>
 <script>
 /* ================================================================
    NOYAU COMMUN — état, persistance, pondérations
@@ -1062,6 +1170,12 @@ let lastImportRPMissing=false,lastAlerts=[];
 function $(id){return document.getElementById(id)}
 function nf(v,d){return (v==null||isNaN(v))?'—':Number(v).toLocaleString('fr-CH',{minimumFractionDigits:d||0,maximumFractionDigits:d||0})}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+/* Un identifiant qui entre dans un attribut onclick="fn(…)" traverse DEUX
+   analyseurs : HTML puis JavaScript. JSON.stringify produit une chaîne JS
+   valide quel que soit le contenu, esc() la rend sûre dans l'attribut. */
+function jsArg(v){return esc(JSON.stringify(String(v==null?'':v)))}
+/* Sélecteur d'attribut sûr : CSS.escape neutralise guillemets et crochets. */
+function attrSel(v){return (window.CSS&&CSS.escape)?CSS.escape(String(v)):String(v).replace(/["\\]/g,'\\$&')}
 function toast(m,t){const e=$('toast');if(!e)return;e.textContent=m;e.className='toast '+t+' sh';setTimeout(()=>e.classList.remove('sh'),3e3)}
 
 /* ---------- PERSISTANCE PARTAGÉE ENTRE LES 3 PAGES ----------
@@ -1104,7 +1218,8 @@ function loadState(){try{const o=JSON.parse(STORE.get(LS_STATE)||'null');if(!o)r
    par objectif survive à un rechargement de page sans réimport. */
 function loadData(){try{const o=JSON.parse(STORE.get(LS_DATA)||'null');if(!o||!o.sites||!o.sites.length)return false;S=o.sites;S_ALL=o.sitesAll||[];
   if(S_ALL.length>S.length){S=S_ALL}   /* cache d'une version antérieure : population complète */lastFileName=o.fileName||'fichier importé';lastFileTime=o.fileTime||0;OBJ_GAPS=o.objGaps||null;OBJ_COFACTORS=o.objCoFactors||null;return true}catch(e){return false}}
-function clearAllData(){if(!confirm('Effacer les données importées et revenir au jeu d’exemple ?\n(Pondérations, notes et phases ajustées seront également réinitialisées.)'))return;try{STORE.del(LS_DATA);STORE.del(LS_STATE)}catch(e){}location.reload()}
+function clearAllData(){if(!confirm('Effacer de ce navigateur tout ce que l’outil y a enregistré ?\n— le fichier importé (tous les sous-sites),\n— les notes, ajustements et exclusions,\n— les instantanés et le portefeuille validé.\nExportez d’abord vos notes (menu ☰) si vous voulez les garder.'))return;
+  try{[LS_DATA,LS_STATE,'pte_snapshots_v1','pte_lock_v1','pte_opt_v2'].forEach(function(k){STORE.del(k)})}catch(e){}location.reload()}
 
 /* ---------- PONDÉRATIONS ---------- */
 
@@ -1679,7 +1794,7 @@ function cecbStatus(v){
   return'check'}
 function cecbInfo(s){return CECB_DEF[(s&&s.cecbSt)||'none']||CECB_DEF.none}
 function cecbBg(s){const d=cecbInfo(s);
-  return'<span class="bg" title="'+d.lbl+(s&&s.cecbRaw?' ('+s.cecbRaw+')':'')+'" style="background:'+d.col+'">'+d.ico+(d.txt?' '+d.txt:'')+'</span>'}
+  return'<span class="bg" title="'+esc(d.lbl+(s&&s.cecbRaw?' ('+s.cecbRaw+')':''))+'" style="background:'+d.col+'">'+d.ico+(d.txt?' '+d.txt:'')+'</span>'}
 /* Normalisation : sites importés d'anciennes versions ou jeu d'exemple */
 function normSites(){S.forEach(function(s,i){
   if(!s.cecbSt)s.cecbSt=(s.cecbRaw!==undefined&&s.cecbRaw!=='')?cecbStatus(s.cecbRaw):(s.cecb?['varA','varB','varC'][i%3]:'none');
@@ -1690,10 +1805,13 @@ function normSites(){S.forEach(function(s,i){
 const PAT_MAP=[['Classé','🏛','Classé'],['Zone','🛡','Zone protégée'],['Inventaire','📋','Inventaire'],
                ['Objets','⭐',"Objets d'intérêt"],['Ensembles','🏘','Ensembles 19e-20e']];
 function patBg(p){
-  if(!p||p==='Non protégé')return'<span style="color:#c8ced6" title="Non protégé">—</span>';
+  /* Le tiret « non protégé » portait #c8ced6 sur blanc : 1,58:1. C'est un
+   glyphe visible avec une infobulle, donc de l'information, pas de la
+   décoration — il passe au gris de légende. (Théo Trait, 03.09.2026) */
+if(!p||p==='Non protégé')return'<span style="color:var(--ink3)" title="Non protégé">—</span>';
   for(let i=0;i<PAT_MAP.length;i++)if(p.includes(PAT_MAP[i][0]))
     return'<span title="'+PAT_MAP[i][2]+'" style="cursor:help;font-size:.95rem">'+PAT_MAP[i][1]+'</span>';
-  return'<span style="color:var(--ink3);font-size:.65rem" title="'+p+'">'+p+'</span>'}
+  return'<span style="color:var(--ink3);font-size:.65rem" title="'+esc(p)+'">'+esc(p)+'</span>'}
 /* Substitution prévue : même vocabulaire visuel que l'agent actuel, pour
    qu'on lise la bascule d'un coup d'œil. « Maintien en l'état » et
    « Optimisation ECS » ne sont pas des substitutions — l'outil ne leur
@@ -1705,14 +1823,14 @@ function subBg(v){
     return'<span class="bg" style="background:#5F6A6B" title="'+esc(t)+' — aucune substitution d\'agent, donc aucun gain de décarbonation attribué">— '+esc(t.length>16?t.slice(0,15)+'…':t)+'</span>';
   return hBg(t)}
 function hBg(t){const f=String(t||'').toLowerCase().trim();
-  const b=(c,x,ti)=>'<span class="bg" style="background:'+c+'"'+(ti?' title="'+ti+'"':'')+'>'+x+'</span>';
+  const b=(c,x,ti)=>'<span class="bg" style="background:'+c+'"'+(ti?' title="'+esc(ti)+'"':'')+'>'+x+'</span>';
   if(!f)return b('#bbb','?','Type d’énergie non renseigné');
   if(/inexistant|aucun|sans chauff/.test(f))return b('#5F6A6B','⛔ Inexistant','Aucune installation de chauffage');
   if(f.includes('pac')&&f.includes('gaz'))return b('#A34100','🔥♻️ PAC+Gaz','Installation hybride pompe à chaleur + gaz');
   if(f.includes('mazout'))return b('#C0392B','🔥 Mazout');
-  if(/cad|distance|cadiom/.test(f))return b('#1F6391','🔄 CAD','Chauffage à distance');
+  if(/cad|distance|cadiom/.test(f))return b('#1F6391','🔄 CAD','Chauffage à distance : le bâtiment reçoit sa chaleur d\'un réseau, sans chaudière sur place. L\'outil ne le compte plus parmi les agents fossiles.');
   if(f.includes('gaz'))return b('#B35F10','🔥 Gaz');
-  if(f.includes('pac'))return b('#1E8449','♻️ PAC','Pompe à chaleur');
+  if(f.includes('pac'))return b('#1E8449','♻️ PAC','Pompe à chaleur : elle puise la chaleur dans l\'air, le sol ou l\'eau et consomme de l\'électricité pour la relever à la température du chauffage.');
   if(/bois|pellet|b[uû]che|palette|granul/.test(f))return b('#1E8449','🌲 Bois');
   if(/electr|électr|^el\b|^el\./.test(f))return b('#6B52A8','⚡ Élec.','Chauffage électrique direct');
   if(/solaire|thermique solaire/.test(f))return b('#f1c40f','☀️ Solaire');
@@ -1723,6 +1841,9 @@ function dstamp(){return new Date().toISOString().slice(0,10)}
 
 /* ---------- NOTES : export / import indépendants du fichier de données ---------- */
 function csvEsc(v){v=(v==null?'':String(v));return /[";\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
+/* Texte libre exporté vers Excel : une cellule qui commence par = + - @ y
+   devient une formule. On la préfixe d'une apostrophe (recommandation OWASP). */
+function csvTxt(v){v=(v==null?'':String(v));return csvEsc(/^[=+\-@]/.test(v)?"'"+v:v)}
 function dl(blob,name){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(function(){URL.revokeObjectURL(u)},2000)}
 function noteIds(){
   /* notes ET ajustements : un même CSV porte les deux */
@@ -1738,7 +1859,7 @@ function exportNotes(){
   const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
   ids.sort().forEach(function(id){const s=pop.find(function(x){return x.id===id});
     const q=siteQuali[String(id)]||{};
-    c+=[csvEsc(id),csvEsc(s?s.nom:''),csvEsc(siteNotes[id]||''),csvEsc(q.p||''),csvEsc(q.m||''),d].join(';')+'\n'});
+    c+=[csvEsc(id),csvTxt(s?s.nom:''),csvTxt(siteNotes[id]||''),csvEsc(q.p||''),csvTxt(q.m||''),d].join(';')+'\n'});
   dl(new Blob(['﻿'+c],{type:'text/csv;charset=utf-8;'}),'notes_PTE_'+d+'.csv');
   toast('📝 '+ids.length+' notes exportées','ok');closeNotes()}
 function handleNotesImport(e){const f=e.target.files[0];if(!f)return;
@@ -2756,7 +2877,17 @@ function finishImport(rows,source){
   const br=$('btnRefresh');if(br)br.style.display='inline-block';
   toast('✅ '+si.length+' sites · 📍 '+fg+' GPS','ok');
   if(lastImportRPMissing)setTimeout(()=>toast('⚠️ Colonne « Responsables Portefeuille » introuvable — sites inactifs NON filtrés','wr'),3200);
-  if(typeof geocodeSites==='function'&&fg<S.length)geocodeSites()}
+  /* Le géocodage envoie des adresses à un serveur tiers : il ne part plus
+     tout seul. Bouton explicite dans l'onglet Carte (geocodeAsk). */
+  geoButtonRefresh()}
+function geoPending(){return S.filter(s=>s.adr&&s.adr.length>3&&s.geoQ!=='file'&&s.geoQ!=='nominatim')}
+function geoButtonRefresh(){const b=$('geoBtn');if(!b)return;const n=geoPending().length;
+  b.style.display=n?'inline-block':'none';b.textContent='🌐 Géolocaliser '+n+' adresse'+(n>1?'s':'')+' via OpenStreetMap'}
+function geocodeAsk(){const n=geoPending().length;if(!n)return;
+  if(!confirm(n+' adresse'+(n>1?'s':'')+' de bâtiments sans coordonnées vont être envoyées, une par une, à nominatim.openstreetmap.org (service tiers, hors administration).\n'+
+    'Seule l\'adresse est transmise — ni le nom, ni les consommations, ni les montants.\n'+
+    'Alternative sans envoi : ajouter les colonnes Latitude et Longitude au classeur.\n\nEnvoyer maintenant ?'))return;
+  geocodeSites().then(geoButtonRefresh)}
 function refreshData(){if(lastFileHandle)  {processFile(lastFileHandle);toast('🔄','nf')} else toast('⚠️ Réimportez le fichier','wr')}
 function updateSourceInfo(count,source,type){
   const b=$('srcBadge');if(!b)return;
@@ -2765,7 +2896,7 @@ function updateSourceInfo(count,source,type){
   if(type==='file')b.innerHTML='<b>'+esc(String(lastFileName||source))+'</b> · '+nf(count)+' sous-sites'+freshLabel();
   else b.innerHTML='<b>Données échantillon</b> — aucun fichier importé';
   if(type==='file')try{renFresh()}catch(e){}
-  b.title='Les données restent dans ce navigateur'+(HAS_LS?'.':' tant que vous restez dans le même onglet (Safari en fichier local).')}
+  b.title='Les données restent enregistrées dans ce navigateur, sur ce poste, jusqu’à ce que vous les effaciez (menu ☰ → Effacer les données de ce navigateur)'+(HAS_LS?'.':' — ici seulement tant que l’onglet reste ouvert (Safari en fichier local).')}
 
 /* Synchronisation entre onglets/pages ouverts simultanément */
 window.addEventListener('storage',function(e){
@@ -2817,7 +2948,11 @@ if(s.sc.t!=null&&s.sc.t>=75&&(!s.invVB||s.invVB<=0))al.push({t:'err',s,m:'En tê
 var ti=s.sc.ti;
 if(ti===4&&(s.sc.t==null||s.sc.t<25))al.push({t:'warn',s,m:'Rénovation complète recommandée (T4) mais très bas dans les classements — vérifier les données de gain'});
 if(ti===1&&s.sc.t!=null&&s.sc.t>=75)al.push({t:'warn',s,m:'Simple suivi énergétique recommandé (T1) alors que le bâtiment est en tête de classement'});
-if((s.coeff||0)>=.92&&s.sc.t!=null&&s.sc.t>=75)al.push({t:'warn',s,m:'État Stratus excellent ('+Math.round(s.coeff*100)+' %) alors que le bâtiment est en tête de classement'});
+/* Le Glossaire lit ce coefficient sur 0–1, comme la colonne du classeur ;
+   l'alerte le rendait en pourcentage. Deux échelles pour un même nombre, et
+   « excellent » était un jugement que rien ne définissait — le seuil réel est
+   coeff ≥ 0,92 ET score ≥ 75, c'est le signal d'une contradiction, pas une note. */
+if((s.coeff||0)>=.92&&s.sc.t!=null&&s.sc.t>=75)al.push({t:'warn',s,m:'Coefficient Stratus élevé ('+s.coeff.toFixed(2)+' sur 1, bâtiment en bon état) alors que le bâtiment est en tête de classement'});
 if(!co2Known(s)&&isFos(s.ht))al.push({t:'warn',s,m:'Émissions de CO₂ non renseignées — critère estimé d’après le type de chauffage seul'});
 
 if(s.sc.t==null)al.push({t:'err',s,m:'Non classé — données de base manquantes : '+s.sc.miss.join(', ')});
@@ -2942,7 +3077,7 @@ function renAlerts(all){
 const al=detectAlerts(all);lastAlerts=al;
 $('alCount').textContent=al.length?'('+al.length+')':'';
 if(!al.length){$('alList').innerHTML='<p style="color:var(--grn);font-size:.78rem">✅ Aucune anomalie détectée.</p>';return}
-$('alList').innerHTML=al.map(a=>'<div class="alert-card al-'+(a.t==='err'?'err':'warn')+'"><span>'+(a.t==='err'?'🔴':'🟠')+'</span><div><b>'+a.s.id+'</b> '+a.s.nom.substring(0,30)+' — '+a.m+'</div></div>').join('')}
+$('alList').innerHTML=al.map(a=>'<div class="alert-card al-'+(a.t==='err'?'err':'warn')+'"><span>'+(a.t==='err'?'🔴':'🟠')+'</span><div><b>'+esc(a.s.id)+'</b> '+esc(a.s.nom.substring(0,30))+' — '+a.m+'</div></div>').join('')}
 
 function renCompleteness(all){
 const el=$('cpList');if(!el)return;const n=all.length||1;
@@ -2952,7 +3087,7 @@ fields.forEach(f=>{const p=Math.round(all.filter(f[1]).length/n*100);tot+=p;cons
 h+='<div style="display:grid;grid-template-columns:150px 1fr 44px;align-items:center;gap:8px;margin-bottom:5px"><span style="font-size:.73rem;font-weight:600">'+f[0]+'</span><div class="sb" style="height:14px"><div class="sf" style="width:'+p+'%;background:'+col+'"></div></div><span style="font-size:.73rem;font-weight:700;color:'+col+'">'+p+'%</span></div>'});
 const avg=Math.round(tot/fields.length);const cp=$('cpPct');if(cp)cp.textContent='(moyenne : '+avg+'%)';
 const worst=all.map(s=>({s:s,p:compl(s)})).filter(x=>x.p<50).sort((a,b)=>a.p-b.p).slice(0,10);
-if(worst.length){h+='<div style="margin-top:10px;font-size:.75rem;font-weight:600;color:var(--pri)">🔴 Sites les moins documentés (&lt;50%) — priorité de collecte :</div>'+worst.map(x=>'<div style="font-size:.72rem;padding:2px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between"><span><b>'+x.s.id+'</b> '+x.s.nom.substring(0,32)+'</span><span style="color:var(--red);font-weight:700">'+x.p+'%</span></div>').join('')}
+if(worst.length){h+='<div style="margin-top:10px;font-size:.75rem;font-weight:600;color:var(--pri)">🔴 Sites les moins documentés (&lt;50%) — priorité de collecte :</div>'+worst.map(x=>'<div style="font-size:.72rem;padding:2px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between"><span><b>'+esc(x.s.id)+'</b> '+esc(x.s.nom.substring(0,32))+'</span><span style="color:var(--red);font-weight:700">'+x.p+'%</span></div>').join('')}
 else h+='<p style="font-size:.73rem;color:var(--grn);margin-top:8px">✅ Aucun site sous 50 % de complétude.</p>';
 el.innerHTML=h}
 
@@ -2961,7 +3096,7 @@ el.innerHTML=h}
 function exportAlerts(){
 if(!lastAlerts||!lastAlerts.length){toast('✅ Aucune alerte à exporter','nf');return}
 let c='Type;N°;Site;Priorité;TI;Référentiel;Message\n';
-lastAlerts.forEach(a=>{c+=[a.t==='err'?'Erreur':'Avertissement',a.s.id,csvEsc(a.s.nom),(a.s.sc.t==null?'':a.s.sc.t),'T'+a.s.sc.ti,csvEsc(invDef().short),csvEsc(a.m)].join(';')+'\n'});
+lastAlerts.forEach(a=>{c+=[a.t==='err'?'Erreur':'Avertissement',csvEsc(a.s.id),csvTxt(a.s.nom),(a.s.sc.t==null?'':a.s.sc.t),'T'+a.s.sc.ti,csvEsc(invDef().short),csvEsc(a.m)].join(';')+'\n'});
 dl(new Blob(['\ufeff'+c],{type:'text/csv;charset=utf-8;'}),'alertes_PTE_'+dstamp()+'.csv');toast('📥 '+lastAlerts.length+' alertes exportées','ok')}
 
 
@@ -2982,7 +3117,12 @@ const OBJ_META={
   pv:{lbl:'Photovoltaïque',lblCourt:'PV',unit:'kWc'},
   cee:{lbl:'CEE',lblCourt:'CEE',unit:'kg CO2/an'},
   veg:{lbl:'Végétalisation',lblCourt:'Végét.',unit:'m²'}};
-function objFmtNum(v,d){if(v==null||isNaN(v))return'—';return Number(v).toLocaleString('fr-CH',{maximumFractionDigits:d==null?0:d})}
+/* Le nombre trié doit avoir une virgule stable : 0,1924 puis 1,169 puis
+   1,1693 fait danser la colonne et interdit la comparaison à l'œil. On fixe
+   le minimum de décimales au maximum demandé. (Théo Trait, 03.09.2026) */
+function objFmtNum(v,d){if(v==null||isNaN(v))return'—';
+  const n=(d==null?0:d);
+  return Number(v).toLocaleString('fr-CH',{minimumFractionDigits:n,maximumFractionDigits:n})}
 
 /* Les fonds de ligne passent par des jetons : en mode nuit, un vert pâle codé
    en dur recevait du texte clair — ratio 1,1, illisible. */
@@ -3010,7 +3150,7 @@ function alertsFor(s){
     out.push('réduction IDC improbable (>'+Math.round(REDUC_MAX_AL*100)+'%)');
   if(s.consoTherm&&s.sre&&s.idcC&&s.sre*s.idcC>0){
     const ratio=s.consoTherm/(s.sre*s.idcC);
-    if(ratio<RATIO_MIN_AL||ratio>RATIO_MAX_AL)out.push('CONSO incohérente avec SRE×IDC');
+    if(ratio<RATIO_MIN_AL||ratio>RATIO_MAX_AL)out.push('Consommation mesurée incohérente avec la surface et l\'indice de chaleur');
   }
   return out}
 /* Pas de dépendance au survol : un clic affiche le détail dans un toast
@@ -3230,6 +3370,46 @@ function jaugeHtml(key){
     +'<span><i style="background:var(--surf-acc)"></i>'+esc(Z.couvert.t)+'</span>'
     +'<span><i class="h"></i>'+esc(Z.reste.t)+'</span></div></div>'}
 
+/* ================================================================
+   LE FRANC PARTAGÉ  (03.09.2026 — revue du Cabinet)
+   Une rénovation CECB+ produit d'un coup un gain thermique, un gain CO₂
+   et une substitution renouvelable. L'outil impute à chacun de ces trois
+   classements le montant COMPLET de l'intervention : c'est une convention
+   homogène, donc le tri reste valide, mais elle a deux conséquences qu'il
+   faut dire à l'écran plutôt que laisser découvrir.
+   · Le bâtiment qui achète trois bénéfices paraît plus cher que celui qui
+     n'en achète qu'un, dans chacun des trois classements. Sur le parc de
+     test : 0,658 contre 0,402 CHF/kWh thermique, 17 rangs d'écart.
+   · Les montants par objectif NE S'ADDITIONNENT PAS. 278 + 508 + 502 =
+     1 288 MCHF pour 649 MCHF réellement engagés.
+   ================================================================ */
+const OBJ_PARTAGES=['co2','th','ren','elec','eau'];
+let _servisCache=null;
+/* nombre d'objectifs que le MÊME montant sert, par bâtiment. Le CEE est
+   exclu : il reprend exactement les items du thermique, le compter
+   reviendrait à compter le thermique deux fois. Le photovoltaïque aussi :
+   son montant n'est pas isolable. La végétalisation a son coût propre. */
+function servisPar(){
+  if(_servisCache)return _servisCache;
+  const m={};
+  if(typeof OBJRANK!=='undefined'&&OBJRANK)
+    OBJ_PARTAGES.forEach(function(k){
+      if(OBJRANK[k])OBJRANK[k].items.forEach(function(it){m[it.id]=(m[it.id]||0)+1})});
+  _servisCache=m;return m}
+/* l'argent réel : un montant par bâtiment, jamais deux fois */
+function investDedup(){
+  const m=servisPar(),pop=(S_ALL&&S_ALL.length)?S_ALL:S,by={};
+  (pop||[]).forEach(function(s){by[s.id]=s});
+  let t=0;Object.keys(m).forEach(function(id){if(by[id])t+=(+by[id].invVB||0)});
+  return t}
+function servisChip(id,key){
+  if(OBJ_PARTAGES.indexOf(key)<0)return'';
+  const n=servisPar()[id]||0;
+  if(n<2)return'';
+  return '<span class="srv-chip" title="Le même montant est imputé à '+n+' classements : '+
+    'ce bâtiment achète '+n+' bénéfices avec un seul franc, et paraît donc plus cher ici '+
+    'que celui qui n\'en achète qu\'un. Son coût unitaire est à lire en le sachant.">⊕'+n+'</span>'}
+
 function objTable(key,R,meta,bySiteId,f){
   const rankedIds=new Set(R.items.map(x=>x.id));
   const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
@@ -3257,6 +3437,7 @@ function objTable(key,R,meta,bySiteId,f){
     '<th style="text-align:right" title="'+(key==='veg'?'Coût TTC du projet de végétalisation, colonne « Coût végétalisation TTC [CHF] » — sans rapport avec le référentiel financier de la rénovation énergétique':'Colonne d\'où viennent les montants — menu « Montants » au-dessus')+'">'+(key==='veg'?'Coût TTC<br>végétalisation':esc(invDef().short))+'</th>'+
     '<th style="text-align:right"'+((invHorsChiffrage()&&key!=='veg'&&key!=='pv')
       ?' title="Déclaré identique pour tous les bâtiments en mode hors chiffrage : ce n\'est plus un critère de tri"':'')
+      +' title="Ce que coûte une unité gagnée : le montant des travaux divisé par le gain annuel cumulé sur la durée de vie retenue. C\'est le critère de tri du classement, du moins cher au plus cher."'
       +'>'+((invHorsChiffrage()&&key!=='veg'&&key!=='pv')?'Coût unitaire<br>(identique)'
         :(key==='pv'?'—':key==='cee'?('CHF/kWh<br>('+pDuree('cee')+' ans)'):key==='veg'?'CHF/m²<br>créé (tri)':'CHF/unité<br>('+pDuree(key)+' ans)'))+'</th>'+
     '<th>Alerte</th></tr></thead><tbody>';
@@ -3271,23 +3452,23 @@ function objTable(key,R,meta,bySiteId,f){
     const estimDisp=plat?'<span title="Aucun montant : le mode hors chiffrage ne lit aucune colonne financière" style="color:var(--ink3)">—</span>'
       :objFmtNum(it.estim,0);
     const _r=(it.rangAdj||it.rang);
-    html+='<tr class="row-click'+(_r===R.franchiRang?' franchi-row':'')+(_r===R.franchiRang2?' franchi-row-50':'')+'" data-id="'+it.id+'" onclick="toggleDetail(\''+it.id+'\')" style="'+objRowStyle(Object.assign({},it,{rang:_r}),R.franchiRang,R.franchiRang2)+'">'+
+    html+='<tr class="row-click'+(_r===R.franchiRang?' franchi-row':'')+(_r===R.franchiRang2?' franchi-row-50':'')+'" data-id="'+esc(it.id)+'" onclick="toggleDetail('+jsArg(it.id)+')" style="'+objRowStyle(Object.assign({},it,{rang:_r}),R.franchiRang,R.franchiRang2)+'">'+
       '<td>'+(it.rangAdj||it.rang)+((it.rangAdj&&rangObj[it.id]&&it.rangAdj!==rangObj[it.id])?'<br><span style="font-size:.6rem;color:var(--ink3)" title="rang du classement arithmétique, avant ajustement">obj. '+rangObj[it.id]+'</span>':'')+
-      (snapCur()?('<br>'+snapDelta(key,it.id,(it.rangAdj||it.rang))):'')+'</td><td><b>'+it.id+'</b></td><td>'+(it.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem">'+(s.rp||'—')+'</span></td>'+
-      '<td style="font-size:.63rem">'+(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td><td>'+subBg(s.hsub)+'</td>'+
+      (snapCur()?('<br>'+snapDelta(key,it.id,(it.rangAdj||it.rang))):'')+'</td><td><b>'+esc(it.id)+'</b></td><td>'+esc(it.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem">'+esc(s.rp||'—')+'</span></td>'+
+      '<td style="font-size:.63rem">'+esc(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td><td>'+subBg(s.hsub)+'</td>'+
       '<td style="text-align:right">'+gainDisp+'</td><td style="text-align:right">'+objFmtNum(it.cumulGain,0)+'</td>'+
       pctCell(it.pctGap,false)+
       (key==='th'?pctCell(it.pctGap2,true):'')+
       '<td style="text-align:right">'+estimDisp+'</td><td style="text-align:right">'+coutDisp+'</td>'+
-      '<td>'+alerteChip(alertsFor(s))+qualiChip(it.id)+(lockHas(it.id)?'<span class="lock-chip" title="Bâtiment du portefeuille validé">🔒</span>':'')+'</td></tr>'}
+      '<td>'+servisChip(it.id,key)+alerteChip(alertsFor(s))+qualiChip(it.id)+(lockHas(it.id)?'<span class="lock-chip" title="Bâtiment du portefeuille validé">🔒</span>':'')+'</td></tr>'}
   if(restRows.length){
     html+='<tr><td colspan="'+(key==='th'?15:14)+'" style="background:var(--soft);color:var(--ink3);font-size:.68rem;font-style:italic;padding:5px 8px">'+
       (key==='veg'?'Aucun projet de végétalisation renseigné pour ces sous-sites — ils ne sont pas classables ici tant que la colonne « Surface végétalisée ajoutée (m2) » reste vide. L\'ordre ci-dessous est celui du score composite de repli.'
                   :'Classement de repli — non mesurable pour cet objectif via CECB+, trié par score composite provisoire (voir « Pondérations du classement de repli » ci-dessus)')+'</td></tr>';
     for(const{s,sc}of restRows)
-      html+='<tr class="row-click" data-id="'+s.id+'" onclick="toggleDetail(\''+s.id+'\')" style="color:var(--ink3)">'+
-        '<td>'+(sc.t!=null?'repli':'—')+'</td><td><b>'+s.id+'</b></td><td>'+(s.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem">'+(s.rp||'—')+'</span></td>'+
-        '<td style="font-size:.63rem">'+(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td><td>'+subBg(s.hsub)+'</td>'+
+      html+='<tr class="row-click" data-id="'+esc(s.id)+'" onclick="toggleDetail('+jsArg(s.id)+')" style="color:var(--ink3)">'+
+        '<td>'+(sc.t!=null?'repli':'—')+'</td><td><b>'+esc(s.id)+'</b></td><td>'+esc(s.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem">'+esc(s.rp||'—')+'</span></td>'+
+        '<td style="font-size:.63rem">'+esc(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td><td>'+subBg(s.hsub)+'</td>'+
         '<td colspan="'+(key==='th'?5:4)+'" style="text-align:center;font-size:.66rem">'+(key==='veg'?'surface végétalisée non renseignée'
            :((+s.sre&&+s.idcC)?('conso estimée '+objFmtNum(s.sre*s.idcC,0)+' kWh/an'):'données insuffisantes'))+'</td>'+
         '<td style="text-align:right">'+(key==='veg'?'—':objFmtNum(s.invEstim,0))+'</td>'+
@@ -3308,11 +3489,19 @@ function objTousTable(bySiteId,f){
     const rangs={},gains={},franchis={};let servis=0,coutSum=0,coutN=0;
     for(const k of keys){
       const it=idxByKey[k][id];
-      if(it){rangs[k]=it.rang;gains[k]=k==='cee'?it.co2Gain:it.gain;franchis[k]=it.franchi;if(it.franchi)servis++;
-        /* hors chiffrage il n'y a plus de coût unitaire : le rang moyen
-           joue le même rôle de départage, croissant lui aussi */
-        const cu=platTous?it.rang:(k==='cee'?it.cee:it.coutUnit);
-        if(cu!=null){coutSum+=cu;coutN++}}
+      if(it){rangs[k]=it.rang;gains[k]=k==='cee'?it.co2Gain:it.gain;franchis[k]=it.franchi;
+        /* Le CEE reprend exactement les items du thermique, avec les mêmes
+           valeurs : le compter reviendrait à compter le thermique deux fois,
+           dans les objectifs servis comme dans le départage. Sa colonne
+           reste affichée, elle sort du calcul. (revue du Cabinet, 03.09) */
+        if(k!=='cee'){
+          if(it.franchi)servis++;
+          /* Départage par le RANG MOYEN, jamais par la moyenne des coûts
+             unitaires : celle-ci mélangeait des CHF/kg CO₂ et des CHF/kWh —
+             deux unités sans rapport — si bien qu'apparaître au classement
+             CO₂ multipliait mécaniquement la moyenne par ~5. Le rang n'a pas
+             d'unité : il se moyenne. */
+          coutSum+=it.rang;coutN++}}
       else{rangs[k]=null;gains[k]=null;franchis[k]=null}}
     rows.push({id,nom:base.nom,estim:base.estim,s,rangs,gains,franchis,servis,coutMoy:coutN?coutSum/coutN:Infinity})}
   /* les ajustements non mesurables s'appliquent aussi à la vue d'ensemble */
@@ -3325,8 +3514,8 @@ function objTousTable(bySiteId,f){
   for(const k of keys)html+='<th style="text-align:right">'+OBJ_META[k].lblCourt+'</th>';
   html+='<th style="text-align:right">Objectifs<br>servis</th><th style="text-align:right">'+esc(invDef().short)+'</th><th>Alerte</th></tr></thead><tbody>';
   rows.forEach((row,i)=>{
-    html+='<tr class="row-click" data-id="'+row.id+'" onclick="toggleDetail(\''+row.id+'\')"><td>'+(i+1)+'</td><td><b>'+row.id+'</b></td><td>'+(row.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem">'+(row.s.rp||'—')+'</span></td>'+
-      '<td style="font-size:.63rem">'+(row.s.drt||'—')+'</td><td>'+cecbBg(row.s)+'</td>';
+    html+='<tr class="row-click" data-id="'+esc(row.id)+'" onclick="toggleDetail('+jsArg(row.id)+')"><td>'+(i+1)+'</td><td><b>'+esc(row.id)+'</b></td><td>'+esc(row.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem">'+esc(row.s.rp||'—')+'</span></td>'+
+      '<td style="font-size:.63rem">'+esc(row.s.drt||'—')+'</td><td>'+cecbBg(row.s)+'</td>';
     for(const k of keys){
       const g=row.gains[k];
       if(g==null)html+='<td style="color:#ddd;text-align:right">—</td>';
@@ -3343,16 +3532,20 @@ function renR(){
   const sel=$('objSel');const key=sel?sel.value:'co2';
   const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
   if(!pop||!pop.length){box.innerHTML='';if(note)note.textContent='';
-    const hx0=$('objExclus');if(hx0)hx0.innerHTML='';return}
+    const hx0=$('objExclus');if(hx0)hx0.innerHTML='';
+    const hp0=$('objPartage');if(hp0)hp0.innerHTML='';return}
+  _servisCache=null;
+  const hp=$('objPartage');if(hp)hp.innerHTML=partageNote(key);
   const bySiteId={};pop.forEach(s=>{bySiteId[s.id]=s});
   const f=rankFilters();
   if(key==='tous'){
-    if(note)note.innerHTML=OBJRANK?'Un bâtiment peut servir plusieurs objectifs à la fois — trié par nombre d’objectifs servis avant leur propre seuil, puis par coût moyen croissant sur les objectifs où il contribue (par rang moyen en mode hors chiffrage, où le coût ne départage plus). <b style="color:var(--ok)">Vert</b> = le bâtiment fait partie de ceux à financer pour atteindre CETTE cible précise (avant son propre seuil, « # » = son rang dans ce classement) ; <b style="color:var(--ink3)">gris</b> = après. Photovoltaïque exclu (pas de coût isolable) et végétalisation exclue (elle se classe au m² créé, pas à l’unité gagnée sur une durée de vie) — voir leurs classements dédiés.':'';
+    if(note)note.innerHTML=OBJRANK?'Un bâtiment peut servir plusieurs objectifs à la fois — trié par nombre d’objectifs servis avant leur propre seuil, puis par <b>rang moyen croissant</b> sur les objectifs où il contribue. Le rang, contrairement au coût unitaire, n’a pas d’unité : il se moyenne sans mélanger des CHF/kg CO₂ avec des CHF/kWh. La colonne <b>CEE</b> reste affichée mais ne compte ni dans les objectifs servis ni dans le départage : elle reprend exactement les bâtiments et les valeurs du thermique. <b style="color:var(--ok)">Vert</b> = le bâtiment fait partie de ceux à financer pour atteindre CETTE cible précise (avant son propre seuil, « # » = son rang dans ce classement) ; <b style="color:var(--ink3)">gris</b> = après. Photovoltaïque exclu (pas de coût isolable) et végétalisation exclue (elle se classe au m² créé, pas à l’unité gagnée sur une durée de vie) — voir leurs classements dédiés.':'';
     const jh0=$('objJauge');if(jh0)jh0.innerHTML='';
     const fw0=$('rankFlatWarn');
     if(fw0){fw0.innerHTML=invHorsChiffrage()?flatNote('tous'):'';
       fw0.style.display=invHorsChiffrage()?'block':'none'}
     const hx1=$('objExclus');if(hx1)hx1.innerHTML=exclusHtml('tous',bySiteId);
+    const hp1=$('objPartage');if(hp1)hp1.innerHTML=partageNote('tous');
     box.innerHTML=objTousTable(bySiteId,f);
     return}
   const meta=OBJ_META[key];
@@ -3366,12 +3559,12 @@ function renR(){
       note.innerHTML=(key==='cee'
         ?(invHorsChiffrage()?'Trié par <b>kWh économisés décroissants</b> — le coût unitaire étant déclaré identique pour tous, le CHF/kWh ne départage plus. ':'Trié par CHF/kWh croissant (référentiel actif, '+pDuree('cee')+' ans). ')+' Pas d’écart résiduel propre au CEE : cible reprise du CO₂, cumul du gain CO₂ (pas du kWh) dans cet ordre : '+objFmtNum(gap,0)+' kg CO2/an à combler. '
         :key==='veg'
-        ?'Trié par <b>coût du m² créé</b> croissant, du moins cher au plus cher. Ni durée de vie ni actualisation : on achète une surface, pas un flux annuel. Objectif 2030 : '+objFmtNum(gap,0)+' m² à créer — les surfaces de la colonne du classeur sont à créer, aucune n’est comptée comme réalisée. '
+        ?'Trié par <b>coût du m² créé</b> croissant, du moins cher au plus cher. Ni durée de vie ni <span title="Méthode qui ramène à leur valeur d\'aujourd\'hui des gains étalés sur des années. Elle ne s\'applique pas ici : une cour désimperméabilisée crée une surface une fois pour toutes, pas un gain qui revient chaque année." style="border-bottom:1px dotted currentColor;cursor:help">actualisation</span> : on achète une surface, pas un flux annuel. Objectif 2030 : '+objFmtNum(gap,0)+' m² à créer — les surfaces de la colonne du classeur sont à créer, aucune n’est comptée comme réalisée. '
         :key==='pv'
         ?'Trié par puissance décroissante (classement d’intention, aucune donnée n’isole le coût d’une installation PV du coût de rénovation du bâtiment). Objectif : +'+objFmtNum(gap,0)+' kWc. '
         :invHorsChiffrage()
         ?'Trié par <b>contribution décroissante</b> — le coût unitaire étant déclaré identique pour tous, il ne départage plus. Écart résiduel à combler : '+objFmtNum(gap,0)+' '+meta.unit+'. '
-        :'Trié par CHF par '+meta.unit.replace('/an','')+' croissant, sur '+pDuree(key)+' ans'+((PARAMS.dureeObj&&+PARAMS.dureeObj[key]>0&&+PARAMS.dureeObj[key]!==pDuree())?' (durée propre à cet objectif)':'')+'. Écart résiduel à combler : '+objFmtNum(gap,0)+' '+meta.unit+'. '
+        :'Trié par CHF par '+meta.unit.replace('/an','')+' croissant, sur '+pDuree(key)+' ans'+((PARAMS.dureeObj&&+PARAMS.dureeObj[key]>0&&+PARAMS.dureeObj[key]!==pDuree())?' (durée propre à cet objectif)':'')+'. <span title="Ce qui manque encore pour atteindre la cible 2030 : la valeur mesurée aujourd\'hui moins la cible. La colonne de cumul dit quelle part de cet écart les bâtiments financés comblent." style="border-bottom:1px dotted currentColor;cursor:help">Écart résiduel</span> à combler : '+objFmtNum(gap,0)+' '+meta.unit+'. '
           +(key==='th'?thNote2Cibles(R):''))
         /* le thermique a sa propre phrase de franchissement, qui couvre les
            deux cibles : la générique ferait doublon */
@@ -3397,31 +3590,31 @@ expandedRow=id;
 const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
 const site=pop.find(s=>s.id===id);if(!site)return;
 const cp=compl(site),sc=score(site),al=alertsFor(site);
-const row=document.querySelector('tr[data-id="'+id+'"]');if(!row)return;
+const row=document.querySelector('tr[data-id="'+attrSel(id)+'"]');if(!row)return;
 row.classList.add('row-expanded');
 const colspan=row.cells.length;
 const det=document.createElement('tr');det.id='detRow';
 det.innerHTML='<td colspan="'+colspan+'" class="detail-td"><div style="display:flex;gap:12px;font-size:.73rem;margin-bottom:8px;flex-wrap:wrap">'+
-  '<span>📐 SRE : <b>'+fmtSRE(site.sre)+'</b></span>'+
-  '<span>🔥 IDC actuel : <b>'+(site.idcC?Math.round(site.idcC):'—')+'</b></span>'+
-  '<span>🎯 IDC projeté ('+(site.cecbRaw?site.cecbRaw.replace('var_','var. '):'—')+') : <b>'+(site.idcVB!=null?Math.round(site.idcVB):'—')+'</b></span>'+
-  '<span>🔄 Substitution : <b>'+(site.hsub||'—')+'</b></span>'+
-  '<span>🏗 État du projet (SIA) : <b>'+(site.etat||'—')+'</b></span>'+
+  '<span title="Surface de référence énergétique : la surface chauffée du bâtiment, en mètres carrés. C\'est elle qui ramène toutes les consommations au mètre carré et rend comparables deux bâtiments de tailles différentes.">📐 SRE : <b>'+fmtSRE(site.sre)+'</b></span>'+
+  '<span title="Indice de dépense de chaleur : la chaleur consommée en une année par mètre carré chauffé. Plus il est élevé, plus le bâtiment consomme pour se chauffer, et c\'est sa baisse qui mesure l\'effet des travaux.">🔥 IDC actuel : <b>'+(site.idcC?Math.round(site.idcC):'—')+'</b></span>'+
+  '<span>🎯 IDC projeté ('+esc(site.cecbRaw?site.cecbRaw.replace('var_','var. '):'—')+') : <b>'+(site.idcVB!=null?Math.round(site.idcVB):'—')+'</b></span>'+
+  '<span>🔄 Substitution : <b>'+esc(site.hsub||'—')+'</b></span>'+
+  '<span title="Société suisse des ingénieurs et des architectes, dont la norme découpe un projet en phases successives — étude, appel d\'offres, réalisation. La phase indiquée ici dit où en est le projet, pas dans quel état énergétique il se trouve.">🏗 État du projet (SIA) : <b>'+esc(site.etat||'—')+'</b></span>'+
   '<span>💰 Invest actif : <b>'+fmtInv(site.invVB)+'</b> <span style="font-size:.63rem;color:var(--ink3)">('+invDef().short+')</span></span>'+
   '<span>📊 Complétude : <b>'+cp+'%</b> '+(cp>=80?'🟢':cp>=50?'🟡':'🔴')+'</span>'+
   (sc.t!=null?'<span>⚖️ Priorité (classements par objectif) : <b>'+sc.t+'</b></span>':'')+
   '</div>'+
   (al.length?'<div style="font-size:.73rem;color:var(--fg-err);margin-bottom:8px">⚠ '+al.join(' ; ')+'</div>':'')+
-  '<div style="display:flex;justify-content:flex-end;margin-bottom:6px"><button class="bt bt-i bt-s" onclick="printSite(\''+id+'\')" title="Imprimer ou enregistrer en PDF une fiche d\'une page pour ce bâtiment">🖨 Fiche imprimable</button></div>'+
+  '<div style="display:flex;justify-content:flex-end;margin-bottom:6px"><button class="bt bt-i bt-s" onclick="printSite('+jsArg(id)+')" title="Imprimer ou enregistrer en PDF une fiche d\'une page pour ce bâtiment">🖨 Fiche imprimable</button></div>'+
   '<div class="q-box"><div style="font-size:.75rem;font-weight:600;color:var(--pri);margin-bottom:4px">⚖️ Facteur non mesurable (choix politique, urgence, vente prévue, contrainte technique…)</div>'+
   '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'+
   '<select id="qSel" style="padding:5px 8px;border:1px solid #cbd5e0;border-radius:6px;font-size:.76rem">'+
   QUALI_DEF.map(function(d){return '<option value="'+d.k+'"'+(((siteQuali[id]||{}).p||'0')===d.k?' selected':'')+'>'+d.lbl+'</option>'}).join('')+'</select>'+
   '<input id="qMot" placeholder="Motif (obligatoire) — ex. : vente prévue 2027, décision DT du 12.03" value="'+esc((siteQuali[id]||{}).m||'')+'" style="flex:1;min-width:220px;padding:5px 8px;border:1px solid #cbd5e0;border-radius:6px;font-size:.76rem">'+
-  '<button class="bt bt-p bt-s" onclick="setQuali(\''+id+'\')">Appliquer</button></div>'+
+  '<button class="bt bt-p bt-s" onclick="setQuali('+jsArg(id)+')">Appliquer</button></div>'+
   '<p class="mini" style="margin-top:4px">L\'ajustement ne modifie jamais la donnée : il déplace le bâtiment dans le classement et le motif reste affiché à côté du rang.</p></div>'+
   '<div style="font-size:.75rem;margin-bottom:4px;font-weight:600;color:var(--pri)">📝 Notes / Commentaires :</div>'+
-  '<textarea id="noteTA" placeholder="Note conservée lors des mises à jour du fichier de données — exportable séparément via « 📝 Notes »" onblur="saveNote(\''+id+'\')" style="width:100%;height:60px;border:1px solid #cbd5e0;border-radius:6px;padding:6px;font-size:.76rem;resize:vertical">'+(siteNotes[id]||'')+'</textarea></td>';
+  '<textarea id="noteTA" placeholder="Note conservée lors des mises à jour du fichier de données — exportable séparément via « 📝 Notes »" onblur="saveNote('+jsArg(id)+')" style="width:100%;height:60px;border:1px solid #cbd5e0;border-radius:6px;padding:6px;font-size:.76rem;resize:vertical">'+esc(siteNotes[id]||'')+'</textarea></td>';
 row.after(det)}
 
 
@@ -3577,8 +3770,8 @@ function exclusHtml(key,bySiteId){
       '</select>'+
       '<input id="exM'+i+'" value="'+esc(q.m||'')+'" placeholder="Motif (obligatoire)" '+
       'title="Le motif reste obligatoire pour tout ajustement — c\'est lui qui rend la décision traçable">'+
-      '<button class="bt bt-p bt-s" onclick="setQualiFrom(\''+id+'\',\'exS'+i+'\',\'exM'+i+'\')">Appliquer</button>'+
-      '<button class="bt bt-i bt-s" onclick="reintegrer(\''+id+'\')" '+
+      '<button class="bt bt-p bt-s" onclick="setQualiFrom('+jsArg(id)+',\'exS'+i+'\',\'exM'+i+'\')">Appliquer</button>'+
+      '<button class="bt bt-i bt-s" onclick="reintegrer('+jsArg(id)+')" '+
       'title="Annuler l\'exclusion et remettre le bâtiment dans tous les classements, sans aucun ajustement. Le motif sera effacé.">↩︎ Réintégrer</button>'+
       '</div></td></tr>'});
 
@@ -3587,6 +3780,32 @@ function exclusHtml(key,bySiteId){
     'et reprises dans l\'export <b>📝 Notes</b> — motif compris. Elles restent visibles sur la carte, '+
     'où le bâtiment existe toujours.</p></div></div>';
   return html}
+
+/* Le bandeau. Il ne s'affiche que là où le montant est effectivement
+   partagé — pas sur la végétalisation, qui a sa propre colonne de coût, ni
+   sur le photovoltaïque, dont le montant n'est pas isolable. */
+function partageNote(key){
+  if(OBJ_PARTAGES.indexOf(key)<0&&key!=='tous')return'';
+  if((typeof invHorsChiffrage==='function')&&invHorsChiffrage())return'';
+  if(typeof OBJRANK==='undefined'||!OBJRANK)return'';
+  const m=servisPar(),ids=Object.keys(m);
+  if(!ids.length)return'';
+  let n2=0,n3=0;ids.forEach(function(id){if(m[id]>=3)n3++;else if(m[id]===2)n2++});
+  const reel=investDedup();
+  let somme=0;OBJ_PARTAGES.forEach(function(k){
+    if(OBJRANK[k])OBJRANK[k].items.forEach(function(it){somme+=(+it.estim||0)})});
+  const fact=reel>0?(somme/reel):null;
+  return '<div class="part-warn">🔗 <b>Un même montant, plusieurs objectifs.</b> '+
+    'Une rénovation CECB+ produit d\'un coup un gain thermique, un gain CO₂ et une substitution '+
+    'renouvelable : le montant affiché ici est le <b>coût complet de l\'intervention</b>, imputé '+
+    'entier à chacun des classements où le bâtiment apparaît. '+
+    (n3?('<b>'+n3+'</b> bâtiment(s) servent trois objectifs'+(n2?(', <b>'+n2+'</b> en servent deux'):'')+' — repérés par la pastille <span class="srv-chip">⊕n</span>. Ils paraissent plus chers ici qu\'ils ne le sont vraiment. ')
+        :(n2?('<b>'+n2+'</b> bâtiment(s) servent deux objectifs — pastille <span class="srv-chip">⊕n</span>. '):''))+
+    '<b>Ces montants ne s\'additionnent pas d\'un objectif à l\'autre.</b> '+
+    'Le total des colonnes de montant des cinq classements vaut '+objFmtNum(somme/1e6,0)+' MCHF, '+
+    'alors que l\'argent réellement engagé sur ces mêmes bâtiments est de <b>'+objFmtNum(reel/1e6,0)+' MCHF</b>'+
+    (fact?(' — un facteur '+objFmtNum(fact,2)):'')+'. '+
+    'Pour raisonner à budget, passez par l\'onglet <b>Arbitrage</b>, qui compte chaque bâtiment une seule fois.</div>'}
 
 /* nombre de bâtiments ajustés, pour l'affichage */
 function qualiSummary(){
@@ -3607,7 +3826,7 @@ const TOUR=[
  {sel:'.ttl',t:'Bienvenue',
   d:"Cet outil répond à une question : <b>par quoi commencer pour atteindre les objectifs 2030 du programme, au meilleur coût ?</b> Trois minutes pour en faire le tour. Vous pouvez quitter à tout moment et relancer la visite par le menu ☰."},
  {sel:'.btn.pri',t:'Importer les données',
-  d:"Tout part du fichier <b>Plan_PTE.xlsx</b>, importé une seule fois : chaque onglet en découle. Les données restent dans votre navigateur, rien n'est envoyé ailleurs."},
+  d:"Tout part du fichier <b>Plan_PTE.xlsx</b>, importé une seule fois : chaque onglet en découle. Les données restent dans votre navigateur et n'en sortent pas — sauf si vous demandez, dans l'onglet Carte, la géolocalisation des adresses sans coordonnées, qui passe par OpenStreetMap."},
  {sel:'.seg',t:'Six lectures des mêmes données',
   d:"<b>Vue d'ensemble</b> : où en est le parc face aux cibles 2030. <b>Classement</b> : par quoi commencer. <b>Arbitrage</b> : ce qu'une enveloppe permet vraiment, et le prix de la tonne évitée. <b>Carte</b> : où sont les bâtiments. <b>Données</b> : ce qui manque et ce que cela empêche de calculer. <b>Méthode</b> : d'où vient chaque chiffre."},
  {sel:'.gsearch',t:'Retrouver un bâtiment',
@@ -3863,7 +4082,7 @@ function gsRun(){
   if(!L.length){box.classList.remove('on');box.innerHTML='';return}
   box.innerHTML=L.map(function(s,i){
     const p=prioMap().v[String(s.id)];
-    return '<div class="gs-it" data-i="'+i+'" onclick="gsGo(\''+s.id+'\')"><b>'+esc(s.id)+'</b> '+esc(String(s.nom||'').substring(0,42))+
+    return '<div class="gs-it" data-i="'+i+'" onclick="gsGo('+jsArg(s.id)+')"><b>'+esc(s.id)+'</b> '+esc(String(s.nom||'').substring(0,42))+
       '<span class="s">'+esc(s.rp||'—')+' · '+(p!=null?('priorité '+Math.round(p)):'non classé')+(qualiOf(s.id)?' · ⚖ ajusté':'')+'</span></div>'}).join('');
   box.classList.add('on')}
 function gsKey(e){
@@ -3883,7 +4102,7 @@ function gsGo(id){
   const body=$('objRankBody');if(body&&!body.classList.contains('op'))tglS('objRankBody','objRankCh');
   const se=$('fSe');if(se){se.value=id;renR()}
   setTimeout(function(){
-    const row=document.querySelector('#objBody tr[data-id="'+id+'"]');
+    const row=document.querySelector('#objBody tr[data-id="'+attrSel(id)+'"]');
     if(row){row.scrollIntoView({block:'center'});if(expandedRow!==id)toggleDetail(id)}
     else toast('Ce bâtiment n\'apparaît pas dans ce classement — essayez un autre objectif','wr')},260)}
 document.addEventListener('click',function(e){
@@ -3918,7 +4137,7 @@ function printSite(id){
      row('Responsable de projet',esc(s.drt||'—'))+
      row('Surface de référence (SRE)',fmtSRE(s.sre))+
      row('IDC actuel',(s.idcC?Math.round(s.idcC)+' kWh/m²·an':'—'))+
-     row('IDC projeté'+(s.cecbRaw?(' ('+String(s.cecbRaw).replace('var_','var. ')+')'):''),(s.idcVB!=null?Math.round(s.idcVB)+' kWh/m²·an':'—'))+
+     row('IDC projeté'+(s.cecbRaw?(' ('+esc(String(s.cecbRaw).replace('var_','var. '))+')'):''),(s.idcVB!=null?Math.round(s.idcVB)+' kWh/m²·an':'—'))+
      row('Chauffage actuel',esc(s.htPrin||s.ht||'—'))+
      row('Substitution prévue',esc(s.hsub||'—'))+
      row('Classement au patrimoine',esc(s.pat||'—'))+
@@ -4108,7 +4327,7 @@ function exportAnomalies(){
   const A=anomalies();
   if(!A.length){toast('✅ Aucune anomalie détectée','ok');return}
   let c='Type;N° sous site;Anomalie;Source\n';
-  A.forEach(function(r){c+=[csvEsc(r[0]),csvEsc(r[1]),csvEsc(r[2]),csvEsc(r[3])].join(';')+'\n'});
+  A.forEach(function(r){c+=[csvEsc(r[0]),csvEsc(r[1]),csvTxt(r[2]),csvEsc(r[3])].join(';')+'\n'});
   dl(new Blob(['﻿'+c],{type:'text/csv;charset=utf-8;'}),'anomalies_PTE_'+dstamp()+'.csv');
   toast('📥 '+A.length+' anomalies exportées','ok')}
 function renAnomalies(){
@@ -4316,7 +4535,7 @@ function renderTiles(){
     if(o.k==='dd')        sub=(!s.dd||!s.dd.volets.length)
                               ?'volets absents de la feuille « Objectifs PTE »'
                               :((s.dd.volets.length)+' volets · <b>'+nf(s.dd.scoreProj,1)+'</b> avec les projets repérés');
-    else if(o.k==='pv')   sub='cible '+cibTxt+' · <b>'+nf(s.gapKw)+' kWc</b> à installer';
+    else if(o.k==='pv')   sub='cible '+cibTxt+' · <b title="Kilowatt-crête : la puissance d\'une installation solaire mesurée dans des conditions d\'ensoleillement de référence. C\'est la taille du parc de panneaux, pas ce qu\'il produira dans l\'année.">'+nf(s.gapKw)+' kWc</b> à installer';
     else if(o.k==='ren')  sub='cible '+cibTxt+' · <b>'+nf((s.gap||0)/1e6,1)+' GWh</b> à basculer';
     else if(s.sansRef)    sub='cible '+cibTxt+' · pas de référence 2005';
     else                  sub='cible '+cibTxt+' · <b>'+nf(s.pct)+' %</b> du chemin';
@@ -4643,7 +4862,7 @@ function renRPF(){
        '<td class="num">'+(ct?nf(ct):'—')+'</td><td class="num" style="font-weight:700">'+nf(b.top)+'</td>'+
        '<td class="num">'+(b.al?('<span class="chip" style="background:var(--bg-err);color:var(--fg-err)">'+b.al+'</span>'):'—')+'</td>'+
        '<td class="num">'+(b.adj?('⚖ '+b.adj):'—')+'</td>'+
-       '<td><button class="bt bt-s bt-i" onclick="rpfFocus(\''+esc(k).replace(/'/g,"\\'")+'\',event)" title="Filtrer tout l\'outil sur ce portefeuille — Maj+clic pour l\'ajouter à la sélection en cours">Filtrer</button></td></tr>'});
+       '<td><button class="bt bt-s bt-i" onclick="rpfFocus('+jsArg(k)+',event)" title="Filtrer tout l\'outil sur ce portefeuille — Maj+clic pour l\'ajouter à la sélection en cours">Filtrer</button></td></tr>'});
   h+='</tbody></table><p class="mini" style="margin-top:6px">« Dans le 1er cinquième » : nombre de bâtiments du portefeuille figurant dans les 20 % de tête d\'au moins un classement par objectif — c\'est là que se joue l\'essentiel du résultat 2030.</p>';
   el.innerHTML=h}
 function rpfFocus(rp,ev){
@@ -4678,7 +4897,7 @@ const QUAL_FIELDS=[
  {k:'PV',lbl:'Futur projet PV — puissance (kWc)',f:function(s){return +s.pvKwc>0},
   eff:'objectif photovoltaïque non calculable'},
  {k:'CO2P',lbl:'CO2 projeté [kg/m2.an]',f:function(s){return s.co2Proj!=null},
-  eff:'à défaut, le CO₂ est estimé par facteur d\'émission'},
+  eff:'à défaut, le CO₂ est estimé par <span title="Quantité de CO₂ rejetée pour chaque unité d\'énergie consommée. Elle dépend de l\'agent de chauffage, et c\'est pourquoi changer d\'agent fait baisser les émissions même quand la consommation, elle, ne bouge pas." style="border-bottom:1px dotted currentColor;cursor:help">facteur d\'émission</span>'},
  {k:'GPS',lbl:'Latitude / Longitude',f:function(s){return s.lat!=null&&s.lng!=null},
   eff:'le bâtiment n\'apparaît pas sur la carte'}];
 function renQual(){
@@ -4938,7 +5157,7 @@ function renM(){
   setTimeout(patchTileImages,800);
 }
 
-function mkTip(s){return'<div style="min-width:180px;font-size:.76rem;line-height:1.5"><b style="color:var(--pri)">'+s.id+'</b> — '+s.nom+'<br>📍 '+(s.adr||'—')+'<br>📐 SRE: <b>'+(s.sre?s.sre.toLocaleString('fr-CH')+' m²':'—')+'</b><br>🔥 IDC: <b>'+(s.idcC||'—')+'</b><br>📋 CECB+ : <b>'+cecbInfo(s).ico+(s.cecbRaw?' '+s.cecbRaw.replace('var_','var. '):'')+'</b> · 🏗 '+(s.etat||'État SIA —')+'<br>📊 '+(s.sc.t==null?'<b>Non classé</b> — données insuffisantes':('Priorité (classements par objectif) : <b>'+s.sc.t+'</b>'))+'</div>'}
+function mkTip(s){return'<div style="min-width:180px;font-size:.76rem;line-height:1.5"><b style="color:var(--pri)">'+esc(s.id)+'</b> — '+esc(s.nom)+'<br>📍 '+esc(s.adr||'—')+'<br>📐 SRE: <b>'+(s.sre?s.sre.toLocaleString('fr-CH')+' m²':'—')+'</b><br>🔥 IDC: <b>'+(s.idcC||'—')+'</b><br>📋 CECB+ : <b>'+cecbInfo(s).ico+esc(s.cecbRaw?' '+s.cecbRaw.replace('var_','var. '):'')+'</b> · 🏗 '+esc(s.etat||'État SIA —')+'<br>📊 '+(s.sc.t==null?'<b>Non classé</b> — données insuffisantes':('Priorité (classements par objectif) : <b>'+s.sc.t+'</b>'))+'</div>'}
 
 let geoRunning=false;
 async function geocodeSites(){
@@ -5284,11 +5503,21 @@ function renderKPI(){
   if(!RES)return;
   const t=RES.tot,a=RES.all;
   const chft=t.co>0?RES.used/(t.co/1000):null;
+  /* Ce chiffre impute l'ENVELOPPE ENTIÈRE au seul CO₂. Le même argent achète
+     aussi du kWh thermique et de la substitution renouvelable : lu comme « le
+     coût du CO₂ », il le surestime d'un facteur qui vaut 5 sur le parc de
+     test. On donne donc les deux — l'entier, et le réparti entre les
+     objectifs que l'enveloppe sert réellement. (revue du Cabinet, 03.09) */
+  const nSrv=(function(){let n=0;if(t.co>0)n++;if(t.th>0)n++;if(t.ren>0)n++;return n||1})();
+  const chftRep=chft?chft/nSrv:null;
   const k=[
     ['Engagé',nf(RES.used/1e6)+' M',nf(100*RES.used/RES.bud)+' % de l\'enveloppe'],
     ['Bâtiments retenus',nf(RES.sel.length),'sur '+nf(SITES.length)+' sous-sites'],
     ['CO₂ évité',nf(t.co/1000)+' t/an',(a.co>0?nf(100*t.co/a.co)+' % du gain total possible':'—')],
-    ['Tonne évitée',chft?nf(chft)+' CHF':'—','par tonne et par an'],
+    ['<span title="Enveloppe entière ÷ tonnes de CO₂ évitées par an. Ce n\'est PAS le coût du CO₂ : la même enveloppe achète aussi du kWh thermique et de la substitution renouvelable, qui n\'apparaissent pas au dénominateur. Le second chiffre répartit l\'enveloppe entre les objectifs qu\'elle sert — c\'est une convention, pas une vérité, mais elle encadre le vrai coût.">Enveloppe ÷ CO₂ évité</span>',
+      chft?nf(chft)+' CHF':'—',
+      (chftRep&&nSrv>1)?('par t/an — <b>'+nf(chftRep)+' CHF</b> si l\'enveloppe est répartie entre les '+nSrv+' objectifs servis')
+                       :'par tonne et par an'],
     ['Thermique',nf(t.th/1e6,1)+' GWh','électricité '+nf(t.el/1e6,1)+' GWh · eau '+nf(t.ea)+' m³'],
     ['Substitution renouvelable',nf(t.ren/1e6,1)+' GWh','consommation basculée sur agent non fossile']];
   $('kpis').innerHTML=k.map(function(x){return '<div class="tr-card"><div class="tr-h"><span>'+x[0]+'</span></div><div class="tr-val">'+x[1]+'</div><div class="mini" style="margin-top:4px">'+x[2]+'</div></div>'}).join('');
@@ -5661,7 +5890,7 @@ function onPanelShown(id){
      un SVG tracé dans un panneau caché a une largeur nulle, et Leaflet
      doit recalculer sa taille après affichage. */
   if(id==='arb'||id==='traj'||id==='macc'){if(typeof draw==='function')draw()}
-  if(id==='mapPnl'){if(!mapReady)initMap();fixMap()}
+  if(id==='mapPnl'){if(!mapReady)initMap();fixMap();geoButtonRefresh()}
 }
 </script>
 </body>

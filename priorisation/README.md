@@ -104,6 +104,33 @@ Trois cas particuliers, tous dits explicitement :
   ligne à ligne, la note donne le total.
 - **Végétalisation** couvre 120 % de la cible : objectif cumulatif, rien n'est encore réalisé.
 
+## Un même montant, plusieurs objectifs
+
+Une rénovation CECB+ produit d'un coup un gain thermique, un gain CO₂ et une substitution
+renouvelable. L'outil impute à chacun de ces trois classements le **montant complet de
+l'intervention** — le même franc, compté trois fois. C'est une convention homogène, donc le tri
+reste valide, mais elle a deux conséquences que l'outil affiche désormais au lieu de les laisser
+découvrir.
+
+**Le bâtiment polyvalent paraît plus cher qu'il ne l'est.** Celui qui achète trois bénéfices
+porte le même coût que celui qui n'en achète qu'un, dans chacun des trois classements. Sur le
+parc de test : 0,658 contre 0,402 CHF/kWh thermique, dix-sept rangs d'écart. Une pastille
+**⊕n** signale ces bâtiments, ligne à ligne.
+
+**Les montants ne s'additionnent pas d'un objectif à l'autre.** 278 + 508 + 502 = 1 288 MCHF
+affichés pour 649 MCHF réellement engagés — un facteur 1,99. Un bandeau permanent le dit sous
+les filtres, avec les deux chiffres et le facteur, recalculés sur le fichier chargé. Pour
+raisonner à budget, l'onglet **Arbitrage** compte chaque bâtiment une seule fois.
+
+La **végétalisation** échappe à tout cela : elle a sa propre colonne de coût dans le classeur,
+donc son CHF/m² est un vrai coût par m². Le **photovoltaïque** aussi, dans l'autre sens : son
+montant n'est pas isolable du coût de rénovation, d'où un classement à la puissance sans coût
+unitaire. Ni l'un ni l'autre ne porte le bandeau.
+
+Le problème porte un nom — **coûts joints**, comme la cogénération chaleur-électricité. Il n'existe
+pas d'allocation « juste » : c'est un résultat démontré, pas une lacune. Seule une répartition du
+montant par lot (enveloppe / chaufferie / technique), saisie dans le classeur, y mettrait fin.
+
 ## Ce que les chiffres ne voient pas
 
 Choix politique, urgence, vente prévue, contrainte patrimoniale : la fiche de chaque bâtiment
@@ -166,6 +193,20 @@ La **végétalisation n'a plus de tuile propre** : elle est devenue le volet le 
 indice, et le détail de la tuile porte sa courbe d'achat — les projets financés du m² le moins
 cher au plus cher, et le rang où la cible est atteinte. Son classement dédié, lui, reste dans
 l'onglet Classement.
+
+## Ce qui ne sort pas du navigateur
+
+Le classeur est lu **dans le navigateur**, par un lecteur XLSX intégré : aucune donnée du parc
+n'est envoyée nulle part, et aucune n'est embarquée dans le fichier HTML.
+
+Une exception, explicite depuis le 03.09.2026 : les sous-sites dépourvus de coordonnées peuvent
+être géolocalisés via **OpenStreetMap**, service tiers. Cet appel ne part **que sur clic** d'un
+bouton de l'onglet Carte, qui nomme l'hôte et le nombre d'adresses concernées. Pour l'éviter
+entièrement, ajoutez deux colonnes `Latitude` et `Longitude` au classeur.
+
+Ce que l'outil garde dans le navigateur — le fichier importé, les notes, les ajustements et
+leurs motifs, les instantanés, le portefeuille validé — reste sur le poste jusqu'à effacement.
+Le menu ☰ porte **« Effacer les données de ce navigateur »**, qui purge l'ensemble.
 
 ## Réglages
 
