@@ -128,8 +128,24 @@ montant n'est pas isolable du coût de rénovation, d'où un classement à la pu
 unitaire. Ni l'un ni l'autre ne porte le bandeau.
 
 Le problème porte un nom — **coûts joints**, comme la cogénération chaleur-électricité. Il n'existe
-pas d'allocation « juste » : c'est un résultat démontré, pas une lacune. Seule une répartition du
-montant par lot (enveloppe / chaufferie / technique), saisie dans le classeur, y mettrait fin.
+pas d'allocation « juste » : c'est un résultat démontré, pas une lacune. La seule sortie conforme à
+la hiérarchie d'ISO 14044 est de **subdiviser** le montant, pas de le répartir par une clé.
+
+### La subdivision par lot
+
+Trois colonnes de `Plan_PTE` portent cette subdivision :
+
+| Colonne | Alimente |
+|---|---|
+| `Coût lot enveloppe [CHF]` | Thermique, et la part enveloppe du CO₂ |
+| `Coût lot chaufferie [CHF]` | Renouvelable, et la part substitution du CO₂ |
+| `Coût lot technique [CHF]` | Électricité et Eau |
+
+Un bâtiment qui les porte cesse d'avoir un coût partagé : son montant est celui du lot qui produit
+ce gain-là, sa pastille passe au vert **⊟**, et il est comparable sans réserve. Un bâtiment qui ne
+les porte pas garde le montant complet et la pastille ⊕n. La précision arrive **bâtiment par
+bâtiment** : rien n'attend que le classeur soit complet, et le bandeau dit à tout moment combien de
+bâtiments sont subdivisés.
 
 ## Ce que les chiffres ne voient pas
 
@@ -207,6 +223,21 @@ entièrement, ajoutez deux colonnes `Latitude` et `Longitude` au classeur.
 Ce que l'outil garde dans le navigateur — le fichier importé, les notes, les ajustements et
 leurs motifs, les instantanés, le portefeuille validé — reste sur le poste jusqu'à effacement.
 Le menu ☰ porte **« Effacer les données de ce navigateur »**, qui purge l'ensemble.
+
+## Ce qui compte comme substitution
+
+Une substitution est un **agent**, pas une phrase. La colonne `Chauffage de subsitution prévu` du
+classeur porte aussi du texte libre — « ??? », « Décision à prendre par COPIL », « OUI, projet DRT
+à clarifier avec X. Chéron ». Ces valeurs passaient autrefois le test « n'est pas fossile » et
+produisaient donc un gain renouvelable, l'une pour 643 275 kWh. Une décision qu'on n'a pas prise ne
+se compte pas comme un gain : depuis le 03.09.2026, seul ce qui **commence par un agent connu**
+(Bois, PAC, CAD, El. SIG, Solaire, Gaz, Mazout…) ouvre droit à une contribution renouvelable. Le
+reste remonte dans l'onglet Données comme saisie à compléter.
+
+**CADIOM est renouvelable.** Il figurait parmi les agents fossiles du moteur des objectifs alors
+que le filtre « Fossiles » de l'onglet Classement l'excluait déjà : le même bâtiment était fossile
+ici et non fossile là. Conséquence assumée de la mise en cohérence : sortir d'un CADIOM n'est plus
+une substitution.
 
 ## Réglages
 

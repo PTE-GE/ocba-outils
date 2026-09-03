@@ -372,6 +372,9 @@ body.night svg text{fill:var(--ink2)}
    pour toutes ce que le tableau ne peut pas dire ligne à ligne. */
 .srv-chip{display:inline-block;margin-right:4px;padding:1px 5px;border-radius:9px;font-size:.6rem;
   font-weight:700;background:var(--bg-info);color:var(--fg-info);cursor:help}
+/* le coût est subdivisé pour ce bâtiment : plus de réserve à émettre */
+.lot-chip{display:inline-block;margin-right:4px;padding:1px 5px;border-radius:9px;font-size:.6rem;
+  font-weight:700;background:var(--bg-ok);color:var(--fg-ok);cursor:help}
 .part-warn{background:var(--bg-info);color:var(--fg-info);border:1px solid var(--acc);
   border-radius:8px;padding:7px 10px;font-size:.72rem;line-height:1.5;margin:0 0 10px}
 .part-warn b{font-weight:700}
@@ -608,11 +611,11 @@ body.night .tblx td>.bt-i{background:none;color:var(--acc)}
 .opt-grid,.me-kpi,.me-crit{gap:12px}
 .detail{padding:20px 24px;margin-top:16px}
 
-/* --- 11 · Top 20 : 520 px pour vingt barres presque identiques ------ */
-/* Le CSS plafonne la boîte ; le sens du graphique se corrige côté JS
-   (voir la note : autorange:'reversed' + x = gain, pas coût unitaire). */
-#gTop{height:360px!important}
-#gTop .svg-container,#gTop .main-svg{max-height:360px}
+/* --- 11 · Top 20 : la boîte suit le dessin ------------------------- */
+/* Le plafond de 360 px ne bridait pas vingt barres, il en cachait cinq :
+   le graphique en demandait 520. Le SVG ne dépasse plus ce qu'il annonce,
+   la boîte n'a donc plus à le contenir de force. */
+#gTop{height:auto!important}
 
 </style>
 </head>
@@ -746,6 +749,9 @@ body.night .tblx td>.bt-i{background:none;color:var(--acc)}
   <label class="cx-l" title="Colonne d'où viennent les montants — en changer recalcule tous les classements">Montants
     <span class="cx-sel"><span class="cx-txt" id="gInvTxt">—</span><select id="gInv" onchange="onInvChange()"></select></span></label>
   <span class="cx-s">·</span>
+  <label class="cx-l" title="Base de comptabilité du CO₂. « Mesuré » retient les émissions du fichier, réseaux de chaleur compris. « Convention légale » compte les réseaux de chaleur, le bois, les pompes à chaleur et le solaire à zéro émission. Elle ne touche PAS aux classements par objectif, qui se calculent sur les facteurs d'émission par agent : elle change les émissions du parc, les tonnes évitées, le prix de la tonne et tout l'onglet Arbitrage.">CO₂
+    <span class="cx-sel"><span class="cx-txt" id="gCo2Txt">—</span><select id="gCo2" onchange="onCo2ConvChange()"></select></span></label>
+  <span class="cx-s">·</span>
   <label class="cx-l" title="Restreindre tout l'outil à un ou plusieurs portefeuilles">Portefeuille
     <span class="cx-sel"><button type="button" class="cx-txt cx-btn" id="gRPTxt" onclick="tglRP(event)">tous</button>
       <div class="rp-pop" id="gRPPop" onclick="event.stopPropagation()">
@@ -817,7 +823,7 @@ body.night .tblx td>.bt-i{background:none;color:var(--acc)}
 <div class="wt" onclick="tglS('ufB','ufCh')"><h3 style="margin:0;border:none;padding:0">Matrice Urgence × Faisabilité</h3><span class="ch" id="ufCh">▼</span></div>
 <div class="wb" id="ufB"><div style="padding-top:8px">
 <p style="font-size:.72rem;color:var(--ink3);margin-bottom:4px">Quadrant <b>haut-droite</b> = urgent ET faisable → priorité maximale. Faisabilité = CECB+ (33) + Substitution (33) + Budget (34) − Protection patrimoniale (0 à −50).</p>
-<div id="gUF" style="height:310px"></div>
+<div id="gUF"></div>
 </div></div>
 </div>
 <div class="cd">
@@ -828,7 +834,7 @@ body.night .tblx td>.bt-i{background:none;color:var(--acc)}
 <div class="wt" onclick="tglS('distB','distCh')"><h3 style="margin:0;border:none;padding:0">Distribution et état SIA</h3><span class="ch" id="distCh">▼</span></div>
 <div class="wb" id="distB"><div style="padding-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
 <div class="cd"><h3>Distribution <span style="font-weight:400;font-size:.65rem;color:var(--ink3)">CEE, CHF/kWh</span></h3><div id="gHist" style="height:210px"></div></div>
-<div class="cd"><h3>État SIA</h3><div id="gPie" style="height:210px"></div></div>
+<div class="cd"><h3>État SIA</h3><div id="gPie"></div></div>
 </div></div>
 </div>
 </div><!-- /rank -->
@@ -1151,7 +1157,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 </div>
 </div>
 
-<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v03.09.2026</div>
+<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v03.09.2026b</div>
 <script>
 /* ================================================================
    NOYAU COMMUN — état, persistance, pondérations
@@ -1634,10 +1640,14 @@ function popCo2Conv(){
   el.innerHTML='';
   CO2_CONV.forEach(function(c){
     const o=document.createElement('option');o.value=c.k;o.textContent=c.lbl;o.title=c.help;el.appendChild(o)});
-  el.value=co2Conv;el.title=co2ConvDef().help}
+  el.value=co2Conv;
+  /* le libellé visible doit suivre le menu, comme pour « Montants » :
+     sans lui, le sélecteur affichait « — » quelle que soit la convention */
+  const t=$('gCo2Txt');if(t)t.textContent=co2ConvDef().short}
 function onCo2ConvChange(){
   const el=$('gCo2');if(!el)return;
-  co2Conv=el.value;el.title=co2ConvDef().help;
+  co2Conv=el.value;
+  const t=$('gCo2Txt');if(t)t.textContent=co2ConvDef().short;
   dataVersion++;saveState();ren();
   toast('🌍 Comptabilité carbone : '+co2ConvDef().short,'nf')}
 
@@ -1984,6 +1994,12 @@ function isProt(p){return p&&(p.includes('Classé')||p.includes('Zone protégée
 function isFos(t){const f=(t||'').toLowerCase();return(f.includes('gaz')||f.includes('mazout'))&&!f.startsWith('pac')&&!f.startsWith('bois')&&!f.startsWith('cad')}
 function scCol(v){return v>=70?'#1E8449':v>=50?'var(--warn)':v>=30?'var(--red)':'#95a5a6'}
 function fmtSRE(v){if(!v)return'—';return v.toLocaleString('fr-CH')}
+/* L'IDC vient d'une division (consommation ÷ surface) : sur le parc réel,
+   386 valeurs sur 415 tombent sur des décimales infinies — 88,888888…
+   L'outil en affichait certaines brutes. Un IDC se lit à l'unité près :
+   la précision affichée doit être celle de la mesure, pas celle du calcul.
+   (décision d'Achim, 03.09.2026) */
+function fmtIDC(v){return(v==null||v===''||isNaN(v))?'—':Math.round(v).toLocaleString('fr-CH')}
 function fmtInv(v){if(!v||v<=0)return'—';if(v>=1e6)return(v/1e6).toFixed(1)+'M';return(v/1e3).toFixed(0)+'k'}
 function fmtIDCproj(v){if(!v&&v!==0)return'<span style="color:var(--ink3)">—</span>';return'<span style="color:var(--grn);font-weight:600">'+v+'</span>'}
 
@@ -2210,6 +2226,13 @@ function importFromRows(rows,includeAll){
        « Surface végétalisée ajoutée (m2) » qui existait déjà */
     ddToitProj:fc(h,['DD Toiture végétalisée projetée [m2]']),
     ddTriProj:fc(h,['DD Points de tri projetés [nb]']),
+    /* Subdivision du montant CECB+ par lot — décision d'Achim du 03.09.2026 :
+       le PTE finance des objectifs séparés, donc le coût doit être découpé,
+       pas réparti par une clé. Colonnes facultatives : tant qu'un bâtiment
+       ne les porte pas, il garde le coût complet. */
+    lotEnv:fc(h,['Coût lot enveloppe [CHF]','Cout lot enveloppe [CHF]','Coût lot enveloppe']),
+    lotChauf:fc(h,['Coût lot chaufferie [CHF]','Cout lot chaufferie [CHF]','Coût lot chaufferie']),
+    lotTech:fc(h,['Coût lot technique [CHF]','Cout lot technique [CHF]','Coût lot technique']),
     ddTriOk:fc(h,['DD Tri conforme']),ddMat:fc(h,['DD Exigence matériaux']),ddLci:fc(h,['DD LCI 117-118']),idcpB:fc(h,['IDC projeté VB [kWh]','IDC projeté VB']),idcpC:fc(h,['IDC projeté VC [kWh]','IDC projeté VC']),idcpGen:fc(h,['IDC projeté','IDCprojeté']),invEstim:fc(h,['Invest estim. CECB+','Estim PTE','EstimPTE']),invVB:fc(h,['Invest ImmOBA','InvestImmOBA','Invest VB']),invGE:fc(h,['Prévisionnel PTE GEI','GE-Invest','GEInvest','GE Invest','Invest GE']),invDG:fc(h,['DG (25%)','DG(25%)','DG 25%','DG25','Invest DG','DG']),lat:fc(h,['Latitude','Lat','GPS_Lat','YCOOR']),lng:fc(h,['Longitude','Long','Lng','GPS_Lng','XCOOR','lon']),notes:fc(h,['Notes','Commentaires','Remarques']),etat:fc(h,['Etat du projet (SIA)','État du projet (SIA)','Etat du projet','État du projet','Etat projet','EtatSIA']),gainElec:fc(h,['Gain Electricité (Max) - kWh','Gain Électricité (Max) - kWh']),gainEau:fc(h,['Gain Eau (Max) - m3']),pvKwc:fc(h,['Futur projet PV - puissance estimée (kWc)']),pvM2:fc(h,['Futur projet PV - surface toiture PV estimée (m2)'])};
   /* Garde-fou anti-collision : si la colonne « RP » détectée contient des nombres
      (ex. Facteur protection 0.5/1), on la rejette et on cherche une colonne
@@ -2263,6 +2286,7 @@ function importFromRows(rows,includeAll){
     ddPerm:pn(gvr(R,c.ddPerm)),ddVeget:pn(gvr(R,c.ddVeget)),ddVegCout:pn(gvr(R,c.ddVegCout)),ddArbres:pn(gvr(R,c.ddArbres)),
     ddCour:gv(R,c.ddCour),ddTri:pn(gvr(R,c.ddTri)),ddTriOk:gv(R,c.ddTriOk),
     ddToitProj:pn(gvr(R,c.ddToitProj)),ddTriProj:pn(gvr(R,c.ddTriProj)),
+    lotEnv:pn(gvr(R,c.lotEnv)),lotChauf:pn(gvr(R,c.lotChauf)),lotTech:pn(gvr(R,c.lotTech)),
     ddMat:gv(R,c.ddMat),ddLci:gv(R,c.ddLci),pvKwc:pn(gvr(R,c.pvKwc)),pvM2:pn(gvr(R,c.pvM2)),lat:fLat,lng:fLng,geoQ:fQ,geoFallback:fQ==='none'})}
   return sites}
 
@@ -2318,8 +2342,33 @@ function pCible50(){return +PARAMS.cibleKwh50>0?+PARAMS.cibleKwh50:63}
 /* conservé pour l'affichage : certains libellés parlent encore en MJ */
 let CIBLE_MJ_M2_OBJ=97*3.6;
 const PLANCHER_CHF_M2_OBJ=50.0;
-const FOSSILE_OBJ=new Set(['Gaz','Mazout','CADIOM','Bûches','PAC+Gaz']);
+/* CADIOM — décision d'Achim, 03.09.2026 : RENOUVELABLE.
+   Il figurait ici alors qu'isFos(), qui sert au filtre « Fossiles » de
+   l'onglet Classement, excluait déjà tout agent commençant par « cad ».
+   Le même bâtiment était donc fossile pour le moteur des objectifs et non
+   fossile pour le filtre. Conséquence assumée : sortir d'un CADIOM n'est
+   plus une substitution, et les bâtiments qui en sortaient quittent le
+   classement Renouvelable — leur gain n'en était pas un. */
+const FOSSILE_OBJ=new Set(['Gaz','Mazout','Bûches','PAC+Gaz']);
 const SUBST_NULLE_OBJ=new Set(["Maintien en l'état","Optimisation ECS"]);
+/* Une substitution est un AGENT, pas une phrase. La colonne « Chauffage de
+   subsitution prévu » du classeur porte aussi du texte libre : « ??? »,
+   « Décision à prendre par COPIL », « OUI, projet DRT à clarifier avec
+   X. Chéron », « demander à SIG date arrivée GENILAC ». Ces valeurs
+   passaient le test « n'est pas fossile » et produisaient donc un gain
+   renouvelable — six bâtiments sur le parc réel, dont un à 643 275 kWh.
+   Une décision qu'on n'a pas prise ne se compte pas comme un gain.
+   (décision d'Achim, 03.09.2026)
+   Le test est volontairement large : il accepte tout ce qui COMMENCE par
+   un agent connu, pour laisser passer « CAD_GeniLac », « PAC ou Bois »,
+   « El. SIG Solaire ». Ce qui ne commence pas par un agent n'est pas une
+   substitution : c'est une saisie à compléter, et l'onglet Données le dit. */
+const SUBST_AGENT_RE=/^\s*(bois|b[uû]ches?|pac|cad|el\.?\s|electr|électr|solaire|gaz|mazout|r[ée]seau|genilac|geniterre|cadiom)/i;
+function substNormalisee(v){
+  const t=String(v==null?'':v).trim();
+  if(!t)return false;
+  if(SUBST_NULLE_OBJ.has(t))return true;      /* décision explicite de ne rien faire */
+  return SUBST_AGENT_RE.test(t)}
 const LEGACY_ELEC_MSG="Legacy — Gain Électricité (Max), méthode par familles abandonnée. Non recalculé bâtiment par bâtiment via CECB+ : à vérifier avant toute décision.";
 const LEGACY_EAU_MSG="Legacy — Gain Eau (Max), méthode par familles abandonnée. Non recalculé bâtiment par bâtiment via CECB+ : à vérifier avant toute décision.";
 let OBJ_GAPS=null,PARC_LIVE=null,OBJ_REFS=null, OBJ_COFACTORS=null, OBJRANK=null;
@@ -2633,6 +2682,9 @@ function buildContributionsObj(sites,coFactors){
        les classements, sinon le menu ne sert à rien. */
     const cout=s.invVB;
     const hasEstim=!!(cout&&cout>0);
+    /* coût imputé à chaque objectif : le lot quand il est saisi, le montant
+       complet sinon (voir LOTS_OBJ ci-dessus) */
+    const cL=function(k){const v=coutLot(s,k);return v!=null?v:cout};
     const cecb=s.cecbRaw||'';
     const sre=s.sre,idc=s.idcC;
     /* idcVB sur le site porte un repli générique (IDC projeté VA) quand la
@@ -2643,25 +2695,37 @@ function buildContributionsObj(sites,coFactors){
     const agent=s.htPrin||'',futur=s.hsub||'';
     if(hasEstim&&sre&&idc&&idcp!=null&&idc>idcp){
       const gainTh=sre*(idc-idcp);
-      out.th.push({id:s.id,nom:s.nom,estim:cout,sre:sre,gain:gainTh,
+      out.th.push({id:s.id,nom:s.nom,estim:cL('th'),lot:coutLot(s,'th')!=null,sre:sre,gain:gainTh,
         mesure:'Rénovation CECB+ ('+cecb+') — '+(agent||'?')+' → '+(futur||agent||'?')});
       const fAct=agent?fget(agent):null;
       const fFut=futur?fget(futur):fAct;
       if(agent&&fAct!=null&&fFut!=null){
         const co2Act=sre*idc*fAct,co2Proj=sre*idcp*fFut;
         const gainCo2=co2Act-co2Proj;
-        if(gainCo2>0)out.co2.push({id:s.id,nom:s.nom,estim:cout,sre:sre,gain:gainCo2,
+        if(gainCo2>0)out.co2.push({id:s.id,nom:s.nom,estim:cL('co2'),lot:coutLot(s,'co2')!=null,sre:sre,gain:gainCo2,
           mesure:'Rénovation CECB+ ('+cecb+') — '+agent+' → '+(futur||agent)});
       }
     }
-    if(hasEstim&&FOSSILE_OBJ.has(agent)&&futur&&!FOSSILE_OBJ.has(futur)&&!SUBST_NULLE_OBJ.has(futur)){
+    /* substNormalisee() écarte le texte libre : sans agent identifiable,
+       il n'y a pas de substitution à créditer. */
+    if(hasEstim&&FOSSILE_OBJ.has(agent)&&futur&&substNormalisee(futur)&&!FOSSILE_OBJ.has(futur)&&!SUBST_NULLE_OBJ.has(futur)){
       const conso=(sre&&idc)?sre*idc:null;
-      if(conso&&conso>0)out.ren.push({id:s.id,nom:s.nom,estim:cout,sre:sre,gain:conso,
+      if(conso&&conso>0)out.ren.push({id:s.id,nom:s.nom,estim:cL('ren'),lot:coutLot(s,'ren')!=null,sre:sre,gain:conso,
         mesure:'Substitution chaufferie — '+agent+' → '+futur});
     }
     if(hasEstim){
-      if(s.gainElecMax&&s.gainElecMax>0)out.elec.push({id:s.id,nom:s.nom,estim:cout,sre:sre,gain:s.gainElecMax,mesure:LEGACY_ELEC_MSG});
-      if(s.gainEauMax&&s.gainEauMax>0)out.eau.push({id:s.id,nom:s.nom,estim:cout,sre:sre,gain:s.gainEauMax,mesure:LEGACY_EAU_MSG});
+      /* « Gain Electricité (Max) - kWh » et « Gain Eau (Max) - m3 » n'existent
+         PAS dans Plan_PTE_optimise.xlsx : le moteur lisait des colonnes
+         fantômes, d'où deux classements vides. Les colonnes réelles sont
+         « Gain Elec projeté [kWh/an] » et « Gain Eau projeté [m3/an] »,
+         encore vides mais présentes. On lit la colonne héritée si elle
+         existe, la colonne réelle sinon. (cohérence classeur, 03.09.2026) */
+      const gEl=(s.gainElecMax&&s.gainElecMax>0)?s.gainElecMax:((s.gainElecProj&&s.gainElecProj>0)?s.gainElecProj:0);
+      const gEa=(s.gainEauMax&&s.gainEauMax>0)?s.gainEauMax:((s.gainEauProj&&s.gainEauProj>0)?s.gainEauProj:0);
+      if(gEl>0)out.elec.push({id:s.id,nom:s.nom,estim:cL('elec'),lot:coutLot(s,'elec')!=null,sre:sre,gain:gEl,
+        mesure:(s.gainElecMax&&s.gainElecMax>0)?LEGACY_ELEC_MSG:'Colonne « Gain Elec projeté [kWh/an] » du Plan_PTE'});
+      if(gEa>0)out.eau.push({id:s.id,nom:s.nom,estim:cL('eau'),lot:coutLot(s,'eau')!=null,sre:sre,gain:gEa,
+        mesure:(s.gainEauMax&&s.gainEauMax>0)?LEGACY_EAU_MSG:'Colonne « Gain Eau projeté [m3/an] » du Plan_PTE'});
     }
     /* Végétalisation : la contribution est la surface créée, le coût son coût
        TTC propre — pas le montant du référentiel financier, qui porte sur la
@@ -2846,7 +2910,7 @@ function loadSample(){S=[
 {id:"693527",nom:"UNI Réaction Exo-gaspillique",adr:"Corniche Deira Promenade 30, Waterfront",lat:25.2900,lng:55.3150,geoQ:'file',geoFallback:false,rp:"Poète du Bâti en Équilibre",drt:"",rang:21,coeff:.46,sre:5725,idcC:99,ht:"CAD réparti",fp:1,pat:"",elec:2292831,co2:594041,clIDC:2,clVet:4,cecb:false,invVB:2455000},
 {id:"836241",nom:"UNI Champ de Bataille Énergie",adr:"Dragon Mart Blvd 20, International City",lat:25.1720,lng:55.4050,geoQ:'file',geoFallback:false,rp:"Poète du Bâti en Équilibre",drt:"",rang:42,coeff:.58,sre:5966,idcC:78,ht:"Gaz",hsub:"CAD_Lignon",fp:.5,pat:"Objets d'intérêt",elec:1382851,co2:604589,clIDC:1,clVet:4,cecb:true,invVB:8763000,idcVB:41.1},
 {id:"507362",nom:"Complexe Massivement Sous-Isolé",adr:"DIFC Gate Avenue 4, Financial Centre",lat:25.2130,lng:55.2780,geoQ:'file',geoFallback:false,rp:"Poète du Bâti en Équilibre",drt:"",rang:297,coeff:.65,sre:60216,idcC:116,ht:"Chauffage à distance",fp:1,pat:"",elec:11361986,co2:990692,clIDC:2,clVet:3,cecb:false,invVB:257795000}
-];S.forEach(function(s){s.invImmOBA=s.invVB!=null?s.invVB:null;s.invGE=s.invVB?Math.round(s.invVB*0.33):null;s.invDG=s.invVB?Math.round(s.invVB*0.25):null});normSites();popInv();applyInvMode();S.forEach(function(s,i){if(s.etat===undefined)s.etat=['SIA 2.21','SIA 3.31','SIA 3.32','voir remarques','','Demande Trx'][i%6]});dataVersion++;detectGeoContext();popEtat();assignFallbackCoords();popRP();popRPProject();ren();updateSourceInfo(S.length,'Échantillon intégré','sample')}
+];S.forEach(function(s){s.invImmOBA=s.invVB!=null?s.invVB:null;s.invGE=s.invVB?Math.round(s.invVB*0.33):null;s.invDG=s.invVB?Math.round(s.invVB*0.25):null});normSites();popInv();popCo2Conv();applyInvMode();S.forEach(function(s,i){if(s.etat===undefined)s.etat=['SIA 2.21','SIA 3.31','SIA 3.32','voir remarques','','Demande Trx'][i%6]});dataVersion++;detectGeoContext();popEtat();assignFallbackCoords();popRP();popRPProject();ren();updateSourceInfo(S.length,'Échantillon intégré','sample')}
 
 
 /* ---------- IMPORT / EXPORT / DÉMARRAGE ---------- */
@@ -2867,7 +2931,7 @@ function finishImport(rows,source){
   /* Les notes et les phases ajustées manuellement sont conservées : le fichier
      de données est mis à jour régulièrement depuis d'autres sources, alors que
      ces deux éléments sont des saisies de l'utilisateur, indexées par N° de sous-site. */
-  S=si;S_ALL=importFromRows(rows,true);dataVersion++;normSites();popInv();applyInvMode();computeObjRanking();buildOpt();renR();
+  S=si;S_ALL=importFromRows(rows,true);dataVersion++;normSites();popInv();popCo2Conv();applyInvMode();computeObjRanking();buildOpt();renR();
   detectGeoContext();assignFallbackCoords();
   saveData();saveState();
   if(typeof lMap!=='undefined'&&lMap)lMap.setView([geoCtx.lat,geoCtx.lng],12);
@@ -2901,7 +2965,7 @@ function updateSourceInfo(count,source,type){
 /* Synchronisation entre onglets/pages ouverts simultanément */
 window.addEventListener('storage',function(e){
   if(_lsWriting)return;
-  if(e.key===LS_DATA){if(loadData()){dataVersion++;normSites();popInv();applyInvMode();computeObjRanking();buildOpt();detectGeoContext();assignFallbackCoords();popRP();popRPProject();popEtat();ren();updateSourceInfo(S.length,lastFileName,'file');toast('🔄 Données mises à jour depuis une autre page','nf')}}
+  if(e.key===LS_DATA){if(loadData()){dataVersion++;normSites();popInv();popCo2Conv();applyInvMode();computeObjRanking();buildOpt();detectGeoContext();assignFallbackCoords();popRP();popRPProject();popEtat();ren();updateSourceInfo(S.length,lastFileName,'file');toast('🔄 Données mises à jour depuis une autre page','nf')}}
   else if(e.key===LS_STATE){loadState();const gi=$('gInv');if(gi)gi.value=invMode;applyInvMode();ren()}});
 
 /* Diagnostic visible : les deux librairies encore chargées depuis Internet
@@ -2909,7 +2973,7 @@ window.addEventListener('storage',function(e){
    d'entreprise. L'import et le classement, eux, ne dépendent de rien. */
 function checkLibs(){
   const miss=[];
-  if($('gTop')&&typeof Plotly==='undefined')miss.push('les graphiques (Plotly)');
+  if($('gHist')&&typeof Plotly==='undefined')miss.push('la distribution CEE (Plotly)');
   if($('leafMap')&&typeof L==='undefined')miss.push('le fond de carte (Leaflet)');
   if(!miss.length)return;
   const d=document.createElement('div');
@@ -2924,7 +2988,7 @@ function boot(){
   const st=loadState();
   const hasData=loadData();
   if(hasData){
-    dataVersion++;normSites();popInv();applyInvMode();computeObjRanking();buildOpt();detectGeoContext();assignFallbackCoords();
+    dataVersion++;normSites();popInv();popCo2Conv();applyInvMode();computeObjRanking();buildOpt();detectGeoContext();assignFallbackCoords();
     popRP();popRPProject();popEtat();
     updateSourceInfo(S.length,lastFileName,'file');ren();
   }else{
@@ -2942,7 +3006,7 @@ window.addEventListener('load',boot);
 /* ==== SPÉCIFIQUE À CETTE PAGE ==== */
 
 function detectAlerts(sites){const al=[];sites.forEach(s=>{
-if(s.idcC>150&&!isFos(s.ht)&&!((s.ht||'').toLowerCase().includes('cad')))al.push({t:'warn',s,m:'IDC élevé ('+s.idcC+') mais chauffage non fossile'});
+if(s.idcC>150&&!isFos(s.ht)&&!((s.ht||'').toLowerCase().includes('cad')))al.push({t:'warn',s,m:'IDC élevé ('+fmtIDC(s.idcC)+') mais chauffage non fossile'});
 if(s.cecb&&(!s.hsub||s.hsub.length<3||/rien|maintien/i.test(s.hsub)))al.push({t:'warn',s,m:'Audit CECB+ réalisé, mais aucune substitution de chauffage prévue'});
 if(s.sc.t!=null&&s.sc.t>=75&&(!s.invVB||s.invVB<=0))al.push({t:'err',s,m:'En tête de classement, mais aucun montant renseigné'});
 var ti=s.sc.ti;
@@ -2993,7 +3057,9 @@ try{
    une distribution de chiffres qui n'existent pas */
 const ceeVals=invHorsChiffrage()?[]:all.filter(ceeOk).map(s=>ceeCHFkWh(s)).filter(v=>v!=null&&isFinite(v));
 if(ceeVals.length){
+  try{
   Plotly.newPlot('gHist',[{x:ceeVals,type:'histogram',marker:{color:'#005F73'},nbinsx:15}],plotLay({margin:{t:5,b:28,l:35,r:5},bargap:.2,xaxis:{title:{text:'CHF/kWh ('+pDuree('cee')+' ans)',font:{size:10}}},yaxis:{title:{text:'Nb bâtiments',font:{size:10}}},font:{size:9,color:themeCols().ink2}}),{responsive:true,displayModeBar:false});
+  }catch(e){$('gHist').innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:70px">Distribution indisponible : cette carte est la seule qui dépende encore de Plotly, et la bibliothèque n\'a pas pu être chargée.</p>'}
 }else{
   $('gHist').innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:70px">'
     +(invHorsChiffrage()
@@ -3001,28 +3067,21 @@ if(ceeVals.length){
       :'Aucun bâtiment éligible CEE dans cette sélection.')+'</p>';
 }
 const dist=etatDist(all);
-Plotly.newPlot('gPie',[{values:dist.map(x=>x[1]),labels:dist.map(x=>x[0]),type:'pie',textinfo:'value+percent',hole:.4}],plotLay({margin:{t:5,b:5,l:5,r:5},font:{size:9,color:themeCols().ink2},showlegend:true,legend:{font:{size:8}}}),{responsive:true,displayModeBar:false});
+drawEtat(dist);
 }catch(e){}
 try{
 /* Matrice — hauteur : la priorité, c'est-à-dire la meilleure place du bâtiment
    dans les classements par objectif (100 = tête de classement). Largeur : la
    faisabilité. Les bâtiments imposés ou exclus par un facteur non mesurable
    sont tracés à part, avec leur motif au survol. */
-const mkUF=(arr,nm,cl,sym)=>({x:arr.map(s=>feasib(s)),y:arr.map(s=>s.sc.t),
-  text:arr.map(s=>s.id+' '+s.nom.substring(0,20)),
-  customdata:arr.map(function(s){const q=qualiOf(s.id);
-    return [fmtInv(s.invVB),ceeOk(s)?'oui':'non',q?(qualiDef(q.p).lbl+' — '+(q.m||'motif non renseigné')):'aucun ajustement',
-            s.sc.best?PRIO_LBL[s.sc.best]:'—']}),
-  mode:'markers',type:'scatter',name:nm,
-  marker:{color:cl,size:9,symbol:sym||'circle',line:{width:.5,color:'#fff'}},
-  hovertemplate:'%{text}<br>priorité : %{y:.0f} (meilleur classement : %{customdata[3]})<br>faisabilité : %{x:.0f}<br>montant : %{customdata[0]}<br>ajustement : %{customdata[2]}<extra>'+nm+'</extra>'});
-const adjIn=all.filter(s=>{const q=qualiOf(s.id);return q&&q.p==='in'});
-const adjEx=all.filter(s=>{const q=qualiOf(s.id);return q&&q.p==='ex'});
-const _rest=all.filter(s=>{const q=qualiOf(s.id);return !(q&&(q.p==='in'||q.p==='ex'))});
-const fos=_rest.filter(s=>isFos(s.ht)),pro=_rest.filter(s=>isProt(s.pat)&&!isFos(s.ht)),oth=_rest.filter(s=>!isProt(s.pat)&&!isFos(s.ht));
-
+/* Le nuage distinguait fossiles, protégés, imposés et exclus par la couleur
+   du point. Ces quatre familles se lisent déjà dans le classement et dans la
+   fiche de chaque bâtiment ; les remettre ici imposait cinq séries qui se
+   recouvraient sur les mêmes abscisses, la faisabilité n'ayant qu'une
+   vingtaine de valeurs possibles. La matrice ne répond qu'à une question :
+   combien de bâtiments à ce croisement. */
 try{if(window.Plotly)Plotly.purge('gUF')}catch(e){}
-Plotly.newPlot('gUF',[mkUF(oth,'Autres','#005F73'),mkUF(fos,'🔥 Fossiles','#C0392B'),mkUF(pro,'🏛 Protégés','#6B52A8'),mkUF(adjIn,'⏫ Imposés','#2C3E50','star'),mkUF(adjEx,'⛔ Exclus','#b0b7c3','x')],plotLay({margin:{t:5,b:35,l:40,r:10},xaxis:{title:{text:'Faisabilité (0–100)',font:{size:10}},range:[-5,105]},yaxis:{title:{text:'Priorité (classements par objectif)',font:{size:10}},range:[0,100]},font:{size:9,color:themeCols().ink2},legend:{font:{size:8},orientation:'h',y:1.12},shapes:[{type:'line',x0:50,x1:50,y0:0,y1:100,line:{color:'#ccc',dash:'dot'}},{type:'line',x0:0,x1:100,y0:50,y1:50,line:{color:'#ccc',dash:'dot'}}],annotations:[{x:90,y:95,text:'🎯 Urgent+Faisable',showarrow:false,font:{size:8,color:'#1E8449'}},{x:10,y:95,text:'⚡ Urgent, à préparer',showarrow:false,font:{size:8,color:'#B35F10'}}]}),{responsive:true,displayModeBar:false});
+drawUF(all);
 }catch(e){}
 try{renAlerts(all)}catch(e){}
 try{renTop(all)}catch(e){}
@@ -3050,7 +3109,6 @@ function renTop(all){
     .filter(function(it){return !rpActif()||(byId[it.id]&&rpMatch(byId[it.id].rp))})
     .slice(0,20);
   if(!items.length){el.innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:60px">Aucun bâtiment de ce portefeuille dans ce classement.</p>';return}
-  const top=items.slice().reverse();
   const unit=OBJ_UNIT[key]||'';
   const platT=invHorsChiffrage()&&key!=='veg';
   const val=function(it){return platT?(key==='cee'?it.kwh:it.gain)
@@ -3060,18 +3118,53 @@ function renTop(all){
   /* Plotly.purge ne vide pas le message « aucun bâtiment » écrit par un rendu
      précédent : il resterait visible sous le graphique. */
   el.innerHTML='';
-  try{
-    Plotly.newPlot(el,[{
-      y:top.map(function(it){const s=byId[it.id];return (it.rangAdj||it.rang)+'. '+it.id+' '+String(it.nom||(s?s.nom:'')).substring(0,22)+(qualiOf(it.id)?' ⚖':'')}),
-      x:top.map(val),
-      customdata:top.map(function(it){const q=qualiOf(it.id);
-        return [objFmtNum(key==='cee'?it.co2Gain:it.gain,0)+' '+unit, q?(qualiDef(q.p).lbl+' — '+(q.m||'motif non renseigné')):'—']}),
-      type:'bar',orientation:'h',marker:{color:top.map(function(it){return qualiOf(it.id)?'#B58900':'#005F73'})},
-      hovertemplate:'%{y}<br>'+axis+' : %{x:.4f}<br>contribution : %{customdata[0]}<br>ajustement : %{customdata[1]}<extra></extra>'}],
-      plotLay({margin:{t:5,b:34,l:210,r:12},xaxis:{title:{text:axis,font:{size:10}}},
-       yaxis:{automargin:true,tickfont:{size:9}},height:Math.max(280,26*top.length)}),
-      {displayModeBar:false,responsive:true});
-  }catch(e){el.innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:60px">Graphique indisponible (bibliothèque non chargée).</p>'}}
+  /* Point sur un axe, pas barre. Une barre dit « plus long, plus grand,
+     donc mieux » ; la grandeur portée ici est un coût unitaire, si bien que
+     la barre la plus longue désignait le plus mauvais bâtiment du Top 20 et
+     la plus courte le meilleur. Le point ne promet rien : il situe. Ce qui
+     ordonne est écrit — le rang, en toutes lettres, à gauche.
+     Le plateau des rangs 6 à 20 reste un plateau : c'est vrai, les coûts y
+     sont voisins. Ce qui les sépare n'est pas le coût mais la contribution,
+     qui varie d'un facteur seize et se lit en colonne, en chiffres. */
+  const C=themeCols();
+  const grand=qualiSortKey(key).desc;
+  const vs=items.map(val).map(function(v){return (v==null||isNaN(v))?null:v});
+  let vmax=0;vs.forEach(function(v){if(v!=null&&v>vmax)vmax=v});
+  vmax=(vmax||1)*1.04;
+  const dec=vmax<2?3:(vmax<20?2:0);
+  const W=1240,T=54,RW=19,xL=436,xR=1006,xVal=1096,xGain=1232;
+  const H=T+RW*items.length+16;
+  const px=function(v){return xL+(xR-xL)*Math.max(0,Math.min(1,v/vmax))};
+  let g=txt(8,17,esc(axis)+(grand?' — plus à droite, mieux classé':' — plus à gauche, mieux classé'),{s:10.5,c:C.ink2});
+  g+=txt(xVal,17,'valeur',{a:'end',s:10.5,c:C.ink2,w:700})
+    +txt(xGain,17,esc('contribution'+(unit?' ('+unit+')':'')),{a:'end',s:10.5,c:C.ink2,w:700});
+  /* l'échelle part de zéro : rien à signaler, et le plateau reste visible */
+  for(let i=0;i<=4;i++){const gx=xL+(xR-xL)*i/4;
+    g+='<line x1="'+gx.toFixed(1)+'" y1="'+(T-16)+'" x2="'+gx.toFixed(1)+'" y2="'+(H-12)+'" stroke="'+C.line+'" stroke-width="1"/>'
+      +txt(gx,T-22,objFmtNum(vmax*i/4,dec),{a:'middle',s:9.5,c:C.ink3})}
+  items.forEach(function(it,i){
+    const s=byId[it.id],q=qualiOf(it.id),v=vs[i];
+    const y=T+RW*i+RW/2,rg=(it.rangAdj||it.rang);
+    const nom=String(it.nom||(s?s.nom:'')).substring(0,40);
+    const gain=objFmtNum(key==='cee'?it.co2Gain:it.gain,0);
+    /* un ajustement se voit trois fois : la balance dans le libellé, la
+       teinte d'alerte et l'anneau du point. Jamais la couleur seule. */
+    const dc=q?C.warn:C.acc;
+    g+='<g><line x1="'+xL+'" y1="'+y+'" x2="'+xR+'" y2="'+y+'" stroke="'+C.line+'" stroke-width="1"/>'
+      +txt(34,y+4,rg+'.',{a:'end',s:11,c:C.ink3,w:700,fix:1})
+      +txt(42,y+4,esc(it.id),{s:11,c:C.ink,w:700,fix:1})
+      +txt(104,y+4,esc(nom)+(q?' ⚖':''),{s:11,c:C.ink2,fix:1})
+      +(v==null?txt((xL+xR)/2,y+4,'valeur indisponible',{a:'middle',s:10,c:C.ink3})
+        :('<circle cx="'+px(v).toFixed(1)+'" cy="'+y+'" r="5" fill="'+dc+'"'+(q?(' stroke="'+C.card+'" stroke-width="2"'):'')+'/>'
+          +(q?('<circle cx="'+px(v).toFixed(1)+'" cy="'+y+'" r="7.5" fill="none" stroke="'+dc+'" stroke-width="1.4"/>'):'')))
+      +txt(xVal,y+4,v==null?'—':objFmtNum(v,dec),{a:'end',s:11,c:C.ink,w:700,fix:1})
+      +txt(xGain,y+4,gain,{a:'end',s:11,c:C.ink2,fix:1})
+      +'<rect x="0" y="'+(y-RW/2)+'" width="'+W+'" height="'+RW+'" fill="transparent"><title>'
+      +esc(rg+'. '+it.id+' '+nom+'\n'+axis+' : '+objFmtNum(v,dec)
+        +'\ncontribution : '+gain+' '+unit
+        +'\najustement : '+(q?(qualiDef(q.p).lbl+' — '+(q.m||'motif non renseigné')):'aucun'))
+      +'</title></rect></g>'});
+  el.innerHTML=svg(W,H,g)}
 
 function renAlerts(all){
 const al=detectAlerts(all);lastAlerts=al;
@@ -3384,6 +3477,36 @@ function jaugeHtml(key){
      1 288 MCHF pour 649 MCHF réellement engagés.
    ================================================================ */
 const OBJ_PARTAGES=['co2','th','ren','elec','eau'];
+/* ================================================================
+   COÛT PAR LOT — subdivision plutôt qu'allocation  (03.09.2026)
+   Le PTE finance des objectifs séparés : le montant d'une rénovation
+   CECB+ doit donc être découpé entre ce qui produit chaque gain, pas
+   réparti par une clé inventée. C'est la seule voie conforme à la
+   hiérarchie d'ISO 14044 — subdiviser d'abord, allouer en dernier
+   recours, jamais par une clé arbitraire.
+     thermique    ← enveloppe
+     renouvelable ← chaufferie
+     CO₂          ← enveloppe + chaufferie, qui y contribuent toutes deux
+     électricité, eau ← technique
+   Un bâtiment dont les lots ne sont pas saisis garde le coût complet :
+   la précision arrive bâtiment par bâtiment, rien n'attend que le
+   classeur soit complet.
+   ================================================================ */
+const LOTS_OBJ={th:['lotEnv'],ren:['lotChauf'],co2:['lotEnv','lotChauf'],
+                elec:['lotTech'],eau:['lotTech'],cee:['lotEnv']};
+/* Montant à imputer à un objectif. Retourne null quand les lots ne sont pas
+   saisis, pour que l'appelant retombe sur le coût complet en le sachant. */
+function coutLot(s,key){
+  const L=LOTS_OBJ[key];if(!L||!s)return null;
+  let t=0,vu=0;
+  for(const k of L){const v=+s[k];if(v>0){t+=v;vu++}}
+  return vu?t:null}
+function aDesLots(s){return !!(s&&((+s.lotEnv>0)||(+s.lotChauf>0)||(+s.lotTech>0)))}
+/* combien de bâtiments du parc portent une subdivision */
+function lotsCouverture(){
+  const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
+  if(!pop||!pop.length)return{n:0,tot:0};
+  return{n:pop.filter(aDesLots).length,tot:pop.length}}
 let _servisCache=null;
 /* nombre d'objectifs que le MÊME montant sert, par bâtiment. Le CEE est
    exclu : il reprend exactement les items du thermique, le compter
@@ -3404,6 +3527,11 @@ function investDedup(){
   return t}
 function servisChip(id,key){
   if(OBJ_PARTAGES.indexOf(key)<0)return'';
+  /* un bâtiment dont les lots sont saisis n'a plus de coût partagé : son
+     montant est celui du lot qui produit CE gain-là. Pastille inutile. */
+  const R=(typeof OBJRANK!=='undefined'&&OBJRANK&&OBJRANK[key])?OBJRANK[key]:null;
+  const it=R?R.items.find(function(x){return x.id===id}):null;
+  if(it&&it.lot)return '<span class="lot-chip" title="Coût subdivisé : le montant affiché est celui du lot qui produit ce gain, pas le montant complet de l\'intervention. Ce bâtiment est comparable sans réserve.">⊟</span>';
   const n=servisPar()[id]||0;
   if(n<2)return'';
   return '<span class="srv-chip" title="Le même montant est imputé à '+n+' classements : '+
@@ -3596,8 +3724,8 @@ const colspan=row.cells.length;
 const det=document.createElement('tr');det.id='detRow';
 det.innerHTML='<td colspan="'+colspan+'" class="detail-td"><div style="display:flex;gap:12px;font-size:.73rem;margin-bottom:8px;flex-wrap:wrap">'+
   '<span title="Surface de référence énergétique : la surface chauffée du bâtiment, en mètres carrés. C\'est elle qui ramène toutes les consommations au mètre carré et rend comparables deux bâtiments de tailles différentes.">📐 SRE : <b>'+fmtSRE(site.sre)+'</b></span>'+
-  '<span title="Indice de dépense de chaleur : la chaleur consommée en une année par mètre carré chauffé. Plus il est élevé, plus le bâtiment consomme pour se chauffer, et c\'est sa baisse qui mesure l\'effet des travaux.">🔥 IDC actuel : <b>'+(site.idcC?Math.round(site.idcC):'—')+'</b></span>'+
-  '<span>🎯 IDC projeté ('+esc(site.cecbRaw?site.cecbRaw.replace('var_','var. '):'—')+') : <b>'+(site.idcVB!=null?Math.round(site.idcVB):'—')+'</b></span>'+
+  '<span title="Indice de dépense de chaleur : la chaleur consommée en une année par mètre carré chauffé. Plus il est élevé, plus le bâtiment consomme pour se chauffer, et c\'est sa baisse qui mesure l\'effet des travaux.">🔥 IDC actuel : <b>'+fmtIDC(site.idcC)+'</b></span>'+
+  '<span>🎯 IDC projeté ('+esc(site.cecbRaw?site.cecbRaw.replace('var_','var. '):'—')+') : <b>'+fmtIDC(site.idcVB)+'</b></span>'+
   '<span>🔄 Substitution : <b>'+esc(site.hsub||'—')+'</b></span>'+
   '<span title="Société suisse des ingénieurs et des architectes, dont la norme découpe un projet en phases successives — étude, appel d\'offres, réalisation. La phase indiquée ici dit où en est le projet, pas dans quel état énergétique il se trouve.">🏗 État du projet (SIA) : <b>'+esc(site.etat||'—')+'</b></span>'+
   '<span>💰 Invest actif : <b>'+fmtInv(site.invVB)+'</b> <span style="font-size:.63rem;color:var(--ink3)">('+invDef().short+')</span></span>'+
@@ -3795,6 +3923,13 @@ function partageNote(key){
   let somme=0;OBJ_PARTAGES.forEach(function(k){
     if(OBJRANK[k])OBJRANK[k].items.forEach(function(it){somme+=(+it.estim||0)})});
   const fact=reel>0?(somme/reel):null;
+  const cov=lotsCouverture();
+  const covTxt=cov.n?('<br>⊟ <b>'+cov.n+' bâtiment(s) sur '+cov.tot+'</b> portent déjà une subdivision du montant par lot '+
+      '(enveloppe / chaufferie / technique) : pour ceux-là le coût affiché est celui du lot qui produit ce gain, '+
+      'et la réserve ci-dessus ne s\'applique pas.')
+    :('<br>⊟ <b>Aucun bâtiment</b> ne porte encore la subdivision du montant par lot. Les trois colonnes '+
+      '<code>Coût lot enveloppe [CHF]</code>, <code>Coût lot chaufferie [CHF]</code> et <code>Coût lot technique [CHF]</code> '+
+      'existent dans <code>Plan_PTE</code> : dès qu\'un bâtiment les porte, son coût cesse d\'être partagé et la pastille passe au vert.');
   return '<div class="part-warn">🔗 <b>Un même montant, plusieurs objectifs.</b> '+
     'Une rénovation CECB+ produit d\'un coup un gain thermique, un gain CO₂ et une substitution '+
     'renouvelable : le montant affiché ici est le <b>coût complet de l\'intervention</b>, imputé '+
@@ -3805,7 +3940,7 @@ function partageNote(key){
     'Le total des colonnes de montant des cinq classements vaut '+objFmtNum(somme/1e6,0)+' MCHF, '+
     'alors que l\'argent réellement engagé sur ces mêmes bâtiments est de <b>'+objFmtNum(reel/1e6,0)+' MCHF</b>'+
     (fact?(' — un facteur '+objFmtNum(fact,2)):'')+'. '+
-    'Pour raisonner à budget, passez par l\'onglet <b>Arbitrage</b>, qui compte chaque bâtiment une seule fois.</div>'}
+    'Pour raisonner à budget, passez par l\'onglet <b>Arbitrage</b>, qui compte chaque bâtiment une seule fois.'+covTxt+'</div>'}
 
 /* nombre de bâtiments ajustés, pour l'affichage */
 function qualiSummary(){
@@ -4036,9 +4171,9 @@ const TITLES=[
  ['#alList','Anomalies détectées dans les données — à corriger dans le classeur, pas dans l\'outil'],
  ['#cpList','Complétude des colonnes clés : un classement ne vaut que ce que valent ses données'],
  ['#gHist','Distribution du coût de l\'énergie économisée sur la durée retenue pour le CEE'],
- ['#gPie','Répartition des bâtiments par état d\'avancement SIA'],
- ['#gUF','Chaque point est un bâtiment : priorité en hauteur, faisabilité en largeur'],
- ['#gTop','Les 20 premiers du classement de l\'objectif sélectionné dans l\'onglet Classement'],
+ ['#gPie','Une barre, une part par état d\'avancement SIA — effectif et pourcentage sous la barre'],
+ ['#gUF','Combien de bâtiments à chaque croisement priorité × faisabilité ; le chiffre est écrit dans la case'],
+ ['#gTop','Les 20 premiers du classement de l\'objectif sélectionné, situés sur l\'axe de la valeur qui les trie'],
  ['[onclick*="tglNotes"]','Notes et facteurs non mesurables : export et import dans un même CSV'],
  ['[onclick*="clearAllData"]','Efface les données importées et les préférences de ce navigateur'],
  ['[onclick*="tourStart"]','Relance la visite guidée']];
@@ -4136,8 +4271,8 @@ function printSite(id){
      row('Responsable de portefeuille',esc(s.rp||'—'))+
      row('Responsable de projet',esc(s.drt||'—'))+
      row('Surface de référence (SRE)',fmtSRE(s.sre))+
-     row('IDC actuel',(s.idcC?Math.round(s.idcC)+' kWh/m²·an':'—'))+
-     row('IDC projeté'+(s.cecbRaw?(' ('+esc(String(s.cecbRaw).replace('var_','var. '))+')'):''),(s.idcVB!=null?Math.round(s.idcVB)+' kWh/m²·an':'—'))+
+     row('IDC actuel',(s.idcC?fmtIDC(s.idcC)+' kWh/m²·an':'—'))+
+     row('IDC projeté'+(s.cecbRaw?(' ('+esc(String(s.cecbRaw).replace('var_','var. '))+')'):''),(s.idcVB!=null?fmtIDC(s.idcVB)+' kWh/m²·an':'—'))+
      row('Chauffage actuel',esc(s.htPrin||s.ht||'—'))+
      row('Substitution prévue',esc(s.hsub||'—'))+
      row('Classement au patrimoine',esc(s.pat||'—'))+
@@ -4320,7 +4455,7 @@ function anomalies(){
       out.push(['Incohérence',s.id,'variante CECB+ retenue ('+s.cecbRaw+') mais IDC projeté absent','Plan_PTE']);
     if(+s.invVB>0&&!(+s.sre>0))out.push(['Incohérence',s.id,'montant renseigné sans surface','Plan_PTE']);
     if(s.idcC&&s.idcVB!=null&&s.idcVB>s.idcC)
-      out.push(['Incohérence',s.id,'IDC projeté ('+Math.round(s.idcVB)+') supérieur à l\'IDC actuel ('+Math.round(s.idcC)+')','Plan_PTE']);
+      out.push(['Incohérence',s.id,'IDC projeté ('+fmtIDC(s.idcVB)+') supérieur à l\'IDC actuel ('+fmtIDC(s.idcC)+')','Plan_PTE']);
   });
   return out}
 function exportAnomalies(){
@@ -4432,6 +4567,36 @@ function plotLay(o){
     if((k==='xaxis'||k==='yaxis')&&t[k]){const m={};for(const a in t[k])m[a]=t[k][a];for(const a in o[k])m[a]=o[k][a];out[k]=m}
     else out[k]=o[k]}
   return out}
+/* ---------- teintes dérivées, pour les SVG ----------
+   themeCols() rend des #rrggbb ; une case de matrice ou un segment de barre
+   a besoin d'un fond intermédiaire entre le jeton et la carte, et surtout de
+   savoir quelle encre y reste lisible. Le seuil bascule dans l'autre sens
+   entre le jour et la nuit : le calculer évite de le deviner deux fois. */
+function hexRGB(x){var s=String(x||'').trim();
+  if(/^#[0-9a-f]{3}$/i.test(s))s='#'+s[1]+s[1]+s[2]+s[2]+s[3]+s[3];
+  if(!/^#[0-9a-f]{6}$/i.test(s))return[128,128,128];
+  return[parseInt(s.slice(1,3),16),parseInt(s.slice(3,5),16),parseInt(s.slice(5,7),16)]}
+function mixHex(a,b,t){var A=hexRGB(a),B=hexRGB(b);
+  t=Math.max(0,Math.min(1,t));
+  return'#'+A.map(function(v,i){var n=Math.round(v+(B[i]-v)*t);
+    return('0'+n.toString(16)).slice(-2)}).join('')}
+function relLum(x){var c=hexRGB(x).map(function(v){v/=255;
+  return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)});
+  return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2]}
+function ratio(a,b){var x=relLum(a),y=relLum(b);
+  return(Math.max(x,y)+0.05)/(Math.min(x,y)+0.05)}
+/* l'encre la plus contrastée parmi les trois du thème — jamais un pari */
+function onColor(bg){var best='#FFFFFF',r=0;
+  ['#FFFFFF','#0F1519','#3A424B'].forEach(function(k){
+    var v=ratio(bg,k);if(v>r){r=v;best=k}});
+  return best}
+/* le fond teinté le plus proche voulu qui garde 4,5:1 avec son encre :
+   la rampe s'arrête d'elle-même avant la bande de luminance illisible */
+function tint(base,card,t){
+  var f=mixHex(card,base,t);
+  for(var i=0;i<9&&ratio(f,onColor(f))<4.5;i++)
+    f=mixHex(f,relLum(card)>0.5?'#FFFFFF':'#0F1519',0.10);
+  return f}
 function themeCols(){
   const c=getComputedStyle(document.body);
   const g=function(n,d){const v=c.getPropertyValue(n);return v?v.trim():d};
@@ -5157,7 +5322,7 @@ function renM(){
   setTimeout(patchTileImages,800);
 }
 
-function mkTip(s){return'<div style="min-width:180px;font-size:.76rem;line-height:1.5"><b style="color:var(--pri)">'+esc(s.id)+'</b> — '+esc(s.nom)+'<br>📍 '+esc(s.adr||'—')+'<br>📐 SRE: <b>'+(s.sre?s.sre.toLocaleString('fr-CH')+' m²':'—')+'</b><br>🔥 IDC: <b>'+(s.idcC||'—')+'</b><br>📋 CECB+ : <b>'+cecbInfo(s).ico+esc(s.cecbRaw?' '+s.cecbRaw.replace('var_','var. '):'')+'</b> · 🏗 '+esc(s.etat||'État SIA —')+'<br>📊 '+(s.sc.t==null?'<b>Non classé</b> — données insuffisantes':('Priorité (classements par objectif) : <b>'+s.sc.t+'</b>'))+'</div>'}
+function mkTip(s){return'<div style="min-width:180px;font-size:.76rem;line-height:1.5"><b style="color:var(--pri)">'+esc(s.id)+'</b> — '+esc(s.nom)+'<br>📍 '+esc(s.adr||'—')+'<br>📐 SRE: <b>'+(s.sre?s.sre.toLocaleString('fr-CH')+' m²':'—')+'</b><br>🔥 IDC: <b>'+fmtIDC(s.idcC)+'</b><br>📋 CECB+ : <b>'+cecbInfo(s).ico+esc(s.cecbRaw?' '+s.cecbRaw.replace('var_','var. '):'')+'</b> · 🏗 '+esc(s.etat||'État SIA —')+'<br>📊 '+(s.sc.t==null?'<b>Non classé</b> — données insuffisantes':('Priorité (classements par objectif) : <b>'+s.sc.t+'</b>'))+'</div>'}
 
 let geoRunning=false;
 async function geocodeSites(){
@@ -5238,7 +5403,8 @@ function _facteurRepli(agent){
   return null}
 
 const VARIANTS={var_A:'IDC projeté VA [kWh]',var_B:'IDC projeté VB [kWh]',var_C:'IDC projeté VC [kWh]'};
-const FOSSILE=['Gaz','Mazout','CADIOM','Bûches','PAC+Gaz'];
+/* Même décision que FOSSILE_OBJ ci-dessus : CADIOM est renouvelable. */
+const FOSSILE=['Gaz','Mazout','Bûches','PAC+Gaz'];
 const SUBST_NULLE=['Maintien en l\'état','Optimisation ECS'];
 const DUREE=40;              // ans — Céé_durée, identique à Priorisation_PTE.xlsx
 const PLANCHER_CHF_M2=50;    // seuils de l'indice de fiabilité — Paramètres!C18:C21
@@ -5668,7 +5834,119 @@ function rubanV(key,x0,yDeb,yAuj,yCib,C,lblDeb,lblAuj,lblCib){
   return g}
 function svg(w,h,inner){return '<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:auto;max-height:'+h+'px">'+inner+'</svg>'}
 function ax(x0,y0,x1,y1){return '<line class="gl" x1="'+x0+'" y1="'+y0+'" x2="'+x1+'" y2="'+y1+'"/>'}
-function txt(x,y,s,o){o=o||{};return '<text x="'+x+'" y="'+y+'" font-size="'+(o.s||10)+'" fill="'+(o.c||'#555')+'" text-anchor="'+(o.a||'start')+'"'+(o.w?' font-weight="'+o.w+'"':'')+'>'+s+'</text>'}
+/* o.fix : pose l'encre en style plutôt qu'en attribut, pour les textes dont
+   la couleur porte une hiérarchie et non un simple habillage — sans quoi le
+   mode nuit les ramène tous au même gris. */
+function txt(x,y,s,o){o=o||{};return '<text x="'+x+'" y="'+y+'" font-size="'+(o.s||10)+'" '
+  +(o.fix?('style="fill:'+(o.c||'#555')+'"'):('fill="'+(o.c||'#555')+'"'))
+  +' text-anchor="'+(o.a||'start')+'"'+(o.w?' font-weight="'+o.w+'"':'')+'>'+s+'</text>'}
+
+/* ================================================================
+   ÉTAT SIA — barre empilée unique  (Théo Trait, 03.09.2026)
+   L'anneau avait sept parts dont quatre sous 6 % : leurs étiquettes
+   sortaient de l'anneau et se chevauchaient, et la légende à 8 px était le
+   seul lien entre une couleur et un mot. Une barre range les parts dans un
+   ordre lisible ; chaque état est nommé sous elle avec son effectif et sa
+   part, si bien que la couleur ne porte plus rien à elle seule — elle relie
+   la ligne au segment, rien de plus. La teinte suit l'ordre de la barre,
+   « Autres » restant en queue quel que soit son effectif : elle ne distingue pas des
+   catégories, elle aide à retrouver un segment. Elle s'arrête avant le fond
+   de la carte : poussée jusque-là, les quatre plus petites parts devenaient
+   indiscernables du support en mode nuit. Un filet les sépare de toute
+   façon, pour qu'on puisse les compter sans se fier à la teinte.
+   ================================================================ */
+function drawEtat(dist){
+  const host=$('gPie');if(!host)return;
+  if(!dist||!dist.length){host.innerHTML='<p class="mini">Aucun état renseigné dans le classeur importé.</p>';return}
+  const C=themeCols();
+  const tot=dist.reduce(function(a,x){return a+x[1]},0)||1;
+  const W=580,L=6,BT=8,BH=40,BW=W-2*L;
+  const col=function(i){return tint(C.acc,C.card,1-0.58*i/Math.max(1,dist.length-1))};
+  let g='',x=L;
+  dist.forEach(function(d,i){
+    const w=BW*d[1]/tot,f=col(i),xa=x;
+    g+='<g><rect x="'+xa.toFixed(1)+'" y="'+BT+'" width="'+Math.max(0.8,w).toFixed(1)+'" height="'+BH+'" fill="'+f+'"/>'
+      /* le chiffre n'entre que s'il tient : sinon il déborderait sur le
+         voisin, ce que faisait déjà l'anneau. Il est de toute façon écrit
+         en toutes lettres dans la liste. */
+      +((w>=30)?('<text x="'+(xa+w/2).toFixed(1)+'" y="'+(BT+BH/2+4)+'" text-anchor="middle" font-size="12" font-weight="700" style="fill:'+onColor(f)+'">'+d[1]+'</text>'):'')
+      /* filet à la couleur de la carte : deux parts voisines restent
+         comptables même si leurs teintes se ressemblent */
+      +((i&&w>0.8)?('<line x1="'+xa.toFixed(1)+'" y1="'+BT+'" x2="'+xa.toFixed(1)+'" y2="'+(BT+BH)+'" stroke="'+C.card+'" stroke-width="1.2"/>'):'')
+      +'<title>'+esc(d[0]+' : '+d[1]+' bâtiment(s), '+nf(d[1]/tot*100,1)+' % du parc affiché')+'</title></g>';
+    x+=w});
+  g+='<rect x="'+L+'" y="'+BT+'" width="'+BW+'" height="'+BH+'" fill="none" stroke="'+C.line+'" rx="2"/>';
+  const y0=BT+BH+24,RW=19,per=Math.ceil(dist.length/2),CL=(BW-16)/2;
+  dist.forEach(function(d,i){
+    const cc=Math.floor(i/per),rr=i%per,xa=L+cc*(CL+16),yy=y0+rr*RW;
+    g+='<g><rect x="'+xa+'" y="'+(yy-8.5)+'" width="10" height="10" rx="2" fill="'+col(i)+'" stroke="'+C.line+'"/>'
+      +txt(xa+16,yy,esc(String(d[0]).substring(0,24)),{s:10.5,c:C.ink2})
+      +txt(xa+CL-2,yy,d[1]+'  ·  '+nf(d[1]/tot*100,1)+' %',{a:'end',s:10.5,c:C.ink,w:700,fix:1})
+      +'<title>'+esc(d[0]+' : '+d[1]+' bâtiment(s)')+'</title></g>'});
+  host.innerHTML=svg(W,y0+per*RW+4,g)}
+
+/* ================================================================
+   MATRICE URGENCE × FAISABILITÉ — comptage 5 × 5  (Théo Trait, 03.09.2026)
+   La faisabilité est un score discret : 33 (CECB+) + 33 (substitution) +
+   34 (budget) − protection patrimoniale. Sur le parc importé elle ne prend
+   que vingt-cinq valeurs, dont 0, 67, 90 et 100 concentrent plus de la
+   moitié des bâtiments : le nuage empilait des dizaines de points sur les
+   mêmes abscisses et n'en montrait qu'un. Compter par case dit ce que
+   l'empilement cachait. Le chiffre est écrit ; la teinte le double, elle ne
+   le remplace pas.
+   Les exclus sortent du comptage — les ranger dans « urgent et faisable »
+   serait leur promettre un programme dont ils sont sortis — et les
+   bâtiments sans classement aussi : ils sont dits à côté, pas dissous.
+   ================================================================ */
+function drawUF(all){
+  const host=$('gUF');if(!host)return;
+  const C=themeCols();
+  const cls=(all||[]).filter(function(s){const q=qualiOf(s.id);return !(q&&q.p==='ex')});
+  const nEx=(all||[]).length-cls.length;
+  const rows=cls.filter(function(s){return s.sc&&s.sc.t!=null&&!isNaN(s.sc.t)});
+  const nSans=cls.length-rows.length;
+  if(!rows.length){host.innerHTML='<p class="mini">Aucun bâtiment classé dans un objectif : la matrice n\'a rien à compter.</p>';return}
+  const B=5,bin=function(v){return Math.max(0,Math.min(B-1,Math.floor(v/20)))};
+  const M=[],ID=[];let nIn=0;
+  for(let r=0;r<B;r++){M.push([0,0,0,0,0]);ID.push([[],[],[],[],[]])}
+  rows.forEach(function(s){const r=bin(s.sc.t),c=bin(feasib(s));
+    M[r][c]++;if(ID[r][c].length<8)ID[r][c].push(s.id);
+    const q=qualiOf(s.id);if(q&&q.p==='in')nIn++});
+  let mx=0;M.forEach(function(r){r.forEach(function(v){if(v>mx)mx=v})});
+  const W=1240,L=170,T=44,CW=118,CH=54,GW=CW*B,GH=CH*B,yB=T+GH;
+  const cx=function(c){return L+c*CW},cy=function(r){return T+(B-1-r)*CH};
+  let g='';
+  /* colonnes puis lignes : les bornes sont écrites, la case ne se lit pas
+     à l'estime */
+  for(let c=0;c<B;c++)g+=txt(cx(c)+CW/2-1.5,T-12,(c*20)+'–'+((c+1)*20),{a:'middle',s:10.5,c:C.ink2});
+  for(let r=0;r<B;r++)g+=txt(L-12,cy(r)+CH/2+4,(r*20)+'–'+((r+1)*20),{a:'end',s:10.5,c:C.ink2});
+  for(let r=0;r<B;r++)for(let c=0;c<B;c++){
+    const n=M[r][c],x=cx(c),y=cy(r);
+    /* racine carrée : sans elle la case la plus fournie écrase les autres
+       et la rampe redevient un dégradé sans information */
+    const f=n?tint(C.acc,C.card,0.10+0.80*Math.sqrt(n/mx)):C.card;
+    g+='<g><rect x="'+(x+1.5)+'" y="'+(y+1.5)+'" width="'+(CW-3)+'" height="'+(CH-3)+'" rx="3" fill="'+f+'" stroke="'+C.line+'"/>'
+      +'<text x="'+(x+CW/2)+'" y="'+(y+CH/2+7)+'" text-anchor="middle" font-size="'+(n?18:12)+'" font-weight="700" style="fill:'+(n?onColor(f):C.ink3)+'">'+(n||'·')+'</text>'
+      +'<title>'+esc('Priorité '+(r*20)+'–'+((r+1)*20)+' × faisabilité '+(c*20)+'–'+((c+1)*20)+' : '+n+' bâtiment(s)'
+        +(n?(' — '+ID[r][c].join(', ')+(n>8?', …':'')):''))+'</title></g>'}
+  /* le carré à engager en premier : un contour, pas une couleur de plus */
+  g+='<rect x="'+(cx(4)+1.5)+'" y="'+(cy(4)+1.5)+'" width="'+(CW-3)+'" height="'+(CH-3)+'" rx="3" fill="none" stroke="'+C.ok+'" stroke-width="2.5"/>';
+  g+='<text transform="rotate(-90 20 '+(T+GH/2)+')" x="20" y="'+(T+GH/2)+'" text-anchor="middle" font-size="10.5" style="fill:'+C.ink2+'">Priorité — 100 = tête de classement</text>';
+  g+=txt(L+GW/2,yB+30,'Faisabilité (0–100)',{a:'middle',s:10.5,c:C.ink2});
+  /* ce que la matrice ne compte pas doit être lisible sur le même dessin :
+     sinon 5 × 5 cases laissent croire qu'elles couvrent tout le parc */
+  const X=L+GW+36;let y=T+2;
+  const li=function(t,o){o=o||{};y+=o.gap||18;g+=txt(X,y,esc(t),{s:o.s||10.5,c:o.c||C.ink2,w:o.w,fix:o.fix})};
+  y=T-16;li('Ce que la matrice compte',{s:11.5,c:C.ink,w:700,fix:1});
+  li(nf(rows.length)+' bâtiments classés dans au moins un objectif',{gap:22});
+  li(nf(nSans)+' sans classement — aucun objectif ne les retient');
+  li(nf(nEx)+' exclus du programme, comptés nulle part ici');
+  if(nIn)li(nf(nIn)+' imposés (⏫) — comptés à leur place réelle');
+  y+=26;
+  g+='<rect x="'+X+'" y="'+(y-9)+'" width="12" height="12" rx="2" fill="none" stroke="'+C.ok+'" stroke-width="2"/>'
+    +txt(X+19,y,'priorité et faisabilité ≥ 80',{s:10.5,c:C.ink,w:700,fix:1});
+  li(nf(M[4][4])+' bâtiment(s) — à engager en premier',{gap:16});
+  host.innerHTML=svg(W,yB+50,g)}
 
 function drawTrend(){
   const P=(typeof PARC_LIVE!=='undefined'&&PARC_LIVE)?PARC_LIVE:null;
