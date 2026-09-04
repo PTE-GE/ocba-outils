@@ -266,6 +266,15 @@ que le filtre « Fossiles » de l'onglet Classement l'excluait déjà : le même
 ici et non fossile là. Conséquence assumée de la mise en cohérence : sortir d'un CADIOM n'est plus
 une substitution.
 
+**Les bûches aussi.** Une bûche est du bois, et le bois est renouvelable : `Bûches` figurait par
+erreur parmi les agents fossiles du moteur des objectifs. Corrigé le 04.09.2026 — sortir d'un
+chauffage à bûches ne compte plus comme une substitution renouvelable, puisque le point de départ
+ne l'était pas.
+
+**`PAC+Gaz` reste une question ouverte.** C'est le seul agent qui demeure fossile pour le moteur
+des objectifs et non fossile pour le filtre. L'ambiguïté est réelle et non résolue : une
+installation bivalente est non fossile en base et fossile à l'appoint.
+
 ## Réglages
 
 Menu **☰ → Paramètres de calcul**, en trois sections repliables : durée de vie, cibles
@@ -285,6 +294,30 @@ chaleur et une robinetterie ne s'amortissent pas sur la même durée, et imposer
 avantage mécaniquement les objectifs dont les mesures durent le plus longtemps. Une case laissée
 vide reprend la valeur générale, et la durée réellement appliquée est écrite en tête de colonne de
 chaque classement.
+
+## Deux rôles, deux abréviations : RP et RPF
+
+Ce ne sont pas les mêmes personnes et l'outil ne les confond plus.
+
+- **RP — responsable de *projet*.** Colonne du classement, colonne `AR` du classeur. Qui conduit
+  l'opération.
+- **RPF — responsable de *portefeuille*.** Ligne sous le nom du sous-site, colonne `AQ` du
+  classeur, et c'est ce que filtre le menu **Portefeuille**. Qui suit le bâtiment dans la durée.
+
+Les deux portent une infobulle sur place et une entrée au glossaire.
+
+## « Hors périmètre » : une attribution à faire, pas une exclusion
+
+**281 des 582 sous-sites du parc n'ont aucun responsable de portefeuille** — leur colonne `AQ`
+porte « hors périmètre ». Ils restent dans tous les classements : un gain qui compte pour les
+objectifs n'a pas de raison de rester hors vue, et les faire remonter fait partie de ce que
+l'outil doit produire.
+
+Ceux qui se classent dans le **premier cinquième d'au moins un classement** sont signalés
+explicitement : un bandeau en tête du classement les compte, les nomme et dit ce qu'il faut en
+faire, et ils portent dans le tableau une pastille verte **« à attribuer »**. Les autres gardent
+une mention grise — le fait n'est pas caché, il est hiérarchisé : une pastille d'alerte sur une
+ligne sur deux ne signalerait plus rien.
 
 ## Filtrer le périmètre
 

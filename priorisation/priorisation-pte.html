@@ -384,6 +384,18 @@ body.night svg text{fill:var(--ink2)}
   font-weight:700;background:var(--bg-ok);color:var(--fg-ok);cursor:help}
 .part-warn{background:var(--bg-info);color:var(--fg-info);border:1px solid var(--acc);
   border-radius:8px;padding:7px 10px;font-size:.72rem;line-height:1.5;margin:0 0 10px}
+/* Un bâtiment hors périmètre bien classé n'est pas une note de bas de page :
+   c'est une occasion d'attribution. Le bandeau se lit donc comme un signal,
+   pas comme une réserve. */
+.attr-warn{background:var(--bg-ok);color:var(--fg-ok);border:1px solid var(--ok);
+  border-radius:8px;padding:7px 10px;font-size:.72rem;line-height:1.5;margin:0 0 10px}
+.hp-chip{display:inline-block;padding:0 5px;border-radius:9px;font-size:.6rem;font-weight:700;
+  background:var(--bg-ok);color:var(--fg-ok);cursor:help}
+/* 281 sous-sites sur 582 sont hors périmètre : en accent partout, la pastille
+   ne signalerait plus rien. Seuls ceux du premier cinquième d'un classement
+   portent l'accent ; les autres restent un constat en gris. */
+.hp-chip.hp-plat{background:transparent;color:var(--ink3);font-weight:400;
+  border:1px solid var(--bd);padding:0 4px}
 .part-warn b{font-weight:700}
 .excl{border:1px solid var(--red);border-radius:8px;margin:0 0 10px;background:var(--bg-err);overflow:hidden}
 .excl-h{display:flex;align-items:center;gap:8px;padding:7px 10px;cursor:pointer;font-size:.72rem;
@@ -817,6 +829,7 @@ body.night .tblx td>.bt-i{background:none;color:var(--acc)}
 <input type="text" id="fSe" placeholder="🔍 Rechercher…" oninput="renR()">
 </div>
 <div class="flat-warn" id="rankFlatWarn"></div>
+<div id="objAttrib"></div>
 <div id="objPartage"></div>
 <div id="objNote" style="font-size:.72rem;color:var(--ink2);margin:6px 2px 8px"></div>
 <div id="objJauge"></div>
@@ -1107,6 +1120,8 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td><b>IDE</b></td><td>Indice de dépense d'électricité, même logique que l'IDC.</td></tr>
 <tr><td><b>CECB+</b></td><td>Certificat énergétique cantonal des bâtiments, version avec rapport de conseil : il propose des variantes de rénovation (A, B, C), dont l'une est retenue.</td></tr>
 <tr><td><b>CEE</b></td><td>Coût de l'énergie économisée : le prix du kWh évité sur la durée de vie retenue (40 ans par défaut, modifiable ⚙️). Ce n'est plus un classement depuis le 03.09.2026 — il doublonnait exactement le Thermique — mais une <b>mesure</b>, qui alimente la distribution de l'onglet Arbitrage et le score composite de repli.</td></tr>
+<tr><td><b>RP</b></td><td>Responsable de <b>projet</b> : celui qui conduit l'opération de rénovation, de l'étude à la réception. C'est lui que porte la colonne <code>RP</code> du classement.</td></tr>
+<tr><td><b>RPF</b></td><td>Responsable de <b>portefeuille</b> : celui qui suit un ensemble de bâtiments dans la durée, indépendamment des opérations en cours. Il figure sous le nom du sous-site et sert au filtre <b>Portefeuille</b> de la barre du haut. Le classeur le porte en colonne <code>Responsables Portefeuille</code>.</td></tr>
 <tr><td><b>CAD</b></td><td>Chauffage à distance : réseau qui livre au bâtiment de la chaleur produite ailleurs, à la place d'une chaudière sur place. Un bâtiment raccordé cesse d'être compté parmi les agents fossiles et reçoit la contribution CO₂ de la substitution, sans que son IDC baisse pour autant. Genève impose le raccordement au-delà de 50 kW.</td></tr>
 <tr><td><b>PAC</b></td><td>Pompe à chaleur : machine qui prélève de la chaleur dans l'air, le sol ou l'eau et la relève à la température du chauffage, en consommant de l'électricité. Elle sort le bâtiment des agents fossiles et déplace une part de sa consommation vers l'électricité — sauf en version hybride <b>PAC + Gaz</b>, que le classeur range encore parmi les fossiles.</td></tr>
 <tr><td><b>Substitution de chaufferie</b></td><td>Remplacement de l'agent de chauffage d'un bâtiment par un autre — mazout ou gaz vers réseau de chaleur, pompe à chaleur ou bois. Elle est portée par la colonne <code>Chauffage de substitution</code> ; quand elle est absente ou notée « maintien en l'état », aucun gain de décarbonation n'est attribué au bâtiment.</td></tr>
@@ -1163,7 +1178,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 </div>
 </div>
 
-<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v03.09.2026e</div>
+<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v04.09.2026</div>
 <script>
 /* ================================================================
    NOYAU COMMUN — état, persistance, pondérations
@@ -2367,8 +2382,20 @@ const PLANCHER_CHF_M2_OBJ=50.0;
    Le même bâtiment était donc fossile pour le moteur des objectifs et non
    fossile pour le filtre. Conséquence assumée : sortir d'un CADIOM n'est
    plus une substitution, et les bâtiments qui en sortaient quittent le
-   classement Renouvelable — leur gain n'en était pas un. */
-const FOSSILE_OBJ=new Set(['Gaz','Mazout','Bûches','PAC+Gaz']);
+   classement Renouvelable — leur gain n'en était pas un.
+
+   BÛCHES — décision d'Achim, 04.09.2026 : RENOUVELABLE aussi, et pour une
+   raison qui n'avait pas besoin d'être mesurée : des bûches, c'est du bois.
+   « Bois » figurait déjà comme agent non fossile ; « Bûches » était rangé
+   parmi les fossiles à côté du gaz et du mazout. Un seul bâtiment du parc
+   produisait un gain renouvelable en sortant de ses bûches — ce gain n'en
+   était pas un.
+
+   PAC+Gaz reste fossile ici : c'est une installation hybride, dont la part
+   gaz est bien fossile. Le filtre « Fossiles » de l'onglet Classement, lui,
+   l'exclut encore (isFos() écarte tout ce qui commence par « pac ») : cette
+   divergence-là n'est pas tranchée. */
+const FOSSILE_OBJ=new Set(['Gaz','Mazout','PAC+Gaz']);
 const SUBST_NULLE_OBJ=new Set(["Maintien en l'état","Optimisation ECS"]);
 /* Une substitution est un AGENT, pas une phrase. La colonne « Chauffage de
    subsitution prévu » du classeur porte aussi du texte libre : « ??? »,
@@ -3537,6 +3564,67 @@ function investDedup(){
   (pop||[]).forEach(function(s){by[s.id]=s});
   let t=0;Object.keys(m).forEach(function(id){if(by[id])t+=(+by[id].invVB||0)});
   return t}
+/* ================================================================
+   HORS PÉRIMÈTRE — une occasion, pas une réserve  (04.09.2026)
+   281 des 582 sous-sites ne sont suivis par aucun responsable de
+   portefeuille. L'outil les affichait en gris, sous le nom du bâtiment,
+   comme une mention de service. Décision d'Achim : c'est l'inverse.
+   Un bâtiment hors périmètre qui se classe haut doit être PROPOSÉ, et
+   attribué à un portefeuille s'il apporte un gain significatif — c'est
+   aussi le but de l'exercice. On les compte donc, on dit ce qu'ils
+   portent, et on les repère ligne à ligne.
+   ================================================================ */
+function estHorsPerimetre(s){return /hors\s*p[ée]rim/i.test(String((s&&s.rp)||'').trim())}
+/* hpChip a deux niveaux : accent pour les candidats du premier cinquième,
+   gris pour les autres. La distinction se fait sur hpCandidats(), qui est
+   la même liste que celle du bandeau — un bâtiment mis en avant dans le
+   bandeau se retrouve donc en accent dans le tableau, et réciproquement. */
+function hpChip(s){
+  if(!estHorsPerimetre(s))return'';
+  let cand=false;
+  try{cand=hpCandidats().some(function(c){return c.id===s.id})}catch(e){}
+  return cand
+    ? '<span class="hp-chip" title="Hors périmètre, et dans le premier cinquième d\'au moins un classement : ce sous-site n\'est suivi par aucun responsable de portefeuille alors qu\'il porte un gain qui compte. À proposer et à attribuer — c\'est le but de l\'exercice, pas une raison de l\'écarter.">à attribuer</span>'
+    : '<span class="hp-chip hp-plat" title="Hors périmètre : aucun responsable de portefeuille ne suit ce sous-site. Il reste dans les classements ; il n\'est simplement pas parmi les mieux placés.">hors périmètre</span>'}
+/* Les hors-périmètre du premier cinquième d'au moins un classement : ceux
+   pour lesquels l'attribution n'est pas une formalité mais un enjeu. */
+let _hpCache=null,_hpKey=null;
+function hpCandidats(){
+  const k=dataVersion+'|'+((typeof OBJRANK!=='undefined'&&OBJRANK)?'ok':'no');
+  if(_hpCache&&_hpKey===k)return _hpCache;
+  const pop=(S_ALL&&S_ALL.length)?S_ALL:S,by={};(pop||[]).forEach(function(s){by[s.id]=s});
+  const out={};
+  if(typeof OBJRANK!=='undefined'&&OBJRANK)
+    ['co2','th','ren','elec','eau','pv','veg'].forEach(function(kk){
+      const R=OBJRANK[kk];if(!R||!R.items||!R.items.length)return;
+      const n=Math.max(1,Math.round(R.items.length*0.2));
+      R.items.slice(0,n).forEach(function(it){
+        const s=by[it.id];if(!s||!estHorsPerimetre(s))return;
+        (out[it.id]=out[it.id]||{id:it.id,nom:s.nom,obj:[],gain:{}}).obj.push({k:kk,rang:it.rang});
+        out[it.id].gain[kk]=it.gain})});
+  _hpKey=k;_hpCache=Object.values(out);return _hpCache}
+function hpNote(key){
+  if(typeof OBJRANK==='undefined'||!OBJRANK)return'';
+  const L=hpCandidats();if(!L.length)return'';
+  const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
+  const tot=(pop||[]).filter(estHorsPerimetre).length;
+  /* sur un objectif donné, on ne cite que ceux qui y sont bien classés */
+  const ici=(key&&key!=='tous')?L.filter(function(c){return c.obj.some(function(o){return o.k===key})}):L;
+  if(!ici.length)return'';
+  const top=ici.slice().sort(function(a,b){
+    const ra=Math.min.apply(null,a.obj.map(function(o){return o.rang}));
+    const rb=Math.min.apply(null,b.obj.map(function(o){return o.rang}));return ra-rb}).slice(0,3);
+  const noms=top.map(function(c){
+    const o=c.obj.slice().sort(function(x,y){return x.rang-y.rang})[0];
+    return '<b>'+esc(c.id)+'</b> '+esc((c.nom||'').slice(0,26))+' ('+(OBJ_META[o.k]?OBJ_META[o.k].lblCourt:o.k)+' n°'+o.rang+')'}).join(' · ');
+  return '<div class="attr-warn">🎯 <b>'+ici.length+' sous-site(s) hors périmètre dans le premier cinquième'+
+    ((key&&key!=='tous')?' de ce classement':' d\'au moins un classement')+'.</b> '+
+    'Ils ne sont suivis par aucun responsable de portefeuille — sur '+tot+' hors périmètre au total — '+
+    'et ce sont précisément ceux qu\'il faut <b>proposer et attribuer</b> : un gain qui compte pour les '+
+    'objectifs n\'a pas de raison de rester hors vue. '+noms+
+    '. <span style="opacity:.85">Ils portent la pastille <span class="hp-chip">à attribuer</span> dans le tableau ; '+
+    'les autres hors-périmètre y sont en gris.</span></div>'}
+
 function servisChip(id,key){
   if(OBJ_PARTAGES.indexOf(key)<0)return'';
   /* un bâtiment dont les lots sont saisis n'a plus de coût partagé : son
@@ -3562,7 +3650,9 @@ function objTable(key,R,meta,bySiteId,f){
   const restRows=repliSorted(restAll).filter(function(x){
     const q=qualiOf(x.s.id);return passRankFilters(x.s,f)&&!(q&&q.p==='ex')});
   let html='<table><thead><tr>'+
-    '<th>Rang</th><th>N°</th><th>Sous-site</th><th>Rp</th><th>Pat.</th><th>CECB+</th>'+
+    '<th>Rang</th><th>N°</th><th>Sous-site</th>'+
+    '<th title="RP — responsable de PROJET, celui qui conduit l\'opération. À ne pas confondre avec le RPF, responsable de portefeuille, qui figure sous le nom du sous-site.">RP</th>'+
+    '<th>Pat.</th><th>CECB+</th>'+
     '<th title="Agent de chauffage actuel">Chauffage</th>'+
     '<th title="Agent de chauffage prévu après travaux — c\'est cette bascule qui produit le gain CO₂">Substitution</th>'+
     '<th style="text-align:right"'+(invHorsChiffrage()&&key!=='veg'&&key!=='pv'
@@ -3594,7 +3684,7 @@ function objTable(key,R,meta,bySiteId,f){
     const _r=(it.rangAdj||it.rang);
     html+='<tr class="row-click'+(_r===R.franchiRang?' franchi-row':'')+(_r===R.franchiRang2?' franchi-row-50':'')+'" data-id="'+esc(it.id)+'" onclick="toggleDetail('+jsArg(it.id)+')" style="'+objRowStyle(Object.assign({},it,{rang:_r}),R.franchiRang,R.franchiRang2)+'">'+
       '<td>'+(it.rangAdj||it.rang)+((it.rangAdj&&rangObj[it.id]&&it.rangAdj!==rangObj[it.id])?'<br><span style="font-size:.6rem;color:var(--ink3)" title="rang du classement arithmétique, avant ajustement">obj. '+rangObj[it.id]+'</span>':'')+
-      (snapCur()?('<br>'+snapDelta(key,it.id,(it.rangAdj||it.rang))):'')+'</td><td><b>'+esc(it.id)+'</b></td><td>'+esc(it.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem">'+esc(s.rp||'—')+'</span></td>'+
+      (snapCur()?('<br>'+snapDelta(key,it.id,(it.rangAdj||it.rang))):'')+'</td><td><b>'+esc(it.id)+'</b></td><td>'+esc(it.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem" title="RPF — responsable de portefeuille, qui suit le bâtiment dans la durée. Le RP, responsable de projet, est dans la colonne RP.">RPF '+(estHorsPerimetre(s)?hpChip(s):esc(s.rp||'—'))+'</span></td>'+
       '<td style="font-size:.63rem">'+esc(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td><td>'+subBg(s.hsub)+'</td>'+
       '<td style="text-align:right">'+gainDisp+'</td><td style="text-align:right">'+objFmtNum(it.cumulGain,0)+'</td>'+
       pctCell(it.pctGap,false)+
@@ -3607,7 +3697,7 @@ function objTable(key,R,meta,bySiteId,f){
                   :'Classement de repli — non mesurable pour cet objectif via CECB+, trié par score composite provisoire (voir « Pondérations du classement de repli » ci-dessus)')+'</td></tr>';
     for(const{s,sc}of restRows)
       html+='<tr class="row-click" data-id="'+esc(s.id)+'" onclick="toggleDetail('+jsArg(s.id)+')" style="color:var(--ink3)">'+
-        '<td>'+(sc.t!=null?'repli':'—')+'</td><td><b>'+esc(s.id)+'</b></td><td>'+esc(s.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem">'+esc(s.rp||'—')+'</span></td>'+
+        '<td>'+(sc.t!=null?'repli':'—')+'</td><td><b>'+esc(s.id)+'</b></td><td>'+esc(s.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem" title="RPF — responsable de portefeuille, qui suit le bâtiment dans la durée. Le RP, responsable de projet, est dans la colonne RP.">RPF '+(estHorsPerimetre(s)?hpChip(s):esc(s.rp||'—'))+'</span></td>'+
         '<td style="font-size:.63rem">'+esc(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td><td>'+subBg(s.hsub)+'</td>'+
         '<td colspan="'+(key==='th'?5:4)+'" style="text-align:center;font-size:.66rem">'+(key==='veg'?'surface végétalisée non renseignée'
            :((+s.sre&&+s.idcC)?('conso estimée '+objFmtNum(s.sre*s.idcC,0)+' kWh/an'):'données insuffisantes'))+'</td>'+
@@ -3650,11 +3740,12 @@ function objTousTable(bySiteId,f){
     r._imp=(q&&q.p==='in')?0:1;r._cm=(r.coutMoy===Infinity)?Infinity:r.coutMoy*(f||1)});
   rowsF.sort((a,b)=>(a._imp-b._imp)||(b.servis-a.servis)||(a._cm-b._cm));
   rows=rowsF;
-  let html='<table><thead><tr><th>#</th><th>N°</th><th>Sous-site</th><th>Rp</th><th>CECB+</th>';
+  let html='<table><thead><tr><th>#</th><th>N°</th><th>Sous-site</th>'+
+    '<th title="RP — responsable de PROJET. Le RPF, responsable de portefeuille, figure sous le nom du sous-site.">RP</th><th>CECB+</th>';
   for(const k of keys)html+='<th style="text-align:right">'+OBJ_META[k].lblCourt+'</th>';
   html+='<th style="text-align:right">Objectifs<br>servis</th><th style="text-align:right">'+esc(invDef().short)+'</th><th>Alerte</th></tr></thead><tbody>';
   rows.forEach((row,i)=>{
-    html+='<tr class="row-click" data-id="'+esc(row.id)+'" onclick="toggleDetail('+jsArg(row.id)+')"><td>'+(i+1)+'</td><td><b>'+esc(row.id)+'</b></td><td>'+esc(row.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem">'+esc(row.s.rp||'—')+'</span></td>'+
+    html+='<tr class="row-click" data-id="'+esc(row.id)+'" onclick="toggleDetail('+jsArg(row.id)+')"><td>'+(i+1)+'</td><td><b>'+esc(row.id)+'</b></td><td>'+esc(row.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem" title="RPF — responsable de portefeuille, qui suit le bâtiment dans la durée. Le RP, responsable de projet, est dans la colonne RP.">RPF '+esc(row.s.rp||'—')+'</span></td>'+
       '<td style="font-size:.63rem">'+esc(row.s.drt||'—')+'</td><td>'+cecbBg(row.s)+'</td>';
     for(const k of keys){
       const g=row.gains[k];
@@ -3673,8 +3764,10 @@ function renR(){
   const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
   if(!pop||!pop.length){box.innerHTML='';if(note)note.textContent='';
     const hx0=$('objExclus');if(hx0)hx0.innerHTML='';
-    const hp0=$('objPartage');if(hp0)hp0.innerHTML='';return}
+    const hp0=$('objPartage');if(hp0)hp0.innerHTML='';
+    const ha0=$('objAttrib');if(ha0)ha0.innerHTML='';return}
   _servisCache=null;
+  const ha=$('objAttrib');if(ha)ha.innerHTML=hpNote(key);
   const hp=$('objPartage');if(hp)hp.innerHTML=partageNote(key);
   const bySiteId={};pop.forEach(s=>{bySiteId[s.id]=s});
   const f=rankFilters();
@@ -3685,6 +3778,7 @@ function renR(){
     if(fw0){fw0.innerHTML=invHorsChiffrage()?flatNote('tous'):'';
       fw0.style.display=invHorsChiffrage()?'block':'none'}
     const hx1=$('objExclus');if(hx1)hx1.innerHTML=exclusHtml('tous',bySiteId);
+    const ha1=$('objAttrib');if(ha1)ha1.innerHTML=hpNote('tous');
     const hp1=$('objPartage');if(hp1)hp1.innerHTML=partageNote('tous');
     box.innerHTML=objTousTable(bySiteId,f);
     return}
@@ -4227,7 +4321,7 @@ function gsRun(){
   box.innerHTML=L.map(function(s,i){
     const p=prioMap().v[String(s.id)];
     return '<div class="gs-it" data-i="'+i+'" onclick="gsGo('+jsArg(s.id)+')"><b>'+esc(s.id)+'</b> '+esc(String(s.nom||'').substring(0,42))+
-      '<span class="s">'+esc(s.rp||'—')+' · '+(p!=null?('priorité '+Math.round(p)):'non classé')+(qualiOf(s.id)?' · ⚖ ajusté':'')+'</span></div>'}).join('');
+      '<span class="s" title="RPF — responsable de portefeuille, qui suit le bâtiment dans la durée. Le RP, responsable de projet, est dans la colonne RP.">RPF '+esc(s.rp||'—')+' · '+(p!=null?('priorité '+Math.round(p)):'non classé')+(qualiOf(s.id)?' · ⚖ ajusté':'')+'</span></div>'}).join('');
   box.classList.add('on')}
 function gsKey(e){
   const box=$('gsRes'),items=box.querySelectorAll('.gs-it');
@@ -5418,8 +5512,9 @@ function _facteurRepli(agent){
   return null}
 
 const VARIANTS={var_A:'IDC projeté VA [kWh]',var_B:'IDC projeté VB [kWh]',var_C:'IDC projeté VC [kWh]'};
-/* Même décision que FOSSILE_OBJ ci-dessus : CADIOM est renouvelable. */
-const FOSSILE=['Gaz','Mazout','Bûches','PAC+Gaz'];
+/* Mêmes décisions que FOSSILE_OBJ ci-dessus : CADIOM et les bûches sont
+   renouvelables. */
+const FOSSILE=['Gaz','Mazout','PAC+Gaz'];
 const SUBST_NULLE=['Maintien en l\'état','Optimisation ECS'];
 const DUREE=40;              // ans — Céé_durée, identique à Priorisation_PTE.xlsx
 const PLANCHER_CHF_M2=50;    // seuils de l'indice de fiabilité — Paramètres!C18:C21
