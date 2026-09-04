@@ -271,9 +271,38 @@ erreur parmi les agents fossiles du moteur des objectifs. Corrigé le 04.09.2026
 chauffage à bûches ne compte plus comme une substitution renouvelable, puisque le point de départ
 ne l'était pas.
 
-**`PAC+Gaz` reste une question ouverte.** C'est le seul agent qui demeure fossile pour le moteur
-des objectifs et non fossile pour le filtre. L'ambiguïté est réelle et non résolue : une
-installation bivalente est non fossile en base et fossile à l'appoint.
+**`PAC+Gaz` a une part conventionnelle.** C'est le seul agent qui demeurait fossile pour le moteur
+des objectifs et non fossile pour le filtre. L'ambiguïté est réelle — une installation bivalente
+est non fossile en base et fossile à l'appoint — et un verdict binaire l'aurait tranchée de
+travers dans les deux sens. Depuis le 04.09.2026, ⚙️ porte donc un réglage : **la part de la
+chaleur produite par la PAC, en pourcent**. Une substitution vers `PAC+Gaz` compte alors comme
+gain renouvelable à hauteur de cette part, et la ligne du classement affiche la convention
+retenue. **Le réglage est livré vide**, et tant qu'il l'est `PAC+Gaz` reste traité comme fossile —
+le comportement d'avant, mais assumé au lieu d'être une incohérence silencieuse. Ordre de
+grandeur de l'enjeu : à 80 %, quatorze bâtiments entrent au classement Renouvelable et le gain
+passe de 37 à 48 GWh.
+
+## Les pompes à chaleur : la chaleur livrée et l'électricité achetée
+
+Une PAC ne produit pas de chaleur, elle en **déplace** : elle livre Q kWh thermiques en achetant
+Q/SCOP kWh électriques. La comparer à une chaudière en ne regardant que Q, c'est comparer deux
+choses qui ne s'achètent pas de la même façon — et cela flatte la PAC.
+
+L'outil affiche donc **deux nombres** dès que le SCOP d'un bâtiment est saisi : la chaleur livrée
+et l'électricité d'entrée. Le SCOP se lit dans la colonne `SCOP PAC [-]` du `Plan_PTE`, créée le
+04.09.2026 et vide à ce jour. Il se saisit bâtiment par bâtiment plutôt que réglé une fois pour
+tout le parc : une PAC sur sonde géothermique et une PAC air/eau n'ont pas le même, et une valeur
+unique ferait passer une hypothèse pour une mesure. Sans SCOP, l'outil n'affiche rien — une
+pastille `SCOP ?` sur la ligne, un bandeau en tête du classement Renouvelable — plutôt qu'un
+nombre inventé. Les valeurs hors de l'intervalle 1–8 sont refusées, pas corrigées.
+
+Cette électricité d'entrée **n'entre pas dans l'objectif Électricité**, qui mesure des économies
+d'usage — éclairage, ventilation, bureautique. Y verser la charge de chauffage d'une PAC
+mélangerait deux choses différentes. C'est le « compter à part » de la consigne, pris au mot.
+
+Sur le parc : **172 substitutions vont vers une pompe à chaleur**, dont 24 figurent au classement
+Renouvelable pour 4 639 MWh thermiques livrés. À un SCOP de 3,5, ces 24 achèteraient
+1 326 MWh d'électricité par an — aujourd'hui invisibles.
 
 ## Réglages
 

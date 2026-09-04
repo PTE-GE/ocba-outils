@@ -396,6 +396,12 @@ body.night svg text{fill:var(--ink2)}
    portent l'accent ; les autres restent un constat en gris. */
 .hp-chip.hp-plat{background:transparent;color:var(--ink3);font-weight:400;
   border:1px solid var(--bd);padding:0 4px}
+/* l'électricité d'entrée d'une PAC : une information, pas une alerte —
+   sauf quand elle manque, et alors c'est une saisie à faire */
+.pac-chip{display:inline-block;padding:0 5px;border-radius:9px;font-size:.6rem;font-weight:700;
+  background:var(--bg-info);color:var(--fg-info);cursor:help;margin-left:4px}
+.pac-chip.pac-vide{background:transparent;color:var(--ink3);font-weight:400;
+  border:1px dashed var(--bd);padding:0 4px}
 .part-warn b{font-weight:700}
 .excl{border:1px solid var(--red);border-radius:8px;margin:0 0 10px;background:var(--bg-err);overflow:hidden}
 .excl-h{display:flex;align-items:center;gap:8px;padding:7px 10px;cursor:pointer;font-size:.72rem;
@@ -735,6 +741,13 @@ body.night .tblx td>.bt-i{background:none;color:var(--acc)}
 <div class="pop-h" id="pKmj" style="margin-top:5px"></div>
 </div></details>
 
+<details class="pset"><summary>♨️ Pompes à chaleur</summary>
+<div class="pset-in">
+<div class="pop-h" style="margin:0 0 3px">Le <b>SCOP</b> ne se règle pas ici : il se saisit bâtiment par bâtiment dans la colonne <code>SCOP PAC [-]</code> du <code>Plan_PTE</code>, parce qu'une PAC sur sonde et une PAC air/eau n'ont pas le même. L'outil affiche l'électricité d'entrée dès qu'un bâtiment porte la sienne.</div>
+<label class="pop-l">Part de la chaleur produite par la PAC dans une installation <code>PAC+Gaz</code> (%)</label>
+<input id="pPacGaz" type="number" min="0" max="100" step="5" class="pop-in" placeholder="non fixée — PAC+Gaz reste fossile" title="Une installation bivalente est non fossile en base et fossile à l'appoint. Tant que cette case est vide, une substitution vers PAC+Gaz ne compte pas comme un gain renouvelable — le comportement actuel. Y mettre une valeur fait entrer 72 substitutions du parc dans le classement Renouvelable, à hauteur de cette part.">
+</div></details>
+
 <details class="pset"><summary>☀️ Photovoltaïque</summary>
 <div class="pset-in">
 <label class="pop-l">Productible (kWh/kWc·an)</label>
@@ -830,6 +843,7 @@ body.night .tblx td>.bt-i{background:none;color:var(--acc)}
 </div>
 <div class="flat-warn" id="rankFlatWarn"></div>
 <div id="objAttrib"></div>
+<div id="objPac"></div>
 <div id="objPartage"></div>
 <div id="objNote" style="font-size:.72rem;color:var(--ink2);margin:6px 2px 8px"></div>
 <div id="objJauge"></div>
@@ -1123,7 +1137,8 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td><b>RP</b></td><td>Responsable de <b>projet</b> : celui qui conduit l'opération de rénovation, de l'étude à la réception. C'est lui que porte la colonne <code>RP</code> du classement.</td></tr>
 <tr><td><b>RPF</b></td><td>Responsable de <b>portefeuille</b> : celui qui suit un ensemble de bâtiments dans la durée, indépendamment des opérations en cours. Il figure sous le nom du sous-site et sert au filtre <b>Portefeuille</b> de la barre du haut. Le classeur le porte en colonne <code>Responsables Portefeuille</code>.</td></tr>
 <tr><td><b>CAD</b></td><td>Chauffage à distance : réseau qui livre au bâtiment de la chaleur produite ailleurs, à la place d'une chaudière sur place. Un bâtiment raccordé cesse d'être compté parmi les agents fossiles et reçoit la contribution CO₂ de la substitution, sans que son IDC baisse pour autant. Genève impose le raccordement au-delà de 50 kW.</td></tr>
-<tr><td><b>PAC</b></td><td>Pompe à chaleur : machine qui prélève de la chaleur dans l'air, le sol ou l'eau et la relève à la température du chauffage, en consommant de l'électricité. Elle sort le bâtiment des agents fossiles et déplace une part de sa consommation vers l'électricité — sauf en version hybride <b>PAC + Gaz</b>, que le classeur range encore parmi les fossiles.</td></tr>
+<tr><td><b>PAC</b></td><td>Pompe à chaleur : machine qui prélève de la chaleur dans l'air, le sol ou l'eau et la relève à la température du chauffage, en consommant de l'électricité. Elle ne produit pas de chaleur, elle en <b>déplace</b> : c'est pourquoi l'outil affiche à part l'électricité qu'elle achète, dès que le <b>SCOP</b> du bâtiment est saisi. Elle sort le bâtiment des agents fossiles — sauf en version hybride <b>PAC+Gaz</b>, dont la part renouvelable est une convention à fixer dans ⚙️ et qui, tant qu'elle ne l'est pas, reste comptée comme fossile.</td></tr>
+<tr><td><b>SCOP</b></td><td>Coefficient de performance saisonnier d'une pompe à chaleur, sans unité : le rapport entre la chaleur qu'elle livre sur une année et l'électricité qu'elle a consommée pour cela. Un SCOP de 3 signifie 3 kWh de chaleur pour 1 kWh d'électricité. C'est le seul facteur qui rende une PAC comparable à une chaudière : à chaleur livrée égale, il dit ce que chaque moyen achète. Il se saisit bâtiment par bâtiment dans la colonne <code>SCOP PAC [-]</code> du <code>Plan_PTE</code> — une PAC sur sonde géothermique et une PAC air/eau n'ont pas le même. Sans lui, l'outil n'affiche rien plutôt qu'une hypothèse.</td></tr>
 <tr><td><b>Substitution de chaufferie</b></td><td>Remplacement de l'agent de chauffage d'un bâtiment par un autre — mazout ou gaz vers réseau de chaleur, pompe à chaleur ou bois. Elle est portée par la colonne <code>Chauffage de substitution</code> ; quand elle est absente ou notée « maintien en l'état », aucun gain de décarbonation n'est attribué au bâtiment.</td></tr>
 <tr><td><b>Rang de franchissement</b></td><td>Rang auquel le cumul des gains atteint la cible 2030.</td></tr>
 <tr><td><b>État SIA</b></td><td>Phase du projet selon la norme SIA 112 (études, appel d'offres, réalisation…).</td></tr>
@@ -1178,7 +1193,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 </div>
 </div>
 
-<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v04.09.2026</div>
+<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v04.09.2026b</div>
 <script>
 /* ================================================================
    NOYAU COMMUN — état, persistance, pondérations
@@ -2264,6 +2279,11 @@ function importFromRows(rows,includeAll){
     lotEnv:fc(h,['Coût lot enveloppe [CHF]','Cout lot enveloppe [CHF]','Coût lot enveloppe']),
     lotChauf:fc(h,['Coût lot chaufferie [CHF]','Cout lot chaufferie [CHF]','Coût lot chaufferie']),
     lotTech:fc(h,['Coût lot technique [CHF]','Cout lot technique [CHF]','Coût lot technique']),
+    /* colonne FK, créée le 04.09.2026 sur décision d'Achim : le SCOP est le
+       seul facteur qui permette de convertir la chaleur livrée par une PAC
+       en électricité d'entrée. Aucune valeur par défaut — une case vide
+       n'affiche rien plutôt que d'afficher une hypothèse. */
+    scop:fc(h,['SCOP PAC [-]','SCOP PAC','SCOP','COP']),
     ddTriOk:fc(h,['DD Tri conforme']),ddMat:fc(h,['DD Exigence matériaux']),ddLci:fc(h,['DD LCI 117-118']),idcpB:fc(h,['IDC projeté VB [kWh]','IDC projeté VB']),idcpC:fc(h,['IDC projeté VC [kWh]','IDC projeté VC']),idcpGen:fc(h,['IDC projeté','IDCprojeté']),invEstim:fc(h,['Invest estim. CECB+','Estim PTE','EstimPTE']),invVB:fc(h,['Invest ImmOBA','InvestImmOBA','Invest VB']),invGE:fc(h,['Prévisionnel PTE GEI','GE-Invest','GEInvest','GE Invest','Invest GE']),invDG:fc(h,['DG (25%)','DG(25%)','DG 25%','DG25','Invest DG','DG']),lat:fc(h,['Latitude','Lat','GPS_Lat','YCOOR']),lng:fc(h,['Longitude','Long','Lng','GPS_Lng','XCOOR','lon']),notes:fc(h,['Notes','Commentaires','Remarques']),etat:fc(h,['Etat du projet (SIA)','État du projet (SIA)','Etat du projet','État du projet','Etat projet','EtatSIA']),gainElec:fc(h,['Gain Electricité (Max) - kWh','Gain Électricité (Max) - kWh']),gainEau:fc(h,['Gain Eau (Max) - m3']),pvKwc:fc(h,['Futur projet PV - puissance estimée (kWc)']),pvM2:fc(h,['Futur projet PV - surface toiture PV estimée (m2)'])};
   /* Garde-fou anti-collision : si la colonne « RP » détectée contient des nombres
      (ex. Facteur protection 0.5/1), on la rejette et on cherche une colonne
@@ -2317,7 +2337,7 @@ function importFromRows(rows,includeAll){
     ddPerm:pn(gvr(R,c.ddPerm)),ddVeget:pn(gvr(R,c.ddVeget)),ddVegCout:pn(gvr(R,c.ddVegCout)),ddArbres:pn(gvr(R,c.ddArbres)),
     ddCour:gv(R,c.ddCour),ddTri:pn(gvr(R,c.ddTri)),ddTriOk:gv(R,c.ddTriOk),
     ddToitProj:pn(gvr(R,c.ddToitProj)),ddTriProj:pn(gvr(R,c.ddTriProj)),
-    lotEnv:pn(gvr(R,c.lotEnv)),lotChauf:pn(gvr(R,c.lotChauf)),lotTech:pn(gvr(R,c.lotTech)),
+    lotEnv:pn(gvr(R,c.lotEnv)),lotChauf:pn(gvr(R,c.lotChauf)),lotTech:pn(gvr(R,c.lotTech)),scop:pn(gvr(R,c.scop)),
     ddMat:gv(R,c.ddMat),ddLci:gv(R,c.ddLci),pvKwc:pn(gvr(R,c.pvKwc)),pvM2:pn(gvr(R,c.pvM2)),lat:fLat,lng:fLng,geoQ:fQ,geoFallback:fQ==='none'})}
   return sites}
 
@@ -2354,7 +2374,15 @@ const DUREE_OBJ=[
 /* Cibles d'intensité thermique, en kWh/m²·an — l'unité des rapports et des
    audits. Le référentiel les exprime en MJ (350 et 227) ; la conversion est
    faite ici une fois pour toutes, ÷ 3,6. */
-const PARAMS_DEF={duree:40,pvProd:950,cibleKwh30:97,cibleKwh50:63,plancher:50,dureeObj:{}};
+/* pacGazPart — part de la chaleur d'une installation PAC+Gaz produite par
+   la PAC, en pourcent. Décision d'Achim du 04.09.2026 : PAC+Gaz mérite une
+   part conventionnelle et non un verdict binaire, une bivalence étant non
+   fossile en base et fossile à l'appoint. LA VALEUR RESTE À FIXER : null
+   tant qu'Achim ne l'a pas donnée, et tant qu'elle est nulle PAC+Gaz est
+   traité comme fossile — le comportement actuel, mais assumé au lieu d'être
+   une incohérence entre le moteur et le filtre. 72 substitutions du parc
+   vont vers PAC+Gaz : la valeur déplacera fortement le classement. */
+const PARAMS_DEF={duree:40,pvProd:950,cibleKwh30:97,cibleKwh50:63,plancher:50,dureeObj:{},pacGazPart:null};
 let PARAMS=Object.assign({},PARAMS_DEF);
 /* pDuree(k) : la durée de l'objectif k s'il en a une, sinon la valeur
    générale. Appelée sans argument, elle rend la valeur générale — tous les
@@ -2478,6 +2506,7 @@ function tglPar(e){if(e)e.stopPropagation();
   const p=$('parPop');if(!p)return;
   const on=p.classList.toggle('on');
   if(on){$('pDur').value=PARAMS.duree;$('pPv').value=PARAMS.pvProd;
+    {const e=$('pPacGaz');if(e)e.value=(PARAMS.pacGazPart==null?'':PARAMS.pacGazPart)}
     $('pK30').value=pCible30();$('pK50').value=pCible50();parKmj();
     const dh=$('durObj');
     if(dh)dh.innerHTML=DUREE_OBJ.map(function(d){
@@ -2496,6 +2525,9 @@ function paramsApply(){
   if(!(d>0)||!(pv>0)||!(k30>0)||!(k50>0)){toast('⚠️ Valeurs invalides','wr');return}
   if(k50>k30){toast('⚠️ La cible 2050 doit être plus basse que celle de 2030','wr');return}
   PARAMS.duree=d;PARAMS.pvProd=pv;PARAMS.cibleKwh30=k30;PARAMS.cibleKwh50=k50;
+  /* une case vidée remet PAC+Gaz en fossile plutôt que de garder en silence
+     une part réglée puis effacée */
+  {const e=$('pPacGaz');if(e)PARAMS.pacGazPart=(e.value===''||isNaN(+e.value))?null:Math.max(0,Math.min(100,+e.value))}
   CIBLE_MJ_M2_OBJ=k30*3.6;
   /* une case vidée efface la surcharge : l'objectif revient à la valeur
      générale plutôt que de garder une ancienne valeur devenue invisible */
@@ -2510,10 +2542,11 @@ function paramsApply(){
   try{if(_lastXlsxSheets){const g=computeGapsObj(_lastXlsxSheets);if(g)OBJ_GAPS=g}}catch(e){}
   computeObjRanking();buildOpt();ren();runOpt();
   toast('⚙️ Durée de vie : '+dureeTxt()+' · productible PV : '+pv+' kWh/kWc · cibles '+k30+' / '+k50+' kWh/m²·an','ok')}
-function paramsReset(){PARAMS=Object.assign({},PARAMS_DEF,{dd:{},dureeObj:{}});CIBLE_MJ_M2_OBJ=pCible30()*3.6;
+function paramsReset(){PARAMS=Object.assign({},PARAMS_DEF,{dd:{},dureeObj:{},pacGazPart:null});CIBLE_MJ_M2_OBJ=pCible30()*3.6;
   $('pDur').value=PARAMS.duree;$('pPv').value=PARAMS.pvProd;
   $('pK30').value=PARAMS.cibleKwh30;$('pK50').value=PARAMS.cibleKwh50;
   DUREE_OBJ.forEach(function(o){const el=$('dur_'+o.k);if(el)el.value=''});
+  {const e=$('pPacGaz');if(e)e.value=''}
   paramsApply()}
 document.addEventListener('click',function(){const p=$('parPop');if(p)p.classList.remove('on')});
 
@@ -2758,6 +2791,16 @@ function buildContributionsObj(sites,coFactors){
       const conso=(sre&&idc)?sre*idc:null;
       if(conso&&conso>0)out.ren.push({id:s.id,nom:s.nom,estim:cL('ren'),lot:coutLot(s,'ren')!=null,sre:sre,gain:conso,
         mesure:'Substitution chaufferie — '+agent+' → '+futur});
+    }
+    /* PAC+Gaz avec une part conventionnelle réglée : la substitution n'est
+       plus écartée en bloc, elle compte pour la part attribuée à la PAC.
+       Tant que le réglage est vide, ce bloc ne fait rien et PAC+Gaz reste
+       fossile. (décision d'Achim, 04.09.2026 — valeur à fixer) */
+    if(hasEstim&&FOSSILE_OBJ.has(agent)&&futur&&pacGazPart()!=null&&estPACGaz(futur)&&!estPACGaz(agent)){
+      const conso=(sre&&idc)?sre*idc:null,pt=pacGazPart()/100;
+      if(conso&&conso>0&&pt>0)out.ren.push({id:s.id,nom:s.nom,estim:cL('ren'),lot:coutLot(s,'ren')!=null,sre:sre,
+        gain:conso*pt,
+        mesure:'Substitution chaufferie — '+agent+' → '+futur+' (part conventionnelle PAC : '+nf(pacGazPart(),0)+' %)'});
     }
     if(hasEstim){
       /* « Gain Electricité (Max) - kWh » et « Gain Eau (Max) - m3 » n'existent
@@ -3625,6 +3668,80 @@ function hpNote(key){
     '. <span style="opacity:.85">Ils portent la pastille <span class="hp-chip">à attribuer</span> dans le tableau ; '+
     'les autres hors-périmètre y sont en gris.</span></div>'}
 
+/* ================================================================
+   LES POMPES À CHALEUR — l'électricité d'entrée se compte à part
+   ----------------------------------------------------------------
+   Consigne d'Achim, 04.09.2026 : « la consommation électrique d'une PAC
+   doit être comptée à part et être transformée en kWh thermiques pour
+   être comparable avec les autres moyens de production de chaleur. »
+
+   Une PAC ne produit pas de chaleur, elle en déplace : elle livre Q kWh
+   thermiques en achetant Q/SCOP kWh électriques. Comparer une PAC à une
+   chaudière en ne regardant que Q, c'est comparer deux choses qui ne
+   s'achètent pas de la même façon. L'outil affiche donc les DEUX nombres
+   dès que le SCOP est saisi — la chaleur livrée et l'électricité d'entrée.
+
+   Ce que l'outil ne fait délibérément PAS : compter cette électricité
+   dans l'objectif Électricité. Cet objectif mesure des économies d'usage
+   (éclairage, ventilation, bureautique) ; y verser l'entrée d'une PAC
+   mélangerait une charge de chauffage à des gains d'exploitation. C'est
+   le « compter à part » de la consigne, pris au mot.
+   ================================================================ */
+const PAC_RE=/^\s*(pac\b|pompe\s*[àa]\s*chaleur)/i;
+const PACGAZ_RE=/^\s*pac\s*\+\s*gaz/i;
+function estPACGaz(v){return PACGAZ_RE.test(String(v==null?'':v).trim())}
+/* null tant qu'Achim n'a pas fixé la valeur — pas de défaut inventé */
+function pacGazPart(){const v=PARAMS&&PARAMS.pacGazPart;
+  return(v==null||v===''||isNaN(+v))?null:Math.max(0,Math.min(100,+v))}
+function estPAC(v){return PAC_RE.test(String(v==null?'':v).trim())}
+/* le SCOP n'est retenu que s'il est physiquement plausible : une PAC en
+   dessous de 1 ne serait plus une PAC, au dessus de 8 c'est une faute de
+   saisie (virgule décimale, pourcentage). Hors bornes, on n'affiche rien
+   et l'onglet Données le signale plutôt que de calculer sur du faux. */
+function scopDe(s){const v=+((s&&s.scop)||0);return(v>=1&&v<=8)?v:null}
+/* chaleur livrée → électricité d'entrée. Renvoie null tant qu'il manque
+   l'un des deux : jamais de valeur par défaut. */
+function elecPAC(s,chaleur){
+  if(!s||!estPAC(s.hsub)||!(chaleur>0))return null;
+  const c=scopDe(s);if(!c)return null;
+  return {scop:c,elec:chaleur/c,chaleur:chaleur}}
+function pacChip(s,chaleur){
+  if(!s||!estPAC(s.hsub))return'';
+  const e=elecPAC(s,chaleur);
+  if(!e)return '<span class="pac-chip pac-vide" title="Substitution vers une pompe à chaleur, SCOP non saisi. Sans lui, l\'électricité que cette PAC consommera reste invisible : la colonne « SCOP PAC [-] » du Plan_PTE attend la valeur.">SCOP ?</span>';
+  return '<span class="pac-chip" title="Une PAC livre de la chaleur en achetant de l\'électricité. À SCOP '+
+    nf(e.scop,1)+', les '+nf(Math.round(e.chaleur))+' kWh thermiques livrés ici demandent '+
+    nf(Math.round(e.elec))+' kWh électriques par an. Cette entrée est comptée à part : elle n\'entre pas dans l\'objectif Électricité, qui mesure des économies d\'usage.">⚡ '+
+    nf(Math.round(e.elec/1000))+' MWh él.</span>'}
+/* combien de substitutions vers une PAC attendent encore leur SCOP */
+function pacManquants(){
+  const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
+  let tot=0,ok=0;
+  (pop||[]).forEach(function(s){if(!estPAC(s.hsub))return;tot++;if(scopDe(s))ok++});
+  return {tot:tot,ok:ok,manque:tot-ok}}
+function pacNote(key){
+  if(key!=='ren')return'';
+  const m=pacManquants();if(!m.tot)return'';
+  const R=(typeof OBJRANK!=='undefined'&&OBJRANK&&OBJRANK.ren)?OBJRANK.ren.items:[];
+  const pop=(S_ALL&&S_ALL.length)?S_ALL:S,by={};(pop||[]).forEach(function(s){by[s.id]=s});
+  let chaleur=0,elec=0,nCl=0,nSansScop=0;
+  (R||[]).forEach(function(it){const s=by[it.id];if(!s||!estPAC(s.hsub))return;
+    nCl++;chaleur+=it.gain;const e=elecPAC(s,it.gain);
+    if(e)elec+=e.elec;else nSansScop++});
+  if(!nCl)return'';
+  const tete='⚡ <b>'+nCl+' substitution(s) vers une pompe à chaleur</b> dans ce classement, '+
+    nf(Math.round(chaleur/1000))+' MWh thermiques livrés. ';
+  if(nSansScop===nCl)
+    return '<div class="part-warn">'+tete+
+      'Une PAC livre cette chaleur en <b>achetant de l\'électricité</b> — à SCOP 3, un tiers ; à SCOP 4, un quart. '+
+      'Tant que la colonne <code>SCOP PAC [-]</code> du <code>Plan_PTE</code> est vide, cette entrée reste invisible et '+
+      'la PAC se compare aux autres agents sur la seule chaleur livrée, ce qui la flatte. '+
+      '<b>'+m.manque+' des '+m.tot+' substitutions PAC du parc</b> attendent leur SCOP.</div>';
+  return '<div class="part-warn">'+tete+
+    'Électricité d\'entrée pour celles dont le SCOP est saisi : <b>'+nf(Math.round(elec/1000))+' MWh/an</b>. '+
+    'Elle est <b>comptée à part</b> — elle n\'entre pas dans l\'objectif Électricité, qui mesure des économies d\'usage.'+
+    (nSansScop?(' '+nSansScop+' de ce classement et '+m.manque+' du parc attendent encore leur SCOP.'):'')+'</div>'}
+
 function servisChip(id,key){
   if(OBJ_PARTAGES.indexOf(key)<0)return'';
   /* un bâtiment dont les lots sont saisis n'a plus de coût partagé : son
@@ -3685,7 +3802,7 @@ function objTable(key,R,meta,bySiteId,f){
     html+='<tr class="row-click'+(_r===R.franchiRang?' franchi-row':'')+(_r===R.franchiRang2?' franchi-row-50':'')+'" data-id="'+esc(it.id)+'" onclick="toggleDetail('+jsArg(it.id)+')" style="'+objRowStyle(Object.assign({},it,{rang:_r}),R.franchiRang,R.franchiRang2)+'">'+
       '<td>'+(it.rangAdj||it.rang)+((it.rangAdj&&rangObj[it.id]&&it.rangAdj!==rangObj[it.id])?'<br><span style="font-size:.6rem;color:var(--ink3)" title="rang du classement arithmétique, avant ajustement">obj. '+rangObj[it.id]+'</span>':'')+
       (snapCur()?('<br>'+snapDelta(key,it.id,(it.rangAdj||it.rang))):'')+'</td><td><b>'+esc(it.id)+'</b></td><td>'+esc(it.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem" title="RPF — responsable de portefeuille, qui suit le bâtiment dans la durée. Le RP, responsable de projet, est dans la colonne RP.">RPF '+(estHorsPerimetre(s)?hpChip(s):esc(s.rp||'—'))+'</span></td>'+
-      '<td style="font-size:.63rem">'+esc(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td><td>'+subBg(s.hsub)+'</td>'+
+      '<td style="font-size:.63rem">'+esc(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td><td>'+subBg(s.hsub)+(key==='ren'?pacChip(s,it.gain):'')+'</td>'+
       '<td style="text-align:right">'+gainDisp+'</td><td style="text-align:right">'+objFmtNum(it.cumulGain,0)+'</td>'+
       pctCell(it.pctGap,false)+
       (key==='th'?pctCell(it.pctGap2,true):'')+
@@ -3765,9 +3882,11 @@ function renR(){
   if(!pop||!pop.length){box.innerHTML='';if(note)note.textContent='';
     const hx0=$('objExclus');if(hx0)hx0.innerHTML='';
     const hp0=$('objPartage');if(hp0)hp0.innerHTML='';
-    const ha0=$('objAttrib');if(ha0)ha0.innerHTML='';return}
+    const ha0=$('objAttrib');if(ha0)ha0.innerHTML='';
+    const hq0=$('objPac');if(hq0)hq0.innerHTML='';return}
   _servisCache=null;
   const ha=$('objAttrib');if(ha)ha.innerHTML=hpNote(key);
+  const hq=$('objPac');if(hq)hq.innerHTML=pacNote(key);
   const hp=$('objPartage');if(hp)hp.innerHTML=partageNote(key);
   const bySiteId={};pop.forEach(s=>{bySiteId[s.id]=s});
   const f=rankFilters();
@@ -3779,6 +3898,7 @@ function renR(){
       fw0.style.display=invHorsChiffrage()?'block':'none'}
     const hx1=$('objExclus');if(hx1)hx1.innerHTML=exclusHtml('tous',bySiteId);
     const ha1=$('objAttrib');if(ha1)ha1.innerHTML=hpNote('tous');
+    const hq1=$('objPac');if(hq1)hq1.innerHTML='';
     const hp1=$('objPartage');if(hp1)hp1.innerHTML=partageNote('tous');
     box.innerHTML=objTousTable(bySiteId,f);
     return}
@@ -5191,6 +5311,15 @@ function renQual(){
        '<td style="min-width:120px"><div class="qual-bar"><i style="width:'+cov+'%;background:'+(cov>=80?'#1E8449':cov>=50?'#e8a838':'var(--red)')+'"></i></div><span class="mini">'+cov+' %</span></td>'+
        '<td class="num" style="font-weight:800;color:'+(r.unlock>0?'var(--red)':'var(--ink3)')+'">'+(r.unlock>0?('+'+nf(r.unlock)):'—')+'</td>'+
        '<td class="mini"'+(r.F.tip?(' title="'+esc(r.F.tip)+'" style="cursor:help"'):'')+'>'+esc(r.F.eff)+'</td></tr>'});
+  /* Le SCOP ne débloque aucun classement — il ne fait entrer personne. Il
+     rend lisible une charge aujourd'hui invisible, ce que le tableau des
+     « Débloquerait » ne sait pas exprimer : d'où sa ligne à part. */
+  try{const _p=pacManquants();
+    if(_p.manque>0)h+='<p class="mini" style="margin-top:6px">♨️ <b>'+_p.manque+' des '+_p.tot+
+      ' substitutions vers une pompe à chaleur</b> n\'ont pas de <code>SCOP PAC [-]</code> saisi. '+
+      'Cette colonne ne fait entrer aucun bâtiment dans un classement : elle rend visible '+
+      'l\'électricité que ces PAC achèteront pour livrer leur chaleur. Sans elle, une PAC se compare '+
+      'aux autres agents sur la seule chaleur livrée, ce qui la flatte.</p>'}catch(e){}
   h+='</tbody></table><p class="mini" style="margin-top:6px">« Débloquerait » = nombre de bâtiments à qui il ne manque <b>que cette colonne</b> pour être classables. Ce sont les saisies les plus rentables : une cellule remplie, un bâtiment qui entre dans les classements.</p>';
   el.innerHTML=h}
 
