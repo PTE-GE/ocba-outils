@@ -210,6 +210,19 @@ indice, et le détail de la tuile porte sa courbe d'achat — les projets financ
 cher au plus cher, et le rang où la cible est atteinte. Son classement dédié, lui, reste dans
 l'onglet Classement.
 
+## Dépendances externes
+
+Les bibliothèques de rendu viennent de deux CDN. Elles portent depuis le 03.09.2026 leur
+empreinte **SRI** (`integrity` + `crossorigin`) et une **politique de sécurité de contenu** en
+balise `meta` limite ce que la page peut aller chercher. Si un CDN sert un octet différent de
+celui attendu, la ressource est refusée et le bandeau d'avertissement existant s'affiche — c'est
+le comportement voulu, et il est visible.
+
+Les pièces qui comptent ne dépendent d'aucune bibliothèque : la **trajectoire**, la **jauge**, le
+**ruban**, la **courbe d'achat**, le **Top 20**, la **matrice urgence × faisabilité** et la
+**répartition par état SIA** sont dessinés en SVG par l'outil lui-même et survivent à un réseau
+coupé. Il ne reste que l'histogramme de distribution et le fond de carte à dépendre de l'extérieur.
+
 ## Ce qui ne sort pas du navigateur
 
 Le classeur est lu **dans le navigateur**, par un lecteur XLSX intégré : aucune donnée du parc
@@ -223,6 +236,20 @@ entièrement, ajoutez deux colonnes `Latitude` et `Longitude` au classeur.
 Ce que l'outil garde dans le navigateur — le fichier importé, les notes, les ajustements et
 leurs motifs, les instantanés, le portefeuille validé — reste sur le poste jusqu'à effacement.
 Le menu ☰ porte **« Effacer les données de ce navigateur »**, qui purge l'ensemble.
+
+## Le CEE n'est plus un objectif
+
+Vérifié sur le parc réel : le classement CEE portait exactement les **mêmes 97 bâtiments** que le
+Thermique, dans **exactement le même ordre**, avec les mêmes coûts unitaires à quatre décimales —
+écart de rang maximal **zéro**. C'est mécanique : les deux divisent le même montant par le même
+gain en kWh et ne diffèrent que par un paramètre de durée de vie, réglé à 40 ans des deux côtés.
+Le CEE n'était que le classement Thermique lu au mètre du CO₂.
+
+Il a donc été retiré des objectifs le 03.09.2026. Le **CHF/kWh reste une mesure** : il note le
+critère « coût de l'énergie » du score composite de repli — celui qui range les bâtiments non
+mesurables pour un objectif donné — et alimente l'histogramme de distribution de l'onglet
+Arbitrage. La durée de vie correspondante reste réglable dans ⚙️, sous le libellé
+**Coût du kWh évité**.
 
 ## Ce qui compte comme substitution
 
@@ -279,9 +306,8 @@ chiffrage** déclare le **coût unitaire identique pour tous les bâtiments**, s
 colonne du classeur. Le coût cesse alors de départager quoi que ce soit, et le seul critère qui
 subsiste est la **contribution** : le classement va du plus gros contributeur au plus petit, et
 le rang de franchissement y devient le **nombre minimal de bâtiments** qui comblent l'écart. Les
-colonnes Montant et CHF/unité n'ont plus de contenu (« — » et « = »). Le CEE se classe alors aux
-kWh économisés ; la végétalisation n'est pas concernée, son coût du m² venant de sa propre
-colonne.
+colonnes Montant et CHF/unité n'ont plus de contenu (« — » et « = »). La végétalisation n'est pas
+concernée, son coût du m² venant de sa propre colonne.
 
 Sur le CO₂ la population classable passe de 43 à 65 bâtiments, sur le thermique de 97 à 151, sur
 le renouvelable de 101 à 158.

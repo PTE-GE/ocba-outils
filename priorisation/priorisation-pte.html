@@ -4,9 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Priorisation PTE — Analyse & Classement</title>
-<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<!-- ÉTAPE 1 (10 min) — SRI + CSP + referrer, librairies toujours sur CDN -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://cdn.plot.ly https://cdnjs.cloudflare.com; style-src 'unsafe-inline' https://cdnjs.cloudflare.com; img-src data: https://*.basemaps.cartocdn.com https://server.arcgisonline.com https://tile.openstreetmap.org https://*.tile.opentopomap.org; connect-src https://nominatim.openstreetmap.org; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; worker-src 'none'; media-src 'none'; manifest-src 'none'">
+<meta name="referrer" content="no-referrer">
+<script src="https://cdn.plot.ly/plotly-cartesian-2.27.0.min.js" integrity="sha384-CGZbcmzn+iZSKWyq5VvS+rJZTj2ya470zOv7mLCSCwcb2aOM8xpNMTGevT3iEPPY" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha384-c6Rcwz4e4CITMbu/NBmnNS8yN2sC3cUElMEMfP3vqqKFp7GOYaaBBCqmaWBjmkjb" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO" crossorigin="anonymous"></script>
+
+<!-- Si l'on garde Plotly complet (3,6 Mo) plutôt que cartesian :
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js" integrity="sha384-Hl48Kq2HifOWdXEjMsKo6qxqvRLTYqIGbvlENBmkHAxZKIGCXv43H6W1jA671RzC" crossorigin="anonymous"></script>
+-->
 <style>
 :root{
   /* charte OCBA / DPTE — couleurs de marque */
@@ -208,7 +215,7 @@ a.tab{text-decoration:none;display:inline-flex;align-items:center;line-height:1}
 .tour-hole{position:fixed;border-radius:10px;box-shadow:0 0 0 4px var(--br6),0 0 0 9999px rgba(15,25,40,.55);z-index:4001;pointer-events:none;transition:all .25s ease}
 .tour-box{position:fixed;z-index:4002;max-width:390px;background:var(--card);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.3);padding:15px 17px;font-size:.82rem;line-height:1.55}
 .tour-box h4{margin:0 0 6px;color:var(--pri);font-size:.95rem}
-.tour-box p{margin:0 0 10px;color:#444}
+.tour-box p{margin:0 0 10px;color:var(--ink2)}
 .tour-nav{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .tour-step{font-size:.68rem;color:var(--ink3);font-weight:600}
 .tour-keys{margin-top:8px;font-size:.66rem;color:var(--ink3);border-top:1px solid #eef2f7;padding-top:6px}
@@ -800,7 +807,6 @@ body.night .tblx td>.bt-i{background:none;color:var(--acc)}
 <option value="eau">💧 Eau</option>
 <option value="pv">☀️ Photovoltaïque</option>
 <option value="veg">🌱 Végétalisation</option>
-<option value="cee" title="Coût de l'énergie économisée : ce que revient chaque unité d'énergie évitée, une fois l'investissement réparti sur la durée de vie retenue. Le classement va du moins cher au plus cher.">💰 CEE</option>
 <option value="tous">📋 Tous les objectifs</option>
 </select>
 <select id="fFo" onchange="renR()"><option value="all">Tout chauffage</option><option value="fos">🔥 Fossiles</option><option value="ren">♻️ Renouvelables</option></select>
@@ -833,7 +839,7 @@ body.night .tblx td>.bt-i{background:none;color:var(--acc)}
 <div class="cd">
 <div class="wt" onclick="tglS('distB','distCh')"><h3 style="margin:0;border:none;padding:0">Distribution et état SIA</h3><span class="ch" id="distCh">▼</span></div>
 <div class="wb" id="distB"><div style="padding-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-<div class="cd"><h3>Distribution <span style="font-weight:400;font-size:.65rem;color:var(--ink3)">CEE, CHF/kWh</span></h3><div id="gHist" style="height:210px"></div></div>
+<div class="cd"><h3>Distribution <span style="font-weight:400;font-size:.65rem;color:var(--ink3)">coût du kWh évité, CHF/kWh</span></h3><div id="gHist" style="height:210px"></div></div>
 <div class="cd"><h3>État SIA</h3><div id="gPie"></div></div>
 </div></div>
 </div>
@@ -1100,7 +1106,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td><b>IDC</b></td><td>Indice de dépense de chaleur, en kWh/m²·an. Deux cibles : <b>97 kWh/m²·an en 2030</b> (350 MJ/m²·an) et <b>63 kWh/m²·an en 2050</b> (environ 227 MJ). Toutes deux réglables dans le menu ⚙️.</td></tr>
 <tr><td><b>IDE</b></td><td>Indice de dépense d'électricité, même logique que l'IDC.</td></tr>
 <tr><td><b>CECB+</b></td><td>Certificat énergétique cantonal des bâtiments, version avec rapport de conseil : il propose des variantes de rénovation (A, B, C), dont l'une est retenue.</td></tr>
-<tr><td><b>CEE</b></td><td>Coût de l'énergie économisée : le prix du kWh évité sur la durée de vie retenue pour cet objectif (40 ans par défaut, modifiable ⚙️).</td></tr>
+<tr><td><b>CEE</b></td><td>Coût de l'énergie économisée : le prix du kWh évité sur la durée de vie retenue (40 ans par défaut, modifiable ⚙️). Ce n'est plus un classement depuis le 03.09.2026 — il doublonnait exactement le Thermique — mais une <b>mesure</b>, qui alimente la distribution de l'onglet Arbitrage et le score composite de repli.</td></tr>
 <tr><td><b>CAD</b></td><td>Chauffage à distance : réseau qui livre au bâtiment de la chaleur produite ailleurs, à la place d'une chaudière sur place. Un bâtiment raccordé cesse d'être compté parmi les agents fossiles et reçoit la contribution CO₂ de la substitution, sans que son IDC baisse pour autant. Genève impose le raccordement au-delà de 50 kW.</td></tr>
 <tr><td><b>PAC</b></td><td>Pompe à chaleur : machine qui prélève de la chaleur dans l'air, le sol ou l'eau et la relève à la température du chauffage, en consommant de l'électricité. Elle sort le bâtiment des agents fossiles et déplace une part de sa consommation vers l'électricité — sauf en version hybride <b>PAC + Gaz</b>, que le classeur range encore parmi les fossiles.</td></tr>
 <tr><td><b>Substitution de chaufferie</b></td><td>Remplacement de l'agent de chauffage d'un bâtiment par un autre — mazout ou gaz vers réseau de chaleur, pompe à chaleur ou bois. Elle est portée par la colonne <code>Chauffage de substitution</code> ; quand elle est absente ou notée « maintien en l'état », aucun gain de décarbonation n'est attribué au bâtiment.</td></tr>
@@ -1157,7 +1163,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 </div>
 </div>
 
-<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v03.09.2026b</div>
+<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v03.09.2026e</div>
 <script>
 /* ================================================================
    NOYAU COMMUN — état, persistance, pondérations
@@ -1887,10 +1893,13 @@ function finishNotesImport(rows){
   let n=0,unknown=0;
   for(let r=1;r<rows.length;r++){
     const id=String(rows[r][ci]||'').trim();if(!id)continue;
+    /* un identifiant qui est aussi un nom de propriété d'Object remplacerait le prototype de siteQuali */
+    if(id==='__proto__'||id==='constructor'||id==='prototype')continue;
     const nt=String(rows[r][cn]==null?'':rows[r][cn]);
     const pq=cp>=0?String(rows[r][cp]==null?'':rows[r][cp]).trim():'';
     const mq=cm>=0?String(rows[r][cm]==null?'':rows[r][cm]).trim():'';
-    if(pq&&pq!=='0'){siteQuali[id]={p:pq,m:mq};n++}
+    /* une priorité hors barème (faute de frappe, autre version du fichier) est ignorée, pas stockée */
+    if(pq&&pq!=='0'&&QUALI_DEF.some(function(d){return d.k===pq})){siteQuali[id]={p:pq,m:mq};n++}
     if(!nt.trim())continue;
     if(!S.some(function(s){return s.id===id}))unknown++;
     siteNotes[id]=nt;n++}
@@ -1916,10 +1925,10 @@ function popEtat(){
   el.value=cur||'all'}
 
 
-function tglS(bid,cid){const b=$(bid),c=$(cid);b.classList.toggle('op');c.classList.toggle('op');if(b.classList.contains('op'))setTimeout(()=>{b.querySelectorAll('[id^=g]').forEach(el=>{try{if(window.Plotly)Plotly.Plots.resize(el)}catch(e){}})},400)}
+function tglS(bid,cid){const b=$(bid),c=$(cid);b.classList.toggle('op');c.classList.toggle('op');if(b.classList.contains('op'))setTimeout(function(){if(typeof plotResize==='function')plotResize()},400)}
 function tglM(n){$('mB'+n).classList.toggle('op');$('mCh'+n).classList.toggle('op')}
 
-function pn(s){if(s===null||s===undefined)return null;if(typeof s==='number')return isNaN(s)?null:s;s=String(s).trim();if(!s||s==='—'||s==='Inexistant'||s==='?')return null;const v=+s.replace(/'/g,'').replace(/[\s\u00a0]/g,'').replace(',','.');return isNaN(v)?null:v}
+function pn(s){if(s===null||s===undefined)return null;if(typeof s==='number')return isNaN(s)?null:s;s=String(s).trim();if(!s||s==='—'||s==='Inexistant'||s==='?')return null;const v=+s.replace(/'/g,'').replace(/[\s\u00a0]/g,'').replace(',','.');return isFinite(v)?v:null}
 function pc(s){if(s===null||s===undefined)return null;if(typeof s==='number')return s>1?s/100:s;s=String(s).replace('%','').trim();const v=pn(s);return v!=null&&v>1?v/100:v}
 
 let geoCtx={lat:46.2044,lng:6.1432,suffix:', Genève, Suisse',cc:'ch'};
@@ -2055,7 +2064,12 @@ function ceeOk(s){
   return !!(s.cecb&&s.invVB>0&&s.idcVB!=null&&s.idcC>0&&s.sre>0&&(s.idcC-s.idcVB)>0)}
 function ceeCHFkWh(s){
   if(!ceeOk(s))return null;
-  return s.invVB/((s.idcC-s.idcVB)*s.sre*pDuree('cee'))}
+  /* même montant que le classement Thermique — le lot enveloppe quand il est
+     saisi, le montant complet sinon. Sans cela les deux classements, qui
+     portent les mêmes bâtiments dans le même ordre, divergeraient dès la
+     première subdivision saisie, et pour une raison invisible à l'écran. */
+  const c=(typeof coutLot==='function')?coutLot(s,'cee'):null;
+  return (c!=null?c:s.invVB)/((s.idcC-s.idcVB)*s.sre*pDuree('cee'))}
 function sC(s){
   const c=ceeCHFkWh(s);
   return c==null?null:Math.max(0,Math.min(100,100-c*pDuree('cee')))}
@@ -2109,14 +2123,14 @@ function prioMap(){
   if(_prioCache&&_prioKey===key)return _prioCache;
   const m={},src={};
   if(typeof OBJRANK!=='undefined'&&OBJRANK){
-    ['co2','th','ren','elec','eau','cee'].forEach(function(k){
+    ['co2','th','ren','elec','eau'].forEach(function(k){
       const R=OBJRANK[k];if(!R||!R.items||!R.items.length)return;
       const n=R.items.length;
       R.items.forEach(function(it){
         const v=100*(1-(it.rang-1)/n),id=String(it.id);
         if(m[id]==null||v>m[id]){m[id]=v;src[id]=k}})})}
   _prioKey=key;_prioCache={v:m,k:src};return _prioCache}
-const PRIO_LBL={co2:'CO₂',th:'thermique',ren:'renouvelable',elec:'électricité',eau:'eau',cee:'CEE'};
+const PRIO_LBL={co2:'CO₂',th:'thermique',ren:'renouvelable',elec:'électricité',eau:'eau'};
 function score(s){
   const dm=dataMiss(s);
   if(dm.length)return notScored(s,dm,0);
@@ -2206,7 +2220,9 @@ function colMostlyNumeric(rows,idx){
     if(typeof v==='number'||!isNaN(+String(v).trim().replace(',','.')))num++}
   return tot>3&&(num/tot)>=0.5}
 
-function gv(row,idx){if(idx<0||!row||idx>=row.length)return'';const v=row[idx];return(v===null||v===undefined||v==='')?'':String(v)}
+/* 4 000 caractères suffisent à toute cellule du classeur (la plus longue en fait 611) ;
+   au-delà, trois expressions régulières de nettoyage deviennent quadratiques. */
+function gv(row,idx){if(idx<0||!row||idx>=row.length)return'';const v=row[idx];return(v===null||v===undefined||v==='')?'':String(v).slice(0,4000)}
 function gvr(row,idx){if(idx<0||!row||idx>=row.length)return null;const v=row[idx];return(v===null||v===undefined||v==='')?null:v}
 function parseCSVtoRows(t){const fl=t.split('\n')[0]||'';const sep=(fl.split(';').length>=fl.split(',').length)?';':',';const rows=[];let row=[];let cur='';let inQ=false;for(let i=0;i<t.length;i++){const ch=t[i];if(ch==='"'){if(inQ&&t[i+1]==='"'){cur+='"';i++}else inQ=!inQ}else if(ch===sep&&!inQ){row.push(cur.trim());cur=''}else if(ch==='\n'&&!inQ){row.push(cur.trim());if(row.length>3)rows.push(row);row=[];cur=''}else if(ch==='\r'){}else cur+=ch}if(row.length>3){row.push(cur.trim());rows.push(row)}return rows}
 
@@ -2316,7 +2332,10 @@ const DUREE_OBJ=[
  {k:'ren' ,lbl:'Renouvelable',aide:'Durée de vie de la production de chaleur renouvelable (PAC, CAD, bois)'},
  {k:'elec',lbl:'Électricité' ,aide:'Éclairage, ventilation, régulation — équipements à renouvellement plus rapide'},
  {k:'eau' ,lbl:'Eau'         ,aide:'Robinetterie, appareils sanitaires, récupération'},
- {k:'cee' ,lbl:'CEE'         ,aide:"Durée retenue pour le coût de l'énergie économisée (CHF par kWh évité)"}];
+ /* Le CEE n'est plus un classement depuis le 03.09.2026, mais le CHF/kWh
+    reste une mesure : il note le critère « coût de l'énergie » du score
+    composite de repli et alimente l'histogramme de distribution. */
+ {k:'cee' ,lbl:'Coût du kWh évité',aide:"Durée retenue pour la mesure CHF par kWh évité — score composite de repli et histogramme de distribution. Ce n'est plus un classement."}];
 /* Cibles d'intensité thermique, en kWh/m²·an — l'unité des rapports et des
    audits. Le référentiel les exprime en MJ (350 et 227) ; la conversion est
    faite ici une fois pour toutes, ÷ 3,6. */
@@ -2817,29 +2836,10 @@ function rankVegObj(items,gap){
    à la tonne de CO2). Les bâtiments dont le gain CO2 n'est pas calculable
    (agent sans facteur d'émission) gardent un rang mais ne font pas avancer
    le cumul. */
-function rankCEEObj(sites,gapCo2,co2ById){
-  const items=[];
-  for(const s of sites){
-    if(!ceeOk(s))continue;
-    const cee=ceeCHFkWh(s);if(cee==null)continue;
-    items.push({id:s.id,nom:s.nom,estim:s.invVB,sre:s.sre,cee:cee,
-      /* kWh économisés sur la durée retenue — dénominateur du CHF/kWh, et
-         seul critère qui subsiste quand le coût est neutralisé */
-      kwh:(s.idcC-s.idcVB)*s.sre*pDuree('cee'),
-      co2Gain:co2ById[s.id]!=null?co2ById[s.id]:null,
-      plausible:plausibleObj(s.invVB,s.sre)});
-  }
-  const platC=(typeof invHorsChiffrage==='function')&&invHorsChiffrage();
-  if(platC){items.forEach(function(it){it.cee=null});
-    items.sort((a,b)=>b.kwh-a.kwh||(a.id<b.id?-1:1))}
-  else items.sort((a,b)=>a.cee-b.cee||(a.id<b.id?-1:1));
-  let cumG=0,cumI=0,franchiRang=null;
-  items.forEach((it,i)=>{const k=i+1;cumI+=it.estim;it.rang=k;
-    if(it.co2Gain!=null)cumG+=it.co2Gain;
-    it.cumulGain=cumG;it.cumulInvest=platC?null:cumI;it.pctGap=gapCo2?cumG/gapCo2:null;
-    if(franchiRang==null&&gapCo2&&cumG>=gapCo2)franchiRang=k;
-    it.franchi=franchiRang!=null&&k<=franchiRang});
-  return{items,franchiRang}}
+/* rankCEEObj() supprimé le 03.09.2026 : le classement CEE portait les mêmes
+   bâtiments que le Thermique, dans le même ordre, aux mêmes coûts unitaires.
+   La MESURE CHF/kWh, elle, reste — voir ceeCHFkWh() plus haut : elle nourrit
+   le score composite de repli et l'histogramme de distribution. */
 
 /* orchestrateur : à appeler après tout import réussi. Recalcule les cibles
    depuis les feuilles brutes si elles viennent d'être lues (nouvel import
@@ -2863,8 +2863,8 @@ function computeObjRanking(){
   const pv=rankIntentionObj(contribs.pv,OBJ_GAPS.pv.gapKw);
   const veg=rankVegObj(contribs.veg,(OBJ_GAPS.veg&&OBJ_GAPS.veg.gap)||null);
   const co2ById={};for(const it of co2.items)co2ById[it.id]=it.gain;
-  const cee=rankCEEObj(pop,OBJ_GAPS.co2.gap,co2ById);
-  OBJRANK={co2,th,ren,elec,eau,pv,cee,veg};
+
+  OBJRANK={co2,th,ren,elec,eau,pv,veg};
 }
 
 function loadSample(){S=[
@@ -3093,7 +3093,7 @@ try{renCompleteness(all)}catch(e){}
    affichés ici et là-bas sont donc les mêmes. Plotly.purge avant tracé :
    sans cela le graphique se met à jour de façon erratique au changement de
    portefeuille (constaté le 20.08.2026). */
-const OBJ_UNIT={co2:'kg CO₂/an',th:'kWh/an',ren:'kWh/an',elec:'kWh/an',eau:'m³/an',pv:'kWc',cee:'CHF/kWh',veg:'m²'};
+const OBJ_UNIT={co2:'kg CO₂/an',th:'kWh/an',ren:'kWh/an',elec:'kWh/an',eau:'m³/an',pv:'kWc',veg:'m²'};
 function renTop(all){
   const el=$('gTop');if(!el)return;
   const key=($('objSel')&&$('objSel').value)||'co2';
@@ -3111,10 +3111,10 @@ function renTop(all){
   if(!items.length){el.innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:60px">Aucun bâtiment de ce portefeuille dans ce classement.</p>';return}
   const unit=OBJ_UNIT[key]||'';
   const platT=invHorsChiffrage()&&key!=='veg';
-  const val=function(it){return platT?(key==='cee'?it.kwh:it.gain)
-    :(key==='cee'?it.cee:(key==='pv'?it.gain:it.coutUnit))};
-  const axis=platT?('contribution ['+(key==='cee'?'kWh':unit)+'] — hors chiffrage, le coût ne départage plus')
-    :(key==='cee'?('CHF/kWh ('+pDuree('cee')+' ans)'):(key==='pv'?'kWc':(key==='veg'?'CHF par m² créé':'coût par unité gagnée ('+pDuree(key)+' ans)')));
+  const val=function(it){return platT?it.gain
+    :(key==='pv'?it.gain:it.coutUnit)};
+  const axis=platT?('contribution ['+unit+'] — hors chiffrage, le coût ne départage plus')
+    :(key==='pv'?'kWc':(key==='veg'?'CHF par m² créé':'coût par unité gagnée ('+pDuree(key)+' ans)'));
   /* Plotly.purge ne vide pas le message « aucun bâtiment » écrit par un rendu
      précédent : il resterait visible sous le graphique. */
   el.innerHTML='';
@@ -3146,7 +3146,7 @@ function renTop(all){
     const s=byId[it.id],q=qualiOf(it.id),v=vs[i];
     const y=T+RW*i+RW/2,rg=(it.rangAdj||it.rang);
     const nom=String(it.nom||(s?s.nom:'')).substring(0,40);
-    const gain=objFmtNum(key==='cee'?it.co2Gain:it.gain,0);
+    const gain=objFmtNum(it.gain,0);
     /* un ajustement se voit trois fois : la balance dans le libellé, la
        teinte d'alerte et l'anneau du point. Jamais la couleur seule. */
     const dc=q?C.warn:C.acc;
@@ -3208,7 +3208,6 @@ const OBJ_META={
   elec:{lbl:'Électricité (legacy)',lblCourt:'Élec.',unit:'kWh/an'},
   eau:{lbl:'Eau (legacy)',lblCourt:'Eau',unit:'m³/an'},
   pv:{lbl:'Photovoltaïque',lblCourt:'PV',unit:'kWc'},
-  cee:{lbl:'CEE',lblCourt:'CEE',unit:'kg CO2/an'},
   veg:{lbl:'Végétalisation',lblCourt:'Végét.',unit:'m²'}};
 /* Le nombre trié doit avoir une virgule stable : 0,1924 puis 1,169 puis
    1,1693 fait danser la colonne et interdit la comparaison à l'œil. On fixe
@@ -3244,6 +3243,14 @@ function alertsFor(s){
   if(s.consoTherm&&s.sre&&s.idcC&&s.sre*s.idcC>0){
     const ratio=s.consoTherm/(s.sre*s.idcC);
     if(ratio<RATIO_MIN_AL||ratio>RATIO_MAX_AL)out.push('Consommation mesurée incohérente avec la surface et l\'indice de chaleur');
+  }
+  /* Un lot est une PART du montant : il ne peut ni le dépasser, ni, additionnés, le dépasser.
+     Sans ce contrôle, un lot saisi en francs là où le montant est en milliers passe inaperçu. */
+  if(typeof aDesLots==='function'&&aDesLots(s)&&s.invVB>0){
+    const L=[+s.lotEnv||0,+s.lotChauf||0,+s.lotTech||0].filter(function(v){return v>0});
+    const som=L.reduce(function(a,v){return a+v},0);
+    if(L.some(function(v){return v>s.invVB*1.001}))out.push('lot supérieur au montant complet');
+    else if(som>s.invVB*1.001)out.push('somme des lots ('+objFmtNum(som,0)+') supérieure au montant complet');
   }
   return out}
 /* Pas de dépendance au survol : un clic affiche le détail dans un toast
@@ -3319,7 +3326,7 @@ const OBJ_COL_GAIN={elec:'Gain Electricité (Max) - kWh',eau:'Gain Eau (Max) - m
    type : 'chemin' (réduction depuis une référence 2005), 'niveau' (une part,
    sans référence donc sans chemin), 'cumul' (on crée, rien n'est réalisé). */
 function pontData(key){
-  if(key==='cee'||key==='tous'||typeof OBJ_GAPS==='undefined'||!OBJ_GAPS)return null;
+  if(key==='tous'||typeof OBJ_GAPS==='undefined'||!OBJ_GAPS)return null;
   const meta=(typeof OBJ_META!=='undefined'&&OBJ_META[key])?OBJ_META[key]:{lbl:key,unit:''};
   const R=(typeof OBJRANK!=='undefined'&&OBJRANK&&OBJRANK[key])?OBJRANK[key]:null;
   const items=R?R.items:[];
@@ -3364,7 +3371,7 @@ function pontZones(D){
   return{acquis:acquis,couvert:couvert,reste:reste,restePc:restePc}}
 
 function objPont(key,R){
-  if(key==='cee'||key==='tous'||typeof OBJ_GAPS==='undefined'||!OBJ_GAPS)return'';
+  if(key==='tous'||typeof OBJ_GAPS==='undefined'||!OBJ_GAPS)return'';
   const meta=(typeof OBJ_META!=='undefined'&&OBJ_META[key])?OBJ_META[key]:{lbl:key,unit:''};
   const nR=(R&&R.items)?R.items.length:0;
   const G=OBJ_GAPS[key]||{};
@@ -3427,7 +3434,7 @@ function flatNote(key){
   const nR=R&&R.items?R.items.length:0;
   const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
   const nTot=(pop||[]).length;
-  const crit=(key==='cee')?'les kWh économisés':'la contribution';
+  const crit='la contribution';
   if(key==='tous')
     return'⚠ <b>Montants « hors chiffrage »</b> — le coût unitaire est déclaré identique pour tous les bâtiments : il ne départage plus rien. Cette vue d\'ensemble ordonne donc par <b>nombre d\'objectifs servis</b>, puis par <b>rang moyen</b> au lieu du coût moyen.';
   if(key==='veg')
@@ -3498,6 +3505,11 @@ const LOTS_OBJ={th:['lotEnv'],ren:['lotChauf'],co2:['lotEnv','lotChauf'],
    saisis, pour que l'appelant retombe sur le coût complet en le sachant. */
 function coutLot(s,key){
   const L=LOTS_OBJ[key];if(!L||!s)return null;
+  /* un lot est une PART du montant complet : au-delà, ou si la somme des trois le dépasse,
+     la saisie est fausse et on revient au coût complet — alertsFor() le signale */
+  if(!(s.invVB>0))return null;
+  const tous=[+s.lotEnv||0,+s.lotChauf||0,+s.lotTech||0].filter(function(v){return v>0});
+  if(tous.some(function(v){return v>s.invVB*1.001})||tous.reduce(function(a,v){return a+v},0)>s.invVB*1.001)return null;
   let t=0,vu=0;
   for(const k of L){const v=+s[k];if(v>0){t+=v;vu++}}
   return vu?t:null}
@@ -3567,16 +3579,16 @@ function objTable(key,R,meta,bySiteId,f){
       ?' title="Déclaré identique pour tous les bâtiments en mode hors chiffrage : ce n\'est plus un critère de tri"':'')
       +' title="Ce que coûte une unité gagnée : le montant des travaux divisé par le gain annuel cumulé sur la durée de vie retenue. C\'est le critère de tri du classement, du moins cher au plus cher."'
       +'>'+((invHorsChiffrage()&&key!=='veg'&&key!=='pv')?'Coût unitaire<br>(identique)'
-        :(key==='pv'?'—':key==='cee'?('CHF/kWh<br>('+pDuree('cee')+' ans)'):key==='veg'?'CHF/m²<br>créé (tri)':'CHF/unité<br>('+pDuree(key)+' ans)'))+'</th>'+
+        :(key==='pv'?'—':key==='veg'?'CHF/m²<br>créé (tri)':'CHF/unité<br>('+pDuree(key)+' ans)'))+'</th>'+
     '<th>Alerte</th></tr></thead><tbody>';
   for(const it of rankedRows){
     const s=bySiteId[it.id];
-    const gainDisp=key==='cee'?objFmtNum(it.co2Gain,0):objFmtNum(it.gain,0);
+    const gainDisp=objFmtNum(it.gain,0);
     /* Hors chiffrage : le montant n'existe pas et le coût unitaire est le
        même pour tous. Un « = » le dit mieux qu'un nombre répété. */
     const plat=invHorsChiffrage()&&key!=='veg';
     const coutDisp=plat?'<span title="Coût unitaire déclaré identique pour tous les bâtiments : il ne départage plus le classement, qui est trié sur la seule contribution" style="color:var(--ink3)">=</span>'
-      :(key==='pv'?'—':objFmtNum(key==='cee'?it.cee:it.coutUnit,key==='cee'?3:(key==='veg'?0:4)));
+      :(key==='pv'?'—':objFmtNum(it.coutUnit,key==='veg'?0:4));
     const estimDisp=plat?'<span title="Aucun montant : le mode hors chiffrage ne lit aucune colonne financière" style="color:var(--ink3)">—</span>'
       :objFmtNum(it.estim,0);
     const _r=(it.rangAdj||it.rang);
@@ -3606,7 +3618,7 @@ function objTable(key,R,meta,bySiteId,f){
 
 function objTousTable(bySiteId,f){
   if(!OBJRANK)return'<p style="color:var(--ink3);font-style:italic">Importez Plan_PTE.xlsx pour calculer le classement par objectif.</p>';
-  const R=OBJRANK,keys=['co2','th','ren','elec','eau','cee'];
+  const R=OBJRANK,keys=['co2','th','ren','elec','eau'];
   const idxByKey={};for(const k of keys){idxByKey[k]={};for(const it of R[k].items)idxByKey[k][it.id]=it}
   const union=new Map();
   for(const k of keys)for(const it of R[k].items)if(!union.has(it.id))union.set(it.id,{id:it.id,nom:it.nom,estim:it.estim});
@@ -3617,7 +3629,7 @@ function objTousTable(bySiteId,f){
     const rangs={},gains={},franchis={};let servis=0,coutSum=0,coutN=0;
     for(const k of keys){
       const it=idxByKey[k][id];
-      if(it){rangs[k]=it.rang;gains[k]=k==='cee'?it.co2Gain:it.gain;franchis[k]=it.franchi;
+      if(it){rangs[k]=it.rang;gains[k]=it.gain;franchis[k]=it.franchi;
         /* Le CEE reprend exactement les items du thermique, avec les mêmes
            valeurs : le compter reviendrait à compter le thermique deux fois,
            dans les objectifs servis comme dans le départage. Sa colonne
@@ -3667,7 +3679,7 @@ function renR(){
   const bySiteId={};pop.forEach(s=>{bySiteId[s.id]=s});
   const f=rankFilters();
   if(key==='tous'){
-    if(note)note.innerHTML=OBJRANK?'Un bâtiment peut servir plusieurs objectifs à la fois — trié par nombre d’objectifs servis avant leur propre seuil, puis par <b>rang moyen croissant</b> sur les objectifs où il contribue. Le rang, contrairement au coût unitaire, n’a pas d’unité : il se moyenne sans mélanger des CHF/kg CO₂ avec des CHF/kWh. La colonne <b>CEE</b> reste affichée mais ne compte ni dans les objectifs servis ni dans le départage : elle reprend exactement les bâtiments et les valeurs du thermique. <b style="color:var(--ok)">Vert</b> = le bâtiment fait partie de ceux à financer pour atteindre CETTE cible précise (avant son propre seuil, « # » = son rang dans ce classement) ; <b style="color:var(--ink3)">gris</b> = après. Photovoltaïque exclu (pas de coût isolable) et végétalisation exclue (elle se classe au m² créé, pas à l’unité gagnée sur une durée de vie) — voir leurs classements dédiés.':'';
+    if(note)note.innerHTML=OBJRANK?'Un bâtiment peut servir plusieurs objectifs à la fois — trié par nombre d’objectifs servis avant leur propre seuil, puis par <b>rang moyen croissant</b> sur les objectifs où il contribue. Le rang, contrairement au coût unitaire, n’a pas d’unité : il se moyenne sans mélanger des CHF/kg CO₂ avec des CHF/kWh. Le <b>CEE</b> a été retiré des objectifs le 03.09.2026 : il portait exactement les mêmes bâtiments que le Thermique, dans le même ordre, aux mêmes coûts unitaires. Le CHF/kWh reste une <b>mesure</b> — visible dans la distribution de l\'onglet Arbitrage et dans le score composite de repli — mais ce n\'est plus un classement. <b style="color:var(--ok)">Vert</b> = le bâtiment fait partie de ceux à financer pour atteindre CETTE cible précise (avant son propre seuil, « # » = son rang dans ce classement) ; <b style="color:var(--ink3)">gris</b> = après. Photovoltaïque exclu (pas de coût isolable) et végétalisation exclue (elle se classe au m² créé, pas à l’unité gagnée sur une durée de vie) — voir leurs classements dédiés.':'';
     const jh0=$('objJauge');if(jh0)jh0.innerHTML='';
     const fw0=$('rankFlatWarn');
     if(fw0){fw0.innerHTML=invHorsChiffrage()?flatNote('tous'):'';
@@ -3681,12 +3693,10 @@ function renR(){
   if(note){
     if(!OBJRANK){note.innerHTML='Aucune cible calculée — importez <b>Plan_PTE.xlsx</b> pour activer le classement par objectif. Les bâtiments ci-dessous sont triés par score composite (classement de repli).'}
     else{
-      const gap=key==='pv'?OBJ_GAPS.pv.gapKw:(key==='cee'?OBJ_GAPS.co2.gap:OBJ_GAPS[key].gap);
+      const gap=key==='pv'?OBJ_GAPS.pv.gapKw:OBJ_GAPS[key].gap;
       const nR=R.items.length;
       const fr50='';
-      note.innerHTML=(key==='cee'
-        ?(invHorsChiffrage()?'Trié par <b>kWh économisés décroissants</b> — le coût unitaire étant déclaré identique pour tous, le CHF/kWh ne départage plus. ':'Trié par CHF/kWh croissant (référentiel actif, '+pDuree('cee')+' ans). ')+' Pas d’écart résiduel propre au CEE : cible reprise du CO₂, cumul du gain CO₂ (pas du kWh) dans cet ordre : '+objFmtNum(gap,0)+' kg CO2/an à combler. '
-        :key==='veg'
+      note.innerHTML=(key==='veg'
         ?'Trié par <b>coût du m² créé</b> croissant, du moins cher au plus cher. Ni durée de vie ni <span title="Méthode qui ramène à leur valeur d\'aujourd\'hui des gains étalés sur des années. Elle ne s\'applique pas ici : une cour désimperméabilisée crée une surface une fois pour toutes, pas un gain qui revient chaque année." style="border-bottom:1px dotted currentColor;cursor:help">actualisation</span> : on achète une surface, pas un flux annuel. Objectif 2030 : '+objFmtNum(gap,0)+' m² à créer — les surfaces de la colonne du classeur sont à créer, aucune n’est comptée comme réalisée. '
         :key==='pv'
         ?'Trié par puissance décroissante (classement d’intention, aucune donnée n’isole le coût d’une installation PV du coût de rénovation du bâtiment). Objectif : +'+objFmtNum(gap,0)+' kWc. '
@@ -3800,8 +3810,7 @@ function qualiSortKey(key){
   /* hors chiffrage, la clé du classement est la contribution : l'ajustement
      doit agir sur elle, sinon il resterait sans effet */
   if((typeof invHorsChiffrage==='function')&&invHorsChiffrage()&&key!=='veg')
-    return{f:function(it){return key==='cee'?it.kwh:it.gain},desc:true};
-  if(key==='cee')return{f:function(it){return it.cee},desc:false};
+    return{f:function(it){return it.gain},desc:true};
   return{f:function(it){return it.coutUnit},desc:false}}
 function applyQuali(items,key){
   if(!items||!items.length)return items;
@@ -3860,7 +3869,7 @@ function exclusHtml(key,bySiteId){
   /* en « Tous les objectifs » il n'y a pas UN rang : on dit sur combien
      d'objectifs le bâtiment était classable, ce qui mesure ce qu'on perd */
   const dansObj={};
-  if(tous&&OBJRANK)['co2','th','ren','elec','eau','cee'].forEach(function(k){
+  if(tous&&OBJRANK)['co2','th','ren','elec','eau'].forEach(function(k){
     if(OBJRANK[k])OBJRANK[k].items.forEach(function(it){dansObj[it.id]=(dansObj[it.id]||0)+1})});
 
   const n=ids.length,pl=n>1?'s':'';
@@ -3884,7 +3893,7 @@ function exclusHtml(key,bySiteId){
     if(tous)rangTxt=dansObj[id]?('classable sur <b>'+dansObj[id]+'</b> objectif'+(dansObj[id]>1?'s':'')):'<span style="color:var(--ink3)">non classable</span>';
     else if(it)rangTxt='<b>#'+it.rang+'</b> sur '+R.items.length+
       '<br><span style="color:var(--ink3);font-size:.66rem">'+
-      objFmtNum(key==='cee'?it.co2Gain:it.gain,0)+(meta?(' '+esc(meta.unit)):'')+'</span>';
+      objFmtNum(it.gain,0)+(meta?(' '+esc(meta.unit)):'')+'</span>';
     else rangTxt='<span style="color:var(--ink3)">non mesurable pour cet objectif</span>';
     html+='<tr><td><b>'+esc(id)+'</b></td>'+
       '<td>'+esc(s?(s.nom||''):'—')+
@@ -3975,7 +3984,7 @@ const TOUR=[
  {sel:'#gRPTxt',t:'Se limiter à un ou plusieurs portefeuilles',
   d:"Ce filtre restreint <b>tout l'outil</b> — classement, arbitrage, carte, indicateurs — au périmètre choisi. On peut cocher <b>plusieurs portefeuilles</b> : trois responsables sans les autres, par exemple, pour préparer une séance commune. Les rangs affichés restent ceux du classement global : on voit la place de ces bâtiments dans l'ensemble du parc, pas un classement interne. Aucune case cochée rétablit le parc entier."},
  {sel:'#objSel',t:'Un objectif à la fois',open:'objRankBody',panel:'rank',
-  d:"Le classement se fait objectif par objectif : CO₂, thermique, renouvelable, électricité, eau, photovoltaïque, végétalisation, coût de l'énergie économisée. Chaque bâtiment est classé par <b>coût de l'unité gagnée</b> sur la durée de vie retenue — pas par un score composite. La végétalisation fait exception : elle se classe au <b>coût du m² créé</b>, car une cour d'école n'a pas de durée de vie au sens énergétique."},
+  d:"Le classement se fait objectif par objectif : CO₂, thermique, renouvelable, électricité, eau, photovoltaïque, végétalisation. Chaque bâtiment est classé par <b>coût de l'unité gagnée</b> sur la durée de vie retenue — pas par un score composite. La végétalisation fait exception : elle se classe au <b>coût du m² créé</b>, car une cour d'école n'a pas de durée de vie au sens énergétique."},
  {sel:'#objBody tr.franchi-row, #objNote',t:'Le rang de franchissement',open:'objRankBody',panel:'rank',
   act:tourToFranchi,d:tourFranchiTxt},
  {sel:'#objJauge',t:'Deux pourcentages, une seule règle',open:'objRankBody',panel:'rank',
@@ -4010,7 +4019,7 @@ function franchiKey(){
   const cur=($('objSel')&&$('objSel').value)||'co2';
   const has=function(k){const R=OBJRANK[k];return !!(R&&R.franchiRang)};
   if(has(cur))return cur;
-  return ['co2','th','ren','elec','eau','cee'].find(has)||null}
+  return ['co2','th','ren','elec','eau'].find(has)||null}
 /* Fait défiler le conteneur du classement jusqu'à la ligne de franchissement,
    qui se trouve souvent à plusieurs centaines de lignes du haut. Bascule
    d'abord sur un objectif où cette ligne existe. */
@@ -4170,7 +4179,7 @@ const TITLES=[
  ['#k6','Somme des montants du référentiel financier actif'],
  ['#alList','Anomalies détectées dans les données — à corriger dans le classeur, pas dans l\'outil'],
  ['#cpList','Complétude des colonnes clés : un classement ne vaut que ce que valent ses données'],
- ['#gHist','Distribution du coût de l\'énergie économisée sur la durée retenue pour le CEE'],
+ ['#gHist','Distribution du coût du kWh évité sur la durée retenue — une mesure, pas un classement'],
  ['#gPie','Une barre, une part par état d\'avancement SIA — effectif et pourcentage sous la barre'],
  ['#gUF','Combien de bâtiments à chaque croisement priorité × faisabilité ; le chiffre est écrit dans la case'],
  ['#gTop','Les 20 premiers du classement de l\'objectif sélectionné, situés sur l\'axe de la valeur qui les trie'],
@@ -4247,13 +4256,13 @@ document.addEventListener('click',function(e){
 function siteRanks(id){
   const out=[];
   if(typeof OBJRANK!=='undefined'&&OBJRANK){
-    ['co2','th','ren','elec','eau','pv','cee'].forEach(function(k){
+    ['co2','th','ren','elec','eau','pv'].forEach(function(k){
       const R=OBJRANK[k];if(!R||!R.items)return;
       const adj=applyQuali(R.items,k);
       const it=adj.find(function(x){return String(x.id)===String(id)});
       if(it)out.push({k:k,lbl:(OBJ_META[k]?OBJ_META[k].lbl:k),rang:it.rangAdj||it.rang,n:adj.length,
-        gain:(k==='cee'?it.co2Gain:it.gain),unit:(OBJ_META[k]?OBJ_META[k].unit:''),
-        cout:(k==='cee'?it.cee:(k==='pv'?null:it.coutUnit))})})}
+        gain:it.gain,unit:(OBJ_META[k]?OBJ_META[k].unit:''),
+        cout:(k==='pv'?null:it.coutUnit)})})}
   return out}
 function printSite(id){
   const pop=gsPop(),s=pop.find(function(x){return String(x.id)===String(id)});
@@ -4413,7 +4422,7 @@ function drawPathYears(){
   let s='';
   for(let i=0;i<=4;i++){const py=T+(H-T-B)*i/4;
     s+='<line x1="'+L+'" y1="'+py+'" x2="'+(W-R)+'" y2="'+py+'" class="gl"/>'+txt(L-8,py+3,nf(max*(1-i/4)/1000)+' t',{a:'end',s:9,c:'#666'})}
-  yrs.forEach(function(y,i){s+=txt(x(i),H-B+16,String(y),{a:'middle',s:9,c:'#444'})});
+  yrs.forEach(function(y,i){s+=txt(x(i),H-B+16,String(y),{a:'middle',s:9,c:themeCols().ink2})});
   const path=function(arr,col,dash){let p='';arr.forEach(function(v,i){p+=(i?'L':'M')+x(i)+','+yy(v)});
     return '<path d="'+p+'" fill="none" stroke="'+col+'" stroke-width="2.4"'+(dash?' stroke-dasharray="6,4"':'')+'/>'};
   s+=path(requis,'#8a94a0',true)+path(port,'var(--red)',false);
@@ -4454,6 +4463,8 @@ function anomalies(){
     if(s.cecbRaw&&String(s.cecbRaw).indexOf('var')===0&&!(s.idcVB>0))
       out.push(['Incohérence',s.id,'variante CECB+ retenue ('+s.cecbRaw+') mais IDC projeté absent','Plan_PTE']);
     if(+s.invVB>0&&!(+s.sre>0))out.push(['Incohérence',s.id,'montant renseigné sans surface','Plan_PTE']);
+    ['lotEnv','lotChauf','lotTech'].forEach(function(k){const v=s[k];
+      if(v!=null&&!(v>0))out.push(['Donnée invalide',s.id,'colonne de lot « '+k+' » : valeur nulle, négative ou non numérique — ignorée','Plan_PTE'])});
     if(s.idcC&&s.idcVB!=null&&s.idcVB>s.idcC)
       out.push(['Incohérence',s.id,'IDC projeté ('+fmtIDC(s.idcVB)+') supérieur à l\'IDC actuel ('+fmtIDC(s.idcC)+')','Plan_PTE']);
   });
@@ -4480,7 +4491,7 @@ function renAnomalies(){
 let presOn=false;
 function tglPres(){presOn=!presOn;document.body.classList.toggle('pres-mode',presOn);
   toast(presOn?'📽️ Mode présentation — interface allégée':'Retour à l\'affichage normal','ok');
-  setTimeout(function(){try{if(window.Plotly)document.querySelectorAll('[id^=g]').forEach(function(e){Plotly.Plots.resize(e)})}catch(e){}},350)}
+  setTimeout(function(){if(typeof plotResize==='function')plotResize()},350)}
 
 /* ---------- portefeuille verrouillé -------------------------------------- */
 let LOCK=null;const LS_LOCK='pte_lock_v1';
@@ -5001,7 +5012,7 @@ function renRPF(){
   const pop=gsPop();if(!pop.length){el.innerHTML='';return}
   const top=new Set();
   if(typeof OBJRANK!=='undefined'&&OBJRANK){
-    ['co2','th','ren','elec','eau','cee'].forEach(function(k){
+    ['co2','th','ren','elec','eau'].forEach(function(k){
       const R=OBJRANK[k];if(!R||!R.items||!R.items.length)return;
       const n=Math.max(1,Math.round(R.items.length*0.2));
       applyQuali(R.items,k).slice(0,n).forEach(function(it){top.add(String(it.id))})})}
@@ -5062,7 +5073,8 @@ const QUAL_FIELDS=[
  {k:'PV',lbl:'Futur projet PV — puissance (kWc)',f:function(s){return +s.pvKwc>0},
   eff:'objectif photovoltaïque non calculable'},
  {k:'CO2P',lbl:'CO2 projeté [kg/m2.an]',f:function(s){return s.co2Proj!=null},
-  eff:'à défaut, le CO₂ est estimé par <span title="Quantité de CO₂ rejetée pour chaque unité d\'énergie consommée. Elle dépend de l\'agent de chauffage, et c\'est pourquoi changer d\'agent fait baisser les émissions même quand la consommation, elle, ne bouge pas." style="border-bottom:1px dotted currentColor;cursor:help">facteur d\'émission</span>'},
+  eff:'à défaut, le CO₂ est estimé par facteur d\'émission',
+  tip:'Facteur d\'émission : quantité de CO₂ rejetée pour chaque unité d\'énergie consommée. Elle dépend de l\'agent de chauffage, et c\'est pourquoi changer d\'agent fait baisser les émissions même quand la consommation, elle, ne bouge pas.'},
  {k:'GPS',lbl:'Latitude / Longitude',f:function(s){return s.lat!=null&&s.lng!=null},
   eff:'le bâtiment n\'apparaît pas sur la carte'}];
 function renQual(){
@@ -5084,7 +5096,7 @@ function renQual(){
     h+='<tr><td><b>'+esc(r.F.lbl)+'</b></td><td class="num">'+nf(r.miss)+'</td>'+
        '<td style="min-width:120px"><div class="qual-bar"><i style="width:'+cov+'%;background:'+(cov>=80?'#1E8449':cov>=50?'#e8a838':'var(--red)')+'"></i></div><span class="mini">'+cov+' %</span></td>'+
        '<td class="num" style="font-weight:800;color:'+(r.unlock>0?'var(--red)':'var(--ink3)')+'">'+(r.unlock>0?('+'+nf(r.unlock)):'—')+'</td>'+
-       '<td class="mini">'+esc(r.F.eff)+'</td></tr>'});
+       '<td class="mini"'+(r.F.tip?(' title="'+esc(r.F.tip)+'" style="cursor:help"'):'')+'>'+esc(r.F.eff)+'</td></tr>'});
   h+='</tbody></table><p class="mini" style="margin-top:6px">« Débloquerait » = nombre de bâtiments à qui il ne manque <b>que cette colonne</b> pour être classables. Ce sont les saisies les plus rentables : une cellule remplie, un bâtiment qui entre dans les classements.</p>';
   el.innerHTML=h}
 
@@ -5096,7 +5108,7 @@ function snapSave(){
   if(typeof OBJRANK==='undefined'||!OBJRANK){toast('Importez d\'abord le fichier','wr');return}
   const d=new Date(),lbl=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear()+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
   const snap={t:Date.now(),lbl:lbl,file:lastFileName||'',r:{}};
-  ['co2','th','ren','elec','eau','pv','cee'].forEach(function(k){
+  ['co2','th','ren','elec','eau','pv'].forEach(function(k){
     const R=OBJRANK[k];if(!R||!R.items)return;
     const m={};applyQuali(R.items,k).forEach(function(it){m[it.id]=it.rangAdj||it.rang});
     snap.r[k]=m});
@@ -5274,7 +5286,10 @@ function addTileLayer(idx,opts){
   }
 
   tileLayer.on('tileload',function(){loadedAnyTile=true;patchTileImages()});
-  tileLayer.on('load',function(){loadedAnyTile=true;setTileStatus('tile-ok','✅ '+p.name);$('mapWarn').textContent='';patchTileImages()});
+  /* « load » se déclenche aussi quand TOUTES les tuiles ont échoué : ne dire ✅ que si une tuile est arrivée */
+  tileLayer.on('load',function(){if(loadedAnyTile){setTileStatus('tile-ok','✅ '+p.name);$('mapWarn').textContent=''}
+    else{setTileStatus('tile-err','❌ '+p.name+' — aucune tuile reçue');$('mapWarn').textContent='⚠️ Aucun fond de carte reçu (réseau ou proxy). Les repères des bâtiments restent affichés sur fond neutre.'}
+    patchTileImages()});
   tileLayer.on('tileerror',function(){errCount++;if(errCount>=8&&!loadedAnyTile)fallbackOnce('erreurs de chargement')});
   tileLayer.addTo(lMap);
 
@@ -5967,7 +5982,7 @@ function drawTrend(){
   let g='';
   for(let i=0;i<=4;i++){const yy=T+(H-T-B)*i/4;
     g+='<line x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'" class="gl"/>'+txt(L-8,yy+3,nf(max*(1-i/4)),{a:'end',s:9,c:'#666'})}
-  yrs.forEach(function(yr,i){g+=txt(x(i),H-B+16,String(yr),{a:'middle',s:9,c:'#444'})});
+  yrs.forEach(function(yr,i){g+=txt(x(i),H-B+16,String(yr),{a:'middle',s:9,c:themeCols().ink2})});
   series.forEach(function(s){
     let p='',last=null;
     yrs.forEach(function(yr,i){
@@ -6062,7 +6077,7 @@ function drawMaccSimple(L){
     g+='<rect x="'+(Lm+x+4)+'" y="'+y+'" width="'+(bw-8)+'" height="'+Math.max(1,hh)+'" fill="'+col+'" rx="3" opacity=".9">'+
        '<title>'+maccBandLbl(o.b)+' CHF/t·an — '+o.n+' bâtiment(s) · '+nf(o.t)+' t/an évitées · '+nf(o.c/1e6,1)+' M CHF</title></rect>';
     g+=txt(Lm+x+bw/2,y-5,nf(o.t)+' t',{a:'middle',s:9,w:700,c:'#333'});
-    g+=txt(Lm+x+bw/2,H-B+14,maccBandLbl(o.b),{a:'middle',s:9,c:'#444'});
+    g+=txt(Lm+x+bw/2,H-B+14,maccBandLbl(o.b),{a:'middle',s:9,c:themeCols().ink2});
     g+=txt(Lm+x+bw/2,H-B+27,o.n+' bât.',{a:'middle',s:8,c:'#888'});
     g+=txt(Lm+x+bw/2,H-B+40,nf(o.c/1e6,1)+' M',{a:'middle',s:8,c:'#888'});
     x+=bw});
@@ -6131,17 +6146,7 @@ function drawMaccTbl(){
 
 
 
-function exportSel(){
-  if(!RES||!RES.sel.length){toast('Aucune sélection à exporter','wr');return}
-  let c='N°;Site;Politique publique;Coût CHF;Année;CO2 kg/an;Thermique kWh/an;Élec kWh/an (legacy);Eau m3/an (legacy);CHF par t/an;Alertes\n';
-  RES.sel.slice().sort(function(x,y){return (x.yr-y.yr)||(y.ratio-x.ratio)}).forEach(function(s){
-    const g=G(s);
-    c+=[s.id,'"'+s.nom.replace(/"/g,'""')+'"','"'+s.pol.replace(/"/g,'""')+'"',
-        Math.round(s.c),s.yr,Math.round(g.co),Math.round(g.th),Math.round(g.el),Math.round(g.ea),
-        g.co>0?Math.round(s.c/(g.co/1000)):'','"'+s.alerts.join(' ; ').replace(/"/g,'""')+'"'].join(';')+'\n'});
-  const b=new Blob(['﻿'+c],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(b),l=document.createElement('a');
-  l.href=u;l.download='PTE_portefeuille_'+new Date().toISOString().slice(0,10)+'.csv';l.click();URL.revokeObjectURL(u);
-  toast('✓ '+RES.sel.length+' bâtiments exportés','ok')}
+/* exportSel() supprimé le 03.09.2026 (soir) : aucun appelant, et seul export CSV qui n'échappait pas les formules. */
 
 
 
