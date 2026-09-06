@@ -277,10 +277,30 @@ est non fossile en base et fossile à l'appoint — et un verdict binaire l'aura
 travers dans les deux sens. Depuis le 04.09.2026, ⚙️ porte donc un réglage : **la part de la
 chaleur produite par la PAC, en pourcent**. Une substitution vers `PAC+Gaz` compte alors comme
 gain renouvelable à hauteur de cette part, et la ligne du classement affiche la convention
-retenue. **Le réglage est livré vide**, et tant qu'il l'est `PAC+Gaz` reste traité comme fossile —
-le comportement d'avant, mais assumé au lieu d'être une incohérence silencieuse. Ordre de
-grandeur de l'enjeu : à 80 %, quatorze bâtiments entrent au classement Renouvelable et le gain
-passe de 37 à 48 GWh.
+retenue. **La valeur est fixée à 80 % PAC / 20 % gaz** depuis le 04.09.2026 : quatorze
+substitutions du parc entrent ainsi au classement Renouvelable — 92 → 106 bâtiments, 37 → 48 GWh.
+Vider la case remet `PAC+Gaz` en fossile et la substitution ne compte alors plus du tout.
+
+## Deux comptabilités carbone, et le menu qui les commande
+
+Le menu **CO₂** de la ligne de contexte choisit sur quelle comptabilité tout le CO₂ est calculé :
+
+- **contenu carbone mesuré** *(défaut)* — les émissions du fichier, réseaux de chaleur compris ;
+- **convention légale** — réseaux de chaleur, bois, pompes à chaleur et solaire comptés à **zéro
+  émission**, à l'état actuel comme à l'état projeté.
+
+Le choix n'est pas cosmétique : sur le parc réel il fait passer le gain CO₂ du classement de
+3 387 à 4 496 tonnes (+33 %) et rebat l'ordre du premier rang au dernier. Sous la convention
+légale, un raccordement à venir efface la totalité des émissions du bâtiment et devient
+**imbattable au coût de la tonne**, alors même que la charge d'exploitation augmente ; à
+l'inverse, un bâtiment déjà sur un agent neutre n'a plus rien à gagner. C'est ce que dit la
+convention, pas ce que mesurent les compteurs — un bandeau le rappelle en tête du classement dès
+qu'elle est active.
+
+> **Corrigé le 04.09.2026.** Jusque-là ce menu n'agissait que sur le prix de la tonne évitée de
+> l'onglet Arbitrage : le classement CO₂ était calculé sur les facteurs bruts quelle que soit la
+> convention choisie, et basculer le sélecteur ne déplaçait pas une ligne. Deux moteurs CO₂
+> indépendants coexistaient ; ils n'en font plus qu'un.
 
 ## Les pompes à chaleur : la chaleur livrée et l'électricité achetée
 

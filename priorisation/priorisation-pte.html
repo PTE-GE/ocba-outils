@@ -745,7 +745,7 @@ body.night .tblx td>.bt-i{background:none;color:var(--acc)}
 <div class="pset-in">
 <div class="pop-h" style="margin:0 0 3px">Le <b>SCOP</b> ne se règle pas ici : il se saisit bâtiment par bâtiment dans la colonne <code>SCOP PAC [-]</code> du <code>Plan_PTE</code>, parce qu'une PAC sur sonde et une PAC air/eau n'ont pas le même. L'outil affiche l'électricité d'entrée dès qu'un bâtiment porte la sienne.</div>
 <label class="pop-l">Part de la chaleur produite par la PAC dans une installation <code>PAC+Gaz</code> (%)</label>
-<input id="pPacGaz" type="number" min="0" max="100" step="5" class="pop-in" placeholder="non fixée — PAC+Gaz reste fossile" title="Une installation bivalente est non fossile en base et fossile à l'appoint. Tant que cette case est vide, une substitution vers PAC+Gaz ne compte pas comme un gain renouvelable — le comportement actuel. Y mettre une valeur fait entrer 72 substitutions du parc dans le classement Renouvelable, à hauteur de cette part.">
+<input id="pPacGaz" type="number" min="0" max="100" step="5" class="pop-in" placeholder="vide — PAC+Gaz redevient fossile" title="Part de la chaleur produite par la PAC dans une installation bivalente PAC+Gaz — 80 % par défaut, valeur fixée le 04.09.2026. Une substitution vers PAC+Gaz compte pour cette part au classement Renouvelable. Vider la case remet PAC+Gaz en fossile : la substitution ne compte alors plus du tout.">
 </div></details>
 
 <details class="pset"><summary>☀️ Photovoltaïque</summary>
@@ -1193,7 +1193,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 </div>
 </div>
 
-<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v04.09.2026b</div>
+<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v04.09.2026c</div>
 <script>
 /* ================================================================
    NOYAU COMMUN — état, persistance, pondérations
@@ -1684,8 +1684,15 @@ function onCo2ConvChange(){
   const el=$('gCo2');if(!el)return;
   co2Conv=el.value;
   const t=$('gCo2Txt');if(t)t.textContent=co2ConvDef().short;
-  dataVersion++;saveState();ren();
-  toast('🌍 Comptabilité carbone : '+co2ConvDef().short,'nf')}
+  dataVersion++;saveState();
+  /* ren() seul ne suffisait pas : le classement des objectifs vit dans
+     OBJRANK, que seul computeObjRanking() reconstruit, et l'optimiseur
+     dans buildOpt(). Sans ces deux appels, changer de convention ne
+     changeait rien à l'écran — le défaut signalé par Achim. Le menu
+     « Montants » les appelait déjà, celui-ci ne les appelait pas. */
+  computeObjRanking();buildOpt();ren();renR();
+  const R=(typeof OBJRANK!=='undefined'&&OBJRANK&&OBJRANK.co2)?OBJRANK.co2.items.length:0;
+  toast('🌍 Comptabilité carbone : '+co2ConvDef().short+' — '+R+' bâtiment(s) au classement CO₂','nf')}
 
 /* ---------- part électrique des émissions ----------
    La colonne CO₂ du fichier englobe déjà le chauffage ET l'électricité :
@@ -2377,12 +2384,12 @@ const DUREE_OBJ=[
 /* pacGazPart — part de la chaleur d'une installation PAC+Gaz produite par
    la PAC, en pourcent. Décision d'Achim du 04.09.2026 : PAC+Gaz mérite une
    part conventionnelle et non un verdict binaire, une bivalence étant non
-   fossile en base et fossile à l'appoint. LA VALEUR RESTE À FIXER : null
-   tant qu'Achim ne l'a pas donnée, et tant qu'elle est nulle PAC+Gaz est
-   traité comme fossile — le comportement actuel, mais assumé au lieu d'être
-   une incohérence entre le moteur et le filtre. 72 substitutions du parc
-   vont vers PAC+Gaz : la valeur déplacera fortement le classement. */
-const PARAMS_DEF={duree:40,pvProd:950,cibleKwh30:97,cibleKwh50:63,plancher:50,dureeObj:{},pacGazPart:null};
+   fossile en base et fossile à l'appoint. VALEUR FIXÉE PAR ACHIM le
+   04.09.2026 : 80 % PAC, 20 % gaz. Une substitution vers PAC+Gaz compte
+   donc pour 80 % de la consommation du bâtiment au classement Renouvelable.
+   72 substitutions du parc vont vers PAC+Gaz : la valeur pèse lourd, et
+   elle reste modifiable dans ⚙️ — vider la case remet PAC+Gaz en fossile. */
+const PARAMS_DEF={duree:40,pvProd:950,cibleKwh30:97,cibleKwh50:63,plancher:50,dureeObj:{},pacGazPart:80};
 let PARAMS=Object.assign({},PARAMS_DEF);
 /* pDuree(k) : la durée de l'objectif k s'il en a une, sinon la valeur
    générale. Appelée sans argument, elle rend la valeur générale — tous les
@@ -2542,11 +2549,11 @@ function paramsApply(){
   try{if(_lastXlsxSheets){const g=computeGapsObj(_lastXlsxSheets);if(g)OBJ_GAPS=g}}catch(e){}
   computeObjRanking();buildOpt();ren();runOpt();
   toast('⚙️ Durée de vie : '+dureeTxt()+' · productible PV : '+pv+' kWh/kWc · cibles '+k30+' / '+k50+' kWh/m²·an','ok')}
-function paramsReset(){PARAMS=Object.assign({},PARAMS_DEF,{dd:{},dureeObj:{},pacGazPart:null});CIBLE_MJ_M2_OBJ=pCible30()*3.6;
+function paramsReset(){PARAMS=Object.assign({},PARAMS_DEF,{dd:{},dureeObj:{}});CIBLE_MJ_M2_OBJ=pCible30()*3.6;
   $('pDur').value=PARAMS.duree;$('pPv').value=PARAMS.pvProd;
   $('pK30').value=PARAMS.cibleKwh30;$('pK50').value=PARAMS.cibleKwh50;
   DUREE_OBJ.forEach(function(o){const el=$('dur_'+o.k);if(el)el.value=''});
-  {const e=$('pPacGaz');if(e)e.value=''}
+  {const e=$('pPacGaz');if(e)e.value=(PARAMS_DEF.pacGazPart==null?'':PARAMS_DEF.pacGazPart)}
   paramsApply()}
 document.addEventListener('click',function(){const p=$('parPop');if(p)p.classList.remove('on')});
 
@@ -2753,7 +2760,25 @@ function plausibleObj(estim,sre){
    directement les champs déjà présents sur chaque site (S), y compris
    idcVB déjà corrigé pour la variante CECB+ réellement retenue */
 function buildContributionsObj(sites,coFactors){
-  const fget=ciLookupObj(coFactors);
+  const fgetBrut=ciLookupObj(coFactors);
+  /* ── LA CONVENTION COMPTABLE S'APPLIQUE ICI AUSSI ──────────────────
+     Jusqu'au 04.09.2026 elle ne s'appliquait qu'à tonsAvoided() : le
+     classement CO₂, qui est le résultat que tout le monde lit, était
+     calculé sur les facteurs bruts quelle que soit la convention
+     choisie. Basculer le sélecteur ne déplaçait pas une ligne. Le
+     défaut était signalé par Achim.
+     Sous « convention légale », les agents que la loi tient pour
+     neutres (réseau de chaleur, bois, PAC, solaire) valent zéro
+     émission — à l'état actuel du bâtiment comme à l'état projeté.
+     Conséquence assumée et volontairement visible : un bâtiment déjà
+     raccordé n'a plus rien à gagner et sort du classement, tandis
+     qu'un raccordement à venir efface la totalité des émissions et
+     devient imbattable. C'est ce que dit la convention ; l'outil ne la
+     corrige pas, il l'affiche. */
+  const fget=function(a){
+    const f=fgetBrut(a);
+    if(co2Conv==='legal'&&f!=null&&CO2_NEUTRAL[co2Agent({ht:a})])return 0;
+    return f};
   const out={co2:[],th:[],ren:[],elec:[],eau:[],pv:[],veg:[]};
   for(const s of sites){
     /* Le coût retenu est celui du RÉFÉRENTIEL ACTIF (menu « Montants »),
@@ -3646,6 +3671,23 @@ function hpCandidats(){
         (out[it.id]=out[it.id]||{id:it.id,nom:s.nom,obj:[],gain:{}}).obj.push({k:kk,rang:it.rang});
         out[it.id].gain[kk]=it.gain})});
   _hpKey=k;_hpCache=Object.values(out);return _hpCache}
+/* Le classement CO₂ doit dire sur quelle comptabilité il est bâti : deux
+   conventions donnent deux classements, et lire l'un en croyant lire
+   l'autre est la pire des erreurs possibles ici. */
+function convNote(key){
+  if(key!=='co2'&&key!=='tous')return'';
+  if(co2Conv!=='legal')return'';
+  const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
+  const n=(pop||[]).filter(function(s){return CO2_NEUTRAL[co2Agent(s)]}).length;
+  return '<div class="part-warn">🌍 <b>Convention légale active.</b> '+
+    'Réseaux de chaleur, bois, pompes à chaleur et solaire sont comptés à '+
+    '<b>zéro émission</b>, à l\'état actuel comme à l\'état projeté. '+
+    'Deux effets à connaître avant de citer ce classement : les <b>'+n+'</b> bâtiments '+
+    'déjà sur un de ces agents n\'ont plus rien à gagner et en sortent ; '+
+    'un raccordement à venir efface la totalité des émissions et devient '+
+    '<b>imbattable au coût de la tonne</b>, alors même que la charge d\'exploitation augmente. '+
+    'C\'est ce que dit la convention, pas ce que mesurent les compteurs — '+
+    'le menu <b>CO₂</b> de la ligne de contexte revient au contenu carbone mesuré.</div>'}
 function hpNote(key){
   if(typeof OBJRANK==='undefined'||!OBJRANK)return'';
   const L=hpCandidats();if(!L.length)return'';
@@ -3885,7 +3927,7 @@ function renR(){
     const ha0=$('objAttrib');if(ha0)ha0.innerHTML='';
     const hq0=$('objPac');if(hq0)hq0.innerHTML='';return}
   _servisCache=null;
-  const ha=$('objAttrib');if(ha)ha.innerHTML=hpNote(key);
+  const ha=$('objAttrib');if(ha)ha.innerHTML=convNote(key)+hpNote(key);
   const hq=$('objPac');if(hq)hq.innerHTML=pacNote(key);
   const hp=$('objPartage');if(hp)hp.innerHTML=partageNote(key);
   const bySiteId={};pop.forEach(s=>{bySiteId[s.id]=s});
@@ -3897,7 +3939,7 @@ function renR(){
     if(fw0){fw0.innerHTML=invHorsChiffrage()?flatNote('tous'):'';
       fw0.style.display=invHorsChiffrage()?'block':'none'}
     const hx1=$('objExclus');if(hx1)hx1.innerHTML=exclusHtml('tous',bySiteId);
-    const ha1=$('objAttrib');if(ha1)ha1.innerHTML=hpNote('tous');
+    const ha1=$('objAttrib');if(ha1)ha1.innerHTML=convNote('tous')+hpNote('tous');
     const hq1=$('objPac');if(hq1)hq1.innerHTML='';
     const hp1=$('objPartage');if(hp1)hp1.innerHTML=partageNote('tous');
     box.innerHTML=objTousTable(bySiteId,f);
