@@ -1193,7 +1193,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 </div>
 </div>
 
-<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v04.09.2026c</div>
+<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v07.09.2026</div>
 <script>
 /* ================================================================
    NOYAU COMMUN — état, persistance, pondérations
@@ -4876,11 +4876,17 @@ function themeCols(){
 
 /* ---------- les 7 indicateurs ---------- */
 const IND=[
+ /* Ordre voulu par Achim, 07.09.2026 : CO₂, thermique et renouvelable sont
+    liés par les mêmes mesures et le même argent — une rénovation CECB+ avec
+    substitution de chaufferie produit les trois d'un coup. Ils se lisent donc
+    à la suite, avant électricité et eau qui relèvent d'autres travaux et
+    d'autres lots. C'est aussi l'ordre du menu de l'onglet Classement : les
+    tuiles s'y alignent au lieu de le contredire. */
  {k:'co2' ,lbl:'CO₂'            ,unit:'t/an'            ,div:1000,dec:0},
  {k:'th'  ,lbl:'Thermique'      ,unit:'GWh/an'          ,div:1e6 ,dec:1},
+ {k:'ren' ,lbl:'Renouvelable'   ,unit:'% du thermique'  ,div:1   ,dec:1,part:true},
  {k:'elec',lbl:'Électricité'    ,unit:'GWh/an'          ,div:1e6 ,dec:1},
  {k:'eau' ,lbl:'Eau'            ,unit:'m³/an'           ,div:1   ,dec:0},
- {k:'ren' ,lbl:'Renouvelable'   ,unit:'% du thermique'  ,div:1   ,dec:1,part:true},
  {k:'pv'  ,lbl:'Photovoltaïque' ,unit:"% de l'électricité",div:1  ,dec:1,part:true},
  /* La végétalisation n'a plus sa tuile : elle est devenue le volet le plus
     lourd (60 %) de l'indice développement durable, et se lit là. Son
