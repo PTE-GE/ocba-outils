@@ -396,6 +396,10 @@ body.night svg text{fill:var(--ink2)}
    portent l'accent ; les autres restent un constat en gris. */
 .hp-chip.hp-plat{background:transparent;color:var(--ink3);font-weight:400;
   border:1px solid var(--bd);padding:0 4px}
+/* « == » : maintien de l'agent actuel, pas une substitution. */
+.eq-chip{display:inline-block;padding:1px 7px;border-radius:6px;font-size:.72rem;
+  font-weight:700;font-family:ui-monospace,SFMono-Regular,monospace;
+  background:var(--soft);color:var(--ink2);border:1px solid var(--bd);cursor:help}
 /* l'électricité d'entrée d'une PAC : une information, pas une alerte —
    sauf quand elle manque, et alors c'est une saisie à faire */
 .pac-chip{display:inline-block;padding:0 5px;border-radius:9px;font-size:.6rem;font-weight:700;
@@ -1193,7 +1197,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 </div>
 </div>
 
-<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v07.09.2026</div>
+<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v08.09.2026b</div>
 <script>
 /* ================================================================
    NOYAU COMMUN — état, persistance, pondérations
@@ -1872,6 +1876,13 @@ if(!p||p==='Non protégé')return'<span style="color:var(--ink3)" title="Non pro
 function subBg(v){
   const t=String(v||'').trim();
   if(!t)return'<span class="bg" style="background:#bbb" title="Substitution non renseignée">?</span>';
+  /* « == » : la substitution reprend le premier agent de la colonne « Agent ».
+     Le chauffage ne change pas — ce n'est pas une substitution, c'est un
+     maintien. Le signe se repère d'un coup d'œil dans une colonne de noms
+     d'agents, là où un « Gaz » répété passerait inaperçu. Écrit ainsi dans le
+     classeur depuis le 08.09.2026, il s'affiche ainsi ici. */
+  if(t==='==')
+    return'<span class="eq-chip" title="La substitution prévue reprend le premier agent de la colonne « Agent » du classeur : le chauffage ne change pas. Ce n\'est donc pas une substitution, et le bâtiment ne produit aucun gain renouvelable à ce titre.">==</span>';
   if(SUBST_NULLE_OBJ.has(t))
     return'<span class="bg" style="background:#5F6A6B" title="'+esc(t)+' — aucune substitution d\'agent, donc aucun gain de décarbonation attribué">— '+esc(t.length>16?t.slice(0,15)+'…':t)+'</span>';
   return hBg(t)}
@@ -2266,7 +2277,7 @@ function parseCSVtoRows(t){const fl=t.split('\n')[0]||'';const sep=(fl.split(';'
 
 function importFromRows(rows,includeAll){
   if(rows.length<2)return[];const h=rows[0].map(v=>String(v||'').trim());
-  const c={id:fc(h,['N° sous site','nsoussite','N°soussite','N°']),nom:fc(h,['Nom du site_AB','Nomdusite','Nom du site']),adr:fc(h,['Adresse','Adresse du site','Lieu']),coeff:fc(h,['Coeff Stratus','CoeffStratus']),sre:fc(h,['SRE']),sreCorr:fc(h,['SRE corrigée (temp)','SRE corrigée','SREcorrigée']),idcC:fc(h,['IDC [kWh]']),idcCorr:fc(h,['IDC corrigé (temp) [kWh]','IDC corrigé','IDCcorrigé','IDC corrige']),agent:fc(h,['Agent']),pat:fc(h,['Classement au Patrimoine','Patrimoine']),elec:fc(h,['Conso Elec 2025 - kWh2','Conso Elec 2025','Conso Elec 2024 - kWh','Conso Elec','ConsoElec']),eau:fc(h,['Conso Eau 2025 - m3','Conso Eau 2025','Conso Eau 2024 - m3','Conso Eau','ConsoEau']),consoTherm:fc(h,['CONSO [kWh]','CONSO kWh','Conso totale [kWh]']),pol:fc(h,['Politique publique_AB','Politique publique']),co2:fc(h,['Co2 2025','Co2 2024','kgCo2','Co2']),clIDC:fc(h,['Classe IDC','ClasseIDC']),clVet:fc(h,['Classe Vétusté','ClasseVetuste']),fp:fc(h,['Facteur protection','Facteurprotection']),ti:fc(h,["Type d'intervention","TypeIntervention","Type_intervention","Typeintervention","Type intervention"]),rp:fc(h,['Responsables Portefeuille','Responsable Portefeuille','ResponsablesPortefeuille','Resp Portefeuille','Portefeuille','RP']),drt:fc(h,['Responsable DRT/DCO','Responsable DRT DCO','ResponsableDRTDCO','Responsable projet','Resp projet','DRT']),cecb:fc(h,['Audit CECB','AuditCECB']),ht:fc(h,['Chauffage Type Energie','ChauffageTypeEnergie','Chauffage Type']),hsub:fc(h,['Chauffage de subsitution','Chauffage de substitution','substitution']),idcpA:fc(h,['IDC projeté VA [kWh]','IDC projeté VA']),gainElecProj:fc(h,['Gain Elec projeté [kWh/an]','Gain Elec projeté']),gainEauProj:fc(h,['Gain Eau projeté [m3/an]','Gain Eau projeté']),co2Proj:fc(h,['CO2 projeté [kg/m2.an]','CO2 projeté [kgCO2/an]','CO2 projeté']),idceProj:fc(h,['IDE projeté [kWh]','IDE projeté']),renAct:fc(h,['Part renouvelable actuelle [%]','Part renouvelable actuelle']),renFut:fc(h,['Part renouvelable après projet [%]']),pvExist:fc(h,['PV existant - puissance [kWc]']),pvProd:fc(h,['PV existant - production [kWh/an]']),anneeIDC:fc(h,['Année IDC (dernière)']),ddEng:fc(h,['Montant DD engagé [CHF]']),ddPrev:fc(h,['Montant DD prévu [CHF]']),
+  const c={id:fc(h,['N° sous site','nsoussite','N°soussite','N°']),nom:fc(h,['Nom du site_AB','Nomdusite','Nom du site']),adr:fc(h,['Adresse','Adresse du site','Lieu']),coeff:fc(h,['Coeff Stratus','CoeffStratus']),sre:fc(h,['SRE']),sreCorr:fc(h,['SRE corrigée (temp)','SRE corrigée','SREcorrigée']),idcC:fc(h,['IDC [kWh]']),idcCorr:fc(h,['IDC corrigé (temp) [kWh]','IDC corrigé','IDCcorrigé','IDC corrige']),agent:fc(h,['Agent']),pat:fc(h,['Classement au Patrimoine','Patrimoine']),elec:fc(h,['Conso Elec 2025 - kWh2','Conso Elec 2025','Conso Elec 2024 - kWh','Conso Elec','ConsoElec']),eau:fc(h,['Conso Eau 2025 - m3','Conso Eau 2025','Conso Eau 2024 - m3','Conso Eau','ConsoEau']),consoTherm:fc(h,['CONSO [kWh]','CONSO kWh','Conso totale [kWh]']),pol:fc(h,['Politique publique_AB','Politique publique']),co2:fc(h,['Co2 2025','Co2 2024','kgCo2','Co2']),clIDC:fc(h,['Classe IDC','ClasseIDC']),clVet:fc(h,['Classe Vétusté','ClasseVetuste']),fp:fc(h,['Facteur protection','Facteurprotection']),ti:fc(h,["Type d'intervention","TypeIntervention","Type_intervention","Typeintervention","Type intervention"]),rp:fc(h,['Responsables Portefeuille','Responsable Portefeuille','ResponsablesPortefeuille','Resp Portefeuille','Portefeuille','RP']),drt:fc(h,['Responsable DRT/DCO','Responsable DRT DCO','ResponsableDRTDCO','Responsable projet','Resp projet','DRT']),cecb:fc(h,['Audit CECB','AuditCECB']),ht:fc(h,['Chauffage Type Energie','ChauffageTypeEnergie','Chauffage Type']),hsub:fc(h,['Chauffage de subsitution','Chauffage de substitution','substitution']),idcpA:fc(h,['IDC projeté VA [kWh]','IDC projeté VA']),gainElecProj:fc(h,['Gain Elec projeté [kWh/an]','Gain Elec projeté']),consoElecProj:fc(h,['Conso élec projetée [kWh/an]','Conso elec projetee [kWh/an]','Conso élec projetée en kWh (MDS)','Conso élec projetée']),gainEauProj:fc(h,['Gain Eau projeté [m3/an]','Gain Eau projeté']),co2Proj:fc(h,['CO2 projeté [kg/m2.an]','CO2 projeté [kgCO2/an]','CO2 projeté']),idceProj:fc(h,['IDE projeté [kWh]','IDE projeté']),renAct:fc(h,['Part renouvelable actuelle [%]','Part renouvelable actuelle']),renFut:fc(h,['Part renouvelable après projet [%]']),pvExist:fc(h,['PV existant - puissance [kWc]']),pvProd:fc(h,['PV existant - production [kWh/an]']),anneeIDC:fc(h,['Année IDC (dernière)']),ddEng:fc(h,['Montant DD engagé [CHF]']),ddPrev:fc(h,['Montant DD prévu [CHF]']),
     ddToitVeg:fc(h,['DD Toiture végétalisée réalisée [m2]','Toiture Végétalisée Surf m2']),
     ddToitType:fc(h,['Toiture Principale Type']),ddToitSurf:fc(h,['Surface toiture brute estimée (m2)']),
     ddPerm:fc(h,['Indicateur Biodiversité 1 Surface perméabilisée ajoutée (m2)','Surface perméabilisée ajoutée (m2)']),
@@ -2339,7 +2350,7 @@ function importFromRows(rows,includeAll){
      build_priorisation.py (`numv(r,"SRE") or numv(r,"SRE corrigée (temp)")`). */
   const sreVal=pn(gvr(R,c.sre))||pn(gvr(R,c.sreCorr));
   const idcCVal=pn(gvr(R,c.idcC))||pn(gvr(R,c.idcCorr));
-  sites.push({id,nom:(gv(R,c.nom)||'').replace(/\s*-\s*\(.*/,'').substring(0,55),adr:gv(R,adrCol),rp:rpV.trim(),drt:(gv(R,c.drt)||'').trim(),coeff,sre:sreVal,idcC:idcCVal,pat:gv(R,c.pat)||'',fp:pn(gvr(R,c.fp)),ti:pn(gvr(R,c.ti)),clIDC:pn(gvr(R,c.clIDC)),clVet:pn(gvr(R,c.clVet)),elec:pn(gvr(R,c.elec)),eau:pn(gvr(R,c.eau)),consoTherm:pn(gvr(R,c.consoTherm)),co2:pn(gvr(R,c.co2)),ht:htVal,htPrin:htPrinVal,hsub:gv(R,c.hsub),cecbRaw:cecbRaw,cecbSt:cecbSt,cecb:CECB_DEF[cecbSt].pts===33,etat:(gv(R,c.etat)||'').trim(),idcVB:pn(gvr(R,idcpColF)),invEstim:pn(gvr(R,c.invEstim)),invImmOBA:pn(gvr(R,c.invVB)),invGE:pn(gvr(R,c.invGE)),invDG:pn(gvr(R,c.invDG)),invVB:pn(gvr(R,c.invVB)),gainElecMax:pn(gvr(R,c.gainElec)),gainEauMax:pn(gvr(R,c.gainEau)),pol:(gv(R,c.pol)||'').trim(),gainElecProj:pn(gvr(R,c.gainElecProj)),gainEauProj:pn(gvr(R,c.gainEauProj)),co2Proj:pn(gvr(R,c.co2Proj)),ideProj:pn(gvr(R,c.idceProj)),renAct:pn(gvr(R,c.renAct)),renFut:pn(gvr(R,c.renFut)),pvExist:pn(gvr(R,c.pvExist)),pvProd:pn(gvr(R,c.pvProd)),anneeIDC:pn(gvr(R,c.anneeIDC)),ddEng:pn(gvr(R,c.ddEng)),ddPrev:pn(gvr(R,c.ddPrev)),
+  sites.push({id,nom:(gv(R,c.nom)||'').replace(/\s*-\s*\(.*/,'').substring(0,55),adr:gv(R,adrCol),rp:rpV.trim(),drt:(gv(R,c.drt)||'').trim(),coeff,sre:sreVal,idcC:idcCVal,pat:gv(R,c.pat)||'',fp:pn(gvr(R,c.fp)),ti:pn(gvr(R,c.ti)),clIDC:pn(gvr(R,c.clIDC)),clVet:pn(gvr(R,c.clVet)),elec:pn(gvr(R,c.elec)),eau:pn(gvr(R,c.eau)),consoTherm:pn(gvr(R,c.consoTherm)),co2:pn(gvr(R,c.co2)),ht:htVal,htPrin:htPrinVal,hsub:gv(R,c.hsub),cecbRaw:cecbRaw,cecbSt:cecbSt,cecb:CECB_DEF[cecbSt].pts===33,etat:(gv(R,c.etat)||'').trim(),idcVB:pn(gvr(R,idcpColF)),invEstim:pn(gvr(R,c.invEstim)),invImmOBA:pn(gvr(R,c.invVB)),invGE:pn(gvr(R,c.invGE)),invDG:pn(gvr(R,c.invDG)),invVB:pn(gvr(R,c.invVB)),gainElecMax:pn(gvr(R,c.gainElec)),gainEauMax:pn(gvr(R,c.gainEau)),pol:(gv(R,c.pol)||'').trim(),gainElecProj:pn(gvr(R,c.gainElecProj)),consoElecProj:pn(gvr(R,c.consoElecProj)),gainEauProj:pn(gvr(R,c.gainEauProj)),co2Proj:pn(gvr(R,c.co2Proj)),ideProj:pn(gvr(R,c.idceProj)),renAct:pn(gvr(R,c.renAct)),renFut:pn(gvr(R,c.renFut)),pvExist:pn(gvr(R,c.pvExist)),pvProd:pn(gvr(R,c.pvProd)),anneeIDC:pn(gvr(R,c.anneeIDC)),ddEng:pn(gvr(R,c.ddEng)),ddPrev:pn(gvr(R,c.ddPrev)),
     ddToitVeg:pn(gvr(R,c.ddToitVeg)),ddToitType:gv(R,c.ddToitType),ddToitSurf:pn(gvr(R,c.ddToitSurf)),
     ddPerm:pn(gvr(R,c.ddPerm)),ddVeget:pn(gvr(R,c.ddVeget)),ddVegCout:pn(gvr(R,c.ddVegCout)),ddArbres:pn(gvr(R,c.ddArbres)),
     ddCour:gv(R,c.ddCour),ddTri:pn(gvr(R,c.ddTri)),ddTriOk:gv(R,c.ddTriOk),
@@ -2431,7 +2442,12 @@ const PLANCHER_CHF_M2_OBJ=50.0;
    l'exclut encore (isFos() écarte tout ce qui commence par « pac ») : cette
    divergence-là n'est pas tranchée. */
 const FOSSILE_OBJ=new Set(['Gaz','Mazout','PAC+Gaz']);
-const SUBST_NULLE_OBJ=new Set(["Maintien en l'état","Optimisation ECS"]);
+/* « == » : le classeur le porte depuis le 08.09.2026 quand la substitution
+   prévue reprend le premier agent de la colonne « Agent ». C'est un
+   maintien, pas une substitution — il rejoint donc les décisions explicites
+   de ne rien changer, au lieu de passer pour une saisie à compléter. */
+const SUBST_NULLE_OBJ=new Set(["Maintien en l'état","Optimisation ECS","=="]);
+function estMaintien(v){return String(v==null?'':v).trim()==='=='}
 /* Une substitution est un AGENT, pas une phrase. La colonne « Chauffage de
    subsitution prévu » du classeur porte aussi du texte libre : « ??? »,
    « Décision à prendre par COPIL », « OUI, projet DRT à clarifier avec
@@ -2478,7 +2494,16 @@ function parcTotalsFromSheet(rows){
   const idx={};hdr.forEach((h,i)=>{if(typeof h==='string'&&h&&!(h in idx))idx[h]=i});
   const data=rows.slice(1);
   const iNom=idx['NOM SITE'];
-  function keep(r){return r[0]!=null&&iNom!=null&&r[iNom]!=null&&r[iNom]!==''}
+  /* Cette fonction lit la MÊME feuille que parcSeries : elle doit écarter
+     les mêmes lignes, sinon deux totaux du même parc divergeraient sans
+     que rien ne le dise. (exclusion des périmètres, 08.09.2026) */
+  const jPer2=idx['Périmètre SME'];
+  function horsProg2(r){
+    if(jPer2===undefined)return false;
+    const v=String(r[jPer2]==null?'':r[jPer2]).trim().toLowerCase();
+    if(!v)return false;
+    return v.indexOf('hors p')===0||v.indexOf('périmètre 3')===0||v.indexOf('perimetre 3')===0}
+  function keep(r){return r[0]!=null&&iNom!=null&&r[iNom]!=null&&r[iNom]!==''&&!horsProg2(r)}
   function T(pre,y){
     let j=idx[pre+y];if(j===undefined)j=idx[pre+' '+y];if(j===undefined)return null;
     let s=0;for(const r of data){if(!keep(r))continue;const v=r[j];if(typeof v==='number')s+=v}
@@ -2597,6 +2622,12 @@ function refsFromObjectifs(rows){
   R.dd=ddDepuisObjectifs(rows,c2005,num,lbl);
   return R}
 
+/* Les lignes de « Objectifs PTE » qui informent sans peser : elles n'ont
+   pas de pondération en colonne C, donc pas de place dans l'indice, mais
+   elles doivent être suivies. Les sites équipés en points de tri sont la
+   première. (décision d'Achim, 08.09.2026) */
+const DD_INFOS=[
+ {k:'sites',cle:['sites équipés','sites equipes'],unit:'sites'}];
 const DD_LIGNES=[
  {k:'veg' ,cle:['végétalis','vegetalis']  ,defUnit:'m²'},
  {k:'toit',cle:['toitures vivantes']      ,defUnit:'m²'},
@@ -2623,9 +2654,22 @@ function ddDepuisObjectifs(rows,c2005,num,lbl){
       unit:mu?mu[1].replace(/m2/i,'m²').replace(/m3/i,'m³'):def.defUnit,
       cible:cible,poids:poids,reel:reel!=null?reel:0,
       reelLbl:suivant?String(suivant[0]||'').trim():''})}
-  if(!volets.length)return null;
+  /* les lignes d'information : même structure à deux lignes, mais sans
+     pondération — on ne les compte pas dans l'indice, on les affiche */
+  const infos=[];
+  for(let i=0;i<rows.length;i++){
+    const L=lbl(rows[i]);
+    const def=DD_INFOS.find(function(d){
+      return d.cle.some(function(c){return L.indexOf(c)===0})});
+    if(!def)continue;
+    const cible=num(rows[i][c2005]);
+    if(!(cible>0))continue;
+    const suivant=rows[i+1];
+    infos.push({k:def.k,lbl:String(rows[i][0]||'').trim(),unit:def.unit,
+      cible:cible,reel:suivant?(num(suivant[c2005])||0):0})}
+  if(!volets.length&&!infos.length)return null;
   const somme=volets.reduce(function(a,v){return a+v.poids},0);
-  return{volets:volets,somme:somme}}
+  return{volets:volets,somme:somme,infos:infos}}
 
 /* Fiabilité des séries de « Consommation par site » : une colonne annuelle
    recopiée d'une autre année, ou polluée par une autre série, donne un total
@@ -2635,7 +2679,22 @@ function parcSeries(rows){
   if(!rows||rows.length<2)return null;
   const hdr=rows[0].map(function(h){return typeof h==='string'?h.replace(/\n/g,' ').trim():h});
   const idx={};hdr.forEach(function(h,i){if(typeof h==='string'&&h&&!(h in idx))idx[h]=i});
-  const data=rows.slice(1).filter(function(r){const j=idx['NOM SITE'];return r[0]!=null&&j!=null&&r[j]!=null&&r[j]!==''});
+  /* ── PÉRIMÈTRES ÉCARTÉS (décision d'Achim, 08.09.2026) ─────────────────
+     « Hors Périmètre » et « Périmètre 3 » ne relèvent pas du programme :
+     leurs consommations sortent de tous les totaux du parc. La règle porte
+     sur le DÉBUT du libellé, pour attraper « Périmètre 3 - Non chauffé »
+     comme « Périmètre 3 » — ce qui est indiqué Périmètre 3 l'est, quel que
+     soit le suffixe. Une ligne sans périmètre indiqué est conservée : rien
+     ne permet de l'écarter, et l'onglet Données la signale. */
+  const jPer=idx['Périmètre SME'];
+  const horsProg=function(r){
+    if(jPer===undefined)return false;
+    const v=String(r[jPer]==null?'':r[jPer]).trim().toLowerCase();
+    if(!v)return false;
+    return v.indexOf('hors p')===0||v.indexOf('périmètre 3')===0||v.indexOf('perimetre 3')===0};
+  const tous=rows.slice(1).filter(function(r){const j=idx['NOM SITE'];return r[0]!=null&&j!=null&&r[j]!=null&&r[j]!==''});
+  const data=tous.filter(function(r){return !horsProg(r)});
+  const nEcartes=tous.length-data.length;
   const YRS=[2017,2018,2019,2020,2021,2022,2023,2024,2025];
   const col=function(pre,y){let j=idx[pre+y];if(j===undefined)j=idx[pre+' '+y];return j===undefined?null:j};
   const sum=function(j){let s=0;for(const r of data){const v=r[j];if(typeof v==='number')s+=v}return s};
@@ -2645,7 +2704,7 @@ function parcSeries(rows){
     for(const r of data){const a=r[ja],b=r[jb];
       if(typeof a==='number'&&a!==0){n++;if(typeof b==='number'&&Math.abs(a-b)<1e-6)eq++}}
     return n?eq/n:0};
-  const out={yrs:YRS,warn:[]};
+  const out={yrs:YRS,warn:[],ecartes:nEcartes,totalLignes:tous.length};
   ['ELEC','EAU','ThTOT','ThRenouv','ThFossile','GAZ','MAZ','CAD','CO2 Scope 1+2'].forEach(function(pre){
     out[pre]=YRS.map(function(y){const j=col(pre,y);return j==null?null:sum(j)});
     out[pre+'_ok']=YRS.map(function(y,i){
@@ -2828,6 +2887,23 @@ function buildContributionsObj(sites,coFactors){
         mesure:'Substitution chaufferie — '+agent+' → '+futur+' (part conventionnelle PAC : '+nf(pacGazPart(),0)+' %)'});
     }
     if(hasEstim){
+      /* ── ÉLECTRICITÉ : le gain se CALCULE désormais ────────────────────
+         Depuis le 08.09.2026, Plan_PTE porte en colonne AI la consommation
+         électrique PROJETÉE (chiffrage MDS, 171 sous-sites). Le gain est la
+         différence avec la consommation 2025 — donnée brute au classeur,
+         calcul ici, donc auditable des deux côtés.
+         Le signe est CONSERVÉ : 43 sous-sites voient leur électricité
+         augmenter parce qu'ils passent à une PAC, un CAD ou du bois, et la
+         projection inclut déjà cette électricité. Les masquer donnerait un
+         gain de 10,87 GWh là où le parc n'en fait que 9,92. */
+      const gElCalc=(s.consoElecProj!=null&&+s.elec>0)?(+s.elec-+s.consoElecProj):null;
+      if(gElCalc!=null&&gElCalc!==0){
+        out.elec.push({id:s.id,nom:s.nom,estim:cL('elec'),lot:coutLot(s,'elec')!=null,sre:sre,gain:gElCalc,
+          consoAct:+s.elec,consoProj:+s.consoElecProj,
+          mesure:(gElCalc>0?'Baisse projetée : ':'Hausse projetée : ')+
+            objFmtNum(+s.elec,0)+' → '+objFmtNum(+s.consoElecProj,0)+' kWh/an'+
+            (gElCalc<0?' — substitution vers '+(futur||'?')+', l\'électricité de la machine est comprise':'')});
+      }
       /* « Gain Electricité (Max) - kWh » et « Gain Eau (Max) - m3 » n'existent
          PAS dans Plan_PTE_optimise.xlsx : le moteur lisait des colonnes
          fantômes, d'où deux classements vides. Les colonnes réelles sont
@@ -2836,7 +2912,9 @@ function buildContributionsObj(sites,coFactors){
          existe, la colonne réelle sinon. (cohérence classeur, 03.09.2026) */
       const gEl=(s.gainElecMax&&s.gainElecMax>0)?s.gainElecMax:((s.gainElecProj&&s.gainElecProj>0)?s.gainElecProj:0);
       const gEa=(s.gainEauMax&&s.gainEauMax>0)?s.gainEauMax:((s.gainEauProj&&s.gainEauProj>0)?s.gainEauProj:0);
-      if(gEl>0)out.elec.push({id:s.id,nom:s.nom,estim:cL('elec'),lot:coutLot(s,'elec')!=null,sre:sre,gain:gEl,
+      /* repli historique : il ne sert plus que si la colonne AI est vide
+         pour ce bâtiment, sans quoi le même sous-site compterait deux fois */
+      if(gEl>0&&gElCalc==null)out.elec.push({id:s.id,nom:s.nom,estim:cL('elec'),lot:coutLot(s,'elec')!=null,sre:sre,gain:gEl,
         mesure:(s.gainElecMax&&s.gainElecMax>0)?LEGACY_ELEC_MSG:'Colonne « Gain Elec projeté [kWh/an] » du Plan_PTE'});
       if(gEa>0)out.eau.push({id:s.id,nom:s.nom,estim:cL('eau'),lot:coutLot(s,'eau')!=null,sre:sre,gain:gEa,
         mesure:(s.gainEauMax&&s.gainEauMax>0)?LEGACY_EAU_MSG:'Colonne « Gain Eau projeté [m3/an] » du Plan_PTE'});
@@ -2870,16 +2948,27 @@ function rankObjectiveObj(items,gap,key,gap2){
      comblent l'écart. */
   const plat=(typeof invHorsChiffrage==='function')&&invHorsChiffrage();
   for(const it of items){
-    it.coutUnit=plat?null:it.estim/(it.gain*dur);
+    it.coutUnit=(plat||!(it.gain>0))?null:it.estim/(it.gain*dur);
     it.duree=dur;it.plausible=plausibleObj(it.estim,it.sre)}
-  if(plat)items.sort((a,b)=>b.gain-a.gain||(a.id<b.id?-1:1));
-  else items.sort((a,b)=>a.coutUnit-b.coutUnit||(a.id<b.id?-1:1));
+  /* Une contribution NÉGATIVE n'a pas de coût unitaire : diviser un montant
+     par un gain négatif donnerait un « coût » négatif, qui trierait en tête.
+     Ces bâtiments — l'électricité d'une PAC, d'un CAD ou d'une chaudière à
+     bois qui vient s'ajouter — sont donc rangés à la FIN, du plus petit
+     surcoût au plus grand, et le cumul les déduit. Le classement dit ainsi
+     le gain net et non le gain brut. (08.09.2026) */
+  const posit=items.filter(function(it){return it.gain>0});
+  const negat=items.filter(function(it){return !(it.gain>0)});
+  if(plat)posit.sort((a,b)=>b.gain-a.gain||(a.id<b.id?-1:1));
+  else posit.sort((a,b)=>a.coutUnit-b.coutUnit||(a.id<b.id?-1:1));
+  negat.sort((a,b)=>b.gain-a.gain||(a.id<b.id?-1:1));
+  items=posit.concat(negat);
   let cumG=0,cumI=0,franchiRang=null,franchiRang2=null;
   items.forEach((it,i)=>{const k=i+1;cumG+=it.gain;cumI+=it.estim;it.rang=k;it.cumulGain=cumG;
     it.cumulInvest=plat?null:cumI;
     it.pctGap=gap?cumG/gap:null;
     it.pctGap2=gap2?cumG/gap2:null;
-    if(franchiRang==null&&gap&&cumG>=gap)franchiRang=k;
+    it.negatif=!(it.gain>0);
+    if(franchiRang==null&&gap&&cumG>=gap&&it.gain>0)franchiRang=k;
     if(franchiRang2==null&&gap2&&cumG>=gap2)franchiRang2=k;
     it.franchi=franchiRang!=null&&k<=franchiRang;
     it.franchi2=franchiRang2!=null&&k<=franchiRang2});
@@ -2941,6 +3030,26 @@ function rankVegObj(items,gap){
    .xlsx), sinon réutilise les dernières cibles connues (persistées avec les
    sites — un import .csv ou un rechargement de page n'a pas accès aux
    feuilles Data / Consommation par site / Objectifs PTE). */
+/* ── L'ÉCART RAPPORTÉ AU PÉRIMÈTRE COUVERT (décision d'Achim, 08.09.2026)
+   L'écart du parc vient de la feuille « Consommation par site » : 92,5 GWh
+   mesurés en 2025 sur 427 lignes, cible −20 %, donc 17,5 GWh à combler. Mais
+   les contributions viennent de Plan_PTE, qui ne porte la consommation que
+   de 287 sous-sites, et le chiffrage projeté n'en couvre que 110. Rapporter
+   un cumul partiel à un écart total gonflerait le pourcentage.
+   La part d'écart imputable à un sous-site est donc prise au prorata de sa
+   consommation : la cible étant une baisse de 20 % du parc, chacun en porte
+   20 % de la sienne. Sur les 110 sous-sites chiffrables, cela fait 4,24 GWh.
+   Le classement s'y rapporte ; le bandeau donne les deux chiffres. */
+function ecartCouvert(key){
+  if(key!=='elec')return null;
+  const pct=(typeof OBJ_REFS!=='undefined'&&OBJ_REFS&&OBJ_REFS.elec)?OBJ_REFS.elec.pct:null;
+  if(!(pct>0))return null;
+  const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
+  let c=0,n=0;
+  (pop||[]).forEach(function(s){
+    if(s.consoElecProj!=null&&+s.elec>0){c+=+s.elec;n++}});
+  return n?{gap:c*pct,conso:c,n:n,pct:pct}:null}
+
 function computeObjRanking(){
   const sheets=_lastXlsxSheets;
   if(sheets&&sheets['Consommation par site']&&sheets['Objectifs PTE']){
@@ -2953,7 +3062,11 @@ function computeObjRanking(){
   const co2=rankObjectiveObj(contribs.co2,OBJ_GAPS.co2.gap,'co2');
   const th=rankObjectiveObj(contribs.th,OBJ_GAPS.th.gap,'th',OBJ_GAPS.th.gap2050||null);
   const ren=rankObjectiveObj(contribs.ren,OBJ_GAPS.ren.gap,'ren');
-  const elec=rankObjectiveObj(contribs.elec,OBJ_GAPS.elec.gap,'elec');
+  /* le dénominateur du « % de l'écart » est celui du périmètre couvert quand
+     il existe, l'écart du parc sinon — voir ecartCouvert() ci-dessus */
+  const ecEl=ecartCouvert('elec');
+  OBJ_GAPS.elec.couvert=ecEl;
+  const elec=rankObjectiveObj(contribs.elec,(ecEl?ecEl.gap:OBJ_GAPS.elec.gap),'elec');
   const eau=rankObjectiveObj(contribs.eau,OBJ_GAPS.eau.gap,'eau');
   const pv=rankIntentionObj(contribs.pv,OBJ_GAPS.pv.gapKw);
   const veg=rankVegObj(contribs.veg,(OBJ_GAPS.veg&&OBJ_GAPS.veg.gap)||null);
@@ -3674,6 +3787,52 @@ function hpCandidats(){
 /* Le classement CO₂ doit dire sur quelle comptabilité il est bâti : deux
    conventions donnent deux classements, et lire l'un en croyant lire
    l'autre est la pire des erreurs possibles ici. */
+/* ── Le bandeau du classement Électricité ────────────────────────────────
+   Trois choses à dire, et une consigne à ne pas perdre. */
+function elecNote(key){
+  if(key!=='elec')return'';
+  const R=(typeof OBJRANK!=='undefined'&&OBJRANK)?OBJRANK.elec:null;
+  if(!R||!R.items||!R.items.length)return'';
+  const pos=R.items.filter(function(it){return it.gain>0});
+  const neg=R.items.filter(function(it){return !(it.gain>0)});
+  const gP=pos.reduce(function(a,b){return a+b.gain},0);
+  const gN=neg.reduce(function(a,b){return a-b.gain},0);
+  const C=(OBJ_GAPS&&OBJ_GAPS.elec&&OBJ_GAPS.elec.couvert)?OBJ_GAPS.elec.couvert:null;
+  const parc=(OBJ_GAPS&&OBJ_GAPS.elec)?OBJ_GAPS.elec.gap:null;
+  const gw=function(v){return objFmtNum(v/1e6,2)+' GWh'};
+  let s='<div class="part-warn">⚡ <b>Consommation projetée, chiffrée projet par projet.</b> '+
+    'Le gain n\'est plus lu dans une colonne : il est calculé, '+
+    '<code>Conso Elec 2025 - kWh2</code> moins <code>Conso élec projetée [kWh/an]</code>. '+
+    '<b>'+pos.length+'</b> sous-site(s) en baisse pour <b>'+gw(gP)+'</b>';
+  if(neg.length)s+=', <b>'+neg.length+'</b> en hausse pour <b>'+gw(gN)+'</b> — '+
+    'net <b>'+gw(gP-gN)+'</b>';
+  s+='.';
+  if(C)s+=' Le <b>% de l\'écart</b> se rapporte à l\'écart du <b>périmètre couvert</b> : '+
+    'les <b>'+C.n+'</b> sous-sites chiffrés pèsent '+gw(C.conso)+' de consommation, dont '+
+    Math.round(C.pct*100)+' % à retrancher, soit <b>'+gw(C.gap)+'</b>'+
+    (parc?' — l\'écart du parc entier vaut '+gw(parc)+', mesuré sur la feuille <code>Consommation par site</code> qui couvre 427 lignes là où Plan_PTE n\'en chiffre que 287':'')+'.';
+  /* Les projections sans montant : réelles, mais non classables — comme sur
+     tous les objectifs, un bâtiment sans coût n'a pas de coût unitaire donc
+     pas de rang. Le dire vaut mieux que de laisser croire à un oubli. */
+  const pop2=(S_ALL&&S_ALL.length)?S_ALL:S;
+  const dedans={};R.items.forEach(function(it){dedans[it.id]=1});
+  const horsC=(pop2||[]).filter(function(x){
+    return x.consoElecProj!=null&&+x.elec>0&&!dedans[x.id]});
+  if(horsC.length){
+    let gh=0,nh=0;
+    horsC.forEach(function(x){const d=+x.elec-+x.consoElecProj;if(d>0)gh+=d;else nh-=d});
+    s+=' <b>'+horsC.length+'</b> sous-site(s) ont une projection mais <b>aucun montant</b> : '+
+      'sans coût il n\'y a pas de coût unitaire, donc pas de rang — ils portent pourtant '+
+      gw(gh)+' de baisse et '+gw(nh)+' de hausse, invisibles ici. L\'onglet <b>Données</b> dit '+
+      'quelles saisies débloqueraient le plus de bâtiments.';
+  }
+  if(neg.length)s+='<br>🔧 <b>À traiter :</b> les hausses viennent de substitutions vers PAC, '+
+    'PAC+Gaz, CAD ou bois — la projection inclut déjà l\'électricité de ces machines. '+
+    'Ces consommations doivent être <b>sorties de l\'Électricité</b>, converties en '+
+    '<b>kWh thermiques</b> par le SCOP, et comptées au <b>classement Thermique</b>. '+
+    'La colonne <code>SCOP PAC [-]</code> du Plan_PTE attend ces valeurs ; tant qu\'elle '+
+    'est vide, la conversion ne peut pas être faite et les hausses restent ici.';
+  return s+'</div>'}
 function convNote(key){
   if(key!=='co2'&&key!=='tous')return'';
   if(co2Conv!=='legal')return'';
@@ -3797,6 +3956,29 @@ function servisChip(id,key){
     'ce bâtiment achète '+n+' bénéfices avec un seul franc, et paraît donc plus cher ici '+
     'que celui qui n\'en achète qu\'un. Son coût unitaire est à lire en le sachant.">⊕'+n+'</span>'}
 
+/* ── D'OÙ VIENT CHAQUE COLONNE (demande d'Achim, 08.09.2026) ─────────────
+   Un classement qui n'annonce pas ses sources oblige à faire confiance. Les
+   entêtes disent donc, au survol, le nom exact des colonnes de Plan_PTE
+   d'où sort le chiffre — de quoi remonter du tableau à la cellule. */
+const SRC_CONTRIB={
+  co2 :'Calculé : SRE × IDC [kWh] × facteur d\'émission de l\'agent actuel, moins SRE × IDC projeté [kWh] × facteur de l\'agent de substitution. Facteurs lus dans la feuille « Data ».',
+  th  :'Calculé : SRE × (IDC [kWh] − IDC projeté [kWh]), la variante CECB+ retenue étant celle de la colonne « Audit CECB+ ».',
+  ren :'Calculé : consommation thermique du bâtiment (SRE × IDC), créditée lorsque « Chauffage Type Energie » est fossile et « Chauffage de subsitution prévu » ne l\'est pas. PAC+Gaz compte pour sa part conventionnelle.',
+  elec:'Calculé : « Conso Elec 2025 - kWh2 » moins « Conso élec projetée [kWh/an] ». Un résultat négatif est une hausse — l\'électricité d\'une PAC, d\'un CAD ou d\'une chaudière à bois comprise dans la projection.',
+  eau :'Colonne « Gain Eau projeté [m3/an] », ou l\'ancienne « Gain Eau (Max) - m3 » si elle est présente.',
+  pv  :'Colonne « Futur projet PV - puissance estimée (kWc) ».',
+  veg :'Colonne « Surface végétalisée ajoutée (m2) ».'};
+const SRC_COMMUN={
+  id  :'Colonne « N° sous site » de Plan_PTE — la clé de tout le classeur.',
+  nom :'Colonne « Nom du site_AB », alimentée par la requête Archibus.',
+  rp  :'Colonne « Responsable projet » de Plan_PTE. À ne pas confondre avec le RPF, « Responsable Portefeuille », affiché sous le nom du sous-site.',
+  pat :'Colonne « Classement au Patrimoine », alimentée par ImmOBA.',
+  cecb:'Colonne « Audit CECB+ » — la variante retenue (var_A, var_B, var_C) décide de l\'IDC projeté utilisé.',
+  ht  :'Colonne « Chauffage Type Energie ».',
+  sub :'Colonne « Chauffage de subsitution prévu » (orthographe du classeur, sans le second t — les requêtes Power Query s\'appuient dessus).',
+  sre :'Colonne « SRE », la surface de référence énergétique.'};
+function srcTip(t){return t?(' title="'+t.replace(/"/g,'&quot;')+'"'):''}
+
 function objTable(key,R,meta,bySiteId,f){
   const rankedIds=new Set(R.items.map(x=>x.id));
   const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
@@ -3809,20 +3991,22 @@ function objTable(key,R,meta,bySiteId,f){
   const restRows=repliSorted(restAll).filter(function(x){
     const q=qualiOf(x.s.id);return passRankFilters(x.s,f)&&!(q&&q.p==='ex')});
   let html='<table><thead><tr>'+
-    '<th>Rang</th><th>N°</th><th>Sous-site</th>'+
-    '<th title="RP — responsable de PROJET, celui qui conduit l\'opération. À ne pas confondre avec le RPF, responsable de portefeuille, qui figure sous le nom du sous-site.">RP</th>'+
-    '<th>Pat.</th><th>CECB+</th>'+
-    '<th title="Agent de chauffage actuel">Chauffage</th>'+
-    '<th title="Agent de chauffage prévu après travaux — c\'est cette bascule qui produit le gain CO₂">Substitution</th>'+
+    '<th>Rang</th><th'+srcTip(SRC_COMMUN.id)+'>N°</th><th'+srcTip(SRC_COMMUN.nom)+'>Sous-site</th>'+
+    '<th title="RP — responsable de PROJET, celui qui conduit l\'opération. À ne pas confondre avec le RPF, responsable de portefeuille, qui figure sous le nom du sous-site. Source : colonne « Responsable projet » de Plan_PTE.">RP</th>'+
+    '<th'+srcTip(SRC_COMMUN.pat)+'>Pat.</th><th'+srcTip(SRC_COMMUN.cecb)+'>CECB+</th>'+
+    '<th title="Agent de chauffage actuel. Source : colonne « Chauffage Type Energie » de Plan_PTE.">Chauffage</th>'+
+    '<th title="Agent de chauffage prévu après travaux — c\'est cette bascule qui produit le gain CO₂. Source : colonne « Chauffage de subsitution prévu » de Plan_PTE (orthographe du classeur).">Substitution</th>'+
     '<th style="text-align:right"'+(invHorsChiffrage()&&key!=='veg'&&key!=='pv'
-      ?' title="Critère de tri en mode hors chiffrage : le classement va du plus gros contributeur au plus petit"'
-      :'')+'>'+(key==='pv'?'Puissance':'Contribution')
+      ?' title="Critère de tri en mode hors chiffrage : le classement va du plus gros contributeur au plus petit. '+String(SRC_CONTRIB[key]||'').replace(/"/g,'&quot;')+'"'
+      :srcTip(SRC_CONTRIB[key]))+'>'+(key==='pv'?'Puissance':'Contribution')
       +((invHorsChiffrage()&&key!=='veg'&&key!=='pv')?' ▼':'')+'<br>['+meta.unit+']</th>'+
-    '<th style="text-align:right">Cumul<br>['+meta.unit+']</th>'+
+    '<th style="text-align:right" title="Somme des contributions depuis le haut du classement. Sur l\'Électricité, les hausses de fin de tableau sont déduites : la dernière ligne donne donc le gain NET du parc chiffré.">Cumul<br>['+meta.unit+']</th>'+
     (key==='th'
       ? '<th style="text-align:right" title="Part de l\'écart RESTANT à 2030 que le cumul comble, en descendant le classement — pas le chemin depuis 2005, que donne la tuile de la Vue d\'ensemble">% écart<br>2030</th>'+
         '<th style="text-align:right" title="Part de l\'écart RESTANT à 2050 que le cumul comble — cible d\'intensité de 63 kWh/m²·an">% écart<br>2050</th>'
-      : '<th style="text-align:right" title="Part de l\'écart RESTANT (mesuré − cible) que le cumul comble, en descendant le classement. Ce n\'est pas le chemin parcouru depuis 2005, que donne la tuile de la Vue d\'ensemble : les deux s\'additionnent, et la jauge au-dessus du tableau montre comment.">% de l\'écart<br>comblé</th>')+
+      : ((key==='elec'&&typeof OBJ_GAPS!=='undefined'&&OBJ_GAPS&&OBJ_GAPS.elec&&OBJ_GAPS.elec.couvert)
+        ? '<th style="text-align:right" title="Part de l\'écart du PÉRIMÈTRE COUVERT que le cumul comble. Le dénominateur n\'est pas l\'écart du parc entier mais la part imputable aux '+OBJ_GAPS.elec.couvert.n+' sous-sites dont la consommation projetée est chiffrée, prise au prorata de leur consommation. La jauge au-dessus du tableau, elle, reste à l\'échelle du parc : les deux ne disent pas la même chose et c\'est voulu.">% de l\'écart<br>couvert</th>'
+        : '<th style="text-align:right" title="Part de l\'écart RESTANT (mesuré − cible) que le cumul comble, en descendant le classement. Ce n\'est pas le chemin parcouru depuis 2005, que donne la tuile de la Vue d\'ensemble : les deux s\'additionnent, et la jauge au-dessus du tableau montre comment.">% de l\'écart<br>comblé</th>'))+
     '<th style="text-align:right" title="'+(key==='veg'?'Coût TTC du projet de végétalisation, colonne « Coût végétalisation TTC [CHF] » — sans rapport avec le référentiel financier de la rénovation énergétique':'Colonne d\'où viennent les montants — menu « Montants » au-dessus')+'">'+(key==='veg'?'Coût TTC<br>végétalisation':esc(invDef().short))+'</th>'+
     '<th style="text-align:right"'+((invHorsChiffrage()&&key!=='veg'&&key!=='pv')
       ?' title="Déclaré identique pour tous les bâtiments en mode hors chiffrage : ce n\'est plus un critère de tri"':'')
@@ -3832,7 +4016,13 @@ function objTable(key,R,meta,bySiteId,f){
     '<th>Alerte</th></tr></thead><tbody>';
   for(const it of rankedRows){
     const s=bySiteId[it.id];
-    const gainDisp=objFmtNum(it.gain,0);
+    /* Une contribution NÉGATIVE est une hausse de consommation, pas un gain.
+       Le signe seul se rate en balayant une colonne de nombres : elle est
+       donc écrite en rouge et porte son mot. (08.09.2026) */
+    const gainDisp=(it.gain<0)
+      ? '<span style="color:var(--fg-err);font-weight:600" title="Hausse de consommation, pas un gain. Ce sous-site consommera davantage après travaux : la projection inclut l\'électricité de la pompe à chaleur, du réseau de chaleur ou de la chaudière à bois qui remplace l\'installation actuelle. Le cumul la déduit.">'
+        +objFmtNum(it.gain,0)+' <span style="font-size:.6rem;font-weight:400">hausse</span></span>'
+      : objFmtNum(it.gain,0);
     /* Hors chiffrage : le montant n'existe pas et le coût unitaire est le
        même pour tous. Un « = » le dit mieux qu'un nombre répété. */
     const plat=invHorsChiffrage()&&key!=='veg';
@@ -3927,7 +4117,7 @@ function renR(){
     const ha0=$('objAttrib');if(ha0)ha0.innerHTML='';
     const hq0=$('objPac');if(hq0)hq0.innerHTML='';return}
   _servisCache=null;
-  const ha=$('objAttrib');if(ha)ha.innerHTML=convNote(key)+hpNote(key);
+  const ha=$('objAttrib');if(ha)ha.innerHTML=elecNote(key)+convNote(key)+hpNote(key);
   const hq=$('objPac');if(hq)hq.innerHTML=pacNote(key);
   const hp=$('objPartage');if(hp)hp.innerHTML=partageNote(key);
   const bySiteId={};pop.forEach(s=>{bySiteId[s.id]=s});
@@ -3949,7 +4139,13 @@ function renR(){
   if(note){
     if(!OBJRANK){note.innerHTML='Aucune cible calculée — importez <b>Plan_PTE.xlsx</b> pour activer le classement par objectif. Les bâtiments ci-dessous sont triés par score composite (classement de repli).'}
     else{
-      const gap=key==='pv'?OBJ_GAPS.pv.gapKw:OBJ_GAPS[key].gap;
+      /* Le classement Électricité se rapporte à l'écart du PÉRIMÈTRE COUVERT
+         (décision d'Achim, 08.09.2026) : la note doit annoncer celui-là et
+         non celui du parc, sans quoi elle contredirait la colonne « % » qui
+         se trouve juste en dessous. Pour tous les autres objectifs, ecC vaut
+         null et rien ne change. */
+      const ecC=(key==='elec'&&OBJ_GAPS.elec&&OBJ_GAPS.elec.couvert)?OBJ_GAPS.elec.couvert:null;
+      const gap=key==='pv'?OBJ_GAPS.pv.gapKw:(ecC?ecC.gap:OBJ_GAPS[key].gap);
       const nR=R.items.length;
       const fr50='';
       note.innerHTML=(key==='veg'
@@ -3958,7 +4154,7 @@ function renR(){
         ?'Trié par puissance décroissante (classement d’intention, aucune donnée n’isole le coût d’une installation PV du coût de rénovation du bâtiment). Objectif : +'+objFmtNum(gap,0)+' kWc. '
         :invHorsChiffrage()
         ?'Trié par <b>contribution décroissante</b> — le coût unitaire étant déclaré identique pour tous, il ne départage plus. Écart résiduel à combler : '+objFmtNum(gap,0)+' '+meta.unit+'. '
-        :'Trié par CHF par '+meta.unit.replace('/an','')+' croissant, sur '+pDuree(key)+' ans'+((PARAMS.dureeObj&&+PARAMS.dureeObj[key]>0&&+PARAMS.dureeObj[key]!==pDuree())?' (durée propre à cet objectif)':'')+'. <span title="Ce qui manque encore pour atteindre la cible 2030 : la valeur mesurée aujourd\'hui moins la cible. La colonne de cumul dit quelle part de cet écart les bâtiments financés comblent." style="border-bottom:1px dotted currentColor;cursor:help">Écart résiduel</span> à combler : '+objFmtNum(gap,0)+' '+meta.unit+'. '
+        :'Trié par CHF par '+meta.unit.replace('/an','')+' croissant, sur '+pDuree(key)+' ans'+((PARAMS.dureeObj&&+PARAMS.dureeObj[key]>0&&+PARAMS.dureeObj[key]!==pDuree())?' (durée propre à cet objectif)':'')+'. <span title="Ce qui manque encore pour atteindre la cible 2030 : la valeur mesurée aujourd\'hui moins la cible. La colonne de cumul dit quelle part de cet écart les bâtiments financés comblent." style="border-bottom:1px dotted currentColor;cursor:help">Écart résiduel</span> à combler : '+objFmtNum(gap,0)+' '+meta.unit+(ecC?(' <span title="Part de l\'objectif 2030 imputable aux '+ecC.n+' sous-sites dont la consommation projetée est chiffrée, prise au prorata de leur consommation : la cible étant une baisse de 20 %, chacun en porte 20 % de la sienne. L\'écart du parc entier vaut '+objFmtNum(OBJ_GAPS.elec.gap,0)+' kWh/an, mesuré sur la feuille Consommation par site qui couvre 427 lignes là où Plan_PTE n\'en chiffre que 287." style="border-bottom:1px dotted currentColor;cursor:help">sur le périmètre couvert</span>'):'')+'. '
           +(key==='th'?thNote2Cibles(R):''))
         /* le thermique a sa propre phrase de franchissement, qui couvre les
            deux cibles : la générique ferait doublon */
@@ -3967,7 +4163,10 @@ function renR(){
           :R.franchiRang?('Rang de franchissement : <b>'+R.franchiRang+'</b> sur '+nR+' bâtiment(s) mesurable(s) — au-delà, non nécessaires pour cette seule cible.')
                         :('Cible non atteinte avec les '+nR+' bâtiment(s) mesurable(s) disponibles.'))
         +(nR===0?objPont(key,R):'')
-        +(key==='elec'||key==='eau'?' ⚠ Donnée legacy (méthode par familles abandonnée), non recalculée via CECB+ — à vérifier avant décision.':'')}}
+        /* L'électricité n'est plus une donnée héritée : depuis le 08.09.2026
+           elle vient d'un chiffrage projet par projet (colonne AI). Seule
+           l'eau garde l'avertissement. */
+        +(key==='eau'?' ⚠ Donnée legacy (méthode par familles abandonnée), non recalculée via CECB+ — à vérifier avant décision.':'')}}
   const fw=$('rankFlatWarn');
   if(fw){fw.innerHTML=invHorsChiffrage()?flatNote(key):'';
     fw.style.display=invHorsChiffrage()?'block':'none'}
@@ -4643,6 +4842,20 @@ function renDD(){
          (v.proj>0?(nf(v.proj)+' <span class="mini">('+nf(v.nProj)+' bât.)</span>'):'—')+'</td>'+
        '<td class="num">'+(v.tauxProj==null?'—':(nf(v.tauxProj*100,1)+' %'+
          (dep?(' <span class="mini" title="Le potentiel repéré vaut '+nf(v.brut,1)+' fois la cible">× '+nf(v.brut,1)+'</span>'):'')))+'</td></tr>'});
+  /* ── Lignes de SUIVI, sans pondération (décision d'Achim, 08.09.2026) ──
+     Les sites équipés en points de tri se suivent mais ne se notent pas :
+     leur donner un poids ferait un quatrième volet et diluerait les trois
+     autres sans qu'aucune décision ne l'ait établi. Ils n'entrent ni dans
+     l'indice, ni dans les classements par objectif, ni dans leur menu. */
+  const INF=(OBJ_GAPS&&OBJ_GAPS.dd&&OBJ_GAPS.dd.infos)?OBJ_GAPS.dd.infos:[];
+  INF.forEach(function(v){
+    const t=(v.cible>0)?Math.min(1,v.reel/v.cible):null;
+    h+='<tr style="color:var(--ink3)"><td><b>'+esc(v.lbl)+'</b><br><span class="mini">suivi seul, hors indice</span></td>'+
+       '<td class="num" title="Cette ligne n\'a pas de pondération dans la feuille « Objectifs PTE » : elle informe, elle ne note pas.">—</td>'+
+       '<td class="num">'+nf(v.cible)+' '+esc(v.unit)+'</td>'+
+       '<td class="num">'+nf(v.reel)+'</td>'+
+       '<td class="num"><b>'+(t==null?'—':nf(t*100,1)+' %')+'</b></td>'+
+       '<td class="num">—</td><td class="num">—</td></tr>'});
   h+='</tbody></table>';
   h+='<p class="mini" style="margin-top:7px">Indice = somme des <b>pondération × min(1, réalisé ÷ cible)</b>. Le plafond est volet par volet : '+
      'un volet dépassé ne rachète pas un volet en retard. Cibles, pondérations et réalisés viennent tous de la feuille '+
@@ -4970,9 +5183,21 @@ function renderTiles(){
     const val=(s.val==null)?'—':nf(s.val/(o.div||1),o.dec);
     const cibTxt=s.part?(nf(s.cible,1)+' %'):(nf(s.cible/(o.div||1),o.dec)+' '+o.unit.split('/')[0]);
     let sub;
-    if(o.k==='dd')        sub=(!s.dd||!s.dd.volets.length)
-                              ?'volets absents de la feuille « Objectifs PTE »'
-                              :((s.dd.volets.length)+' volets · <b>'+nf(s.dd.scoreProj,1)+'</b> avec les projets repérés');
+    if(o.k==='dd'){
+      /* Le suivi des points de tri s'affiche sur la tuile — c'est un
+         indicateur global du programme, qu'Achim veut voir sans ouvrir le
+         panneau. Il ne pèse pas dans l'indice. (08.09.2026) */
+      const dech=(s.dd&&s.dd.volets)?s.dd.volets.find(function(v){return v.k==='dech'}):null;
+      const sit=(s.dd&&s.dd.infos)?s.dd.infos.find(function(v){return v.k==='sites'}):null;
+      let tri='';
+      if(dech)tri=' · ♻️ <b title="Points de tri installés sur l\'objectif du programme — feuille « Objectifs PTE ». Volet pesé de l\'indice.">'+
+        nf(dech.reel)+'/'+nf(dech.cible)+'</b> pts';
+      if(sit)tri+=' · <b title="Sites équipés en points de tri. Ligne de suivi sans pondération : elle informe, elle n\'entre pas dans l\'indice.">'+
+        nf(sit.reel)+'/'+nf(sit.cible)+'</b> sites';
+      sub=(!s.dd||!s.dd.volets.length)
+            ?'volets absents de la feuille « Objectifs PTE »'
+            :((s.dd.volets.length)+' volets · <b>'+nf(s.dd.scoreProj,1)+'</b> projeté'+tri);
+    }
     else if(o.k==='pv')   sub='cible '+cibTxt+' · <b title="Kilowatt-crête : la puissance d\'une installation solaire mesurée dans des conditions d\'ensoleillement de référence. C\'est la taille du parc de panneaux, pas ce qu\'il produira dans l\'année.">'+nf(s.gapKw)+' kWc</b> à installer';
     else if(o.k==='ren')  sub='cible '+cibTxt+' · <b>'+nf((s.gap||0)/1e6,1)+' GWh</b> à basculer';
     else if(s.sansRef)    sub='cible '+cibTxt+' · pas de référence 2005';
@@ -5758,7 +5983,14 @@ function buildOpt(){
       actif:(r.invVB!=null&&+r.invVB>0)?+r.invVB:null,
       conso:conso>0?conso:null,
       sia:String(r.etat||''),rp:String(r.rp||''),pat:String(r.pat||''),
-      elGain:(+r.gainElecProj||+r.gainElecMax||0),eaGain:(+r.gainEauProj||+r.gainEauMax||0),
+      /* Le gain électrique du portefeuille vient d'abord de la conso projetée
+         (colonne AI), calculée et SIGNÉE : un bâtiment qui passe à une PAC
+         consomme davantage, et l'« Après travaux » de la Vue d'ensemble doit
+         le dire au lieu de l'ignorer. Les deux anciennes colonnes ne servent
+         plus que de repli. (08.09.2026) */
+      elGain:((r.consoElecProj!=null&&+r.elec>0)?(+r.elec-+r.consoElecProj)
+              :(+r.gainElecProj||+r.gainElecMax||0)),
+      eaGain:(+r.gainEauProj||+r.gainEauMax||0),
       pvKwc:+r.pvKwc||0,co2Proj:(r.co2Proj!=null?+r.co2Proj:null),ri:ri};
 
     s.g={th:0,co:0,ren:0,el:0,ea:0};
@@ -5780,7 +6012,8 @@ function buildOpt(){
     if(FOSSILE.indexOf(agent)>=0&&futur&&FOSSILE.indexOf(futur)<0&&SUBST_NULLE.indexOf(futur)<0){
       if(sre&&idc){s.g.ren=sre*idc;s.has.ren=true}
     }
-    if(s.elGain>0){s.g.el=s.elGain;s.has.el=true}
+    /* une hausse compte aussi : elle se soustrait du gain du parc */
+    if(s.elGain!==0&&s.elGain!=null&&!isNaN(s.elGain)){s.g.el=s.elGain;s.has.el=true}
     if(s.eaGain>0){s.g.ea=s.eaGain;s.has.ea=true}
     s.alerts=alertsOpt(s);
     SITES.push(s);

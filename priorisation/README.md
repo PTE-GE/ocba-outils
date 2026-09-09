@@ -281,6 +281,53 @@ retenue. **La valeur est fixée à 80 % PAC / 20 % gaz** depuis le 04.09.2026 : 
 substitutions du parc entrent ainsi au classement Renouvelable — 92 → 106 bâtiments, 37 → 48 GWh.
 Vider la case remet `PAC+Gaz` en fossile et la substitution ne compte alors plus du tout.
 
+## Le périmètre du parc : ce qui compte et ce qui ne compte pas
+
+Les totaux du parc — mesuré, référence, cible, écart — se calculent sur la feuille
+`Consommation par site`. Depuis le 08.09.2026, deux catégories en sont **écartées** : les lignes dont
+la colonne `Périmètre SME` commence par **`Hors Périmètre`** ou par **`Périmètre 3`**. Elles ne
+relèvent pas du programme. La règle porte sur le début du libellé, ce qui attrape aussi
+`Périmètre 3 - Non chauffé` ; une ligne sans périmètre indiqué est conservée, rien ne permettant de
+l'écarter. Sur le parc réel, **177 lignes sur 432** sortent ainsi.
+
+L'effet n'est pas cosmétique : l'écart Électricité passe de 17,5 à **9,25 GWh**, l'écart thermique
+de 54,9 à **49,5 GWh**, l'écart CO₂ de 9,28 à **7,88 kt**. Et la série `EAU2025`, jusque-là écartée
+automatiquement parce que ses valeurs étaient écrasées par `ELEC2025` sur une partie des sites,
+**redevient exploitable** — le défaut était concentré dans les périmètres exclus. L'eau gagne une
+année de mesure.
+
+## L'électricité projetée, et les hausses qu'elle révèle
+
+Le classement Électricité était vide : il cherchait une colonne qui n'existe pas, puis se repliait
+sur une colonne jamais saisie. Depuis le 08.09.2026, `Plan_PTE` porte en colonne **AI** la
+**consommation électrique projetée**, chiffrée projet par projet. Le gain n'est plus lu, il est
+**calculé** — `Conso Elec 2025 - kWh2` moins `Conso élec projetée [kWh/an]` — ce qui le rend
+auditable des deux côtés.
+
+Le signe est conservé, et c'est le point important : **23 sous-sites voient leur électricité
+augmenter**, parce qu'ils passent à une pompe à chaleur, un réseau de chaleur ou une chaudière à
+bois, et que la projection inclut déjà l'électricité de ces machines. Ils s'affichent en fin de
+classement, en rouge, avec le mot « hausse », et le cumul les **déduit** : la dernière ligne donne
+le gain NET du parc chiffré, non le gain brut. Masquer ces hausses afficherait un gain supérieur de
+10 % à ce que le parc fera réellement.
+
+Ces consommations de PAC devront être sorties de l'Électricité, converties en kWh thermiques par le
+SCOP, et comptées au Thermique. La colonne `SCOP PAC [-]` attend ces valeurs ; tant qu'elle est
+vide, la conversion est impossible et un bandeau ⚡ porte la consigne à l'écran.
+
+Le **% de l'écart** de ce classement se rapporte au **périmètre couvert** et non au parc : la part
+d'écart imputable à un sous-site est prise au prorata de sa consommation, la cible étant une baisse
+de 20 %. L'entête de la colonne le dit — « % de l'écart couvert » — pendant que la jauge, elle,
+reste à l'échelle du parc.
+
+## `==` : la substitution qui n'en est pas une
+
+Quand `Chauffage de subsitution prévu` reprend le premier agent de la colonne `Agent`, le classeur
+porte **`==`** et l'outil l'affiche tel quel. Le chauffage ne change pas : ce n'est pas une
+substitution mais un maintien, et aucun gain renouvelable n'est crédité. Rien n'est perdu — l'agent
+reste lisible dans sa propre colonne — et le signe se repère d'un coup d'œil là où un nom d'agent
+répété passerait inaperçu.
+
 ## Deux comptabilités carbone, et le menu qui les commande
 
 Le menu **CO₂** de la ligne de contexte choisit sur quelle comptabilité tout le CO₂ est calculé :
