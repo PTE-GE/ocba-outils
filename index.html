@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pilotage PTE</title>
+<style>
+  :root{
+    --slate:#2C3E50; --teal:#005F73; --green:#1A8554; --turquoise:#30E5D9;
+    --purple:#856EBE; --ochre:#B58900; --red:#B03A2E; --gray:#8A8F94;
+    --page-bg:#F4F6F8; --card-bg:#fff; --border:#E1E6E9;
+    --ink:#2C3E50; --ink-70:#5A6B78; --ink-muted:#5F6B75;
+    --r:8px;
+    --shadow:0 1px 2px rgba(44,62,80,.06), 0 1px 8px rgba(44,62,80,.05);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0; background:var(--page-bg);}
+  body{font-family:Arial, Helvetica, sans-serif; color:var(--ink); line-height:1.45;}
+  header{background:var(--teal); color:#fff; padding:22px 24px;}
+  header h1{margin:0; font-size:1.35rem; font-weight:bold;}
+  header p{margin:.35em 0 0; font-size:.9rem; opacity:.9;}
+  main{max-width:1100px; margin:0 auto; padding:28px 20px 40px;}
+  .cards{display:flex; gap:18px; flex-wrap:wrap;}
+  .card{
+    flex:1 1 280px; background:var(--card-bg); border:1px solid var(--border);
+    border-radius:var(--r); box-shadow:var(--shadow); padding:20px;
+    display:flex; flex-direction:column; text-decoration:none; color:inherit;
+    border-top:4px solid var(--teal); transition:box-shadow .15s;
+  }
+  .card:hover{box-shadow:0 2px 4px rgba(44,62,80,.1), 0 4px 14px rgba(44,62,80,.1);}
+  .card.c-suivre{border-top-color:var(--purple);}
+  .card.c-donnees{border-top-color:var(--ochre);}
+  .card h2{margin:0 0 .5em; font-size:1.05rem; color:var(--ink);}
+  .card .tag{
+    display:inline-block; font-size:11px; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--ink-muted); font-weight:bold; margin-bottom:.6em;
+  }
+  .card p{margin:0; font-size:.87rem; color:var(--ink-70); flex:1;}
+  .card .go{margin-top:1em; font-size:.83rem; font-weight:bold; color:var(--teal);}
+  footer{max-width:1100px; margin:0 auto; padding:10px 20px 30px; font-size:.78rem; color:var(--ink-muted); text-align:center;}
+  .src{background:var(--card-bg); border:1px solid var(--border); border-radius:var(--r);
+       padding:10px 16px; margin:22px 0 4px; font-size:.85rem; color:var(--ink-70);}
+  .src b{color:var(--ink);}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Pilotage PTE — DPTE/OCBA</h1>
+  <p>Un seul fichier d'entrée : Plan_PTE_optimise.xlsx</p>
+</header>
+
+<main>
+  <div class="src">
+    <b>Source unique :</b> toutes les données des outils ci-dessous proviennent du classeur
+    <code>Plan_PTE_optimise.xlsx</code>, importé dans le navigateur. Aucune donnée n'est
+    embarquée dans ces pages ni envoyée à un serveur.
+  </div>
+
+  <div class="cards">
+
+    <a class="card c-prioriser" href="priorisation/priorisation-pte.html">
+      <span class="tag">Prioriser</span>
+      <h2>Outil de priorisation PTE</h2>
+      <p>Classement des 582 sous-sites selon les objectifs du programme,
+         arbitrage des scénarios, carte du patrimoine.</p>
+      <span class="go">Ouvrir l'outil de priorisation →</span>
+    </a>
+
+    <a class="card c-suivre" href="revue-projets/revue-projets.html">
+      <span class="tag">Suivre</span>
+      <h2>Revue de projets</h2>
+      <p>Reporting Programme → Portefeuille → Sous-site → Projet, avec
+         Gantt et sémaphores de suivi.</p>
+      <span class="go">Ouvrir la revue de projets →</span>
+    </a>
+
+    <a class="card c-donnees" href="simulation-gains/pte-simulation.html">
+      <span class="tag">Simuler</span>
+      <h2>Simulation des gains</h2>
+      <p>Choix des mesures bâtiment par bâtiment et estimation des gains
+         par objectif ; tableau de bord KPI CECB+ dans le dossier <code>kpi/</code>.</p>
+      <span class="go">Ouvrir la simulation →</span>
+    </a>
+
+  </div>
+</main>
+
+<footer>Pilotage PTE — v1.0 – 16.09.2026</footer>
+
+</body>
+</html>
