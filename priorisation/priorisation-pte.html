@@ -23,7 +23,7 @@
   --sec:#005F73;      /* teal */
   --grn:#1A8554;      /* vert foncé */
   --acc:#B58900;      /* accent lisible sur fond clair (le D7FF37 de marque sert de surlignage) */
-  --red:#C0392B;
+  --red:#B03A2E;
   --bg:#F2F5F7;
 }
 *{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#333;font-size:14px}
@@ -48,7 +48,7 @@ body.night .m-feas-tbl th{background:var(--soft);color:var(--ink)}
 body.night code{background:var(--soft);color:var(--ink)}
 .detail-td{background:var(--soft)!important;padding:10px 16px!important;border-bottom:2px solid var(--acc)!important}
 .bg{display:inline-block;padding:1px 6px;border-radius:9px;font-size:.65rem;font-weight:700;color:#fff;white-space:nowrap}
-.bg-p1{background:#C0392B}.bg-p2{background:#B35F10}.bg-p3{background:#3498db}.bg-p4{background:#95a5a6}
+.bg-p1{background:#B03A2E}.bg-p2{background:#B35F10}.bg-p3{background:#3498db}.bg-p4{background:#95a5a6}
 .sb{height:16px;border-radius:3px;background:#e2e8f0;overflow:hidden;min-width:60px}
 .sf{height:100%;border-radius:3px;transition:width .3s;display:flex;align-items:center;justify-content:flex-end;padding-right:3px;font-size:.63rem;font-weight:700;color:#fff}
 .kpi{text-align:center;padding:8px}.kpi .n{font-size:1.45rem;font-weight:800;color:var(--pri)}.kpi .l{font-size:.7rem;color:var(--ink2);margin-top:2px}
@@ -101,7 +101,7 @@ a.tab{text-decoration:none;display:inline-flex;align-items:center;line-height:1}
 .libwarn{background:var(--bg-warn);border-bottom:1px solid #e8a838;color:#7a5900;font-size:.76rem;line-height:1.55;padding:0}
 .libwarn-in{max-width:1320px;margin:0 auto;padding:9px 22px}
 .alert-card{padding:8px 12px;border-radius:8px;margin-bottom:6px;font-size:.75rem;display:flex;align-items:flex-start;gap:8px}
-.alert-card.al-err{background:var(--bg-err);border-left:3px solid #C0392B}
+.alert-card.al-err{background:var(--bg-err);border-left:3px solid #B03A2E}
 .alert-card.al-warn{background:var(--bg-warn);border-left:3px solid #e8a838}
 .m-hdr{background:linear-gradient(135deg,var(--surf-dark),var(--surf-acc));color:var(--on-surf-dark);border-radius:12px;padding:24px 28px;margin-bottom:12px}
 .m-hdr h2{font-size:1.2rem;font-weight:700;margin-bottom:4px;color:#fff}.m-hdr p{opacity:.85;font-size:.8rem;margin:0}
@@ -255,7 +255,7 @@ a.tab{text-decoration:none;display:inline-flex;align-items:center;line-height:1}
   --ink:#1D2733; --ink2:#5B6672; --ink3:#616B77;
   --line:#E4E8EC; --bg:#F6F7F9; --card:#FFFFFF; --soft:#EFF1F4;
   --acc:#005F73; --brand:#30E5D9;
-  --ok:#17754A; --warn:#8A6800; --red:#C0392B;
+  --ok:#17754A; --warn:#8A6500; --red:#B03A2E;
   /* texte porté par un aplat d'accent : blanc sur le teal foncé du jour */
   --on-acc:#FFFFFF;
   /* fonds d'état — déclinés en nuit plus bas, jamais codés en dur ailleurs */
@@ -278,7 +278,7 @@ body.night{
   --ink:#E8ECF1; --ink2:#A7B0BB; --ink3:#949EAC;
   --line:#2A323C; --bg:#12171D; --card:#1A2026; --soft:#232B33;
   --acc:#3FB6C6; --brand:#30E5D9;
-  --ok:#3DBF84; --warn:#D8AE3A; --red:#E5695C;
+  --ok:#3DBF84; --warn:#D8AE3A; --red:#D25B4E;
   /* le teal du mode nuit est trop lumineux pour porter du blanc (2,4:1) :
      ce qui repose dessus s'écrit en sombre (7,5:1) */
   --on-acc:#0F1519;
@@ -346,6 +346,27 @@ body.night svg text{fill:var(--ink2)}
 .rp-i input{margin:0;cursor:pointer;flex:none}
 .rp-i .n{margin-left:auto;font-size:.66rem;color:var(--ink3);font-variant-numeric:tabular-nums}
 .rp-f{display:flex;gap:6px;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+/* Filtres multiples du Classement : même mécanique que le choix de
+   portefeuilles — un bouton, une liste de cases, un bouton Appliquer.
+   Un bouton actif se voit sans avoir à le déplier. */
+.f-sel{position:relative;display:inline-block}
+.f-bt{font:inherit;font-size:.78rem;padding:4px 20px 4px 8px;border:1px solid #cbd5e0;
+  border-radius:6px;background:var(--card);color:var(--ink);cursor:pointer;max-width:240px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;
+  background-image:linear-gradient(45deg,transparent 50%,var(--ink3) 50%),linear-gradient(135deg,var(--ink3) 50%,transparent 50%);
+  background-position:calc(100% - 11px) 55%,calc(100% - 7px) 55%;background-size:4px 4px,4px 4px;background-repeat:no-repeat}
+.f-bt:hover{border-color:var(--acc);color:var(--acc)}
+.f-bt.on{border-color:var(--acc);background-color:var(--soft);color:var(--acc);font-weight:600}
+.f-rz{font:inherit;font-size:.74rem;padding:4px 9px;border:1px solid var(--line);
+  border-radius:6px;background:none;color:var(--ink3);cursor:pointer;white-space:nowrap}
+.f-rz:not([disabled]){border-color:var(--red);color:var(--red)}
+.f-rz:hover:not([disabled]){background:var(--bg-err);border-color:var(--red)}
+.f-rz[disabled]{opacity:.42;cursor:default}
+/* les <select> de la barre passent à var(--line) en mode nuit ; les boutons
+   de filtre, qui ne sont ni input ni select, doivent suivre le même chemin */
+body.night .f-bt{background:var(--soft);border-color:var(--line)}
+body.night .f-bt.on{background:var(--soft);border-color:var(--acc)}
+.f-rz b{font-variant-numeric:tabular-nums}
 .cx-sel:hover .cx-txt{color:var(--acc);background-color:var(--soft)}
 /* Le mode hors chiffrage doit se voir sans avoir à déplier le menu : le
    montant affiché partout ailleurs dans l'outil n'est plus une donnée. */
@@ -605,7 +626,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 /* hBg() code ses fonds en dur, hors jetons : ils échappent à l'audit.
    #bbb + blanc = 1,96:1 · #f1c40f + blanc = 1,70:1.                    */
 .bg[style*="#bbb"]{background:#5F6A6B!important}
-.bg[style*="#f1c40f"]{background:#8A6800!important}
+.bg[style*="#f1c40f"]{background:#8A6500!important}
 .bg{font-size:11px;padding:1px 7px;font-weight:600}
 
 /* --- 7 · CECB+ : la lettre porte l'information, pas l'aplat --------- */
@@ -614,7 +635,7 @@ svg text{font-family:Arial,Helvetica,sans-serif}
    ou en cours), on éteint le vert en jeton discret.                    */
 #objBody td:nth-child(6) .bg{background:transparent!important;color:var(--ok);
   border:1px solid currentColor;font-weight:700}
-#objBody td:nth-child(6) .bg[style*="#C0392B"]{color:var(--red)}
+#objBody td:nth-child(6) .bg[style*="#B03A2E"]{color:var(--red)}
 #objBody td:nth-child(6) .bg[style*="#B35F10"]{color:var(--warn)}
 /* 7 bis (facultatif) — même logique sur Chauffage et Substitution :
    l'aplat plein signale le fossile, le contour signale le propre.
@@ -718,6 +739,7 @@ body.night .tblx td>.bt-i{background:none;color:var(--acc)}
 <div class="pop-t">📝 Notes / Commentaires</div>
 <div class="pop-i" id="notePopInfo"></div>
 <button class="bt bt-p bt-s" style="width:100%;margin-bottom:5px" onclick="exportNotes()">📥 Exporter les notes (CSV)</button>
+<button class="bt bt-p bt-s" style="width:100%;margin-bottom:5px" onclick="exportClassement()" title="Export pour l'outil de revue de projets">Exporter le classement (CSV)</button>
 <button class="bt bt-i bt-s" style="width:100%" onclick="$('nIn').click()">📂 Importer des notes (CSV)</button>
 <input type="file" id="nIn" accept=".csv,.txt" style="display:none" onchange="handleNotesImport(event)">
 <div class="pop-h">Fichier indépendant des données : colonnes <b>N°</b> et <b>Note</b>. Les notes existantes sont complétées, jamais effacées, et survivent aux mises à jour du fichier Excel.</div>
@@ -826,6 +848,7 @@ body.night .tblx td>.bt-i{background:none;color:var(--acc)}
 <select id="snapSel" onchange="renR()" style="padding:5px 8px;border:1px solid #cbd5e0;border-radius:6px;font-size:.76rem" title="Comparer les rangs actuels à ceux d'un instantané précédent"><option value="">Comparer avec…</option></select>
 <button class="bt bt-s bt-x" onclick="snapDel()" title="Supprimer l'instantané sélectionné">🗑</button>
 <span class="mini" id="snapInfo"></span>
+<button class="bt bt-p bt-s" onclick="exportClassement()" title="Export pour l'outil de revue de projets">Exporter le classement (CSV)</button>
 </div>
 <div class="fb" id="objFilters" title="Le menu de gauche choisit l'objectif classé ; les suivants filtrent l'affichage sans changer les rangs">
 <select id="objSel" onchange="renR();try{renTop(scored(getGlobalRP()))}catch(e){}">
@@ -838,12 +861,13 @@ body.night .tblx td>.bt-i{background:none;color:var(--acc)}
 <option value="veg">🌱 Végétalisation</option>
 <option value="tous">📋 Tous les objectifs</option>
 </select>
-<select id="fFo" onchange="renR()"><option value="all">Tout chauffage</option><option value="fos">🔥 Fossiles</option><option value="ren">♻️ Renouvelables</option></select>
-<select id="fPa" onchange="renR()"><option value="all">Tout patrimoine</option><option value="Classé">🏛️ Classé</option><option value="Zone protégée">🛡 Zone prot.</option><option value="Inventaire">📋 Inventaire</option><option value="Objets d'intérêt">⭐ Obj. int.</option><option value="Ensembles 19e-20e">🏘 Ensembles</option><option value="Non protégé">Non protégé</option></select>
-<select id="fRpj" onchange="renR()"><option value="all">Responsable projet : tous</option></select>
-<select id="fCe" onchange="renR()"><option value="all">Tout CECB+</option><option value="green">🟢 Réalisé (var. A/B/C)</option><option value="orange">🟠 En cours / à vérifier</option><option value="red">🔴 Aucun audit</option></select>
-<select id="fEt" onchange="renR()"><option value="all">État projet : tous</option></select>
-<input type="text" id="fSe" placeholder="🔍 Rechercher…" oninput="renR()">
+<span class="f-sel"><button type="button" class="f-bt" id="fFoTxt" onclick="tglF('fo',event)">Tout chauffage</button><div class="rp-pop" id="fFoPop" onclick="event.stopPropagation()"><div class="rp-h">Chauffage actuel — cochez un ou plusieurs choix. Aucune case cochée = pas de filtre.</div><div class="rp-list" id="fFoList"></div><div class="rp-f"><button class="bt bt-s" onclick="fselAll('fo',false)">Tout décocher</button><button class="bt bt-p bt-s" style="flex:1" onclick="fselApply('fo')">Appliquer</button></div></div></span>
+<span class="f-sel"><button type="button" class="f-bt" id="fPaTxt" onclick="tglF('pa',event)">Tout patrimoine</button><div class="rp-pop" id="fPaPop" onclick="event.stopPropagation()"><div class="rp-h">Classement au patrimoine — cochez un ou plusieurs choix. Aucune case cochée = pas de filtre.</div><div class="rp-list" id="fPaList"></div><div class="rp-f"><button class="bt bt-s" onclick="fselAll('pa',false)">Tout décocher</button><button class="bt bt-p bt-s" style="flex:1" onclick="fselApply('pa')">Appliquer</button></div></div></span>
+<span class="f-sel"><button type="button" class="f-bt" id="fRpjTxt" onclick="tglF('rpj',event)">Responsable projet : tous</button><div class="rp-pop" id="fRpjPop" onclick="event.stopPropagation()"><div class="rp-h">Responsable du projet — cochez un ou plusieurs choix. Aucune case cochée = pas de filtre.</div><div class="rp-list" id="fRpjList"></div><div class="rp-f"><button class="bt bt-s" onclick="fselAll('rpj',false)">Tout décocher</button><button class="bt bt-p bt-s" style="flex:1" onclick="fselApply('rpj')">Appliquer</button></div></div></span>
+<span class="f-sel"><button type="button" class="f-bt" id="fCeTxt" onclick="tglF('ce',event)">Tout CECB+</button><div class="rp-pop" id="fCePop" onclick="event.stopPropagation()"><div class="rp-h">État de l’audit CECB+ — cochez un ou plusieurs choix. Aucune case cochée = pas de filtre.</div><div class="rp-list" id="fCeList"></div><div class="rp-f"><button class="bt bt-s" onclick="fselAll('ce',false)">Tout décocher</button><button class="bt bt-p bt-s" style="flex:1" onclick="fselApply('ce')">Appliquer</button></div></div></span>
+<span class="f-sel"><button type="button" class="f-bt" id="fEtTxt" onclick="tglF('et',event)">État projet : tous</button><div class="rp-pop" id="fEtPop" onclick="event.stopPropagation()"><div class="rp-h">État du projet au sens SIA — cochez un ou plusieurs choix. Aucune case cochée = pas de filtre.</div><div class="rp-list" id="fEtList"></div><div class="rp-f"><button class="bt bt-s" onclick="fselAll('et',false)">Tout décocher</button><button class="bt bt-p bt-s" style="flex:1" onclick="fselApply('et')">Appliquer</button></div></div></span>
+<input type="text" id="fSe" placeholder="🔍 Rechercher…" oninput="renR();fselRzBtn()">
+<button type="button" class="f-rz" id="fRz" onclick="resetFiltres()" disabled>✕ Effacer les filtres <b id="fRzN"></b></button>
 </div>
 <div class="flat-warn" id="rankFlatWarn"></div>
 <div id="objAttrib"></div>
@@ -1120,6 +1144,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td>⛔ Exclu</td><td>retiré des classements, du classement de repli, de la vue d'ensemble et de l'arbitrage — mais listé dans le bloc <b>⛔ Exclus du programme</b>, au-dessus du tableau du Classement</td></tr>
 </tbody></table>
 <p>La donnée du classeur n'est jamais modifiée. Le rang arithmétique d'origine reste affiché sous le rang ajusté, et le motif apparaît au survol de la pastille. Tout s'exporte avec les notes dans un même CSV, qui se complète dans Excel, se partage et se réimporte.</p>
+<p>Le bouton <b>Exporter le classement (CSV)</b> produit un second fichier, <code>priorisation_PTE_&lt;date&gt;.csv</code> : une ligne par sous-site de la population entière, rangs par objectif et ajustements compris, qui alimente l'outil de revue de projets (<code>09_Revues-projets/revue-projets.html</code>).</p>
 <p><b>Une exclusion reste réversible.</b> Elle vaut pour le programme entier, pas pour un objectif : le bloc <b>⛔ Exclus du programme</b> affiche donc les mêmes bâtiments quel que soit le classement à l'écran, et aucun filtre de la barre ne peut l'amputer. Chaque ligne y rappelle le motif écrit au moment de la décision et le rang que le bâtiment tenait avant d'en sortir, et porte de quoi rejuger sur place — changer l'ajustement, ou <b>réintégrer</b>. Le bâtiment reste par ailleurs visible sur la carte et dans sa fiche.</p>
 </div></div></div>
 
@@ -1197,7 +1222,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 </div>
 </div>
 
-<div style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v08.09.2026b</div>
+<div id="ftVer" style="text-align:center;padding:16px;color:var(--ink3);font-size:.7rem">Office cantonal des bâtiments · Programme de Transition Écologique · loi 13210 · v11.09.2026</div>
 <script>
 /* ================================================================
    NOYAU COMMUN — état, persistance, pondérations
@@ -1833,7 +1858,7 @@ function fmtCHFt(v){
      (vide) · --- · à vérifier · en cours · var_A · var_B · var_C
    ================================================================ */
 const CECB_DEF={
-  none   :{pts:0 ,ico:'✗',txt:'' ,col:'#C0392B',fam:'red'   ,lbl:'Aucun audit CECB+ réalisé / non prévu'},
+  none   :{pts:0 ,ico:'✗',txt:'' ,col:'#B03A2E',fam:'red'   ,lbl:'Aucun audit CECB+ réalisé / non prévu'},
   pending:{pts:16,ico:'⏳',txt:'' ,col:'#B35F10',fam:'orange',lbl:'Audit CECB+ en cours de réalisation (crédit partiel)'},
   check  :{pts:0 ,ico:'👤',txt:'' ,col:'#B35F10',fam:'orange',lbl:'Statut douteux, à confirmer manuellement'},
   varA   :{pts:33,ico:'✓',txt:'A',col:'#1E8449',fam:'green' ,lbl:'Audit CECB+ réalisé — variante A retenue'},
@@ -1891,7 +1916,7 @@ function hBg(t){const f=String(t||'').toLowerCase().trim();
   if(!f)return b('#bbb','?','Type d’énergie non renseigné');
   if(/inexistant|aucun|sans chauff/.test(f))return b('#5F6A6B','⛔ Inexistant','Aucune installation de chauffage');
   if(f.includes('pac')&&f.includes('gaz'))return b('#A34100','🔥♻️ PAC+Gaz','Installation hybride pompe à chaleur + gaz');
-  if(f.includes('mazout'))return b('#C0392B','🔥 Mazout');
+  if(f.includes('mazout'))return b('#B03A2E','🔥 Mazout');
   if(/cad|distance|cadiom/.test(f))return b('#1F6391','🔄 CAD','Chauffage à distance : le bâtiment reçoit sa chaleur d\'un réseau, sans chaudière sur place. L\'outil ne le compte plus parmi les agents fossiles.');
   if(f.includes('gaz'))return b('#B35F10','🔥 Gaz');
   if(f.includes('pac'))return b('#1E8449','♻️ PAC','Pompe à chaleur : elle puise la chaleur dans l\'air, le sol ou l\'eau et consomme de l\'électricité pour la relever à la température du chauffage.');
@@ -1963,14 +1988,142 @@ function tglNotes(e){if(e)e.stopPropagation();
 function closeNotes(){const p=$('notePop');if(p)p.classList.remove('on')}
 document.addEventListener('click',function(e){const p=$('notePop');if(p&&p.classList.contains('on')&&!p.contains(e.target))closeNotes()});
 
+/* ================================================================
+   EXPORT « CLASSEMENT » — nourrit l'outil de revue de projets
+   (09_Revues-projets/revue-projets.html), qui reconnaît ce fichier
+   par ses colonnes, jamais par son nom. Contrat des colonnes :
+   CONTRAT_priorisation_csv.md. Population complète (S_ALL si non
+   vide, sinon S), sans filtre d'écran, ajustements qualitatifs
+   appliqués. Absent = cellule vide, jamais 0 à la place.
+   ================================================================ */
+/* Nombre formaté pour un CSV : point décimal, cellule vide si non
+   calculable — jamais 0 à la place d'une absence (contrat, § intro). */
+function csvNum(v,d){
+  if(v==null||v===''||isNaN(v))return'';
+  const p=Math.pow(10,d==null?0:d);
+  return String(Math.round(Number(v)*p)/p)}
+/* Version de l'outil : lue dans le pied de page plutôt que dupliquée
+   en dur, pour ne jamais s'en désynchroniser. */
+function appVersion(){
+  const el=$('ftVer');
+  if(!el)return'';
+  const m=String(el.textContent||'').match(/\bv\d{2}\.\d{2}\.\d{4}\b/);
+  return m?m[0]:''}
+/* État CECB+ dans le vocabulaire attendu côté revue de projets — dérivé
+   des 6 statuts internes (CECB_DEF) plutôt que dupliqué : une variante
+   retenue (A/B/C) est décidable, un statut douteux reste à confirmer,
+   un audit non terminé est en cours, l'absence d'audit reste à auditer.
+   Le hors périmètre prime sur tout : ces sous-sites ne sont suivis par
+   aucun responsable de portefeuille. */
+function etatCecbLabel(s){
+  if(estHorsPerimetre(s))return'hors périmètre';
+  const st=(s&&s.cecbSt)||'none';
+  if(st==='varA'||st==='varB'||st==='varC')return'décidable';
+  if(st==='check')return'variante à confirmer';
+  if(st==='pending')return'audit en cours';
+  return'à auditer'}
+/* Ajustement qualitatif réduit au vocabulaire du contrat d'échange :
+   in / ex / + / − / vide — les deux niveaux d'intensité (± et ±±) du
+   facteur non mesurable partagent le même signe, la nuance restant
+   dans motif_ajustement et dans l'outil lui-même. */
+function ajustementCode(id){
+  const q=siteQuali[String(id)];
+  if(!q||!q.p||q.p==='0')return'';
+  if(q.p==='in')return'in';
+  if(q.p==='ex')return'ex';
+  if(q.p==='2'||q.p==='1')return'+';
+  if(q.p==='-1'||q.p==='-2')return'-';
+  return''}
+function exportClassement(){
+  const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
+  if(!pop||!pop.length){toast('Aucune donnée à exporter','wr');return}
+  const bySiteId={};pop.forEach(function(s){bySiteId[s.id]=s});
+  const hasObj=!!(typeof OBJRANK!=='undefined'&&OBJRANK);
+  /* co2/th/ren/elec/eau/pv/veg : les sept objectifs individuels du
+     contrat. « Tous objectifs » (rang_global) n'en retient que cinq —
+     PV et végétalisation en sont exclus, comme à l'écran (objTousRows),
+     faute de coût isolable pour l'un et d'unité comparable pour l'autre. */
+  const KEYS_ALL=['co2','th','ren','elec','eau','pv','veg'];
+  const adjByKey={},nByKey={};
+  if(hasObj)KEYS_ALL.forEach(function(k){
+    const R=OBJRANK[k];adjByKey[k]={};nByKey[k]=0;
+    if(R&&R.items){
+      const adj=applyQuali(R.items,k);
+      /* Un même sous-site peut, très rarement, porter deux contributions
+         pour le même objectif (ex. Renouvelable : substitution générale et
+         part conventionnelle PAC+Gaz peuvent toutes deux se déclencher).
+         siteRanks() retient la PREMIÈRE occurrence (Array.find) : même
+         convention ici, pour ne jamais diverger d'un site à l'autre. */
+      adj.forEach(function(it){const id=String(it.id);if(!(id in adjByKey[k]))adjByKey[k][id]=it});
+      nByKey[k]=adj.length}});
+  const tousRows=hasObj?objTousRows(bySiteId):[];
+  const nbClasses=tousRows.length;
+  const tousById={};tousRows.forEach(function(r,i){tousById[String(r.id)]={rang:i+1,servis:r.servis}});
+  const d=dstamp();
+  const ver=appVersion(),fichier=lastFileName||'Échantillon intégré';
+  const versionOutil=(ver?ver+' · ':'')+fichier;
+  const HEAD=['numero_sous_site','nom_sous_site','rpf','rang_global','nb_classes','objectifs_servis',
+    'rang_co2','rang_th','rang_ren','rang_elec','rang_eau','rang_pv','rang_veg',
+    'n_co2','n_th','n_ren','n_elec','n_eau','n_pv','n_veg',
+    'franchi_co2','franchi_th','franchi_ren','franchi_elec','franchi_eau','franchi_pv','franchi_veg',
+    'gain_co2_t','gain_th_kwh','gain_ren_kwh','gain_elec_kwh','gain_eau_m3','gain_pv_kwc','gain_veg_m2',
+    'cout_kwh_chf','cout_co2_chf_t','referentiel_invest','estim_kchf',
+    'etat_cecb','alerte_coherence','ajustement','motif_ajustement','portefeuille_valide',
+    'date_export','version_outil'];
+  let c=HEAD.join(';')+'\n';
+  pop.forEach(function(s){
+    const id=String(s.id);
+    const q=siteQuali[id]||{};
+    const tous=tousById[id];
+    const row=[];
+    row.push(csvTxt(id),csvTxt(s.nom||''),csvTxt(s.rp||''));
+    row.push(tous?csvNum(tous.rang,0):'');
+    row.push(hasObj?csvNum(nbClasses,0):'');
+    row.push(tous?csvNum(tous.servis,0):'');
+    KEYS_ALL.forEach(function(k){const it=hasObj?adjByKey[k][id]:null;
+      row.push(it?csvNum(it.rangAdj||it.rang,0):'')});
+    KEYS_ALL.forEach(function(k){const it=hasObj?adjByKey[k][id]:null;
+      row.push(it?csvNum(nByKey[k],0):'')});
+    KEYS_ALL.forEach(function(k){const it=hasObj?adjByKey[k][id]:null;
+      row.push(it?(it.franchi?'oui':'non'):'')});
+    KEYS_ALL.forEach(function(k){const it=hasObj?adjByKey[k][id]:null;
+      if(!it||it.gain==null){row.push('');return}
+      /* CO₂ se classe en kg (OBJ_META.co2.unit) ; le contrat veut des
+         tonnes (gain_co2_t) — conversion ici, nulle part ailleurs. */
+      if(k==='co2')row.push(csvNum(it.gain/1000,3));
+      else if(k==='pv')row.push(csvNum(it.gain,1));
+      else row.push(csvNum(it.gain,0))});
+    /* coutUnit du classement principal (rankObjectiveObj) : CHF par unité de
+       gain CUMULÉE sur la durée de vie retenue (estim/(gain×durée)). Pour le
+       thermique l'unité du gain est le kWh : coutUnit est déjà en CHF/kWh,
+       repris tel quel. Pour le CO₂ l'unité du gain est le kg : coutUnit est
+       en CHF/kg — converti ici en CHF/t (×1000) pour coller au contrat. */
+    const itTh=hasObj?adjByKey.th[id]:null;
+    row.push(itTh&&itTh.coutUnit!=null?csvNum(itTh.coutUnit,4):'');
+    const itCo2=hasObj?adjByKey.co2[id]:null;
+    row.push(itCo2&&itCo2.coutUnit!=null?csvNum(itCo2.coutUnit*1000,4):'');
+    row.push(csvTxt(invDef().short));
+    row.push(s.invVB!=null?csvNum(s.invVB/1000,1):'');
+    row.push(csvTxt(etatCecbLabel(s)));
+    row.push(csvTxt(alertsFor(s).join(' | ')));
+    /* csvEsc, pas csvTxt : "+" et "-" sont ici des codes, pas du texte libre
+       saisi par un utilisateur — le préfixe anti-formule de csvTxt les
+       abîmerait ('+' deviendrait "'+" à la relecture). */
+    row.push(csvEsc(ajustementCode(id)));
+    row.push(csvTxt(q.m||''));
+    row.push(lockHas(id)?'oui':'non');
+    row.push(d);
+    row.push(csvTxt(versionOutil));
+    c+=row.join(';')+'\n'});
+  dl(new Blob(['﻿'+c],{type:'text/csv;charset=utf-8;'}),'priorisation_PTE_'+d+'.csv');
+  toast(pop.length+' sous-sites exportés','ok');
+  if(!hasObj)setTimeout(function(){toast('Classement par objectif indisponible (importez Plan_PTE.xlsx) — export limité aux colonnes d\'identité','wr')},800)}
+
 /* ---------- ÉTAT DU PROJET (SIA) ---------- */
-function popEtat(){
-  const el=$('fEt');if(!el)return;
-  const set=new Set();S.forEach(function(s){if(s.etat)set.add(s.etat)});
-  const cur=el.value;
-  el.innerHTML='<option value="all">État projet : tous</option>';
-  [...set].sort().forEach(function(v){const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o)});
-  el.value=cur||'all'}
+/* Les options ne sont plus portées par un <select> : elles se construisent à
+   l'ouverture de chaque filtre. Cette fonction reste le point d'entrée appelé
+   après chaque import ; elle se borne à purger les valeurs devenues absentes. */
+function popEtat(){fselSyncAll()}
 
 
 function tglS(bid,cid){const b=$(bid),c=$(cid);b.classList.toggle('op');c.classList.toggle('op');if(b.classList.contains('op'))setTimeout(function(){if(typeof plotResize==='function')plotResize()},400)}
@@ -2044,7 +2197,7 @@ var sl=co>=0.70?0:co>=0.50?1:co>=0.35?2:3;
 return[[1,1,2,2],[2,2,3,3],[2,3,3,4],[3,3,4,4]][il][sl]}
 
 var TI_LABELS={1:'Suivi énergétique',2:'Entretien / renouvellement',3:'Gros travaux / rénovation partielle',4:'Rénovation complète'};
-function tiBg(v){if(!v&&v!==0)return'<span class="bg" style="background:#bbb">—</span>';v=Math.round(v);var cols={1:'#1E8449',2:'#B8860B',3:'#B35F10',4:'#C0392B'};return'<span class="bg" title="'+(TI_LABELS[v]||'')+'" style="background:'+(cols[v]||'#bbb')+';color:'+(v===2?'#333':'#fff')+'">T'+v+'</span>'}
+function tiBg(v){if(!v&&v!==0)return'<span class="bg" style="background:#bbb">—</span>';v=Math.round(v);var cols={1:'#1E8449',2:'#B8860B',3:'#B35F10',4:'#B03A2E'};return'<span class="bg" title="'+(TI_LABELS[v]||'')+'" style="background:'+(cols[v]||'#bbb')+';color:'+(v===2?'#333':'#fff')+'">T'+v+'</span>'}
 
 function scored(rp,pat){let r=baseScored();if(rpActif())r=r.filter(s=>rpMatch(s.rp));if(pat==='prot')r=r.filter(s=>isProt(s.pat));else if(pat==='nprot')r=r.filter(s=>!isProt(s.pat));else if(pat&&pat!=='all')r=r.filter(s=>(s.pat||'')===pat);return r}
 function isProt(p){return p&&(p.includes('Classé')||p.includes('Zone protégée')||p.includes('Inventaire')||p.includes('Objets')||p.includes('Ensembles'))}
@@ -2227,18 +2380,10 @@ function popRP(){
   RP_SEL=RP_SEL.filter(function(r){return s.has(r)});
   rpFill();cxSync()}
 
-function popRPProject(){
-  const s=new Set();S.forEach(si=>{if(si.drt)s.add(si.drt)});
-  const sorted=[...s].sort();
-  const el=$('fRpj'); if(!el) return;
-  const cur=el.value;
-  el.innerHTML='<option value="all">Responsable projet : tous</option>';
-  sorted.forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;el.appendChild(o)});
-  el.value=cur||'all';
-}
+function popRPProject(){fselSyncAll()}
 
 
-const phColors={1:'#C0392B',2:'#B35F10',3:'#2E86C1',4:'#6B7683'};
+const phColors={1:'#B03A2E',2:'#B35F10',3:'#2E86C1',4:'#6B7683'};
 const phPos=[{l:0,w:16.67},{l:16.67,w:25},{l:41.67,w:25},{l:66.67,w:33.33}];
 
 function assignFallbackCoords(){S.forEach(s=>{if(s.lat&&s.lng&&!s.geoFallback){if(s.geoQ!=='nominatim')s.geoQ='file';return}const npa=extractNPA(s.adr);if(npa&&GE_NPA[npa]){const[lat,lng]=GE_NPA[npa];s.lat=lat+(Math.random()-.5)*.004;s.lng=lng+(Math.random()-.5)*.004;s.geoQ='npa';s.geoFallback=true}else{s.lat=null;s.lng=null;s.geoQ='none';s.geoFallback=true}})}
@@ -3471,17 +3616,144 @@ function alerteChip(al){
 /* Population filtrée par les sélecteurs communs du bloc Classement,
    appliquée à l'affichage seulement — rang, cumul et % cible restent
    ceux du classement global (calculés une fois dans computeObjRanking). */
+/* ---------- FILTRES MULTIPLES DU CLASSEMENT ----------
+   Cinq filtres à choix multiple, sur le modèle du choix de portefeuilles :
+   un bouton, une liste de cases à cocher, un bouton Appliquer. Une liste
+   vide vaut « pas de filtre » — c'est le seul état neutre, ce qui évite
+   d'avoir à distinguer « rien coché » de « tout coché ».
+   À l'intérieur d'un filtre les valeurs se cumulent (OU) ; entre filtres
+   elles se croisent (ET). */
+let FSEL={fo:[],pa:[],rpj:[],ce:[],et:[]};
+const FDEF={
+ fo:{t:'Chauffage',vide:'Tout chauffage',
+   aide:'Chauffage actuel. Un bâtiment peut n’appartenir à aucune des deux familles.',
+   val:function(s){const r=[];if(isFos(s.ht))r.push('fos');
+     const x=(s.ht||'').toLowerCase();
+     if(x.indexOf('pac')>=0||x.indexOf('bois')>=0||x.indexOf('cad')>=0)r.push('ren');
+     return r},
+   fix:[['fos','🔥 Fossiles'],['ren','♻️ Renouvelables']]},
+ pa:{t:'Patrimoine',vide:'Tout patrimoine',
+   aide:'Classement au patrimoine.',
+   val:function(s){return[s.pat||'']},
+   fix:[['Classé','🏛️ Classé'],['Zone protégée','🛡 Zone protégée'],
+        ['Inventaire','📋 Inventaire'],['Objets d’intérêt','⭐ Objets d’intérêt'],
+        ["Objets d'intérêt",'⭐ Objets d’intérêt'],
+        ['Ensembles 19e-20e','🏘 Ensembles 19e-20e'],['Non protégé','Non protégé']]},
+ rpj:{t:'Responsable projet',vide:'Responsable projet : tous',
+   aide:'Responsable du projet, tel qu’il est saisi dans le fichier.',
+   val:function(s){return[s.drt||'']}},
+ ce:{t:'CECB+',vide:'Tout CECB+',
+   aide:'État de l’audit CECB+.',
+   val:function(s){return[cecbInfo(s).fam]},
+   fix:[['green','🟢 Réalisé (var. A/B/C)'],['orange','🟠 En cours / à vérifier'],
+        ['red','🔴 Aucun audit']]},
+ et:{t:'État du projet',vide:'État projet : tous',
+   aide:'État du projet au sens SIA.',
+   val:function(s){return[s.etat||'']}}
+};
+function fid(k){return'f'+k.charAt(0).toUpperCase()+k.slice(1)}
+function fselLib(k,v){
+  const d=FDEF[k];
+  if(d.fix)for(let i=0;i<d.fix.length;i++)if(d.fix[i][0]===v)return d.fix[i][1];
+  return v===''?'— non renseigné':String(v)}
+/* Options réellement présentes dans les données, avec leur effectif. Une
+   valeur absente de la liste fixe est ajoutée en fin plutôt qu'ignorée :
+   un filtre qui escamote une valeur est pire que pas de filtre du tout. */
+function fselOpts(k){
+  const d=FDEF[k],cnt={};
+  (S||[]).forEach(function(s){d.val(s).forEach(function(v){cnt[v]=(cnt[v]||0)+1})});
+  let ks=[];
+  if(d.fix){d.fix.forEach(function(o){if(cnt[o[0]]&&ks.indexOf(o[0])<0)ks.push(o[0])});
+    Object.keys(cnt).forEach(function(v){if(ks.indexOf(v)<0)ks.push(v)})}
+  else ks=Object.keys(cnt).sort(function(a,b){
+    if(a==='')return 1;if(b==='')return -1;
+    return String(a).localeCompare(String(b),'fr')});
+  return ks.map(function(v){return{v:v,n:cnt[v],t:fselLib(k,v)}})}
+function fselFill(k){
+  const el=$(fid(k)+'List');if(!el)return;
+  const opts=fselOpts(k),sel=FSEL[k];
+  el.innerHTML=opts.length?opts.map(function(o){
+    return'<label class="rp-i"><input type="checkbox" value="'+esc(o.v)+'"'+
+      (sel.indexOf(o.v)>=0?' checked':'')+'>'+esc(o.t)+
+      '<span class="n">'+o.n+'</span></label>'}).join('')
+    :'<div class="rp-h">Aucune valeur pour ce filtre dans le fichier importé.</div>'}
+function fselAll(k,v){
+  const el=$(fid(k)+'List');if(!el)return;
+  el.querySelectorAll('input').forEach(function(i){i.checked=!!v})}
+function fselApply(k){
+  const el=$(fid(k)+'List');
+  let a=el?[].slice.call(el.querySelectorAll('input:checked')).map(function(i){return i.value}):[];
+  /* tout cocher revient à ne rien filtrer : on normalise pour que l'étiquette
+     dise « tous » plutôt que « 6 choix » */
+  const tot=el?el.querySelectorAll('input').length:0;
+  if(tot&&a.length===tot)a=[];
+  FSEL[k]=a;
+  const p=$(fid(k)+'Pop');if(p)p.classList.remove('on');
+  fselBtn(k);renR()}
+function fselCloseAll(){Object.keys(FDEF).forEach(function(k){
+  const p=$(fid(k)+'Pop');if(p)p.classList.remove('on')})}
+function tglF(k,e){
+  if(e)e.stopPropagation();
+  const p=$(fid(k)+'Pop');if(!p)return;
+  const ouvrir=!p.classList.contains('on');
+  fselCloseAll();
+  if(ouvrir){fselFill(k);p.classList.add('on')}}
+function fselBtn(k){
+  const b=$(fid(k)+'Txt');if(!b)return;
+  const a=FSEL[k],d=FDEF[k];
+  b.textContent=!a.length?d.vide:(a.length===1?fselLib(k,a[0]):d.t+' : '+a.length+' choix');
+  b.classList.toggle('on',a.length>0);
+  b.title=a.length?(d.t+' — '+a.map(function(v){return fselLib(k,v)}).join(', ')):d.aide;
+  fselRzBtn()}
+function fselActifs(){
+  let n=0;Object.keys(FDEF).forEach(function(k){if(FSEL[k].length)n++});
+  if(($('fSe')&&$('fSe').value||'').trim())n++;
+  return n}
+function fselRzBtn(){
+  const b=$('fRz');if(!b)return;
+  const n=fselActifs(),s=$('fRzN');
+  b.disabled=!n;
+  if(s)s.textContent=n?String(n):'';
+  b.title=n?('Remettre à zéro '+n+' filtre'+(n>1?'s':'')+' du Classement')
+           :'Aucun filtre actif dans le Classement'}
+/* Après import : une valeur retenue qui n'existe plus dans le nouveau fichier
+   filtrerait en silence, et l'écran resterait vide sans explication. */
+function fselSyncAll(){
+  Object.keys(FDEF).forEach(function(k){
+    const ok={};fselOpts(k).forEach(function(o){ok[o.v]=1});
+    FSEL[k]=FSEL[k].filter(function(v){return ok[v]===1});
+    fselBtn(k)})}
+function resetFiltres(){
+  const n=fselActifs();
+  Object.keys(FDEF).forEach(function(k){FSEL[k]=[]});
+  const se=$('fSe');if(se)se.value='';
+  Object.keys(FDEF).forEach(function(k){fselBtn(k)});
+  fselCloseAll();fselRzBtn();renR();
+  if(!n)return;
+  /* Le portefeuille n'est pas un filtre du Classement mais du contexte global :
+     le laisser en place sans le dire ferait croire à un effacement raté. */
+  toast('✕ '+n+' filtre'+(n>1?'s':'')+' effacé'+(n>1?'s':'')+
+    (rpActif()?' — la restriction de portefeuille reste active':''),'ok')}
+document.addEventListener('click',function(){fselCloseAll()});
+
 function rankFilters(){
-  return{fo:$('fFo')?.value||'all',pa:$('fPa')?.value||'all',rpj:$('fRpj')?.value||'all',
-         ce:$('fCe')?.value||'all',et:$('fEt')?.value||'all',se:($('fSe')?.value||'').toLowerCase()}}
+  return{fo:FSEL.fo,pa:FSEL.pa,rpj:FSEL.rpj,ce:FSEL.ce,et:FSEL.et,
+         se:($('fSe')?.value||'').toLowerCase()}}
+/* Un filtre vide laisse tout passer. Sinon le site passe s'il porte AU MOINS
+   une des valeurs cochées. val() n'est appelé que si le filtre est actif :
+   cecbInfo() n'est donc pas payé 582 fois pour rien. */
+function fHit(k,s,f){
+  const a=f[k];if(!a||!a.length)return true;
+  const v=FDEF[k].val(s);
+  for(let i=0;i<v.length;i++)if(a.indexOf(v[i])>=0)return true;
+  return false}
 function passRankFilters(s,f){
   if(!rpMatch(s.rp))return false;
-  if(f.fo==='fos'&&!isFos(s.ht))return false;
-  if(f.fo==='ren'){const t=(s.ht||'').toLowerCase();if(!(t.includes('pac')||t.includes('bois')||t.includes('cad')))return false}
-  if(f.pa!=='all'&&(s.pat||'')!==f.pa)return false;
-  if(f.rpj!=='all'&&(s.drt||'')!==f.rpj)return false;
-  if(f.ce!=='all'&&cecbInfo(s).fam!==f.ce)return false;
-  if(f.et!=='all'&&(s.etat||'')!==f.et)return false;
+  if(!fHit('fo',s,f))return false;
+  if(!fHit('pa',s,f))return false;
+  if(!fHit('rpj',s,f))return false;
+  if(!fHit('ce',s,f))return false;
+  if(!fHit('et',s,f))return false;
   if(f.se&&!(s.id+s.nom+(s.rp||'')+(s.drt||'')+(s.hsub||'')+(s.pat||'')+(s.adr||'')+(s.etat||'')).toLowerCase().includes(f.se))return false;
   return true}
 /* Tri de repli : score composite décroissant, non notés en dernier —
@@ -4055,8 +4327,13 @@ function objTable(key,R,meta,bySiteId,f){
   html+='</tbody></table>';
   return html}
 
-function objTousTable(bySiteId,f){
-  if(!OBJRANK)return'<p style="color:var(--ink3);font-style:italic">Importez Plan_PTE.xlsx pour calculer le classement par objectif.</p>';
+/* Lignes du tableau « Tous objectifs », sans filtre d'écran : objectifs
+   servis décroissants puis rang moyen croissant, ajustements qualitatifs
+   appliqués. Fonction pure, réutilisée par l'écran (objTousTable, qui
+   applique passRankFilters SUR LE RÉSULTAT) et par l'export CSV
+   (exportClassement, qui ne filtre rien — population entière). */
+function objTousRows(bySiteId){
+  if(!OBJRANK)return[];
   const R=OBJRANK,keys=['co2','th','ren','elec','eau'];
   const idxByKey={};for(const k of keys){idxByKey[k]={};for(const it of R[k].items)idxByKey[k][it.id]=it}
   const union=new Map();
@@ -4064,7 +4341,7 @@ function objTousTable(bySiteId,f){
   let rows=[];
   const platTous=invHorsChiffrage();
   for(const[id,base]of union){
-    const s=bySiteId[id];if(!s||!passRankFilters(s,f))continue;
+    const s=bySiteId[id];if(!s)continue;
     const rangs={},gains={},franchis={};let servis=0,coutSum=0,coutN=0;
     for(const k of keys){
       const it=idxByKey[k][id];
@@ -4088,7 +4365,12 @@ function objTousTable(bySiteId,f){
   rowsF.forEach(function(r){const q=qualiOf(r.id);const f=qualiFactor(r.id);
     r._imp=(q&&q.p==='in')?0:1;r._cm=(r.coutMoy===Infinity)?Infinity:r.coutMoy*(f||1)});
   rowsF.sort((a,b)=>(a._imp-b._imp)||(b.servis-a.servis)||(a._cm-b._cm));
-  rows=rowsF;
+  return rowsF}
+
+function objTousTable(bySiteId,f){
+  if(!OBJRANK)return'<p style="color:var(--ink3);font-style:italic">Importez Plan_PTE.xlsx pour calculer le classement par objectif.</p>';
+  const keys=['co2','th','ren','elec','eau'];
+  const rows=objTousRows(bySiteId).filter(function(r){return passRankFilters(r.s,f)});
   let html='<table><thead><tr><th>#</th><th>N°</th><th>Sous-site</th>'+
     '<th title="RP — responsable de PROJET. Le RPF, responsable de portefeuille, figure sous le nom du sous-site.">RP</th><th>CECB+</th>';
   for(const k of keys)html+='<th style="text-align:right">'+OBJ_META[k].lblCourt+'</th>';
@@ -4761,7 +5043,7 @@ function printSite(id){
     h+='<div style="margin-top:12px;border-left:4px solid #e8a838;background:#fdf6e7;padding:8px 12px;font-size:.82rem">'+
        '<b>Facteur non mesurable :</b> '+esc(qualiDef(q.p).lbl)+'<br><b>Motif :</b> '+esc(q.m||'—')+'</div>';
   if(al.length)
-    h+='<div style="margin-top:10px;border-left:4px solid #C0392B;background:var(--bg-err);padding:8px 12px;font-size:.8rem"><b>Alertes de cohérence :</b> '+esc(al.join(' ; '))+'</div>';
+    h+='<div style="margin-top:10px;border-left:4px solid #B03A2E;background:var(--bg-err);padding:8px 12px;font-size:.8rem"><b>Alertes de cohérence :</b> '+esc(al.join(' ; '))+'</div>';
   if(siteNotes[id])
     h+='<div style="margin-top:10px;border:1px solid #e2e8f0;border-radius:6px;padding:8px 12px;font-size:.82rem;white-space:pre-wrap"><b>Notes :</b>\n'+esc(siteNotes[id])+'</div>';
   h+='<p style="margin-top:16px;font-size:.66rem;color:var(--ink3)">Les rangs sont ceux du parc entier pour l\'objectif considéré, ajustements non mesurables compris. Un rang n\'est pas une décision.</p></div>';
@@ -4897,14 +5179,14 @@ function drawPathYears(){
   s+=path(requis,'#8a94a0',true)+path(port,'var(--red)',false);
   s+='<line x1="'+L+'" y1="'+yy(cible)+'" x2="'+(W-R)+'" y2="'+yy(cible)+'" stroke="#1A8554" stroke-width="1.6" stroke-dasharray="4,4"/>'+
      txt(W-R-2,yy(cible)-4,'cible 2030 : '+nf(cible/1000)+' t',{a:'end',s:9,c:'#1A8554',w:700});
-  port.forEach(function(v,i){s+='<circle cx="'+x(i)+'" cy="'+yy(v)+'" r="3" fill="#C0392B"><title>'+yrs[i]+' : '+nf(v/1000)+' t</title></circle>'});
+  port.forEach(function(v,i){s+='<circle cx="'+x(i)+'" cy="'+yy(v)+'" r="3" fill="#B03A2E"><title>'+yrs[i]+' : '+nf(v/1000)+' t</title></circle>'});
   const fin=port[port.length-1],ok=fin<=cible;
   el.innerHTML=svg(W,H,s)+
     '<div class="'+(ok?'okbox':'errbox')+'" style="margin-top:8px">'+
     '<b>'+(ok?'Cible 2030 atteinte':'Cible 2030 non atteinte')+'</b> — au rythme du portefeuille retenu, le parc émettrait <b>'+nf(fin/1000)+' t/an</b> fin 2030 '+
     'pour une cible de '+nf(cible/1000)+' t. '+(ok?'':'Écart restant : <b>'+nf((fin-cible)/1000)+' t/an</b>.')+'</div>'+
     '<p class="mini" style="margin-top:4px"><span class="mc-key" style="background:#8a94a0"></span> rythme requis (décroissance régulière vers la cible) &nbsp; '+
-    '<span class="mc-key" style="background:#C0392B"></span> effet du portefeuille, année par année</p>'}
+    '<span class="mc-key" style="background:#B03A2E"></span> effet du portefeuille, année par année</p>'}
 
 /* ---------- alerte de régression : consommation qui remonte --------------- */
 function regressions(){
@@ -5082,7 +5364,7 @@ function themeCols(){
   const g=function(n,d){const v=c.getPropertyValue(n);return v?v.trim():d};
   return{ink:g('--ink','#1D2733'),ink2:g('--ink2','#5B6672'),ink3:g('--ink3','#8C97A3'),
          line:g('--line','#E4E8EC'),acc:g('--acc','#005F73'),ok:g('--ok','#1A8554'),
-         warn:g('--warn','#B58900'),red:g('--red','#C0392B'),card:g('--card','#fff'),
+         warn:g('--warn','#B58900'),red:g('--red','#B03A2E'),card:g('--card','#fff'),
          fait:g('--surf-fait','#17754A'),onFait:g('--on-surf-fait','#FFFFFF'),
          couv:g('--surf-acc','#005F73'),onCouv:g('--on-surf-acc','#FFFFFF'),
          soft:g('--soft','#F2F5F7')}}
@@ -5746,7 +6028,7 @@ function initMap(){
 
     lMarkers=L.layerGroup().addTo(lMap);
     var leg=L.control({position:'bottomright'});
-    leg.onAdd=function(){var d=L.DomUtil.create('div','map-legend');d.innerHTML='<b>Audit CECB+</b><br><i style="background:var(--grn)"></i> Réalisé (var. A/B/C)<br><i style="background:#B35F10"></i> En cours / à vérifier<br><i style="background:#C0392B"></i> Aucun audit';return d};
+    leg.onAdd=function(){var d=L.DomUtil.create('div','map-legend');d.innerHTML='<b>Audit CECB+</b><br><i style="background:var(--grn)"></i> Réalisé (var. A/B/C)<br><i style="background:#B35F10"></i> En cours / à vérifier<br><i style="background:#B03A2E"></i> Aucun audit';return d};
     leg.addTo(lMap);
     mapReady=true;
     lMap.on('layeradd',patchTileImages);
@@ -5924,7 +6206,7 @@ const IDC_MIN=15,IDC_MAX=500,REDUC_MAX=0.85,RATIO_MIN=0.3,RATIO_MAX=5;
 
 /* Politiques publiques — palette stable par hachage de nom, pour que
    la même politique garde toujours la même couleur d'une session à l'autre. */
-const PAL=['#c0392b','#2d6a9f','#e8a838','#1E8449','#7d3c98','#16a085','#f39c12','#6B52A8','#1F6391','#A34100','#1abc9c','#34495e'];
+const PAL=['#b03a2e','#2d6a9f','#e8a838','#1E8449','#7d3c98','#16a085','#f39c12','#6B52A8','#1F6391','#A34100','#1abc9c','#34495e'];
 function polColor(name){let h=0;const s=String(name||'?');for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return PAL[h%PAL.length]}
 
 /* ================================================================
@@ -6593,7 +6875,7 @@ function drawMaccSimple(L){
   const cheapC=use.filter(function(o){return o.b[1]<=50e3}).reduce(function(s,o){return s+o.c},0);
   $('maccLeg').innerHTML='<p class="mini"><span class="mc-key" style="background:var(--grn)"></span> jusqu\'à 50 kCHF/t &nbsp; '+
     '<span class="mc-key" style="background:var(--acc)"></span> 50 à 150 kCHF/t &nbsp; '+
-    '<span class="mc-key" style="background:#C0392B"></span> au-delà de 150 kCHF/t<br>'+
+    '<span class="mc-key" style="background:#B03A2E"></span> au-delà de 150 kCHF/t<br>'+
     'Lecture : chaque barre regroupe les bâtiments dont la tonne évitée coûte le même ordre de prix. Hauteur = CO₂ évité par an, sous la barre : le nombre de bâtiments et l\'investissement correspondant. '+
     '<b>'+nf(cheapT)+' t/an</b> sont accessibles à moins de 50 kCHF la tonne, pour <b>'+nf(cheapC/1e6,0)+' M CHF</b> — soit '+nf(100*cheapT/totT)+' % du gisement pour '+
     nf(100*cheapC/(use.reduce(function(s,o){return s+o.c},0)||1))+' % de la dépense totale.</p>'}
@@ -6615,8 +6897,8 @@ function drawMaccDetail(L){
     if(budCut===null&&spent>bud)budCut=Lm+x});
   /* repères de prix */
   [50e3,100e3,200e3].forEach(function(v){if(v<pmax){const y=H-B-(H-T-B)*v/pmax;
-    g+='<line x1="'+Lm+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'" stroke="#c0392b" stroke-width="1" stroke-dasharray="4,4" opacity=".6"/>'+
-       txt(W-R-2,y-3,nf(v/1000)+'k CHF/t',{a:'end',s:8,c:'#c0392b'})}});
+    g+='<line x1="'+Lm+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'" stroke="#b03a2e" stroke-width="1" stroke-dasharray="4,4" opacity=".6"/>'+
+       txt(W-R-2,y-3,nf(v/1000)+'k CHF/t',{a:'end',s:8,c:'#b03a2e'})}});
   g+=txt(6,T+4,'CHF/t·an',{s:9,w:700,c:'#333'});
   g+=txt(W/2,H-6,'CO₂ évité cumulé — '+nf(totT)+' t/an au total ('+L.length+' bâtiments)',{a:'middle',s:10,c:'#333'});
   if(budCut!==null)g+='<line x1="'+budCut+'" y1="'+T+'" x2="'+budCut+'" y2="'+(H-B)+'" stroke="#2C3E50" stroke-width="1.8" stroke-dasharray="5,4"/>'+
