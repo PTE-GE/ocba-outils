@@ -5,88 +5,647 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pilotage PTE</title>
 <style>
-  :root{
-    --slate:#2C3E50; --teal:#005F73; --green:#1A8554; --turquoise:#30E5D9;
-    --purple:#856EBE; --ochre:#B58900; --red:#B03A2E; --gray:#8A8F94;
-    --page-bg:#F4F6F8; --card-bg:#fff; --border:#E1E6E9;
-    --ink:#2C3E50; --ink-70:#5A6B78; --ink-muted:#5F6B75;
-    --r:8px;
-    --shadow:0 1px 2px rgba(44,62,80,.06), 0 1px 8px rgba(44,62,80,.05);
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0; background:var(--page-bg);}
-  body{font-family:Arial, Helvetica, sans-serif; color:var(--ink); line-height:1.45;}
-  header{background:var(--teal); color:#fff; padding:22px 24px;}
-  header h1{margin:0; font-size:1.35rem; font-weight:bold;}
-  header p{margin:.35em 0 0; font-size:.9rem; opacity:.9;}
-  main{max-width:1100px; margin:0 auto; padding:28px 20px 40px;}
-  .cards{display:flex; gap:18px; flex-wrap:wrap;}
-  .card{
-    flex:1 1 280px; background:var(--card-bg); border:1px solid var(--border);
-    border-radius:var(--r); box-shadow:var(--shadow); padding:20px;
-    display:flex; flex-direction:column; text-decoration:none; color:inherit;
-    border-top:4px solid var(--teal); transition:box-shadow .15s;
-  }
-  .card:hover{box-shadow:0 2px 4px rgba(44,62,80,.1), 0 4px 14px rgba(44,62,80,.1);}
-  .card.c-suivre{border-top-color:var(--purple);}
-  .card.c-donnees{border-top-color:var(--ochre);}
-  .card h2{margin:0 0 .5em; font-size:1.05rem; color:var(--ink);}
-  .card .tag{
-    display:inline-block; font-size:11px; text-transform:uppercase; letter-spacing:.04em;
-    color:var(--ink-muted); font-weight:bold; margin-bottom:.6em;
-  }
-  .card p{margin:0; font-size:.87rem; color:var(--ink-70); flex:1;}
-  .card .go{margin-top:1em; font-size:.83rem; font-weight:bold; color:var(--teal);}
-  footer{max-width:1100px; margin:0 auto; padding:10px 20px 30px; font-size:.78rem; color:var(--ink-muted); text-align:center;}
-  .src{background:var(--card-bg); border:1px solid var(--border); border-radius:var(--r);
-       padding:10px 16px; margin:22px 0 4px; font-size:.85rem; color:var(--ink-70);}
-  .src b{color:var(--ink);}
+/* ==========================================================================
+   OCBA / DPTE — Pilotage PTE — chrome commun des outils (v2, 17.09.2026)
+   Extrait de ocba-pte-chrome.css (référence) : seules les règles utilisées
+   par cette page sont reprises, à l'identique.
+   ========================================================================== */
+:root{
+  --violet:#856EBE; --turquoise:#30E5D9; --emeraude:#06E9A8; --vert-clair:#64F7A3;
+  --lime:#6EF93C; --jaune-vert:#D7FF37;
+  --grad:linear-gradient(90deg,var(--violet),var(--turquoise),var(--emeraude),var(--vert-clair),var(--lime),var(--jaune-vert));
+  --slate:#2C3E50; --teal:#005F73; --green:#1A8554; --ochre:#B58900; --ochre-text:#8A6500;
+  --red:#B03A2E; --gray:#8A8F94; --blue-pale:#E8F4F7;
+  --page-bg:#F4F6F8; --card-bg:#FFFFFF; --border:#E1E6E9;
+  --ink:var(--slate); --ink-70:#5A6B78; --ink-muted:#5F6B75;
+  --tint-gris:#EDEFF1; --tint-orange:#FBF1D6; --tint-orange-strong:#F5E1A6;
+  --r:10px; --r-in:8px; --pill:100px;
+  --shadow:0 1px 2px rgba(44,62,80,.05), 0 8px 24px rgba(44,62,80,.06);
+  --wrap:1440px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font:14px/1.45 Arial,Helvetica,sans-serif;color:var(--ink);background:var(--page-bg)}
+h1,h2,h3,h4{font-family:inherit;color:var(--ink);margin:0 0 .4em;font-weight:bold}
+a{color:var(--teal)}
+
+.band{height:4px;background:var(--grad)}
+.hdr{position:sticky;top:0;z-index:30;background:var(--card-bg);border-bottom:1px solid var(--border)}
+.hdr-in{max-width:var(--wrap);margin:0 auto;padding:12px 24px 0;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.hdr h1{margin:0;font-size:18px;font-weight:bold;letter-spacing:-.01em;white-space:nowrap}
+.hdr .sub{margin:2px 0 0;font-size:12px;color:var(--ink-muted)}
+.hdr .grow{flex:1 1 auto}
+
+.card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 20px;margin-bottom:16px}
+.card h2,.card h3{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-muted);margin:0 0 12px}
+.lead{font-size:13px;color:var(--ink-70);margin:-6px 0 12px}
+
+.notice{font-size:13px;line-height:1.55;padding:10px 14px;border-radius:var(--r-in);border:1px solid var(--border);background:var(--card-bg);color:var(--ink-70);margin-bottom:10px}
+.notice b{color:var(--ink)}
+
+.foot{max-width:var(--wrap);margin:32px auto 0;padding:16px 24px 28px;border-top:1px solid var(--border);
+  font-size:12px;color:var(--ink-muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.foot a{color:var(--ink-muted);text-decoration:none;border-bottom:1px dotted currentColor}
+.foot a:hover{color:var(--teal)}
+
+@media print{
+  body{background:#fff}
+  .band,.foot a{display:none !important}
+  .hdr{position:static;border-bottom:1px solid #ccc}
+  .card{box-shadow:none;border-color:#ccc;break-inside:avoid}
+}
+
+/* ==========================================================================
+   Pilotage PTE — styles propres à la page d'accueil
+   ========================================================================== */
+.hdr-in{padding-bottom:12px}                 /* pas d'onglets sur cette page */
+.wrap{max-width:var(--wrap);margin:0 auto;padding:24px 24px 0}
+.wrap>.lead{margin:8px 0 20px;font-size:14px}
+
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:20px}
+@media(max-width:920px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.cards{grid-template-columns:1fr}}
+
+a.card{display:flex;flex-direction:column;gap:6px;margin:0;color:inherit;text-decoration:none;
+  border-top:4px solid var(--teal);transition:box-shadow .15s,border-color .15s}
+a.card:hover{box-shadow:0 2px 4px rgba(44,62,80,.1),0 8px 24px rgba(44,62,80,.12)}
+a.card:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a.card h2{margin:0}                          /* mot-clé en capitales, 12 px gris (chrome commun) */
+a.card h3{font-size:16px;text-transform:none;letter-spacing:-.01em;color:var(--ink);margin:0}
+a.card p{margin:0;flex:1;font-size:13px;color:var(--ink-70)}
+a.card .go{margin-top:10px;font-size:13px;font-weight:bold;color:var(--teal)}
+a.card .go::after{content:'';display:inline-block;width:6px;height:6px;margin-left:8px;
+  border-right:1.5px solid currentColor;border-top:1.5px solid currentColor;transform:rotate(45deg) translateY(-1px)}
+
+/* ---- pastille d'état, boutons, zone de dépôt : chrome commun (ocba-pte-chrome.css) ---- */
+.hdr-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:.45em;font-size:12px;font-weight:bold;padding:5px 12px;border-radius:var(--pill);white-space:nowrap}
+.badge::before{content:'';width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.9}
+.badge.none{background:var(--tint-gris);color:var(--ink-muted)}
+.badge.ok{background:var(--tint-vert);color:var(--green)}
+.badge.warn{background:var(--tint-orange);color:var(--ochre-text)}
+.btn{font:inherit;font-size:13px;font-weight:bold;border:1px solid var(--border);background:var(--card-bg);color:var(--ink);
+  padding:7px 15px;border-radius:var(--pill);cursor:pointer;transition:.15s;white-space:nowrap}
+.btn:hover{background:var(--page-bg);border-color:#CFD8E0}
+.btn-p{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn-p:hover{background:#00758C;border-color:#00758C}
+.btn-danger{color:var(--red);border-color:#F0D6D2}
+.btn-danger:hover{background:var(--tint-rouge)}
+.hidden{display:none !important}
+.drop{border:2px dashed #C6D2DC;border-radius:16px;background:var(--card-bg);padding:40px 30px;text-align:center;
+  position:relative;transition:.2s;max-width:820px;margin:8px auto 24px}
+.drop.over{border-color:var(--teal);background:var(--blue-pale)}
+.drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drop .ic{width:40px;height:40px;margin:0 auto 12px;color:var(--teal)}
+.drop h2{margin:0 0 6px;font-size:20px}
+.drop p{margin:0;color:var(--ink-muted);font-size:14px}
+.drop .opt{margin-top:14px;font-size:12.5px;color:var(--ink-muted)}
+.srcbar{max-width:var(--wrap);margin:0 auto 20px}
+.srcbar-in{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-70);
+  background:var(--card-bg);border:1px solid var(--border);border-radius:var(--pill);padding:8px 8px 8px 18px}
+.srcbar b{color:var(--ink)}
+.srcbar .actions{display:flex;gap:8px;flex-wrap:wrap}
+.notice.warn{background:var(--tint-orange);border-color:var(--tint-orange-strong);color:var(--ochre-text)}
+a.card .etat{font-size:12px;color:var(--green);margin-top:2px}
+a.card .etat.none{color:var(--ink-muted)}
+@media print{.drop,.srcbar,.hdr-right{display:none !important}}
 </style>
 </head>
 <body>
 
-<header>
-  <h1>Pilotage PTE — DPTE/OCBA</h1>
-  <p>Un seul fichier d'entrée : Plan_PTE_optimise.xlsx</p>
+<div class="band"></div>
+<header class="hdr">
+  <div class="hdr-in">
+    <div>
+      <h1>Pilotage PTE</h1>
+      <p class="sub">Office cantonal des bâtiments · Programme de transition écologique · loi 13210</p>
+    </div>
+    <div class="grow"></div>
+    <div class="hdr-right">
+      <span class="badge none" id="badge">Aucune donnée chargée</span>
+      <button class="btn btn-p" id="btnCharger">Charger le classeur</button>
+    </div>
+  </div>
 </header>
 
-<main>
-  <div class="src">
-    <b>Source unique :</b> toutes les données des outils ci-dessous proviennent du classeur
-    <code>Plan_PTE_optimise.xlsx</code>, importé dans le navigateur. Aucune donnée n'est
-    embarquée dans ces pages ni envoyée à un serveur.
+<div class="wrap">
+  <p class="lead">Trois outils pour prioriser, simuler et suivre les projets du Plan PTE, nourris par un seul classeur, déposé ici une fois.</p>
+
+  <div class="drop" id="drop">
+    <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 12l6 6 6-6M4 20h16"/></svg>
+    <h2>Glissez ici Plan_PTE.xlsx</h2>
+    <p>ou cliquez pour choisir le classeur — tout se calcule dans votre navigateur, rien n'est envoyé nulle part.</p>
+    <p class="opt">Le classeur est gardé dans ce navigateur et les trois outils s'ouvrent avec, sans nouvel import.</p>
+    <input type="file" id="fileInput" accept=".xlsx,.xlsm">
   </div>
+
+  <div class="srcbar hidden" id="srcbar"><div class="srcbar-in"><span id="srcTexte"></span>
+    <span class="actions"><button class="btn" id="btnUpdate">Recharger le classeur</button>
+    <button class="btn btn-danger" id="btnEffacer">Effacer le classeur commun</button></span></div></div>
+
+  <div id="msg" class="hidden"></div>
 
   <div class="cards">
 
     <a class="card c-prioriser" href="priorisation/priorisation-pte.html">
-      <span class="tag">Prioriser</span>
-      <h2>Outil de priorisation PTE</h2>
-      <p>Classement des 582 sous-sites selon les objectifs du programme,
-         arbitrage des scénarios, carte du patrimoine.</p>
-      <span class="go">Ouvrir l'outil de priorisation →</span>
+      <h2>Prioriser</h2>
+      <h3>Priorisation PTE</h3>
+      <p>Classe les 582 sous-sites selon les objectifs 2030, compare les scénarios et situe le patrimoine sur la carte.</p>
+      <span class="etat none" data-etat>Aucun classeur commun</span>
+      <span class="go">Ouvrir la priorisation</span>
+    </a>
+
+    <a class="card c-simuler" href="simulation-gains/pte-simulation.html">
+      <h2>Simuler</h2>
+      <h3>Simulation des gains</h3>
+      <p>Chiffre, pour un site, les gains d'énergie, de CO₂ et de francs d'une combinaison de mesures.</p>
+      <span class="etat none" data-etat>Aucun classeur commun</span>
+      <span class="go">Ouvrir la simulation</span>
     </a>
 
     <a class="card c-suivre" href="revue-projets/revue-projets.html">
-      <span class="tag">Suivre</span>
-      <h2>Revue de projets</h2>
-      <p>Reporting Programme → Portefeuille → Sous-site → Projet, avec
-         Gantt et sémaphores de suivi.</p>
-      <span class="go">Ouvrir la revue de projets →</span>
+      <h2>Suivre</h2>
+      <h3>Revue de projets</h3>
+      <p>Suit l'avancement du programme au portefeuille, au sous-site et au projet, avec Gantt et sémaphores.</p>
+      <span class="etat none" data-etat>Aucun classeur commun</span>
+      <span class="go">Ouvrir la revue de projets</span>
     </a>
 
-    <a class="card c-donnees" href="simulation-gains/pte-simulation.html">
-      <span class="tag">Simuler</span>
-      <h2>Simulation des gains</h2>
-      <p>Choix des mesures bâtiment par bâtiment et estimation des gains
-         par objectif ; tableau de bord KPI CECB+ dans le dossier <code>kpi/</code>.</p>
-      <span class="go">Ouvrir la simulation →</span>
-    </a>
 
   </div>
-</main>
 
-<footer>Pilotage PTE — v1.0 – 16.09.2026</footer>
+</div>
 
+<footer class="foot">
+  <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
+  <span>Pilotage PTE · v1.3 · 21.09.2026</span>
+</footer>
+
+<script>
+'use strict';
+
+/* ============================================================================
+   PTE_COMMUN — ce que les trois outils de pilotage partagent (20.09.2026)
+   Décisions d'Achim du 19.09.2026 (idées 1 et 2 de Zoé, version ambitieuse) :
+     1. un seul import pour les trois outils : le classeur est gardé une fois,
+        dans IndexedDB de l'origine commune (GitHub Pages), avec sa fiche
+        (nom, date, taille, empreinte) dans localStorage ; la page Pilotage PTE
+        est le point d'import ; chaque outil s'ouvre chargé s'il trouve un
+        classeur commun plus récent que ses propres données ;
+     2. le sous-site est une adresse : `#ss=204601` ouvre chaque outil sur ce
+        sous-site ; les fiches portent des liens croisés ; la priorisation
+        publie son classement dans le stockage commun, la revue le lit.
+   Module sans dépendance, à copier tel quel dans les trois outils et dans
+   Pilotage_PTE.html. Aucune donnée ne quitte le navigateur.
+   ========================================================================== */
+var PTE_COMMUN = (function () {
+  'use strict';
+  var DB = 'pte-pilotage', STORE = 'classeur', KEY = 'courant';
+  var LS_META = 'pte.classeur.meta.v1';      /* {nom, date, taille, empreinte, outil} */
+  var LS_CLASSEMENT = 'pte.classement.v1';   /* {date, source, lignes:[{num, rang, objectifs:[...], ...}]} */
+  var LS_QUESTIONS = 'pte.questions.v1';     /* revue : questions du mois (voir SPEC) */
+
+  /* ---------- où sommes-nous ? (kDrive ou GitHub Pages) ---------- */
+  /* Les quatre pages vivent dans deux arborescences différentes ; on reconnaît
+     l'une ou l'autre au chemin courant et on construit les liens en conséquence. */
+  var LAYOUTS = {
+    kdrive: { accueil: 'Pilotage_PTE.html', prio: '02_Outil-PTE/index.html',
+              sim: '06_Simulation-Gains/pte-simulation.html', revue: '09_Revues-projets/revue-projets.html',
+              donnees: '01_Donnees/' },
+    /* GitHub Pages : l'arborescence publiée depuis août 2026 — `simulation-gains`,
+       pas `simulation` (vérifié en ligne le 21.09.2026). */
+    github: { accueil: 'index.html', prio: 'priorisation/priorisation-pte.html',
+              sim: 'simulation-gains/pte-simulation.html', revue: 'revue-projets/revue-projets.html',
+              donnees: '' }
+  };
+  function layout() {
+    var p = (typeof location !== 'undefined' && location.pathname) || '';
+    if (/\/(priorisation|simulation-gains|revue-projets)\/|ocba-outils/.test(p)) return 'github';
+    return 'kdrive';
+  }
+  /* Profondeur de la page courante par rapport à la racine (0 = accueil, 1 = un outil). */
+  function racine() {
+    var p = (typeof location !== 'undefined' && location.pathname) || '';
+    var L = LAYOUTS[layout()], k;
+    for (k in L) if (k !== 'accueil' && k !== 'donnees' && p.indexOf('/' + L[k].split('/')[0] + '/') >= 0) return '../';
+    return './';
+  }
+  /* Lien vers un autre outil, avec éventuellement un sous-site. */
+  function lien(outil, ss) {
+    var L = LAYOUTS[layout()];
+    if (!L[outil]) return null;
+    return racine() + L[outil] + (ss ? '#ss=' + encodeURIComponent(String(ss)) : '');
+  }
+
+  /* ---------- #ss=… dans l'adresse ---------- */
+  function ssDepuisHash() {
+    var h = (typeof location !== 'undefined' && location.hash) || '';
+    var m = /[#&]ss=([0-9]{6})\b/.exec(h);
+    return m ? m[1] : null;
+  }
+  function ecrireHash(ss) {
+    if (typeof history === 'undefined') return;
+    try { history.replaceState(null, '', ss ? '#ss=' + ss : location.pathname + location.search); } catch (e) {}
+  }
+
+  /* ---------- classeur commun (IndexedDB + fiche localStorage) ---------- */
+  function ouvrir() {
+    return new Promise(function (res, rej) {
+      if (typeof indexedDB === 'undefined') return rej(new Error('IndexedDB indisponible'));
+      var q = indexedDB.open(DB, 1);
+      q.onupgradeneeded = function () { q.result.createObjectStore(STORE); };
+      q.onsuccess = function () { res(q.result); };
+      q.onerror = function () { rej(q.error); };
+    });
+  }
+  function empreinte(buf) {
+    /* FNV-1a 32 bits sur tous les octets (5 Mo : quelques dizaines de ms) */
+    var u = new Uint8Array(buf), h = 0x811c9dc5, i;
+    for (i = 0; i < u.length; i++) { h ^= u[i]; h = Math.imul(h, 0x01000193) >>> 0; }
+    h ^= u.length; h = Math.imul(h, 0x01000193) >>> 0;
+    return ('00000000' + h.toString(16)).slice(-8);
+  }
+  function lireMeta() { try { return JSON.parse(localStorage.getItem(LS_META) || 'null'); } catch (e) { return null; } }
+  /* Enregistre le classeur importé (ArrayBuffer) et sa fiche. `outil` = qui l'a importé. */
+  function publierClasseur(buf, nom, outil) {
+    var meta = { nom: nom || 'Plan_PTE.xlsx', date: new Date().toISOString(), taille: buf.byteLength,
+                 empreinte: empreinte(buf), outil: outil || '' };
+    return ouvrir().then(function (db) {
+      return new Promise(function (res, rej) {
+        var tx = db.transaction(STORE, 'readwrite');
+        tx.objectStore(STORE).put(buf, KEY);
+        tx.oncomplete = function () { try { localStorage.setItem(LS_META, JSON.stringify(meta)); } catch (e) {} res(meta); };
+        tx.onerror = function () { rej(tx.error); };
+      });
+    });
+  }
+  /* Rend {buf, meta} ou null. */
+  function lireClasseur() {
+    var meta = lireMeta();
+    if (!meta) return Promise.resolve(null);
+    return ouvrir().then(function (db) {
+      return new Promise(function (res) {
+        var tx = db.transaction(STORE, 'readonly'), q = tx.objectStore(STORE).get(KEY);
+        q.onsuccess = function () { res(q.result ? { buf: q.result, meta: meta } : null); };
+        q.onerror = function () { res(null); };
+      });
+    }).catch(function () { return null; });
+  }
+  function effacerClasseur() {
+    try { localStorage.removeItem(LS_META); } catch (e) {}
+    return ouvrir().then(function (db) {
+      return new Promise(function (res) { var tx = db.transaction(STORE, 'readwrite'); tx.objectStore(STORE).delete(KEY); tx.oncomplete = res; tx.onerror = res; });
+    }).catch(function () {});
+  }
+  /* Un classeur commun plus récent que la date donnée (ISO) existe-t-il ? */
+  function plusRecentQue(dateIso) {
+    var m = lireMeta(); if (!m) return false;
+    if (!dateIso) return true;
+    return m.date > dateIso;
+  }
+
+  /* ---------- classement de la priorisation (publié / lu) ---------- */
+  function publierClassement(lignes, source) {
+    try { localStorage.setItem(LS_CLASSEMENT, JSON.stringify({ date: new Date().toISOString(), source: source || '', lignes: lignes })); return true; } catch (e) { return false; }
+  }
+  function lireClassement() { try { return JSON.parse(localStorage.getItem(LS_CLASSEMENT) || 'null'); } catch (e) { return null; } }
+
+  /* ---------- questions du mois (revue) ---------- */
+  function lireQuestions() { try { return JSON.parse(localStorage.getItem(LS_QUESTIONS) || 'null') || { mois: {} }; } catch (e) { return { mois: {} }; } }
+  function ecrireQuestions(q) { try { localStorage.setItem(LS_QUESTIONS, JSON.stringify(q)); return true; } catch (e) { return false; } }
+
+  /* ---------- thème jour / nuit (commun aux trois outils, 20.09.2026) ------
+     Une seule clé : basculer dans un outil bascule aussi les deux autres au
+     prochain chargement. La classe posée sur <body> est `night`, comme dans
+     la priorisation ; le CSS commun redéfinit les jetons. */
+  var LS_THEME = 'pte.theme.v1';
+  function themeCourant() { try { return localStorage.getItem(LS_THEME) === 'nuit' ? 'nuit' : 'jour'; } catch (e) { return 'jour'; } }
+  function appliquerTheme(t) {
+    var nuit = (t || themeCourant()) === 'nuit';
+    if (typeof document !== 'undefined' && document.body) document.body.classList.toggle('night', nuit);
+    return nuit ? 'nuit' : 'jour';
+  }
+  function basculerTheme() {
+    var t = themeCourant() === 'nuit' ? 'jour' : 'nuit';
+    try { localStorage.setItem(LS_THEME, t); } catch (e) {}
+    return appliquerTheme(t);
+  }
+
+  /* ---------- visite guidée (moteur commun) --------------------------------
+     etapes : [{ sel, t, d, avant? }] — `sel` le sélecteur à éclairer, `t` le
+     titre, `d` le texte (HTML simple), `avant` une fonction appelée avant
+     d'afficher l'étape (ouvrir un onglet, dérouler un bloc…). `cle` sert à
+     retenir que la visite a été vue (une clé par outil).
+     Le balisage et les classes sont ceux du CSS commun : .tour-mask,
+     .tour-hole, .tour-box. */
+  function tour(etapes, opts) {
+    opts = opts || {};
+    if (!etapes || !etapes.length || typeof document === 'undefined') return null;
+    var i = -1, masque = null, trou = null, boite = null;
+    function creer() {
+      masque = document.createElement('div'); masque.className = 'tour-mask';
+      trou = document.createElement('div'); trou.className = 'tour-hole';
+      boite = document.createElement('div'); boite.className = 'tour-box';
+      document.body.appendChild(masque); document.body.appendChild(trou); document.body.appendChild(boite);
+      masque.addEventListener('click', fin);
+      document.addEventListener('keydown', clavier);
+    }
+    function clavier(e) {
+      if (!masque) return;
+      if (e.key === 'Escape') fin();
+      else if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); aller(1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); aller(-1); }
+    }
+    function placer(el) {
+      var r = el.getBoundingClientRect(), m = 6;
+      trou.style.left = (r.left - m) + 'px'; trou.style.top = (r.top - m) + 'px';
+      trou.style.width = (r.width + 2 * m) + 'px'; trou.style.height = (r.height + 2 * m) + 'px';
+      trou.style.display = 'block';
+      var bw = Math.min(390, window.innerWidth - 32), bh = boite.offsetHeight || 180;
+      var top = r.bottom + 14, left = Math.min(Math.max(12, r.left), window.innerWidth - bw - 12);
+      if (top + bh > window.innerHeight - 12) top = Math.max(12, r.top - bh - 14);
+      boite.style.width = bw + 'px'; boite.style.left = left + 'px'; boite.style.top = top + 'px';
+    }
+    function rendre() {
+      var e = etapes[i];
+      if (e.avant) { try { e.avant(); } catch (err) {} }
+      var el = typeof e.sel === 'function' ? e.sel() : document.querySelector(e.sel);
+      boite.innerHTML = '<h4></h4><p></p>' +
+        '<div class="tour-nav"><span class="tour-step"></span><span>' +
+        '<button type="button" class="btn" data-tour="prec">Précédent</button> ' +
+        '<button type="button" class="btn btn-p" data-tour="suiv">Suivant</button> ' +
+        '<button type="button" class="btn" data-tour="fin">Quitter</button></span></div>' +
+        '<div class="tour-keys">Flèches pour naviguer, Échap pour quitter.</div>';
+      boite.querySelector('h4').textContent = e.t;
+      boite.querySelector('p').innerHTML = e.d;
+      boite.querySelector('.tour-step').textContent = (i + 1) + ' / ' + etapes.length;
+      boite.querySelector('[data-tour=prec]').disabled = (i === 0);
+      if (i === etapes.length - 1) boite.querySelector('[data-tour=suiv]').textContent = 'Terminer';
+      boite.querySelector('[data-tour=prec]').addEventListener('click', function () { aller(-1); });
+      boite.querySelector('[data-tour=suiv]').addEventListener('click', function () { aller(1); });
+      boite.querySelector('[data-tour=fin]').addEventListener('click', fin);
+      if (el) {
+        try { el.scrollIntoView({ block: 'center', behavior: 'instant' }); } catch (err) { try { el.scrollIntoView(); } catch (e2) {} }
+        setTimeout(function () { if (masque) placer(el); }, 60);
+      } else {                       /* élément absent (onglet vide) : bulle centrée, pas de trou */
+        trou.style.display = 'none';
+        boite.style.width = Math.min(390, window.innerWidth - 32) + 'px';
+        boite.style.left = Math.max(12, (window.innerWidth - 390) / 2) + 'px';
+        boite.style.top = Math.max(12, window.innerHeight / 2 - 120) + 'px';
+      }
+    }
+    function aller(d) { var n = i + d; if (n < 0) return; if (n >= etapes.length) return fin(); i = n; rendre(); }
+    function fin() {
+      document.removeEventListener('keydown', clavier);
+      [masque, trou, boite].forEach(function (n) { if (n && n.parentNode) n.parentNode.removeChild(n); });
+      masque = trou = boite = null;
+      if (opts.cle) { try { localStorage.setItem(opts.cle, '1'); } catch (e) {} }
+      if (opts.fin) { try { opts.fin(); } catch (e) {} }
+    }
+    creer(); masque.classList.add('on'); i = 0; rendre();
+    return { fin: fin };
+  }
+  function tourVue(cle) { try { return localStorage.getItem(cle) === '1'; } catch (e) { return false; } }
+
+  /* ---------- mes saisies : ce que l'utilisateur a tapé, les trois outils ---
+     Les trois outils vivent sur la même origine : une page peut donc lire et
+     écrire les clés des deux autres. On n'exporte que les SAISIES — notes,
+     ajustements, décisions, variantes, questions, réglages —, jamais le
+     classeur ni les données qui en sont dérivées : elles reviennent au
+     prochain import. Un fichier, trois outils, pour passer d'un poste ou
+     d'un navigateur à l'autre (décision d'Achim, 20.09.2026). */
+  var SAISIES = [
+    { outil: 'priorisation', cle: 'pte_state_v2', champs: ['siteNotes', 'siteQuali', 'phaseOverrides', 'params', 'inv', 'co2c'],
+      resume: function (o) { var n = o && o.siteNotes ? Object.keys(o.siteNotes).length : 0,
+                                 a = o && o.siteQuali ? Object.keys(o.siteQuali).length : 0;
+        return n + ' note(s), ' + a + ' ajustement(s)'; } },
+    { outil: 'priorisation', cle: 'pte_snapshots_v1', tout: true,
+      resume: function (o) { return (o && o.length ? o.length : 0) + ' instantané(s)'; } },
+    { outil: 'revue', cle: 'ocba_revue_db_v1', champs: ['decisions'],
+      resume: function (o) { return (o && o.decisions ? o.decisions.length : 0) + ' décision(s)'; } },
+    { outil: 'revue', cle: 'ocba_revue_params_v1', tout: true,
+      resume: function () { return 'seuils des sémaphores'; } },
+    { outil: 'simulation', cle: 'pte-simulation-v3', champs: ['variantes', 'variante', 'typologie', 'agent', 'anneeChoisie'],
+      resume: function (o) { var v = o && o.variantes ? o.variantes : null;
+        var n = 0; if (v) { for (var k in v) if (v[k] && v[k].length) n += v[k].length; }
+        return n + ' mesure(s) simulée(s)'; } },
+    { outil: 'revue', cle: LS_QUESTIONS, tout: true,
+      resume: function (o) { var m = o && o.mois ? Object.keys(o.mois).length : 0; return m + ' mois de questions'; } }
+  ];
+  function lireJSON(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
+  function exporterSaisies() {
+    var out = { format: 'pte-saisies', version: 1, date: new Date().toISOString(), blocs: [] };
+    SAISIES.forEach(function (d) {
+      var o = lireJSON(d.cle); if (o == null) return;
+      var part = o;
+      if (!d.tout) { part = {}; d.champs.forEach(function (c) { if (o[c] !== undefined) part[c] = o[c]; }); }
+      if (!d.tout && !Object.keys(part).length) return;
+      out.blocs.push({ outil: d.outil, cle: d.cle, contenu: part, resume: d.resume(o) });
+    });
+    return out;
+  }
+  function resumeSaisies() { return exporterSaisies().blocs.map(function (b) { return b.outil + ' : ' + b.resume; }); }
+  /* Fusionne : ce qui existe déjà et n'est pas dans le fichier est conservé ;
+     les listes (décisions, instantanés) sont ajoutées sans doublon. */
+  function importerSaisies(obj) {
+    if (!obj || obj.format !== 'pte-saisies' || !obj.blocs) throw new Error('Ce fichier n’est pas un export de saisies PTE.');
+    var faits = [];
+    obj.blocs.forEach(function (b) {
+      var def = null, i;
+      for (i = 0; i < SAISIES.length; i++) if (SAISIES[i].cle === b.cle) { def = SAISIES[i]; break; }
+      if (!def) return;
+      var actuel = lireJSON(b.cle), fusion;
+      if (Array.isArray(b.contenu)) {
+        var base = Array.isArray(actuel) ? actuel.slice() : [];
+        var vus = {}; base.forEach(function (x) { vus[JSON.stringify(x)] = 1; });
+        b.contenu.forEach(function (x) { var s = JSON.stringify(x); if (!vus[s]) { base.push(x); vus[s] = 1; } });
+        fusion = base;
+      } else {
+        fusion = actuel && typeof actuel === 'object' ? actuel : {};
+        for (var c in b.contenu) {
+          if (Array.isArray(b.contenu[c])) {
+            var av = Array.isArray(fusion[c]) ? fusion[c].slice() : [], vus2 = {};
+            av.forEach(function (x) { vus2[JSON.stringify(x)] = 1; });
+            b.contenu[c].forEach(function (x) { var s2 = JSON.stringify(x); if (!vus2[s2]) { av.push(x); vus2[s2] = 1; } });
+            fusion[c] = av;
+          } else if (b.contenu[c] && typeof b.contenu[c] === 'object') {
+            fusion[c] = Object.assign({}, fusion[c] || {}, b.contenu[c]);
+          } else { fusion[c] = b.contenu[c]; }
+        }
+      }
+      try { localStorage.setItem(b.cle, JSON.stringify(fusion)); faits.push(b.outil + ' : ' + b.resume); } catch (e) {}
+    });
+    return faits;
+  }
+  /* Télécharge l'export sous pte-saisies-AAAA-MM-JJ.json */
+  function telechargerSaisies() {
+    var o = exporterSaisies(), d = new Date();
+    var nom = 'pte-saisies-' + d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + '.json';
+    var blob = new Blob([JSON.stringify(o, null, 1)], { type: 'application/json' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nom;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 0);
+    return { nom: nom, blocs: o.blocs.length };
+  }
+
+  /* Les liens « Pilotage PTE » de l'en-tête et du pied sont écrits en dur pour
+     le kDrive (`../Pilotage_PTE.html`). Sur GitHub Pages, l'accueil s'appelle
+     `index.html` : on les réécrit au chargement plutôt que de maintenir deux
+     versions de chaque outil. */
+  function relierAccueil() {
+    if (typeof document === 'undefined') return 0;
+    var cible = lien('accueil'); if (!cible) return 0;
+    var liens = document.querySelectorAll('a[href$="Pilotage_PTE.html"]'), i, n = 0;
+    for (i = 0; i < liens.length; i++) { liens[i].setAttribute('href', cible); n++; }
+    return n;
+  }
+
+  /* ---------- affichage commun ---------- */
+  function dateCourte(iso) {
+    if (!iso) return '';
+    var d = new Date(iso); if (isNaN(d)) return String(iso);
+    var p = function (n) { return (n < 10 ? '0' : '') + n; };
+    return p(d.getDate()) + '.' + p(d.getMonth() + 1) + '.' + d.getFullYear();
+  }
+  /* Texte de la pastille d'état, identique dans les trois outils. */
+  function texteBadge(n, meta, remarques) {
+    if (!meta && !n) return 'Aucune donnée chargée';
+    var t = (n != null ? n + ' sous-sites' : '') + (meta && meta.nom ? ' · ' + meta.nom : '') + (meta && meta.date ? ' · ' + dateCourte(meta.date) : '');
+    if (remarques) t += ' · ' + remarques + ' à compléter';
+    return t.replace(/^ · /, '');
+  }
+
+  return { LS_META: LS_META, LS_CLASSEMENT: LS_CLASSEMENT, LS_QUESTIONS: LS_QUESTIONS, LS_THEME: LS_THEME,
+           themeCourant: themeCourant, appliquerTheme: appliquerTheme, basculerTheme: basculerTheme,
+           tour: tour, tourVue: tourVue, relierAccueil: relierAccueil,
+           exporterSaisies: exporterSaisies, importerSaisies: importerSaisies,
+           resumeSaisies: resumeSaisies, telechargerSaisies: telechargerSaisies,
+           layout: layout, lien: lien, ssDepuisHash: ssDepuisHash, ecrireHash: ecrireHash,
+           publierClasseur: publierClasseur, lireClasseur: lireClasseur, effacerClasseur: effacerClasseur,
+           lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,
+           publierClassement: publierClassement, lireClassement: lireClassement,
+           lireQuestions: lireQuestions, ecrireQuestions: ecrireQuestions,
+           dateCourte: dateCourte, texteBadge: texteBadge };
+})();
+
+/* ===========================================================================
+   Pilotage PTE — point d'import commun (C1, 20.09.2026)
+   Lecteur xlsx minimal écrit pour cette page (ZIP + XML, décompression par
+   DecompressionStream du navigateur) : il ne sert qu'à compter les lignes de
+   Plan_PTE pour la pastille. Les outils lisent le classeur avec leur propre lecteur.
+   =========================================================================== */
+const LS_COMPTE = 'pte.classeur.accueil.v1';   /* {empreinte, n} : nombre de sous-sites du classeur commun */
+
+async function compterPlanPTE(buf) {
+  const u = new Uint8Array(buf), dv = new DataView(u.buffer, u.byteOffset, u.byteLength), td = new TextDecoder();
+  let i = u.length - 22; const min = Math.max(0, u.length - 22 - 65535);
+  for (; i >= min; i--) if (dv.getUint32(i, true) === 0x06054b50) break;
+  if (i < min) throw new Error('ce fichier n’est pas un classeur .xlsx');
+  const n = dv.getUint16(i + 10, true); let p = dv.getUint32(i + 16, true);
+  const files = {};
+  for (let k = 0; k < n; k++) {
+    if (dv.getUint32(p, true) !== 0x02014b50) throw new Error('archive .xlsx corrompue');
+    const method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true);
+    const nlen = dv.getUint16(p + 28, true), elen = dv.getUint16(p + 30, true), clen = dv.getUint16(p + 32, true);
+    const lho = dv.getUint32(p + 42, true);
+    const name = td.decode(u.subarray(p + 46, p + 46 + nlen));
+    const lnlen = dv.getUint16(lho + 26, true), lelen = dv.getUint16(lho + 28, true);
+    files[name] = { method, start: lho + 30 + lnlen + lelen, csize };
+    p += 46 + nlen + elen + clen;
+  }
+  async function texte(name) {
+    const f = files[name]; if (!f) return null;
+    const raw = u.subarray(f.start, f.start + f.csize);
+    if (f.method === 0) return td.decode(raw);
+    if (f.method !== 8) throw new Error('méthode de compression non prise en charge');
+    const ds = new DecompressionStream('deflate-raw');
+    const w = ds.writable.getWriter(); w.write(raw); w.close();
+    return await new Response(ds.readable).text();
+  }
+  const xml = s => { const d = new DOMParser().parseFromString(s || '', 'application/xml'); if (d.getElementsByTagName('parsererror').length) throw new Error('XML du classeur illisible'); return d; };
+  const wb = xml(await texte('xl/workbook.xml')), rels = xml(await texte('xl/_rels/workbook.xml.rels'));
+  const relMap = {}; for (const r of rels.getElementsByTagName('Relationship')) relMap[r.getAttribute('Id')] = r.getAttribute('Target');
+  let target = null;
+  for (const sh of wb.getElementsByTagName('sheet')) {
+    if (String(sh.getAttribute('name') || '').replace(/\s+/g, '').toLowerCase() !== 'plan_pte') continue;
+    target = relMap[sh.getAttribute('r:id') || sh.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships', 'id')];
+    break;
+  }
+  if (!target) throw new Error('feuille Plan_PTE absente du classeur');
+  const feuille = await texte(target.charAt(0) === '/' ? target.slice(1) : 'xl/' + target.replace(/^\.\//, ''));
+  /* lignes portant au moins une valeur, moins la ligne d'en-tête */
+  let nb = 0, m; const re = /<row\b[^>]*>([\s\S]*?)<\/row>/g;
+  while ((m = re.exec(feuille))) if (/<v>|<is>/.test(m[1])) nb++;
+  return Math.max(0, nb - 1);
+}
+
+function $(s) { return document.querySelector(s); }
+function lireCompte() { try { return JSON.parse(localStorage.getItem(LS_COMPTE) || 'null'); } catch (e) { return null; } }
+
+function rendre() {
+  const meta = PTE_COMMUN.lireMeta();
+  const c = lireCompte();
+  const n = (meta && c && c.empreinte === meta.empreinte) ? c.n : null;
+  const badge = $('#badge');
+  $('#drop').classList.toggle('hidden', !!meta);
+  $('#srcbar').classList.toggle('hidden', !meta);
+  $('#btnCharger').classList.toggle('hidden', !!meta);
+  document.querySelectorAll('[data-etat]').forEach(e => {
+    e.textContent = meta ? 'chargé · ' + PTE_COMMUN.dateCourte(meta.date) : 'Aucun classeur commun';
+    e.classList.toggle('none', !meta);
+  });
+  if (!meta) { badge.className = 'badge none'; badge.textContent = 'Aucune donnée chargée'; badge.title = ''; return; }
+  badge.className = 'badge ok';
+  badge.textContent = PTE_COMMUN.texteBadge(n, meta);
+  badge.title = 'Classeur commun aux trois outils, déposé ' + (meta.outil === 'accueil' ? 'ici' : 'dans l’outil « ' + meta.outil + ' »');
+  const ko = Math.round((meta.taille || 0) / 1024);
+  $('#srcTexte').innerHTML = 'Classeur commun : <b>' + esc(meta.nom) + '</b> · déposé le <b>' + esc(dateHeure(meta.date)) + '</b>' +
+    (n != null ? ' · ' + n + ' sous-sites' : '') + (ko ? ' · ' + ko.toLocaleString('fr-CH') + ' Ko' : '') +
+    ' · empreinte ' + esc(meta.empreinte || '—') + (meta.outil && meta.outil !== 'accueil' ? ' · chargé depuis l’outil « ' + esc(meta.outil) + ' »' : '');
+}
+function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function dateHeure(iso) { const d = new Date(iso); if (isNaN(d)) return String(iso || ''); const p = x => (x < 10 ? '0' : '') + x; return PTE_COMMUN.dateCourte(iso) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()); }
+function message(t, cl) { const z = $('#msg'); z.className = 'notice ' + (cl || ''); z.textContent = t; z.classList.remove('hidden'); }
+function cacherMessage() { const z = $('#msg'); z.className = 'hidden'; z.textContent = ''; }
+
+function deposer(file) {
+  if (!file) return;
+  const fr = new FileReader();
+  fr.onload = async e => {
+    const buf = e.target.result;
+    let n = null, avert = '';
+    try { n = await compterPlanPTE(buf); }
+    catch (err) { avert = 'Le nombre de sous-sites n’a pas pu être lu (' + (err && err.message ? err.message : err) + ') ; le classeur est gardé tel quel.'; }
+    try {
+      const meta = await PTE_COMMUN.publierClasseur(buf, file.name, 'accueil');
+      try { localStorage.setItem(LS_COMPTE, JSON.stringify({ empreinte: meta.empreinte, n: n })); } catch (e2) {}
+      rendre();
+      /* La barre de source dit déjà le nom, la date et le nombre de sous-sites :
+         on ne répète pas. Le message ne sert qu'à ce qu'elle ne peut pas dire. */
+      if (avert) message(avert, 'warn'); else cacherMessage();
+    } catch (err) {
+      message('Le classeur n’a pas pu être gardé dans ce navigateur : ' + (err && err.message ? err.message : err), 'warn');
+    }
+  };
+  fr.readAsArrayBuffer(file);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const fi = $('#fileInput'), dz = $('#drop');
+  fi.addEventListener('change', e => deposer(e.target.files[0]));
+  $('#btnCharger').addEventListener('click', () => fi.click());
+  $('#btnUpdate').addEventListener('click', () => fi.click());
+  $('#btnEffacer').addEventListener('click', () => {
+    if (!confirm('Effacer le classeur commun de ce navigateur ? Les données propres à chaque outil ne sont pas touchées.')) return;
+    PTE_COMMUN.effacerClasseur().then(() => { try { localStorage.removeItem(LS_COMPTE); } catch (e) {} rendre(); message('Classeur commun effacé.'); });
+  });
+  ['dragover', 'dragenter'].forEach(t => document.addEventListener(t, e => { e.preventDefault(); dz.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach(t => document.addEventListener(t, e => { e.preventDefault(); dz.classList.remove('over'); }));
+  document.addEventListener('drop', e => { if (e.dataTransfer && e.dataTransfer.files[0]) deposer(e.dataTransfer.files[0]); });
+  /* la fiche peut survivre à un classeur perdu (IndexedDB vidée) : on vérifie que le classeur est bien là */
+  PTE_COMMUN.lireClasseur().then(c => { if (!c && PTE_COMMUN.lireMeta()) { try { localStorage.removeItem(PTE_COMMUN.LS_META); } catch (e) {} } rendre(); });
+  rendre();
+});
+</script>
 </body>
 </html>
