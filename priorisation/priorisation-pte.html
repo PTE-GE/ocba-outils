@@ -1034,7 +1034,7 @@ body.night .fiche-card{background:var(--card-bg)}
 <div class="pop-h" style="margin:0 0 3px">En kWh par m² et par an. La cible 2030 retenue reste la plus contraignante entre la baisse de −60 % depuis 2005 et cette intensité ; la cible 2050 est une intensité pure.</div>
 <div class="pgrid">
 <div><label class="pop-l">Cible 2030</label>
-<input id="pK30" type="number" min="40" max="250" step="1" class="pop-in" title="Référentiel 2030 : 97 kWh/m²·an, soit 350 MJ/m²·an."></div>
+<input id="pK30" type="number" min="40" max="250" step="0.1" class="pop-in" title="Référentiel 2030 : 350 MJ/m²·an, soit 97,2 kWh/m²·an. Le pas est au dixième de kWh : c'est ce qu'il faut pour retomber exactement sur un seuil exprimé en mégajoules."></div>
 <div><label class="pop-l">Cible 2050</label>
 <input id="pK50" type="number" min="30" max="200" step="1" class="pop-in" title="Référentiel 2050 : 63 kWh/m²·an, soit environ 227 MJ/m²·an."></div>
 </div>
@@ -1447,7 +1447,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <div class="cd"><div class="wt" onclick="tglM(5)" title="Vocabulaire"><h3 style="margin:0;border:none;padding:0"><span class="m-num">5</span> Glossaire</h3><span class="ch" id="mCh5">▼</span></div><div class="wb" id="mB5"><div class="m-body">
 <table class="m-feas-tbl"><thead><tr><th>Terme</th><th>Définition</th></tr></thead><tbody>
 <tr><td><b>SRE</b></td><td>Surface de référence énergétique, en m² — la surface chauffée servant de base à tous les ratios.</td></tr>
-<tr><td><b>IDC</b></td><td>Indice de dépense de chaleur, en kWh/m²·an. Deux cibles : <b>97 kWh/m²·an en 2030</b> (350 MJ/m²·an) et <b>63 kWh/m²·an en 2050</b> (environ 227 MJ). Toutes deux réglables dans les Paramètres de calcul (menu ☰). Partout où l'outil affiche un IDC, l'équivalent en <b>mégajoules</b> suit entre parenthèses, en gris : c'est l'unité dans laquelle la LEn genevoise et le référentiel du programme expriment le seuil. Depuis le 21.09.2026 l'IDC est un indicateur à part entière : une tuile à la Vue d'ensemble et un objectif au Classement. Il se lit à deux niveaux qu'il ne faut pas confondre — le <b>parc</b>, en moyenne pondérée par la SRE, se compare à la cible ; le <b>seuil</b>, lui, s'apprécie sous-site par sous-site. Un parc sous la cible peut porter des centaines de sous-sites au-dessus, et ce sont eux que classe l'objectif IDC. À la différence du Thermique, ce classement ne trie pas au coût mais à la chaleur en trop, du plus loin au plus près du seuil.</td></tr>
+<tr><td><b>IDC</b></td><td>Indice de dépense de chaleur, en kWh/m²·an. Deux cibles : <b>97,2 kWh/m²·an en 2030</b> (350 MJ/m²·an exactement) et <b>63 kWh/m²·an en 2050</b> (environ 227 MJ). Toutes deux réglables dans les Paramètres de calcul (menu ☰). Partout où l'outil affiche un IDC, l'équivalent en <b>mégajoules</b> suit entre parenthèses, en gris : c'est l'unité dans laquelle la LEn genevoise et le référentiel du programme expriment le seuil. Depuis le 21.09.2026 l'IDC est un indicateur à part entière : une tuile à la Vue d'ensemble et un objectif au Classement. Il se lit à deux niveaux qu'il ne faut pas confondre — le <b>parc</b>, en moyenne pondérée par la SRE, se compare à la cible ; le <b>seuil</b>, lui, s'apprécie sous-site par sous-site. Un parc sous la cible peut porter des centaines de sous-sites au-dessus, et ce sont eux que classe l'objectif IDC. À la différence du Thermique, ce classement ne trie pas au coût mais à la chaleur en trop, du plus loin au plus près du seuil.</td></tr>
 <tr><td><b>IDE</b></td><td>Indice de dépense d'électricité, même logique que l'IDC.</td></tr>
 <tr><td><b>CECB+</b></td><td>Certificat énergétique cantonal des bâtiments, version avec rapport de conseil : il propose des variantes de rénovation (A, B, C), dont l'une est retenue.</td></tr>
 <tr><td><b>CEE</b></td><td>Coût de l'énergie économisée : le prix du kWh évité sur la durée de vie retenue (40 ans par défaut, modifiable dans les Paramètres de calcul). Ce n'est plus un classement depuis le 03.09.2026 — il doublonnait exactement le Thermique — mais une <b>mesure</b>, qui alimente la distribution de l'onglet Arbitrage et le score composite de repli.</td></tr>
@@ -1482,7 +1482,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <p class="mini">CO₂, thermique d'une part, électricité et eau d'autre part ne reposent pas sur la même qualité de donnée. CO₂ et thermique viennent du calcul CECB+ complet (IDC actuel et projeté, agent avant/après). Électricité et eau n'ont pas cette donnée : la seule contribution chiffrée par bâtiment est un héritage de l'ancienne méthode par familles (<code>Gain Électricité (Max)</code>, <code>Gain Eau (Max)</code>), jamais recalculée depuis un audit CECB+. Les classements Électricité et Eau s'appuient donc quand même dessus — la donnée manquante n'est pas un motif pour l'ignorer — mais le résultat est à relire avec cette réserve en tête. Détail : <code>Liste_Donnees_PTE.md</code>.</p>
 
 <h4 class="sub">4. L'objectif thermique est exprimé en intensité</h4>
-<p class="mini">La base 2005 n'est pas comparable au parc actuel en valeur absolue : le périmètre a bougé en vingt ans. L'outil lit donc chaque objectif au m² (ligne « Mesuré » du panneau de la Vue d'ensemble, chiffres du classeur chargé) et retient pour le thermique la cible <b>&lt; 350 MJ/m²·an</b> (97 kWh/m²·an), qui figure au même référentiel d'objectifs 2030, qui est exprimée en intensité, et qui est mesurable chaque année. La surface qui divise est la somme des <code>SRE</code> de <code>Plan_PTE</code> (contrat de données, D1) : la cible d'intensité en kWh/an en dépend directement, et elle a changé le 20.09.2026 avec cette règle.</p>
+<p class="mini">La base 2005 n'est pas comparable au parc actuel en valeur absolue : le périmètre a bougé en vingt ans. L'outil lit donc chaque objectif au m² (ligne « Mesuré » du panneau de la Vue d'ensemble, chiffres du classeur chargé) et retient pour le thermique la cible <b>&lt; 350 MJ/m²·an</b> (97,2 kWh/m²·an), qui figure au même référentiel d'objectifs 2030, qui est exprimée en intensité, et qui est mesurable chaque année. La surface qui divise est la somme des <code>SRE</code> de <code>Plan_PTE</code> (contrat de données, D1) : la cible d'intensité en kWh/an en dépend directement, et elle a changé le 20.09.2026 avec cette règle.</p>
 
 <h4 class="sub">5. L'indice développement durable est entièrement décrit dans le classeur</h4>
 <p class="mini">Il vaut <b>la somme des pondération × min(1, réalisé ÷ cible)</b> sur les volets décrits dans la feuille <code>Objectifs PTE</code>. Chaque volet s'y écrit sur deux lignes : le libellé porte la <b>cible</b> en colonne B et la <b>pondération</b> en colonne C, la ligne suivante porte le <b>réalisé</b>. Trois volets aujourd'hui — <b>Végétalisation</b> (60 %), <b>Toitures vivantes</b> (20 %), <b>Déchets et tri</b> (20 %). Ni les volets, ni leurs poids, ni leurs cibles ne sont réglables dans l'outil : ce sont des décisions du programme, elles vivent avec les autres objectifs.</p>
@@ -2427,6 +2427,11 @@ function loadState(){try{const o=JSON.parse(STORE.get(LS_STATE)||'null');/* thè
     /* un état enregistré avant le 27.08 ne connaît que « cibleMJ » : on le
        convertit plutôt que de le perdre */
     if(PARAMS.cibleMJ&&!o.params.cibleKwh30)PARAMS.cibleKwh30=Math.round(+PARAMS.cibleMJ/3.6);
+    /* Reprise d'un état enregistré avant le 21.09.2026 : la cible y vaut 97,
+       l'arrondi au kWh entier du seuil de 350 MJ. On la remet sur 97,2, qui
+       est la valeur exacte — et uniquement dans ce cas précis, pour ne jamais
+       écraser une cible que l'utilisateur aurait réglée lui-même. */
+    if(+PARAMS.cibleKwh30===97)PARAMS.cibleKwh30=97.2;
     delete PARAMS.cibleMJ;
     CIBLE_MJ_M2_OBJ=pCible30()*3.6}if(o.tourSeen)tourSeen=true;if(o.siteQuali)siteQuali=o.siteQuali;if(o.phaseOverrides)phaseOverrides=o.phaseOverrides;if(o.siteNotes)siteNotes=o.siteNotes;if(o.inv&&INV_MODES.some(m=>m.k===o.inv))invMode=o.inv;if(o.co2c&&CO2_CONV.some(c=>c.k===o.co2c))co2Conv=o.co2c;
     if(Array.isArray(o.rpSel))RP_SEL=o.rpSel.slice();
@@ -3421,10 +3426,10 @@ function fmtSRE(v){if(!v)return'—';return v.toLocaleString('fr-CH')}
    La LEn genevoise et le référentiel du programme s'expriment en MJ : donner
    les deux évite la conversion de tête à chaque lecture. Facteur 3,6 —
    1 kWh = 3,6 MJ. La conversion est EXACTE, jamais recalée sur un chiffre
-   rond : le référentiel dit 350 MJ/m²·an, dont l'équivalent exact est
-   97,2 kWh/m²·an, et le paramètre de l'outil est posé à 97 — d'où 349 MJ
-   affichés. Arrondir à 350 ferait croire à une cible que le paramètre ne
-   porte pas. Pour retrouver 350, régler la cible sur 97,2. */
+   rond. C'est pour cela que la cible 2030 vaut 97,2 et non 97 depuis le
+   21.09.2026 : le référentiel fixe le seuil en mégajoules — 350 MJ/m²·an —
+   et l'arrondi au kWh entier affichait 349 MJ là où tout le monde lit 350.
+   Le paramètre porte la valeur exacte, l'affichage n'a rien à rattraper. */
 function fmtMJ(v,suffixe){
   if(v==null||v===''||isNaN(v))return'';
   return nf(v*3.6,0)+(suffixe===false?' MJ':' MJ/m²·an')}
@@ -3764,7 +3769,7 @@ const DUREE_OBJ=[
    donc pour 80 % de la consommation du bâtiment au classement Renouvelable.
    72 substitutions du parc vont vers PAC+Gaz : la valeur pèse lourd, et
    elle reste modifiable dans les Paramètres de calcul — vider la case remet PAC+Gaz en fossile. */
-const PARAMS_DEF={duree:40,pvProd:950,cibleKwh30:97,cibleKwh50:63,plancher:50,dureeObj:{},pacGazPart:80,cibleMode:'intensite'};
+const PARAMS_DEF={duree:40,pvProd:950,cibleKwh30:97.2,cibleKwh50:63,plancher:50,dureeObj:{},pacGazPart:80,cibleMode:'intensite'};
 /* Cible 2030 qui classe (décision d'Achim, 17.09.2026) : « intensite » = intensité
    2005 × (1 − x %) × SRE d'aujourd'hui (lecture « ramenée à la surface » du PL
    13210) ; « absolu » = total 2005 × (1 − x %). Sans bloc « référence 2005 »
@@ -3786,7 +3791,10 @@ function dureeSurchargee(){
 function dureeTxt(){
   const g=pDuree();return g+' ans'+(dureeSurchargee()?' · réglée par objectif':'')}
 function pPvProd(){return +PARAMS.pvProd>0?+PARAMS.pvProd:950}
-function pCible30(){return +PARAMS.cibleKwh30>0?+PARAMS.cibleKwh30:97}
+/* 97,2 et non 97 : le référentiel fixe le seuil en mégajoules — 350 MJ/m²·an
+   — et 350 ÷ 3,6 = 97,222…  L'arrondi au kWh entier affichait 349 MJ là où
+   tout le monde lit 350. (Achim, 21.09.2026) */
+function pCible30(){return +PARAMS.cibleKwh30>0?+PARAMS.cibleKwh30:97.2}
 function pCible50(){return +PARAMS.cibleKwh50>0?+PARAMS.cibleKwh50:63}
 /* conservé pour l'affichage : certains libellés parlent encore en MJ */
 let CIBLE_MJ_M2_OBJ=97*3.6;
@@ -5942,7 +5950,7 @@ function renR(){
       note.innerHTML=(key==='veg'
         ?'Trié par <b>coût du m² créé</b> croissant, du moins cher au plus cher. Ni durée de vie ni <span title="Méthode qui ramène à leur valeur d\'aujourd\'hui des gains étalés sur des années. Elle ne s\'applique pas ici : une cour désimperméabilisée crée une surface une fois pour toutes, pas un gain qui revient chaque année." style="border-bottom:1px dotted currentColor;cursor:help">actualisation</span> : on achète une surface, pas un flux annuel. Objectif 2030 : '+objFmtNum(gap,0)+' m² à créer — les surfaces de la colonne du classeur sont à créer, aucune n’est comptée comme réalisée. '
         :key==='idc'
-        ?'Trié par <b>chaleur en trop décroissante</b> — SRE × (IDC − '+objFmtNum(pCible30(),0)+') — du sous-site le plus loin du seuil au plus près. Sans coût : aucune colonne du classeur n’isole ce que coûte le passage sous le seuil. Les <b>'+nR+'</b> sous-sites listés sont tous au-dessus du seuil, il n’y a donc pas de rang de franchissement ; la colonne cumulée dit quelle part de l’excédent du parc (<b>'+objFmtNum(gap,0)+' kWh/an</b>) les premiers rangs portent. <span title="La tuile de la Vue d’ensemble affiche la moyenne du parc pondérée par la SRE, qui peut être sous la cible alors que ces sous-sites la dépassent : le parc et le seuil ne se lisent pas au même niveau." style="border-bottom:1px dotted currentColor;cursor:help">Pourquoi la tuile peut être verte</span>. '
+        ?'Trié par <b>chaleur en trop décroissante</b> — SRE × (IDC − '+objFmtNum(pCible30(),1)+') — du sous-site le plus loin du seuil au plus près. Sans coût : aucune colonne du classeur n’isole ce que coûte le passage sous le seuil. Les <b>'+nR+'</b> sous-sites listés sont tous au-dessus du seuil, il n’y a donc pas de rang de franchissement ; la colonne cumulée dit quelle part de l’excédent du parc (<b>'+objFmtNum(gap,0)+' kWh/an</b>) les premiers rangs portent. <span title="La tuile de la Vue d’ensemble affiche la moyenne du parc pondérée par la SRE, qui peut être sous la cible alors que ces sous-sites la dépassent : le parc et le seuil ne se lisent pas au même niveau." style="border-bottom:1px dotted currentColor;cursor:help">Pourquoi la tuile peut être verte</span>. '
         :key==='pv'
         ?'Trié par puissance décroissante (classement d’intention, aucune donnée n’isole le coût d’une installation PV du coût de rénovation du sous-site). Objectif : +'+objFmtNum(gap,0)+' kWc. '
         :invHorsChiffrage()
@@ -7164,7 +7172,7 @@ function renderTiles(){
       :'<div class="abs">&nbsp;</div>';
     /* l'IDC est déjà au m² : sa cible garde son unité entière, là où les
        objectifs absolus n'affichent que le numérateur (« GWh », « m³ ») */
-    const cibTxt=(o.k==='idc')?(nf(s.cible,0)+' '+o.unit):s.part?(nf(s.cible,1)+' %'):(useInt
+    const cibTxt=(o.k==='idc')?(nf(s.cible,1)+' '+o.unit):s.part?(nf(s.cible,1)+' %'):(useInt
       ?(nf(intVal(s.cible,s.surface,o.mul),intDec(o.unitInt,intVal(s.cible,s.surface,o.mul)))+' '+o.unitInt)
       :(nf(s.cible/(o.div||1),o.dec)+' '+o.unit.split('/')[0]));
     let sub;
@@ -7308,8 +7316,8 @@ function renderDetail(){
     const rI=[
       [{h:'IDC du parc',t:'Somme des SRE × IDC divisée par la somme des SRE, sur les sous-sites qui portent un IDC. Colonne « IDC [kWh] » de Plan_PTE, soit l\'indice OCEN ramené en kWh/m²·an (÷ 3,6). L\'équivalent en mégajoules est donné entre parenthèses : c\'est l\'unité de la LEn.'},
         (q.idc!=null?nf(q.idc,1)+' kWh/m²·an '+iabs(fmtMJ(q.idc)):'—')],
-      [{h:'Cible 2030',t:'Référentiel du programme : 350 MJ/m²·an, dont l\'équivalent exact est 97,2 kWh/m²·an. Le paramètre de l\'outil est posé à 97, et la conversion affichée est exacte — d\'où 349 MJ et non 350. Réglable dans les paramètres de calcul (menu ☰) : c\'est la même valeur qui sert de cible d\'intensité au thermique.'},
-        nf(s.cible,0)+' kWh/m²·an '+iabs(fmtMJ(s.cible))],
+      [{h:'Cible 2030',t:'Référentiel du programme : 350 MJ/m²·an, dont l\'équivalent exact est 97,2 kWh/m²·an — et c\'est cette valeur exacte que porte le paramètre depuis le 21.09.2026, au lieu de l\'arrondi à 97 qui affichait 349 MJ. Réglable dans les paramètres de calcul (menu ☰) : c\'est la même valeur qui sert de cible d\'intensité au thermique.'},
+        nf(s.cible,1)+' kWh/m²·an '+iabs(fmtMJ(s.cible))],
       [{h:'Cible 2050',t:'63 kWh/m²·an, environ 227 MJ/m²·an. Réglable dans les paramètres de calcul.'},
         nf(s.cible50,0)+' kWh/m²·an '+iabs(fmtMJ(s.cible50))],
       [{h:'Sous-sites au-dessus du seuil',t:'Sous-sites dont l\'IDC dépasse la cible 2030, quel que soit l\'IDC du parc. C\'est la lecture réglementaire, bâtiment par bâtiment — celle que classe l\'onglet Classement, objectif IDC.'},
@@ -7466,8 +7474,11 @@ function idcHisto(q,c30,c50){
     /* l'étiquette se pose sur la BORNE GAUCHE de la tranche, pas en son
        milieu : sinon le trait du seuil 97 tombe à gauche du nombre 97 et se
        lit comme s'il ne lui correspondait pas */
+    /* nf() et non la valeur brute : depuis que la cible vaut 97,2, une borne
+       peut porter une décimale — « 97.2 » au point serait la seule du tableau
+       de bord à ne pas être écrite à la française */
     g+='<text x="'+(L+i*iw).toFixed(1)+'" y="'+(H-Bm+13)+'" text-anchor="middle" font-size="9.5" fill="var(--ink3)">'+
-       B[i]+'</text>'});
+       nf(B[i],(B[i]%1)?1:0)+'</text>'});
   [[c30,'2030'],[c50,'2050']].forEach(function(p){
     const x=xOf(p[0]);if(x==null)return;
     g+='<line x1="'+x.toFixed(1)+'" y1="'+T+'" x2="'+x.toFixed(1)+'" y2="'+(H-Bm)+'" stroke="var(--acc)" stroke-width="1.4" stroke-dasharray="4 3"/>'+
