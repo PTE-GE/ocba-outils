@@ -490,8 +490,9 @@ body.night .f-bt.on{background:var(--soft);border-color:var(--acc)}
 .dash-foot{margin-top:16px;color:var(--ink3)}
 .dash-foot a{color:var(--acc);text-decoration:none;border-bottom:1px solid currentColor}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(214px,1fr));gap:12px}
-/* Les sept indicateurs forment une bande unique : on les lit d'un coup d'œil,
-   sans qu'un septième isolé donne l'impression d'un indicateur à part. */
+/* Les huit indicateurs forment une bande unique : on les lit d'un coup
+   d'œil, sans qu'un dernier isolé donne l'impression d'un indicateur à part.
+   Huit colonnes à ≥ 1241 px, puis 4 × 2 et 2 × 4. (IDC ajouté le 21.09.2026) */
 #objTiles{grid-template-columns:repeat(8,1fr);gap:8px}
 #objTiles .tile{padding:11px 11px 12px}
 #objTiles .tile .v{font-size:1.34rem}
@@ -630,10 +631,16 @@ svg text{font-family:Arial,Helvetica,sans-serif}
 /* Rp : colonne quasi vide à 112 px, plus large que la clé de tri.       */
 #objBody thead th:nth-child(4),#objBody tbody td:nth-child(4){max-width:74px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* --- 3 · Grille des sept indicateurs -------------------------------- */
-/* repeat(8,1fr) pour 7 tuiles : 155 px de colonne morte à droite,
-   à toutes les largeurs ≥ 1241 px.                                     */
-#objTiles{grid-template-columns:repeat(7,1fr)}
+/* --- 3 · Grille des huit indicateurs -------------------------------- */
+/* La colonne morte laissée par les 7 tuiles est reprise par la tuile IDC
+   (21.09.2026) : huit tuiles, huit colonnes, plus rien à droite.
+   Les deux points de rupture sont REDÉCLARÉS ici. Cette section corrige
+   la grille sans media query, et annulait donc ceux du bloc d'origine
+   (l. 501) : les tuiles restaient sur une seule ligne jusqu'à déborder de
+   l'écran en dessous de 800 px. Le défaut existait déjà à sept tuiles.  */
+#objTiles{grid-template-columns:repeat(8,1fr)}
+@media(max-width:1240px){#objTiles{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:820px){#objTiles{grid-template-columns:repeat(2,1fr)}}
 
 /* --- 4 · Les six tuiles « Résultat » : 3 × 2, pas 5 + 1 orphelin ----- */
 #kpis{grid-template-columns:repeat(3,1fr)}
@@ -1113,7 +1120,7 @@ body.night .fiche-card{background:var(--card-bg)}
 
 <div id="rank" class="pnl">
 <div class="sec-h">Classement</div>
-<p class="lead tab-lead">Chaque sous-site classé par coût de l'unité gagnée, objectif par objectif ; cliquez une ligne pour ouvrir sa fiche.</p>
+<p class="lead tab-lead">Chaque sous-site classé par coût de l'unité gagnée, objectif par objectif — sauf le photovoltaïque, la végétalisation et l'IDC, qui ont chacun leur propre clé de tri, annoncée au-dessus du tableau. Cliquez une ligne pour ouvrir sa fiche.</p>
 <div class="cd" id="objRankCard">
 <div class="wt op" onclick="tglS('objRankBody','objRankCh')" title="Cliquer pour déplier ou replier le classement"><h3 style="margin:0;border:none;padding:0">Classement par objectif</h3><span class="ch op" id="objRankCh">▼</span></div>
 <div class="wb op" id="objRankBody">
@@ -1129,11 +1136,12 @@ body.night .fiche-card{background:var(--card-bg)}
 <select id="objSel" onchange="renR();try{renTop(scored(getGlobalRP()))}catch(e){}">
 <option value="co2">CO₂</option>
 <option value="th">Thermique</option>
+<option value="idc">IDC</option>
 <option value="ren">Renouvelable</option>
 <option value="elec">Électricité</option>
 <option value="eau">Eau</option>
 <option value="pv">Photovoltaïque</option>
-<option value="veg">Végétalisation</option>
+<option value="veg">Développement durable</option>
 <option value="tous">Tous les objectifs</option>
 </select>
 <span class="f-sel"><button type="button" class="f-bt" id="fFoTxt" onclick="tglF('fo',event)">Tout chauffage</button><div class="rp-pop" id="fFoPop" onclick="event.stopPropagation()"><div class="rp-h">Chauffage actuel — cochez un ou plusieurs choix. Aucune case cochée = pas de filtre.</div><div class="rp-list" id="fFoList"></div><div class="rp-f"><button class="bt bt-s" onclick="fselAll('fo',false)">Tout décocher</button><button class="bt bt-p bt-s" style="flex:1" onclick="fselApply('fo')">Appliquer</button></div></div></span>
@@ -1390,7 +1398,8 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td>Séries mesurées du parc</td><td>onglet <code>Consommation par site</code> (2017 → dernière année fiable), surfaces comprises</td></tr>
 <tr><td>Indice développement durable</td><td>feuille <code>Objectifs PTE</code> : un volet par bloc de deux lignes — cible en colonne B, pondération en colonne C, réalisé sur la ligne suivante. Trois volets aujourd'hui : <code>Végétalisation [m2]</code>, <code>Toitures vivantes</code>, <code>Déchets et tri</code></td></tr>
 <tr><td>Projeté par volet</td><td><code>Surface végétalisée ajoutée (m2)</code>, <code>DD Toiture végétalisée projetée [m2]</code>, <code>DD Points de tri projetés [nb]</code> de <code>Plan_PTE</code> — ce que les projets repérés ajouteraient, bâtiment par bâtiment</td></tr>
-<tr><td>Classement Végétalisation</td><td><code>Surface végétalisée ajoutée (m2)</code> et <code>Coût végétalisation TTC [CHF]</code> de <code>Plan_PTE</code> ; cible 2030 dans <code>Objectifs PTE</code>, ligne <code>Végétalisation [m2]</code></td></tr>
+<tr><td>Tuile et classement IDC</td><td>colonne <code>IDC [kWh]</code> de <code>Plan_PTE</code> (indice OCEN ÷ 3,6), pondérée par la <code>SRE</code> pour la tuile ; <code>IDC projeté [kWh]</code> pour la projection, retenue seulement quand une variante CECB+ précise l'est aussi. Les deux cibles viennent des paramètres de calcul, pas du classeur : aucune ligne IDC n'existe dans <code>Objectifs PTE</code></td></tr>
+<tr><td>Classement Développement durable</td><td><code>Surface végétalisée ajoutée (m2)</code> et <code>Coût végétalisation TTC [CHF]</code> de <code>Plan_PTE</code> ; cible 2030 dans <code>Objectifs PTE</code>, ligne <code>Végétalisation [m2]</code></td></tr>
 <tr><td>Périmètre des portefeuilles</td><td><code>Responsable Portefeuille</code></td></tr>
 </tbody></table>
 </div></div></div>
@@ -1438,7 +1447,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <div class="cd"><div class="wt" onclick="tglM(5)" title="Vocabulaire"><h3 style="margin:0;border:none;padding:0"><span class="m-num">5</span> Glossaire</h3><span class="ch" id="mCh5">▼</span></div><div class="wb" id="mB5"><div class="m-body">
 <table class="m-feas-tbl"><thead><tr><th>Terme</th><th>Définition</th></tr></thead><tbody>
 <tr><td><b>SRE</b></td><td>Surface de référence énergétique, en m² — la surface chauffée servant de base à tous les ratios.</td></tr>
-<tr><td><b>IDC</b></td><td>Indice de dépense de chaleur, en kWh/m²·an. Deux cibles : <b>97 kWh/m²·an en 2030</b> (350 MJ/m²·an) et <b>63 kWh/m²·an en 2050</b> (environ 227 MJ). Toutes deux réglables dans les Paramètres de calcul (menu ☰).</td></tr>
+<tr><td><b>IDC</b></td><td>Indice de dépense de chaleur, en kWh/m²·an. Deux cibles : <b>97 kWh/m²·an en 2030</b> (350 MJ/m²·an) et <b>63 kWh/m²·an en 2050</b> (environ 227 MJ). Toutes deux réglables dans les Paramètres de calcul (menu ☰). Partout où l'outil affiche un IDC, l'équivalent en <b>mégajoules</b> suit entre parenthèses, en gris : c'est l'unité dans laquelle la LEn genevoise et le référentiel du programme expriment le seuil. Depuis le 21.09.2026 l'IDC est un indicateur à part entière : une tuile à la Vue d'ensemble et un objectif au Classement. Il se lit à deux niveaux qu'il ne faut pas confondre — le <b>parc</b>, en moyenne pondérée par la SRE, se compare à la cible ; le <b>seuil</b>, lui, s'apprécie sous-site par sous-site. Un parc sous la cible peut porter des centaines de sous-sites au-dessus, et ce sont eux que classe l'objectif IDC. À la différence du Thermique, ce classement ne trie pas au coût mais à la chaleur en trop, du plus loin au plus près du seuil.</td></tr>
 <tr><td><b>IDE</b></td><td>Indice de dépense d'électricité, même logique que l'IDC.</td></tr>
 <tr><td><b>CECB+</b></td><td>Certificat énergétique cantonal des bâtiments, version avec rapport de conseil : il propose des variantes de rénovation (A, B, C), dont l'une est retenue.</td></tr>
 <tr><td><b>CEE</b></td><td>Coût de l'énergie économisée : le prix du kWh évité sur la durée de vie retenue (40 ans par défaut, modifiable dans les Paramètres de calcul). Ce n'est plus un classement depuis le 03.09.2026 — il doublonnait exactement le Thermique — mais une <b>mesure</b>, qui alimente la distribution de l'onglet Arbitrage et le score composite de repli.</td></tr>
@@ -3237,6 +3246,9 @@ function lignesClassement(){
      contrat. « Tous objectifs » (rang_global) n'en retient que cinq —
      PV et végétalisation en sont exclus, comme à l'écran (objTousRows),
      faute de coût isolable pour l'un et d'unité comparable pour l'autre. */
+  /* L'IDC n'entre PAS dans cette liste : les 45 colonnes du CSV sont le
+     contrat d'échange avec l'outil de revue de projets, et trois colonnes de
+     plus le casseraient. Le classement IDC vit à l'écran. (21.09.2026) */
   const KEYS_ALL=['co2','th','ren','elec','eau','pv','veg'];
   const adjByKey={},nByKey={};
   if(hasObj)KEYS_ALL.forEach(function(k){
@@ -3405,6 +3417,17 @@ function fmtSRE(v){if(!v)return'—';return v.toLocaleString('fr-CH')}
    L'outil en affichait certaines brutes. Un IDC se lit à l'unité près :
    la précision affichée doit être celle de la mesure, pas celle du calcul.
    (décision d'Achim, 03.09.2026) */
+/* L'équivalent en mégajoules d'une intensité en kWh/m²·an.
+   La LEn genevoise et le référentiel du programme s'expriment en MJ : donner
+   les deux évite la conversion de tête à chaque lecture. Facteur 3,6 —
+   1 kWh = 3,6 MJ. La conversion est EXACTE, jamais recalée sur un chiffre
+   rond : le référentiel dit 350 MJ/m²·an, dont l'équivalent exact est
+   97,2 kWh/m²·an, et le paramètre de l'outil est posé à 97 — d'où 349 MJ
+   affichés. Arrondir à 350 ferait croire à une cible que le paramètre ne
+   porte pas. Pour retrouver 350, régler la cible sur 97,2. */
+function fmtMJ(v,suffixe){
+  if(v==null||v===''||isNaN(v))return'';
+  return nf(v*3.6,0)+(suffixe===false?' MJ':' MJ/m²·an')}
 function fmtIDC(v){return(v==null||v===''||isNaN(v))?'—':Math.round(v).toLocaleString('fr-CH')}
 function fmtInv(v){if(!v||v<=0)return'—';if(v>=1e6)return(v/1e6).toFixed(1)+'M';return(v/1e3).toFixed(0)+'k'}
 function fmtIDCproj(v){if(!v&&v!==0)return'<span style="color:var(--ink3)">—</span>';return'<span style="color:var(--grn);font-weight:600">'+v+'</span>'}
@@ -4242,8 +4265,24 @@ function computeGapsObj(sheets){
          gap:g(ea.v,cEa),surface:S,unit:'m³'},
     pv:{actuelKw:P.pvKw||0,prod:pvProd2025,ciblePart:partPv,cibleKwh:cPvKwh,gapKwh:gapPvKwh,
         gapKw:gapPvKwh/pPvProd(),cibleKw:(cPvKwh/pPvProd()),elec:el.v,surface:S,unit:'kWc'},
+    idc:idcGap(),
     veg:vegGap(R),
     dd:(R&&R.dd)?R.dd:null}}
+
+/* L'écart de l'objectif IDC n'est PAS celui du parc.
+   Le parc peut être sous la cible (95,3 contre 97 au classeur du 20.09) alors
+   que 204 sous-sites la dépassent : rapporter le classement à un écart de parc
+   nul ne dirait rien. L'écart retenu est donc la chaleur totale en trop —
+   la somme des SRE × (IDC − seuil) des sous-sites hors seuil. L'écart du parc
+   est conservé à côté, sous gapParc, pour la tuile et les textes. */
+function idcGap(){
+  const pop=(typeof S_ALL!=='undefined'&&S_ALL&&S_ALL.length)?S_ALL:(typeof S!=='undefined'?S:[]);
+  const c30=pCible30(),c50=pCible50(),q=idcParc(pop,c30);
+  return{mesure:q.idc,cible:c30,cible2050:c50,surface:q.sre,
+    gap:q.exces||0,
+    gapParc:(q.idc!=null&&q.idc>c30)?(q.idc-c30)*q.sre:0,
+    n:q.n,nHors:q.nHors,sreHors:q.sreHors,exces:q.exces,
+    idcApres:q.idcApres,nProj:q.nProj,unit:'kWh'}}
 
 /* Végétalisation : la cible vient de la feuille « Objectifs PTE » ; le réalisé
    et le prévu viennent de la colonne « Surface végétalisée ajoutée (m2) » du
@@ -4297,7 +4336,8 @@ function buildContributionsObj(sites,coFactors){
     const f=fgetBrut(a);
     if(co2Conv==='legal'&&f!=null&&CO2_NEUTRAL[co2Agent({ht:a})])return 0;
     return f};
-  const out={co2:[],th:[],ren:[],elec:[],eau:[],pv:[],veg:[]};
+  const out={co2:[],th:[],idc:[],ren:[],elec:[],eau:[],pv:[],veg:[]};
+  const cibleIdc=pCible30();
   for(const s of sites){
     /* Le coût retenu est celui du RÉFÉRENTIEL ACTIF (menu « Montants »),
        pas la colonne Estim PTE en dur : changer de référentiel doit changer
@@ -4335,6 +4375,18 @@ function buildContributionsObj(sites,coFactors){
         if(gainCo2>0)out.co2.push({id:s.id,nom:s.nom,estim:cL('co2'),lot:coutLot(s,'co2')!=null,sre:sre,gain:gainCo2,
           mesure:'Rénovation CECB+ ('+cecb+') — '+agent+' → '+(futur||agent)});
       }
+    }
+    /* IDC : tout sous-site dont l'indice dépasse le seuil 2030 entre au
+       classement, chiffré ou non — c'est la non-conformité qui le fait
+       entrer, pas la disponibilité d'un montant. La contribution est la
+       chaleur en trop, SRE × (IDC − seuil) : ce qu'il faudrait retirer pour
+       que ce sous-site passe sous la barre. (Achim, 21.09.2026) */
+    if(sre>0&&idc>0&&idc>cibleIdc){
+      out.idc.push({id:s.id,nom:s.nom,estim:hasEstim?cout:null,sre:sre,
+        gain:sre*(idc-cibleIdc),
+        mesure:'IDC '+Math.round(idc)+' kWh/m²·an — '+Math.round(idc-cibleIdc)+
+               ' au-dessus du seuil de '+Math.round(cibleIdc)+
+               ((idcp!=null&&idcp<idc)?(' · projeté '+Math.round(idcp)):' · pas d\'IDC projeté')});
     }
     /* substNormalisee() écarte le texte libre : sans agent identifiable,
        il n'y a pas de substitution à créditer. */
@@ -4538,10 +4590,16 @@ function computeObjRanking(){
   const elec=rankObjectiveObj(contribs.elec,(ecEl?ecEl.gap:OBJ_GAPS.elec.gap),'elec');
   const eau=rankObjectiveObj(contribs.eau,OBJ_GAPS.eau.gap,'eau');
   const pv=rankIntentionObj(contribs.pv,OBJ_GAPS.pv.gapKw);
+  /* Même moteur que le photovoltaïque : tri par contribution décroissante,
+     sans coût. Mais le rang de franchissement est effacé — tous les
+     sous-sites listés sont au-dessus du seuil, un « rang au-delà duquel ce
+     n'est plus nécessaire » n'aurait aucun sens ici. */
+  const idc=rankIntentionObj(contribs.idc,(OBJ_GAPS.idc&&OBJ_GAPS.idc.gap)||null);
+  idc.franchiRang=null;idc.items.forEach(function(it){it.franchi=false});
   const veg=rankVegObj(contribs.veg,(OBJ_GAPS.veg&&OBJ_GAPS.veg.gap)||null);
   const co2ById={};for(const it of co2.items)co2ById[it.id]=it.gain;
 
-  OBJRANK={co2,th,ren,elec,eau,pv,veg};
+  OBJRANK={co2,th,idc,ren,elec,eau,pv,veg};
   OBJRANK.co2NonChiffrables=contribs.co2NonChiffrables||0;
   /* C2 : le classement est publié dans le stockage commun à chaque recalcul,
      avec exactement les 45 colonnes du CSV d'export (même fonction). */
@@ -4874,7 +4932,7 @@ try{renCompleteness(all)}catch(e){}
    affichés ici et là-bas sont donc les mêmes. Plotly.purge avant tracé :
    sans cela le graphique se met à jour de façon erratique au changement de
    portefeuille (constaté le 20.08.2026). */
-const OBJ_UNIT={co2:'kg CO₂/an',th:'kWh/an',ren:'kWh/an',elec:'kWh/an',eau:'m³/an',pv:'kWc',veg:'m²'};
+const OBJ_UNIT={co2:'kg CO₂/an',th:'kWh/an',idc:'kWh/an',ren:'kWh/an',elec:'kWh/an',eau:'m³/an',pv:'kWc',veg:'m²'};
 function renTop(all){
   const el=$('gTop');if(!el)return;
   const key=($('objSel')&&$('objSel').value)||'co2';
@@ -4891,11 +4949,11 @@ function renTop(all){
     .slice(0,20);
   if(!items.length){el.innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:60px">Aucun sous-site de ce portefeuille dans ce classement.</p>';return}
   const unit=OBJ_UNIT[key]||'';
-  const platT=invHorsChiffrage()&&key!=='veg';
+  const platT=invHorsChiffrage()&&key!=='veg'&&key!=='idc';
   const val=function(it){return platT?it.gain
-    :(key==='pv'?it.gain:it.coutUnit)};
+    :(key==='pv'||key==='idc'?it.gain:it.coutUnit)};
   const axis=platT?('contribution ['+unit+'] — hors chiffrage, le coût ne départage plus')
-    :(key==='pv'?'kWc':(key==='veg'?'CHF par m² créé':'coût par unité gagnée ('+pDuree(key)+' ans)'));
+    :(key==='pv'?'kWc':(key==='idc'?'chaleur en trop [kWh/an]':(key==='veg'?'CHF par m² créé':'coût par unité gagnée ('+pDuree(key)+' ans)')));
   /* Plotly.purge ne vide pas le message « aucun bâtiment » écrit par un rendu
      précédent : il resterait visible sous le graphique. */
   el.innerHTML='';
@@ -4985,6 +5043,7 @@ dl(new Blob(['\ufeff'+c],{type:'text/csv;charset=utf-8;'}),'alertes_PTE_'+dstamp
 const OBJ_META={
   co2:{lbl:'CO₂',lblCourt:'CO₂',unit:'kg CO₂/an'},
   th:{lbl:'Thermique',lblCourt:'Thermique',unit:'kWh/an'},
+  idc:{lbl:'IDC',lblCourt:'IDC',unit:'kWh/an'},
   ren:{lbl:'Renouvelable',lblCourt:'Renouv.',unit:'kWh/an'},
   elec:{lbl:'Électricité (legacy)',lblCourt:'Élec.',unit:'kWh/an'},
   eau:{lbl:'Eau (legacy)',lblCourt:'Eau',unit:'m³/an'},
@@ -5229,12 +5288,14 @@ function thNote2Cibles(R){
    erreur de calcul. Cette phrase pose les deux dénominateurs et fait
    l'addition — c'est du langage, pas de l'arithmétique nouvelle.
    ------------------------------------------------------------------ */
-const OBJ_COL_GAIN={elec:'Gain Electricité (Max) - kWh',eau:'Gain Eau (Max) - m3',veg:'Surface végétalisée ajoutée (m2)'};
+const OBJ_COL_GAIN={elec:'Gain Electricité (Max) - kWh',eau:'Gain Eau (Max) - m3',veg:'Surface végétalisée ajoutée (m2)',idc:'IDC [kWh]'};
 /* Les trois quantités, calculées une fois, servies au texte comme au dessin.
    type : 'chemin' (réduction depuis une référence 2005), 'niveau' (une part,
    sans référence donc sans chemin), 'cumul' (on crée, rien n'est réalisé). */
 function pontData(key){
-  if(key==='tous'||typeof OBJ_GAPS==='undefined'||!OBJ_GAPS)return null;
+  /* L'IDC n'a ni référence 2005 ni chemin parcouru : le ruban n'aurait rien
+     à partager en trois. Son panneau et sa note portent tout. */
+  if(key==='tous'||key==='idc'||typeof OBJ_GAPS==='undefined'||!OBJ_GAPS)return null;
   const meta=(typeof OBJ_META!=='undefined'&&OBJ_META[key])?OBJ_META[key]:{lbl:key,unit:''};
   const R=(typeof OBJRANK!=='undefined'&&OBJRANK&&OBJRANK[key])?OBJRANK[key]:null;
   const items=R?R.items:[];
@@ -5279,7 +5340,7 @@ function pontZones(D){
   return{acquis:acquis,couvert:couvert,reste:reste,restePc:restePc}}
 
 function objPont(key,R){
-  if(key==='tous'||typeof OBJ_GAPS==='undefined'||!OBJ_GAPS)return'';
+  if(key==='tous'||key==='idc'||typeof OBJ_GAPS==='undefined'||!OBJ_GAPS)return'';
   const meta=(typeof OBJ_META!=='undefined'&&OBJ_META[key])?OBJ_META[key]:{lbl:key,unit:''};
   const nR=(R&&R.items)?R.items.length:0;
   const G=OBJ_GAPS[key]||{};
@@ -5476,7 +5537,7 @@ function hpCandidats(){
   const pop=(S_ALL&&S_ALL.length)?S_ALL:S,by={};(pop||[]).forEach(function(s){by[s.id]=s});
   const out={};
   if(typeof OBJRANK!=='undefined'&&OBJRANK)
-    ['co2','th','ren','elec','eau','pv','veg'].forEach(function(kk){
+    ['co2','th','idc','ren','elec','eau','pv','veg'].forEach(function(kk){
       const R=OBJRANK[kk];if(!R||!R.items||!R.items.length)return;
       const n=Math.max(1,Math.round(R.items.length*0.2));
       R.items.slice(0,n).forEach(function(it){
@@ -5681,6 +5742,7 @@ const SRC_CONTRIB={
   ren :'Calculé : consommation thermique du sous-site (SRE × IDC), créditée lorsque « Chauffage Type Energie » est fossile et « Chauffage de subsitution prévu » ne l\'est pas. PAC+Gaz compte pour sa part conventionnelle.',
   elec:'Calculé : « Conso Elec 2025 - kWh2 » moins « Conso élec projetée [kWh/an] ». Un résultat négatif est une hausse — l\'électricité d\'une PAC, d\'un CAD ou d\'une chaudière à bois comprise dans la projection.',
   eau :'Colonne « Gain Eau projeté [m3/an] », ou l\'ancienne « Gain Eau (Max) - m3 » si elle est présente.',
+  idc :'Calculé : SRE × (IDC [kWh] − cible 2030). Seuls les sous-sites dont l\'IDC dépasse le seuil figurent à ce classement ; les autres n\'ont rien à résorber.',
   pv  :'Colonne « Futur projet PV - puissance estimée (kWc) ».',
   veg :'Colonne « Surface végétalisée ajoutée (m2) ».'};
 const SRC_COMMUN={
@@ -5711,23 +5773,25 @@ function objTable(key,R,meta,bySiteId,f){
     '<th'+srcTip(SRC_COMMUN.pat)+'>Pat.</th><th'+srcTip(SRC_COMMUN.cecb)+'>CECB+</th>'+
     '<th title="Agent de chauffage actuel. Source : premier terme de la colonne « Agent » (SITG) de Plan_PTE, rapporté au libellé de la feuille Data (contrat de données, D7).">Chauffage</th>'+
     '<th title="Agent de chauffage prévu après travaux — c\'est cette bascule qui produit le gain CO₂. Source : colonne « Chauffage de subsitution prévu » de Plan_PTE (orthographe du classeur).">Substitution</th>'+
-    '<th style="text-align:right"'+(invHorsChiffrage()&&key!=='veg'&&key!=='pv'
+    '<th style="text-align:right"'+(invHorsChiffrage()&&key!=='veg'&&key!=='pv'&&key!=='idc'
       ?' title="Critère de tri en mode hors chiffrage : le classement va du plus gros contributeur au plus petit. '+String(SRC_CONTRIB[key]||'').replace(/"/g,'&quot;')+'"'
-      :srcTip(SRC_CONTRIB[key]))+'>'+(key==='pv'?'Puissance':'Contribution')
-      +((invHorsChiffrage()&&key!=='veg'&&key!=='pv')?' ▼':'')+'<br>['+meta.unit+']</th>'+
+      :srcTip(SRC_CONTRIB[key]))+'>'+(key==='pv'?'Puissance':key==='idc'?'Chaleur en trop ▼':'Contribution')
+      +((invHorsChiffrage()&&key!=='veg'&&key!=='pv'&&key!=='idc')?' ▼':'')+'<br>['+meta.unit+']</th>'+
     '<th style="text-align:right" title="Somme des contributions depuis le haut du classement. Sur l\'Électricité, les hausses de fin de tableau sont déduites : la dernière ligne donne donc le gain NET du parc chiffré.">Cumul<br>['+meta.unit+']</th>'+
     (key==='th'
       ? '<th style="text-align:right" title="Part de l\'écart RESTANT à 2030 que le cumul comble, en descendant le classement — pas le chemin depuis 2005, que donne la tuile de la Vue d\'ensemble">% écart<br>2030</th>'+
         '<th style="text-align:right" title="Part de l\'écart RESTANT à 2050 que le cumul comble — cible d\'intensité de 63 kWh/m²·an">% écart<br>2050</th>'
+      : key==='idc'
+      ? '<th style="text-align:right" title="Part de la chaleur en trop du PARC ENTIER que portent les sous-sites depuis le haut du classement. Il n\'y a pas de rang de franchissement : tous les sous-sites listés sont au-dessus du seuil.">% de l\'excédent<br>du parc</th>'
       : ((key==='elec'&&typeof OBJ_GAPS!=='undefined'&&OBJ_GAPS&&OBJ_GAPS.elec&&OBJ_GAPS.elec.couvert)
         ? '<th style="text-align:right" title="Part de l\'écart du PÉRIMÈTRE COUVERT que le cumul comble. Le dénominateur n\'est pas l\'écart du parc entier mais la part imputable aux '+OBJ_GAPS.elec.couvert.n+' sous-sites dont la consommation projetée est chiffrée, prise au prorata de leur consommation. La jauge au-dessus du tableau, elle, reste à l\'échelle du parc : les deux ne disent pas la même chose et c\'est voulu.">% de l\'écart<br>couvert</th>'
         : '<th style="text-align:right" title="Part de l\'écart RESTANT (mesuré − cible) que le cumul comble, en descendant le classement. Ce n\'est pas le chemin parcouru depuis 2005, que donne la tuile de la Vue d\'ensemble : les deux s\'additionnent, et la jauge au-dessus du tableau montre comment.">% de l\'écart<br>comblé</th>'))+
     '<th style="text-align:right" title="'+(key==='veg'?'Coût TTC du projet de végétalisation, colonne « Coût végétalisation TTC [CHF] » — sans rapport avec le référentiel financier de la rénovation énergétique':'Colonne d\'où viennent les montants — menu « Montants » au-dessus')+'">'+(key==='veg'?'Coût TTC<br>végétalisation':esc(invDef().short))+'</th>'+
-    '<th style="text-align:right"'+((invHorsChiffrage()&&key!=='veg'&&key!=='pv')
+    '<th style="text-align:right"'+((invHorsChiffrage()&&key!=='veg'&&key!=='pv'&&key!=='idc')
       ?' title="Déclaré identique pour tous les sous-sites en mode hors chiffrage : ce n\'est plus un critère de tri"':'')
       +' title="Ce que coûte une unité gagnée : le montant des travaux divisé par le gain annuel cumulé sur la durée de vie retenue. C\'est le critère de tri du classement, du moins cher au plus cher."'
-      +'>'+((invHorsChiffrage()&&key!=='veg'&&key!=='pv')?'Coût unitaire<br>(identique)'
-        :(key==='pv'?'—':key==='veg'?'CHF/m²<br>créé (tri)':'CHF/unité<br>('+pDuree(key)+' ans)'))+'</th>'+
+      +'>'+((invHorsChiffrage()&&key!=='veg'&&key!=='pv'&&key!=='idc')?'Coût unitaire<br>(identique)'
+        :(key==='pv'||key==='idc'?'—':key==='veg'?'CHF/m²<br>créé (tri)':'CHF/unité<br>('+pDuree(key)+' ans)'))+'</th>'+
     '<th>Alerte</th></tr></thead><tbody>';
   for(const it of rankedRows){
     const s=bySiteId[it.id];
@@ -5740,9 +5804,9 @@ function objTable(key,R,meta,bySiteId,f){
       : objFmtNum(it.gain,0);
     /* Hors chiffrage : le montant n'existe pas et le coût unitaire est le
        même pour tous. Un « = » le dit mieux qu'un nombre répété. */
-    const plat=invHorsChiffrage()&&key!=='veg';
+    const plat=invHorsChiffrage()&&key!=='veg'&&key!=='idc';
     const coutDisp=plat?'<span title="Coût unitaire déclaré identique pour tous les sous-sites : il ne départage plus le classement, qui est trié sur la seule contribution" style="color:var(--ink3)">=</span>'
-      :(key==='pv'?'—':objFmtNum(it.coutUnit,key==='veg'?0:4));
+      :(key==='pv'||key==='idc'?'—':objFmtNum(it.coutUnit,key==='veg'?0:4));
     const estimDisp=plat?'<span title="Aucun montant : le mode hors chiffrage ne lit aucune colonne financière" style="color:var(--ink3)">—</span>'
       :objFmtNum(it.estim,0);
     const _r=(it.rangAdj||it.rang);
@@ -5850,7 +5914,7 @@ function renR(){
   const bySiteId={};pop.forEach(s=>{bySiteId[s.id]=s});
   const f=rankFilters();
   if(key==='tous'){
-    if(note)note.innerHTML=OBJRANK?'<details class="howto"><summary>Comment lire ce classement</summary><div>Un sous-site peut servir plusieurs objectifs à la fois — trié par nombre d’objectifs servis avant leur propre seuil, puis par <b>rang moyen croissant</b> sur les objectifs où il contribue. Le rang, contrairement au coût unitaire, n’a pas d’unité : il se moyenne sans mélanger des CHF/kg CO₂ avec des CHF/kWh. Le <b>CEE</b> a été retiré des objectifs le 03.09.2026 : il portait exactement les mêmes sous-sites que le Thermique, dans le même ordre, aux mêmes coûts unitaires. Le CHF/kWh reste une <b>mesure</b> — visible dans la distribution de l\'onglet Arbitrage et dans le score composite de repli — mais ce n\'est plus un classement. <b style="color:var(--ok)">Vert</b> = le sous-site fait partie de ceux à financer pour atteindre CETTE cible précise (avant son propre seuil, « # » = son rang dans ce classement) ; <b style="color:var(--ink3)">gris</b> = après. Photovoltaïque exclu (pas de coût isolable) et végétalisation exclue (elle se classe au m² créé, pas à l’unité gagnée sur une durée de vie) — voir leurs classements dédiés.</div></details>':'';
+    if(note)note.innerHTML=OBJRANK?'<details class="howto"><summary>Comment lire ce classement</summary><div>Un sous-site peut servir plusieurs objectifs à la fois — trié par nombre d’objectifs servis avant leur propre seuil, puis par <b>rang moyen croissant</b> sur les objectifs où il contribue. Le rang, contrairement au coût unitaire, n’a pas d’unité : il se moyenne sans mélanger des CHF/kg CO₂ avec des CHF/kWh. Le <b>CEE</b> a été retiré des objectifs le 03.09.2026 : il portait exactement les mêmes sous-sites que le Thermique, dans le même ordre, aux mêmes coûts unitaires. Le CHF/kWh reste une <b>mesure</b> — visible dans la distribution de l\'onglet Arbitrage et dans le score composite de repli — mais ce n\'est plus un classement. <b style="color:var(--ok)">Vert</b> = le sous-site fait partie de ceux à financer pour atteindre CETTE cible précise (avant son propre seuil, « # » = son rang dans ce classement) ; <b style="color:var(--ink3)">gris</b> = après. Photovoltaïque exclu (pas de coût isolable), végétalisation exclue (elle se classe au m² créé, pas à l’unité gagnée sur une durée de vie) et IDC exclu (il se classe à la chaleur en trop, pas à un coût) — voir leurs classements dédiés.</div></details>':'';
     const jh0=$('objJauge');if(jh0)jh0.innerHTML='';
     const fw0=$('rankFlatWarn');
     if(fw0){fw0.innerHTML=invHorsChiffrage()?flatNote('tous'):'';
@@ -5877,6 +5941,8 @@ function renR(){
       const fr50='';
       note.innerHTML=(key==='veg'
         ?'Trié par <b>coût du m² créé</b> croissant, du moins cher au plus cher. Ni durée de vie ni <span title="Méthode qui ramène à leur valeur d\'aujourd\'hui des gains étalés sur des années. Elle ne s\'applique pas ici : une cour désimperméabilisée crée une surface une fois pour toutes, pas un gain qui revient chaque année." style="border-bottom:1px dotted currentColor;cursor:help">actualisation</span> : on achète une surface, pas un flux annuel. Objectif 2030 : '+objFmtNum(gap,0)+' m² à créer — les surfaces de la colonne du classeur sont à créer, aucune n’est comptée comme réalisée. '
+        :key==='idc'
+        ?'Trié par <b>chaleur en trop décroissante</b> — SRE × (IDC − '+objFmtNum(pCible30(),0)+') — du sous-site le plus loin du seuil au plus près. Sans coût : aucune colonne du classeur n’isole ce que coûte le passage sous le seuil. Les <b>'+nR+'</b> sous-sites listés sont tous au-dessus du seuil, il n’y a donc pas de rang de franchissement ; la colonne cumulée dit quelle part de l’excédent du parc (<b>'+objFmtNum(gap,0)+' kWh/an</b>) les premiers rangs portent. <span title="La tuile de la Vue d’ensemble affiche la moyenne du parc pondérée par la SRE, qui peut être sous la cible alors que ces sous-sites la dépassent : le parc et le seuil ne se lisent pas au même niveau." style="border-bottom:1px dotted currentColor;cursor:help">Pourquoi la tuile peut être verte</span>. '
         :key==='pv'
         ?'Trié par puissance décroissante (classement d’intention, aucune donnée n’isole le coût d’une installation PV du coût de rénovation du sous-site). Objectif : +'+objFmtNum(gap,0)+' kWc. '
         :invHorsChiffrage()
@@ -5886,6 +5952,7 @@ function renR(){
         /* le thermique a sa propre phrase de franchissement, qui couvre les
            deux cibles : la générique ferait doublon */
         +(key==='th'?('Population mesurable : '+nR+' sous-site(s).')
+          :key==='idc'?''
           :nR===0?''
           :R.franchiRang?('Rang de franchissement : <b>'+R.franchiRang+'</b> sur '+nR+' sous-site(s) mesurable(s) — au-delà, non nécessaires pour cette seule cible.')
                         :('Cible non atteinte avec les '+nR+' sous-site(s) mesurable(s) disponibles.'))
@@ -6028,7 +6095,7 @@ function setQuali(id){return setQualiFrom(id,'qSel','qMot')}
    le photovoltaïque : l'ajustement doit agir sur LA clé du classement affiché,
    sinon il reste sans effet (constaté sur CEE et PV le 20.08.2026). */
 function qualiSortKey(key){
-  if(key==='pv')return{f:function(it){return it.gain},desc:true};
+  if(key==='pv'||key==='idc')return{f:function(it){return it.gain},desc:true};
   /* hors chiffrage, la clé du classement est la contribution : l'ajustement
      doit agir sur elle, sinon il resterait sans effet */
   if((typeof invHorsChiffrage==='function')&&invHorsChiffrage()&&key!=='veg')
@@ -6197,8 +6264,8 @@ const TOUR=[
   d:"<b>Vue d'ensemble</b> : où en est le parc face aux cibles 2030. <b>Classement</b> : par quoi commencer. <b>Arbitrage</b> : ce qu'une enveloppe permet vraiment, et le prix de la tonne évitée. <b>Carte</b> : où sont les sous-sites. <b>Données</b> : ce qui manque et ce que cela empêche de calculer. <b>Méthode</b> : d'où vient chaque chiffre."},
  {sel:'.gsearch',t:'Retrouver un sous-site',
   d:"Tapez un <b>numéro de sous-site</b> ou un <b>nom</b> : la liste propose les correspondances avec leur responsable de portefeuille et leur priorité. <b>Entrée</b> ouvre directement la fiche du sous-site dans le classement, quel que soit l'onglet où vous étiez."},
- {sel:'#objTiles',t:'Sept indicateurs, un seul écran',panel:'dash',
-  d:"Chaque tuile porte la <b>valeur mesurée</b> du parc, la cible 2030 et le chemin déjà parcouru depuis la référence 2005. Le segment clair de la barre est ce que le portefeuille arrêté ajouterait. La couleur juge l'ensemble : vert si la cible est en vue, rouge si le compte n'y est pas. La <b>végétalisation</b> n'a plus de tuile propre : elle est devenue le volet le plus lourd de l'indice <b>développement durable</b>, et se lit là — son classement dédié, lui, reste dans l'onglet Classement."},
+ {sel:'#objTiles',t:'Huit indicateurs, un seul écran',panel:'dash',
+  d:"Chaque tuile porte la <b>valeur mesurée</b> du parc, la cible 2030 et le chemin déjà parcouru depuis la référence 2005. Le segment clair de la barre est ce que le portefeuille arrêté ajouterait. La couleur juge l'ensemble : vert si la cible est en vue, rouge si le compte n'y est pas. L'<b>IDC</b> fait exception : il n'a pas de référence 2005 et se lit à deux niveaux — le parc en moyenne pondérée, et le seuil sous-site par sous-site. Son sous-titre compte donc les sous-sites encore au-dessus, pas un chemin parcouru. La <b>végétalisation</b>, elle, n'a plus de tuile propre : elle est devenue le volet le plus lourd de l'indice <b>développement durable</b>, et se lit là."},
  {sel:'#objDetail',t:'Une tuile, une trajectoire',panel:'dash',
   d:"Cliquez une tuile : le graphique dessous montre la série mesurée depuis 2005, le rythme qu'il faudrait tenir jusqu'en 2030, et l'effet du portefeuille que vous aurez arrêté dans l'onglet Arbitrage. La ligne de sources, en bas, dit de quelle feuille vient chaque chiffre."},
  {sel:'#gInv',t:"D'où viennent les montants",
@@ -6473,7 +6540,7 @@ function gsGo(id){
   let row=document.querySelector('#objBody tr[data-id="'+attrSel(id)+'"]');
   const sel=$('objSel');
   if(!row&&sel&&OBJRANK){
-    const k=['co2','th','ren','elec','eau','pv','veg'].find(function(k2){return OBJRANK[k2]&&OBJRANK[k2].items.some(function(it){return String(it.id)===id})});
+    const k=['co2','th','idc','ren','elec','eau','pv','veg'].find(function(k2){return OBJRANK[k2]&&OBJRANK[k2].items.some(function(it){return String(it.id)===id})});
     if(k&&sel.value!==k){sel.value=k;renR();try{renTop(scored(getGlobalRP()))}catch(e){}row=document.querySelector('#objBody tr[data-id="'+attrSel(id)+'"]')}}
   /* La fiche vit dans sa propre carte (B.4) : elle s'ouvre même si le sous-site
      n'a pas de ligne dans le classement affiché (exclu, non classable…). */
@@ -6487,13 +6554,13 @@ document.addEventListener('click',function(e){
 function siteRanks(id){
   const out=[];
   if(typeof OBJRANK!=='undefined'&&OBJRANK){
-    ['co2','th','ren','elec','eau','pv'].forEach(function(k){
+    ['co2','th','idc','ren','elec','eau','pv'].forEach(function(k){
       const R=OBJRANK[k];if(!R||!R.items)return;
       const adj=applyQuali(R.items,k);
       const it=adj.find(function(x){return String(x.id)===String(id)});
       if(it)out.push({k:k,lbl:(OBJ_META[k]?OBJ_META[k].lbl:k),rang:it.rangAdj||it.rang,n:adj.length,
         gain:it.gain,unit:(OBJ_META[k]?OBJ_META[k].unit:''),
-        cout:(k==='pv'?null:it.coutUnit)})})}
+        cout:(k==='pv'||k==='idc'?null:it.coutUnit)})})}
   return out}
 function printSite(id){
   const pop=gsPop(),s=pop.find(function(x){return String(x.id)===String(id)});
@@ -6511,8 +6578,8 @@ function printSite(id){
      row('Responsable de portefeuille',esc(s.rp||'—'))+
      row('Responsable de projet',esc(s.drt||'—'))+
      row('Surface de référence (SRE)',fmtSRE(s.sre))+
-     row('IDC actuel',(s.idcC?fmtIDC(s.idcC)+' kWh/m²·an':'—'))+
-     row('IDC projeté'+(s.cecbRaw?(' ('+esc(String(s.cecbRaw).replace('var_','var. '))+')'):''),(s.idcVB!=null?fmtIDC(s.idcVB)+' kWh/m²·an':'—'))+
+     row('IDC actuel',(s.idcC?fmtIDC(s.idcC)+' kWh/m²·an '+iabs(fmtMJ(s.idcC)):'—'))+
+     row('IDC projeté'+(s.cecbRaw?(' ('+esc(String(s.cecbRaw).replace('var_','var. '))+')'):''),(s.idcVB!=null?fmtIDC(s.idcVB)+' kWh/m²·an '+iabs(fmtMJ(s.idcVB)):'—'))+
      row('Chauffage actuel',esc(s.htPrin||s.ht||'—'))+
      row('Substitution prévue',esc(s.hsub||'—'))+
      row('Classement au patrimoine',esc(s.pat||'—'))+
@@ -6874,7 +6941,40 @@ function themeCols(){
          couv:g('--surf-acc','#005F73'),onCouv:g('--on-surf-acc','#FFFFFF'),
          soft:g('--soft','#F2F5F7')}}
 
-/* ---------- les 7 indicateurs ---------- */
+/* ── L'IDC du parc ────────────────────────────────────────────────────
+   Moyenne des IDC pondérée par la SRE : somme des SRE × IDC divisée par la
+   somme des SRE, sur les seuls sous-sites qui portent un IDC. C'est la
+   définition de l'indicateur, et c'est aussi la seule qui permette de le
+   comparer à un seuil exprimé au m².
+
+   Deux lectures cohabitent et ne disent pas la même chose — le panneau de
+   détail les affiche toutes les deux plutôt que d'en choisir une :
+     · le PARC, en moyenne pondérée, se compare à la cible 2030 ;
+     · le SEUIL, lui, s'apprécie sous-site par sous-site (lecture
+       réglementaire) — un parc sous la cible peut porter des centaines de
+       sous-sites au-dessus.
+   L'IDC projeté n'est retenu que si une variante CECB+ précise est retenue
+   et qu'elle abaisse l'indice : même garde que le gain thermique, pour que
+   les deux indicateurs ne divergent jamais. (Achim, 21.09.2026) */
+function idcParc(pop,cible){
+  const c=(cible!=null)?cible:pCible30();
+  let sre=0,pond=0,n=0,nHors=0,sreHors=0,exces=0,pondAp=0,nProj=0;
+  const ans={};
+  (pop||[]).forEach(function(x){
+    const S1=+x.sre,I=+x.idcC;
+    if(!(S1>0)||!(I>0))return;
+    sre+=S1;pond+=S1*I;n++;
+    if(x.anneeIDC)ans[x.anneeIDC]=(ans[x.anneeIDC]||0)+1;
+    if(I>c){nHors++;sreHors+=S1;exces+=S1*(I-c)}
+    const cecb=x.cecbRaw||'';
+    const ip=(cecb==='var_A'||cecb==='var_B'||cecb==='var_C')?x.idcVB:null;
+    if(ip!=null&&ip<I){pondAp+=S1*ip;nProj++}else pondAp+=S1*I});
+  const annees=Object.keys(ans).sort().map(function(a){return a+' ('+ans[a]+')'}).join(' · ');
+  return{idc:sre>0?pond/sre:null,idcApres:sre>0?pondAp/sre:null,
+         sre:sre,n:n,nHors:nHors,sreHors:sreHors,exces:exces,nProj:nProj,
+         annees:annees||null,cible:c}}
+
+/* ---------- les 8 indicateurs ---------- */
 const IND=[
  /* Ordre voulu par Achim, 07.09.2026 : CO₂, thermique et renouvelable sont
     liés par les mêmes mesures et le même argent — une rénovation CECB+ avec
@@ -6887,6 +6987,11 @@ const IND=[
     Renouvelable/PV (déjà des %) ni DD (déjà un indice) n'en ont besoin. */
  {k:'co2' ,lbl:'CO₂'            ,unit:'t/an'            ,div:1000,dec:0,unitInt:'kg/m²·an',mul:1   ,abs:true},
  {k:'th'  ,lbl:'Thermique'      ,unit:'GWh/an'          ,div:1e6 ,dec:1,unitInt:'kWh/m²·an',mul:1  ,abs:true},
+ /* L'IDC se lit déjà au m² : ni division, ni parenthèse d'absolu, ni
+    référence 2005 — l'OCEN ne relève pas de série depuis 2005. Il suit le
+    thermique parce qu'il en est la lecture réglementaire, bâtiment par
+    bâtiment. (Achim, 21.09.2026) */
+ {k:'idc' ,lbl:'IDC'            ,unit:'kWh/m²·an'       ,div:1   ,dec:1,seuil:true},
  {k:'ren' ,lbl:'Renouvelable'   ,unit:'% du thermique'  ,div:1   ,dec:1,part:true},
  {k:'elec',lbl:'Électricité'    ,unit:'GWh/an'          ,div:1e6 ,dec:1,unitInt:'kWh/m²·an',mul:1  ,abs:true},
  {k:'eau' ,lbl:'Eau'            ,unit:'m³/an'           ,div:1   ,dec:0,unitInt:'l/m²·an',mul:1000 ,abs:true},
@@ -6914,6 +7019,29 @@ function indState(k){
               ajouteraient — même convention que « + portefeuille » ailleurs */
            pctPort:(P.scoreProj!=null&&P.score!=null)?Math.max(0,Math.min(100-P.score,P.scoreProj-P.score)):0,
            lbl:'Développement durable',unit:'/ 100',couv:P.couverture,dd:P}}
+  if(k==='idc'){
+    const q=idcParc((S_ALL&&S_ALL.length)?S_ALL:S),c30=pCible30(),c50=pCible50();
+    if(q.idc==null)return{val:null,cible:c30,cible50:c50,part:false,niveau:true,
+      pct:0,pctPort:0,idcq:q,surface:q.sre};
+    const atteint=q.idc<=c30;
+    /* La barre ne peut pas dire un « chemin parcouru » : l'OCEN ne relève pas
+       d'IDC depuis 2005, il n'y a pas de point de départ. Elle dit donc
+       l'avancement réel de cet indicateur — la part de la surface du parc
+       déjà sous le seuil — et c'est elle qui donne sa couleur à la tuile.
+       Un parc dont la MOYENNE est sous la cible peut n'avoir que 61 % de sa
+       surface conforme : la tuile le montre au lieu de l'effacer.
+       Pas de segment clair : partout ailleurs il signifie « portefeuille
+       arrêté », et lui donner un second sens ici ferait mentir la légende. */
+    const conforme=q.sre>0?Math.max(0,Math.min(100,100*(q.sre-q.sreHors)/q.sre)):0;
+    /* La couleur juge la CIBLE, pas la barre : un parc dont la moyenne est
+       sous 97 a atteint son objectif, et la tuile le dit en vert. Ce qui
+       reste à faire — les sous-sites encore au-dessus du seuil — se lit au
+       sous-titre et au remplissage de la barre, pas à la couleur.
+       (Décision d'Achim, 21.09.2026) */
+    return{val:q.idc,cible:c30,cible50:c50,part:false,niveau:true,
+      pct:conforme,pctPort:0,atteint:atteint,conforme:conforme,
+      couleur:atteint?'var(--ok)':(conforme>=50?'var(--warn)':'var(--red)'),
+      apres:q.idcApres,surface:q.sre,idcq:q}}
   if(k==='veg'){const v=g.veg||{};
     /* Objectif cumulatif : on ne réduit pas, on crée. Le « chemin » n'est donc
        pas un chemin parcouru mais la part de l'objectif que les projets
@@ -6970,6 +7098,10 @@ function indColor(s){
      arrêté ajoutera. Un parc à mi-chemin qui a financé le reste n'est pas
      dans la même situation qu'un parc à mi-chemin sans budget engagé. */
   if(!s)return'var(--ink3)';
+  /* Un indicateur peut juger autrement que par le remplissage de sa barre.
+     L'IDC s'en sert : sa cible est atteinte ou elle ne l'est pas, et la barre
+     dit une autre chose — la part du parc déjà sous le seuil. (21.09.2026) */
+  if(s.couleur)return s.couleur;
   const p=(s.pct||0)+(s.pctPort||0);return p>=95?'var(--ok)':(p>=50?'var(--warn)':'var(--red)')}
 function sparkOf(k){
   const P=(typeof PARC_LIVE!=='undefined')?PARC_LIVE:null;
@@ -7023,10 +7155,16 @@ function renderTiles(){
     /* placeholder invisible sur Renouvelable/PV/DD : ces trois tuiles n'ont
        pas d'absolu à parenthéser, mais doivent garder la même hauteur que
        les quatre autres, qui viennent de gagner une ligne (17.09.2026) */
+    /* L'IDC n'a pas d'absolu à parenthéser, mais il a une seconde unité :
+       la ligne qui servait de cale prend ses mégajoules. */
     const absLine=(o.abs&&useInt)
       ?'<div class="abs">'+iabs(nf(s.val/(o.div||1),o.dec)+' '+esc(o.unit))+'</div>'
+      :(o.k==='idc'&&s.val!=null)
+      ?'<div class="abs">'+iabs(fmtMJ(s.val))+'</div>'
       :'<div class="abs">&nbsp;</div>';
-    const cibTxt=s.part?(nf(s.cible,1)+' %'):(useInt
+    /* l'IDC est déjà au m² : sa cible garde son unité entière, là où les
+       objectifs absolus n'affichent que le numérateur (« GWh », « m³ ») */
+    const cibTxt=(o.k==='idc')?(nf(s.cible,0)+' '+o.unit):s.part?(nf(s.cible,1)+' %'):(useInt
       ?(nf(intVal(s.cible,s.surface,o.mul),intDec(o.unitInt,intVal(s.cible,s.surface,o.mul)))+' '+o.unitInt)
       :(nf(s.cible/(o.div||1),o.dec)+' '+o.unit.split('/')[0]));
     let sub;
@@ -7047,6 +7185,10 @@ function renderTiles(){
     }
     else if(o.k==='pv')   sub='cible '+cibTxt+' · <b title="Kilowatt-crête : la puissance d\'une installation solaire mesurée dans des conditions d\'ensoleillement de référence. C\'est la taille du parc de panneaux, pas ce qu\'il produira dans l\'année.">'+nf(s.gapKw)+' kWc</b> à installer';
     else if(o.k==='ren')  sub='cible '+cibTxt+' · <b>'+nf((s.gap||0)/1e6,1)+' GWh</b> à basculer';
+    /* Le parc peut être sous la cible alors que des centaines de sous-sites
+       la dépassent : c'est ce chiffre-là, pas la moyenne, qui dit le travail
+       qui reste. Il tient la place du « % du chemin » des autres tuiles. */
+    else if(o.k==='idc')  sub='cible '+cibTxt+' · <b>'+nf((s.idcq&&s.idcq.nHors)||0)+' sous-sites</b> au-dessus';
     else if(s.sansRef)    sub='cible '+cibTxt+' · pas de référence 2005';
     else                  sub='cible '+cibTxt+' · <b>'+nf(s.pct)+' %</b> du chemin';
     /* sur l'indice DD, le segment clair n'est pas le portefeuille arrêté mais
@@ -7054,11 +7196,14 @@ function renderTiles(){
     if(s.pctPort>0.5&&o.k!=='dd')sub+=' <span class="add">+'+nf(s.pctPort)+' % portef.</span>';
     const estimeTtl=(o.k==='th'&&s.contrat&&s.estime>0)?(' Chaleur du parc du contrat de données : '+nf(s.val/1e6,1)+' GWh, dont '+nf(s.estime/1e6,1)+' GWh estimés (SRE × IDC, '+nf(s.nbEstimes)+' sous-sites).'):'';
     const ttl=o.k==='dd'?'Indice de développement durable : somme pondérée des taux d\'atteinte des volets décrits dans « Objectifs PTE » — cliquer pour le détail'
-      :(o.k==='pv'?('Puissance restant à installer pour que le photovoltaïque couvre '+nf(s.cible,1)+' % de l\'électricité consommée')
+      :(o.k==='idc'?('Indice de dépense de chaleur du parc, moyenne pondérée par la SRE sur '+nf((s.idcq&&s.idcq.n)||0)+' sous-sites — '+fmtMJ(s.val)+'. '+
+        (s.atteint?'La couleur dit que la cible du parc est atteinte ; elle ne dit pas que le travail est fini. ':'')+
+        'La barre ne dit pas un chemin depuis 2005 — l\'OCEN n\'en relève pas — mais la part de la surface du parc déjà sous le seuil : '+nf(s.conforme||0)+' %. Cliquer pour les deux lectures et la distribution')
+       :(o.k==='pv'?('Puissance restant à installer pour que le photovoltaïque couvre '+nf(s.cible,1)+' % de l\'électricité consommée')
        :(o.k==='ren'?('Consommation thermique restant à basculer sur un agent non fossile pour atteindre '+nf(s.cible,1)+' %')
         :('Chemin parcouru depuis la référence 2005 vers la cible 2030'+
           (s.pctPort>0.5?', puis apport du portefeuille arrêté (segment clair)':'')+
-          ' — cliquer pour voir la trajectoire'+estimeTtl)));
+          ' — cliquer pour voir la trajectoire'+estimeTtl))));
     return '<div class="tile'+(indSel===o.k?' on':'')+'" onclick="selInd(\''+o.k+'\')" title="'+ttl+'">'+
       '<div class="k"><span class="dot" style="background:'+col+'"></span>'+esc(o.lbl)+'</div>'+
       '<div class="v">'+val+'<span class="u">'+esc(unitTxt)+'</span></div>'+
@@ -7074,6 +7219,9 @@ function selInd(k){
   indSel=(k==='veg')?'dd':k;renderTiles()}
 /* d'où viennent les chiffres affichés pour cet indicateur */
 function indSource(k){
+  if(k==='idc')return 'IDC : colonne <code>IDC [kWh]</code> de <code>Plan_PTE</code> (indice OCEN ÷ 3,6), pondéré par la <code>SRE</code>. '+
+    'IDC projeté : colonne <code>IDC projeté [kWh]</code>, retenue seulement quand une variante CECB+ précise est retenue. '+
+    'Cibles 2030 et 2050 : paramètres de calcul du menu ☰ — aucune ligne IDC n\'existe dans la feuille <code>Objectifs PTE</code>.';
   const RS=(typeof OBJ_REFS!=='undefined'&&OBJ_REFS&&OBJ_REFS[k])?OBJ_REFS[k].serie:null;
   const P=(typeof PARC_LIVE!=='undefined')?PARC_LIVE:null;
   const parts=[];
@@ -7153,6 +7301,37 @@ function renderDetail(){
       '<div id="ddHost"></div>'+ddVegBloc();
     const src=$('ddTbl');if(src)$('ddHost').innerHTML=src.innerHTML;
     if(document.getElementById('indChart'))drawIndic('veg');
+    return}
+  if(indSel==='idc'){
+    const q=s.idcq||{};
+    const pcS=function(a,b){return b>0?nf(100*a/b,0)+' %':'—'};
+    const rI=[
+      [{h:'IDC du parc',t:'Somme des SRE × IDC divisée par la somme des SRE, sur les sous-sites qui portent un IDC. Colonne « IDC [kWh] » de Plan_PTE, soit l\'indice OCEN ramené en kWh/m²·an (÷ 3,6). L\'équivalent en mégajoules est donné entre parenthèses : c\'est l\'unité de la LEn.'},
+        (q.idc!=null?nf(q.idc,1)+' kWh/m²·an '+iabs(fmtMJ(q.idc)):'—')],
+      [{h:'Cible 2030',t:'Référentiel du programme : 350 MJ/m²·an, dont l\'équivalent exact est 97,2 kWh/m²·an. Le paramètre de l\'outil est posé à 97, et la conversion affichée est exacte — d\'où 349 MJ et non 350. Réglable dans les paramètres de calcul (menu ☰) : c\'est la même valeur qui sert de cible d\'intensité au thermique.'},
+        nf(s.cible,0)+' kWh/m²·an '+iabs(fmtMJ(s.cible))],
+      [{h:'Cible 2050',t:'63 kWh/m²·an, environ 227 MJ/m²·an. Réglable dans les paramètres de calcul.'},
+        nf(s.cible50,0)+' kWh/m²·an '+iabs(fmtMJ(s.cible50))],
+      [{h:'Sous-sites au-dessus du seuil',t:'Sous-sites dont l\'IDC dépasse la cible 2030, quel que soit l\'IDC du parc. C\'est la lecture réglementaire, bâtiment par bâtiment — celle que classe l\'onglet Classement, objectif IDC.'},
+        nf(q.nHors||0)+' sur '+nf(q.n||0)+' '+iabs(pcS(q.sreHors,q.sre)+' de la SRE')],
+      [{h:'Chaleur au-dessus du seuil',t:'Somme des SRE × (IDC − cible) sur ces sous-sites : la chaleur qu\'il faudrait retirer pour qu\'aucun ne dépasse le seuil. C\'est la grandeur que trie le classement IDC.'},
+        nf((q.exces||0)/1e6,1)+' GWh/an'],
+      [{h:'IDC après les projets repérés',t:'Même moyenne pondérée, en remplaçant l\'IDC actuel par l\'IDC projeté partout où une variante CECB+ précise est retenue et qu\'elle abaisse l\'indice. Même garde que le gain thermique.'},
+        (q.idcApres!=null?nf(q.idcApres,1)+' kWh/m²·an '+iabs(fmtMJ(q.idcApres)+' · '+nf(q.nProj||0)+' sous-sites projetés'):'—')],
+      [{h:'Couverture',t:'Part du parc qui porte un IDC renseigné. Un sous-site sans IDC ne pèse ni dans la moyenne, ni dans le classement : il est absent, pas conforme.'},
+        nf(q.n||0)+' sous-sites · '+fmtSurfPanel(q.sre)],
+      [{h:'Millésimes IDC',t:'Années des relevés OCEN, colonne « Année IDC (dernière) ». Un millésime différent de l\'année des mesures est signalé dans l\'onglet Données.'},
+        q.annees||'—']];
+    const mI=Math.ceil(rI.length/2);
+    el.innerHTML='<h3>IDC — indice de dépense de chaleur</h3>'+
+      '<p class="lead">'+(s.atteint?'<span class="tag ok">cible du parc atteinte</span> ':'')+
+      'La chaleur consommée en une année par mètre carré chauffé, telle que l\'OCEN la relève. '+
+      'Le parc se lit en moyenne pondérée par la SRE ; le seuil, lui, s\'apprécie sous-site par sous-site. '+
+      'Les deux lectures ne disent pas la même chose, et c\'est la seconde qui désigne le travail à faire.</p>'+
+      idcHisto(q,s.cible,s.cible50)+
+      '<div class="dgrid"><div>'+rI.slice(0,mI).map(drow).join('')+
+      '</div><div>'+rI.slice(mI).map(drow).join('')+'</div></div>'+
+      '<p class="mini" style="margin-top:8px;color:var(--ink3)">'+indSource('idc')+'</p>';
     return}
   const rows=[];
   if(s.part){
@@ -7246,6 +7425,61 @@ function renderDetail(){
     pontLegende(indSel)+
     '<p class="mini" style="margin-top:8px;color:var(--ink3)">'+indSource(indSel)+'</p>';
   drawIndic(indSel)}
+/* Distribution des SRE par tranche d'IDC, avec les deux seuils.
+   Un seul dessin répond à la question que pose la tuile : où est la masse
+   du parc par rapport au seuil. Couleurs prises aux jetons, donc justes en
+   mode nuit comme à l'impression. */
+function idcHisto(q,c30,c50){
+  const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
+  if(!pop||!pop.length)return'';
+  /* Les bornes intègrent les deux cibles : sans cela une tranche 80–100
+     serait à cheval sur le seuil de 97 et sa couleur ne voudrait rien dire.
+     Elles suivent donc les cibles si on les change dans les paramètres. */
+  const B=[0,40,c50,80,c30,120,150,180,220]
+    .filter(function(v){return v>=0&&isFinite(v)})
+    .sort(function(x,y){return x-y})
+    .filter(function(v,i,a){return i===0||v-a[i-1]>4})
+    .concat([1e9]);
+  const v=B.slice(0,-1).map(function(){return 0});
+  let tot=0;
+  pop.forEach(function(x){
+    const S1=+x.sre,I=+x.idcC;if(!(S1>0)||!(I>0))return;
+    for(let i=0;i<v.length;i++)if(I>=B[i]&&I<B[i+1]){v[i]+=S1;tot+=S1;break}});
+  if(!tot)return'';
+  const mx=Math.max.apply(null,v)||1;
+  const W=760,H=190,L=44,Rm=10,T=12,Bm=42,iw=(W-L-Rm)/v.length;
+  const xOf=function(idc){ /* position d'un seuil sur l'axe des tranches */
+    for(let i=0;i<v.length;i++)if(idc>=B[i]&&idc<B[i+1])
+      return L+i*iw+iw*(idc-B[i])/((B[i+1]===1e9?300:B[i+1])-B[i]);
+    return null};
+  let g='';
+  v.forEach(function(val,i){
+    const h=(H-T-Bm)*val/mx,x=L+i*iw+2,y=H-Bm-h;
+    /* chaque tranche est entièrement d'un côté du seuil : sa couleur est
+       donc une lecture, pas une approximation */
+    const sous=B[i+1]<=c30;
+    const col=sous?'var(--ok)':(B[i]>=2*c30?'var(--red)':'var(--warn)');
+    g+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+(iw-4).toFixed(1)+'" height="'+Math.max(0,h).toFixed(1)+'" fill="'+col+'" opacity=".85">'+
+       '<title>'+(B[i+1]===1e9?('IDC ≥ '+B[i]):(B[i]+' à '+B[i+1]))+' kWh/m²·an — '+
+       nf(val/1000,0)+' milliers de m² ('+nf(100*val/tot,0)+' % de la SRE) — '+
+       (B[i+1]<=c30?'sous le seuil 2030':'au-dessus du seuil 2030')+'</title></rect>';
+    /* l'étiquette se pose sur la BORNE GAUCHE de la tranche, pas en son
+       milieu : sinon le trait du seuil 97 tombe à gauche du nombre 97 et se
+       lit comme s'il ne lui correspondait pas */
+    g+='<text x="'+(L+i*iw).toFixed(1)+'" y="'+(H-Bm+13)+'" text-anchor="middle" font-size="9.5" fill="var(--ink3)">'+
+       B[i]+'</text>'});
+  [[c30,'2030'],[c50,'2050']].forEach(function(p){
+    const x=xOf(p[0]);if(x==null)return;
+    g+='<line x1="'+x.toFixed(1)+'" y1="'+T+'" x2="'+x.toFixed(1)+'" y2="'+(H-Bm)+'" stroke="var(--acc)" stroke-width="1.4" stroke-dasharray="4 3"/>'+
+       /* halo de la couleur de la carte : les deux étiquettes passent
+          au-dessus d'une barre sans devenir illisibles, de jour comme de nuit */
+       '<text x="'+(x+4).toFixed(1)+'" y="'+(T+10)+'" font-size="10" font-weight="600" fill="var(--acc)" stroke="var(--card)" stroke-width="3" paint-order="stroke">'+p[1]+' · '+Math.round(p[0])+'</text>'+
+       '<text x="'+(x+4).toFixed(1)+'" y="'+(T+21)+'" font-size="9" fill="var(--ink2)" stroke="var(--card)" stroke-width="3" paint-order="stroke">'+fmtMJ(p[0],false)+'</text>'});
+  return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block;margin:4px 0 10px" role="img" '+
+    'aria-label="Distribution de la surface du parc par tranche d\'IDC">'+
+    '<line x1="'+L+'" y1="'+(H-Bm)+'" x2="'+(W-Rm)+'" y2="'+(H-Bm)+'" stroke="var(--line)"/>'+g+
+    '<text x="'+L+'" y="'+(H-8)+'" font-size="10" fill="var(--ink3)">IDC [kWh/m²·an] — hauteur : surface du parc (SRE) dans la tranche</text>'+
+    '</svg>'}
 function pontLegende(k){
   const D=pontData(k);if(!D)return'';
   const Z=pontZones(D);
@@ -7527,7 +7761,7 @@ function snapSave(){
   if(typeof OBJRANK==='undefined'||!OBJRANK){toast('Importez d\'abord le fichier','wr');return}
   const d=new Date(),lbl=('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear()+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
   const snap={t:Date.now(),lbl:lbl,file:lastFileName||'',r:{}};
-  ['co2','th','ren','elec','eau','pv'].forEach(function(k){
+  ['co2','th','idc','ren','elec','eau','pv'].forEach(function(k){
     const R=OBJRANK[k];if(!R||!R.items)return;
     const m={};applyQuali(R.items,k).forEach(function(it){m[it.id]=it.rangAdj||it.rang});
     snap.r[k]=m});
