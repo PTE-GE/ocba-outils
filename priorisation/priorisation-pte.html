@@ -3769,6 +3769,20 @@ const DUREE_OBJ=[
    donc pour 80 % de la consommation du bâtiment au classement Renouvelable.
    72 substitutions du parc vont vers PAC+Gaz : la valeur pèse lourd, et
    elle reste modifiable dans les Paramètres de calcul — vider la case remet PAC+Gaz en fossile. */
+/* ── Liens sortants vers les autres pages ─────────────────────────────
+   MASQUÉS TEMPORAIREMENT — demande d'Achim, 22.09.2026 : à ce stade la
+   priorisation ne doit pas ouvrir la page Pilotage PTE, la simulation ni la
+   revue de projets. Quatre liens sont concernés : « Pilotage PTE » dans le
+   sous-titre et dans le pied de page, et les deux boutons de la fiche du
+   sous-site. Le texte reste, seul le lien disparaît.
+
+   La consigne ne vaut QUE dans ce sens. Les liens qui ARRIVENT ici — depuis
+   la page Pilotage PTE, la simulation et la revue — sont intacts, et l'ancre
+   #ss=NNNNNN qui ouvre un sous-site continue de fonctionner.
+
+   Pour tout rétablir : passer cette seule constante à true. */
+const LIENS_SORTANTS=false;
+
 const PARAMS_DEF={duree:40,pvProd:950,cibleKwh30:97.2,cibleKwh50:63,plancher:50,dureeObj:{},pacGazPart:80,cibleMode:'intensite'};
 /* Cible 2030 qui classe (décision d'Achim, 17.09.2026) : « intensite » = intensité
    2005 × (1 − x %) × SRE d'aujourd'hui (lecture « ramenée à la surface » du PL
@@ -4813,12 +4827,31 @@ function initDropzone(){
     processFile(ok)});
 }
 
+/* Remplace chaque lien vers la page Pilotage PTE par un simple texte : le
+   mot reste lisible à sa place dans le sous-titre et dans le pied de page,
+   mais il ne mène nulle part. Rendre la fonction inopérante suffit à tout
+   remettre — elle ne s'exécute que si LIENS_SORTANTS vaut false. */
+function masquerLiensSortants(){
+  if(LIENS_SORTANTS||typeof document==='undefined')return 0;
+  const liens=document.querySelectorAll('a[href$="Pilotage_PTE.html"]');
+  let n=0;
+  liens.forEach(function(a){
+    const sp=document.createElement('span');
+    sp.className=a.className;
+    sp.textContent=a.textContent;
+    sp.title='Accès à la page Pilotage PTE non ouvert depuis cet outil pour le moment.';
+    a.parentNode.replaceChild(sp,a);n++});
+  return n}
+
 function boot(){
   /* Arborescence : les liens « Pilotage PTE » et la ligne de démonstration
      dépendent de l'endroit où la page est servie (kDrive ou GitHub Pages).
      Demo_PTE.xlsx n'est pas publié sur GitHub : on retire la ligne plutôt
      que de laisser un lien mort. */
-  try{PTE_COMMUN.relierAccueil();
+  try{
+    /* Liens coupés : inutile de les recâbler sur l'arborescence, on les
+       remplace par leur seul texte. Sinon, comportement d'origine. */
+    if(LIENS_SORTANTS)PTE_COMMUN.relierAccueil();else masquerLiensSortants();
     if(PTE_COMMUN.layout()==='github'){const d=$('dropDemo');if(d)d.remove()}
   }catch(e){}
   const st=loadState();
@@ -6075,10 +6108,14 @@ box.innerHTML='<div class="fiche-card">'+
   '<p class="mini" style="margin-top:4px">L\'ajustement ne modifie jamais la donnée : il déplace le sous-site dans le classement et le motif reste affiché à côté du rang.</p></div>'+
   '<div style="font-size:.75rem;margin-bottom:4px;font-weight:600;color:var(--pri)">Notes et commentaires :</div>'+
   '<textarea id="noteTA" placeholder="Note conservée lors des mises à jour du fichier de données — exportable séparément via « Notes et ajustements »" onblur="saveNote('+jsArg(id)+')" style="width:100%;height:60px;border:1px solid #cbd5e0;border-radius:6px;padding:6px;font-size:.76rem;resize:vertical">'+esc(siteNotes[id]||'')+'</textarea>'+
-  '<div class="fiche-liens">'+
-    '<a class="btn" href="'+esc(PTE_COMMUN.lien('sim',site.id)||'#')+'" title="Ouvrir la simulation des gains sur ce sous-site">Simuler ce sous-site</a>'+
-    '<a class="btn" href="'+esc(PTE_COMMUN.lien('revue',site.id)||'#')+'" title="Ouvrir la revue de projets sur ce sous-site">Voir ses projets</a>'+
-  '</div></div>';
+  /* Le bloc entier disparaît quand les liens sortants sont coupés : un
+     conteneur vide laisserait une marge sous les notes. */
+  (LIENS_SORTANTS
+    ? ('<div class="fiche-liens">'+
+       '<a class="btn" href="'+esc(PTE_COMMUN.lien('sim',site.id)||'#')+'" title="Ouvrir la simulation des gains sur ce sous-site">Simuler ce sous-site</a>'+
+       '<a class="btn" href="'+esc(PTE_COMMUN.lien('revue',site.id)||'#')+'" title="Ouvrir la revue de projets sur ce sous-site">Voir ses projets</a>'+
+       '</div>')
+    : '')+'</div>';
 box.classList.add('on');
 try{PTE_COMMUN.ecrireHash(String(site.id))}catch(e){}
 try{box.scrollIntoView({block:'nearest'})}catch(e){}}
