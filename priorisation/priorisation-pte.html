@@ -862,6 +862,16 @@ details.howto>summary::-webkit-details-marker{display:none}
 details.howto>summary::before{content:'▸';font-size:.7rem;transition:transform .15s}
 details.howto[open]>summary::before{transform:rotate(90deg)}
 details.howto>div,details.howto>p{margin-top:6px;line-height:1.55}
+/* Variante « plein » : un bloc repliable posé SOUS des bandeaux pleine largeur.
+   La mesure de 80ch vaut pour une note isolée ; ici elle casse l'alignement de
+   la colonne et fait croire à un encart secondaire. Ouvert, le contenu prend la
+   forme d'un bandeau comme ceux du dessus — neutre par défaut, coloré s'il porte
+   déjà part-warn ou attr-warn. */
+details.howto.plein{max-width:none}
+details.howto.plein>div{background:var(--soft);border:1px solid var(--line);
+  border-radius:8px;padding:7px 10px;font-size:.72rem;margin:6px 0 10px}
+details.howto.plein>div.part-warn{background:var(--bg-info);color:var(--fg-info);border-color:var(--acc)}
+details.howto.plein>div.attr-warn{background:var(--bg-ok);color:var(--fg-ok);border-color:var(--ok)}
 /* patrimoine : une abréviation lisible remplace le pictogramme */
 .pat-chip{display:inline-block;padding:0 6px;border-radius:9px;font-size:.62rem;font-weight:bold;
   border:1px solid var(--border);color:var(--ink-70);cursor:help;white-space:nowrap}
@@ -1390,7 +1400,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td>IDC actuel / projeté</td><td><code>IDC [kWh]</code> / <code>IDC projeté [kWh]</code> (variante CECB+ retenue)</td></tr>
 <tr><td>Variante CECB+</td><td><code>Audit CECB+</code> (var_A, var_B, var_C)</td></tr>
 <tr><td>Chauffage actuel / prévu</td><td><code>Agent</code> (SITG, premier terme avant « | ») rapporté au libellé de la feuille <code>Data</code> qui porte le facteur ; <code>Chauffage Type Energie Prin</code> ne sert plus qu'à nommer le réseau (CADIOM, CAD_x) / <code>Chauffage de subsitution prévu</code></td></tr>
-<tr><td>Montants</td><td><code>Estim PTE</code> (référentiel), <code>Invest estim. CECB+</code>, <code>Invest ImmOBA</code>, <code>Prévisionnel PTE GEI</code> — au choix, menu <b>Montants</b></td></tr>
+<tr><td>Montants</td><td><code>Estim PTE</code> (référentiel), <code>Estim CECB+</code>, <code>Invest ImmOBA</code>, <code>Prévisionnel PTE GEI</code> — au choix, menu <b>Montants</b></td></tr>
 <tr><td>CO₂ projeté</td><td><code>CO2 projeté [kg/m2.an]</code> (suivi CECB+) ; à défaut, calcul par facteur d'émission</td></tr>
 <tr><td>Facteurs d'émission</td><td>onglet <code>Data</code> du classeur, colonnes <code>FournisseurChaleur</code> / <code>FacteurCO2</code> (g/kWh), sans repli : un agent sans facteur rend le sous-site non chiffrable en CO₂, et l'outil le dit</td></tr>
 <tr><td>RPF / RP</td><td><code>Responsable Portefeuille</code> / <code>GEI_Suivi!Nom responsable suivi</code> du premier projet du sous-site, sinon <code>Responsable projet</code> ; « --- » = vide</td></tr>
@@ -1411,7 +1421,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <b>CO₂</b> : gain = SRE × IDC × facteur du chauffage actuel − SRE × IDC projeté × facteur du chauffage prévu, en kg/an. Si le classeur fournit un CO₂ projeté par sous-site, c'est lui qui prime.<br>
 <b>Renouvelable</b> : gain = SRE × IDC, pour les bâtiments passant d'une énergie fossile à une énergie renouvelable.<br>
 <b>Coût unitaire</b> : montant ÷ (gain × durée de vie retenue). C'est le prix de l'unité gagnée, et c'est lui qui ordonne le classement, du moins cher au plus cher.<br>
-<b>Quel montant ?</b> celui de la colonne choisie dans le menu <b>Montants</b> de la barre de source — <code>Estim PTE</code>, <code>Invest estim. CECB+</code>, <code>Invest ImmOBA</code> ou <code>Prévisionnel PTE GEI</code>. Le menu indique combien de montants chaque colonne contient réellement ; en changer recalcule tous les classements, tous les coûts unitaires et l'arbitrage.<br>
+<b>Quel montant ?</b> celui de la colonne choisie dans le menu <b>Montants</b> de la barre de source — <code>Estim PTE</code>, <code>Estim CECB+</code>, <code>Invest ImmOBA</code> ou <code>Prévisionnel PTE GEI</code>. Le menu indique combien de montants chaque colonne contient réellement ; en changer recalcule tous les classements, tous les coûts unitaires et l'arbitrage.<br>
 <b>Durée de vie retenue</b> : 40 ans par défaut, <b>et réglable objectif par objectif</b> (menu ☰ → Paramètres de calcul → « Durée de vie »). <b>Ce n'est pas une norme SIA</b> — c'est la convention de calcul du coût de l'énergie économisée reprise de <code>Priorisation_PTE.xlsx</code>. Une seule durée pour tous supposerait qu'une isolation d'enveloppe, une pompe à chaleur et une robinetterie s'amortissent pareil ; en régler une par objectif évite d'avantager mécaniquement celui dont les mesures durent le plus longtemps. La durée réellement appliquée est écrite en tête de colonne de chaque classement.<br>
 <b>Rang de franchissement</b> : le rang auquel le cumul des gains atteint l'écart restant à combler pour 2030.</div></div>
 <p><b>La végétalisation fait exception elle aussi</b>, dans l'autre sens : elle est chiffrée mais ne se rapporte à aucune durée de vie. Une cour d'école désimperméabilisée ne produit pas un flux annuel de kWh évités ; elle crée une surface, une fois. Son classement se fait donc au <b>coût du m² créé</b> — montant TTC du projet ÷ m² créés — du moins cher au plus cher, sans actualisation ni durée de vie. Le rang de franchissement garde le même sens : le rang auquel le cumul des surfaces atteint la cible 2030. Attention à la lecture des surfaces : la colonne du classeur porte ce que les projets <b>créeraient</b>, pas ce qui est déjà créé — l'écart à combler est donc l'objectif entier.</p>
@@ -1788,7 +1798,7 @@ var PTE_CONTRAT = (function () {
       rpf: col(idx, ['Responsable Portefeuille']),                       /* D8 */
       rp: col(idx, ['Responsable projet']),
       estimPte: col(idx, ['Estim PTE']),                                 /* D6 */
-      investCecb: col(idx, ['Invest estim. CECB+']),
+      investCecb: col(idx, ['Estim CECB+', 'Invest estim. CECB+']),
       co2Proj: col(idx, ['CO2 projeté [kg/m2.an]']),                     /* D5 */
       idcProj: col(idx, ['IDC projeté [kWh]', 'IDC projeté']),
       idcGain: col(idx, ['IDC Gain retenu']),
@@ -2081,6 +2091,29 @@ var PTE_COMMUN = (function () {
       return new Promise(function (res) { var tx = db.transaction(STORE, 'readwrite'); tx.objectStore(STORE).delete(KEY); tx.oncomplete = res; tx.onerror = res; });
     }).catch(function () {});
   }
+
+  /* Deuxième temps de l'effacement : le classeur commun.
+     Il vit dans IndexedDB, partagé par les trois outils de Pilotage PTE. Vider les
+     données d'un seul outil ne l'atteint pas : au rechargement il revient, et
+     l'utilisateur croit que l'effacement a échoué. La question est donc posée
+     explicitement, en nommant le fichier et en disant qui d'autre le perd.
+     `apres(efface)` est appelé dans tous les cas, une fois la suppression terminée —
+     sinon le rechargement court contre la transaction IndexedDB et le classeur est
+     encore là au démarrage suivant. */
+  function demanderEffacerClasseur(apres) {
+    var fin = (typeof apres === 'function') ? apres : function () {};
+    var m = lireMeta();
+    if (!m) { fin(false); return; }
+    var q = 'Effacer aussi le classeur commun \u00ab\u00a0' + (m.nom || 'Plan_PTE.xlsx') + '\u00a0\u00bb'
+          + (m.date ? ' (import\u00e9 le ' + dateCourte(m.date) + ')' : '') + ' ?\n\n'
+          + 'Ce classeur est partag\u00e9 par les trois outils de Pilotage PTE : la priorisation, '
+          + 'la simulation de gains et la revue de projets le perdront aussi, et il faudra '
+          + 'le r\u00e9importer.\n\n'
+          + 'Annuler : le classeur est conserv\u00e9 et sera recharg\u00e9 au d\u00e9marrage.';
+    if (!confirm(q)) { fin(false); return; }
+    effacerClasseur().then(function () { fin(true); }, function () { fin(true); });
+  }
+
   /* Un classeur commun plus récent que la date donnée (ISO) existe-t-il ? */
   function plusRecentQue(dateIso) {
     var m = lireMeta(); if (!m) return false;
@@ -2306,6 +2339,7 @@ var PTE_COMMUN = (function () {
            resumeSaisies: resumeSaisies, telechargerSaisies: telechargerSaisies,
            layout: layout, lien: lien, ssDepuisHash: ssDepuisHash, ecrireHash: ecrireHash,
            publierClasseur: publierClasseur, lireClasseur: lireClasseur, effacerClasseur: effacerClasseur,
+           demanderEffacerClasseur: demanderEffacerClasseur,
            lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,
            publierClassement: publierClassement, lireClassement: lireClassement,
            lireQuestions: lireQuestions, ecrireQuestions: ecrireQuestions,
@@ -2369,7 +2403,7 @@ function appliquerContrat(list){
     s.agentARenseigner=!!x.agent.aRenseigner;s.agentPrincipal=x.agent.principal;
     s.ht=x.agent.cible||x.agent.principal||'';s.htPrin=x.agent.cible||'';
     /* la substitution prévue reste lue par l'outil (colonne propre, « --- » compris) */
-    /* montants : « Estim PTE » lit Estim PTE, « Invest estim. CECB+ » lit sa colonne */
+    /* montants : « Estim PTE » lit Estim PTE, « Estim CECB+ » lit sa colonne */
     s.invEstim=x.estimPte;s.invCecb=x.investCecb;
     /* RPF = Responsable Portefeuille ; RP = GEI_Suivi puis Responsable projet ; « --- » = vide */
     s.rp=x.rpf||'';s.drt=x.rp||'';s.rpSource=x.rpSource||null;
@@ -2445,10 +2479,11 @@ function loadData(){try{const o=JSON.parse(STORE.get(LS_DATA)||'null');if(!o||!o
   if(S_ALL.length>S.length){S=S_ALL}   /* cache d'une version antérieure : population complète */lastFileName=o.fileName||'fichier importé';lastFileTime=o.fileTime||0;OBJ_GAPS=o.objGaps||null;OBJ_COFACTORS=o.objCoFactors||null;CONTRAT=o.contrat||null;importIso=o.importIso||(o.ts?new Date(o.ts).toISOString():'');importEmpreinte=o.importEmpreinte||'';importDepuisCommun=!!o.depuisCommun;return true}catch(e){return false}}
 function clearAllData(){if(!confirm('Effacer de ce navigateur tout ce que l’outil y a enregistré ?\n— le fichier importé (tous les sous-sites),\n— les notes, ajustements et exclusions,\n— les instantanés et le portefeuille validé.\nExportez d’abord vos notes (menu ☰) si vous voulez les garder.'))return;
   try{[LS_DATA,LS_STATE,'pte_snapshots_v1','pte_lock_v1','pte_opt_v2'].forEach(function(k){STORE.del(k)})}catch(e){}
-  /* le classement publié pour la revue est produit par cet outil : il part avec ses données.
-     Le classeur commun de Pilotage PTE, lui, n'est effacé que depuis la page d'accueil (C1). */
+  /* le classement publié pour la revue est produit par cet outil : il part avec ses données. */
   try{localStorage.removeItem(PTE_COMMUN.LS_CLASSEMENT)}catch(e){}
-  location.reload()}
+  /* Le classeur commun vit ailleurs (IndexedDB) et sert aux trois outils : il a sa
+     propre question, et le rechargement attend la fin de sa suppression. */
+  PTE_COMMUN.demanderEffacerClasseur(function(){location.reload()})}
 
 /* ---------- PONDÉRATIONS ---------- */
 
@@ -2743,7 +2778,7 @@ const INV_MODES=[
   /* Contrat de données (D6, 20.09.2026) : « Estim PTE » lit la colonne Estim PTE
      et rien d'autre ; le coût de la variante CECB+ retenue est un référentiel à
      part entière, lu dans sa propre colonne. */
-  {k:'cecb'  ,f:'invCecb'  ,lbl:'Invest estim. CECB+',short:'Invest estim. CECB+'},
+  {k:'cecb'  ,f:'invCecb'  ,lbl:'Estim CECB+',short:'Estim CECB+'},
   {k:'immoba',f:'invImmOBA',lbl:'Invest ImmOBA',short:'Invest ImmOBA'},
   {k:'ge'    ,f:'invGE'    ,lbl:'GE-Invest'    ,short:'GE-Invest'},
   /* Aucune colonne source : le montant est une convention de l'outil, pas
@@ -3646,11 +3681,11 @@ function parseCSVtoRows(t){const fl=t.split('\n')[0]||'';const sep=(fl.split(';'
 
 function importFromRows(rows,includeAll){
   if(rows.length<2)return[];const h=rows[0].map(v=>String(v||'').trim());
-  const c={id:fc(h,['N° sous site','nsoussite','N°soussite','N°']),nom:fc(h,['Nom du site_AB','Nomdusite','Nom du site']),adr:fc(h,['Adresse','Adresse du site','Lieu']),coeff:fc(h,['Coeff Stratus','CoeffStratus']),sre:fc(h,['SRE']),sreCorr:fc(h,['SRE corrigée (temp)','SRE corrigée','SREcorrigée']),idcC:fc(h,['IDC [kWh]']),idcCorr:fc(h,['IDC corrigé (temp) [kWh]','IDC corrigé','IDCcorrigé','IDC corrige']),agent:fc(h,['Agent']),pat:fc(h,['Classement au Patrimoine','Patrimoine']),elec:fc(h,['Conso Elec 2025 - kWh2','Conso Elec 2025','Conso Elec 2024 - kWh','Conso Elec','ConsoElec']),eau:fc(h,['Conso Eau 2025 - m3','Conso Eau 2025','Conso Eau 2024 - m3','Conso Eau','ConsoEau']),consoTherm:fc(h,['CONSO [kWh]','CONSO kWh','Conso totale [kWh]']),pol:fc(h,['Politique publique_AB','Politique publique']),co2:fc(h,['Co2 2025','Co2 2024','kgCo2','Co2']),clIDC:fc(h,['Classe IDC','ClasseIDC']),clVet:fc(h,['Classe Vétusté','ClasseVetuste']),fp:fc(h,['Facteur protection','Facteurprotection']),ti:fc(h,["Type d'intervention","TypeIntervention","Type_intervention","Typeintervention","Type intervention"]),rp:fc(h,['Responsables Portefeuille','Responsable Portefeuille','ResponsablesPortefeuille','Resp Portefeuille','Portefeuille','RP']),drt:fc(h,['Responsable DRT/DCO','Responsable DRT DCO','ResponsableDRTDCO','Responsable projet','Resp projet','DRT']),cecb:fc(h,['Audit CECB','AuditCECB']),ht:fc(h,['Chauffage Type Energie','ChauffageTypeEnergie','Chauffage Type']),hsub:fc(h,['Chauffage de subsitution','Chauffage de substitution','substitution']),idcpA:fc(h,['IDC projeté VA [kWh]','IDC projeté VA']),gainElecProj:fc(h,['Gain Elec projeté [kWh/an]','Gain Elec projeté']),consoElecProj:fc(h,['Conso élec projetée [kWh/an]','Conso elec projetee [kWh/an]','Conso élec projetée en kWh (MDS)','Conso élec projetée']),gainEauProj:fc(h,['Gain Eau projeté [m3/an]','Gain Eau projeté']),co2Proj:fc(h,['CO2 projeté [kg/m2.an]','CO2 projeté [kgCO2/an]','CO2 projeté']),idceProj:fc(h,['IDE projeté [kWh]','IDE projeté']),renAct:fc(h,['Part renouvelable actuelle [%]','Part renouvelable actuelle']),renFut:fc(h,['Part renouvelable après projet [%]']),pvExist:fc(h,['PV existant - puissance [kWc]']),pvProd:fc(h,['PV existant - production [kWh/an]']),anneeIDC:fc(h,['Année IDC (dernière)']),ddEng:fc(h,['Montant DD engagé [CHF]']),ddPrev:fc(h,['Montant DD prévu [CHF]']),
+  const c={id:fc(h,['N° sous site','nsoussite','N°soussite','N°']),nom:fc(h,['Nom du site_AB','Nomdusite','Nom du site']),adr:fc(h,['Adresse','Adresse du site','Lieu']),coeff:fc(h,['Coeff Stratus','CoeffStratus']),sre:fc(h,['SRE']),sreCorr:fc(h,['SRE corrigée (temp)','SRE corrigée','SREcorrigée']),idcC:fc(h,['IDC [kWh]']),idcCorr:fc(h,['IDC corrigé (temp) [kWh]','IDC corrigé','IDCcorrigé','IDC corrige']),agent:fc(h,['Agent']),pat:fc(h,['Classement au Patrimoine','Patrimoine']),elec:fc(h,['Conso Elec 2025 [kWh]','Conso Elec 2025 - kWh2','Conso Elec 2025','Conso Elec 2024 [kWh]','Conso Elec 2024 - kWh','Conso Elec','ConsoElec']),eau:fc(h,['Conso Eau 2025 [m3]','Conso Eau 2025 - m3','Conso Eau 2025','Conso Eau 2024 [m3]','Conso Eau 2024 - m3','Conso Eau','ConsoEau']),consoTherm:fc(h,['CONSO [kWh]','CONSO kWh','Conso totale [kWh]']),pol:fc(h,['Politique publique_AB','Politique publique']),co2:fc(h,['Co2 2025','Co2 2024','kgCo2','Co2']),clIDC:fc(h,['Classe IDC','ClasseIDC']),clVet:fc(h,['Classe Vétusté','ClasseVetuste']),fp:fc(h,['Facteur protection','Facteurprotection']),ti:fc(h,["Type d'intervention","TypeIntervention","Type_intervention","Typeintervention","Type intervention"]),rp:fc(h,['Responsables Portefeuille','Responsable Portefeuille','ResponsablesPortefeuille','Resp Portefeuille','Portefeuille','RP']),drt:fc(h,['Responsable DRT/DCO','Responsable DRT DCO','ResponsableDRTDCO','Responsable projet','Resp projet','DRT']),cecb:fc(h,['Audit CECB','AuditCECB']),ht:fc(h,['Chauffage Type Energie','ChauffageTypeEnergie','Chauffage Type']),hsub:fc(h,['Chauffage de subsitution','Chauffage de substitution','substitution']),idcpA:fc(h,['IDC projeté VA [kWh]','IDC projeté VA']),gainElecProj:fc(h,['Gain Elec simulé [kWh/an]','Gain Elec projeté [kWh/an]','Gain Elec projeté']),consoElecProj:fc(h,['Conso élec projetée [kWh/an]','Conso elec projetee [kWh/an]','Conso élec projetée en kWh (MDS)','Conso élec projetée']),gainEauProj:fc(h,['Gain Eau simulé [m3/an]','Gain Eau projeté [m3/an]','Gain Eau projeté']),co2Proj:fc(h,['CO2 projeté [kg/m2.an]','CO2 projeté [kgCO2/an]','CO2 projeté']),idceProj:fc(h,['IDE projeté [kWh]','IDE projeté']),renAct:fc(h,['Part renouvelable actuelle [%]','Part renouvelable actuelle']),renFut:fc(h,['Part renouvelable après projet [%]']),pvExist:fc(h,['PV existant - puissance [kWc]']),pvProd:fc(h,['PV existant - production [kWh/an]']),anneeIDC:fc(h,['Année IDC (dernière)']),ddEng:fc(h,['Montant DD engagé [CHF]']),ddPrev:fc(h,['Montant DD prévu [CHF]']),
     ddToitVeg:fc(h,['DD Toiture végétalisée réalisée [m2]','Toiture Végétalisée Surf m2']),
-    ddToitType:fc(h,['Toiture Principale Type']),ddToitSurf:fc(h,['Surface toiture brute estimée (m2)']),
-    ddPerm:fc(h,['Indicateur Biodiversité 1 Surface perméabilisée ajoutée (m2)','Surface perméabilisée ajoutée (m2)']),
-    ddVeget:fc(h,['Indicateur Biodiversité 2 Surface végétalisée ajoutée (m2)','Surface végétalisée ajoutée (m2)']),
+    ddToitType:fc(h,['Toiture Principale Type']),ddToitSurf:fc(h,['Surface toiture brute estimée [m2]','Surface toiture brute estimée (m2)']),
+    ddPerm:fc(h,['Indicateur Biodiversité 1 Surface perméabilisée ajoutée [m2]','Indicateur Biodiversité 1 Surface perméabilisée ajoutée (m2)','Surface perméabilisée ajoutée (m2)']),
+    ddVeget:fc(h,['Indicateur Biodiversité 2 Surface végétalisée ajoutée [m2]','Indicateur Biodiversité 2 Surface végétalisée ajoutée (m2)','Surface végétalisée ajoutée (m2)']),
     ddVegCout:fc(h,['Coût végétalisation TTC [CHF]','Cout végétalisation TTC [CHF]','Coût végétalisation TTC']),
     ddArbres:fc(h,["Indicateur Biodiversité 3 Nombre d'arbres plantés","Nombre d'arbres plantés"]),
     ddCour:fc(h,["DD Cour d'école traitée"]),ddTri:fc(h,['DD Points de tri installés [nb]']),
@@ -3671,7 +3706,7 @@ function importFromRows(rows,includeAll){
        en électricité d'entrée. Aucune valeur par défaut — une case vide
        n'affiche rien plutôt que d'afficher une hypothèse. */
     scop:fc(h,['SCOP PAC [-]','SCOP PAC','SCOP','COP']),
-    ddTriOk:fc(h,['DD Tri conforme']),ddMat:fc(h,['DD Exigence matériaux']),ddLci:fc(h,['DD LCI 117-118']),idcpB:fc(h,['IDC projeté VB [kWh]','IDC projeté VB']),idcpC:fc(h,['IDC projeté VC [kWh]','IDC projeté VC']),idcpGen:fc(h,['IDC projeté','IDCprojeté']),invEstim:fc(h,['Estim PTE','EstimPTE']),invCecb:fc(h,['Invest estim. CECB+']),invVB:fc(h,['Invest ImmOBA','InvestImmOBA','Invest VB']),invGE:fc(h,['Prévisionnel PTE GEI','GE-Invest','GEInvest','GE Invest','Invest GE']),invDG:fc(h,['DG [CHF]','DG (25%)','DG(25%)','DG 25%','DG25','Invest DG','DG']),lat:fc(h,['Latitude','Lat','GPS_Lat','YCOOR']),lng:fc(h,['Longitude','Long','Lng','GPS_Lng','XCOOR','lon']),notes:fc(h,['Notes','Commentaires','Remarques']),etat:fc(h,['Etat du projet (SIA)','État du projet (SIA)','Etat du projet','État du projet','Etat projet','EtatSIA']),gainElec:fc(h,['Gain Electricité (Max) - kWh','Gain Électricité (Max) - kWh']),gainEau:fc(h,['Gain Eau (Max) - m3']),pvKwc:fc(h,['Futur projet PV - puissance estimée (kWc)']),pvM2:fc(h,['Futur projet PV - surface toiture PV estimée (m2)'])};
+    ddTriOk:fc(h,['DD Tri conforme']),ddMat:fc(h,['DD Exigence matériaux']),ddLci:fc(h,['DD LCI 117-118']),idcpB:fc(h,['IDC projeté VB [kWh]','IDC projeté VB']),idcpC:fc(h,['IDC projeté VC [kWh]','IDC projeté VC']),idcpGen:fc(h,['IDC projeté','IDCprojeté']),invEstim:fc(h,['Estim PTE','EstimPTE']),invCecb:fc(h,['Estim CECB+','Invest estim. CECB+']),invVB:fc(h,['Invest ImmOBA','InvestImmOBA','Invest VB']),invGE:fc(h,['Prévisionnel PTE GEI','GE-Invest','GEInvest','GE Invest','Invest GE']),invDG:fc(h,['DG [CHF]','DG (25%)','DG(25%)','DG 25%','DG25','Invest DG','DG']),lat:fc(h,['Latitude','Lat','GPS_Lat','YCOOR']),lng:fc(h,['Longitude','Long','Lng','GPS_Lng','XCOOR','lon']),notes:fc(h,['Notes','Commentaires','Remarques']),etat:fc(h,['Etat du projet (SIA)','État du projet (SIA)','Etat du projet','État du projet','Etat projet','EtatSIA']),gainElec:fc(h,['Gain Electricité (Max) - kWh','Gain Électricité (Max) - kWh']),gainEau:fc(h,['Gain Eau (Max) - m3']),pvKwc:fc(h,['Futur projet PV - puissance estimée [kWc]','Futur projet PV - puissance estimée (kWc)']),pvM2:fc(h,['Futur projet PV - surface toiture PV estimée [m2]','Futur projet PV - surface toiture PV estimée (m2)'])};
   /* Garde-fou anti-collision : si la colonne « RP » détectée contient des nombres
      (ex. Facteur protection 0.5/1), on la rejette et on cherche une colonne
      dont l'en-tête contient « portefeuille ». */
@@ -3683,7 +3718,7 @@ function importFromRows(rows,includeAll){
   if(c.invDG>=0&&(c.invDG===c.invVB||c.invDG===c.invGE||c.invDG===c.invEstim))c.invDG=-1;
   try{invCols={estim:c.invEstim>=0?h[c.invEstim]:null,cecb:c.invCecb>=0?h[c.invCecb]:null,immoba:c.invVB>=0?h[c.invVB]:null,ge:c.invGE>=0?h[c.invGE]:null,dg:c.invDG>=0?h[c.invDG]:null}}catch(e){}
   lastImportRPMissing=(c.rp<0);
-  lastColDebug='Montants→'+[['Estim PTE',c.invEstim],['Invest estim. CECB+',c.invCecb],['ImmOBA',c.invVB],['GE',c.invGE],['DG',c.invDG]].map(function(x){return x[0]+':'+(x[1]>=0?'« '+h[x[1]]+' »':'INTROUVABLE')}).join(', ')+' · RP→'+(c.rp>=0?'« '+h[c.rp]+' »':'INTROUVABLE')+' · Resp.projet→'+(c.drt>=0?'« '+h[c.drt]+' »':'—')+' · Patrimoine→'+(c.pat>=0?'« '+h[c.pat]+' »':'—');
+  lastColDebug='Montants→'+[['Estim PTE',c.invEstim],['Estim CECB+',c.invCecb],['ImmOBA',c.invVB],['GE',c.invGE],['DG',c.invDG]].map(function(x){return x[0]+':'+(x[1]>=0?'« '+h[x[1]]+' »':'INTROUVABLE')}).join(', ')+' · RP→'+(c.rp>=0?'« '+h[c.rp]+' »':'INTROUVABLE')+' · Resp.projet→'+(c.drt>=0?'« '+h[c.drt]+' »':'—')+' · Patrimoine→'+(c.pat>=0?'« '+h[c.pat]+' »':'—');
   try{console.log('[Import PTE] Mapping colonnes :',lastColDebug)}catch(e){}
   const hasGPS=c.lat>=0&&c.lng>=0;const adrCol=c.adr>=0?c.adr:2;let fgc=0;const sites=[];
   for(let r=1;r<rows.length;r++){const R=rows[r];if(!R||R.length<5)continue;
@@ -5986,7 +6021,7 @@ function renR(){
   const bySiteId={};pop.forEach(s=>{bySiteId[s.id]=s});
   const f=rankFilters();
   if(key==='tous'){
-    if(note)note.innerHTML=OBJRANK?'<details class="howto"><summary>Comment lire ce classement</summary><div>Un sous-site peut servir plusieurs objectifs à la fois — trié par nombre d’objectifs servis avant leur propre seuil, puis par <b>rang moyen croissant</b> sur les objectifs où il contribue. Le rang, contrairement au coût unitaire, n’a pas d’unité : il se moyenne sans mélanger des CHF/kg CO₂ avec des CHF/kWh. Le <b>CEE</b> a été retiré des objectifs le 03.09.2026 : il portait exactement les mêmes sous-sites que le Thermique, dans le même ordre, aux mêmes coûts unitaires. Le CHF/kWh reste une <b>mesure</b> — visible dans la distribution de l\'onglet Arbitrage et dans le score composite de repli — mais ce n\'est plus un classement. <b style="color:var(--ok)">Vert</b> = le sous-site fait partie de ceux à financer pour atteindre CETTE cible précise (avant son propre seuil, « # » = son rang dans ce classement) ; <b style="color:var(--ink3)">gris</b> = après. Photovoltaïque exclu (pas de coût isolable), végétalisation exclue (elle se classe au m² créé, pas à l’unité gagnée sur une durée de vie) et IDC exclu (il se classe à la chaleur en trop, pas à un coût) — voir leurs classements dédiés.</div></details>':'';
+    if(note)note.innerHTML=OBJRANK?'<details class="howto plein"><summary>Comment ce classement est trié</summary><div>Un sous-site peut servir plusieurs objectifs à la fois — trié par nombre d’objectifs servis avant leur propre seuil, puis par <b>rang moyen croissant</b> sur les objectifs où il contribue. Le rang, contrairement au coût unitaire, n’a pas d’unité : il se moyenne sans mélanger des CHF/kg CO₂ avec des CHF/kWh. Le <b>CEE</b> a été retiré des objectifs le 03.09.2026 : il portait exactement les mêmes sous-sites que le Thermique, dans le même ordre, aux mêmes coûts unitaires. Le CHF/kWh reste une <b>mesure</b> — visible dans la distribution de l\'onglet Arbitrage et dans le score composite de repli — mais ce n\'est plus un classement. <b style="color:var(--ok)">Vert</b> = le sous-site fait partie de ceux à financer pour atteindre CETTE cible précise (avant son propre seuil, « # » = son rang dans ce classement) ; <b style="color:var(--ink3)">gris</b> = après. Photovoltaïque exclu (pas de coût isolable), végétalisation exclue (elle se classe au m² créé, pas à l’unité gagnée sur une durée de vie) et IDC exclu (il se classe à la chaleur en trop, pas à un coût) — voir leurs classements dédiés.</div></details>':'';
     const jh0=$('objJauge');if(jh0)jh0.innerHTML='';
     const fw0=$('rankFlatWarn');
     if(fw0){fw0.innerHTML=invHorsChiffrage()?flatNote('tous'):'';
@@ -6304,7 +6339,7 @@ function partageNote(key){
     :('<br>⊟ <b>Aucun sous-site</b> ne porte encore la subdivision du montant par lot. Les trois colonnes '+
       '<code>Coût lot enveloppe [CHF]</code>, <code>Coût lot chaufferie [CHF]</code> et <code>Coût lot technique [CHF]</code> '+
       'existent dans <code>Plan_PTE</code> : dès qu\'un sous-site les porte, son coût cesse d\'être partagé et la pastille passe au vert.');
-  return '<details class="howto"><summary>Comment lire ce classement</summary><div class="part-warn"><b>Un même montant, plusieurs objectifs.</b> '+
+  return '<details class="howto plein"><summary>Pourquoi un même montant compte dans plusieurs classements</summary><div class="part-warn"><b>Un même montant, plusieurs objectifs.</b> '+
     'Une rénovation CECB+ produit d\'un coup un gain thermique, un gain CO₂ et une substitution '+
     'renouvelable : le montant affiché ici est le <b>coût complet de l\'intervention</b>, imputé '+
     'entier à chacun des classements où le sous-site apparaît. '+
