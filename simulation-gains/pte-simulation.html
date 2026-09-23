@@ -961,7 +961,7 @@ var PTE_CONTRAT = (function () {
       rpf: col(idx, ['Responsable Portefeuille']),                       /* D8 */
       rp: col(idx, ['Responsable projet']),
       estimPte: col(idx, ['Estim PTE']),                                 /* D6 */
-      investCecb: col(idx, ['Invest estim. CECB+']),
+      investCecb: col(idx, ['Estim CECB+', 'Invest estim. CECB+']),
       co2Proj: col(idx, ['CO2 projeté [kg/m2.an]']),                     /* D5 */
       idcProj: col(idx, ['IDC projeté [kWh]', 'IDC projeté']),
       idcGain: col(idx, ['IDC Gain retenu']),
@@ -1254,6 +1254,29 @@ var PTE_COMMUN = (function () {
       return new Promise(function (res) { var tx = db.transaction(STORE, 'readwrite'); tx.objectStore(STORE).delete(KEY); tx.oncomplete = res; tx.onerror = res; });
     }).catch(function () {});
   }
+
+  /* Deuxième temps de l'effacement : le classeur commun.
+     Il vit dans IndexedDB, partagé par les trois outils de Pilotage PTE. Vider les
+     données d'un seul outil ne l'atteint pas : au rechargement il revient, et
+     l'utilisateur croit que l'effacement a échoué. La question est donc posée
+     explicitement, en nommant le fichier et en disant qui d'autre le perd.
+     `apres(efface)` est appelé dans tous les cas, une fois la suppression terminée —
+     sinon le rechargement court contre la transaction IndexedDB et le classeur est
+     encore là au démarrage suivant. */
+  function demanderEffacerClasseur(apres) {
+    var fin = (typeof apres === 'function') ? apres : function () {};
+    var m = lireMeta();
+    if (!m) { fin(false); return; }
+    var q = 'Effacer aussi le classeur commun \u00ab\u00a0' + (m.nom || 'Plan_PTE.xlsx') + '\u00a0\u00bb'
+          + (m.date ? ' (import\u00e9 le ' + dateCourte(m.date) + ')' : '') + ' ?\n\n'
+          + 'Ce classeur est partag\u00e9 par les trois outils de Pilotage PTE : la priorisation, '
+          + 'la simulation de gains et la revue de projets le perdront aussi, et il faudra '
+          + 'le r\u00e9importer.\n\n'
+          + 'Annuler : le classeur est conserv\u00e9 et sera recharg\u00e9 au d\u00e9marrage.';
+    if (!confirm(q)) { fin(false); return; }
+    effacerClasseur().then(function () { fin(true); }, function () { fin(true); });
+  }
+
   /* Un classeur commun plus récent que la date donnée (ISO) existe-t-il ? */
   function plusRecentQue(dateIso) {
     var m = lireMeta(); if (!m) return false;
@@ -1479,6 +1502,7 @@ var PTE_COMMUN = (function () {
            resumeSaisies: resumeSaisies, telechargerSaisies: telechargerSaisies,
            layout: layout, lien: lien, ssDepuisHash: ssDepuisHash, ecrireHash: ecrireHash,
            publierClasseur: publierClasseur, lireClasseur: lireClasseur, effacerClasseur: effacerClasseur,
+           demanderEffacerClasseur: demanderEffacerClasseur,
            lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,
            publierClassement: publierClassement, lireClassement: lireClassement,
            lireQuestions: lireQuestions, ecrireQuestions: ecrireQuestions,
@@ -1727,15 +1751,15 @@ const REPORT_PLAN = [
   { lib: 'Investissement', val: t => t.inv, dec: 0,
     noms: ['Budget (CHF)', 'Estim PTE', 'Invest ImmOBA'] },
   { lib: 'Économie annuelle', val: t => t.chf, dec: 0,
-    noms: ['Economie (CHF)', 'Économies énergie/an [CHF]'] },
+    noms: ['Économie énergie simulée [CHF/an]', 'Économies énergie/an [CHF]', 'Economie (CHF)'] },
   { lib: 'Gain chaleur', val: t => t.th, dec: 0,
-    noms: ['Economie thermique [kWh]', 'Gain thermique (Max) - kWh'] },
+    noms: ['Gain thermique simulé [kWh/an]', 'Gain thermique projeté [kWh/an]', 'Economie thermique [kWh]'] },
   { lib: 'Gain électricité', val: t => t.el, dec: 0,
-    noms: ['Economie électrique [kWh]', 'Gain Electricité (Max) - kWh'] },
+    noms: ['Gain Elec simulé [kWh/an]', 'Gain Elec projeté [kWh/an]', 'Economie électrique [kWh]'] },
   { lib: 'Gain CO₂', val: t => t.co2, dec: 0,
-    noms: ['Economie CO2', 'Gain CO2 (Max)'] },
+    noms: ['Gain CO2 simulé [kgCO2/an]', 'Gain CO2 projeté [kgCO2/an]', 'Economie CO2'] },
   { lib: 'Gain eau', val: t => t.eau, dec: 0,
-    noms: ['Gain Eau (Max) - m3'] },
+    noms: ['Gain Eau simulé [m3/an]', 'Gain Eau projeté [m3/an]', 'Gain Eau (Max) - m3'] },
   { lib: 'IDC projeté', val: t => t.idcApres, dec: 1,
     noms: ['IDC projeté [kWh]'] },
   { lib: 'Coût du kWh économisé', val: t => t.cee, dec: 3,
@@ -1909,7 +1933,9 @@ function reprendreSaisies() {
 
 function purger() {
   localStorage.removeItem(CLE_STOCK);
-  location.reload();
+  /* Le classeur commun vit dans IndexedDB et sert aux trois outils : il a sa propre
+     question, et le rechargement attend la fin de sa suppression. */
+  PTE_COMMUN.demanderEffacerClasseur(function () { location.reload(); });
 }
 
 /* ---------------------------------------------------------------- contexte site */
@@ -2796,7 +2822,7 @@ function init() {
     else if (a === 'theme') { PTE_COMMUN.basculerTheme(); majLibelleTheme(); }
     else if (a === 'tour') PTE_COMMUN.tour(ETAPES_SIM, { cle: 'pte.tour.simulation.v1' });
     else if (a === 'effacer') {
-      if (confirm('Effacer les données de cet outil dans ce navigateur ? Le classeur commun de Pilotage PTE, s’il existe, sera rechargé.')) purger();
+      if (confirm('Effacer les données de cet outil dans ce navigateur ?\nLe classeur commun de Pilotage PTE fera l’objet d’une seconde question.')) purger();
     }
   }));
   $('#fSaisies').addEventListener('change', e => {
