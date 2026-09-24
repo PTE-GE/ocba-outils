@@ -810,7 +810,7 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · v0.9 · 20.09.2026 · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · v0.10 · 24.09.2026 · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 <div class="panel-backdrop" id="panel-backdrop" hidden></div>
@@ -1137,7 +1137,9 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
    Usage :
      const R = PTE_CONTRAT.lire(sheets);
      sheets = { 'Plan_PTE': [[en-têtes],[ligne],…], 'Consommation par site': [[…]],
-                'Objectifs PTE': [[…]], 'Data': [[…]], 'GEI_Suivi': [[…]] (optionnelle) }
+                'Objectifs PTE': [[…]], 'Data': [[…]], 'GEI_Projets': [[…]] (optionnelle) }
+     GE-Invest : feuille GEI_Projets (une ligne par projet, niveau 4c du 24.09.2026) ;
+     repli sur l'ancienne feuille plate GEI_Suivi si GEI_Projets est absente.
      Cellules brutes (nombre, chaîne, null). Feuilles repérées par nom normalisé,
      colonnes repérées par en-tête normalisé (jamais par position).
 
@@ -1342,7 +1344,8 @@ var PTE_CONTRAT = (function () {
     return res;
   }
 
-  /* ---------- D8 : responsables de projet depuis GEI_Suivi (Objet (actif), chiffres 7 à 12 = sous-site) ---------- */
+  /* ---------- D8 : responsables de projet depuis GE-Invest (Objet (actif), chiffres 7 à 12 = sous-site) ----------
+     Feuille GEI_Projets (une ligne par projet) ou, à défaut, GEI_Suivi (plate : le projet y est répété). */
   function lireProjets(rowsG) {
     var parSousSite = {}, vus = {}, idx, jO, jN, jR, jL, i, r, o, ss, n, rp;
     if (!rowsG || rowsG.length < 2) return parSousSite;
@@ -1355,7 +1358,7 @@ var PTE_CONTRAT = (function () {
       if (!/^\d{15}$/.test(o)) continue;
       ss = o.slice(6, 12);
       n = txt(cell(r, jN)) || o;
-      if (vus[n + '|' + ss]) continue;   /* une ligne par projet (la feuille répète le projet par jalon / risque / livrable) */
+      if (vus[n + '|' + ss]) continue;   /* une ligne par projet (GEI_Suivi répète le projet par jalon / risque / livrable) */
       vus[n + '|' + ss] = true;
       rp = txt(cell(r, jR));
       (parSousSite[ss] = parSousSite[ss] || []).push({ numero: n, nom: txt(cell(r, jL)), rp: rp });
@@ -1367,10 +1370,12 @@ var PTE_CONTRAT = (function () {
   function lire(sheets) {
     var manquants = [];
     var rowsP = feuille(sheets, 'Plan_PTE'), rowsC = feuille(sheets, 'Consommation par site'),
-        rowsO = feuille(sheets, 'Objectifs PTE'), rowsD = feuille(sheets, 'Data'), rowsG = feuille(sheets, 'GEI_Suivi');
+        rowsO = feuille(sheets, 'Objectifs PTE'), rowsD = feuille(sheets, 'Data'),
+        rowsG = feuille(sheets, 'GEI_Projets'), nomG = 'GEI_Projets';
+    if (!rowsG) { rowsG = feuille(sheets, 'GEI_Suivi'); nomG = 'GEI_Suivi'; }   /* ancien classeur, avant le niveau 4c */
     if (!rowsP || rowsP.length < 2) throw new Error('PTE_CONTRAT : feuille Plan_PTE absente ou vide');
     if (!rowsC || rowsC.length < 2) manquants.push({ num: null, champ: 'Consommation par site', motif: 'feuille absente : aucune chaleur mesurée, tout le parc sera estimé' });
-    if (!rowsG) manquants.push({ num: null, champ: 'GEI_Suivi', motif: 'feuille absente : RP lu dans Plan_PTE!Responsable projet seulement' });
+    if (!rowsG) manquants.push({ num: null, champ: 'GEI_Projets', motif: 'feuilles GEI_Projets et GEI_Suivi absentes : RP lu dans Plan_PTE!Responsable projet seulement' });
 
     /* D9 */
     var an = anneeDesMesures(rowsO, rowsC, manquants), annee = an.annee;
@@ -1453,7 +1458,7 @@ var PTE_CONTRAT = (function () {
       ss.rpf = txt(cell(r, C.rpf));
       ss.projets = projets[ss.num] || [];
       ss.rp = null; ss.rpSource = null;
-      for (k = 0; k < ss.projets.length; k++) if (ss.projets[k].rp) { ss.rp = ss.projets[k].rp; ss.rpSource = 'GEI_Suivi'; break; }
+      for (k = 0; k < ss.projets.length; k++) if (ss.projets[k].rp) { ss.rp = ss.projets[k].rp; ss.rpSource = nomG; break; }
       if (ss.rp == null) { ss.rp = txt(cell(r, C.rp)); if (ss.rp) ss.rpSource = 'Plan_PTE'; }
       /* D7 : agent SITG (premier terme), agent principal ImmOBA informatif, cible Data, facteur */
       var brutAgent = txt(cell(r, C.agent)), sitg = brutAgent ? txt(brutAgent.split('|')[0]) : null;
@@ -1573,7 +1578,7 @@ var PTE_CONTRAT = (function () {
     };
   }
 
-  return { lire: lire, norm: norm, cibleAgent: cibleAgent, CORRESPONDANCE_AGENT: CORRESPONDANCE_AGENT, CAD_GENERIQUE: CAD_GENERIQUE, version: '2026-09-20' };
+  return { lire: lire, norm: norm, cibleAgent: cibleAgent, CORRESPONDANCE_AGENT: CORRESPONDANCE_AGENT, CAD_GENERIQUE: CAD_GENERIQUE, version: '2026-09-24' };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = PTE_CONTRAT;
 
@@ -2070,7 +2075,7 @@ var PTE_COMMUN = (function () {
 
   // -------------------------------------------------------------------
   // Schémas des 2 CSV restants après le switch direct v0.7 : le classeur
-  // Plan_PTE.xlsx (feuilles Plan_PTE, GEI_Suivi, Objectifs PTE)
+  // Plan_PTE.xlsx (feuilles Plan_PTE, GEI_Projets/_Jalons/_Risques/_Livrables, Objectifs PTE)
   // fournit désormais projets/suivi/jalons/finances/risques/pte/objectifs.
   // Seuls decisions.csv (registre ré-importé) et priorisation.csv (export
   // de l'outil de priorisation PTE) restent des imports CSV séparés.
@@ -2589,6 +2594,19 @@ var PTE_COMMUN = (function () {
     return { headers: headers, rows: out };
   }
 
+  // Niveau 4c (24.09.2026) : les 4 feuilles GE-Invest normalisées (GEI_Projets
+  // puis GEI_Jalons, GEI_Risques, GEI_Livrables, reliées par « Numéro ») remises
+  // bout à bout au format de xlsxSheetToParsed(). Les lignes projet viennent
+  // en premier : loadGEI() lit les champs projet sur la première ligne de
+  // chaque projet et prend jalons, risques et livrables sur toutes les lignes.
+  function geiFeuillesVersParsed(rowsProjets, autres) {
+    var parsed = xlsxSheetToParsed(rowsProjets);
+    (autres || []).forEach(function (rowsN) {
+      if (rowsN && rowsN.length > 1) parsed.rows = parsed.rows.concat(xlsxSheetToParsed(rowsN).rows);
+    });
+    return parsed;
+  }
+
   // Résout XLSXReader : global navigateur (script chargé avant engine.js
   // dans la page), variable globale, ou require() en Node.
   function _resolveXLSXReader() {
@@ -2667,12 +2685,13 @@ var PTE_COMMUN = (function () {
 
   // Point d'entrée : classeur Plan_PTE.xlsx (fichier unique du
   // système depuis le switch direct v0.7). Construit db.planpte ET
-  // db.pte (feuille Plan_PTE) ; si une feuille GEI_Suivi existe (contrat :
-  // en-têtes GE-Invest « tous champs » en ligne 1), alimente aussi
+  // db.pte (feuille Plan_PTE) ; si les feuilles GE-Invest existent
+  // (GEI_Projets/_Jalons/_Risques/_Livrables, ou l'ancienne GEI_Suivi ;
+  // contrat : en-têtes GE-Invest d'origine en ligne 1), alimente aussi
   // projets/suivi/jalons/finances/risques/livrables via loadGEI() ; si une
   // feuille Objectifs PTE contient la table T_Objectifs, alimente
   // db.objectifs. Vague 2 : les feuilles brutes (Plan_PTE, Consommation par
-  // site, Objectifs PTE, Data, GEI_Suivi) passent à PTE_CONTRAT.lire, dont
+  // site, Objectifs PTE, Data, GEI_Projets ou GEI_Suivi) passent à PTE_CONTRAT.lire, dont
   // le résultat enrichit db.planpte / db.pte (appliquerContrat).
   // Retourne {type:null} si ce n'est pas un classeur Plan_PTE.
   function loadXLSX(db, bufOuU8, filename) {
@@ -2694,12 +2713,32 @@ var PTE_COMMUN = (function () {
     var rows = XR.sheetRows(bufOuU8, planName) || [];
     var res = loadPlanPTE(db, rows);
 
-    var geiRes = null, geiRows = null;
-    var geiSheetName = findSheet('GEI_Suivi');
-    if (geiSheetName) {
-      geiRows = XR.sheetRows(bufOuU8, geiSheetName);
+    // GE-Invest. Depuis le niveau 4c (24.09.2026), 4 feuilles normalisées
+    // reliées par « Numéro » : GEI_Projets (une ligne par projet), GEI_Jalons,
+    // GEI_Risques, GEI_Livrables. On les remet bout à bout, projets d'abord
+    // (loadGEI lit les champs projet sur la première ligne de chaque projet),
+    // pour réutiliser loadGEI() telle quelle. Repli : ancienne feuille plate
+    // GEI_Suivi (produit croisé jalons × risques × livrables).
+    var geiRes = null, geiRows = null, geiNom = null;
+    var geiProjetsName = findSheet('GEI_Projets');
+    if (geiProjetsName) {
+      geiRows = XR.sheetRows(bufOuU8, geiProjetsName);
+      geiNom = 'GEI_Projets';
       if (geiRows && geiRows.length > 1) {
-        geiRes = loadGEI(db, xlsxSheetToParsed(geiRows));
+        var autresGEI = ['GEI_Jalons', 'GEI_Risques', 'GEI_Livrables'].map(function (n) {
+          var nm = findSheet(n);
+          return nm ? XR.sheetRows(bufOuU8, nm) : null;
+        });
+        geiRes = loadGEI(db, geiFeuillesVersParsed(geiRows, autresGEI));
+      }
+    } else {
+      var geiSheetName = findSheet('GEI_Suivi');
+      if (geiSheetName) {
+        geiRows = XR.sheetRows(bufOuU8, geiSheetName);
+        geiNom = 'GEI_Suivi';
+        if (geiRows && geiRows.length > 1) {
+          geiRes = loadGEI(db, xlsxSheetToParsed(geiRows));
+        }
       }
     }
 
@@ -2720,7 +2759,7 @@ var PTE_COMMUN = (function () {
         if (consoName) sheets['Consommation par site'] = XR.sheetRows(bufOuU8, consoName) || [];
         if (objRows) sheets['Objectifs PTE'] = objRows;
         if (dataName) sheets['Data'] = XR.sheetRows(bufOuU8, dataName) || [];
-        if (geiRows) sheets['GEI_Suivi'] = geiRows;
+        if (geiRows) sheets[geiNom] = geiRows;
         contratRes = appliquerContrat(db, CT.lire(sheets));
       } catch (e) {
         contratErreur = String((e && e.message) || e);
@@ -3246,7 +3285,7 @@ var PTE_COMMUN = (function () {
   var Engine = {
     normKey: normKey, parseNum: parseNum, parseDate: parseDate, parseDateFR: parseDateFR, dayDiff: dayDiff, monthKey: monthKey, addMonths: addMonths,
     parseCSV: parseCSV, SCHEMAS: SCHEMAS, identify: identify,
-    createDB: createDB, loadCSVText: loadCSVText, loadGEI: loadGEI,
+    createDB: createDB, loadCSVText: loadCSVText, loadGEI: loadGEI, geiFeuillesVersParsed: geiFeuillesVersParsed,
     loadXLSX: loadXLSX, loadPlanPTE: loadPlanPTE, loadObjectifsPTE: loadObjectifsPTE, appliquerContrat: appliquerContrat,
     xlsxSheetToParsed: xlsxSheetToParsed, excelSerialToFR: excelSerialToFR,
     mapPerfGlobale: mapPerfGlobale, cleanRPF: cleanRPF, sousSiteFromObjet: sousSiteFromObjet, kchf: kchf, pct01: pct01,
@@ -4460,7 +4499,7 @@ var PTE_COMMUN = (function () {
     wrap.appendChild(tip(item('CO₂', m.co2 && m.co2.val !== null ? Math.round(m.co2.val / 100) / 10 : null, 't/an', 1), (m.co2 && m.co2.origine) ? (m.co2.origine + ' (scope 1+2, kg → t)') : 'CO₂ non renseigné pour cette année.'));
     wrap.appendChild(tip(item('Gain CO₂', m.gainCo2T === null || m.gainCo2T === undefined ? null : m.gainCo2T, 't/an', 1), 'Gain réel (contrat D5) = CO₂ mesuré − CO₂ projeté × SRE ; vide si l’un des deux manque, jamais 0.'));
     if (m.agent && m.agent.aRenseigner) wrap.appendChild(tip(el('span', { class: 'mes-warn' }, ['facteur CO₂ « ' + m.agent.cible + ' » à renseigner dans Data']), 'Agent SITG « ' + (m.agent.sitg || '—') + ' » : aucun facteur dans Data, colonnes FournisseurChaleur / FacteurCO2.'));
-    if (!opts.sansRp) wrap.appendChild(tip(el('span', { class: 'mes-src' }, ['RPF ' + (m.rpf || '—') + ' · RP ' + (m.rp || '—') + (m.rpSource ? ' (' + m.rpSource + ')' : '')]), 'RPF = Plan_PTE!Responsable Portefeuille ; RP = GEI_Suivi!Nom responsable suivi, sinon Plan_PTE!Responsable projet (contrat D8).'));
+    if (!opts.sansRp) wrap.appendChild(tip(el('span', { class: 'mes-src' }, ['RPF ' + (m.rpf || '—') + ' · RP ' + (m.rp || '—') + (m.rpSource ? ' (' + m.rpSource + ')' : '')]), 'RPF = Plan_PTE!Responsable Portefeuille ; RP = GEI_Projets!Nom responsable suivi (ou GEI_Suivi), sinon Plan_PTE!Responsable projet (contrat D8).'));
     return wrap;
   }
 
@@ -4715,7 +4754,7 @@ var PTE_COMMUN = (function () {
   // de bord QlikSense de la DGFE, charte OCBA.
   //
   // Source : la situation financière et le statut GE-Invest par projet
-  // (DB.gei, alimenté par la feuille GEI_Suivi du classeur) ; repli
+  // (DB.gei, alimenté par les feuilles GE-Invest du classeur) ; repli
   // automatique sur DB.finances si la feuille n'est pas chargée.
   // ==================================================================
 
@@ -6532,7 +6571,7 @@ var PTE_COMMUN = (function () {
     var b2 = el('div', { class: 'accordion-body' });
     b2.appendChild(el('p', {}, ['Un classeur (Plan_PTE.xlsx) et deux CSV (« ; »). Jointure : numero_projet ↔ numero_sous_site (Objet actif GE-Invest / N° sous site du Plan_PTE).']));
     var sl = el('ul', {});
-    [['Feuille Plan_PTE', 'sous-sites, montants, objectifs PTE par sous-site'], ['Feuille GEI_Suivi (optionnelle)', 'projets, suivi mensuel, jalons, finances, risques (extraction GE-Invest)'], ['Feuille Objectifs PTE (optionnelle)', 'objectifs 2030 (table T_Objectifs)'], ['decisions.csv', 'décisions et escalades'], ['priorisation.csv', 'export de l’outil de priorisation PTE (optionnel)']].forEach(function (pair) { sl.appendChild(el('li', {}, [el('strong', {}, [pair[0]]), ' — ' + pair[1]])); });
+    [['Feuille Plan_PTE', 'sous-sites, montants, objectifs PTE par sous-site'], ['Feuilles GEI_Projets, GEI_Jalons, GEI_Risques, GEI_Livrables (optionnelles ; ou l’ancienne GEI_Suivi)', 'projets, suivi mensuel, jalons, finances, risques, livrables (extractions GE-Invest)'], ['Feuille Objectifs PTE (optionnelle)', 'objectifs 2030 (table T_Objectifs)'], ['decisions.csv', 'décisions et escalades'], ['priorisation.csv', 'export de l’outil de priorisation PTE (optionnel)']].forEach(function (pair) { sl.appendChild(el('li', {}, [el('strong', {}, [pair[0]]), ' — ' + pair[1]])); });
     b2.appendChild(sl);
     b2.appendChild(el('p', {}, ['Contrat de données (vague 2) : SRE, IDC, chaleur (facturation du site ventilée au prorata SRE, sinon SRE × IDC « estimé »), élec, eau, CO₂ de l’année des mesures (cellule Objectifs PTE « Année des mesures »), agent et facteur CO₂ (Data), RPF/RP, Estim PTE. Rien n’est deviné : une valeur absente reste vide et figure dans « À compléter dans le classeur ».']));
     b2.appendChild(el('p', {}, ['Gain t CO₂/an = CO₂ mesuré − CO₂ projeté × SRE (réel) ; vide si l’un des deux manque, jamais 0.']));

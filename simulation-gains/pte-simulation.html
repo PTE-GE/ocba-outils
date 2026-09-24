@@ -657,7 +657,7 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Simulation des gains · v3 · 20.09.2026 · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Simulation des gains · v3.1 · 24.09.2026 · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 <div id="flash"></div>
@@ -701,7 +701,9 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
    Usage :
      const R = PTE_CONTRAT.lire(sheets);
      sheets = { 'Plan_PTE': [[en-têtes],[ligne],…], 'Consommation par site': [[…]],
-                'Objectifs PTE': [[…]], 'Data': [[…]], 'GEI_Suivi': [[…]] (optionnelle) }
+                'Objectifs PTE': [[…]], 'Data': [[…]], 'GEI_Projets': [[…]] (optionnelle) }
+     GE-Invest : feuille GEI_Projets (une ligne par projet, niveau 4c du 24.09.2026) ;
+     repli sur l'ancienne feuille plate GEI_Suivi si GEI_Projets est absente.
      Cellules brutes (nombre, chaîne, null). Feuilles repérées par nom normalisé,
      colonnes repérées par en-tête normalisé (jamais par position).
 
@@ -906,7 +908,8 @@ var PTE_CONTRAT = (function () {
     return res;
   }
 
-  /* ---------- D8 : responsables de projet depuis GEI_Suivi (Objet (actif), chiffres 7 à 12 = sous-site) ---------- */
+  /* ---------- D8 : responsables de projet depuis GE-Invest (Objet (actif), chiffres 7 à 12 = sous-site) ----------
+     Feuille GEI_Projets (une ligne par projet) ou, à défaut, GEI_Suivi (plate : le projet y est répété). */
   function lireProjets(rowsG) {
     var parSousSite = {}, vus = {}, idx, jO, jN, jR, jL, i, r, o, ss, n, rp;
     if (!rowsG || rowsG.length < 2) return parSousSite;
@@ -919,7 +922,7 @@ var PTE_CONTRAT = (function () {
       if (!/^\d{15}$/.test(o)) continue;
       ss = o.slice(6, 12);
       n = txt(cell(r, jN)) || o;
-      if (vus[n + '|' + ss]) continue;   /* une ligne par projet (la feuille répète le projet par jalon / risque / livrable) */
+      if (vus[n + '|' + ss]) continue;   /* une ligne par projet (GEI_Suivi répète le projet par jalon / risque / livrable) */
       vus[n + '|' + ss] = true;
       rp = txt(cell(r, jR));
       (parSousSite[ss] = parSousSite[ss] || []).push({ numero: n, nom: txt(cell(r, jL)), rp: rp });
@@ -931,10 +934,12 @@ var PTE_CONTRAT = (function () {
   function lire(sheets) {
     var manquants = [];
     var rowsP = feuille(sheets, 'Plan_PTE'), rowsC = feuille(sheets, 'Consommation par site'),
-        rowsO = feuille(sheets, 'Objectifs PTE'), rowsD = feuille(sheets, 'Data'), rowsG = feuille(sheets, 'GEI_Suivi');
+        rowsO = feuille(sheets, 'Objectifs PTE'), rowsD = feuille(sheets, 'Data'),
+        rowsG = feuille(sheets, 'GEI_Projets'), nomG = 'GEI_Projets';
+    if (!rowsG) { rowsG = feuille(sheets, 'GEI_Suivi'); nomG = 'GEI_Suivi'; }   /* ancien classeur, avant le niveau 4c */
     if (!rowsP || rowsP.length < 2) throw new Error('PTE_CONTRAT : feuille Plan_PTE absente ou vide');
     if (!rowsC || rowsC.length < 2) manquants.push({ num: null, champ: 'Consommation par site', motif: 'feuille absente : aucune chaleur mesurée, tout le parc sera estimé' });
-    if (!rowsG) manquants.push({ num: null, champ: 'GEI_Suivi', motif: 'feuille absente : RP lu dans Plan_PTE!Responsable projet seulement' });
+    if (!rowsG) manquants.push({ num: null, champ: 'GEI_Projets', motif: 'feuilles GEI_Projets et GEI_Suivi absentes : RP lu dans Plan_PTE!Responsable projet seulement' });
 
     /* D9 */
     var an = anneeDesMesures(rowsO, rowsC, manquants), annee = an.annee;
@@ -1017,7 +1022,7 @@ var PTE_CONTRAT = (function () {
       ss.rpf = txt(cell(r, C.rpf));
       ss.projets = projets[ss.num] || [];
       ss.rp = null; ss.rpSource = null;
-      for (k = 0; k < ss.projets.length; k++) if (ss.projets[k].rp) { ss.rp = ss.projets[k].rp; ss.rpSource = 'GEI_Suivi'; break; }
+      for (k = 0; k < ss.projets.length; k++) if (ss.projets[k].rp) { ss.rp = ss.projets[k].rp; ss.rpSource = nomG; break; }
       if (ss.rp == null) { ss.rp = txt(cell(r, C.rp)); if (ss.rp) ss.rpSource = 'Plan_PTE'; }
       /* D7 : agent SITG (premier terme), agent principal ImmOBA informatif, cible Data, facteur */
       var brutAgent = txt(cell(r, C.agent)), sitg = brutAgent ? txt(brutAgent.split('|')[0]) : null;
@@ -1137,7 +1142,7 @@ var PTE_CONTRAT = (function () {
     };
   }
 
-  return { lire: lire, norm: norm, cibleAgent: cibleAgent, CORRESPONDANCE_AGENT: CORRESPONDANCE_AGENT, CAD_GENERIQUE: CAD_GENERIQUE, version: '2026-09-20' };
+  return { lire: lire, norm: norm, cibleAgent: cibleAgent, CORRESPONDANCE_AGENT: CORRESPONDANCE_AGENT, CAD_GENERIQUE: CAD_GENERIQUE, version: '2026-09-24' };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = PTE_CONTRAT;
 
@@ -1864,7 +1869,7 @@ function diagnostiquer() {
   const R = CONTRAT, ss = R.sousSites;
   const erreursCol = ETAT.erreurs || {};
   const avecSRE = ss.filter(x => x.sre != null).length;
-  const struct = R.manquants.filter(m => m.num === null && m.champ !== 'GEI_Suivi' && m.champ !== 'Année des mesures');
+  const struct = R.manquants.filter(m => m.num === null && !/^GEI_/.test(m.champ) && m.champ !== 'Année des mesures');
   ETAT.diag = {
     lignes: ss.length, sites: R.sites.size,
     avecSRE, avecIDC: ss.filter(x => x.idc != null).length, avecAgent: ss.filter(x => x.agent.sitg).length,

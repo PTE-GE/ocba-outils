@@ -1403,7 +1403,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td>Montants</td><td><code>Estim PTE</code> (référentiel), <code>Estim CECB+</code>, <code>Invest ImmOBA</code>, <code>Prévisionnel PTE GEI</code> — au choix, menu <b>Montants</b></td></tr>
 <tr><td>CO₂ projeté</td><td><code>CO2 projeté [kg/m2.an]</code> (suivi CECB+) ; à défaut, calcul par facteur d'émission</td></tr>
 <tr><td>Facteurs d'émission</td><td>onglet <code>Data</code> du classeur, colonnes <code>FournisseurChaleur</code> / <code>FacteurCO2</code> (g/kWh), sans repli : un agent sans facteur rend le sous-site non chiffrable en CO₂, et l'outil le dit</td></tr>
-<tr><td>RPF / RP</td><td><code>Responsable Portefeuille</code> / <code>GEI_Suivi!Nom responsable suivi</code> du premier projet du sous-site, sinon <code>Responsable projet</code> ; « --- » = vide</td></tr>
+<tr><td>RPF / RP</td><td><code>Responsable Portefeuille</code> / <code>GEI_Projets!Nom responsable suivi</code> (ou l’ancienne <code>GEI_Suivi</code>) du premier projet du sous-site, sinon <code>Responsable projet</code> ; « --- » = vide</td></tr>
 <tr><td>Références 2005 et cibles 2030</td><td>onglet <code>Objectifs PTE</code> : ligne de pourcentage (CO₂ −60 %, thermique −60 %, eau −60 %, électricité −20 %, renouvelable 50 %, PV 20 %) puis série annuelle démarrant en 2005. Aucune cible n'est codée dans l'outil.</td></tr>
 <tr><td>Séries mesurées du parc</td><td>onglet <code>Consommation par site</code> (2017 → dernière année fiable), surfaces comprises</td></tr>
 <tr><td>Indice développement durable</td><td>feuille <code>Objectifs PTE</code> : un volet par bloc de deux lignes — cible en colonne B, pondération en colonne C, réalisé sur la ligne suivante. Trois volets aujourd'hui : <code>Végétalisation [m2]</code>, <code>Toitures vivantes</code>, <code>Déchets et tri</code></td></tr>
@@ -1522,7 +1522,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · v20.09.2026 · vague 2 · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · v24.09.2026 · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -1538,7 +1538,9 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
    Usage :
      const R = PTE_CONTRAT.lire(sheets);
      sheets = { 'Plan_PTE': [[en-têtes],[ligne],…], 'Consommation par site': [[…]],
-                'Objectifs PTE': [[…]], 'Data': [[…]], 'GEI_Suivi': [[…]] (optionnelle) }
+                'Objectifs PTE': [[…]], 'Data': [[…]], 'GEI_Projets': [[…]] (optionnelle) }
+     GE-Invest : feuille GEI_Projets (une ligne par projet, niveau 4c du 24.09.2026) ;
+     repli sur l'ancienne feuille plate GEI_Suivi si GEI_Projets est absente.
      Cellules brutes (nombre, chaîne, null). Feuilles repérées par nom normalisé,
      colonnes repérées par en-tête normalisé (jamais par position).
 
@@ -1743,7 +1745,8 @@ var PTE_CONTRAT = (function () {
     return res;
   }
 
-  /* ---------- D8 : responsables de projet depuis GEI_Suivi (Objet (actif), chiffres 7 à 12 = sous-site) ---------- */
+  /* ---------- D8 : responsables de projet depuis GE-Invest (Objet (actif), chiffres 7 à 12 = sous-site) ----------
+     Feuille GEI_Projets (une ligne par projet) ou, à défaut, GEI_Suivi (plate : le projet y est répété). */
   function lireProjets(rowsG) {
     var parSousSite = {}, vus = {}, idx, jO, jN, jR, jL, i, r, o, ss, n, rp;
     if (!rowsG || rowsG.length < 2) return parSousSite;
@@ -1756,7 +1759,7 @@ var PTE_CONTRAT = (function () {
       if (!/^\d{15}$/.test(o)) continue;
       ss = o.slice(6, 12);
       n = txt(cell(r, jN)) || o;
-      if (vus[n + '|' + ss]) continue;   /* une ligne par projet (la feuille répète le projet par jalon / risque / livrable) */
+      if (vus[n + '|' + ss]) continue;   /* une ligne par projet (GEI_Suivi répète le projet par jalon / risque / livrable) */
       vus[n + '|' + ss] = true;
       rp = txt(cell(r, jR));
       (parSousSite[ss] = parSousSite[ss] || []).push({ numero: n, nom: txt(cell(r, jL)), rp: rp });
@@ -1768,10 +1771,12 @@ var PTE_CONTRAT = (function () {
   function lire(sheets) {
     var manquants = [];
     var rowsP = feuille(sheets, 'Plan_PTE'), rowsC = feuille(sheets, 'Consommation par site'),
-        rowsO = feuille(sheets, 'Objectifs PTE'), rowsD = feuille(sheets, 'Data'), rowsG = feuille(sheets, 'GEI_Suivi');
+        rowsO = feuille(sheets, 'Objectifs PTE'), rowsD = feuille(sheets, 'Data'),
+        rowsG = feuille(sheets, 'GEI_Projets'), nomG = 'GEI_Projets';
+    if (!rowsG) { rowsG = feuille(sheets, 'GEI_Suivi'); nomG = 'GEI_Suivi'; }   /* ancien classeur, avant le niveau 4c */
     if (!rowsP || rowsP.length < 2) throw new Error('PTE_CONTRAT : feuille Plan_PTE absente ou vide');
     if (!rowsC || rowsC.length < 2) manquants.push({ num: null, champ: 'Consommation par site', motif: 'feuille absente : aucune chaleur mesurée, tout le parc sera estimé' });
-    if (!rowsG) manquants.push({ num: null, champ: 'GEI_Suivi', motif: 'feuille absente : RP lu dans Plan_PTE!Responsable projet seulement' });
+    if (!rowsG) manquants.push({ num: null, champ: 'GEI_Projets', motif: 'feuilles GEI_Projets et GEI_Suivi absentes : RP lu dans Plan_PTE!Responsable projet seulement' });
 
     /* D9 */
     var an = anneeDesMesures(rowsO, rowsC, manquants), annee = an.annee;
@@ -1854,7 +1859,7 @@ var PTE_CONTRAT = (function () {
       ss.rpf = txt(cell(r, C.rpf));
       ss.projets = projets[ss.num] || [];
       ss.rp = null; ss.rpSource = null;
-      for (k = 0; k < ss.projets.length; k++) if (ss.projets[k].rp) { ss.rp = ss.projets[k].rp; ss.rpSource = 'GEI_Suivi'; break; }
+      for (k = 0; k < ss.projets.length; k++) if (ss.projets[k].rp) { ss.rp = ss.projets[k].rp; ss.rpSource = nomG; break; }
       if (ss.rp == null) { ss.rp = txt(cell(r, C.rp)); if (ss.rp) ss.rpSource = 'Plan_PTE'; }
       /* D7 : agent SITG (premier terme), agent principal ImmOBA informatif, cible Data, facteur */
       var brutAgent = txt(cell(r, C.agent)), sitg = brutAgent ? txt(brutAgent.split('|')[0]) : null;
@@ -1974,7 +1979,7 @@ var PTE_CONTRAT = (function () {
     };
   }
 
-  return { lire: lire, norm: norm, cibleAgent: cibleAgent, CORRESPONDANCE_AGENT: CORRESPONDANCE_AGENT, CAD_GENERIQUE: CAD_GENERIQUE, version: '2026-09-20' };
+  return { lire: lire, norm: norm, cibleAgent: cibleAgent, CORRESPONDANCE_AGENT: CORRESPONDANCE_AGENT, CAD_GENERIQUE: CAD_GENERIQUE, version: '2026-09-24' };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = PTE_CONTRAT;
 
@@ -2405,7 +2410,7 @@ function appliquerContrat(list){
     /* la substitution prévue reste lue par l'outil (colonne propre, « --- » compris) */
     /* montants : « Estim PTE » lit Estim PTE, « Estim CECB+ » lit sa colonne */
     s.invEstim=x.estimPte;s.invCecb=x.investCecb;
-    /* RPF = Responsable Portefeuille ; RP = GEI_Suivi puis Responsable projet ; « --- » = vide */
+    /* RPF = Responsable Portefeuille ; RP = GEI_Projets (ou GEI_Suivi) puis Responsable projet ; « --- » = vide */
     s.rp=x.rpf||'';s.drt=x.rp||'';s.rpSource=x.rpSource||null;
     s.nbProjets=(x.projets||[]).length;
     s.co2Proj=x.co2Projete;s.gainCo2T=x.gainCo2T;s.perimetreSme=x.perimetreSme;s.siteMesure=!!x.siteMesure});

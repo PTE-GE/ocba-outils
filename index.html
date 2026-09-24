@@ -147,7 +147,10 @@ a.card .etat.none{color:var(--ink-muted)}
 
   <div class="cards">
 
-    <a class="card c-prioriser" href="priorisation/priorisation-pte.html">
+    <!-- Les liens ci-dessous sont ceux du kDrive. Sur GitHub Pages, la page les
+         remplace au chargement par ceux de l'arborescence publiée
+         (PTE_COMMUN.lien) : un seul fichier sert les deux, sans réécriture. -->
+    <a class="card c-prioriser" href="02_Outil-PTE/index.html">
       <h2>Prioriser</h2>
       <h3>Priorisation PTE</h3>
       <p>Classe les 582 sous-sites selon les objectifs 2030, compare les scénarios et situe le patrimoine sur la carte.</p>
@@ -155,7 +158,7 @@ a.card .etat.none{color:var(--ink-muted)}
       <span class="go">Ouvrir la priorisation</span>
     </a>
 
-    <a class="card c-simuler" href="simulation-gains/pte-simulation.html">
+    <a class="card c-simuler" href="06_Simulation-Gains/pte-simulation.html">
       <h2>Simuler</h2>
       <h3>Simulation des gains</h3>
       <p>Chiffre, pour un site, les gains d'énergie, de CO₂ et de francs d'une combinaison de mesures.</p>
@@ -163,7 +166,7 @@ a.card .etat.none{color:var(--ink-muted)}
       <span class="go">Ouvrir la simulation</span>
     </a>
 
-    <a class="card c-suivre" href="revue-projets/revue-projets.html">
+    <a class="card c-suivre" href="09_Revues-projets/revue-projets.html">
       <h2>Suivre</h2>
       <h3>Revue de projets</h3>
       <p>Suit l'avancement du programme au portefeuille, au sous-site et au projet, avec Gantt et sémaphores.</p>
@@ -178,7 +181,7 @@ a.card .etat.none{color:var(--ink-muted)}
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Pilotage PTE · v1.3 · 21.09.2026</span>
+  <span>Pilotage PTE · v1.4 · 24.09.2026</span>
 </footer>
 
 <script>
@@ -297,6 +300,29 @@ var PTE_COMMUN = (function () {
       return new Promise(function (res) { var tx = db.transaction(STORE, 'readwrite'); tx.objectStore(STORE).delete(KEY); tx.oncomplete = res; tx.onerror = res; });
     }).catch(function () {});
   }
+
+  /* Deuxième temps de l'effacement : le classeur commun.
+     Il vit dans IndexedDB, partagé par les trois outils de Pilotage PTE. Vider les
+     données d'un seul outil ne l'atteint pas : au rechargement il revient, et
+     l'utilisateur croit que l'effacement a échoué. La question est donc posée
+     explicitement, en nommant le fichier et en disant qui d'autre le perd.
+     `apres(efface)` est appelé dans tous les cas, une fois la suppression terminée —
+     sinon le rechargement court contre la transaction IndexedDB et le classeur est
+     encore là au démarrage suivant. */
+  function demanderEffacerClasseur(apres) {
+    var fin = (typeof apres === 'function') ? apres : function () {};
+    var m = lireMeta();
+    if (!m) { fin(false); return; }
+    var q = 'Effacer aussi le classeur commun \u00ab\u00a0' + (m.nom || 'Plan_PTE.xlsx') + '\u00a0\u00bb'
+          + (m.date ? ' (import\u00e9 le ' + dateCourte(m.date) + ')' : '') + ' ?\n\n'
+          + 'Ce classeur est partag\u00e9 par les trois outils de Pilotage PTE : la priorisation, '
+          + 'la simulation de gains et la revue de projets le perdront aussi, et il faudra '
+          + 'le r\u00e9importer.\n\n'
+          + 'Annuler : le classeur est conserv\u00e9 et sera recharg\u00e9 au d\u00e9marrage.';
+    if (!confirm(q)) { fin(false); return; }
+    effacerClasseur().then(function () { fin(true); }, function () { fin(true); });
+  }
+
   /* Un classeur commun plus récent que la date donnée (ISO) existe-t-il ? */
   function plusRecentQue(dateIso) {
     var m = lireMeta(); if (!m) return false;
@@ -522,6 +548,7 @@ var PTE_COMMUN = (function () {
            resumeSaisies: resumeSaisies, telechargerSaisies: telechargerSaisies,
            layout: layout, lien: lien, ssDepuisHash: ssDepuisHash, ecrireHash: ecrireHash,
            publierClasseur: publierClasseur, lireClasseur: lireClasseur, effacerClasseur: effacerClasseur,
+           demanderEffacerClasseur: demanderEffacerClasseur,
            lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,
            publierClassement: publierClassement, lireClassement: lireClassement,
            lireQuestions: lireQuestions, ecrireQuestions: ecrireQuestions,
@@ -631,6 +658,13 @@ function deposer(file) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  /* Une seule version pour le kDrive et GitHub Pages (24.09.2026) : chaque carte
+     prend le chemin de l'arborescence où la page est servie. Jusqu'ici l'accueil
+     publié était une copie aux liens réécrits à la main, d'où deux numéros de
+     version pour un même contenu. */
+  [['.c-prioriser', 'prio'], ['.c-simuler', 'sim'], ['.c-suivre', 'revue']].forEach(([sel, k]) => {
+    const a = $(sel), h = PTE_COMMUN.lien(k); if (a && h) a.setAttribute('href', h);
+  });
   const fi = $('#fileInput'), dz = $('#drop');
   fi.addEventListener('change', e => deposer(e.target.files[0]));
   $('#btnCharger').addEventListener('click', () => fi.click());
