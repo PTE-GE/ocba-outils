@@ -1765,10 +1765,13 @@ const REPORT_PLAN = [
     noms: ['Gain CO2 simulé [kgCO2/an]', 'Gain CO2 projeté [kgCO2/an]', 'Economie CO2'] },
   { lib: 'Gain eau', val: t => t.eau, dec: 0,
     noms: ['Gain Eau simulé [m3/an]', 'Gain Eau projeté [m3/an]', 'Gain Eau (Max) - m3'] },
+  /* Depuis le 24.09.2026, deux colonnes « simulé » propres : la simulation n'écrit plus dans
+     « IDC projeté [kWh] » ni dans « CEE retenu », calculées par le classeur depuis le CECB+.
+     Pas de repli sur ces deux colonnes : un classeur sans colonne « simulé » n'a pas de destination. */
   { lib: 'IDC projeté', val: t => t.idcApres, dec: 1,
-    noms: ['IDC projeté [kWh]'] },
+    noms: ['IDC projeté simulé [kWh]'] },
   { lib: 'Coût du kWh économisé', val: t => t.cee, dec: 3,
-    noms: ['CEE retenu'] }
+    noms: ['CEE simulé [CHF/kWh]'] }
 ];
 
 const ERREURS_XL = ['#NAME?', '#NOM?', '#REF!', '#N/A', '#VALEUR!', '#VALUE!', '#DIV/0!', '#NOMBRE!', '#NUM!'];
