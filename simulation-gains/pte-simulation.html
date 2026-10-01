@@ -479,7 +479,7 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
   <div class="hdr-in">
     <div>
       <h1>Simulation des gains</h1>
-      <p class="sub"><a href="../Pilotage_PTE.html" title="Retour à la page Pilotage PTE">Pilotage PTE</a> · Office cantonal des bâtiments · Programme de transition écologique</p>
+      <p class="sub"><a href="../Pilotage_PTE.html" title="Retour à la page Pilotage PTE">Pilotage PTE</a> · <span title="Office cantonal des bâtiments · Programme de transition écologique">OCBA</span></p>
     </div>
     <div class="grow"></div>
     <div class="hdr-right">
@@ -511,9 +511,9 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
 
   <div class="drop" id="dropZone">
     <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 12l6 6 6-6M4 20h16"/></svg>
-    <h2>Glissez ici Plan_PTE.xlsx</h2>
-    <p>ou cliquez pour choisir le classeur — tout se calcule dans votre navigateur, rien n'est envoyé nulle part.</p>
-    <p class="opt">Un classeur déposé sur la page Pilotage PTE s'ouvre ici tout seul. Ajoutez l'onglet Référentiel PTE au classeur pour remplacer les prix et la matrice livrés ; les facteurs CO₂ viennent de la feuille Data.</p>
+    <h2>Déposer ici Plan_PTE.xlsx</h2>
+    <p>ou un clic pour choisir le classeur — tout se calcule dans ce navigateur, rien n'est envoyé nulle part.</p>
+    <p class="opt">Un classeur déposé sur la page Pilotage PTE s'ouvre ici tout seul. Un onglet Référentiel PTE ajouté au classeur remplace les prix et la matrice livrés ; les facteurs CO₂ viennent de la feuille Data.</p>
     <input type="file" id="fileInput" accept=".xlsx,.xlsm,.xls">
   </div>
 
@@ -528,7 +528,7 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
         <div class="bloc">
           <div class="etape"><span class="n">1</span><h2>Quel site&nbsp;?</h2>
             <span class="sub" id="resumeReglages"></span></div>
-          <p class="lead">Choisissez un site : la SRE et les consommations de ses sous-sites servent de base à la simulation.</p>
+          <p class="lead">La SRE et les consommations des sous-sites du site choisi servent de base à la simulation.</p>
 
           <div id="choixBloc">
             <input class="rech" id="rech" type="search" autocomplete="off"
@@ -585,6 +585,7 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
         <details class="bloc methode hidden" id="blocMethode">
           <summary class="chev">Comment ces chiffres sont calculés</summary>
           <div class="meth">
+            <div id="diagMeth"></div>
             <p><b>Le site.</b> La simulation travaille au site, somme des sous-sites de même numéro de
               site dans Plan_PTE : SRE additionnée, chaleur facturée du site (Consommation par site), électricité,
               eau et CO₂ additionnés. Quand la chaleur n’est pas facturée, elle est estimée par SRE × IDC et la
@@ -593,7 +594,7 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
               l’année des mesures. Pour un poste électrique, elle est ramenée à la part concernée d’après
               l’affectation — l’éclairage compte pour 40 % de l’électricité dans une école,
               la ventilation pour 25 %. Pour un poste thermique, c’est la totalité de la chaleur.
-              Vous pouvez toujours imposer une autre valeur sous « Ajuster ».</p>
+              Une autre valeur peut toujours être imposée sous « Ajuster ».</p>
             <p><b>IDC et intensité de chaleur facturée.</b> L’IDC affiché est l’indice OCEN des
               sous-sites (colonne IDC [kWh] de Plan_PTE), pondéré par leur SRE ; il est corrigé du climat.
               L’intensité de chaleur facturée est la chaleur facturée divisée par la SRE : elle sert de
@@ -603,7 +604,7 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
             <p><b>Fourchette de gain.</b> Chaque combinaison poste × action porte une fourchette issue
               de la matrice des gains. Le curseur va du prudent à l’optimiste ; le milieu est proposé
               par défaut. Six combinaisons ne sont pas chiffrées dans la matrice et quatre renvoient à
-              une cible normative : l’outil le dit et vous laisse saisir la valeur.</p>
+              une cible normative : l’outil le dit et laisse saisir la valeur.</p>
             <p><b>Deux mesures sur le même poste.</b> Elles ne s’additionnent pas : la seconde ne porte
               que sur ce que la première a laissé. 55 % puis 20 % donnent 64 %, pas 75 %.</p>
             <p><b>CO₂ et francs.</b> L’agent thermique du site est déduit de la colonne Agent (SITG) de
@@ -618,7 +619,7 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
               d’économie » sur un poste : il déplace la consommation. Ces actions ouvrent leurs propres
               champs (consommation remplacée, rendement, COP) et l’électricité ajoutée est comptée en
               négatif.</p>
-            <p><b>Où vont les saisies.</b> Tout ce que vous saisissez reste dans <b>ce navigateur, sur ce
+            <p><b>Où vont les saisies.</b> Tout ce qui est saisi reste dans <b>ce navigateur, sur ce
               poste</b> : rien n’est envoyé nulle part. Les notes et ajustements de la priorisation, les
               décisions de la revue, les variantes de la simulation et les questions du mois vivent chacun
               dans leur outil, mais dans une mémoire commune : <b>« Exporter mes saisies »</b> produit un
@@ -657,7 +658,7 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Simulation des gains · v3.1 · 24.09.2026 · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Simulation des gains · <a href="#" data-pte-versions="simulation" title="Historique des versions">v3.3 · 30.09.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 <div id="flash"></div>
@@ -700,6 +701,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 
    Usage :
      const R = PTE_CONTRAT.lire(sheets);
+     PTE_CONTRAT.comparer(PTE_CONTRAT.empreinte(R), empreinteDeReference)   // contrôle à l'import (25.09.2026)
      sheets = { 'Plan_PTE': [[en-têtes],[ligne],…], 'Consommation par site': [[…]],
                 'Objectifs PTE': [[…]], 'Data': [[…]], 'GEI_Projets': [[…]] (optionnelle) }
      GE-Invest : feuille GEI_Projets (une ligne par projet, niveau 4c du 24.09.2026) ;
@@ -712,13 +714,17 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
        sousSites: [ { num, site, nom, nomSite, rpf, rp, projets, sre, idc, idcAnnee,
                       chaleur:{val,source,origine}, elec:{…}, eau:{…}, co2:{…},
                       agent:{sitg, principal, cible, facteur, aRenseigner},
-                      estimPte, investCecb, co2Projete, gainCo2T, perimetreSme, siteMesure } ],
+                      estimPte, investCecb, co2Projete, gainCo2T, gainEauEstime, perimetreSme, siteMesure } ],
        sites: Map(num -> { num, nom, sousSites, sre, idc, chaleur, elec, eau, co2, estimPte,
-                           perimetreSme, siteMesure, brut }),
+                           gainEauEstime, perimetreSme, siteMesure, brut }),
        parc: { sre, annee, chaleur, chaleurMesuree, chaleurEstimee, elec, eau, co2,
+               gainEauEstime, nbGainEauEstime,
                nbSousSites, nbEstimes, nbSansChaleur, nbSitesMesures, nbSitesAbsents },
        facteurs: { table, correspondance, aRenseigner },
-       manquants: [ { num, champ, motif } ], colonnes: {…} }
+       manquants: [ { num, champ, motif } ], colonnes: {…}, colonnesFacultatives: {…} }
+     gainEauEstime (29.09.2026) : gain d'eau ESTIMÉ par l'audit eau [m3/an], colonne facultative
+     « Gain Eau estimé [m3/an] » de Plan_PTE (gain du site ventilé au prorata de la SRE par le
+     classeur). null si la colonne manque ou si la cellule est vide ou nulle.
    ========================================================================== */
 var PTE_CONTRAT = (function () {
   'use strict';
@@ -956,9 +962,6 @@ var PTE_CONTRAT = (function () {
       idc: col(idx, ['IDC [kWh]']),                                      /* D2 — OCEN ÷ 3,6, kWh/m2.an */
       idcAnnee: col(idx, ['Année IDC (dernière)', 'Année IDC']),
       conso: col(idx, ['CONSO [kWh]']),                                  /* D3 — informatif (SITG) */
-      elec: A ? col(idx, ['Conso Elec ' + A + ' - kWh', 'Conso Elec ' + A]) : null,
-      eau: A ? col(idx, ['Conso Eau ' + A + ' - m3', 'Conso Eau ' + A]) : null,
-      co2: A ? col(idx, ['Co2 ' + A + ' - kgCo2', 'Co2 ' + A, 'CO2 ' + A]) : null,
       agent: col(idx, ['Agent']),                                        /* D7 — SITG */
       pctAgent: col(idx, ['%Agent']),
       principal: col(idx, ['Chauffage Type Energie Prin', 'Chauffage Type Energie']),
@@ -975,9 +978,14 @@ var PTE_CONTRAT = (function () {
     };
     var obligatoires = ['num', 'site', 'sre', 'idc', 'agent', 'rpf', 'estimPte'], k;
     for (k = 0; k < obligatoires.length; k++) if (C[obligatoires[k]] == null) manquants.push({ num: null, champ: 'Plan_PTE', motif: 'colonne « ' + obligatoires[k] + ' » introuvable' });
-    if (A && C.elec == null) manquants.push({ num: null, champ: 'Plan_PTE', motif: 'colonne Conso Elec ' + A + ' absente : électricité ventilée depuis Consommation par site' });
-    if (A && C.eau == null) manquants.push({ num: null, champ: 'Plan_PTE', motif: 'colonne Conso Eau ' + A + ' absente : eau ventilée depuis Consommation par site' });
-    if (A && C.co2 == null) manquants.push({ num: null, champ: 'Plan_PTE', motif: 'colonne Co2 ' + A + ' absente : CO2 ventilé depuis Consommation par site' });
+    /* Électricité, eau et CO2 (29.09.2026, demande d'Achim) : lus dans Consommation par site à
+       l'année des mesures et ventilés au prorata SRE, comme la chaleur. Les colonnes « Conso Elec »,
+       « Conso Eau » et « Co2 » de Plan_PTE (même calcul, fait par Excel) ne sont plus lues : l'outil
+       reste juste quelle que soit l'année choisie, et un classeur sans ces colonnes suffit. */
+    /* Colonne facultative, tenue hors de C pour ne pas toucher au contrôle à l'import (29.09.2026) :
+       gain d'eau ESTIMÉ par l'audit eau (fichier Tableau_suivi_conso_O, requête Gains_Eau_O),
+       gain du site ventilé au sous-site au prorata de la SRE par le classeur lui-même. */
+    var jGainEauEst = col(idx, ['Gain Eau estimé [m3/an]', 'Gain Eau estimé']);
 
     /* Consommation par site, indexée par SITES NUM */
     var mesures = {}, idxC = entetes(rowsC || []), jNum = col(idxC, ['SITES NUM']), jNomS = col(idxC, ['NOM SITE']),
@@ -1043,10 +1051,12 @@ var PTE_CONTRAT = (function () {
       ss.co2Projete = num(cell(r, C.co2Proj));
       ss.idcProjete = num(cell(r, C.idcProj));
       ss.idcGainRetenu = num(cell(r, C.idcGain));
-      /* mesures ventilées par le classeur (Plan_PTE) — D3 : la colonne de l'année fait foi si elle existe */
-      ss.elec = { val: num(cell(r, C.elec)), source: null, origine: null };
-      ss.eau = { val: num(cell(r, C.eau)), source: null, origine: null };
-      ss.co2 = { val: num(cell(r, C.co2)), source: null, origine: null };
+      /* gain d'eau estimé (audit eau) : un zéro n'est pas un gain */
+      v = num(cell(r, jGainEauEst)); ss.gainEauEstime = (v != null && v > 0) ? v : null;
+      /* électricité, eau, CO2 : ventilés en passe 2 depuis Consommation par site */
+      ss.elec = { val: null, source: null, origine: null };
+      ss.eau = { val: null, source: null, origine: null };
+      ss.co2 = { val: null, source: null, origine: null };
       ss.chaleur = { val: null, source: null, origine: null };
       sousSites.push(ss);
       site = sites.get(ss.site);
@@ -1057,7 +1067,7 @@ var PTE_CONTRAT = (function () {
 
     /* ---- passe 2 : sites, ventilation site -> sous-site (D10), chaleur (D3, D11) ---- */
     var parc = { sre: 0, annee: annee, chaleur: 0, chaleurMesuree: 0, chaleurEstimee: 0, elec: 0, eau: 0, co2: 0,
-                 nbSousSites: sousSites.length, nbEstimes: 0, nbSansChaleur: 0, nbSitesMesures: 0, nbSitesAbsents: 0 };
+                 gainEauEstime: 0, nbGainEauEstime: 0, nbSousSites: sousSites.length, nbEstimes: 0, nbSansChaleur: 0, nbSitesMesures: 0, nbSitesAbsents: 0 };
     sites.forEach(function (site) {
       var m = mesures[site.num] || null, j, x, part;
       site.siteMesure = !!m;
@@ -1072,7 +1082,7 @@ var PTE_CONTRAT = (function () {
       var motifEstim = !m ? 'site absent de Consommation par site' : (m.thtot == null ? 'ThTOT' + A + ' vide' : 'ThTOT' + A + ' nul');
       var sreSite = 0;
       for (j = 0; j < site.sousSites.length; j++) if (site.sousSites[j].sre != null) sreSite += site.sousSites[j].sre;
-      var agg = { chaleur: 0, elec: 0, eau: 0, co2: 0, estimPte: 0, investCecb: 0, nEst: 0, nMes: 0, nElec: 0, nEau: 0, nCo2: 0 };
+      var agg = { chaleur: 0, elec: 0, eau: 0, co2: 0, estimPte: 0, investCecb: 0, nEst: 0, nMes: 0, nElec: 0, nEau: 0, nCo2: 0, gainEau: 0, nGainEau: 0 };
       for (j = 0; j < site.sousSites.length; j++) {
         x = site.sousSites[j];
         part = (x.sre != null && sreSite > 0) ? x.sre / sreSite : null;
@@ -1088,18 +1098,18 @@ var PTE_CONTRAT = (function () {
           x.chaleur = { val: null, source: null, origine: null };
           manquants.push({ num: x.num, champ: 'Chaleur', motif: (thMesure != null ? 'sans SRE : part du site non calculable' : motifEstim + ' et SRE ou IDC manquant') });
         }
-        /* élec, eau, CO2 : colonne Plan_PTE de l'année ; à défaut ventilation depuis Consommation par site (même prorata) */
-        [['elec', 'Conso Elec ' + A + ' - kWh', 'ELEC' + A, 'nElec'], ['eau', 'Conso Eau ' + A + ' - m3', 'EAU' + A, 'nEau'], ['co2', 'Co2 ' + A + ' - kgCo2', 'CO2 Scope 1+2 ' + A, 'nCo2']]
+        /* élec, eau, CO2 : Consommation par site de l'année des mesures, même prorata que la chaleur */
+        [['elec', 'ELEC' + A, 'nElec'], ['eau', 'EAU' + A, 'nEau'], ['co2', 'CO2 Scope 1+2 ' + A, 'nCo2']]
           .forEach(function (d) {
             var g = x[d[0]], key = d[0];
-            if (g.val != null) { g.source = 'mesuré'; g.origine = 'Plan_PTE!' + d[1]; }
-            else if (m && m[key] != null && part != null) { g.val = m[key] * part; g.source = 'mesuré'; g.origine = 'Consommation par site!' + d[2] + ' × SRE ÷ Σ SRE du site'; }
+            if (m && m[key] != null && part != null) { g.val = m[key] * part; g.source = 'mesuré'; g.origine = 'Consommation par site!' + d[1] + ' × SRE ÷ Σ SRE du site'; }
             else { g.val = null; g.source = null; g.origine = null; }
-            if (g.val != null) { agg[key] += g.val; agg[d[3]]++; }
+            if (g.val != null) { agg[key] += g.val; agg[d[2]]++; }
           });
         if (x.chaleur.val != null) agg.chaleur += x.chaleur.val;
         if (x.estimPte != null) agg.estimPte += x.estimPte;
         if (x.investCecb != null) agg.investCecb += x.investCecb;
+        if (x.gainEauEstime != null) { agg.gainEau += x.gainEauEstime; agg.nGainEau++; parc.gainEauEstime += x.gainEauEstime; parc.nbGainEauEstime++; }
         /* D5 : vrai gain CO2 (t/an) = émissions mesurées − CO2 projeté × SRE ; vide si l'un des deux manque */
         x.gainCo2T = (x.co2.val != null && x.co2Projete != null && x.sre != null) ? round((x.co2.val - x.co2Projete * x.sre) / 1000, 3) : null;
         x.perimetreSme = site.perimetreSme; x.siteMesure = site.siteMesure;
@@ -1117,10 +1127,11 @@ var PTE_CONTRAT = (function () {
       site.eau = agg.nEau ? { val: agg.eau, source: 'mesuré', origine: 'Σ sous-sites' } : { val: null, source: null, origine: null };
       site.co2 = agg.nCo2 ? { val: agg.co2, source: 'mesuré', origine: 'Σ sous-sites' } : { val: null, source: null, origine: null };
       site.estimPte = agg.estimPte; site.investCecb = agg.investCecb;
+      site.gainEauEstime = agg.nGainEau ? round(agg.gainEau, 3) : null;
       site.nbSousSitesEstimes = agg.nEst; site.nbSousSitesMesures = agg.nMes;
     });
     parc.sre = round(parc.sre, 3);
-    ['chaleur', 'chaleurMesuree', 'chaleurEstimee', 'elec', 'eau', 'co2'].forEach(function (k2) { parc[k2] = round(parc[k2], 3); });
+    ['chaleur', 'chaleurMesuree', 'chaleurEstimee', 'elec', 'eau', 'co2', 'gainEauEstime'].forEach(function (k2) { parc[k2] = round(parc[k2], 3); });
 
     /* ---- facteurs : table lisible, correspondance appliquée, libellés à renseigner ---- */
     var table = {}, key, aRens = {}, corr = {};
@@ -1138,11 +1149,99 @@ var PTE_CONTRAT = (function () {
       annee: annee, anneeSource: an.source, anneesDisponibles: rowsC ? anneesDeConso(rowsC) : [], series: an.series,
       sousSites: sousSites, sites: sites, parc: parc,
       facteurs: { table: table, correspondance: corr, aRenseigner: aRenseigner, cadGenerique: CAD_GENERIQUE },
-      manquants: manquants, colonnes: C
+      manquants: manquants, colonnes: C, colonnesFacultatives: { gainEauEstime: jGainEauEst }
     };
   }
 
-  return { lire: lire, norm: norm, cibleAgent: cibleAgent, CORRESPONDANCE_AGENT: CORRESPONDANCE_AGENT, CAD_GENERIQUE: CAD_GENERIQUE, version: '2026-09-24' };
+  /* ---------- Contrôle à l'import (25.09.2026, proposition validée par Achim) ----------
+     empreinte(R) résume un import en quelques chiffres ; comparer(e, p) dit ce qui manque ou
+     a fortement changé par rapport à l'import de référence p. Fonctions pures : le stockage
+     et le bandeau sont dans PTE_COMMUN.controleImport. Seuils : sous-sites 2 %, remplissage
+     d'une colonne clé −10 %, totaux du parc ±10 % (même année de mesures). */
+  var LIB_COL = {    /* premier alias de chaque colonne de lire() : à tenir à jour avec C */
+    num: 'N° sous site', site: 'N site', nom: 'Nom du site_AB', nomSite: 'Nom du site', sre: 'SRE', idc: 'IDC [kWh]',
+    idcAnnee: 'Année IDC (dernière)', conso: 'CONSO [kWh]', agent: 'Agent', pctAgent: '%Agent', principal: 'Chauffage Type Energie Prin',
+    substitution: 'Chauffage de subsitution prévu', rpf: 'Responsable Portefeuille', rp: 'Responsable projet',
+    estimPte: 'Estim PTE', investCecb: 'Estim CECB+', co2Proj: 'CO2 projeté [kg/m2.an]', idcProj: 'IDC projeté [kWh]',
+    idcGain: 'IDC Gain retenu', etat: 'Etat du projet (SIA)', affectation: 'Affectation_AB' };
+  var OBLIGATOIRES = ['num', 'site', 'sre', 'idc', 'agent', 'rpf', 'estimPte'];
+  var LIB_REMPL = { sre: 'SRE', idc: 'IDC', agent: 'Agent (SITG)', rpf: 'Responsable Portefeuille', estimPte: 'Estim PTE',
+    investCecb: 'Estim CECB+', chaleurMesuree: 'Chaleur mesurée', elec: 'Électricité', eau: 'Eau', co2: 'CO2' };
+  var LIB_PARC = { sre: ['SRE du parc', 'm²', 1], chaleur: ['Chaleur du parc', 'MWh', 1000], elec: ['Électricité du parc', 'MWh', 1000],
+    eau: ['Eau du parc', 'm³', 1], co2: ['CO2 du parc', 't', 1000] };
+  var SEUILS = { sousSites: 0.02, remplissage: 0.10, parc: 0.10 };
+
+  function empreinte(R) {
+    var ss = (R && R.sousSites) || [], C = (R && R.colonnes) || {}, p = (R && R.parc) || {}, k;
+    var rempl = { sre: 0, idc: 0, agent: 0, rpf: 0, estimPte: 0, investCecb: 0, chaleurMesuree: 0, elec: 0, eau: 0, co2: 0 };
+    ss.forEach(function (x) {
+      if (x.sre != null) rempl.sre++;
+      if (x.idc != null) rempl.idc++;
+      if (x.agent && x.agent.sitg) rempl.agent++;
+      if (x.rpf) rempl.rpf++;
+      if (x.estimPte != null) rempl.estimPte++;
+      if (x.investCecb != null) rempl.investCecb++;
+      if (x.chaleur && x.chaleur.val != null && x.chaleur.source === 'mesuré') rempl.chaleurMesuree++;
+      if (x.elec && x.elec.val != null) rempl.elec++;
+      if (x.eau && x.eau.val != null) rempl.eau++;
+      if (x.co2 && x.co2.val != null) rempl.co2++;
+    });
+    var absentes = [];
+    for (k in C) if (C[k] == null) absentes.push(k);
+    return { v: 1, date: new Date().toISOString(), annee: R ? R.annee : null, nbSousSites: ss.length,
+             nbSites: R && R.sites ? R.sites.size : null, colonnesAbsentes: absentes, remplissage: rempl,
+             parc: { sre: p.sre || 0, chaleur: p.chaleur || 0, elec: p.elec || 0, eau: p.eau || 0, co2: p.co2 || 0 } };
+  }
+
+  function entier(n) {
+    var t = String(Math.round(Math.abs(n))).replace(/\B(?=(\d{3})+(?!\d))/g, '’');
+    return (n < 0 ? '−' : '') + t;
+  }
+  function ecart(a, b) {           /* « +12 % » / « −28 % » */
+    var v = b ? Math.round((a - b) / b * 100) : 0;
+    return (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v) + ' %';
+  }
+  function libCol(k, annee) { return (LIB_COL[k] || k).replace('{année}', annee == null ? '' : annee); }
+
+  function comparer(e, p) {
+    var al = [], k;
+    var abs = (e && e.colonnesAbsentes) || [], absP = (p && p.colonnesAbsentes) || [];
+    abs.forEach(function (c) {
+      if (OBLIGATOIRES.indexOf(c) >= 0)
+        al.push({ niveau: 'erreur', texte: 'Colonne « ' + libCol(c, e.annee) + ' » introuvable dans Plan_PTE : les trois outils en ont besoin. Renommée ou supprimée ?' });
+      else if (!p || absP.indexOf(c) < 0)
+        al.push({ niveau: 'attention', texte: 'Colonne « ' + libCol(c, e.annee) + ' » introuvable dans Plan_PTE' + (p ? ' ; elle était là à l\'import de référence. Renommée ?' : '.') });
+    });
+    if (p) {
+      if (e.nbSousSites !== p.nbSousSites) {
+        var d = e.nbSousSites - p.nbSousSites, r = p.nbSousSites ? Math.abs(d) / p.nbSousSites : 1;
+        al.push({ niveau: r > SEUILS.sousSites ? 'attention' : 'info',
+                  texte: 'Sous-sites : ' + p.nbSousSites + ' → ' + e.nbSousSites + ' (' + (d > 0 ? '+' : '−') + Math.abs(d) + ').' });
+      }
+      for (k in LIB_REMPL) {
+        var a = (e.remplissage || {})[k], b = (p.remplissage || {})[k];
+        if (b > 0 && a != null && (b - a) / b > SEUILS.remplissage)
+          al.push({ niveau: 'attention', texte: LIB_REMPL[k] + ' : ' + a + ' sous-sites renseignés, contre ' + b + ' à l\'import de référence (' + ecart(a, b) + ').' });
+      }
+      if (e.annee !== p.annee) {
+        al.push({ niveau: 'info', texte: 'Année des mesures : ' + p.annee + ' → ' + e.annee + ' ; les totaux du parc ne sont pas comparés.' });
+      } else {
+        for (k in LIB_PARC) {
+          var x = (e.parc || {})[k], y = (p.parc || {})[k], L = LIB_PARC[k];
+          if (y && x != null && Math.abs(x - y) / y > SEUILS.parc)
+            al.push({ niveau: 'attention', texte: L[0] + ' ' + e.annee + ' : ' + entier(y / L[2]) + ' → ' + entier(x / L[2]) + ' ' + L[1] + ' (' + ecart(x, y) + ').' });
+        }
+      }
+    }
+    var n = { erreur: 0, attention: 0, info: 0 };
+    al.forEach(function (z) { n[z.niveau]++; });
+    var cle = function (o) { return o ? JSON.stringify([o.annee, o.nbSousSites, o.nbSites, o.colonnesAbsentes, o.remplissage, o.parc]) : ''; };
+    return { niveau: n.erreur ? 'erreur' : n.attention ? 'attention' : n.info ? 'info' : 'ok', alertes: al,
+             identique: !!p && cle(e) === cle(p), reference: p ? p.date : null, seuils: SEUILS };
+  }
+
+  return { lire: lire, norm: norm, cibleAgent: cibleAgent, CORRESPONDANCE_AGENT: CORRESPONDANCE_AGENT, CAD_GENERIQUE: CAD_GENERIQUE,
+           empreinte: empreinte, comparer: comparer, version: '2026-09-29' };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = PTE_CONTRAT;
 
@@ -1171,7 +1270,7 @@ var PTE_COMMUN = (function () {
   /* Les quatre pages vivent dans deux arborescences différentes ; on reconnaît
      l'une ou l'autre au chemin courant et on construit les liens en conséquence. */
   var LAYOUTS = {
-    kdrive: { accueil: 'Pilotage_PTE.html', prio: '02_Outil-PTE/index.html',
+    kdrive: { accueil: 'Pilotage_PTE.html', prio: '02_Outil-PTE/priorisation-pte.html',   /* renommé le 25.09.2026 : même nom qu'en ligne */
               sim: '06_Simulation-Gains/pte-simulation.html', revue: '09_Revues-projets/revue-projets.html',
               donnees: '01_Donnees/' },
     /* GitHub Pages : l'arborescence publiée depuis août 2026 — `simulation-gains`,
@@ -1500,7 +1599,283 @@ var PTE_COMMUN = (function () {
     return t.replace(/^ · /, '');
   }
 
-  return { LS_META: LS_META, LS_CLASSEMENT: LS_CLASSEMENT, LS_QUESTIONS: LS_QUESTIONS, LS_THEME: LS_THEME,
+  /* ---------- contrôle à l'import (25.09.2026, revu le 30.09.2026) ----------
+     Chaque page passe l'empreinte de son import (PTE_CONTRAT.empreinte). Elle est comparée à la
+     référence de la page, gardée dans localStorage (une par page). La référence avance seule quand
+     rien n'est anormal ; sinon elle ne bouge que sur « C'est normal, retenir ce classeur ».
+     Revue du Cabinet du 30.09.2026 (A1, idée 1 de Zoé) : le contrôle se LIT une fois, sur
+     l'accueil, où le classeur est déposé. Les outils se taisent quand tout va bien et n'affichent
+     qu'une alerte (colonne introuvable, écart à vérifier). Le message se place SOUS l'en-tête de
+     la page, jamais par-dessus. */
+  var LS_CONTROLE = 'pte.controle.v1';
+  function controleImport(emp, outil) {
+    if (!emp || typeof PTE_CONTRAT === 'undefined' || !PTE_CONTRAT.comparer) return null;
+    var cle = LS_CONTROLE + '.' + (outil || 'outil');
+    var ref = lireJSON(cle);
+    if (ref && ref.v !== emp.v) ref = null;
+    var res = PTE_CONTRAT.comparer(emp, ref);
+    var retenir = function () { try { localStorage.setItem(cle, JSON.stringify(emp)); return true; } catch (e) { return false; } };
+    if (res.niveau === 'ok' || res.niveau === 'info') retenir();
+    var grave = res.niveau === 'erreur' || res.niveau === 'attention';
+    if (!res.identique && (grave || outil === 'accueil')) afficherControle(res, emp, retenir);
+    return res;
+  }
+  function afficherControle(res, emp, retenir) {
+    if (typeof document === 'undefined' || !document.createElement || !document.body) return null;
+    var ancien = document.getElementById('pte-controle-import');
+    if (ancien && ancien.parentNode) ancien.parentNode.removeChild(ancien);
+    var teinte = { erreur: ['var(--red, #B3261E)', 'var(--tint-rouge, #FBE9E7)'], attention: ['var(--ochre-text, #8A5A00)', 'var(--tint-orange, #FDF1E3)'],
+                   info: ['var(--green, #1A8554)', 'var(--tint-vert, #E8F5EE)'], ok: ['var(--green, #1A8554)', 'var(--tint-vert, #E8F5EE)'] }[res.niveau];
+    var grave = res.niveau === 'erreur' || res.niveau === 'attention';
+    var nb = res.alertes.filter(function (a) { return a.niveau !== 'info'; }).length;
+    var d = document.createElement('div');
+    d.id = 'pte-controle-import';
+    d.setAttribute('role', grave ? 'alert' : 'status');
+    d.style.cssText = 'position:relative;box-sizing:border-box;margin:12px auto;' +
+      'width:calc(100% - 32px);max-width:960px;padding:12px 44px 12px 16px;border-radius:8px;' +
+      'border-left:4px solid ' + teinte[0] + ';background:' + teinte[1] + ';color:var(--ink, #1F2328);' +
+      'font:13px/1.45 system-ui, -apple-system, "Segoe UI", Arial, sans-serif';
+    var titre = res.niveau === 'erreur' ? 'Contrôle à l\'import : colonne indispensable introuvable'
+      : res.niveau === 'attention' ? 'Contrôle à l\'import : ' + nb + ' point' + (nb > 1 ? 's' : '') + ' à vérifier'
+      : 'Contrôle à l\'import : rien d\'anormal';
+    var sous = res.reference ? 'Comparé à l\'import de référence du ' + dateCourte(res.reference) + ' · ' + emp.nbSousSites + ' sous-sites.'
+      : 'Premier import contrôlé dans ce navigateur : ce classeur (' + emp.nbSousSites + ' sous-sites) sert de référence.';
+    var h = document.createElement('div'); h.style.cssText = 'font-weight:600;margin-bottom:2px'; h.textContent = titre; d.appendChild(h);
+    var p = document.createElement('div'); p.style.cssText = 'opacity:.8'; p.textContent = sous; d.appendChild(p);
+    if (res.alertes.length) {
+      var ul = document.createElement('ul'); ul.style.cssText = 'margin:8px 0 0;padding-left:18px';
+      res.alertes.forEach(function (a) { var li = document.createElement('li'); li.textContent = a.texte; if (a.niveau === 'info') li.style.opacity = '.8'; ul.appendChild(li); });
+      d.appendChild(ul);
+    }
+    var fermer = document.createElement('button');
+    fermer.type = 'button'; fermer.textContent = '×'; fermer.setAttribute('aria-label', 'Fermer');
+    fermer.style.cssText = 'position:absolute;top:6px;right:8px;border:0;background:none;color:inherit;font-size:20px;line-height:1;cursor:pointer;padding:4px';
+    fermer.onclick = function () { if (d.parentNode) d.parentNode.removeChild(d); };
+    d.appendChild(fermer);
+    if (grave) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.textContent = 'C\'est normal, retenir ce classeur comme référence';
+      b.style.cssText = 'margin-top:10px;padding:5px 10px;border-radius:6px;border:1px solid ' + teinte[0] + ';background:transparent;color:inherit;font:inherit;cursor:pointer';
+      b.onclick = function () { retenir(); if (d.parentNode) d.parentNode.removeChild(d); };
+      d.appendChild(b);
+    } else {
+      setTimeout(function () { if (d.parentNode) d.parentNode.removeChild(d); }, 10000);
+    }
+    /* sous l'en-tête : après <header> (ou en tête de page à défaut), jamais par-dessus */
+    var hdr = document.querySelector('header.hdr') || document.querySelector('header');
+    if (hdr && hdr.parentNode) hdr.parentNode.insertBefore(d, hdr.nextSibling);
+    else document.body.insertBefore(d, document.body.firstChild);
+    return d;
+  }
+
+  /* ---------- Situation du programme (30.09.2026) ----------
+     Pari de Zoé retenu par Achim (E3) sur le cadre d'Hélène (D) : quatre montants, une seule
+     unité (MCHF), la même définition partout.
+       Voté    : enveloppe des lois votées, inscrite ici en dur (décision d'Achim du 30.09.2026) :
+                 loi 13210, 1 000 MCHF, et loi 12552 (embrasures), 250 MCHF.
+       Engagé  : Σ « Solde engagé dépense » des projets GE-Invest (commandé, pas encore payé).
+       Dépensé : Σ « Cumul comptabilisé dépense N-1 » + « Comptabilisé N dépense » (GE-Invest).
+       Estimé  : Σ « Estim PTE » des sous-sites de la feuille Plan_PTE (jamais Estim CECB+).
+     Montants rendus en CHF ; l'affichage les divise par 1e6. GE-Invest : feuille GEI_Projets
+     (une ligne par projet), à défaut l'ancienne GEI_Suivi (projet répété : dédoublonné par Numéro). */
+  var ENVELOPPE_VOTEE = [
+    { loi: '13210', objet: 'Programme de transition écologique', chf: 1000e6 },
+    { loi: '12552', objet: 'Embrasures', chf: 250e6 }
+  ];
+  function nombreChf(v) {
+    if (typeof v === 'number') return isFinite(v) ? v : null;
+    if (v == null) return null;
+    var t = String(v).replace(/[\s  ']/g, '').replace(',', '.');
+    if (!t || !/^-?\d+(\.\d+)?$/.test(t)) return null;
+    return Number(t);
+  }
+  function normEntete(x) {
+    return String(x == null ? '' : x).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  }
+  function situationProgramme(R, rowsG) {
+    var vote = 0, i;
+    for (i = 0; i < ENVELOPPE_VOTEE.length; i++) vote += ENVELOPPE_VOTEE[i].chf;
+    var ss = (R && R.sousSites) ? R.sousSites : [], est = 0, nEst = 0;
+    for (i = 0; i < ss.length; i++) { var e = nombreChf(ss[i].estimPte); if (e != null && e > 0) { est += e; nEst++; } }
+    var g = null;
+    if (rowsG && rowsG.length > 1) {
+      var h = rowsG[0].map(normEntete), j = function (n) { var k = h.indexOf(normEntete(n)); return k < 0 ? null : k; };
+      var jN = j('Numéro'), jC = j('Crédit total dépense'), jA = j('Cumul comptabilisé dépense N-1'),
+          jB = j('Comptabilisé N dépense'), jE = j('Solde engagé dépense'), jY = j('Année référence prévision financière');
+      if (jE != null || jA != null || jB != null) {
+        g = { projets: 0, credit: 0, cumulN1: 0, comptaN: 0, engage: 0, annee: null };
+        var vus = {};
+        for (i = 1; i < rowsG.length; i++) {
+          var r = rowsG[i]; if (!r) continue;
+          var n = jN == null ? String(i) : String(r[jN] == null ? '' : r[jN]).trim();
+          if (!n || vus[n]) continue;
+          vus[n] = true; g.projets++;
+          g.credit += nombreChf(jC == null ? null : r[jC]) || 0;
+          g.cumulN1 += nombreChf(jA == null ? null : r[jA]) || 0;
+          g.comptaN += nombreChf(jB == null ? null : r[jB]) || 0;
+          g.engage += nombreChf(jE == null ? null : r[jE]) || 0;
+          var y = nombreChf(jY == null ? null : r[jY]); if (y && !g.annee) g.annee = y;
+        }
+        g.depense = g.cumulN1 + g.comptaN;
+      }
+    }
+    return { v: 1, date: new Date().toISOString(), vote: vote, lois: ENVELOPPE_VOTEE,
+             estime: est, nbEstimes: nEst, nbSousSites: ss.length, gei: g };
+  }
+  /* « 964,3 » : CHF -> MCHF, une décimale, séparateur suisse */
+  function mchf(chf, dec) {
+    if (chf == null || !isFinite(chf)) return '—';
+    var d = dec == null ? 1 : dec, v = chf / 1e6;
+    return v.toLocaleString('fr-CH', { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+
+  /* ---------- Historique des versions (29.09.2026, demande d'Achim) ----------
+     Le numéro de version affiché dans le pied de chaque page ouvre cette fenêtre : tout
+     élément portant l'attribut data-pte-versions="<outil>" suffit, sans code dans la page.
+     Les données sont ici, dans le module commun, pour que les quatre pages montrent le
+     même historique. Il ne porte QUE les outils : les évolutions du classeur Plan_PTE sont
+     tenues dans sa feuille « Versions » (décision d'Achim, 29.09.2026).
+     RÈGLE DE TENUE : à chaque nouvelle version d'un outil, ajouter l'entrée EN TÊTE de
+     VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
+     pages (la revue se reconstruit par build-html.js). */
+  var VERSIONS = [
+    {"date": "30.09.2026", "objet": "accueil", "version": "v1.6", "titre": "Situation du programme", "points": ["Au-dessus des trois outils : voté, engagé, dépensé et estimé, en MCHF, avec une phrase et leurs sources, recalculés à chaque dépôt du classeur.", "Voté : 1 250 MCHF, loi 13210 (1 000) et loi 12552, embrasures (250). Engagé et dépensé : GE-Invest. Estimé : somme de l'Estim PTE.", "Le contrôle à l'import se lit ici, une fois, sous l'en-tête.", "L'empreinte du classeur passe dans l'info-bulle de la barre du classeur."]},
+    {"date": "30.09.2026", "objet": "priorisation", "version": "v30.09.2026", "titre": "Revue du Cabinet : lecture plus directe", "points": ["La visite guidée ne s'ouvre plus d'office ; elle reste dans le menu ☰, relue et sans l'étape « Mode nuit ».", "Hors classement, chaque objectif trie et affiche sa propre grandeur : l'eau pour l'eau, l'électricité pour l'électricité, le CO₂ pour le CO₂, la chaleur sinon.", "Quand la cible 2030 est déjà atteinte au niveau du parc, la note le dit au lieu de « Cible non atteinte ».", "Textes revus : tuile Développement durable en une ligne, « huit engagements du programme », « Arbitrages », montants en MCHF, enveloppe de 1 250 MCHF sourcée (lois 13210 et 12552) ; les énoncés de la Méthode qui dépendaient du classeur sont calculés ou neutres."]},
+    {"date": "30.09.2026", "objet": "simulation", "version": "v3.3", "titre": "Écran d'ouverture allégé", "points": ["L'ouverture ne garde que « Quel site ? » : la couverture du classeur et les points à compléter passent dans « Comment ces chiffres sont calculés ».", "Textes de l'écran reformulés sans s'adresser à l'utilisateur."]},
+    {"date": "30.09.2026", "objet": "revue", "version": "v0.12", "titre": "Reporting plus court, planning par projet", "points": ["Montants en MCHF dans toute la revue ; sémaphores : la complétude du suivi d'abord, puis la répartition des projets renseignés, les projets gris restant à un clic.", "Un sommaire « Aller à » en tête du reporting ; le planning remonte après les sémaphores ; la situation par statut est repliée.", "Planning : un clic sur un sous-site affiche le planning de chacun de ses projets ; libellés alignés à gauche.", "Fiche projet : liens vers les autres projets du même sous-site et vers sa vue consolidée."]},
+    {"date": "30.09.2026", "objet": "commun", "version": null, "titre": "Contrôle à l'import discret, situation du programme", "points": ["Les outils n'affichent plus « rien d'anormal » : seulement une alerte, placée sous l'en-tête, jamais par-dessus.", "Sous-titre court dans les trois outils : « Pilotage PTE · OCBA ».", "Calcul commun de la situation du programme, repris par l'accueil."]},
+    {"date": "29.09.2026", "objet": "priorisation", "version": "v29.09.2026", "titre": "Gains d'eau estimés, liens rétablis, historique des versions", "points": ["Le classement Eau lit le gain estimé par l'audit eau : gain du site réparti entre ses sous-sites au prorata de la SRE.", "Le classement Eau se trie sur le volume économisé : les mesures d'eau n'ont pas de coût propre, le montant de rénovation ne les départage pas.", "Les liens vers l'accueil, la simulation et la revue sont de nouveau actifs.", "Un clic sur le numéro de version ouvre cet historique."]},
+    {"date": "29.09.2026", "objet": "simulation", "version": "v3.2", "titre": "Gain d'eau estimé affiché, historique des versions", "points": ["La fiche du site affiche le gain d'eau estimé par l'audit, à côté de l'eau mesurée : un repère pour les mesures « Eau ».", "L'export Excel reprend ce gain estimé.", "Un clic sur le numéro de version ouvre cet historique."]},
+    {"date": "29.09.2026", "objet": "revue", "version": "v0.11", "titre": "Gain d'eau estimé, historique des versions", "points": ["La ligne « Mesures » du sous-site affiche le gain d'eau estimé par l'audit.", "Pour l'objectif eau, le gain estimé prime sur le gain simulé.", "Un clic sur le numéro de version ouvre cet historique."]},
+    {"date": "29.09.2026", "objet": "accueil", "version": "v1.5", "titre": "Historique des versions", "points": ["Un clic sur le numéro de version ouvre l'historique de tous les outils et du classeur."]},
+    {"date": "29.09.2026", "objet": "commun", "version": null, "titre": "Gain d'eau estimé et historique partagés", "points": ["Le contrat de données lit la colonne « Gain Eau estimé [m3/an] » quand le classeur la contient ; sinon rien ne change.", "Électricité, eau et CO₂ sont lus dans la feuille « Consommation par site », à l'année des mesures, pour les trois outils.", "L'historique des versions est le même dans les quatre pages."]},
+    {"date": "25.09.2026", "objet": "priorisation", "version": "v25.09.2026", "titre": "Menu Montants revu et contrôle à l'import", "points": ["Menu Montants : Estim CECB+ par défaut, DG 3.31 ajouté, Invest ImmOBA retiré.", "À chaque import, l'outil signale ce qui a changé dans le classeur : colonnes, sous-sites, totaux du parc.", "L'outil ne lit plus que les feuilles dont il a besoin ; le résultat est inchangé.", "Le fichier local prend le nom de la version en ligne. Cette version n'est pas encore publiée."]},
+    {"date": "25.09.2026", "objet": "simulation", "version": null, "titre": "Mise en ligne de la v3.1, puis contrôle à l'import", "points": ["Version 3.1 mise en ligne le 25.09 à 7 h 11.", "À chaque import, l'outil signale ce qui a changé dans le classeur : colonnes, sous-sites, totaux du parc.", "L'outil ne lit plus que les feuilles dont il a besoin ; le résultat est inchangé.", "Ces deux améliorations ne sont pas encore publiées."]},
+    {"date": "25.09.2026", "objet": "revue", "version": null, "titre": "Colonnes renommées de nouveau lues, contrôle à l'import", "points": ["Correction : 4 colonnes renommées le 23.09 n'étaient plus lues (Estim CECB+, gains élec et eau simulés, surface végétalisée).", "La surface végétalisée est de nouveau lue : 39 sous-sites au lieu de 0.", "À chaque import, l'outil signale ce qui a changé dans le classeur : colonnes, sous-sites, totaux du parc.", "Pas encore publiée."]},
+    {"date": "25.09.2026", "objet": "commun", "version": null, "titre": "Contrôle à l'import, commun aux 3 outils", "points": ["Chaque import est comparé à l'import de référence : colonnes introuvables, sous-sites apparus ou disparus, totaux du parc à ±10 %.", "Un bandeau n'apparaît que si le classeur a changé.", "« C'est normal, retenir ce classeur » fait du nouvel import la référence."]},
+    {"date": "24.09.2026", "objet": "accueil", "version": "v1.4", "titre": "Accueil unifié", "points": ["Les trois cartes calculent leur lien au chargement : le même fichier fonctionne en local et en ligne.", "Fin des deux numéros pour un même contenu (v1.2 en local, v1.3 en ligne).", "Mise en ligne le 24.09 à 19 h 02."]},
+    {"date": "24.09.2026", "objet": "priorisation", "version": "v24.09.2026", "titre": "Lecture de GE-Invest en 4 feuilles", "points": ["Lit les nouvelles feuilles GE-Invest ; les anciens classeurs restent lisibles.", "Mêmes données pour les 582 sous-sites ; import en 5,0 s au lieu de 18,2 s.", "Mise en ligne le 24.09 à 19 h 02."]},
+    {"date": "24.09.2026", "objet": "simulation", "version": "v3.1", "titre": "Report vers les colonnes « simulé »", "points": ["Les 8 résultats se reportent dans les colonnes « simulé » de Plan_PTE.", "L'IDC projeté et le coût du kWh économisé ont leurs propres colonnes : aucune colonne calculée n'est plus écrasée.", "Lit les nouvelles feuilles GE-Invest ; import en 3,7 s au lieu de 11,0 s.", "Mise en ligne le 25.09 à 7 h 11."]},
+    {"date": "24.09.2026", "objet": "revue", "version": "v0.10", "titre": "Lecture de GE-Invest en 4 feuilles", "points": ["Lit les 4 nouvelles feuilles GE-Invest ; projets, jalons, risques, livrables et finances identiques.", "Lecture du classeur en 3,1 s au lieu de 20,4 s.", "Corrections du 23.09 reportées dans les sources : elles ne disparaîtront plus à la reconstruction.", "Mise en ligne le 24.09 à 19 h 02."]},
+    {"date": "24.09.2026", "objet": "commun", "version": null, "titre": "Modules communs à source unique", "points": ["Les modules communs ont une seule source, copiée à l'identique dans les quatre pages.", "Le contrat de données lit les nouvelles feuilles GE-Invest, avec repli sur l'ancienne feuille GEI_Suivi."]},
+    {"date": "23.09.2026", "objet": "priorisation", "version": null, "titre": "Libellé Estim CECB+", "points": ["Le menu Montants suit le nouveau nom Estim CECB+ ; l'ancien nom reste reconnu.", "Mise en ligne le 23.09."]},
+    {"date": "23.09.2026", "objet": "commun", "version": null, "titre": "Effacement du classeur commun clarifié", "points": ["« Effacer les données » pose une seconde question qui nomme le fichier et prévient que les trois outils le perdront.", "Une fois effacé, le classeur ne revient plus au rechargement.", "Mise en ligne le 23.09."]},
+    {"date": "22.09.2026", "objet": "priorisation", "version": null, "titre": "Liens sortants masqués", "points": ["Les quatre liens vers Pilotage PTE, la simulation et la revue sont masqués, à la demande d'Achim.", "Modification faite dans la version en ligne."]},
+    {"date": "21.09.2026", "objet": "accueil", "version": "v1.3", "titre": "Copie en ligne aux liens réécrits", "points": ["Version en ligne dont les liens ont été adaptés à la main au site publié.", "Non reportée en local, resté en v1.2 : écart résolu par la v1.4."]},
+    {"date": "20.09.2026", "objet": "accueil", "version": "v1.2", "titre": "Version locale", "points": ["Version tenue en local ; le détail des changements n'est pas consigné."]},
+    {"date": "19.09.2026", "objet": "commun", "version": null, "titre": "Contrat de données commun", "points": ["La simulation et la revue lisent les colonnes du classeur avec les mêmes règles.", "Une colonne est trouvée par son nom, jamais par sa position."]},
+    {"date": "17.09.2026", "objet": "accueil", "version": "v1.1", "titre": "Nouvelle version et première mise en ligne", "points": ["Le détail des changements de cette version n'est pas consigné.", "Le même jour, première mise en ligne de l'accueil, de la priorisation et de la revue."]},
+    {"date": "17.09.2026", "objet": "priorisation", "version": null, "titre": "Première mise en ligne", "points": ["Outil mis en ligne pour la première fois, avec l'accueil et la revue."]},
+    {"date": "16.09.2026", "objet": "accueil", "version": "v1.0", "titre": "Page d'accueil Pilotage PTE", "points": ["Première version de la page d'accueil « Pilotage PTE »."]},
+    {"date": "16.09.2026", "objet": "revue", "version": "v0.7", "titre": "Plan_PTE, seul fichier d'entrée", "points": ["Le classeur Plan_PTE devient le seul fichier d'entrée ; les anciens CSV ne sont plus acceptés.", "Restent acceptés en complément : le registre des décisions et l'export de la priorisation.", "Objectifs 2030 lus dans la feuille Objectifs PTE quand elle existe ; jamais de valeur par défaut.", "Mise en ligne le 17.09."]},
+    {"date": "16.09.2026", "objet": "revue", "version": "v0.6", "titre": "Chaîne financière et classeur Plan_PTE", "points": ["Le classeur Plan_PTE devient le fichier d'import de référence ; les anciens CSV restent acceptés en transition.", "Chaîne financière Estim PTE → DG → crédit GE-Invest, avec une carte « Cohérence financière ».", "Rappel du nom de projet recommandé quand le n° de sous-site manque dans le nom."]},
+    {"date": "15.09.2026", "objet": "revue", "version": "v0.5", "titre": "Reporting par sous-site et Gantt des jalons", "points": ["Tableaux organisés par sous-site, dépliables vers les projets ; badge si un sous-site porte plusieurs projets.", "Gantt des jalons prévisionnels, par sous-site et par projet."]},
+    {"date": "15.09.2026", "objet": "revue", "version": "v0.4", "titre": "Extraction GE-Invest unique et vue Reporting", "points": ["Une seule extraction GE-Invest « tous champs » remplace 5 fichiers CSV.", "Nouvelle vue Reporting à trois niveaux : programme, portefeuille, projet."]},
+    {"date": "13.09.2026", "objet": "revue", "version": "v0.3", "titre": "Lien avec la priorisation PTE", "points": ["Chaque projet affiche son rang dans la priorisation PTE, grâce à l'export CSV de la priorisation.", "Cartes « Priorisation PTE » sur la fiche projet et « Alignement » sur le portefeuille.", "Contrastes renforcés ; la couleur n'est jamais le seul repère."]},
+    {"date": "12.09.2026", "objet": "revue", "version": "v0.2", "titre": "Refonte visuelle", "points": ["Tableau de bord en ouverture ; import, complétude et paramètres regroupés dans Données.", "Filtre RPF/RP commun à toutes les vues ; graphiques et info-bulles au lieu de tableaux."]},
+    {"date": "12.09.2026", "objet": "revue", "version": "v0.1.1", "titre": "Corrections", "points": ["Impact de risque « Assez faible » : l'indicateur ne passe plus à tort en gris.", "Trajectoire 2030 : l'écart à combler est exprimé en valeur absolue."]},
+    {"date": "22.08.2026", "objet": "priorisation", "version": null, "titre": "Outil de priorisation en page unique", "points": ["Six onglets : tableau de bord, classement, arbitrage, coût d'abattement, carte, méthode.", "Références 2005 et cibles lues dans l'onglet Objectifs PTE : plus aucune cible écrite dans l'outil.", "Séries de consommation douteuses détectées et écartées ; paramètres réglables (durée de vie, productible PV)."]},
+    {"date": "18.08.2026", "objet": "simulation", "version": null, "titre": "Première mise en ligne", "points": ["Publication sur le site des outils OCBA (GitHub Pages)."]},
+    {"date": "17.08.2026", "objet": "simulation", "version": null, "titre": "Création de l'outil de simulation des gains", "points": ["Remplace la Matrice Excel : une fiche par bâtiment, une carte par mesure, variantes I, II et III comparées.", "Lecture de Plan_PTE par nom de colonne ; export Excel et impression."]},
+    {"date": "11.08.2026", "objet": "priorisation", "version": null, "titre": "Méthode bâtiment par bâtiment (CECB+)", "points": ["Classements par objectif : CO₂, thermique, renouvelable, électricité, eau et photovoltaïque.", "Coût de chaque bâtiment lu dans Estim PTE ; l'ancienne méthode par familles est abandonnée."]}
+  ];
+  var OBJETS_VER = { accueil: 'Accueil', priorisation: 'Priorisation', simulation: 'Simulation',
+                     revue: 'Revue de projets', commun: 'Commun aux outils' };
+  /* Entrées d'un outil (et celles qui le concernent toutes : « commun ») ; tout si tous = true. */
+  function versionsDe(outil, tous) {
+    return VERSIONS.filter(function (v) {
+      return tous || !outil || outil === 'accueil' || v.objet === outil || v.objet === 'commun';
+    });
+  }
+  function echapperV(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function afficherVersions(outil) {
+    if (typeof document === 'undefined' || !document.body || !document.createElement) return null;
+    var ancien = document.getElementById('pte-versions');
+    if (ancien && ancien.parentNode) ancien.parentNode.removeChild(ancien);
+    var nuit = !!(document.body.classList && document.body.classList.contains && document.body.classList.contains('night'));
+    var c = nuit ? { fond: '#1b2631', encre: '#e6edf3', doux: '#9fb0c0', trait: '#34495e', acc: '#30E5D9', puce: '#26394a' }
+                 : { fond: '#ffffff', encre: '#1f2d3d', doux: '#5b6b7b', trait: '#dfe6ec', acc: '#005F73', puce: '#e9f1f4' };
+    var tous = !outil || outil === 'accueil' || !OBJETS_VER[outil];
+    var voile = document.createElement('div');
+    voile.id = 'pte-versions';
+    voile.style.cssText = 'position:fixed;left:0;top:0;right:0;bottom:0;z-index:10000;background:rgba(15,23,32,.55);' +
+      'display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box';
+    var boite = document.createElement('div');
+    boite.setAttribute('role', 'dialog'); boite.setAttribute('aria-modal', 'true');
+    boite.setAttribute('aria-labelledby', 'pte-versions-titre');
+    boite.style.cssText = 'background:' + c.fond + ';color:' + c.encre + ';width:100%;max-width:760px;max-height:86vh;display:flex;' +
+      'flex-direction:column;border-radius:10px;box-shadow:0 14px 44px rgba(0,0,0,.35);font:14px/1.45 Arial,Helvetica,sans-serif;text-align:left';
+    var bouton = function (lib, actif) {
+      return '<button type="button" data-v="' + lib + '" style="font:inherit;font-size:12.5px;padding:3px 10px;border-radius:14px;cursor:pointer;' +
+        'border:1px solid ' + c.acc + ';background:' + (actif ? c.acc : 'transparent') + ';color:' + (actif ? c.fond : c.acc) + '">' +
+        (lib === 'outil' ? 'Cet outil' : 'Tous les outils') + '</button>';
+    };
+    boite.innerHTML =
+      '<div style="display:flex;align-items:center;gap:10px;padding:14px 18px 10px;border-bottom:1px solid ' + c.trait + '">' +
+        '<h2 id="pte-versions-titre" style="margin:0;font-size:17px;flex:1;color:' + c.encre + '">Historique des versions' +
+          (tous ? '' : ' — ' + echapperV(OBJETS_VER[outil])) + '</h2>' +
+        '<button type="button" data-fermer="1" aria-label="Fermer" title="Fermer (Échap)" style="font:inherit;font-size:20px;line-height:1;' +
+          'background:transparent;border:0;color:' + c.doux + ';cursor:pointer;padding:2px 6px">×</button></div>' +
+      '<div data-filtres="1" style="display:' + (outil && outil !== 'accueil' && OBJETS_VER[outil] ? 'flex' : 'none') + ';gap:8px;padding:10px 18px 0"></div>' +
+      '<div data-liste="1" style="overflow:auto;padding:4px 18px 8px"></div>' +
+      '<div style="padding:10px 18px 14px;border-top:1px solid ' + c.trait + ';font-size:12px;color:' + c.doux + '">' +
+        'Les plus récentes en haut. Détail complet : <code>Versioning_PTE.md</code> (dossier 00_Contexte du projet). ' +
+        'Les évolutions du classeur <code>Plan_PTE.xlsx</code> sont dans sa feuille « Versions ».</div>';
+    voile.appendChild(boite);
+    var liste = boite.querySelector('[data-liste]'), filtres = boite.querySelector('[data-filtres]');
+    function rendre() {
+      filtres.innerHTML = bouton('outil', !tous) + bouton('tous', tous);
+      var L = versionsDe(outil, tous);
+      liste.innerHTML = L.length ? L.map(function (v) {
+        return '<div style="padding:10px 0;border-bottom:1px solid ' + c.trait + '">' +
+          '<div style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap">' +
+            '<span style="color:' + c.doux + ';font-size:12.5px;min-width:74px">' + echapperV(v.date) + '</span>' +
+            '<span style="background:' + c.puce + ';border-radius:10px;padding:1px 8px;font-size:12px;white-space:nowrap">' +
+              echapperV(OBJETS_VER[v.objet] || v.objet) + (v.version ? ' · <b>' + echapperV(v.version) + '</b>' : '') + '</span>' +
+            '<b>' + echapperV(v.titre) + '</b></div>' +
+          '<ul style="margin:5px 0 0;padding:0 0 0 20px">' + (v.points || []).map(function (p) {
+            return '<li style="margin:2px 0">' + echapperV(p) + '</li>';
+          }).join('') + '</ul></div>';
+      }).join('') : '<p style="color:' + c.doux + '">Aucune entrée.</p>';
+    }
+    function fermer() {
+      document.removeEventListener('keydown', clavier, true);
+      if (voile.parentNode) voile.parentNode.removeChild(voile);
+    }
+    function clavier(e) { if (e.key === 'Escape' || e.key === 'Esc') { e.stopPropagation(); fermer(); } }
+    voile.addEventListener('click', function (e) {
+      var t = e.target;
+      if (t === voile || (t.getAttribute && t.getAttribute('data-fermer'))) { fermer(); return; }
+      var v = t.getAttribute && t.getAttribute('data-v');
+      if (v) { tous = v === 'tous'; rendre(); }
+    });
+    document.addEventListener('keydown', clavier, true);
+    rendre();
+    document.body.appendChild(voile);
+    try { boite.querySelector('[data-fermer]').focus(); } catch (e) {}
+    return voile;
+  }
+  /* Délégation : un seul écouteur pour toute la page. */
+  if (typeof document !== 'undefined' && document.addEventListener) {
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      while (t && t !== document) {
+        if (t.getAttribute && t.getAttribute('data-pte-versions') != null) {
+          e.preventDefault();
+          afficherVersions(t.getAttribute('data-pte-versions'));
+          return;
+        }
+        t = t.parentNode;
+      }
+    });
+  }
+
+  return { LS_META: LS_META, LS_CLASSEMENT: LS_CLASSEMENT, LS_QUESTIONS: LS_QUESTIONS, LS_THEME: LS_THEME, LS_CONTROLE: LS_CONTROLE,
+           controleImport: controleImport,
            themeCourant: themeCourant, appliquerTheme: appliquerTheme, basculerTheme: basculerTheme,
            tour: tour, tourVue: tourVue, relierAccueil: relierAccueil,
            exporterSaisies: exporterSaisies, importerSaisies: importerSaisies,
@@ -1511,7 +1886,9 @@ var PTE_COMMUN = (function () {
            lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,
            publierClassement: publierClassement, lireClassement: lireClassement,
            lireQuestions: lireQuestions, ecrireQuestions: ecrireQuestions,
-           dateCourte: dateCourte, texteBadge: texteBadge };
+           dateCourte: dateCourte, texteBadge: texteBadge,
+           ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, situationProgramme: situationProgramme, mchf: mchf,
+           VERSIONS: VERSIONS, OBJETS_VER: OBJETS_VER, versionsDe: versionsDe, afficherVersions: afficherVersions };
 })();
 
 /* ===========================================================================
@@ -1782,7 +2159,13 @@ function txt(v) {
 
 function chargerClasseur(ab, nomFichier, opts) {
   opts = opts || {};
-  const wb = XLSX.read(ab, { type: 'array', cellDates: false });
+  /* 25.09.2026 (niveau 4b) : on ne décompresse que les feuilles lues par l'outil
+     (FEUILLES_CONTRAT et l'onglet facultatif « Référentiel PTE ») ; les feuilles
+     techniques des requêtes ne sont plus analysées. Noms lus d'abord (rapide). */
+  const nomsClasseur = XLSX.read(ab, { type: 'array', bookSheets: true }).SheetNames || [];
+  const lues = FEUILLES_CONTRAT.concat(['Référentiel PTE']);
+  const aLire = nomsClasseur.filter(n => lues.indexOf(n) >= 0);
+  const wb = XLSX.read(ab, aLire.length ? { type: 'array', cellDates: false, sheets: aLire } : { type: 'array', cellDates: false });
   const sheets = {};
   FEUILLES_CONTRAT.forEach(n => { const a = feuilleAoa(wb, n); if (a) sheets[n] = a; });
   if (!sheets['Plan_PTE'] || !sheets['Consommation par site']) {
@@ -1800,6 +2183,10 @@ function chargerClasseur(ab, nomFichier, opts) {
   ETAT.anneeChoisie = null;
   COMMUN_DISPO = null;
   appliquerContrat();
+  /* Contrôle à l'import (25.09.2026) : comparé au dernier import de référence de cet outil */
+  if (typeof PTE_COMMUN !== 'undefined' && PTE_COMMUN.controleImport) {
+    try { PTE_COMMUN.controleImport(PTE_CONTRAT.empreinte(CONTRAT), 'sim'); } catch (e) { /* contrôle facultatif */ }
+  }
   if (ETAT.site && !CONTRAT.sites.has(String(ETAT.site))) { ETAT.site = null; ETAT.ssRef = null; }
   sauver();
 }
@@ -1965,6 +2352,9 @@ function ctx() {
     S, I, site: S.num, nom: I.nom, sre, idc,
     chaleur, chaleurSource: S.chaleur.source, chaleurOrigine: S.chaleur.origine,
     elec, eau, co2,
+    /* gain d'eau estimé par l'audit eau (colonne « Gain Eau estimé [m3/an] », 29.09.2026) :
+       un repère affiché à côté de l'eau mesurée, jamais repris d'office dans la simulation */
+    gainEauEstime: S.gainEauEstime != null ? S.gainEauEstime : null,
     intensite: (chaleur != null && sre && S.chaleur.source === 'mesuré') ? chaleur / sre : null,
     typologie, agent, agentAuto, agentInconnu: !agent, fa, fe,
     prixEau: REF.param['Prix_eau'] || 0,
@@ -2165,7 +2555,7 @@ function render() {
   $('#badge').className = nRem ? 'badge warn' : 'badge ok';
   $('#badge').textContent = PTE_COMMUN.texteBadge(CONTRAT.sousSites.length, { nom: ETAT.fichier, date: ETAT.dateIso }, nRem);
   $('#badge').title = (ETAT.origine === 'accueil' ? 'Chargé depuis Pilotage PTE' : 'Chargé dans cet outil') +
-    (ETAT.date ? ' le ' + ETAT.date : '') + (nRem ? ' · ' + nRem + ' point' + (nRem > 1 ? 's' : '') + ' à compléter (voir les remarques)' : '');
+    (ETAT.date ? ' le ' + ETAT.date : '') + (nRem ? ' · ' + nRem + ' point' + (nRem > 1 ? 's' : '') + ' à compléter (voir « Comment ces chiffres sont calculés »)' : '');
   renderDiagnostic();
   $('#blocMethode').classList.toggle('hidden', false);
   $('#app').classList.toggle('sans-site', !ctx());
@@ -2245,11 +2635,14 @@ function libelleRef() {
 
 function nbRemarques() { return remarquesClasseur().rem.length; }
 
+/* A7 (revue du Cabinet, 30.09.2026) : la couverture du classeur et ses remarques quittent
+   l'écran d'ouverture — qui ne garde que « Quel site ? » — pour « Comment ces chiffres sont
+   calculés ». Le nombre de remarques reste sur la pastille de l'en-tête. */
 function renderDiagnostic() {
-  const z = $('#diag');
+  const z = $('#diagMeth') || $('#diag');
   const { rem, couverture } = remarquesClasseur();
   const b = [];
-  if (couverture) b.push(`<div class="notice">${couverture}</div>`);
+  if (couverture) b.push(`<p><b>Le classeur chargé.</b> ${couverture}</p>`);
   if (rem.length) {
     const ouvert = z.querySelector('details.notices');
     b.push(`<details class="notices"${ouvert && ouvert.open ? ' open' : ''}>
@@ -2259,6 +2652,7 @@ function renderDiagnostic() {
   }
   z.innerHTML = b.join('');
   z.classList.toggle('hidden', b.length === 0);
+  if ($('#diag') && z !== $('#diag')) $('#diag').classList.add('hidden');
 }
 
 /* --- étape 1 : le site ----------------------------------------------------- */
@@ -2282,7 +2676,7 @@ function renderEtape1() {
     ['IDC', n1(C.idc), 'kWh/m²·an', 'indice OCEN, pondéré par la SRE'],
     ['Chaleur', n0(C.chaleur), 'kWh/an', srcCh],
     ['Électricité', n0(C.elec), 'kWh/an', ''],
-    ['Eau', n0(C.eau), 'm³/an', ''],
+    ['Eau', n0(C.eau), 'm³/an', C.gainEauEstime != null ? 'gain estimé par l’audit eau : ' + n0(C.gainEauEstime) + ' m³/an' + (C.eau ? ' (' + n0(100 * C.gainEauEstime / C.eau) + ' %)' : '') : ''],
     ['CO₂', C.co2 == null ? '—' : n1(C.co2 / 1000), 't/an', 'scope 1 + 2']
   ];
   $('#fChiffres').innerHTML = chiffres.map(([l, v, u, s]) =>
@@ -2295,6 +2689,7 @@ function renderEtape1() {
   const al = [];
   if (C.chaleur == null) al.push(['warn', 'Aucune chaleur pour ce site en ' + CONTRAT.annee + ' : ni facturation dans Consommation par site, ni SRE × IDC.']);
   else if (C.chaleurSource === 'estimé') al.push(['', 'Chaleur estimée (SRE × IDC) : ' + (C.chaleurOrigine || '') + '.']);
+  if (C.gainEauEstime != null) al.push(['', 'Audit eau : ' + n0(C.gainEauEstime) + ' m³/an d’économie estimée pour ce site (colonne « Gain Eau estimé [m3/an] » du classeur). C’est un repère pour les mesures « Eau » : la simulation ne le reprend pas d’office.']);
   if (C.sre == null) al.push(['warn', 'Aucune SRE renseignée : l’IDC et le coût du kWh économisé ne peuvent pas être calculés.']);
   if (C.agentInconnu) al.push(['warn', 'Aucun agent thermique SITG sur les sous-sites de ce site : choisissez-le sous « Ajuster », sinon le CO₂ et les francs des mesures thermiques ne sont pas chiffrés.']);
   else if (C.fa.aRenseigner) al.push(['warn', `Agent « ${C.agent} » : facteur CO₂ à renseigner dans Data (feuille du classeur). Les gains CO₂ des mesures thermiques ne sont pas chiffrables.`]);
@@ -2384,7 +2779,7 @@ function carteMesure(r, i, C) {
 
   let corps = '';
   if (!m.poste || !p) {
-    corps = '<p class="aide">Choisissez un poste pour commencer.</p>';
+    corps = '<p class="aide">Premier pas : un poste.</p>';
   } else if (chg) {
     const v = r.vect || {};
     corps = `
@@ -2634,7 +3029,7 @@ function exporterExcel() {
     ['SRE (m²)', C.sre], ['IDC OCEN pondéré SRE (kWh/m²·an)', C.idc],
     ['Intensité de chaleur facturée (kWh/m²·an)', C.intensite],
     ['Électricité (kWh/an)', C.elec], ['Chaleur (kWh/an)', C.chaleur], ['Chaleur : source', C.chaleurSource || '—'],
-    ['Eau (m³/an)', C.eau], ['CO₂ (kg/an)', C.co2],
+    ['Eau (m³/an)', C.eau], ['Gain eau estimé par l’audit (m³/an)', C.gainEauEstime], ['CO₂ (kg/an)', C.co2],
     [],
     ['RÉSULTAT'],
     ['Investissement (CHF)', tot.inv], ['Économie (CHF/an)', ar(tot.chf)],
@@ -2777,7 +3172,7 @@ const ETAPES_SIM = [
   { sel: vis('#fChiffres'), t: 'La fiche du site',
     d: 'SRE, IDC, chaleur, électricité, eau et CO₂ du site. Juste dessous, l’intensité de chaleur facturée — chaleur divisée par la SRE — sert de contrôle de l’IDC.' },
   { sel: vis('#btnAjouter'), t: 'Ajouter une mesure', avant: sortirDeLaComparaison,
-    d: 'Choisissez un poste, puis une action : un curseur va du gain prudent au gain optimiste. Deux mesures sur un même poste ne s’additionnent pas, la seconde porte sur le reste.' },
+    d: 'Un poste, puis une action : un curseur va du gain prudent au gain optimiste. Deux mesures sur un même poste ne s’additionnent pas, la seconde porte sur le reste.' },
   { sel: vis('#ongletsVar'), t: 'Les trois variantes', avant: sortirDeLaComparaison,
     d: 'Chaque variante est un scénario de mesures. « Dupliquer » recopie la variante courante dans une variante libre ; « Comparer » met les trois côte à côte.' },
   { sel: vis('#panneau'), t: 'Le panneau Résultat', avant: sortirDeLaComparaison,

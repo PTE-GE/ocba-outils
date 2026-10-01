@@ -449,6 +449,18 @@ tr.ss-child:hover td, .qtable tbody tr.ss-child:hover td{background:var(--surfac
 /* Gantt */
 svg.gantt{width:100%; height:auto; display:block;}
 .gantt-scroll{max-height:440px; overflow-y:auto;}
+/* 30.09.2026 : sommaire du reporting, planning dépliable, statut replié, fiche reliée */
+.rep-sommaire{display:flex; align-items:center; gap:.4em; flex-wrap:wrap; margin:0 0 12px;}
+.rep-saut{font:inherit; font-size:12.5px; font-weight:bold; color:var(--teal); background:var(--card-bg, #fff); border:1px solid var(--border); border-radius:100px; padding:4px 12px; cursor:pointer;}
+.rep-saut:hover{background:var(--blue-pale, #E8F4F7);}
+.rep-ancre{scroll-margin-top:200px;}
+.gantt-hit:focus{outline:2px solid var(--teal); outline-offset:-2px;}
+.rep-repli{margin:0 0 16px;}
+.rep-repli>summary{cursor:pointer; font-size:13px; font-weight:bold; color:var(--ink-70); padding:6px 0;}
+.hero-row.hero-row-3.hero-row-completude{grid-template-columns:1fr 1fr 1.8fr;}
+@media (max-width:900px){ .hero-row.hero-row-3.hero-row-completude{grid-template-columns:1fr;} }
+.fiche-freres{margin-top:.5em;}
+.fiche-consolide{font-weight:bold;}
 .rep-legend .sw-dot{width:10px; height:10px; border-radius:50%; background:var(--teal);}
 .rep-legend .sw-diamond{width:9px; height:9px; background:var(--card-bg); border:1.5px solid var(--slate); transform:rotate(45deg); border-radius:1px;}
 .rep-legend .sw-diamond.sw-late{background:var(--red); border-color:var(--red);}
@@ -718,7 +730,7 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
   <div class="hdr-in">
     <div>
       <h1>Revue de projets</h1>
-      <p class="sub"><a href="../Pilotage_PTE.html" title="Retour à la page Pilotage PTE">Pilotage PTE</a> · Office cantonal des bâtiments · Programme de transition écologique</p>
+      <p class="sub"><a href="../Pilotage_PTE.html" title="Retour à la page Pilotage PTE">Pilotage PTE</a> · <span title="Office cantonal des bâtiments · Programme de transition écologique">OCBA</span></p>
     </div>
     <div class="grow"></div>
     <span class="badge none" id="badge">Aucune donnée chargée</span>
@@ -767,7 +779,7 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
 <div class="notice" id="notice-commun" hidden></div>
 
 <section class="view" id="view-reporting">
-  <p class="lead">Questions du mois, sémaphores, situation financière et planning des projets GE-Invest ; cliquez une ligne pour descendre d’un niveau.</p>
+  <p class="lead">Questions du mois, sémaphores, situation financière et planning des projets GE-Invest ; un clic sur une ligne descend d’un niveau.</p>
   <div id="reporting-content"></div>
 </section>
 
@@ -802,7 +814,7 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
 </section>
 
 <section class="view" id="view-donnees" hidden>
-  <p class="lead">Chargez le classeur, vérifiez la complétude du mois et ajustez les seuils des sémaphores.</p>
+  <p class="lead">Chargement du classeur, complétude du mois et seuils des sémaphores.</p>
   <div id="donnees-content"></div>
 </section>
 
@@ -810,7 +822,7 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · v0.10 · 24.09.2026 · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.12 · 30.09.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 <div class="panel-backdrop" id="panel-backdrop" hidden></div>
@@ -829,7 +841,7 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
 <script>
 /* ============================================================================
    Lecteur .xlsx autonome — repris tel quel du lecteur maison de
-   02_Outil-PTE/index.html (bloc « LECTEUR .XLSX AUTONOME »), sans aucune
+   02_Outil-PTE/priorisation-pte.html (bloc « LECTEUR .XLSX AUTONOME »), sans aucune
    dépendance externe : décompression DEFLATE, lecture d'archive ZIP,
    analyse du XML du classeur, tout est fait à la main.
 
@@ -1136,6 +1148,7 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
 
    Usage :
      const R = PTE_CONTRAT.lire(sheets);
+     PTE_CONTRAT.comparer(PTE_CONTRAT.empreinte(R), empreinteDeReference)   // contrôle à l'import (25.09.2026)
      sheets = { 'Plan_PTE': [[en-têtes],[ligne],…], 'Consommation par site': [[…]],
                 'Objectifs PTE': [[…]], 'Data': [[…]], 'GEI_Projets': [[…]] (optionnelle) }
      GE-Invest : feuille GEI_Projets (une ligne par projet, niveau 4c du 24.09.2026) ;
@@ -1148,13 +1161,17 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
        sousSites: [ { num, site, nom, nomSite, rpf, rp, projets, sre, idc, idcAnnee,
                       chaleur:{val,source,origine}, elec:{…}, eau:{…}, co2:{…},
                       agent:{sitg, principal, cible, facteur, aRenseigner},
-                      estimPte, investCecb, co2Projete, gainCo2T, perimetreSme, siteMesure } ],
+                      estimPte, investCecb, co2Projete, gainCo2T, gainEauEstime, perimetreSme, siteMesure } ],
        sites: Map(num -> { num, nom, sousSites, sre, idc, chaleur, elec, eau, co2, estimPte,
-                           perimetreSme, siteMesure, brut }),
+                           gainEauEstime, perimetreSme, siteMesure, brut }),
        parc: { sre, annee, chaleur, chaleurMesuree, chaleurEstimee, elec, eau, co2,
+               gainEauEstime, nbGainEauEstime,
                nbSousSites, nbEstimes, nbSansChaleur, nbSitesMesures, nbSitesAbsents },
        facteurs: { table, correspondance, aRenseigner },
-       manquants: [ { num, champ, motif } ], colonnes: {…} }
+       manquants: [ { num, champ, motif } ], colonnes: {…}, colonnesFacultatives: {…} }
+     gainEauEstime (29.09.2026) : gain d'eau ESTIMÉ par l'audit eau [m3/an], colonne facultative
+     « Gain Eau estimé [m3/an] » de Plan_PTE (gain du site ventilé au prorata de la SRE par le
+     classeur). null si la colonne manque ou si la cellule est vide ou nulle.
    ========================================================================== */
 var PTE_CONTRAT = (function () {
   'use strict';
@@ -1392,9 +1409,6 @@ var PTE_CONTRAT = (function () {
       idc: col(idx, ['IDC [kWh]']),                                      /* D2 — OCEN ÷ 3,6, kWh/m2.an */
       idcAnnee: col(idx, ['Année IDC (dernière)', 'Année IDC']),
       conso: col(idx, ['CONSO [kWh]']),                                  /* D3 — informatif (SITG) */
-      elec: A ? col(idx, ['Conso Elec ' + A + ' - kWh', 'Conso Elec ' + A]) : null,
-      eau: A ? col(idx, ['Conso Eau ' + A + ' - m3', 'Conso Eau ' + A]) : null,
-      co2: A ? col(idx, ['Co2 ' + A + ' - kgCo2', 'Co2 ' + A, 'CO2 ' + A]) : null,
       agent: col(idx, ['Agent']),                                        /* D7 — SITG */
       pctAgent: col(idx, ['%Agent']),
       principal: col(idx, ['Chauffage Type Energie Prin', 'Chauffage Type Energie']),
@@ -1411,9 +1425,14 @@ var PTE_CONTRAT = (function () {
     };
     var obligatoires = ['num', 'site', 'sre', 'idc', 'agent', 'rpf', 'estimPte'], k;
     for (k = 0; k < obligatoires.length; k++) if (C[obligatoires[k]] == null) manquants.push({ num: null, champ: 'Plan_PTE', motif: 'colonne « ' + obligatoires[k] + ' » introuvable' });
-    if (A && C.elec == null) manquants.push({ num: null, champ: 'Plan_PTE', motif: 'colonne Conso Elec ' + A + ' absente : électricité ventilée depuis Consommation par site' });
-    if (A && C.eau == null) manquants.push({ num: null, champ: 'Plan_PTE', motif: 'colonne Conso Eau ' + A + ' absente : eau ventilée depuis Consommation par site' });
-    if (A && C.co2 == null) manquants.push({ num: null, champ: 'Plan_PTE', motif: 'colonne Co2 ' + A + ' absente : CO2 ventilé depuis Consommation par site' });
+    /* Électricité, eau et CO2 (29.09.2026, demande d'Achim) : lus dans Consommation par site à
+       l'année des mesures et ventilés au prorata SRE, comme la chaleur. Les colonnes « Conso Elec »,
+       « Conso Eau » et « Co2 » de Plan_PTE (même calcul, fait par Excel) ne sont plus lues : l'outil
+       reste juste quelle que soit l'année choisie, et un classeur sans ces colonnes suffit. */
+    /* Colonne facultative, tenue hors de C pour ne pas toucher au contrôle à l'import (29.09.2026) :
+       gain d'eau ESTIMÉ par l'audit eau (fichier Tableau_suivi_conso_O, requête Gains_Eau_O),
+       gain du site ventilé au sous-site au prorata de la SRE par le classeur lui-même. */
+    var jGainEauEst = col(idx, ['Gain Eau estimé [m3/an]', 'Gain Eau estimé']);
 
     /* Consommation par site, indexée par SITES NUM */
     var mesures = {}, idxC = entetes(rowsC || []), jNum = col(idxC, ['SITES NUM']), jNomS = col(idxC, ['NOM SITE']),
@@ -1479,10 +1498,12 @@ var PTE_CONTRAT = (function () {
       ss.co2Projete = num(cell(r, C.co2Proj));
       ss.idcProjete = num(cell(r, C.idcProj));
       ss.idcGainRetenu = num(cell(r, C.idcGain));
-      /* mesures ventilées par le classeur (Plan_PTE) — D3 : la colonne de l'année fait foi si elle existe */
-      ss.elec = { val: num(cell(r, C.elec)), source: null, origine: null };
-      ss.eau = { val: num(cell(r, C.eau)), source: null, origine: null };
-      ss.co2 = { val: num(cell(r, C.co2)), source: null, origine: null };
+      /* gain d'eau estimé (audit eau) : un zéro n'est pas un gain */
+      v = num(cell(r, jGainEauEst)); ss.gainEauEstime = (v != null && v > 0) ? v : null;
+      /* électricité, eau, CO2 : ventilés en passe 2 depuis Consommation par site */
+      ss.elec = { val: null, source: null, origine: null };
+      ss.eau = { val: null, source: null, origine: null };
+      ss.co2 = { val: null, source: null, origine: null };
       ss.chaleur = { val: null, source: null, origine: null };
       sousSites.push(ss);
       site = sites.get(ss.site);
@@ -1493,7 +1514,7 @@ var PTE_CONTRAT = (function () {
 
     /* ---- passe 2 : sites, ventilation site -> sous-site (D10), chaleur (D3, D11) ---- */
     var parc = { sre: 0, annee: annee, chaleur: 0, chaleurMesuree: 0, chaleurEstimee: 0, elec: 0, eau: 0, co2: 0,
-                 nbSousSites: sousSites.length, nbEstimes: 0, nbSansChaleur: 0, nbSitesMesures: 0, nbSitesAbsents: 0 };
+                 gainEauEstime: 0, nbGainEauEstime: 0, nbSousSites: sousSites.length, nbEstimes: 0, nbSansChaleur: 0, nbSitesMesures: 0, nbSitesAbsents: 0 };
     sites.forEach(function (site) {
       var m = mesures[site.num] || null, j, x, part;
       site.siteMesure = !!m;
@@ -1508,7 +1529,7 @@ var PTE_CONTRAT = (function () {
       var motifEstim = !m ? 'site absent de Consommation par site' : (m.thtot == null ? 'ThTOT' + A + ' vide' : 'ThTOT' + A + ' nul');
       var sreSite = 0;
       for (j = 0; j < site.sousSites.length; j++) if (site.sousSites[j].sre != null) sreSite += site.sousSites[j].sre;
-      var agg = { chaleur: 0, elec: 0, eau: 0, co2: 0, estimPte: 0, investCecb: 0, nEst: 0, nMes: 0, nElec: 0, nEau: 0, nCo2: 0 };
+      var agg = { chaleur: 0, elec: 0, eau: 0, co2: 0, estimPte: 0, investCecb: 0, nEst: 0, nMes: 0, nElec: 0, nEau: 0, nCo2: 0, gainEau: 0, nGainEau: 0 };
       for (j = 0; j < site.sousSites.length; j++) {
         x = site.sousSites[j];
         part = (x.sre != null && sreSite > 0) ? x.sre / sreSite : null;
@@ -1524,18 +1545,18 @@ var PTE_CONTRAT = (function () {
           x.chaleur = { val: null, source: null, origine: null };
           manquants.push({ num: x.num, champ: 'Chaleur', motif: (thMesure != null ? 'sans SRE : part du site non calculable' : motifEstim + ' et SRE ou IDC manquant') });
         }
-        /* élec, eau, CO2 : colonne Plan_PTE de l'année ; à défaut ventilation depuis Consommation par site (même prorata) */
-        [['elec', 'Conso Elec ' + A + ' - kWh', 'ELEC' + A, 'nElec'], ['eau', 'Conso Eau ' + A + ' - m3', 'EAU' + A, 'nEau'], ['co2', 'Co2 ' + A + ' - kgCo2', 'CO2 Scope 1+2 ' + A, 'nCo2']]
+        /* élec, eau, CO2 : Consommation par site de l'année des mesures, même prorata que la chaleur */
+        [['elec', 'ELEC' + A, 'nElec'], ['eau', 'EAU' + A, 'nEau'], ['co2', 'CO2 Scope 1+2 ' + A, 'nCo2']]
           .forEach(function (d) {
             var g = x[d[0]], key = d[0];
-            if (g.val != null) { g.source = 'mesuré'; g.origine = 'Plan_PTE!' + d[1]; }
-            else if (m && m[key] != null && part != null) { g.val = m[key] * part; g.source = 'mesuré'; g.origine = 'Consommation par site!' + d[2] + ' × SRE ÷ Σ SRE du site'; }
+            if (m && m[key] != null && part != null) { g.val = m[key] * part; g.source = 'mesuré'; g.origine = 'Consommation par site!' + d[1] + ' × SRE ÷ Σ SRE du site'; }
             else { g.val = null; g.source = null; g.origine = null; }
-            if (g.val != null) { agg[key] += g.val; agg[d[3]]++; }
+            if (g.val != null) { agg[key] += g.val; agg[d[2]]++; }
           });
         if (x.chaleur.val != null) agg.chaleur += x.chaleur.val;
         if (x.estimPte != null) agg.estimPte += x.estimPte;
         if (x.investCecb != null) agg.investCecb += x.investCecb;
+        if (x.gainEauEstime != null) { agg.gainEau += x.gainEauEstime; agg.nGainEau++; parc.gainEauEstime += x.gainEauEstime; parc.nbGainEauEstime++; }
         /* D5 : vrai gain CO2 (t/an) = émissions mesurées − CO2 projeté × SRE ; vide si l'un des deux manque */
         x.gainCo2T = (x.co2.val != null && x.co2Projete != null && x.sre != null) ? round((x.co2.val - x.co2Projete * x.sre) / 1000, 3) : null;
         x.perimetreSme = site.perimetreSme; x.siteMesure = site.siteMesure;
@@ -1553,10 +1574,11 @@ var PTE_CONTRAT = (function () {
       site.eau = agg.nEau ? { val: agg.eau, source: 'mesuré', origine: 'Σ sous-sites' } : { val: null, source: null, origine: null };
       site.co2 = agg.nCo2 ? { val: agg.co2, source: 'mesuré', origine: 'Σ sous-sites' } : { val: null, source: null, origine: null };
       site.estimPte = agg.estimPte; site.investCecb = agg.investCecb;
+      site.gainEauEstime = agg.nGainEau ? round(agg.gainEau, 3) : null;
       site.nbSousSitesEstimes = agg.nEst; site.nbSousSitesMesures = agg.nMes;
     });
     parc.sre = round(parc.sre, 3);
-    ['chaleur', 'chaleurMesuree', 'chaleurEstimee', 'elec', 'eau', 'co2'].forEach(function (k2) { parc[k2] = round(parc[k2], 3); });
+    ['chaleur', 'chaleurMesuree', 'chaleurEstimee', 'elec', 'eau', 'co2', 'gainEauEstime'].forEach(function (k2) { parc[k2] = round(parc[k2], 3); });
 
     /* ---- facteurs : table lisible, correspondance appliquée, libellés à renseigner ---- */
     var table = {}, key, aRens = {}, corr = {};
@@ -1574,11 +1596,99 @@ var PTE_CONTRAT = (function () {
       annee: annee, anneeSource: an.source, anneesDisponibles: rowsC ? anneesDeConso(rowsC) : [], series: an.series,
       sousSites: sousSites, sites: sites, parc: parc,
       facteurs: { table: table, correspondance: corr, aRenseigner: aRenseigner, cadGenerique: CAD_GENERIQUE },
-      manquants: manquants, colonnes: C
+      manquants: manquants, colonnes: C, colonnesFacultatives: { gainEauEstime: jGainEauEst }
     };
   }
 
-  return { lire: lire, norm: norm, cibleAgent: cibleAgent, CORRESPONDANCE_AGENT: CORRESPONDANCE_AGENT, CAD_GENERIQUE: CAD_GENERIQUE, version: '2026-09-24' };
+  /* ---------- Contrôle à l'import (25.09.2026, proposition validée par Achim) ----------
+     empreinte(R) résume un import en quelques chiffres ; comparer(e, p) dit ce qui manque ou
+     a fortement changé par rapport à l'import de référence p. Fonctions pures : le stockage
+     et le bandeau sont dans PTE_COMMUN.controleImport. Seuils : sous-sites 2 %, remplissage
+     d'une colonne clé −10 %, totaux du parc ±10 % (même année de mesures). */
+  var LIB_COL = {    /* premier alias de chaque colonne de lire() : à tenir à jour avec C */
+    num: 'N° sous site', site: 'N site', nom: 'Nom du site_AB', nomSite: 'Nom du site', sre: 'SRE', idc: 'IDC [kWh]',
+    idcAnnee: 'Année IDC (dernière)', conso: 'CONSO [kWh]', agent: 'Agent', pctAgent: '%Agent', principal: 'Chauffage Type Energie Prin',
+    substitution: 'Chauffage de subsitution prévu', rpf: 'Responsable Portefeuille', rp: 'Responsable projet',
+    estimPte: 'Estim PTE', investCecb: 'Estim CECB+', co2Proj: 'CO2 projeté [kg/m2.an]', idcProj: 'IDC projeté [kWh]',
+    idcGain: 'IDC Gain retenu', etat: 'Etat du projet (SIA)', affectation: 'Affectation_AB' };
+  var OBLIGATOIRES = ['num', 'site', 'sre', 'idc', 'agent', 'rpf', 'estimPte'];
+  var LIB_REMPL = { sre: 'SRE', idc: 'IDC', agent: 'Agent (SITG)', rpf: 'Responsable Portefeuille', estimPte: 'Estim PTE',
+    investCecb: 'Estim CECB+', chaleurMesuree: 'Chaleur mesurée', elec: 'Électricité', eau: 'Eau', co2: 'CO2' };
+  var LIB_PARC = { sre: ['SRE du parc', 'm²', 1], chaleur: ['Chaleur du parc', 'MWh', 1000], elec: ['Électricité du parc', 'MWh', 1000],
+    eau: ['Eau du parc', 'm³', 1], co2: ['CO2 du parc', 't', 1000] };
+  var SEUILS = { sousSites: 0.02, remplissage: 0.10, parc: 0.10 };
+
+  function empreinte(R) {
+    var ss = (R && R.sousSites) || [], C = (R && R.colonnes) || {}, p = (R && R.parc) || {}, k;
+    var rempl = { sre: 0, idc: 0, agent: 0, rpf: 0, estimPte: 0, investCecb: 0, chaleurMesuree: 0, elec: 0, eau: 0, co2: 0 };
+    ss.forEach(function (x) {
+      if (x.sre != null) rempl.sre++;
+      if (x.idc != null) rempl.idc++;
+      if (x.agent && x.agent.sitg) rempl.agent++;
+      if (x.rpf) rempl.rpf++;
+      if (x.estimPte != null) rempl.estimPte++;
+      if (x.investCecb != null) rempl.investCecb++;
+      if (x.chaleur && x.chaleur.val != null && x.chaleur.source === 'mesuré') rempl.chaleurMesuree++;
+      if (x.elec && x.elec.val != null) rempl.elec++;
+      if (x.eau && x.eau.val != null) rempl.eau++;
+      if (x.co2 && x.co2.val != null) rempl.co2++;
+    });
+    var absentes = [];
+    for (k in C) if (C[k] == null) absentes.push(k);
+    return { v: 1, date: new Date().toISOString(), annee: R ? R.annee : null, nbSousSites: ss.length,
+             nbSites: R && R.sites ? R.sites.size : null, colonnesAbsentes: absentes, remplissage: rempl,
+             parc: { sre: p.sre || 0, chaleur: p.chaleur || 0, elec: p.elec || 0, eau: p.eau || 0, co2: p.co2 || 0 } };
+  }
+
+  function entier(n) {
+    var t = String(Math.round(Math.abs(n))).replace(/\B(?=(\d{3})+(?!\d))/g, '’');
+    return (n < 0 ? '−' : '') + t;
+  }
+  function ecart(a, b) {           /* « +12 % » / « −28 % » */
+    var v = b ? Math.round((a - b) / b * 100) : 0;
+    return (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v) + ' %';
+  }
+  function libCol(k, annee) { return (LIB_COL[k] || k).replace('{année}', annee == null ? '' : annee); }
+
+  function comparer(e, p) {
+    var al = [], k;
+    var abs = (e && e.colonnesAbsentes) || [], absP = (p && p.colonnesAbsentes) || [];
+    abs.forEach(function (c) {
+      if (OBLIGATOIRES.indexOf(c) >= 0)
+        al.push({ niveau: 'erreur', texte: 'Colonne « ' + libCol(c, e.annee) + ' » introuvable dans Plan_PTE : les trois outils en ont besoin. Renommée ou supprimée ?' });
+      else if (!p || absP.indexOf(c) < 0)
+        al.push({ niveau: 'attention', texte: 'Colonne « ' + libCol(c, e.annee) + ' » introuvable dans Plan_PTE' + (p ? ' ; elle était là à l\'import de référence. Renommée ?' : '.') });
+    });
+    if (p) {
+      if (e.nbSousSites !== p.nbSousSites) {
+        var d = e.nbSousSites - p.nbSousSites, r = p.nbSousSites ? Math.abs(d) / p.nbSousSites : 1;
+        al.push({ niveau: r > SEUILS.sousSites ? 'attention' : 'info',
+                  texte: 'Sous-sites : ' + p.nbSousSites + ' → ' + e.nbSousSites + ' (' + (d > 0 ? '+' : '−') + Math.abs(d) + ').' });
+      }
+      for (k in LIB_REMPL) {
+        var a = (e.remplissage || {})[k], b = (p.remplissage || {})[k];
+        if (b > 0 && a != null && (b - a) / b > SEUILS.remplissage)
+          al.push({ niveau: 'attention', texte: LIB_REMPL[k] + ' : ' + a + ' sous-sites renseignés, contre ' + b + ' à l\'import de référence (' + ecart(a, b) + ').' });
+      }
+      if (e.annee !== p.annee) {
+        al.push({ niveau: 'info', texte: 'Année des mesures : ' + p.annee + ' → ' + e.annee + ' ; les totaux du parc ne sont pas comparés.' });
+      } else {
+        for (k in LIB_PARC) {
+          var x = (e.parc || {})[k], y = (p.parc || {})[k], L = LIB_PARC[k];
+          if (y && x != null && Math.abs(x - y) / y > SEUILS.parc)
+            al.push({ niveau: 'attention', texte: L[0] + ' ' + e.annee + ' : ' + entier(y / L[2]) + ' → ' + entier(x / L[2]) + ' ' + L[1] + ' (' + ecart(x, y) + ').' });
+        }
+      }
+    }
+    var n = { erreur: 0, attention: 0, info: 0 };
+    al.forEach(function (z) { n[z.niveau]++; });
+    var cle = function (o) { return o ? JSON.stringify([o.annee, o.nbSousSites, o.nbSites, o.colonnesAbsentes, o.remplissage, o.parc]) : ''; };
+    return { niveau: n.erreur ? 'erreur' : n.attention ? 'attention' : n.info ? 'info' : 'ok', alertes: al,
+             identique: !!p && cle(e) === cle(p), reference: p ? p.date : null, seuils: SEUILS };
+  }
+
+  return { lire: lire, norm: norm, cibleAgent: cibleAgent, CORRESPONDANCE_AGENT: CORRESPONDANCE_AGENT, CAD_GENERIQUE: CAD_GENERIQUE,
+           empreinte: empreinte, comparer: comparer, version: '2026-09-29' };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = PTE_CONTRAT;
 
@@ -1609,7 +1719,7 @@ var PTE_COMMUN = (function () {
   /* Les quatre pages vivent dans deux arborescences différentes ; on reconnaît
      l'une ou l'autre au chemin courant et on construit les liens en conséquence. */
   var LAYOUTS = {
-    kdrive: { accueil: 'Pilotage_PTE.html', prio: '02_Outil-PTE/index.html',
+    kdrive: { accueil: 'Pilotage_PTE.html', prio: '02_Outil-PTE/priorisation-pte.html',   /* renommé le 25.09.2026 : même nom qu'en ligne */
               sim: '06_Simulation-Gains/pte-simulation.html', revue: '09_Revues-projets/revue-projets.html',
               donnees: '01_Donnees/' },
     /* GitHub Pages : l'arborescence publiée depuis août 2026 — `simulation-gains`,
@@ -1938,7 +2048,283 @@ var PTE_COMMUN = (function () {
     return t.replace(/^ · /, '');
   }
 
-  return { LS_META: LS_META, LS_CLASSEMENT: LS_CLASSEMENT, LS_QUESTIONS: LS_QUESTIONS, LS_THEME: LS_THEME,
+  /* ---------- contrôle à l'import (25.09.2026, revu le 30.09.2026) ----------
+     Chaque page passe l'empreinte de son import (PTE_CONTRAT.empreinte). Elle est comparée à la
+     référence de la page, gardée dans localStorage (une par page). La référence avance seule quand
+     rien n'est anormal ; sinon elle ne bouge que sur « C'est normal, retenir ce classeur ».
+     Revue du Cabinet du 30.09.2026 (A1, idée 1 de Zoé) : le contrôle se LIT une fois, sur
+     l'accueil, où le classeur est déposé. Les outils se taisent quand tout va bien et n'affichent
+     qu'une alerte (colonne introuvable, écart à vérifier). Le message se place SOUS l'en-tête de
+     la page, jamais par-dessus. */
+  var LS_CONTROLE = 'pte.controle.v1';
+  function controleImport(emp, outil) {
+    if (!emp || typeof PTE_CONTRAT === 'undefined' || !PTE_CONTRAT.comparer) return null;
+    var cle = LS_CONTROLE + '.' + (outil || 'outil');
+    var ref = lireJSON(cle);
+    if (ref && ref.v !== emp.v) ref = null;
+    var res = PTE_CONTRAT.comparer(emp, ref);
+    var retenir = function () { try { localStorage.setItem(cle, JSON.stringify(emp)); return true; } catch (e) { return false; } };
+    if (res.niveau === 'ok' || res.niveau === 'info') retenir();
+    var grave = res.niveau === 'erreur' || res.niveau === 'attention';
+    if (!res.identique && (grave || outil === 'accueil')) afficherControle(res, emp, retenir);
+    return res;
+  }
+  function afficherControle(res, emp, retenir) {
+    if (typeof document === 'undefined' || !document.createElement || !document.body) return null;
+    var ancien = document.getElementById('pte-controle-import');
+    if (ancien && ancien.parentNode) ancien.parentNode.removeChild(ancien);
+    var teinte = { erreur: ['var(--red, #B3261E)', 'var(--tint-rouge, #FBE9E7)'], attention: ['var(--ochre-text, #8A5A00)', 'var(--tint-orange, #FDF1E3)'],
+                   info: ['var(--green, #1A8554)', 'var(--tint-vert, #E8F5EE)'], ok: ['var(--green, #1A8554)', 'var(--tint-vert, #E8F5EE)'] }[res.niveau];
+    var grave = res.niveau === 'erreur' || res.niveau === 'attention';
+    var nb = res.alertes.filter(function (a) { return a.niveau !== 'info'; }).length;
+    var d = document.createElement('div');
+    d.id = 'pte-controle-import';
+    d.setAttribute('role', grave ? 'alert' : 'status');
+    d.style.cssText = 'position:relative;box-sizing:border-box;margin:12px auto;' +
+      'width:calc(100% - 32px);max-width:960px;padding:12px 44px 12px 16px;border-radius:8px;' +
+      'border-left:4px solid ' + teinte[0] + ';background:' + teinte[1] + ';color:var(--ink, #1F2328);' +
+      'font:13px/1.45 system-ui, -apple-system, "Segoe UI", Arial, sans-serif';
+    var titre = res.niveau === 'erreur' ? 'Contrôle à l\'import : colonne indispensable introuvable'
+      : res.niveau === 'attention' ? 'Contrôle à l\'import : ' + nb + ' point' + (nb > 1 ? 's' : '') + ' à vérifier'
+      : 'Contrôle à l\'import : rien d\'anormal';
+    var sous = res.reference ? 'Comparé à l\'import de référence du ' + dateCourte(res.reference) + ' · ' + emp.nbSousSites + ' sous-sites.'
+      : 'Premier import contrôlé dans ce navigateur : ce classeur (' + emp.nbSousSites + ' sous-sites) sert de référence.';
+    var h = document.createElement('div'); h.style.cssText = 'font-weight:600;margin-bottom:2px'; h.textContent = titre; d.appendChild(h);
+    var p = document.createElement('div'); p.style.cssText = 'opacity:.8'; p.textContent = sous; d.appendChild(p);
+    if (res.alertes.length) {
+      var ul = document.createElement('ul'); ul.style.cssText = 'margin:8px 0 0;padding-left:18px';
+      res.alertes.forEach(function (a) { var li = document.createElement('li'); li.textContent = a.texte; if (a.niveau === 'info') li.style.opacity = '.8'; ul.appendChild(li); });
+      d.appendChild(ul);
+    }
+    var fermer = document.createElement('button');
+    fermer.type = 'button'; fermer.textContent = '×'; fermer.setAttribute('aria-label', 'Fermer');
+    fermer.style.cssText = 'position:absolute;top:6px;right:8px;border:0;background:none;color:inherit;font-size:20px;line-height:1;cursor:pointer;padding:4px';
+    fermer.onclick = function () { if (d.parentNode) d.parentNode.removeChild(d); };
+    d.appendChild(fermer);
+    if (grave) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.textContent = 'C\'est normal, retenir ce classeur comme référence';
+      b.style.cssText = 'margin-top:10px;padding:5px 10px;border-radius:6px;border:1px solid ' + teinte[0] + ';background:transparent;color:inherit;font:inherit;cursor:pointer';
+      b.onclick = function () { retenir(); if (d.parentNode) d.parentNode.removeChild(d); };
+      d.appendChild(b);
+    } else {
+      setTimeout(function () { if (d.parentNode) d.parentNode.removeChild(d); }, 10000);
+    }
+    /* sous l'en-tête : après <header> (ou en tête de page à défaut), jamais par-dessus */
+    var hdr = document.querySelector('header.hdr') || document.querySelector('header');
+    if (hdr && hdr.parentNode) hdr.parentNode.insertBefore(d, hdr.nextSibling);
+    else document.body.insertBefore(d, document.body.firstChild);
+    return d;
+  }
+
+  /* ---------- Situation du programme (30.09.2026) ----------
+     Pari de Zoé retenu par Achim (E3) sur le cadre d'Hélène (D) : quatre montants, une seule
+     unité (MCHF), la même définition partout.
+       Voté    : enveloppe des lois votées, inscrite ici en dur (décision d'Achim du 30.09.2026) :
+                 loi 13210, 1 000 MCHF, et loi 12552 (embrasures), 250 MCHF.
+       Engagé  : Σ « Solde engagé dépense » des projets GE-Invest (commandé, pas encore payé).
+       Dépensé : Σ « Cumul comptabilisé dépense N-1 » + « Comptabilisé N dépense » (GE-Invest).
+       Estimé  : Σ « Estim PTE » des sous-sites de la feuille Plan_PTE (jamais Estim CECB+).
+     Montants rendus en CHF ; l'affichage les divise par 1e6. GE-Invest : feuille GEI_Projets
+     (une ligne par projet), à défaut l'ancienne GEI_Suivi (projet répété : dédoublonné par Numéro). */
+  var ENVELOPPE_VOTEE = [
+    { loi: '13210', objet: 'Programme de transition écologique', chf: 1000e6 },
+    { loi: '12552', objet: 'Embrasures', chf: 250e6 }
+  ];
+  function nombreChf(v) {
+    if (typeof v === 'number') return isFinite(v) ? v : null;
+    if (v == null) return null;
+    var t = String(v).replace(/[\s  ']/g, '').replace(',', '.');
+    if (!t || !/^-?\d+(\.\d+)?$/.test(t)) return null;
+    return Number(t);
+  }
+  function normEntete(x) {
+    return String(x == null ? '' : x).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  }
+  function situationProgramme(R, rowsG) {
+    var vote = 0, i;
+    for (i = 0; i < ENVELOPPE_VOTEE.length; i++) vote += ENVELOPPE_VOTEE[i].chf;
+    var ss = (R && R.sousSites) ? R.sousSites : [], est = 0, nEst = 0;
+    for (i = 0; i < ss.length; i++) { var e = nombreChf(ss[i].estimPte); if (e != null && e > 0) { est += e; nEst++; } }
+    var g = null;
+    if (rowsG && rowsG.length > 1) {
+      var h = rowsG[0].map(normEntete), j = function (n) { var k = h.indexOf(normEntete(n)); return k < 0 ? null : k; };
+      var jN = j('Numéro'), jC = j('Crédit total dépense'), jA = j('Cumul comptabilisé dépense N-1'),
+          jB = j('Comptabilisé N dépense'), jE = j('Solde engagé dépense'), jY = j('Année référence prévision financière');
+      if (jE != null || jA != null || jB != null) {
+        g = { projets: 0, credit: 0, cumulN1: 0, comptaN: 0, engage: 0, annee: null };
+        var vus = {};
+        for (i = 1; i < rowsG.length; i++) {
+          var r = rowsG[i]; if (!r) continue;
+          var n = jN == null ? String(i) : String(r[jN] == null ? '' : r[jN]).trim();
+          if (!n || vus[n]) continue;
+          vus[n] = true; g.projets++;
+          g.credit += nombreChf(jC == null ? null : r[jC]) || 0;
+          g.cumulN1 += nombreChf(jA == null ? null : r[jA]) || 0;
+          g.comptaN += nombreChf(jB == null ? null : r[jB]) || 0;
+          g.engage += nombreChf(jE == null ? null : r[jE]) || 0;
+          var y = nombreChf(jY == null ? null : r[jY]); if (y && !g.annee) g.annee = y;
+        }
+        g.depense = g.cumulN1 + g.comptaN;
+      }
+    }
+    return { v: 1, date: new Date().toISOString(), vote: vote, lois: ENVELOPPE_VOTEE,
+             estime: est, nbEstimes: nEst, nbSousSites: ss.length, gei: g };
+  }
+  /* « 964,3 » : CHF -> MCHF, une décimale, séparateur suisse */
+  function mchf(chf, dec) {
+    if (chf == null || !isFinite(chf)) return '—';
+    var d = dec == null ? 1 : dec, v = chf / 1e6;
+    return v.toLocaleString('fr-CH', { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+
+  /* ---------- Historique des versions (29.09.2026, demande d'Achim) ----------
+     Le numéro de version affiché dans le pied de chaque page ouvre cette fenêtre : tout
+     élément portant l'attribut data-pte-versions="<outil>" suffit, sans code dans la page.
+     Les données sont ici, dans le module commun, pour que les quatre pages montrent le
+     même historique. Il ne porte QUE les outils : les évolutions du classeur Plan_PTE sont
+     tenues dans sa feuille « Versions » (décision d'Achim, 29.09.2026).
+     RÈGLE DE TENUE : à chaque nouvelle version d'un outil, ajouter l'entrée EN TÊTE de
+     VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
+     pages (la revue se reconstruit par build-html.js). */
+  var VERSIONS = [
+    {"date": "30.09.2026", "objet": "accueil", "version": "v1.6", "titre": "Situation du programme", "points": ["Au-dessus des trois outils : voté, engagé, dépensé et estimé, en MCHF, avec une phrase et leurs sources, recalculés à chaque dépôt du classeur.", "Voté : 1 250 MCHF, loi 13210 (1 000) et loi 12552, embrasures (250). Engagé et dépensé : GE-Invest. Estimé : somme de l'Estim PTE.", "Le contrôle à l'import se lit ici, une fois, sous l'en-tête.", "L'empreinte du classeur passe dans l'info-bulle de la barre du classeur."]},
+    {"date": "30.09.2026", "objet": "priorisation", "version": "v30.09.2026", "titre": "Revue du Cabinet : lecture plus directe", "points": ["La visite guidée ne s'ouvre plus d'office ; elle reste dans le menu ☰, relue et sans l'étape « Mode nuit ».", "Hors classement, chaque objectif trie et affiche sa propre grandeur : l'eau pour l'eau, l'électricité pour l'électricité, le CO₂ pour le CO₂, la chaleur sinon.", "Quand la cible 2030 est déjà atteinte au niveau du parc, la note le dit au lieu de « Cible non atteinte ».", "Textes revus : tuile Développement durable en une ligne, « huit engagements du programme », « Arbitrages », montants en MCHF, enveloppe de 1 250 MCHF sourcée (lois 13210 et 12552) ; les énoncés de la Méthode qui dépendaient du classeur sont calculés ou neutres."]},
+    {"date": "30.09.2026", "objet": "simulation", "version": "v3.3", "titre": "Écran d'ouverture allégé", "points": ["L'ouverture ne garde que « Quel site ? » : la couverture du classeur et les points à compléter passent dans « Comment ces chiffres sont calculés ».", "Textes de l'écran reformulés sans s'adresser à l'utilisateur."]},
+    {"date": "30.09.2026", "objet": "revue", "version": "v0.12", "titre": "Reporting plus court, planning par projet", "points": ["Montants en MCHF dans toute la revue ; sémaphores : la complétude du suivi d'abord, puis la répartition des projets renseignés, les projets gris restant à un clic.", "Un sommaire « Aller à » en tête du reporting ; le planning remonte après les sémaphores ; la situation par statut est repliée.", "Planning : un clic sur un sous-site affiche le planning de chacun de ses projets ; libellés alignés à gauche.", "Fiche projet : liens vers les autres projets du même sous-site et vers sa vue consolidée."]},
+    {"date": "30.09.2026", "objet": "commun", "version": null, "titre": "Contrôle à l'import discret, situation du programme", "points": ["Les outils n'affichent plus « rien d'anormal » : seulement une alerte, placée sous l'en-tête, jamais par-dessus.", "Sous-titre court dans les trois outils : « Pilotage PTE · OCBA ».", "Calcul commun de la situation du programme, repris par l'accueil."]},
+    {"date": "29.09.2026", "objet": "priorisation", "version": "v29.09.2026", "titre": "Gains d'eau estimés, liens rétablis, historique des versions", "points": ["Le classement Eau lit le gain estimé par l'audit eau : gain du site réparti entre ses sous-sites au prorata de la SRE.", "Le classement Eau se trie sur le volume économisé : les mesures d'eau n'ont pas de coût propre, le montant de rénovation ne les départage pas.", "Les liens vers l'accueil, la simulation et la revue sont de nouveau actifs.", "Un clic sur le numéro de version ouvre cet historique."]},
+    {"date": "29.09.2026", "objet": "simulation", "version": "v3.2", "titre": "Gain d'eau estimé affiché, historique des versions", "points": ["La fiche du site affiche le gain d'eau estimé par l'audit, à côté de l'eau mesurée : un repère pour les mesures « Eau ».", "L'export Excel reprend ce gain estimé.", "Un clic sur le numéro de version ouvre cet historique."]},
+    {"date": "29.09.2026", "objet": "revue", "version": "v0.11", "titre": "Gain d'eau estimé, historique des versions", "points": ["La ligne « Mesures » du sous-site affiche le gain d'eau estimé par l'audit.", "Pour l'objectif eau, le gain estimé prime sur le gain simulé.", "Un clic sur le numéro de version ouvre cet historique."]},
+    {"date": "29.09.2026", "objet": "accueil", "version": "v1.5", "titre": "Historique des versions", "points": ["Un clic sur le numéro de version ouvre l'historique de tous les outils et du classeur."]},
+    {"date": "29.09.2026", "objet": "commun", "version": null, "titre": "Gain d'eau estimé et historique partagés", "points": ["Le contrat de données lit la colonne « Gain Eau estimé [m3/an] » quand le classeur la contient ; sinon rien ne change.", "Électricité, eau et CO₂ sont lus dans la feuille « Consommation par site », à l'année des mesures, pour les trois outils.", "L'historique des versions est le même dans les quatre pages."]},
+    {"date": "25.09.2026", "objet": "priorisation", "version": "v25.09.2026", "titre": "Menu Montants revu et contrôle à l'import", "points": ["Menu Montants : Estim CECB+ par défaut, DG 3.31 ajouté, Invest ImmOBA retiré.", "À chaque import, l'outil signale ce qui a changé dans le classeur : colonnes, sous-sites, totaux du parc.", "L'outil ne lit plus que les feuilles dont il a besoin ; le résultat est inchangé.", "Le fichier local prend le nom de la version en ligne. Cette version n'est pas encore publiée."]},
+    {"date": "25.09.2026", "objet": "simulation", "version": null, "titre": "Mise en ligne de la v3.1, puis contrôle à l'import", "points": ["Version 3.1 mise en ligne le 25.09 à 7 h 11.", "À chaque import, l'outil signale ce qui a changé dans le classeur : colonnes, sous-sites, totaux du parc.", "L'outil ne lit plus que les feuilles dont il a besoin ; le résultat est inchangé.", "Ces deux améliorations ne sont pas encore publiées."]},
+    {"date": "25.09.2026", "objet": "revue", "version": null, "titre": "Colonnes renommées de nouveau lues, contrôle à l'import", "points": ["Correction : 4 colonnes renommées le 23.09 n'étaient plus lues (Estim CECB+, gains élec et eau simulés, surface végétalisée).", "La surface végétalisée est de nouveau lue : 39 sous-sites au lieu de 0.", "À chaque import, l'outil signale ce qui a changé dans le classeur : colonnes, sous-sites, totaux du parc.", "Pas encore publiée."]},
+    {"date": "25.09.2026", "objet": "commun", "version": null, "titre": "Contrôle à l'import, commun aux 3 outils", "points": ["Chaque import est comparé à l'import de référence : colonnes introuvables, sous-sites apparus ou disparus, totaux du parc à ±10 %.", "Un bandeau n'apparaît que si le classeur a changé.", "« C'est normal, retenir ce classeur » fait du nouvel import la référence."]},
+    {"date": "24.09.2026", "objet": "accueil", "version": "v1.4", "titre": "Accueil unifié", "points": ["Les trois cartes calculent leur lien au chargement : le même fichier fonctionne en local et en ligne.", "Fin des deux numéros pour un même contenu (v1.2 en local, v1.3 en ligne).", "Mise en ligne le 24.09 à 19 h 02."]},
+    {"date": "24.09.2026", "objet": "priorisation", "version": "v24.09.2026", "titre": "Lecture de GE-Invest en 4 feuilles", "points": ["Lit les nouvelles feuilles GE-Invest ; les anciens classeurs restent lisibles.", "Mêmes données pour les 582 sous-sites ; import en 5,0 s au lieu de 18,2 s.", "Mise en ligne le 24.09 à 19 h 02."]},
+    {"date": "24.09.2026", "objet": "simulation", "version": "v3.1", "titre": "Report vers les colonnes « simulé »", "points": ["Les 8 résultats se reportent dans les colonnes « simulé » de Plan_PTE.", "L'IDC projeté et le coût du kWh économisé ont leurs propres colonnes : aucune colonne calculée n'est plus écrasée.", "Lit les nouvelles feuilles GE-Invest ; import en 3,7 s au lieu de 11,0 s.", "Mise en ligne le 25.09 à 7 h 11."]},
+    {"date": "24.09.2026", "objet": "revue", "version": "v0.10", "titre": "Lecture de GE-Invest en 4 feuilles", "points": ["Lit les 4 nouvelles feuilles GE-Invest ; projets, jalons, risques, livrables et finances identiques.", "Lecture du classeur en 3,1 s au lieu de 20,4 s.", "Corrections du 23.09 reportées dans les sources : elles ne disparaîtront plus à la reconstruction.", "Mise en ligne le 24.09 à 19 h 02."]},
+    {"date": "24.09.2026", "objet": "commun", "version": null, "titre": "Modules communs à source unique", "points": ["Les modules communs ont une seule source, copiée à l'identique dans les quatre pages.", "Le contrat de données lit les nouvelles feuilles GE-Invest, avec repli sur l'ancienne feuille GEI_Suivi."]},
+    {"date": "23.09.2026", "objet": "priorisation", "version": null, "titre": "Libellé Estim CECB+", "points": ["Le menu Montants suit le nouveau nom Estim CECB+ ; l'ancien nom reste reconnu.", "Mise en ligne le 23.09."]},
+    {"date": "23.09.2026", "objet": "commun", "version": null, "titre": "Effacement du classeur commun clarifié", "points": ["« Effacer les données » pose une seconde question qui nomme le fichier et prévient que les trois outils le perdront.", "Une fois effacé, le classeur ne revient plus au rechargement.", "Mise en ligne le 23.09."]},
+    {"date": "22.09.2026", "objet": "priorisation", "version": null, "titre": "Liens sortants masqués", "points": ["Les quatre liens vers Pilotage PTE, la simulation et la revue sont masqués, à la demande d'Achim.", "Modification faite dans la version en ligne."]},
+    {"date": "21.09.2026", "objet": "accueil", "version": "v1.3", "titre": "Copie en ligne aux liens réécrits", "points": ["Version en ligne dont les liens ont été adaptés à la main au site publié.", "Non reportée en local, resté en v1.2 : écart résolu par la v1.4."]},
+    {"date": "20.09.2026", "objet": "accueil", "version": "v1.2", "titre": "Version locale", "points": ["Version tenue en local ; le détail des changements n'est pas consigné."]},
+    {"date": "19.09.2026", "objet": "commun", "version": null, "titre": "Contrat de données commun", "points": ["La simulation et la revue lisent les colonnes du classeur avec les mêmes règles.", "Une colonne est trouvée par son nom, jamais par sa position."]},
+    {"date": "17.09.2026", "objet": "accueil", "version": "v1.1", "titre": "Nouvelle version et première mise en ligne", "points": ["Le détail des changements de cette version n'est pas consigné.", "Le même jour, première mise en ligne de l'accueil, de la priorisation et de la revue."]},
+    {"date": "17.09.2026", "objet": "priorisation", "version": null, "titre": "Première mise en ligne", "points": ["Outil mis en ligne pour la première fois, avec l'accueil et la revue."]},
+    {"date": "16.09.2026", "objet": "accueil", "version": "v1.0", "titre": "Page d'accueil Pilotage PTE", "points": ["Première version de la page d'accueil « Pilotage PTE »."]},
+    {"date": "16.09.2026", "objet": "revue", "version": "v0.7", "titre": "Plan_PTE, seul fichier d'entrée", "points": ["Le classeur Plan_PTE devient le seul fichier d'entrée ; les anciens CSV ne sont plus acceptés.", "Restent acceptés en complément : le registre des décisions et l'export de la priorisation.", "Objectifs 2030 lus dans la feuille Objectifs PTE quand elle existe ; jamais de valeur par défaut.", "Mise en ligne le 17.09."]},
+    {"date": "16.09.2026", "objet": "revue", "version": "v0.6", "titre": "Chaîne financière et classeur Plan_PTE", "points": ["Le classeur Plan_PTE devient le fichier d'import de référence ; les anciens CSV restent acceptés en transition.", "Chaîne financière Estim PTE → DG → crédit GE-Invest, avec une carte « Cohérence financière ».", "Rappel du nom de projet recommandé quand le n° de sous-site manque dans le nom."]},
+    {"date": "15.09.2026", "objet": "revue", "version": "v0.5", "titre": "Reporting par sous-site et Gantt des jalons", "points": ["Tableaux organisés par sous-site, dépliables vers les projets ; badge si un sous-site porte plusieurs projets.", "Gantt des jalons prévisionnels, par sous-site et par projet."]},
+    {"date": "15.09.2026", "objet": "revue", "version": "v0.4", "titre": "Extraction GE-Invest unique et vue Reporting", "points": ["Une seule extraction GE-Invest « tous champs » remplace 5 fichiers CSV.", "Nouvelle vue Reporting à trois niveaux : programme, portefeuille, projet."]},
+    {"date": "13.09.2026", "objet": "revue", "version": "v0.3", "titre": "Lien avec la priorisation PTE", "points": ["Chaque projet affiche son rang dans la priorisation PTE, grâce à l'export CSV de la priorisation.", "Cartes « Priorisation PTE » sur la fiche projet et « Alignement » sur le portefeuille.", "Contrastes renforcés ; la couleur n'est jamais le seul repère."]},
+    {"date": "12.09.2026", "objet": "revue", "version": "v0.2", "titre": "Refonte visuelle", "points": ["Tableau de bord en ouverture ; import, complétude et paramètres regroupés dans Données.", "Filtre RPF/RP commun à toutes les vues ; graphiques et info-bulles au lieu de tableaux."]},
+    {"date": "12.09.2026", "objet": "revue", "version": "v0.1.1", "titre": "Corrections", "points": ["Impact de risque « Assez faible » : l'indicateur ne passe plus à tort en gris.", "Trajectoire 2030 : l'écart à combler est exprimé en valeur absolue."]},
+    {"date": "22.08.2026", "objet": "priorisation", "version": null, "titre": "Outil de priorisation en page unique", "points": ["Six onglets : tableau de bord, classement, arbitrage, coût d'abattement, carte, méthode.", "Références 2005 et cibles lues dans l'onglet Objectifs PTE : plus aucune cible écrite dans l'outil.", "Séries de consommation douteuses détectées et écartées ; paramètres réglables (durée de vie, productible PV)."]},
+    {"date": "18.08.2026", "objet": "simulation", "version": null, "titre": "Première mise en ligne", "points": ["Publication sur le site des outils OCBA (GitHub Pages)."]},
+    {"date": "17.08.2026", "objet": "simulation", "version": null, "titre": "Création de l'outil de simulation des gains", "points": ["Remplace la Matrice Excel : une fiche par bâtiment, une carte par mesure, variantes I, II et III comparées.", "Lecture de Plan_PTE par nom de colonne ; export Excel et impression."]},
+    {"date": "11.08.2026", "objet": "priorisation", "version": null, "titre": "Méthode bâtiment par bâtiment (CECB+)", "points": ["Classements par objectif : CO₂, thermique, renouvelable, électricité, eau et photovoltaïque.", "Coût de chaque bâtiment lu dans Estim PTE ; l'ancienne méthode par familles est abandonnée."]}
+  ];
+  var OBJETS_VER = { accueil: 'Accueil', priorisation: 'Priorisation', simulation: 'Simulation',
+                     revue: 'Revue de projets', commun: 'Commun aux outils' };
+  /* Entrées d'un outil (et celles qui le concernent toutes : « commun ») ; tout si tous = true. */
+  function versionsDe(outil, tous) {
+    return VERSIONS.filter(function (v) {
+      return tous || !outil || outil === 'accueil' || v.objet === outil || v.objet === 'commun';
+    });
+  }
+  function echapperV(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function afficherVersions(outil) {
+    if (typeof document === 'undefined' || !document.body || !document.createElement) return null;
+    var ancien = document.getElementById('pte-versions');
+    if (ancien && ancien.parentNode) ancien.parentNode.removeChild(ancien);
+    var nuit = !!(document.body.classList && document.body.classList.contains && document.body.classList.contains('night'));
+    var c = nuit ? { fond: '#1b2631', encre: '#e6edf3', doux: '#9fb0c0', trait: '#34495e', acc: '#30E5D9', puce: '#26394a' }
+                 : { fond: '#ffffff', encre: '#1f2d3d', doux: '#5b6b7b', trait: '#dfe6ec', acc: '#005F73', puce: '#e9f1f4' };
+    var tous = !outil || outil === 'accueil' || !OBJETS_VER[outil];
+    var voile = document.createElement('div');
+    voile.id = 'pte-versions';
+    voile.style.cssText = 'position:fixed;left:0;top:0;right:0;bottom:0;z-index:10000;background:rgba(15,23,32,.55);' +
+      'display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box';
+    var boite = document.createElement('div');
+    boite.setAttribute('role', 'dialog'); boite.setAttribute('aria-modal', 'true');
+    boite.setAttribute('aria-labelledby', 'pte-versions-titre');
+    boite.style.cssText = 'background:' + c.fond + ';color:' + c.encre + ';width:100%;max-width:760px;max-height:86vh;display:flex;' +
+      'flex-direction:column;border-radius:10px;box-shadow:0 14px 44px rgba(0,0,0,.35);font:14px/1.45 Arial,Helvetica,sans-serif;text-align:left';
+    var bouton = function (lib, actif) {
+      return '<button type="button" data-v="' + lib + '" style="font:inherit;font-size:12.5px;padding:3px 10px;border-radius:14px;cursor:pointer;' +
+        'border:1px solid ' + c.acc + ';background:' + (actif ? c.acc : 'transparent') + ';color:' + (actif ? c.fond : c.acc) + '">' +
+        (lib === 'outil' ? 'Cet outil' : 'Tous les outils') + '</button>';
+    };
+    boite.innerHTML =
+      '<div style="display:flex;align-items:center;gap:10px;padding:14px 18px 10px;border-bottom:1px solid ' + c.trait + '">' +
+        '<h2 id="pte-versions-titre" style="margin:0;font-size:17px;flex:1;color:' + c.encre + '">Historique des versions' +
+          (tous ? '' : ' — ' + echapperV(OBJETS_VER[outil])) + '</h2>' +
+        '<button type="button" data-fermer="1" aria-label="Fermer" title="Fermer (Échap)" style="font:inherit;font-size:20px;line-height:1;' +
+          'background:transparent;border:0;color:' + c.doux + ';cursor:pointer;padding:2px 6px">×</button></div>' +
+      '<div data-filtres="1" style="display:' + (outil && outil !== 'accueil' && OBJETS_VER[outil] ? 'flex' : 'none') + ';gap:8px;padding:10px 18px 0"></div>' +
+      '<div data-liste="1" style="overflow:auto;padding:4px 18px 8px"></div>' +
+      '<div style="padding:10px 18px 14px;border-top:1px solid ' + c.trait + ';font-size:12px;color:' + c.doux + '">' +
+        'Les plus récentes en haut. Détail complet : <code>Versioning_PTE.md</code> (dossier 00_Contexte du projet). ' +
+        'Les évolutions du classeur <code>Plan_PTE.xlsx</code> sont dans sa feuille « Versions ».</div>';
+    voile.appendChild(boite);
+    var liste = boite.querySelector('[data-liste]'), filtres = boite.querySelector('[data-filtres]');
+    function rendre() {
+      filtres.innerHTML = bouton('outil', !tous) + bouton('tous', tous);
+      var L = versionsDe(outil, tous);
+      liste.innerHTML = L.length ? L.map(function (v) {
+        return '<div style="padding:10px 0;border-bottom:1px solid ' + c.trait + '">' +
+          '<div style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap">' +
+            '<span style="color:' + c.doux + ';font-size:12.5px;min-width:74px">' + echapperV(v.date) + '</span>' +
+            '<span style="background:' + c.puce + ';border-radius:10px;padding:1px 8px;font-size:12px;white-space:nowrap">' +
+              echapperV(OBJETS_VER[v.objet] || v.objet) + (v.version ? ' · <b>' + echapperV(v.version) + '</b>' : '') + '</span>' +
+            '<b>' + echapperV(v.titre) + '</b></div>' +
+          '<ul style="margin:5px 0 0;padding:0 0 0 20px">' + (v.points || []).map(function (p) {
+            return '<li style="margin:2px 0">' + echapperV(p) + '</li>';
+          }).join('') + '</ul></div>';
+      }).join('') : '<p style="color:' + c.doux + '">Aucune entrée.</p>';
+    }
+    function fermer() {
+      document.removeEventListener('keydown', clavier, true);
+      if (voile.parentNode) voile.parentNode.removeChild(voile);
+    }
+    function clavier(e) { if (e.key === 'Escape' || e.key === 'Esc') { e.stopPropagation(); fermer(); } }
+    voile.addEventListener('click', function (e) {
+      var t = e.target;
+      if (t === voile || (t.getAttribute && t.getAttribute('data-fermer'))) { fermer(); return; }
+      var v = t.getAttribute && t.getAttribute('data-v');
+      if (v) { tous = v === 'tous'; rendre(); }
+    });
+    document.addEventListener('keydown', clavier, true);
+    rendre();
+    document.body.appendChild(voile);
+    try { boite.querySelector('[data-fermer]').focus(); } catch (e) {}
+    return voile;
+  }
+  /* Délégation : un seul écouteur pour toute la page. */
+  if (typeof document !== 'undefined' && document.addEventListener) {
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      while (t && t !== document) {
+        if (t.getAttribute && t.getAttribute('data-pte-versions') != null) {
+          e.preventDefault();
+          afficherVersions(t.getAttribute('data-pte-versions'));
+          return;
+        }
+        t = t.parentNode;
+      }
+    });
+  }
+
+  return { LS_META: LS_META, LS_CLASSEMENT: LS_CLASSEMENT, LS_QUESTIONS: LS_QUESTIONS, LS_THEME: LS_THEME, LS_CONTROLE: LS_CONTROLE,
+           controleImport: controleImport,
            themeCourant: themeCourant, appliquerTheme: appliquerTheme, basculerTheme: basculerTheme,
            tour: tour, tourVue: tourVue, relierAccueil: relierAccueil,
            exporterSaisies: exporterSaisies, importerSaisies: importerSaisies,
@@ -1949,7 +2335,9 @@ var PTE_COMMUN = (function () {
            lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,
            publierClassement: publierClassement, lireClassement: lireClassement,
            lireQuestions: lireQuestions, ecrireQuestions: ecrireQuestions,
-           dateCourte: dateCourte, texteBadge: texteBadge };
+           dateCourte: dateCourte, texteBadge: texteBadge,
+           ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, situationProgramme: situationProgramme, mchf: mchf,
+           VERSIONS: VERSIONS, OBJETS_VER: OBJETS_VER, versionsDe: versionsDe, afficherVersions: afficherVersions };
 })();
 
 </script>
@@ -2135,6 +2523,12 @@ var PTE_COMMUN = (function () {
   function kchf(v) {
     var n = parseNum(v);
     return n === null ? null : Math.round(n / 100) / 10; // CHF → kCHF (1 déc.)
+  }
+  // kCHF → texte en MCHF (motifs des sémaphores ; revue du Cabinet, 30.09.2026 : une seule unité)
+  function mchfTxt(k) {
+    var n = parseNum(k); if (n === null) return '—';
+    var v = n / 1000;
+    return v.toLocaleString('fr-CH', { minimumFractionDigits: Math.abs(v) >= 1 ? 1 : 2, maximumFractionDigits: Math.abs(v) >= 1 ? 1 : 2 });
   }
 
   function cleanRPF(portefeuille) {
@@ -2414,8 +2808,10 @@ var PTE_COMMUN = (function () {
   //   - gain_kwh_el  : « Gain Elec projeté [kWh/an] », directe (colonne
   //     présente mais vide sur tous les sous-sites du classeur inspecté —
   //     restera null tant qu'elle n'est pas renseignée).
-  //   - gain_m3_eau  : « Gain Eau projeté [m3/an] », directe (idem, vide
-  //     actuellement).
+  //   - gain_m3_eau  : « Gain Eau estimé [m3/an] » (audit eau, fichier
+  //     Tableau_suivi_conso_O, gain du site ventilé au prorata de la SRE —
+  //     29.09.2026) ; à défaut « Gain Eau simulé [m3/an] », directe. La
+  //     source retenue est dite dans gain_m3_eau_source (estimé / simulé).
   //   - pv_kwc       : « Futur projet PV - puissance estimée (kWc) »,
   //     directe (texte non numérique du type « faisabilité à discuter » →
   //     null via parseNum, jamais 0 par défaut).
@@ -2434,19 +2830,20 @@ var PTE_COMMUN = (function () {
       rpf: _findCol(header, ['responsable_portefeuille', 'agent']),
       sre: _findCol(header, ['sre']),
       estim: _findCol(header, ['estim_pte', 'estim_pte_chf']),
-      dg: _findCol(header, ['dg', 'dg_chf', 'devis_general', 'devis_general_chf', 'devis_general_dg', 'dg_25']),
+      dg: _findCol(header, ['dg_3_31_chf', 'dg_3_31', 'dg', 'dg_chf', 'devis_general', 'devis_general_chf', 'devis_general_dg', 'dg_25']),
       dateDg: _findCol(header, ['date_dg']),
       statutConsolidation: _findCol(header, ['statut_consolidation']),
       gei: _findCol(header, ['previsionnel_pte_gei', 'ge_invest', 'geinvest', 'invest_ge']),
-      cecb: _findCol(header, ['invest_estim_cecb', 'invest_estim_cecb_chf']),
+      cecb: _findCol(header, ['estim_cecb', 'invest_estim_cecb', 'invest_estim_cecb_chf']),   // « Estim CECB+ » depuis le 23.09.2026
       immoba: _findCol(header, ['invest_immoba']),
       // gains PTE par sous-site (db.pte) — cf. commentaire ci-dessus
       idcGainRetenu: _findCol(header, ['idc_gain_retenu']),
       co2ProjeteKgM2An: _findCol(header, ['co2_projete_kg_m2_an']),
-      gainElec: _findCol(header, ['gain_elec_projete_kwh_an']),
-      gainEau: _findCol(header, ['gain_eau_projete_m3_an']),
+      gainElec: _findCol(header, ['gain_elec_simule_kwh_an', 'gain_elec_projete_kwh_an']),   // renommée « … simulé » le 23.09.2026
+      gainEau: _findCol(header, ['gain_eau_simule_m3_an', 'gain_eau_projete_m3_an']),   // renommée « … simulé » le 23.09.2026
+      gainEauEst: _findCol(header, ['gain_eau_estime_m3_an']),   // audit eau, colonne ajoutée le 29.09.2026
       pvKwc: _findCol(header, ['futur_projet_pv_puissance_estimee_kwc']),
-      vegetalisation: _findCol(header, ['indicateur_biodiversite_2_x000d_surface_vegetalisee_ajoutee_m2']),
+      vegetalisation: _findCol(header, ['indicateur_biodiversite_2_surface_vegetalisee_ajoutee_m2', 'indicateur_biodiversite_2_x000d_surface_vegetalisee_ajoutee_m2']),   // en-tête sur une ligne depuis le 23.09.2026
       etatCecb: _findCol(header, ['etat_cecb'])
     };
     function get(c, r) { return c ? r[c.index] : undefined; }
@@ -2481,6 +2878,9 @@ var PTE_COMMUN = (function () {
       var idcGain = parseNum(get(cols.idcGainRetenu, r));
       var gainThKwh = (idcGain !== null && sreVal !== null) ? Math.round(idcGain * sreVal) : null;
       var co2ProjKgM2An = parseNum(get(cols.co2ProjeteKgM2An, r));
+      // eau : le gain estimé par l'audit prime ; à défaut le gain simulé (un zéro estimé n'est pas un gain)
+      var gainEauEst = parseNum(get(cols.gainEauEst, r)), gainEauSim = parseNum(get(cols.gainEau, r));
+      var eauEst = gainEauEst !== null && gainEauEst > 0;
       var gainCo2T = (co2ProjKgM2An !== null && sreVal !== null) ? Math.round((co2ProjKgM2An * sreVal / 1000) * 100) / 100 : null;
       pte.push({
         numero_sous_site: numero,
@@ -2490,7 +2890,8 @@ var PTE_COMMUN = (function () {
         gain_kwh_th: gainThKwh,
         gain_t_co2: gainCo2T,
         gain_kwh_el: parseNum(get(cols.gainElec, r)),
-        gain_m3_eau: parseNum(get(cols.gainEau, r)),
+        gain_m3_eau: eauEst ? gainEauEst : gainEauSim,
+        gain_m3_eau_source: eauEst ? 'estimé' : (gainEauSim !== null ? 'simulé' : null),
         pv_kwc: parseNum(get(cols.pvKwc, r)),
         vegetalisation_m2: parseNum(get(cols.vegetalisation, r)),
         estim_pte_kchf: estimKchf
@@ -2656,7 +3057,7 @@ var PTE_COMMUN = (function () {
       if (s.rpf) pp.rpf_ou_agent = s.rpf;                             // D8
       pp.mesures = {
         annee: R.annee, sre: s.sre, idc: s.idc, idcAnnee: s.idcAnnee,
-        chaleur: s.chaleur, elec: s.elec, eau: s.eau, co2: s.co2,
+        chaleur: s.chaleur, elec: s.elec, eau: s.eau, co2: s.co2, gainEauEstime: s.gainEauEstime,
         agent: { sitg: s.agent.sitg, cible: s.agent.cible, facteur: s.agent.facteur, aRenseigner: s.agent.aRenseigner },
         co2Projete: s.co2Projete, gainCo2T: s.gainCo2T,
         rpf: s.rpf, rp: s.rp, rpSource: s.rpSource, site: s.site, nomSite: s.nomSite
@@ -2760,7 +3161,9 @@ var PTE_COMMUN = (function () {
         if (objRows) sheets['Objectifs PTE'] = objRows;
         if (dataName) sheets['Data'] = XR.sheetRows(bufOuU8, dataName) || [];
         if (geiRows) sheets[geiNom] = geiRows;
-        contratRes = appliquerContrat(db, CT.lire(sheets));
+        var Rct = CT.lire(sheets);
+        contratRes = appliquerContrat(db, Rct);
+        if (contratRes && CT.empreinte) contratRes.empreinte = CT.empreinte(Rct);   // contrôle à l'import (25.09.2026)
       } catch (e) {
         contratErreur = String((e && e.message) || e);
         db.contrat = { erreur: contratErreur, manquants: [{ num: null, champ: 'Contrat', motif: contratErreur }] };
@@ -2770,7 +3173,7 @@ var PTE_COMMUN = (function () {
     }
 
     var detail = { sousSites: res.n, gei: geiRes, dgPresent: res.dgPresent, objectifs: objRes,
-      contrat: contratRes ? { annee: contratRes.annee, anneeSource: contratRes.anneeSource, manquants: contratRes.manquants.length, nbGainCo2: contratRes.nbGainCo2 } : { erreur: contratErreur || 'indisponible' } };
+      contrat: contratRes ? { annee: contratRes.annee, anneeSource: contratRes.anneeSource, manquants: contratRes.manquants.length, nbGainCo2: contratRes.nbGainCo2, empreinte: contratRes.empreinte || null } : { erreur: contratErreur || 'indisponible' } };
     db.meta.files[filename || 'Plan_PTE.xlsx'] = { type: 'plan_pte', count: res.n, ok: true, detail: detail };
     return { type: 'plan_pte', count: res.n, detail: detail };
   }
@@ -2950,12 +3353,12 @@ var PTE_COMMUN = (function () {
     var color, reason, ratio;
     if (objectif === 0) {
       if (prevision === 0) { color = 'vert'; ratio = null; reason = 'Aucun budget prévu ni engagé pour ' + annee + '.'; }
-      else { color = 'rouge'; ratio = null; reason = 'Prévision de ' + prevision + ' kCHF sans objectif budgétaire annuel pour ' + annee + '.'; }
+      else { color = 'rouge'; ratio = null; reason = 'Prévision de ' + mchfTxt(prevision) + ' MCHF sans objectif budgétaire annuel pour ' + annee + '.'; }
     } else {
       ratio = prevision / objectif;
       var ecartPct = (ratio - 1) * 100;
       if (ecartPct <= params.depensesEcartVertMaxPct && ratio * 100 >= params.depensesSousConsoVertMinPct) {
-        color = 'vert'; reason = 'Prévision ' + annee + ' à ' + (ratio * 100).toFixed(0) + '% de l\'objectif (' + prevision + ' / ' + objectif + ' kCHF).';
+        color = 'vert'; reason = 'Prévision ' + annee + ' à ' + (ratio * 100).toFixed(0) + '% de l\'objectif (' + mchfTxt(prevision) + ' / ' + mchfTxt(objectif) + ' MCHF).';
       } else if (ecartPct > params.depensesEcartOrangeMaxPct || ratio * 100 < params.depensesSousConsoOrangeMinPct) {
         color = 'rouge';
         reason = ecartPct > params.depensesEcartOrangeMaxPct
@@ -2974,7 +3377,7 @@ var PTE_COMMUN = (function () {
       var depTotal = 0;
       db.finances.filter(function (f) { return f.numero_projet === projet.numero_projet && (f.nature || '').trim().toLowerCase() === 'depense'; })
         .forEach(function (f) { var m = parseNum(f.montant_kchf); if (m) depTotal += m; });
-      if (depTotal > credit) { color = 'rouge'; reason = 'Dépenses cumulées (' + depTotal + ' kCHF) supérieures au crédit voté (' + credit + ' kCHF).'; }
+      if (depTotal > credit) { color = 'rouge'; reason = 'Dépenses cumulées (' + mchfTxt(depTotal) + ' MCHF) supérieures au crédit voté (' + mchfTxt(credit) + ' MCHF).'; }
     }
     return { color: color, reason: reason, objectif: objectif, prevision: prevision, ratio: ratio };
   }
@@ -3401,7 +3804,7 @@ var PTE_COMMUN = (function () {
   function dispLabel(sv) { return String(sv === null || sv === undefined ? '' : sv).replace(/CO2/g, 'CO₂').replace(/\bm2\b/g, 'm²').replace(/\bm3\b/g, 'm³').replace(/(m[²³])\.an\b/g, '$1·an'); }
   function fmtDec(n) { return (n === null || n === undefined) ? '—' : String(n).replace('.', ','); }
   // Libellés en capitales (en-têtes, tuiles, titres de carte) : les unités gardent leur casse (kCHF, kWh, m²).
-  var UNIT_RE = /(kCHF|M CHF|CHF\/t|kg CO₂\/m²·an|t CO₂\/an|kWh th\/an|kWh\/m²·an|kWh\/an|kWh|kWc|MJ\/m²·an|m³\/an|m³|m²|l\/m²·an|t\/an)/g;
+  var UNIT_RE = /(kCHF|MCHF|M CHF|CHF\/t|kg CO₂\/m²·an|t CO₂\/an|kWh th\/an|kWh\/m²·an|kWh\/an|kWh|kWc|MJ\/m²·an|m³\/an|m³|m²|l\/m²·an|t\/an)/g;
   function markUnits(root) {
     $all('th, .kpi-label, .card-title, .donut-label, .hero-cap, .stat-l, .prio-pastille-lbl', root).forEach(function (n) {
       Array.prototype.slice.call(n.childNodes).forEach(function (t) {
@@ -3792,7 +4195,7 @@ var PTE_COMMUN = (function () {
           ]),
           el('div', { class: 'propose-meta' }, [[
             r.rpf || 'hors périmètre',
-            r.estim_kchf === null ? null : ('Estim ' + fmt(r.estim_kchf) + ' kCHF'),
+            r.estim_kchf === null ? null : ('Estim ' + fmtK(r.estim_kchf) + ' MCHF'),
             r.objectifs_servis === null ? null : (r.objectifs_servis + ' obj. servis')
           ].filter(function (part) { return part !== null; }).join(' · ')])
         ]);
@@ -3845,6 +4248,7 @@ var PTE_COMMUN = (function () {
     wrap.appendChild(bar);
     var legend = el('div', { class: 'distbar-legend' });
     ['vert', 'orange', 'rouge', 'gris'].forEach(function (color) {
+      if (color === 'gris' && counts.sansGris) return;   /* A8 : les gris sont dits à part, sous la barre */
       legend.appendChild(el('span', {}, [el('span', { class: 'sem-dot dot-' + color, style: 'width:8px;height:8px;' }), Engine.COLOR_LABEL[color] + ' (' + counts[color] + ')']));
     });
     wrap.appendChild(legend);
@@ -3894,7 +4298,7 @@ var PTE_COMMUN = (function () {
   function smallValueTable(container, years, rows, unitLabel) {
     var t = el('table', { class: 'small' }, [el('thead', {}, [el('tr', {}, [el('th', { class: 'no-sort' }, ['Nature / Année'])].concat(years.map(function (y) { return el('th', { class: 'no-sort' }, [String(y)]); })))])]);
     var tb = el('tbody');
-    rows.forEach(function (r) { tb.appendChild(el('tr', {}, [el('td', {}, [r.name])].concat(r.values.map(function (v) { return el('td', {}, [fmt(v)]); })))); });
+    rows.forEach(function (r) { tb.appendChild(el('tr', {}, [el('td', {}, [r.name])].concat(r.values.map(function (v) { return el('td', {}, [fmtK(v)]); })))); });
     t.appendChild(tb);
     container.appendChild(t);
   }
@@ -3912,7 +4316,7 @@ var PTE_COMMUN = (function () {
       var yv = maxV * g / 4;
       var yy = H - padB - (H - padB - padT) * g / 4;
       s.appendChild(svg('line', { class: 'gridline', x1: padL, y1: yy, x2: W - padR, y2: yy }));
-      var t = svg('text', { x: padL - 6, y: yy + 4, 'font-size': 10, 'text-anchor': 'end' }); t.textContent = fmt(yv); s.appendChild(t);
+      var t = svg('text', { x: padL - 6, y: yy + 4, 'font-size': 10, 'text-anchor': 'end' }); t.textContent = fmtK(yv); s.appendChild(t);
     }
     var groupW = (W - padL - padR) / years.length;
     var barW = Math.min(22, (groupW - 10) / series.length);
@@ -3925,9 +4329,9 @@ var PTE_COMMUN = (function () {
         var x = gx + j * (barW + 3);
         var yb = H - padB - h;
         var rect = svg('rect', { class: 'mark', x: x, y: yb, width: barW, height: Math.max(0, h), rx: 2, fill: ser.color });
-        tip(rect, ser.name + ' ' + y + ' : ' + fmt(v) + ' kCHF');
+        tip(rect, ser.name + ' ' + y + ' : ' + fmtK(v) + ' MCHF');
         s.appendChild(rect);
-        if (v && showLabels) { var lv = svg('text', { x: x + barW / 2, y: yb - 3, 'font-size': 9, 'text-anchor': 'middle' }); lv.textContent = fmt(v); s.appendChild(lv); }
+        if (v && showLabels) { var lv = svg('text', { x: x + barW / 2, y: yb - 3, 'font-size': 9, 'text-anchor': 'middle' }); lv.textContent = fmtK(v); s.appendChild(lv); }
       });
       var lab = svg('text', { x: gx + (groupW - 12) / 2, y: H - padB + 16, 'font-size': 11, 'text-anchor': 'middle' }); lab.textContent = y; s.appendChild(lab);
     });
@@ -3949,7 +4353,7 @@ var PTE_COMMUN = (function () {
     for (var g = 0; g <= 4; g++) {
       var yy = H - padB - (H - padB - padT) * g / 4;
       s.appendChild(svg('line', { class: 'gridline', x1: padL, y1: yy, x2: W - padR, y2: yy }));
-      var t = svg('text', { x: padL - 6, y: yy + 4, 'font-size': 10, 'text-anchor': 'end' }); t.textContent = fmt(maxV * g / 4); s.appendChild(t);
+      var t = svg('text', { x: padL - 6, y: yy + 4, 'font-size': 10, 'text-anchor': 'end' }); t.textContent = fmtK(maxV * g / 4); s.appendChild(t);
     }
     var groupW = (W - padL - padR) / years.length;
     var barW = Math.min(40, groupW - 14);
@@ -3964,17 +4368,17 @@ var PTE_COMMUN = (function () {
         var h = (H - padB - padT) * (v / maxV);
         yCursor -= h;
         var rect = svg('rect', { class: 'mark', x: x, y: yCursor, width: barW, height: Math.max(0, h), fill: st.color || palette[j % palette.length] });
-        tip(rect, (st.name || '') + ' ' + y + ' : ' + fmt(v) + ' kCHF');
+        tip(rect, (st.name || '') + ' ' + y + ' : ' + fmtK(v) + ' MCHF');
         s.appendChild(rect);
       });
-      if (totals[i] && showTotalLabel) { var lv = svg('text', { x: x + barW / 2, y: yCursor - 4, 'font-size': 9, 'text-anchor': 'middle' }); lv.textContent = fmt(totals[i]); s.appendChild(lv); }
+      if (totals[i] && showTotalLabel) { var lv = svg('text', { x: x + barW / 2, y: yCursor - 4, 'font-size': 9, 'text-anchor': 'middle' }); lv.textContent = fmtK(totals[i]); s.appendChild(lv); }
       var lab = svg('text', { x: x + barW / 2, y: H - padB + 16, 'font-size': 11, 'text-anchor': 'middle' }); lab.textContent = y; s.appendChild(lab);
     });
     container.appendChild(s);
     var legend = el('div', { class: 'small', style: 'margin-top:.3em;' });
     stacks.forEach(function (st, j) { legend.appendChild(el('span', { class: 'tag', style: 'border-left:8px solid ' + (st.color || palette[j % palette.length]) + ';' }, [st.name])); });
     container.appendChild(legend);
-    if (!showTotalLabel) smallValueTable(container, years, [{ name: 'Total (kCHF)', values: totals }], unitLabel);
+    if (!showTotalLabel) smallValueTable(container, years, [{ name: 'Total (MCHF)', values: totals }], unitLabel);
   }
 
   // Regroupement des séries pour la « Trajectoire financière » : par
@@ -4390,11 +4794,11 @@ var PTE_COMMUN = (function () {
     list.forEach(function (c) { if (c.sems.delais.glissJours !== null && c.sems.delais.glissJours !== undefined) { driftSum += c.sems.delais.glissJours; driftN++; } });
     var tiles = el('div', { class: 'kpi-tiles' });
     tiles.appendChild(kpiTile('Projets actifs', String(list.length), null, 'Nombre de projets dans ce périmètre pour ' + (STATE.mois || '—') + '.'));
-    tiles.appendChild(kpiTile('Budget objectif, kCHF', fmt(fin.objectif), String(annee), 'Somme des objectifs budgétaires ' + annee + ' du périmètre.'));
-    tiles.appendChild(kpiTile('Prévision, kCHF', fmt(fin.prevision), String(annee), 'Somme des prévisions budgétaires ' + annee + '.'));
-    tiles.appendChild(kpiTile('Dépensé, kCHF', fmt(fin.depense), String(annee), 'Somme des dépenses enregistrées ' + annee + '.'));
+    tiles.appendChild(kpiTile('Budget objectif, MCHF', fmtK(fin.objectif), String(annee), 'Somme des objectifs budgétaires ' + annee + ' du périmètre.'));
+    tiles.appendChild(kpiTile('Prévision, MCHF', fmtK(fin.prevision), String(annee), 'Somme des prévisions budgétaires ' + annee + '.'));
+    tiles.appendChild(kpiTile('Dépensé, MCHF', fmtK(fin.depense), String(annee), 'Somme des dépenses enregistrées ' + annee + '.'));
     tiles.appendChild(kpiTile('Dérive délais, j', driftN ? String(Math.round(driftSum / driftN)) : '—', null, 'Écart moyen entre fin prévue et fin ré-estimée, sur les projets disposant des deux dates.'));
-    tiles.appendChild(kpiTile('Estim. PTE, kCHF', fmt(pte.estim_pte_kchf), pte.n + ' sous-site(s)', 'Estimation financière PTE cumulée des sous-sites reliés à ce périmètre.', 'pte'));
+    tiles.appendChild(kpiTile('Estim. PTE, MCHF', fmtK(pte.estim_pte_kchf), pte.n + ' sous-site(s)', 'Estimation financière PTE cumulée des sous-sites reliés à ce périmètre.', 'pte'));
     return tiles;
   }
 
@@ -4406,8 +4810,8 @@ var PTE_COMMUN = (function () {
   function buildDropzone(big) {
     var box = el('div', { class: 'drop' + (big ? '' : ' drop-sm'), id: big ? 'drop' : 'drop-sm' });
     box.innerHTML = '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6 12l6 6 6-6M4 20h16"/></svg>';
-    box.appendChild(el('h2', {}, ['Glissez ici Plan_PTE.xlsx']));
-    box.appendChild(el('p', {}, ['ou cliquez pour choisir le classeur — tout se calcule dans votre navigateur, rien n’est envoyé nulle part.']));
+    box.appendChild(el('h2', {}, ['Déposer ici Plan_PTE.xlsx']));
+    box.appendChild(el('p', {}, ['ou un clic pour choisir le classeur — tout se calcule dans ce navigateur, rien n’est envoyé nulle part.']));
     box.appendChild(el('p', { class: 'opt' }, ['En option : decisions.csv (registre ré-importé) · priorisation.csv (rangs de l’outil de priorisation)']));
     var input = el('input', { type: 'file', multiple: '', accept: DROP_ACCEPT, 'aria-label': 'Charger le classeur' });
     input.addEventListener('change', function (e) { handleFiles(Array.prototype.slice.call(e.target.files || [])); e.target.value = ''; });
@@ -4496,6 +4900,8 @@ var PTE_COMMUN = (function () {
     wrap.appendChild(tip(item('Chaleur', chal.val === null || chal.val === undefined ? null : Math.round(chal.val), 'kWh/an', 0, chalExtra), chal.origine || 'Chaleur non calculable (ni facturation du site, ni SRE × IDC).'));
     wrap.appendChild(tip(item('Élec', m.elec && m.elec.val !== null ? Math.round(m.elec.val) : null, 'kWh/an'), (m.elec && m.elec.origine) || 'Électricité non renseignée pour cette année.'));
     wrap.appendChild(tip(item('Eau', m.eau && m.eau.val !== null ? Math.round(m.eau.val) : null, 'm³/an'), (m.eau && m.eau.origine) || 'Eau non renseignée pour cette année.'));
+    if (m.gainEauEstime !== null && m.gainEauEstime !== undefined)
+      wrap.appendChild(tip(item('Gain eau estimé', Math.round(m.gainEauEstime), 'm³/an'), 'Audit eau (fichier Tableau_suivi_conso_O) : gain estimé du site, ventilé au sous-site au prorata de la SRE — colonne Plan_PTE « Gain Eau estimé [m3/an] ».'));
     wrap.appendChild(tip(item('CO₂', m.co2 && m.co2.val !== null ? Math.round(m.co2.val / 100) / 10 : null, 't/an', 1), (m.co2 && m.co2.origine) ? (m.co2.origine + ' (scope 1+2, kg → t)') : 'CO₂ non renseigné pour cette année.'));
     wrap.appendChild(tip(item('Gain CO₂', m.gainCo2T === null || m.gainCo2T === undefined ? null : m.gainCo2T, 't/an', 1), 'Gain réel (contrat D5) = CO₂ mesuré − CO₂ projeté × SRE ; vide si l’un des deux manque, jamais 0.'));
     if (m.agent && m.agent.aRenseigner) wrap.appendChild(tip(el('span', { class: 'mes-warn' }, ['facteur CO₂ « ' + m.agent.cible + ' » à renseigner dans Data']), 'Agent SITG « ' + (m.agent.sitg || '—') + ' » : aucun facteur dans Data, colonnes FournisseurChaleur / FacteurCO2.'));
@@ -4554,7 +4960,7 @@ var PTE_COMMUN = (function () {
   // ==================================================================
   var REGLES_QUESTIONS = {
     // ordre = gravité : ce qui bloque un sémaphore (gris/rouge) passe d'abord
-    engage_sup_credit:     { poids: 10, texte: function (d) { return 'Dans GE-Invest, fiche ' + d.np + ' : l’engagé (' + fmtK(d.engage) + ' kCHF) dépasse le crédit (' + fmtK(d.credit) + ' kCHF) : corrigez ou demandez un crédit complémentaire.'; } },
+    engage_sup_credit:     { poids: 10, texte: function (d) { return 'Dans GE-Invest, fiche ' + d.np + ' : l’engagé (' + fmtK(d.engage) + ' MCHF) dépasse le crédit (' + fmtK(d.credit) + ' MCHF) : corrigez ou demandez un crédit complémentaire.'; } },
     sans_suivi_mois:       { poids: 9,  texte: function (d) { return 'Dans GE-Invest, fiche ' + d.np + ' : saisissez le suivi mensuel de ' + d.moisLib + ' (sémaphores et avancement).'; } },
     sans_prevision:        { poids: 8,  texte: function (d) { return 'Dans GE-Invest, fiche ' + d.np + ' : renseignez le budget et la prévision de dépenses ' + d.annee + '.'; } },
     risque_sans_probabilite: { poids: 7, texte: function (d) { return 'Dans GE-Invest, fiche ' + d.np + ', risque « ' + d.lib + ' » : indiquez sa probabilité et son impact.'; } },
@@ -4868,9 +5274,12 @@ var PTE_COMMUN = (function () {
     return wrap;
   }
 
-  function fmtK(v) { return v === null || v === undefined ? '—' : fmt(Math.round(v)); }
+  /* Montants (revue du Cabinet, 30.09.2026 — A8 et cadre D) : la base garde des kCHF, l'écran
+     affiche des MCHF, une seule unité dans toute la revue : 1 décimale, 2 sous 1 MCHF. */
+  function fmtMv(v) { if (v === null || v === undefined || isNaN(v)) return '—'; if (v === 0) return '0'; return fmt(v, Math.abs(v) >= 1 ? 1 : 2); }
+  function fmtK(v) { return v === null || v === undefined || isNaN(v) ? '—' : fmtMv(v / 1000); }
 
-  // ---- Graphique « Situation financière » (SVG, un seul axe, kCHF) ---
+  // ---- Graphique « Situation financière » (SVG, un seul axe, MCHF à l'écran) ---
   // Barres : Réalisé (teal plein, foncé) puis Prévision (même teinte
   // claire + hachures = « pas encore réel ») — dégradé séquentiel d'une
   // seule teinte, légende + libellés directs. Ligne : trajectoire
@@ -4904,7 +5313,7 @@ var PTE_COMMUN = (function () {
     var svgNS = 'http://www.w3.org/2000/svg';
     function sv(tag, attrs) { var e = document.createElementNS(svgNS, tag); if (attrs) Object.keys(attrs).forEach(function (a) { e.setAttribute(a, attrs[a]); }); return e; }
     function y(v) { return padT + plotH * (1 - v / yMax); }
-    var svg = sv('svg', { class: 'chart rep-chart', viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Situation financière en kilofrancs par année : réalisé, prévisions, trajectoire cumulée et crédit total.' });
+    var svg = sv('svg', { class: 'chart rep-chart', viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Situation financière en millions de francs par année : réalisé, prévisions, trajectoire cumulée et crédit total.' });
 
     // hachures « prévision »
     var defs = sv('defs');
@@ -4920,7 +5329,7 @@ var PTE_COMMUN = (function () {
       var vv = yMax * t / ticks;
       svg.appendChild(sv('line', { x1: padL, x2: W - padR, y1: y(vv), y2: y(vv), stroke: JETON.grille, 'stroke-width': '1' }));
       var lbl = sv('text', { x: padL - 8, y: y(vv) + 4, 'text-anchor': 'end', 'font-size': '11', fill: JETON.inkMuted });
-      lbl.textContent = fmtCompact(Math.round(vv));
+      lbl.textContent = fmtK(vv);
       svg.appendChild(lbl);
     }
 
@@ -4936,7 +5345,7 @@ var PTE_COMMUN = (function () {
         var bx = pair ? (def[0] === 'realise' ? cx - barW - 1 : cx + 1) : cx - barW / 2;
         var bh = Math.max(2, plotH * v / yMax);
         var r = sv('rect', { x: bx, y: y(v), width: barW, height: bh, rx: '3', fill: def[1], stroke: def[0] === 'prevision' ? JETON.hachureTrait : 'none', 'stroke-width': def[0] === 'prevision' ? '1' : '0' });
-        tip(r, c.label + ' — ' + def[2] + ' : ' + fmt(Math.round(v)) + ' kCHF.');
+        tip(r, c.label + ' — ' + def[2] + ' : ' + fmtK(v) + ' MCHF.');
         svg.appendChild(r);
       });
       var xl = sv('text', { x: cx, y: H - padB + 16, 'text-anchor': 'middle', 'font-size': '11', fill: JETON.inkMuted });
@@ -4949,19 +5358,19 @@ var PTE_COMMUN = (function () {
     svg.appendChild(sv('polyline', { points: pts, fill: 'none', stroke: JETON.slate, 'stroke-width': '2' }));
     cumPts.forEach(function (v, idx) {
       var c = sv('circle', { cx: padL + slot * idx + slot / 2, cy: y(v), r: '3.5', fill: JETON.slate, stroke: JETON.carte, 'stroke-width': '1.5' });
-      tip(c, cats[idx].label + ' — cumul projeté : ' + fmt(Math.round(v)) + ' kCHF.');
+      tip(c, cats[idx].label + ' — cumul projeté : ' + fmtK(v) + ' MCHF.');
       svg.appendChild(c);
     });
     // libellé direct du dernier point
     var lastLbl = sv('text', { x: Math.min(padL + slot * (n - 1) + slot / 2 + 6, W - padR - 4), y: y(cumPts[n - 1]) - 8, 'text-anchor': 'end', 'font-size': '11', 'font-weight': 'bold', fill: JETON.slate });
-    lastLbl.textContent = fmtCompact(Math.round(cumPts[n - 1]));
+    lastLbl.textContent = fmtK(cumPts[n - 1]);
     svg.appendChild(lastLbl);
 
     // crédit total voté (référence, tiretée)
     if (agg.credit) {
       svg.appendChild(sv('line', { x1: padL, x2: W - padR, y1: y(agg.credit), y2: y(agg.credit), stroke: JETON.rouge, 'stroke-width': '1.6', 'stroke-dasharray': '6 4' }));
       var cl = sv('text', { x: W - padR - 4, y: y(agg.credit) - 6, 'text-anchor': 'end', 'font-size': '11', 'font-weight': 'bold', fill: JETON.rouge });
-      cl.textContent = 'Crédit total ' + fmtCompact(Math.round(agg.credit));
+      cl.textContent = 'Crédit total ' + fmtK(agg.credit) + ' MCHF';
       svg.appendChild(cl);
     }
 
@@ -4972,7 +5381,7 @@ var PTE_COMMUN = (function () {
       el('span', {}, [el('span', { class: 'sw sw-dash' }), 'Crédit total voté'])
     ]);
     var card = el('div', { class: 'card' }, [
-      cardTitle(opts.title || 'Situation financière (kCHF)', 'Flux annuels : dépensé (réalisé) et prévisions GE-Invest, exercice ' + N + '. Ligne : trajectoire cumulée. Tirets : crédit total voté.'),
+      cardTitle(opts.title || 'Situation financière (MCHF)', 'Flux annuels : dépensé (réalisé) et prévisions GE-Invest, exercice ' + N + '. Ligne : trajectoire cumulée. Tirets : crédit total voté.'),
       svg, legend
     ]);
     return card;
@@ -5121,8 +5530,8 @@ var PTE_COMMUN = (function () {
     if (abs > PARAMS.ecartFinRougePct) td.className += ' tint-rouge';
     else if (abs > PARAMS.ecartFinOrangePct) td.className += ' tint-orange';
     td.appendChild(document.createTextNode((pct >= 0 ? '+' : '−') + Math.round(abs) + ' %'));
-    tip(td, 'Estim PTE ' + fmtK(chain.estim) + ' kCHF → DG ' + (chain.dg === null || chain.dg === undefined ? '(non renseigné)' : fmtK(chain.dg) + ' kCHF') +
-      ' → Crédit GE-Invest ' + fmtK(credit) + ' kCHF. Référence de l\'écart : ' + chain.refLabel + '.');
+    tip(td, 'Estim PTE ' + fmtK(chain.estim) + ' MCHF → DG ' + (chain.dg === null || chain.dg === undefined ? '(non renseigné)' : fmtK(chain.dg) + ' MCHF') +
+      ' → Crédit GE-Invest ' + fmtK(credit) + ' MCHF. Référence de l\'écart : ' + chain.refLabel + '.');
     return td;
   }
 
@@ -5314,7 +5723,7 @@ var PTE_COMMUN = (function () {
   function repGantt(rowsG, opts) {
     opts = opts || {};
     var today = new Date();
-    rowsG = rowsG.filter(function (r) { return r.debut || r.fin || (r.jalons && r.jalons.length); });
+    rowsG = rowsG.filter(function (r) { return r.ouvert || r.enfant || r.debut || r.fin || (r.jalons && r.jalons.length); });
     if (!rowsG.length) return null;
     // bornes temporelles
     var tMin = null, tMax = null;
@@ -5334,7 +5743,7 @@ var PTE_COMMUN = (function () {
     tMin = new Date(tMin.getTime() - 61 * 86400000);
     tMax = new Date(tMax.getTime() + 61 * 86400000);
 
-    var W = 960, padL = 258, padR = 14, padT = 26, padB = 8, rowH = 26;
+    var W = 960, padL = 318, padR = 14, padT = 26, padB = 8, rowH = 26;
     var plotW = W - padL - padR;
     var H = padT + rowsG.length * rowH + padB;
     var svgNS = 'http://www.w3.org/2000/svg';
@@ -5366,12 +5775,25 @@ var PTE_COMMUN = (function () {
       var yTop = padT + i * rowH;
       var yc = yTop + rowH / 2;
       if (i % 2 === 1) svg.appendChild(sv('rect', { x: 0, y: yTop, width: W, height: rowH, fill: JETON.bande }));
-      // libellé
-      var lbl = sv('text', { x: padL - 10, y: yc + 4, 'text-anchor': 'end', 'font-size': '11', fill: JETON.ink });
-      var short = r.label.length > 40 ? r.label.slice(0, 39) + '…' : r.label;
-      lbl.textContent = short;
+      if (r.enfant) svg.appendChild(sv('rect', { x: 0, y: yTop, width: 3, height: rowH, fill: JETON.teal }));
+      // libellé, aligné à gauche comme dans les tableaux (30.09.2026) ; un projet est décalé sous son sous-site
+      var x0 = r.enfant ? 28 : 8;
+      var lbl = sv('text', { x: x0, y: yc + 4, 'text-anchor': 'start', 'font-size': '11', fill: r.enfant ? JETON.inkMuted : JETON.ink });
+      var lmax = r.enfant ? 46 : 50;
+      var txt = (r.depliable ? (r.ouvert ? '▾ ' : '▸ ') : '') + r.label;
+      lbl.textContent = txt.length > lmax ? txt.slice(0, lmax - 1) + '…' : txt;
       tip(lbl, r.tipLabel || r.label);
       svg.appendChild(lbl);
+      if (r.depliable && opts.onToggle) {
+        /* toute la ligne est cliquable (et atteignable au clavier) : elle déplie les projets du sous-site */
+        var hit = sv('rect', { x: 0, y: yTop, width: W, height: rowH, fill: 'transparent', class: 'gantt-hit', tabindex: '0', role: 'button',
+          'aria-expanded': r.ouvert ? 'true' : 'false', 'aria-label': (r.ouvert ? 'Replier ' : 'Déplier ') + r.label });
+        hit.style.cursor = 'pointer';
+        tip(hit, (r.tipLabel || r.label) + (r.ouvert ? ' — cliquer pour replier.' : ' — cliquer pour afficher le planning de chaque projet.'));
+        hit.addEventListener('click', function () { opts.onToggle(r.cle); });
+        hit.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); opts.onToggle(r.cle); } });
+        svg.appendChild(hit);   /* sous la barre et les marqueurs : leur info-bulle reste la leur */
+      }
       // barre de durée
       var dDeb = Engine.parseDate(r.debut), dFin = Engine.parseDate(r.fin);
       var jDates = (r.jalons || []).map(function (j) { return Engine.parseDate(j.realisee || j.prevue); }).filter(Boolean);
@@ -5411,13 +5833,28 @@ var PTE_COMMUN = (function () {
     ]);
     var wrap = rowsG.length > 14 ? el('div', { class: 'gantt-scroll' }, [svg]) : svg;
     return el('div', { class: 'card' }, [
-      cardTitle(opts.title || 'Planning (jalons)', opts.tipText || 'Gantt sur les dates prévisionnelles des jalons GE-Invest. Barre : durée du sous-site (début le plus tôt → fin la plus tardive de ses projets). Survolez les marqueurs pour le détail.'),
+      cardTitle(opts.title || 'Planning (jalons)', opts.tipText || 'Gantt sur les dates prévisionnelles des jalons GE-Invest. Barre : durée du sous-site (début le plus tôt → fin la plus tardive de ses projets). Un clic sur un sous-site affiche le planning de chacun de ses projets. Le survol des marqueurs donne le détail.'),
       wrap, legend
     ]);
   }
 
-  // Gantt agrégé par sous-site (niveaux Programme et Portefeuille)
+  // Gantt agrégé par sous-site (niveaux Programme et Portefeuille). Depuis le 30.09.2026, un
+  // sous-site se déplie comme dans le tableau des sous-sites : une ligne par projet rattaché,
+  // avec sa durée et ses jalons. opts.ouverts : { clé: true } ; opts.tousOuverts : tout déplié.
+  function repGanttProjetLigne(r) {
+    var jal = [];
+    DB.jalons.forEach(function (j) {
+      if (j.numero_projet !== r.p.numero_projet || !j.date_prevue) return;
+      jal.push({ prevue: j.date_prevue, realisee: j.date_realisee || '', libelle: j.libelle, projet: '' });
+    });
+    var sansDate = !jal.length && !((r.s && r.s.date_debut_reel) || r.p.date_debut_prevue) && !((r.s && r.s.date_fin_reestimee) || r.p.date_fin_prevue);
+    return { label: r.p.numero_projet + ' — ' + (sansDate ? '(sans date) ' : '') + (r.p.nom_projet || ''), tipLabel: r.p.numero_projet + ' — ' + (r.p.nom_projet || '') + (r.p.rp ? ' · RP ' + r.p.rp : ''),
+             debut: (r.s && r.s.date_debut_reel) || r.p.date_debut_prevue, fin: (r.s && r.s.date_fin_reestimee) || r.p.date_fin_prevue,
+             jalons: jal, enfant: true };
+  }
   function repGanttSousSites(rows, opts) {
+    opts = opts || {};
+    var ouverts = opts.ouverts || {};
     var groups = repSousSiteGroups(rows);
     var rowsG = groups.map(function (g) {
       var debut = null, fin = null, jal = [];
@@ -5430,9 +5867,30 @@ var PTE_COMMUN = (function () {
         });
       });
       var label = (g.num ? g.num + ' — ' : '') + g.nom;
-      return { label: label, tipLabel: label + ' (' + g.rows.length + ' projet(s))', debut: debut, fin: fin, jalons: jal, _deb: debut || '9999' };
+      var ouvert = !!(opts.tousOuverts || ouverts[g.key]);
+      return { label: label, tipLabel: label + ' (' + g.rows.length + ' projet(s))', debut: debut, fin: fin, jalons: ouvert ? [] : jal, _deb: debut || '9999',
+               cle: g.key, depliable: !!opts.onToggle, ouvert: ouvert,
+               enfants: ouvert ? g.rows.map(repGanttProjetLigne) : [] };
     }).sort(function (a, b) { return a._deb < b._deb ? -1 : 1; });
-    return repGantt(rowsG, opts);
+    var aplat = [];
+    rowsG.forEach(function (r) { aplat.push(r); (r.enfants || []).forEach(function (c) { aplat.push(c); }); });
+    return repGantt(aplat, opts);
+  }
+  // Hôte du planning : se redessine seul au dépliage, en gardant la position de défilement
+  function repGanttHote(rows, opts) {
+    var hote = el('div', { class: 'gantt-hote' });
+    STATE.rep.ganttOuverts = STATE.rep.ganttOuverts || {};
+    function dessiner() {
+      var sc = hote.querySelector('.gantt-scroll'), haut = sc ? sc.scrollTop : 0;
+      hote.innerHTML = '';
+      var g = repGanttSousSites(rows, Object.assign({}, opts, { ouverts: STATE.rep.ganttOuverts, onToggle: function (cle) {
+        STATE.rep.ganttOuverts[cle] = !STATE.rep.ganttOuverts[cle]; hideTipBubble(); dessiner();
+      } }));
+      if (g) hote.appendChild(g);
+      var sc2 = hote.querySelector('.gantt-scroll'); if (sc2) sc2.scrollTop = haut;
+    }
+    dessiner();
+    return hote;
   }
 
   // Gantt d'un projet : une ligne par phase de jalons (+ ligne projet)
@@ -5547,10 +6005,10 @@ var PTE_COMMUN = (function () {
       tile('Sous-sites reliés', String(opts.sousSites || 0), 'à un projet GE-Invest', 'Nombre de sous-sites du périmètre affiché reliés à au moins un projet GE-Invest (objectif à terme : un seul projet par sous-site).');
       tile('Projets', String(agg.n), null, 'Nombre de projets GE-Invest du périmètre affiché (après filtres).');
     }
-    tile('Crédit total, kCHF', fmtK(agg.credit), 'voté', 'Somme des crédits totaux (dépenses) GE-Invest des projets affichés.');
-    tile('Dépensé cumulé, kCHF', fmtK(agg.depenseCumul), '≤ ' + (N - 1) + ' : ' + fmtK(agg.cumulN1) + ' · ' + N + ' : ' + fmtK(agg.comptaN), 'Comptabilisé cumulé à fin ' + (N - 1) + ' plus comptabilisé ' + N + '.');
-    tile('Engagé, kCHF', fmtK(agg.engage), 'solde', 'Solde engagé (dépenses) au moment de l’extraction.');
-    tile('Prévision ' + N + ', kCHF', fmtK(agg.prev[0]), 'budget ' + N + ' : ' + fmtK(agg.budgetN), 'Prévision de dépenses ' + N + ' (GE-Invest) ; en dessous, le budget ' + N + ' alloué.');
+    tile('Crédit total, MCHF', fmtK(agg.credit), 'crédits des projets', 'Somme des crédits totaux (dépenses) GE-Invest des projets affichés. À ne pas confondre avec l’enveloppe votée par les lois (page d’accueil).');
+    tile('Dépensé cumulé, MCHF', fmtK(agg.depenseCumul), '≤ ' + (N - 1) + ' : ' + fmtK(agg.cumulN1) + ' · ' + N + ' : ' + fmtK(agg.comptaN), 'Comptabilisé cumulé à fin ' + (N - 1) + ' plus comptabilisé ' + N + '.');
+    tile('Engagé, MCHF', fmtK(agg.engage), 'solde', 'Solde engagé (dépenses) au moment de l’extraction : commandé, pas encore payé.');
+    tile('Prévision ' + N + ', MCHF', fmtK(agg.prev[0]), 'budget ' + N + ' : ' + fmtK(agg.budgetN), 'Prévision de dépenses ' + N + ' (GE-Invest) ; en dessous, le budget ' + N + ' alloué.');
     var avTxt = agg.avancement === null ? '—' : Math.round(agg.avancement) + ' %';
     tile('Avancement', avTxt, 'pondéré au crédit', 'Avancement global moyen des projets, pondéré par le crédit total.');
     if (full && opts.list) {
@@ -5576,22 +6034,33 @@ var PTE_COMMUN = (function () {
     var pctRenseigne = list.length ? Math.round(100 * renseignes / list.length) : 0;
     var card = el('div', { class: 'card' });
     card.appendChild(cardTitle('Sémaphores — ' + STATE.mois, 'Périmètre : ' + labelPerimetre(STATE.perimetre) + (STATE.rep.pf ? ' · portefeuille ' + STATE.rep.pf : '') + '. Cliquer un segment filtre la liste « À traiter en revue ».'));
-    var hero = el('div', { class: 'hero-row hero-row-3' });
+    /* A8 (revue du Cabinet, 30.09.2026) : la complétude d'abord — le gris n'est pas un état du
+       programme, c'est un état de la donnée —, puis le sémaphore et la répartition des projets
+       renseignés ; les « non renseignés » restent à un clic. */
+    var hero = el('div', { class: 'hero-row hero-row-3 hero-row-completude' });
     var boxA = el('div', { class: 'hero-box', tabindex: '0' });
     boxA.appendChild(semInline(sem.color, null, { size: 'hero' }));
     boxA.appendChild(el('div', { class: 'hero-cap' }, ['Sémaphore du périmètre']));
     tip(boxA, sem.reason);
-    hero.appendChild(boxA);
     var boxB = el('div', { class: 'hero-box', style: 'align-items:stretch; text-align:left;' });
-    tip(boxB, counts.vert + ' vert · ' + counts.orange + ' orange · ' + counts.rouge + ' rouge · ' + counts.gris + ' gris. Cliquer un segment filtre la liste « À traiter en revue ».');
-    boxB.appendChild(el('div', { class: 'hero-cap', style: 'margin-bottom:.5em;' }, ['Répartition des sémaphores']));
-    boxB.appendChild(distBar(counts, function (color) { if (watchlistHostRef.el) renderWatchlist(watchlistHostRef.el, list, gel, color); }));
-    hero.appendChild(boxB);
+    var nRens = counts.vert + counts.orange + counts.rouge;
+    tip(boxB, counts.vert + ' vert · ' + counts.orange + ' orange · ' + counts.rouge + ' rouge, sur ' + nRens + ' projets dont les cinq volets (suivi, délais, dépenses, livrables, risques) sont renseignés. Cliquer un segment filtre la liste « À traiter en revue ».');
+    boxB.appendChild(el('div', { class: 'hero-cap', style: 'margin-bottom:.5em;' }, ['Projets entièrement renseignés : répartition']));
+    var filtrer = function (color) { if (watchlistHostRef.el) renderWatchlist(watchlistHostRef.el, list, gel, color); };
+    boxB.appendChild(distBar({ vert: counts.vert, orange: counts.orange, rouge: counts.rouge, gris: 0, sansGris: true }, filtrer));
+    if (counts.gris) {
+      var lienGris = el('a', { href: '#', class: 'small' }, [counts.gris + ' projet' + (counts.gris > 1 ? 's' : '') + ' avec au moins un volet non renseigné (gris) : voir la liste']);
+      lienGris.addEventListener('click', function (e) { e.preventDefault(); filtrer('gris'); });
+      boxB.appendChild(el('div', { style: 'margin-top:.5em;' }, [lienGris]));
+    }
     var boxC = el('div', { class: 'hero-box', tabindex: '0' });
     boxC.appendChild(donutSVG(pctRenseigne, JETON.teal, { size: 64, stroke: 7 }));
-    boxC.appendChild(el('div', { class: 'hero-cap' }, ['Complétude']));
-    tip(boxC, renseignes + '/' + list.length + ' projets avec suivi saisi pour ' + STATE.mois + '.');
+    boxC.appendChild(el('div', { class: 'hero-cap' }, ['Complétude du suivi']));
+    boxC.appendChild(el('div', { class: 'small muted' }, [renseignes + ' sur ' + list.length + ' projets avec suivi du mois']));
+    tip(boxC, renseignes + '/' + list.length + ' projets avec suivi saisi pour ' + STATE.mois + '. Un projet sans suivi est gris : c\u2019est un état de la donnée, pas du projet.');
     hero.appendChild(boxC);
+    hero.appendChild(boxA);
+    hero.appendChild(boxB);
     card.appendChild(hero);
     return card;
   }
@@ -5675,7 +6144,7 @@ var PTE_COMMUN = (function () {
         creditSS = (creditSS || 0) + x.credit;
       });
       var chainP = el('p', { class: 'muted small' }, [
-        'Chaîne financière du sous-site : Estim PTE ' + fmtK(chain.estim) + ' → DG ' + fmtK(chain.dg) + ' → Crédit GE-Invest ' + fmtK(creditSS) + ' kCHF'
+        'Chaîne financière du sous-site : Estim PTE ' + fmtK(chain.estim) + ' → DG ' + fmtK(chain.dg) + ' → Crédit GE-Invest ' + fmtK(creditSS) + ' MCHF'
       ]);
       if (chain.ref && creditSS !== null) {
         var pctSS = (creditSS - chain.ref) / chain.ref * 100;
@@ -5717,7 +6186,7 @@ var PTE_COMMUN = (function () {
 
     host.appendChild(repKPIStrip(agg, { projet: true }));
     host.appendChild(el('div', { style: 'height:16px;' }));
-    host.appendChild(repChart(agg, { title: 'Situation financière du projet (kCHF)' }));
+    host.appendChild(repChart(agg, { title: 'Situation financière du projet (MCHF)' }));
     var ganttP = repGanttProjet(r);
     if (ganttP) host.appendChild(ganttP);
 
@@ -5811,7 +6280,7 @@ var PTE_COMMUN = (function () {
     var chain = finChainInfo(num);
     if (chain) {
       var creditSS = null; mine.forEach(function (x) { if (x.credit !== null && x.credit !== undefined) creditSS = (creditSS || 0) + x.credit; });
-      var chainP = el('p', { class: 'muted small' }, ['Chaîne financière : Estim PTE ' + fmtK(chain.estim) + ' → DG ' + fmtK(chain.dg) + ' → Crédit GE-Invest ' + fmtK(creditSS) + ' kCHF']);
+      var chainP = el('p', { class: 'muted small' }, ['Chaîne financière : Estim PTE ' + fmtK(chain.estim) + ' → DG ' + fmtK(chain.dg) + ' → Crédit GE-Invest ' + fmtK(creditSS) + ' MCHF']);
       if (chain.ref && creditSS !== null) { var pctSS = (creditSS - chain.ref) / chain.ref * 100; chainP.appendChild(document.createTextNode(' (écart ' + (pctSS >= 0 ? '+' : '−') + Math.round(Math.abs(pctSS)) + ' %)')); }
       left.appendChild(chainP);
     }
@@ -5828,7 +6297,7 @@ var PTE_COMMUN = (function () {
       host.appendChild(repKPIStrip(agg, { projet: true }));
       host.appendChild(el('div', { style: 'height:16px;' }));
       host.appendChild(repProjetsTable(mine, agg.anneeRef));
-      var g = repGanttSousSites(mine, { title: 'Planning du sous-site (jalons)', aria: 'Planning du sous-site : durée et jalons prévus, réalisés ou en retard.' });
+      var g = repGanttSousSites(mine, { title: 'Planning du sous-site et de ses projets (jalons)', aria: 'Planning du sous-site et de chacun de ses projets : durée et jalons prévus, réalisés ou en retard.', tousOuverts: true });
       if (g) host.appendChild(g);
     }
     return host;
@@ -5885,10 +6354,22 @@ var PTE_COMMUN = (function () {
 
     if (STATE.questionsOuvertes && STATE.mois) body.appendChild(questionsCard(STATE.mois));
 
+    /* Reporting moins long (remarque d'Achim, 30.09.2026) : un sommaire en tête mène à chaque
+       bloc, le planning remonte juste après les sémaphores, la situation par statut est repliée. */
+    var SECTIONS = [['rep-sec-semaphores', 'Sémaphores'], ['rep-sec-planning', 'Planning'], ['rep-sec-finances', 'Finances'],
+                    ['rep-sec-portefeuilles', STATE.rep.pf ? 'Statuts' : 'Portefeuilles'], ['rep-sec-sous-sites', 'Sous-sites']];
+    var sommaire = el('nav', { class: 'rep-sommaire no-print', 'aria-label': 'Aller à une partie du reporting' }, [el('span', { class: 'muted small' }, ['Aller à :'])]);
+    SECTIONS.forEach(function (sx) {
+      var b = el('button', { type: 'button', class: 'rep-saut' }, [sx[1]]);
+      b.addEventListener('click', function () { var cible = document.getElementById(sx[0]); if (cible && cible.scrollIntoView) cible.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+      sommaire.appendChild(b);
+    });
+    body.appendChild(sommaire);
+
     // (b)
     var nbSS = repSousSiteGroups(rows).filter(function (g) { return !!g.num; }).length;
     body.appendChild(repKPIStrip(agg, { sousSites: nbSS, list: list }));
-    body.appendChild(el('div', { style: 'height:16px;' }));
+    body.appendChild(el('div', { style: 'height:16px;', id: 'rep-sec-semaphores', class: 'rep-ancre' }));
 
     // (c) + (d)
     if (STATE.mois) {
@@ -5901,7 +6382,15 @@ var PTE_COMMUN = (function () {
       body.appendChild(emptyCard('Aucun mois de suivi dans les données chargées : sémaphores non calculables.'));
     }
 
+    // (h) planning, remonté ici : dépliable par sous-site vers ses projets
+    body.appendChild(el('div', { id: 'rep-sec-planning', class: 'rep-ancre' }));
+    body.appendChild(repGanttHote(rows, {
+      title: STATE.rep.pf ? 'Planning du portefeuille (jalons par sous-site)' : 'Planning du parc (jalons par sous-site)',
+      aria: 'Planning des sous-sites : durée et jalons prévus, réalisés ou en retard.'
+    }));
+
     // (e)
+    body.appendChild(el('div', { id: 'rep-sec-finances', class: 'rep-ancre' }));
     var mainGrid = el('div', { class: 'rep-main-grid' });
     mainGrid.appendChild(repChart(agg, {}));
     mainGrid.appendChild(repPerfCard(agg));
@@ -5910,6 +6399,7 @@ var PTE_COMMUN = (function () {
     if (finChainCard) { body.appendChild(el('div', { style: 'height:16px;' })); body.appendChild(finChainCard); }
 
     // (f)
+    body.appendChild(el('div', { id: 'rep-sec-portefeuilles', class: 'rep-ancre' }));
     if (!STATE.rep.pf) {
       var groupsPf = groupBy(rows, function (r) { return r.pf; });
       body.appendChild(repAggTable('Portefeuille', 'Situation consolidée par portefeuille GE-Invest, avec le taux de réponse aux questions du mois. Cliquer sur une ligne pour descendre au niveau portefeuille.', groupsPf, function (gr) {
@@ -5917,17 +6407,12 @@ var PTE_COMMUN = (function () {
       }));
     }
     var groupsSt = groupBy(rows, function (r) { return r.statut; });
-    body.appendChild(repAggTable('Statut', 'Situation consolidée par statut de projet GE-Invest (nombre, crédit, dépenses, engagés, prévisions).', groupsSt, null));
+    var statut = repAggTable('Statut', 'Situation consolidée par statut de projet GE-Invest (nombre, crédit, dépenses, engagés, prévisions).', groupsSt, null);
+    body.appendChild(STATE.rep.pf ? statut : el('details', { class: 'rep-repli' }, [el('summary', {}, ['Situation par statut de projet']), statut]));
 
     // (g)
+    body.appendChild(el('div', { id: 'rep-sec-sous-sites', class: 'rep-ancre' }));
     body.appendChild(repSousSitesTable(rows, N));
-
-    // (h)
-    var gantt = repGanttSousSites(rows, {
-      title: STATE.rep.pf ? 'Planning du portefeuille (jalons par sous-site)' : 'Planning du parc (jalons par sous-site)',
-      aria: 'Planning des sous-sites : durée et jalons prévus, réalisés ou en retard.'
-    });
-    if (gantt) body.appendChild(gantt);
     markUnits(body);
   }
 
@@ -5955,7 +6440,7 @@ var PTE_COMMUN = (function () {
   // ------------------------------------------------------------------
   function renderPortefeuilleView() {
     var host = $('#portefeuille-content'); host.innerHTML = '';
-    if (!STATE.mois) { host.appendChild(emptyCard('Chargez le classeur Plan_PTE.xlsx (onglet Données) pour afficher la revue de portefeuille.')); return; }
+    if (!STATE.mois) { host.appendChild(emptyCard('Le classeur Plan_PTE.xlsx (onglet Données) est à charger pour afficher la revue de portefeuille.')); return; }
     var list = projetsByPerimetre(STATE.perimetre);
     var gel = Engine.gelDate(STATE.mois, PARAMS);
     var annee = currentYear();
@@ -6009,7 +6494,7 @@ var PTE_COMMUN = (function () {
 
   function buildFiche(numeroProjet) {
     var host = $('#fiche-content'); host.innerHTML = '';
-    if (!numeroProjet) { host.appendChild(emptyCard('Aucun projet dans ce périmètre. Chargez le classeur Plan_PTE.xlsx (onglet Données) ou changez de périmètre.')); return; }
+    if (!numeroProjet) { host.appendChild(emptyCard('Aucun projet dans ce périmètre. Le classeur Plan_PTE.xlsx est à charger (onglet Données), ou le périmètre à changer.')); return; }
     var projet = DB.projets.filter(function (p) { return p.numero_projet === numeroProjet; })[0];
     if (!projet) return;
     var comp = Engine.computeProjectMonth(DB, projet, STATE.mois, PARAMS);
@@ -6038,6 +6523,33 @@ var PTE_COMMUN = (function () {
     dates.appendChild(dateItem('Fin ré-estimée', comp.suiviRow ? comp.suiviRow.date_fin_reestimee : null));
     dates.appendChild(dateItem('Mise en service', comp.suiviRow ? comp.suiviRow.date_mise_en_service : null));
     head.appendChild(dates);
+    /* Accès direct aux projets du même sous-site, pour une revue liée ou consolidée
+       (remarque d'Achim, 30.09.2026). */
+    var ssF = (projet.numero_sous_site || '').trim();
+    if (ssF) {
+      var freresF = DB.projets.filter(function (p) { return p.numero_projet !== numeroProjet && (p.numero_sous_site || '').trim() === ssF; });
+      if (freresF.length) {
+        var ligneF = el('p', { class: 'small ss-freres fiche-freres' }, ['Même sous-site ' + ssF + ' : ' + freresF.length + ' autre' + (freresF.length > 1 ? 's' : '') + ' projet' + (freresF.length > 1 ? 's' : '') + ' — ']);
+        freresF.forEach(function (p, i) {
+          if (i) ligneF.appendChild(document.createTextNode(' · '));
+          var lf = el('a', { href: '#' }, [p.numero_projet]);
+          tip(lf, p.nom_projet + (p.rp ? ' · RP ' + p.rp : '') + '. Ouvrir sa fiche.');
+          lf.addEventListener('click', function (e) { e.preventDefault(); STATE.projetSel = p.numero_projet; showView('fiche'); });
+          ligneF.appendChild(lf);
+        });
+        var consol = el('a', { href: '#', class: 'fiche-consolide' }, ['vue consolidée du sous-site →']);
+        tip(consol, 'Reporting du sous-site ' + ssF + ' : tous ses projets, leurs finances additionnées et leurs plannings.');
+        consol.addEventListener('click', function (e) {
+          e.preventDefault();
+          STATE.rep.pf = null; STATE.rep.projet = null; STATE.rep.ss = ssF;
+          STATE.rep.rp = ''; STATE.rep.statut = ''; STATE.rep.type = ''; STATE.rep.q = '';
+          showView('reporting');
+        });
+        ligneF.appendChild(document.createTextNode(' · '));
+        ligneF.appendChild(consol);
+        head.appendChild(ligneF);
+      }
+    }
     host.appendChild(head);
 
     var cols = el('div', { class: 'fiche-cols' });
@@ -6089,7 +6601,7 @@ var PTE_COMMUN = (function () {
 
     // GAUCHE — Finances
     var finCard = el('div', { class: 'card' });
-    finCard.appendChild(cardTitle('Finances, kCHF'));
+    finCard.appendChild(cardTitle('Finances, MCHF'));
     var years = Array.from(new Set(DB.finances.filter(function (f) { return f.numero_projet === numeroProjet; }).map(function (f) { return +f.annee; }))).sort();
     var series = ['objectif', 'prevision', 'engage', 'depense'].map(function (nat) {
       var color = { objectif: JETON.gris, prevision: JETON.teal, engage: JETON.violet, depense: JETON.vert }[nat];
@@ -6128,7 +6640,7 @@ var PTE_COMMUN = (function () {
       var gainCo2Node = info('Gain t CO₂/an', gainCo2 === null ? null : fmt(gainCo2, 1));
       tip(gainCo2Node, gainCo2 === null ? 'Non chiffrable : CO₂ mesuré de l’année ou CO₂ projeté manquant (jamais 0).' : 'Gain réel (contrat D5) : ' + dispLabel(pteRow.gain_t_co2_source || 'CO₂ mesuré − CO₂ projeté × SRE') + '.');
       pg.appendChild(gainCo2Node);
-      pg.appendChild(info('Estim PTE, kCHF', fmt(Engine.parseNum(pteRow.estim_pte_kchf))));
+      pg.appendChild(info('Estim PTE, MCHF', fmtK(Engine.parseNum(pteRow.estim_pte_kchf))));
       var mFiche = mesuresDe(ss);
       pg.appendChild(info('IDC actuel → projeté', (mFiche && mFiche.idc !== null ? fmt(mFiche.idc) + ' kWh/m²·an' : (pteRow.idc_actuel || '—')) + ' → ' + (pteRow.idc_projete || '—')));
       pteCard.appendChild(pg);
@@ -6186,7 +6698,7 @@ var PTE_COMMUN = (function () {
         infoGrid.appendChild(infoP('Coût kWh économisé, CHF', prio.cout_kwh_chf === null ? null : fmt(prio.cout_kwh_chf, 2)));
         infoGrid.appendChild(infoP('Coût CO₂ évité, CHF/t', prio.cout_co2_chf_t === null ? null : fmt(prio.cout_co2_chf_t)));
         infoGrid.appendChild(infoP('Référentiel d’investissement', prio.referentiel_invest));
-        infoGrid.appendChild(infoP('Estim. investissement, kCHF', prio.estim_kchf === null ? null : fmt(prio.estim_kchf)));
+        infoGrid.appendChild(infoP('Estim. investissement, MCHF', prio.estim_kchf === null ? null : fmtK(prio.estim_kchf)));
         prioCard.appendChild(infoGrid);
 
         if (prio.alerte_coherence) {
@@ -6266,7 +6778,7 @@ var PTE_COMMUN = (function () {
   // ------------------------------------------------------------------
   function renderParcView() {
     var host = $('#parc-content'); host.innerHTML = '';
-    if (!STATE.mois) { host.appendChild(emptyCard('Chargez le classeur Plan_PTE.xlsx (onglet Données) pour afficher la revue de parc.')); return; }
+    if (!STATE.mois) { host.appendChild(emptyCard('Le classeur Plan_PTE.xlsx (onglet Données) est à charger pour afficher la revue de parc.')); return; }
     var baseList = projetsByPerimetre(STATE.perimetre);
     var annee = currentYear();
     var rpfGroups = Array.from(new Set(baseList.map(function (c) { return c.projet.rpf; }).filter(function (v) { return v && v.trim(); }))).sort();
@@ -6277,8 +6789,8 @@ var PTE_COMMUN = (function () {
 
     var hasPrio = DB.priorisation && DB.priorisation.length;
     var c1 = el('div', { class: 'card' });
-    c1.appendChild(cardTitle('Vue par portefeuille', 'Mini-barre : répartition vert/orange/rouge/gris. Survolez pour le détail.'));
-    var headCells = [el('th', { class: 'no-sort' }, ['Portefeuille']), el('th', { class: 'no-sort' }, ['Projets']), el('th', { class: 'no-sort' }, ['Sémaphore']), el('th', { class: 'no-sort' }, ['Répartition']), el('th', { class: 'no-sort' }, ['Objectif ' + annee]), el('th', { class: 'no-sort' }, ['Prévision ' + annee]), el('th', { class: 'no-sort' }, ['Dépensé ' + annee]), el('th', { class: 'no-sort' }, ['Gain kWh th/an']), el('th', { class: 'no-sort' }, ['Gain t CO₂/an'])];
+    c1.appendChild(cardTitle('Vue par portefeuille', 'Mini-barre : répartition vert/orange/rouge/gris. Le survol donne le détail.'));
+    var headCells = [el('th', { class: 'no-sort' }, ['Portefeuille']), el('th', { class: 'no-sort' }, ['Projets']), el('th', { class: 'no-sort' }, ['Sémaphore']), el('th', { class: 'no-sort' }, ['Répartition']), el('th', { class: 'no-sort' }, ['Objectif ' + annee + ', MCHF']), el('th', { class: 'no-sort' }, ['Prévision ' + annee + ', MCHF']), el('th', { class: 'no-sort' }, ['Dépensé ' + annee + ', MCHF']), el('th', { class: 'no-sort' }, ['Gain kWh th/an']), el('th', { class: 'no-sort' }, ['Gain t CO₂/an'])];
     if (hasPrio) {
       var thTop = el('th', { class: 'no-sort' }, ['Top ' + PARAMS.seuilTop + ' actifs']); tip(thTop, 'Nombre de projets actifs de ce portefeuille classés au rang ≤ ' + PARAMS.seuilTop + ' (' + prioSourceLabel() + ').');
       var thSans = el('th', { class: 'no-sort' }, ['Top ' + PARAMS.seuilTop + ' sans projet']); tip(thSans, 'Sous-sites de ce portefeuille classés au rang ≤ ' + PARAMS.seuilTop + ' sans aucun projet actif (« à proposer »).');
@@ -6298,7 +6810,7 @@ var PTE_COMMUN = (function () {
       var gainCo2Td = el('td', {}, [fmtCompact(gains.gain_t_co2)]); tip(gainCo2Td, fmt(gains.gain_t_co2) + ' t CO₂/an (' + gains.n + ' sous-site(s) PTE).');
       var rowCells = [
         el('td', {}, [g.label]), el('td', {}, [String(g.list.length)]), el('td', {}, [semInline(sem.color, null, { tipText: sem.reason })]),
-        el('td', {}, [miniBar]), el('td', {}, [fmt(fin.objectif)]), el('td', {}, [fmt(fin.prevision)]), el('td', {}, [fmt(fin.depense)]), gainThTd, gainCo2Td
+        el('td', {}, [miniBar]), el('td', {}, [fmtK(fin.objectif)]), el('td', {}, [fmtK(fin.prevision)]), el('td', {}, [fmtK(fin.depense)]), gainThTd, gainCo2Td
       ];
       if (hasPrio) {
         var alG = g.key ? Engine.alignementPerimetre(DB, g.list, PARAMS, { filterRow: function (r) { return r.rpf === g.key; } }) : Engine.alignementPerimetre(DB, g.list, PARAMS, { filterRow: function (r) { return !r.rpf || !r.rpf.trim(); } });
@@ -6611,7 +7123,7 @@ var PTE_COMMUN = (function () {
     b4.appendChild(el('p', {}, ['Rien n’est envoyé : tout reste dans ce navigateur (localStorage, et le classeur commun des trois outils dans IndexedDB : classeur, nom, date, taille, empreinte). Aucun serveur, aucun compte.']));
     // Vague 3 — « Où vont les saisies » (SPEC_vague3 §4), texte commun aux trois outils.
     b4.appendChild(el('p', {}, [
-      'Tout ce que vous saisissez reste dans ', el('strong', {}, ['ce navigateur, sur ce poste']),
+      'Tout ce qui est saisi reste dans ', el('strong', {}, ['ce navigateur, sur ce poste']),
       ' : rien n’est envoyé nulle part. Les notes et ajustements de la priorisation, les décisions de la revue, les variantes de la simulation et les questions du mois vivent chacun dans leur outil, mais dans une mémoire commune : ',
       el('strong', {}, ['« Exporter mes saisies »']),
       ' produit un fichier unique pour les trois, que ',
@@ -6810,6 +7322,10 @@ var PTE_COMMUN = (function () {
     ensureMonth();
     // C3 : rejeu des détections sur le nouveau classeur → questions soldées
     res.questions = rejouerQuestions();
+    // Contrôle à l'import (25.09.2026) : comparé au dernier import de référence de cet outil
+    if (COMMUN && COMMUN.controleImport && res.detail && res.detail.contrat && res.detail.contrat.empreinte) {
+      try { COMMUN.controleImport(res.detail.contrat.empreinte, 'revue'); } catch (e) { /* contrôle facultatif */ }
+    }
     try { saveState(); } catch (e) { /* stockage indisponible : import conservé en mémoire seulement */ }
     // C1 : tout import local est publié pour les deux autres outils
     if (!opts.depuisCommun && COMMUN && buf && buf.byteLength) {
