@@ -1523,7 +1523,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v30.09.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.0 · 01.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -2576,6 +2576,7 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "01.10.2026", "objet": "priorisation", "version": "v2.0", "titre": "Numérotation alignée sur les autres outils", "points": ["Le numéro de version prend la même forme que dans les autres outils : v2.0 et la date.", "Contenu identique à la version du 30.09 (v30.09.2026), mise en ligne le 01.10.", "Les versions précédentes gardent leur numéro daté dans cet historique."]},
     {"date": "30.09.2026", "objet": "accueil", "version": "v1.6", "titre": "Situation du programme", "points": ["Au-dessus des trois outils : voté, engagé, dépensé et estimé, en MCHF, avec une phrase et leurs sources, recalculés à chaque dépôt du classeur.", "Voté : 1 250 MCHF, loi 13210 (1 000) et loi 12552, embrasures (250). Engagé et dépensé : GE-Invest. Estimé : somme de l'Estim PTE.", "Le contrôle à l'import se lit ici, une fois, sous l'en-tête.", "L'empreinte du classeur passe dans l'info-bulle de la barre du classeur."]},
     {"date": "30.09.2026", "objet": "priorisation", "version": "v30.09.2026", "titre": "Revue du Cabinet : lecture plus directe", "points": ["La visite guidée ne s'ouvre plus d'office ; elle reste dans le menu ☰, relue et sans l'étape « Mode nuit ».", "Hors classement, chaque objectif trie et affiche sa propre grandeur : l'eau pour l'eau, l'électricité pour l'électricité, le CO₂ pour le CO₂, la chaleur sinon.", "Quand la cible 2030 est déjà atteinte au niveau du parc, la note le dit au lieu de « Cible non atteinte ».", "Textes revus : tuile Développement durable en une ligne, « huit engagements du programme », « Arbitrages », montants en MCHF, enveloppe de 1 250 MCHF sourcée (lois 13210 et 12552) ; les énoncés de la Méthode qui dépendaient du classeur sont calculés ou neutres."]},
     {"date": "30.09.2026", "objet": "simulation", "version": "v3.3", "titre": "Écran d'ouverture allégé", "points": ["L'ouverture ne garde que « Quel site ? » : la couverture du classeur et les points à compléter passent dans « Comment ces chiffres sont calculés ».", "Textes de l'écran reformulés sans s'adresser à l'utilisateur."]},
@@ -3635,7 +3636,9 @@ function csvNum(v,d){
 function appVersion(){
   const el=$('ftVer');
   if(!el)return'';
-  const m=String(el.textContent||'').match(/\bv\d{2}\.\d{2}\.\d{4}\b/);
+  /* Depuis le 01.10.2026 : « v2.0 · 01.10.2026 », comme les autres outils ; l'ancienne forme
+     « v30.09.2026 » reste reconnue. Repris dans la colonne version_outil de l'export. */
+  const m=String(el.textContent||'').match(/\bv\d+\.\d+(?:\.\d+)?\s·\s\d{2}\.\d{2}\.\d{4}|\bv\d{2}\.\d{2}\.\d{4}\b/);
   return m?m[0]:''}
 /* État CECB+ dans le vocabulaire attendu côté revue de projets — dérivé
    des 6 statuts internes (CECB_DEF) plutôt que dupliqué : une variante
