@@ -180,13 +180,39 @@ button:disabled{opacity:.5; cursor:not-allowed;}
 #app-shell{max-width:var(--wrap); margin:0 auto; padding:0 24px 40px;}
 
 /* En-tête sur deux lignes (vague 2) : titre + pastille d'état sur la première, actions sur la seconde */
-.hdr-in #badge{margin-left:auto;}
-.hdr .hdr-right{flex:0 0 100%; justify-content:flex-start; padding-bottom:2px;}
 /* En-tête : sélecteurs Périmètre / Mois de revue (style clair) */
 .hdr .filter-field{display:flex; flex-direction:column; align-items:flex-start; gap:2px;}
 .hdr .filter-field label{margin:0; font-size:10px; white-space:nowrap;}
 .hdr .filter-field select{width:180px; padding:5px 8px; font-size:13px;}
 body.no-data .hdr .filter-field{display:none;}
+/* ══════════════════════════════════════════════════════════════
+   EN-TÊTE COMMUN v2 — 02.10.2026 (Achim) — même bloc dans les outils.
+   Ligne 1 : titre · à droite, l'état des données (pastille + corbeille),
+             « Charger / Recharger le classeur », menu ☰.
+   Ligne 2 : onglets à gauche (« Méthode » en dernier, marqué « ? »),
+             filtres de contexte à droite. L'en-tête étant collant,
+             les filtres restent accessibles en tout point de la page.
+   ══════════════════════════════════════════════════════════════ */
+.data-set{display:inline-flex;align-items:center;gap:2px}
+.btn-eff{width:28px;height:28px;padding:0;border:0;border-radius:50%;background:none;color:var(--ink-muted);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;transition:.15s}
+.btn-eff:hover,.btn-eff:focus-visible{background:var(--tint-rouge);color:var(--red)}
+.btn-eff svg{width:15px;height:15px;display:block}
+.badge.none + .btn-eff{display:none}
+.hdr-row2{max-width:var(--wrap);margin:0 auto;padding:8px 24px 10px;display:flex;align-items:center;gap:6px 20px;flex-wrap:wrap}
+.hdr-row2 .tabs{max-width:none;margin:0;padding:0;flex:1 1 100%}
+.hdr-ctx{display:flex;align-items:center;gap:6px 22px;flex-wrap:wrap;font-size:12.5px;flex:1 1 100%;
+  margin-top:4px;padding-top:8px;border-top:1px solid var(--border)}
+.hdr-ctx .cx-l{display:inline-flex;align-items:center;gap:6px;margin:0;font-size:12.5px;font-weight:normal;
+  text-transform:none;letter-spacing:0;color:var(--ink-muted);white-space:nowrap}
+.hdr-ctx select.cx-in{width:auto;max-width:210px;padding:3px 6px;font:inherit;font-size:12.5px;font-weight:bold;color:var(--ink-70);
+  border:1px solid transparent;border-radius:6px;background-color:transparent;cursor:pointer}
+.hdr-ctx select.cx-in:hover,.hdr-ctx select.cx-in:focus{border-color:var(--border)}
+.hdr-ctx .btn{padding:4px 12px;font-size:12.5px}
+body.no-data .hdr-ctx{display:none !important}
+#view-methode{max-width:900px;}
+#view-methode p{font-size:13px; line-height:1.55; margin:0 0 .8em;}
+#view-methode table{font-size:12px;}
 /* Unités dans un libellé en capitales (kCHF, kWh, m²) : jamais en majuscules */
 .u{text-transform:none;}
 /* Tableaux denses : hauteur de ligne compacte */
@@ -210,6 +236,14 @@ section.view[hidden]{display:none;}
 /* Titres de détail dans une carte (nom du projet) : pas en capitales */
 .card .fiche-head h2, .card.rep-proj-head h2{font-size:18px; text-transform:none; letter-spacing:0; color:var(--ink); margin:0;}
 .card-title .info-icon{margin-left:.1em;}
+/* Cartes repliables (02.10.2026) : dépliées par défaut ; le chevron du titre replie la carte, l'état est gardé par titre */
+.card-pli{flex:none; width:18px; height:18px; margin:0 2px 0 -4px; padding:0; border:0; border-radius:4px; background:none; color:var(--ink-muted); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;}
+.card-pli::before{content:''; width:6px; height:6px; border-right:1.6px solid currentColor; border-bottom:1.6px solid currentColor; transform:rotate(45deg) translate(-1px,-1px); transition:transform .15s;}
+.card-pli:hover, .card-pli:focus-visible{background:var(--tint-gris, #EDEFF1); color:var(--teal);}
+.card-title.pli-ferme{margin-bottom:0;}
+.card-title.pli-ferme .card-pli::before{transform:rotate(-45deg) translate(-1px,-1px);}
+.card:has(> .card-title.pli-ferme) > *:not(.card-title){display:none;}
+@media print{ .card-pli{display:none;} .card:has(> .card-title.pli-ferme) > *:not(.card-title){display:revert;} }
 .card-title .card-title-right{margin-left:auto; font-weight:normal; text-transform:none; letter-spacing:0; font-size:12px; color:var(--ink-muted);}
 .grid{display:grid; gap:16px;}
 .grid.cols-2{grid-template-columns:1fr 1fr;}
@@ -395,7 +429,11 @@ tr.clickable:hover td{background:var(--surface-hover);}
 .drop.drop-sm .opt{margin-top:8px; font-size:12px;}
 
 /* ------------------------------------------------------------- Reporting */
-.rep-toprow{display:flex; align-items:center; gap:1em; flex-wrap:wrap; margin-bottom:14px;}
+/* ligne figée sous l'en-tête (02.10.2026) : fil d'Ariane, « Aller à », filtres — sur le fond gris de la page */
+.rep-toprow{display:flex; align-items:flex-end; gap:.6em 1em; flex-wrap:wrap; margin:0 -24px 12px; padding:10px 24px;
+  position:sticky; top:var(--hdr-h, 150px); z-index:20; background:var(--page-bg);}
+.rep-toprow .rep-sommaire{margin:0 auto 0 0; padding-bottom:3px;}
+.rep-toprow .rep-crumbs:empty{display:none;}
 .rep-crumbs{display:flex; align-items:center; gap:.3em; flex-wrap:wrap;}
 .rep-crumbs .crumb{background:transparent; color:var(--teal); border:none; padding:.3em .45em; font-weight:bold; font-size:14px; border-radius:var(--r-in);}
 .rep-crumbs .crumb:hover{background:var(--surface-hover); }
@@ -453,7 +491,18 @@ svg.gantt{width:100%; height:auto; display:block;}
 .rep-sommaire{display:flex; align-items:center; gap:.4em; flex-wrap:wrap; margin:0 0 12px;}
 .rep-saut{font:inherit; font-size:12.5px; font-weight:bold; color:var(--teal); background:var(--card-bg, #fff); border:1px solid var(--border); border-radius:100px; padding:4px 12px; cursor:pointer;}
 .rep-saut:hover{background:var(--blue-pale, #E8F4F7);}
-.rep-ancre{scroll-margin-top:200px;}
+.rep-ancre{scroll-margin-top:calc(var(--hdr-h, 150px) + 84px);}
+/* diagramme CPI / SPI */
+.cpi-corps{display:flex; gap:24px; align-items:center; flex-wrap:wrap;}
+.cpi-graphe{flex:1 1 420px; max-width:620px; min-width:0;}
+.cpi-graphe svg{width:100%; height:auto; display:block;}
+.cpi-pt{cursor:pointer;}
+.cpi-pt:hover, .cpi-pt:focus{stroke:var(--ink); stroke-width:2; outline:none;}
+.cpi-legende{flex:1 1 260px; display:flex; flex-direction:column; gap:10px;}
+.cpi-ligne{display:flex; align-items:baseline; gap:8px; font-size:13px;}
+.cpi-pastille{flex:none; width:10px; height:10px; border-radius:50%; align-self:center;}
+.cpi-nb{flex:none; min-width:2.2em; text-align:right; font-size:20px; font-weight:bold; font-variant-numeric:tabular-nums;}
+.cpi-note{margin:12px 0 0;}
 .gantt-hit:focus{outline:2px solid var(--teal); outline-offset:-2px;}
 .rep-repli{margin:0 0 16px;}
 .rep-repli>summary{cursor:pointer; font-size:13px; font-weight:bold; color:var(--ink-70); padding:6px 0;}
@@ -733,19 +782,9 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
       <p class="sub"><a href="../Pilotage_PTE.html" title="Retour à la page Pilotage PTE">Pilotage PTE</a> · <span title="Office cantonal des bâtiments · Programme de transition écologique">OCBA</span></p>
     </div>
     <div class="grow"></div>
-    <span class="badge none" id="badge">Aucune donnée chargée</span>
     <div class="hdr-right">
+      <span class="data-set"><span class="badge none" id="badge">Aucune donnée chargée</span><button type="button" class="btn-eff" id="btnEff" title="Effacer les données de ce navigateur" aria-label="Effacer les données de ce navigateur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg></button></span>
       <button type="button" class="btn btn-p" id="btn-reload">Charger le classeur</button>
-      <div class="filter-field">
-        <label for="sel-filtre">Périmètre</label>
-        <select id="sel-filtre"></select>
-      </div>
-      <div class="filter-field">
-        <label for="sel-mois">Mois de revue</label>
-        <select id="sel-mois"></select>
-      </div>
-      <button type="button" class="btn" id="btn-questions" title="Générer les questions du mois par RPF (Reporting)">Questions du mois</button>
-      <button type="button" class="btn btn-ic" id="btn-help" title="Aide et méthode" aria-label="Aide et méthode">?</button>
       <span class="menu-wrap">
         <button class="btn btn-ic" id="btnMenu" aria-haspopup="true" aria-expanded="false" title="Menu">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -758,20 +797,27 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
           <div class="grp">Affichage</div>
           <button class="item" data-act="theme">Mode nuit<span id="mTheme">désactivé</span></button>
           <button class="item" data-act="tour">Visite guidée</button>
-          <div class="sep"></div>
-          <button class="item danger" data-act="effacer">Effacer les données de ce navigateur</button>
         </div>
       </span>
       <input type="file" id="fSaisies" accept=".json,application/json" hidden>
+      <input type="file" id="fClasseur" multiple hidden aria-label="Charger le classeur">
     </div>
   </div>
+  <div class="hdr-row2">
   <nav class="tabs" id="nav-tabs">
-    <button type="button" class="tab" data-view="reporting">Reporting</button>
-    <button type="button" class="tab" data-view="portefeuille">Portefeuille</button>
-    <button type="button" class="tab" data-view="fiche">Fiche projet</button>
-    <button type="button" class="tab" data-view="parc">Parc</button>
-    <button type="button" class="tab" data-view="donnees">Données</button>
+    <button type="button" class="tab" data-view="reporting" title="Questions du mois, sémaphores, situation financière et planning des projets GE-Invest ; un clic sur une ligne descend d’un niveau.">Reporting</button>
+    <button type="button" class="tab" data-view="portefeuille" title="Heatmap des quatre indicateurs par projet, jalons à 60 jours, risques et décisions ouvertes ; une ligne ouvre la fiche.">Portefeuille</button>
+    <button type="button" class="tab" data-view="fiche" title="Un projet en détail : sémaphores, jalons, finances, risques et registre des décisions, imprimable en A4.">Fiche projet</button>
+    <button type="button" class="tab" data-view="parc" title="Vue direction : portefeuilles, contribution 2030 (seul emplacement), projets rouges, capacité et couverture CECB+.">Parc</button>
+    <button type="button" class="tab" data-view="donnees" title="Chargement du classeur, complétude du mois et seuils des sémaphores.">Données</button>
+    <button type="button" class="tab" data-view="methode" id="btn-help" title="Règles des sémaphores, sources des données, lien avec la priorisation et calendrier du cycle mensuel.">Méthode</button>
   </nav>
+  <div class="hdr-ctx">
+    <label class="cx-l" for="sel-filtre">Périmètre <select id="sel-filtre" class="cx-in"></select></label>
+    <label class="cx-l" for="sel-mois">Mois de revue <select id="sel-mois" class="cx-in"></select></label>
+    <button type="button" class="btn" id="btn-questions" title="Générer les questions du mois par RPF (Reporting)">Questions du mois</button>
+  </div>
+  </div>
 </header>
 
 <div id="app-shell">
@@ -779,20 +825,18 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
 <div class="notice" id="notice-commun" hidden></div>
 
 <section class="view" id="view-reporting">
-  <p class="lead">Questions du mois, sémaphores, situation financière et planning des projets GE-Invest ; un clic sur une ligne descend d’un niveau.</p>
   <div id="reporting-content"></div>
 </section>
 
+<section class="view" id="view-methode" hidden>
+  <div id="methode-content"></div>
+</section>
+
 <section class="view" id="view-portefeuille" hidden>
-  <p class="lead">Heatmap des quatre indicateurs par projet, jalons à 60 jours, risques et décisions ouvertes ; une ligne ouvre la fiche.</p>
-  <div class="toolbar-row no-print">
-    <button type="button" id="btn-print-portefeuille" class="btn">Imprimer / PDF (A4 paysage)</button>
-  </div>
   <div id="portefeuille-content"></div>
 </section>
 
 <section class="view" id="view-fiche" hidden>
-  <p class="lead">Un projet en détail : sémaphores, jalons, finances, risques et registre des décisions, imprimable en A4.</p>
   <div class="toolbar-row no-print">
     <div class="field searchbox" style="margin:0; flex:1; min-width:180px;">
       <label for="search-projet">Rechercher</label>
@@ -806,15 +850,10 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
 </section>
 
 <section class="view" id="view-parc" hidden>
-  <p class="lead">Vue direction : portefeuilles, contribution 2030 (seul emplacement), projets rouges, capacité et couverture CECB+.</p>
-  <div class="toolbar-row no-print">
-    <button type="button" id="btn-print-parc" class="btn">Imprimer / PDF (A4 paysage)</button>
-  </div>
   <div id="parc-content"></div>
 </section>
 
 <section class="view" id="view-donnees" hidden>
-  <p class="lead">Chargement du classeur, complétude du mois et seuils des sémaphores.</p>
   <div id="donnees-content"></div>
 </section>
 
@@ -822,17 +861,9 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.12 · 30.09.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.15 · 02.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
-<div class="panel-backdrop" id="panel-backdrop" hidden></div>
-<aside class="side-panel" id="panel-methode" hidden aria-label="Méthode">
-  <div class="panel-head">
-    <h2>Méthode</h2>
-    <button type="button" class="btn btn-ic" id="btn-panel-close" title="Fermer" aria-label="Fermer">×</button>
-  </div>
-  <div id="methode-content"></div>
-</aside>
 
 <div id="tooltip-bubble" role="tooltip" hidden></div>
 
@@ -2040,6 +2071,14 @@ var PTE_COMMUN = (function () {
     var p = function (n) { return (n < 10 ? '0' : '') + n; };
     return p(d.getDate()) + '.' + p(d.getMonth() + 1) + '.' + d.getFullYear();
   }
+  /* Nom de personne ou de portefeuille écrit en capitales dans le classeur (« REIS MENINO TIAGO ») :
+     affiché en casse de nom propre (« Reis Menino Tiago »). Affichage seulement : les filtres
+     continuent de comparer la valeur du classeur. (02.10.2026) */
+  function nomPropre(v) {
+    var t = String(v == null ? '' : v);
+    if (!/[A-Za-zÀ-ÿ]/.test(t) || t !== t.toLocaleUpperCase('fr')) return t;   /* seuls les libellés tout en capitales sont repris */
+    return t.toLocaleLowerCase('fr').replace(/(^|[\s\-'’.(/])([a-zà-ÿ])/g, function (m, a, b) { return a + b.toLocaleUpperCase('fr'); });
+  }
   /* Texte de la pastille d'état, identique dans les trois outils. */
   function texteBadge(n, meta, remarques) {
     if (!meta && !n) return 'Aucune donnée chargée';
@@ -2188,6 +2227,15 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.4", "titre": "Classement en sous-onglets, une seule recherche", "points": ["Le Classement a quatre sous-onglets : Liste, Matrice urgence × faisabilité, Top 20, Distribution et état SIA. Plus de défilement pour atteindre les trois derniers.", "Une seule recherche, dans l'en-tête : une proposition ouvre la fiche du sous-site ; un texte libre validé par Entrée filtre le classement, et une étiquette « Filtre » permet de le retirer.", "Carte : fond Esri World Street par défaut ; les fonds CARTO, qui exigent désormais une clé, sont retirés."]},
+    {"date": "02.10.2026", "objet": "revue", "version": "v0.15", "titre": "Diagramme CPI / SPI, ligne de filtres figée", "points": ["Reporting : nouveau diagramme coût et planning (CPI / SPI), un point par projet, quatre quadrants comptés ; il suit le périmètre et les filtres. Les projets sans avancement global ne sont pas placés, et c'est dit.", "La ligne « Aller à » et les filtres reste visible sous l'en-tête ; le mot « Programme » disparaît.", "Retirés : la situation par statut au niveau Programme, le bloc « Chargement » de l'onglet Données, les boutons d'impression du Parc et du Portefeuille.", "« Recharger le classeur » ouvre directement le choix du fichier."]},
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.3", "titre": "En-tête sur trois lignes, onglets allégés", "points": ["Les filtres Périmètre, Montants et CO₂ ont leur ligne sous les onglets, séparée par un filet ; la recherche d'un sous-site les rejoint. L'onglet Méthode n'a plus de « ? ».", "Le texte explicatif de chaque onglet est replié dans « Comment lire cet onglet » et repris dans l'info-bulle de l'onglet.", "Le classement s'ouvre sur « Tous les objectifs » ; IDC sans projection : « --- » ; la carte ne signale plus que l'échec du fond.", "Correction : dans l'Arbitrage, changer l'objectif à faire reculer recalcule de nouveau le portefeuille."]},
+    {"date": "02.10.2026", "objet": "revue", "version": "v0.14", "titre": "Cartes repliables, en-tête sur trois lignes", "points": ["Chaque carte se replie par le chevron de son titre ; toutes sont dépliées par défaut et le repli est gardé dans ce navigateur.", "Périmètre, Mois de revue et Questions du mois ont leur ligne sous les onglets ; l'onglet Méthode n'a plus de « ? ».", "Le texte explicatif de chaque onglet passe dans son info-bulle."]},
+    {"date": "02.10.2026", "objet": "commun", "version": null, "titre": "Noms de portefeuille lisibles", "points": ["Dans les menus Périmètre, un nom écrit en capitales dans le classeur s'affiche en casse de nom propre ; le filtre compare toujours la valeur du classeur."]},
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.2", "titre": "En-tête commun, filtres toujours accessibles", "points": ["Les filtres Périmètre (ex-Portefeuille), Montants et CO₂ montent dans l'en-tête collant, à droite des onglets : ils restent accessibles partout.", "À droite du titre, comme dans la simulation : état des données, « Recharger le classeur », menu ☰.", "« Effacer les données de ce navigateur » devient une corbeille à côté de l'état des données.", "Mode présentation supprimé ; l'onglet Méthode est marqué « ? »."]},
+    {"date": "02.10.2026", "objet": "revue", "version": "v0.13", "titre": "En-tête commun, Méthode en onglet", "points": ["Même en-tête que la priorisation : état des données, « Recharger le classeur » et menu ☰ à droite du titre.", "Périmètre, Mois de revue et « Questions du mois » à droite des onglets, toujours accessibles.", "Le bouton « ? » devient l'onglet Méthode, le dernier, comme dans la priorisation.", "« Effacer les données de ce navigateur » devient une corbeille à côté de l'état des données."]},
+    {"date": "02.10.2026", "objet": "simulation", "version": "v3.4", "titre": "Corbeille à côté de l'état des données", "points": ["« Effacer les données de ce navigateur » quitte le menu ☰ : une corbeille à côté de l'état des données, texte au survol, comme dans les deux autres outils."]},
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.1", "titre": "Facteurs non mesurables : cumul et franchissement recalculés", "points": ["Après un ajustement (imposé, priorisé, dépriorisé, exclu), le cumul, le % de l'écart et le rang de franchissement suivent l'ordre affiché ; un exclu ne compte plus dans le cumul.", "Toutes les lignes jusqu'au rang de franchissement sont surlignées, plus seulement la ligne de franchissement.", "Hors classement : le montant affiché est celui du menu Montants ; « — » s'il manque dans cette colonne."]},
     {"date": "01.10.2026", "objet": "priorisation", "version": "v2.0", "titre": "Numérotation alignée sur les autres outils", "points": ["Le numéro de version prend la même forme que dans les autres outils : v2.0 et la date.", "Contenu identique à la version du 30.09 (v30.09.2026), mise en ligne le 01.10.", "Les versions précédentes gardent leur numéro daté dans cet historique."]},
     {"date": "30.09.2026", "objet": "accueil", "version": "v1.6", "titre": "Situation du programme", "points": ["Au-dessus des trois outils : voté, engagé, dépensé et estimé, en MCHF, avec une phrase et leurs sources, recalculés à chaque dépôt du classeur.", "Voté : 1 250 MCHF, loi 13210 (1 000) et loi 12552, embrasures (250). Engagé et dépensé : GE-Invest. Estimé : somme de l'Estim PTE.", "Le contrôle à l'import se lit ici, une fois, sous l'en-tête.", "L'empreinte du classeur passe dans l'info-bulle de la barre du classeur."]},
     {"date": "30.09.2026", "objet": "priorisation", "version": "v30.09.2026", "titre": "Revue du Cabinet : lecture plus directe", "points": ["La visite guidée ne s'ouvre plus d'office ; elle reste dans le menu ☰, relue et sans l'étape « Mode nuit ».", "Hors classement, chaque objectif trie et affiche sa propre grandeur : l'eau pour l'eau, l'électricité pour l'électricité, le CO₂ pour le CO₂, la chaleur sinon.", "Quand la cible 2030 est déjà atteinte au niveau du parc, la note le dit au lieu de « Cible non atteinte ».", "Textes revus : tuile Développement durable en une ligne, « huit engagements du programme », « Arbitrages », montants en MCHF, enveloppe de 1 250 MCHF sourcée (lois 13210 et 12552) ; les énoncés de la Méthode qui dépendaient du classeur sont calculés ou neutres."]},
@@ -2336,7 +2384,7 @@ var PTE_COMMUN = (function () {
            lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,
            publierClassement: publierClassement, lireClassement: lireClassement,
            lireQuestions: lireQuestions, ecrireQuestions: ecrireQuestions,
-           dateCourte: dateCourte, texteBadge: texteBadge,
+           dateCourte: dateCourte, texteBadge: texteBadge, nomPropre: nomPropre,
            ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, situationProgramme: situationProgramme, mchf: mchf,
            VERSIONS: VERSIONS, OBJETS_VER: OBJETS_VER, versionsDe: versionsDe, afficherVersions: afficherVersions };
 })();
@@ -3825,8 +3873,26 @@ var PTE_COMMUN = (function () {
   // ------------------------------------------------------------------
   function tip(el2, text) { if (el2 && text) el2.setAttribute('data-tip', text); return el2; }
   function infoIcon(text) { var s = el('span', { class: 'info-icon', tabindex: '0', 'aria-label': text }, ['i']); tip(s, text); return s; }
+  /* Cartes repliables (02.10.2026, demande d'Achim) : toutes dépliées par défaut. Le chevron du titre
+     replie la carte ; l'état est gardé par titre dans ce navigateur. Le repli est porté par le titre
+     (classe pli-ferme) et la feuille de style masque le reste de la carte. */
+  var LS_PLIS = 'pte.revue.plis.v1';
+  var PLIS = (function () { try { var o = JSON.parse(localStorage.getItem(LS_PLIS) || '{}'); return (o && typeof o === 'object') ? o : {}; } catch (e) { return {}; } })();
   function cardTitle(text, tipText, rightNode) {
-    var h = el('h2', { class: 'card-title' }, [text]);
+    /* clé stable : « Sémaphores — 2026-09 » et « Projets (3) » gardent leur état d'un mois ou d'un filtre à l'autre */
+    var cle = String(text).replace(/\s[—–-]\s.*$/, '').replace(/\s*\(.*$/, '').trim();
+    var ferme = PLIS[cle] === 1;
+    var pli = el('button', { type: 'button', class: 'card-pli', 'aria-expanded': ferme ? 'false' : 'true', 'aria-label': (ferme ? 'Déplier' : 'Replier') + ' « ' + cle + ' »' });
+    var h = el('h2', { class: 'card-title' + (ferme ? ' pli-ferme' : '') }, [pli, text]);
+    pli.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var f = !h.classList.contains('pli-ferme');
+      h.classList.toggle('pli-ferme', f);
+      pli.setAttribute('aria-expanded', f ? 'false' : 'true');
+      pli.setAttribute('aria-label', (f ? 'Déplier' : 'Replier') + ' « ' + cle + ' »');
+      if (f) PLIS[cle] = 1; else delete PLIS[cle];
+      try { localStorage.setItem(LS_PLIS, JSON.stringify(PLIS)); } catch (e2) { /* stockage indisponible : repli valable pour la page seulement */ }
+    });
     if (tipText) h.appendChild(infoIcon(tipText));
     if (rightNode) h.appendChild(el('span', { class: 'card-title-right' }, [rightNode]));
     return h;
@@ -5922,6 +5988,94 @@ var PTE_COMMUN = (function () {
     });
   }
 
+
+  // ---- Performance coût et planning (CPI / SPI) — 02.10.2026, diagramme demandé par Achim ----
+  // Valeur acquise    EV = avancement global × crédit total du projet
+  // Coût réel         AC = dépensé cumulé (comptabilisé à fin N-1 + comptabilisé N)
+  // Valeur planifiée  PV = part du temps écoulé entre le début et la fin prévus (dates initiales) × crédit
+  // CPI = EV / AC (coût) ; SPI = EV / PV (planning). Hypothèse : dépense planifiée linéaire dans le temps.
+  // Un projet n'est placé que si les deux indices se calculent : jamais de valeur par défaut.
+  var CPI_MAX = 1.5;   // au-delà, le point est posé sur le bord (« ≥ 1,5 »), comme dans le diagramme d'origine
+  function cpiSpi(r, ref) {
+    if (r.avancement === null || r.avancement === undefined || isNaN(r.avancement)) return { motif: 'avancement' };
+    if (!r.credit || r.credit <= 0) return { motif: 'credit' };
+    var d0 = Engine.parseDate(r.p.date_debut_prevue), d1 = Engine.parseDate(r.p.date_fin_prevue);
+    if (!d0 || !d1 || d1 <= d0) return { motif: 'dates' };
+    var part = Math.max(0, Math.min(1, (ref - d0) / (d1 - d0)));
+    if (part <= 0) return { motif: 'nonDemarre' };
+    var ac = (r.cumulN1 || 0) + (r.comptaN || 0);
+    if (ac <= 0) return { motif: 'depense' };
+    var ev = r.avancement / 100 * r.credit;
+    return { cpi: ev / ac, spi: ev / (part * r.credit) };
+  }
+  function cpiSpiClasse(x) { return (x.cpi >= 1 && x.spi >= 1) ? 'vert' : (x.cpi < 1 && x.spi < 1) ? 'rouge' : (x.spi < 1 ? 'retard' : 'derive'); }
+  function repCpiSpiCard(rows, ref) {
+    var pts = [], hors = { avancement: 0, credit: 0, dates: 0, nonDemarre: 0, depense: 0 };
+    rows.forEach(function (r) { var x = cpiSpi(r, ref); if (x.motif) hors[x.motif]++; else { x.r = r; x.k = cpiSpiClasse(x); pts.push(x); } });
+    var CL = {
+      vert:   { nom: 'Sous contrôle', detail: 'CPI ≥ 1 et SPI ≥ 1', couleur: JETON.vert },
+      retard: { nom: 'En retard sur le planning', detail: 'SPI < 1, CPI ≥ 1', couleur: JETON.orange },
+      derive: { nom: 'En dérive budgétaire', detail: 'CPI < 1, SPI ≥ 1', couleur: JETON.orange },
+      rouge:  { nom: 'Critiques', detail: 'CPI < 1 et SPI < 1', couleur: JETON.rouge }
+    };
+    var n = { vert: 0, retard: 0, derive: 0, rouge: 0 }; pts.forEach(function (x) { n[x.k]++; });
+    var card = el('div', { class: 'card', id: 'cpi-spi-card' });
+    card.appendChild(cardTitle('Performance coût et planning (CPI / SPI)',
+      'Un point par projet. SPI (planning) = valeur acquise ÷ valeur planifiée ; CPI (coût) = valeur acquise ÷ dépensé. Valeur acquise = avancement global × crédit du projet ; valeur planifiée = part du temps écoulé entre le début et la fin prévus × crédit (dépense supposée linéaire). 1 = conforme au plan ; en dessous, retard ou surcoût. Au-delà de 1,5 le point est posé sur le bord. Un clic sur un point ouvre le projet.'));
+    if (!pts.length) {
+      card.appendChild(el('p', { class: 'muted small' }, ['Aucun projet du périmètre ne peut être placé : il faut un avancement global, un crédit, des dates de début et de fin, et une dépense.']));
+    } else {
+      var W = 560, H = 340, pL = 46, pR = 14, pT = 14, pB = 40, MAXA = 1.6;
+      var pw = W - pL - pR, ph = H - pT - pB, NS = 'http://www.w3.org/2000/svg';
+      function sv(tag, a) { var e = document.createElementNS(NS, tag); if (a) Object.keys(a).forEach(function (k) { e.setAttribute(k, a[k]); }); return e; }
+      function X(v) { return pL + pw * Math.min(v, MAXA) / MAXA; }
+      function Y(v) { return pT + ph * (1 - Math.min(v, MAXA) / MAXA); }
+      var svg = sv('svg', { class: 'chart cpi-spi', viewBox: '0 0 ' + W + ' ' + H, role: 'img',
+        'aria-label': 'Nuage de points CPI et SPI : ' + n.vert + ' projets sous contrôle, ' + n.retard + ' en retard, ' + n.derive + ' en dérive budgétaire, ' + n.rouge + ' critiques.' });
+      [0, 0.5, 1, 1.5].forEach(function (t) {
+        svg.appendChild(sv('line', { x1: pL, x2: W - pR, y1: Y(t), y2: Y(t), stroke: JETON.grille, 'stroke-width': '1' }));
+        svg.appendChild(sv('line', { x1: X(t), x2: X(t), y1: pT, y2: H - pB, stroke: JETON.grille, 'stroke-width': '1' }));
+        var ty = sv('text', { x: pL - 8, y: Y(t) + 4, 'text-anchor': 'end', 'font-size': '11', fill: JETON.inkMuted }); ty.textContent = fmtDec(t); svg.appendChild(ty);
+        var tx = sv('text', { x: X(t), y: H - pB + 15, 'text-anchor': 'middle', 'font-size': '11', fill: JETON.inkMuted }); tx.textContent = fmtDec(t); svg.appendChild(tx);
+      });
+      // seuils à 1 : les quatre quadrants
+      svg.appendChild(sv('line', { x1: X(1), x2: X(1), y1: pT, y2: H - pB, stroke: JETON.slate, 'stroke-width': '1.4', 'stroke-dasharray': '5 4' }));
+      svg.appendChild(sv('line', { x1: pL, x2: W - pR, y1: Y(1), y2: Y(1), stroke: JETON.slate, 'stroke-width': '1.4', 'stroke-dasharray': '5 4' }));
+      var ax = sv('text', { x: pL + pw / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': '11', 'font-weight': 'bold', fill: JETON.inkMuted }); ax.textContent = 'SPI — planning'; svg.appendChild(ax);
+      var ay = sv('text', { x: 12, y: pT + ph / 2, 'text-anchor': 'middle', 'font-size': '11', 'font-weight': 'bold', fill: JETON.inkMuted, transform: 'rotate(-90 12 ' + (pT + ph / 2) + ')' }); ay.textContent = 'CPI — coût'; svg.appendChild(ay);
+      // les critiques dessous, les « sous contrôle » dessus : aucun point rouge n'est caché par un vert
+      var ordre = { vert: 3, retard: 1, derive: 2, rouge: 0 };
+      pts.slice().sort(function (a, b) { return ordre[a.k] - ordre[b.k]; }).forEach(function (x) {
+        var c = sv('circle', { cx: X(Math.min(x.spi, CPI_MAX)), cy: Y(Math.min(x.cpi, CPI_MAX)), r: '5', fill: CL[x.k].couleur, stroke: JETON.carte, 'stroke-width': '1.5', class: 'cpi-pt', tabindex: '0', role: 'button',
+          'aria-label': x.r.p.numero_projet + ' : ' + CL[x.k].nom });
+        tip(c, x.r.p.numero_projet + ' — ' + (x.r.p.nom_projet || '') + ' · CPI ' + fmt(x.cpi, 2) + ' · SPI ' + fmt(x.spi, 2) + ' · ' + CL[x.k].nom + '. Cliquer pour ouvrir le projet.');
+        function ouvrir() { STATE.rep.projet = x.r.p.numero_projet; renderReportingView(); }
+        c.addEventListener('click', ouvrir);
+        c.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ouvrir(); } });
+        svg.appendChild(c);
+      });
+      var legende = el('div', { class: 'cpi-legende' });
+      ['vert', 'retard', 'derive', 'rouge'].forEach(function (k) {
+        legende.appendChild(el('div', { class: 'cpi-ligne' }, [
+          el('span', { class: 'cpi-pastille', style: 'background:' + CL[k].couleur + ';' }),
+          el('span', { class: 'cpi-nb' }, [String(n[k])]),
+          el('span', {}, [el('strong', {}, [CL[k].nom]), el('span', { class: 'muted small' }, [' · ' + Math.round(100 * n[k] / pts.length) + ' % · ' + CL[k].detail])])
+        ]));
+      });
+      card.appendChild(el('div', { class: 'cpi-corps' }, [el('div', { class: 'cpi-graphe' }, [svg]), legende]));
+    }
+    var nHors = rows.length - pts.length;
+    var motifs = [];
+    if (hors.avancement) motifs.push(hors.avancement + ' sans avancement global');
+    if (hors.depense) motifs.push(hors.depense + ' sans dépense');
+    if (hors.nonDemarre) motifs.push(hors.nonDemarre + ' pas encore commencés selon leurs dates');
+    if (hors.dates) motifs.push(hors.dates + ' sans dates de début et de fin');
+    if (hors.credit) motifs.push(hors.credit + ' sans crédit');
+    card.appendChild(el('div', { class: 'small muted cpi-note' }, [pts.length + ' projet' + (pts.length > 1 ? 's' : '') + ' placé' + (pts.length > 1 ? 's' : '') + ' sur ' + rows.length +
+      (nHors ? ' ; ' + nHors + ' non placé' + (nHors > 1 ? 's' : '') + ' : ' + motifs.join(', ') + '.' : '.')]));
+    return card;
+  }
+
   // ---- Fil d'Ariane + barre de filtres --------------------------------
   function repCrumbs() {
     var wrap = el('div', { class: 'rep-crumbs' });
@@ -5933,6 +6087,7 @@ var PTE_COMMUN = (function () {
     var lvlProjet = !!STATE.rep.projet;
     var lvlSs = !!STATE.rep.ss;
     var lvlPf = !!STATE.rep.pf;
+    if (!lvlPf && !lvlSs && !lvlProjet) return wrap;   /* 02.10.2026 : au niveau Programme, les boutons « Aller à » prennent la place */
     wrap.appendChild(crumb('Programme', function () { STATE.rep.pf = null; STATE.rep.ss = null; STATE.rep.projet = null; ecrireHashSs(null); renderReportingView(); }, !lvlPf && !lvlSs && !lvlProjet));
     if (lvlPf) {
       wrap.appendChild(el('span', { class: 'crumb-sep' }, ['›']));
@@ -6355,18 +6510,8 @@ var PTE_COMMUN = (function () {
 
     if (STATE.questionsOuvertes && STATE.mois) body.appendChild(questionsCard(STATE.mois));
 
-    /* Reporting moins long (remarque d'Achim, 30.09.2026) : un sommaire en tête mène à chaque
-       bloc, le planning remonte juste après les sémaphores, la situation par statut est repliée. */
-    var SECTIONS = [['rep-sec-semaphores', 'Sémaphores'], ['rep-sec-planning', 'Planning'], ['rep-sec-finances', 'Finances'],
-                    ['rep-sec-portefeuilles', STATE.rep.pf ? 'Statuts' : 'Portefeuilles'], ['rep-sec-sous-sites', 'Sous-sites']];
-    var sommaire = el('nav', { class: 'rep-sommaire no-print', 'aria-label': 'Aller à une partie du reporting' }, [el('span', { class: 'muted small' }, ['Aller à :'])]);
-    SECTIONS.forEach(function (sx) {
-      var b = el('button', { type: 'button', class: 'rep-saut' }, [sx[1]]);
-      b.addEventListener('click', function () { var cible = document.getElementById(sx[0]); if (cible && cible.scrollIntoView) cible.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
-      sommaire.appendChild(b);
-    });
-    body.appendChild(sommaire);
-
+    /* Reporting moins long (30.09 et 02.10.2026) : les boutons « Aller à » sont dans la ligne figée
+       (renderReportingView), le planning suit les sémaphores et le diagramme CPI / SPI. */
     // (b)
     var nbSS = repSousSiteGroups(rows).filter(function (g) { return !!g.num; }).length;
     body.appendChild(repKPIStrip(agg, { sousSites: nbSS, list: list }));
@@ -6382,6 +6527,10 @@ var PTE_COMMUN = (function () {
     } else {
       body.appendChild(emptyCard('Aucun mois de suivi dans les données chargées : sémaphores non calculables.'));
     }
+
+    // CPI / SPI : suit le périmètre et les filtres affichés
+    body.appendChild(el('div', { id: 'rep-sec-cpi', class: 'rep-ancre' }));
+    body.appendChild(repCpiSpiCard(rows, gel));
 
     // (h) planning, remonté ici : dépliable par sous-site vers ses projets
     body.appendChild(el('div', { id: 'rep-sec-planning', class: 'rep-ancre' }));
@@ -6409,7 +6558,7 @@ var PTE_COMMUN = (function () {
     }
     var groupsSt = groupBy(rows, function (r) { return r.statut; });
     var statut = repAggTable('Statut', 'Situation consolidée par statut de projet GE-Invest (nombre, crédit, dépenses, engagés, prévisions).', groupsSt, null);
-    body.appendChild(STATE.rep.pf ? statut : el('details', { class: 'rep-repli' }, [el('summary', {}, ['Situation par statut de projet']), statut]));
+    if (STATE.rep.pf) body.appendChild(statut);   /* niveau Programme : retirée le 02.10.2026, doublon du filtre « Statut » */
 
     // (g)
     body.appendChild(el('div', { id: 'rep-sec-sous-sites', class: 'rep-ancre' }));
@@ -6417,6 +6566,11 @@ var PTE_COMMUN = (function () {
     markUnits(body);
   }
 
+  /* Hauteur de l'en-tête collant, donnée à la feuille de style : la ligne de filtres du Reporting se fige juste dessous. */
+  function majHauteurEntete() {
+    var h = $('header.hdr');
+    if (h && h.offsetHeight) document.documentElement.style.setProperty('--hdr-h', h.offsetHeight + 'px');
+  }
   function renderReportingView() {
     var host = $('#reporting-content');
     if (!host) return;
@@ -6429,9 +6583,22 @@ var PTE_COMMUN = (function () {
     if (STATE.hashMessage) host.appendChild(el('div', { class: 'notice warn' }, [STATE.hashMessage]));
     var all = repRows();
     var scoped = STATE.rep.pf ? all.filter(function (r) { return r.pf === STATE.rep.pf; }) : all;
+    /* Ligne figée sous l'en-tête (02.10.2026, demande d'Achim) : fil d'Ariane s'il y a lieu, boutons « Aller à », filtres. */
     var topRow = el('div', { class: 'rep-toprow no-print' }, [repCrumbs()]);
-    if (!STATE.rep.projet && !STATE.rep.ss) topRow.appendChild(repFilterBar(scoped));
+    if (!STATE.rep.projet && !STATE.rep.ss) {
+      var SECTIONS = [['rep-sec-semaphores', 'Sémaphores'], ['rep-sec-cpi', 'CPI / SPI'], ['rep-sec-planning', 'Planning'], ['rep-sec-finances', 'Finances'],
+                      ['rep-sec-portefeuilles', STATE.rep.pf ? 'Statuts' : 'Portefeuilles'], ['rep-sec-sous-sites', 'Sous-sites']];
+      var sommaire = el('nav', { class: 'rep-sommaire', 'aria-label': 'Aller à une partie du reporting' }, [el('span', { class: 'muted small' }, ['Aller à :'])]);
+      SECTIONS.forEach(function (sx) {
+        var b = el('button', { type: 'button', class: 'rep-saut' }, [sx[1]]);
+        b.addEventListener('click', function () { var cible = document.getElementById(sx[0]); if (cible && cible.scrollIntoView) cible.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+        sommaire.appendChild(b);
+      });
+      topRow.appendChild(sommaire);
+      topRow.appendChild(repFilterBar(scoped));
+    }
     host.appendChild(topRow);
+    majHauteurEntete();
     host.appendChild(el('div', { id: 'rep-body' }));
     renderRepBody();
   }
@@ -6891,25 +7058,11 @@ var PTE_COMMUN = (function () {
   // VUE : Données (Import + Contrôle de complétude + Paramètres, en accordéon)
   // ------------------------------------------------------------------
   function renderFilesTable() {
-    var tbody = $('#tbl-files tbody'); if (!tbody) return; tbody.innerHTML = '';
-    var files = DB.meta.files || {}; var names = Object.keys(files);
-    if (!names.length) tbody.appendChild(el('tr', {}, [el('td', { colspan: 4, class: 'muted' }, ['Aucun fichier chargé.'])]));
-    names.forEach(function (n) {
-      var f = files[n];
-      var typeLabel = f.type === 'plan_pte' ? 'classeur (.xlsx)' : (f.type ? f.type + '.csv' : '—');
-      tbody.appendChild(el('tr', {}, [
-        el('td', {}, [n]), el('td', {}, [typeLabel]), el('td', {}, [String(f.count)]),
-        el('td', {}, [f.ok ? semInline('vert', 'Reconnu') : semInline('rouge', 'Non reconnu')])
-      ]));
-    });
-    if (DB.meta.prioSource && DB.meta.prioSource.type === 'commun') {
-      tbody.appendChild(el('tr', {}, [
-        el('td', {}, ['Classement publié par l’outil de priorisation']), el('td', {}, ['classement commun']), el('td', {}, [String(DB.priorisation.length)]),
-        el('td', {}, [semInline('vert', 'Lu le ' + fmtDateCH(DB.meta.prioSource.date, true))])
-      ]));
-    }
-    var sum = $('#import-summary');
-    if (sum) sum.textContent = 'projets ' + DB.projets.length + ' · suivis ' + DB.suivi.length + ' · jalons ' + DB.jalons.length + ' · finances ' + DB.finances.length + ' · risques ' + DB.risques.length + ' · PTE ' + DB.pte.length + ' · décisions ' + DB.decisions.length + ' · objectifs 2030 ' + (DB.objectifs.length ? DB.objectifs.length : 'non chargé') + ' · classement ' + (DB.priorisation.length ? DB.priorisation.length + ' sous-sites (' + prioSourceLabel() + ')' : 'aucun') + (DB.contrat && DB.contrat.annee ? ' · année des mesures ' + DB.contrat.annee + ' (' + (DB.contrat.anneeSource === 'cellule' ? 'cellule Objectifs PTE' : 'repli') + ')' : '');
+    var sum = $('#import-summary'); if (!sum) return;
+    var files = DB.meta.files || {};
+    var lus = Object.keys(files).map(function (n) { return n + (files[n].ok ? '' : ' (non reconnu)'); });
+    if (DB.meta.prioSource && DB.meta.prioSource.type === 'commun') lus.push('classement publié par la priorisation le ' + fmtDateCH(DB.meta.prioSource.date, true));
+    sum.textContent = (lus.length ? 'Lu : ' + lus.join(' · ') + ' — ' : 'Aucun fichier chargé — ') + 'projets ' + DB.projets.length + ' · suivis ' + DB.suivi.length + ' · jalons ' + DB.jalons.length + ' · finances ' + DB.finances.length + ' · risques ' + DB.risques.length + ' · PTE ' + DB.pte.length + ' · décisions ' + DB.decisions.length + ' · objectifs 2030 ' + (DB.objectifs.length ? DB.objectifs.length : 'non chargé') + ' · classement ' + (DB.priorisation.length ? DB.priorisation.length + ' sous-sites (' + prioSourceLabel() + ')' : 'aucun') + (DB.contrat && DB.contrat.annee ? ' · année des mesures ' + DB.contrat.annee + ' (' + (DB.contrat.anneeSource === 'cellule' ? 'cellule Objectifs PTE' : 'repli') + ')' : '');
   }
 
   // Manquants du contrat de données (vague 2) : résumé par champ, détail replié
@@ -7004,22 +7157,10 @@ var PTE_COMMUN = (function () {
   function renderDonneesView() {
     var host = $('#donnees-content'); host.innerHTML = '';
 
-    var accImport = el('details', { class: 'accordion', open: '' });
-    accImport.appendChild(el('summary', {}, ['Chargement', infoIcon('Classeur Plan_PTE.xlsx, plus decisions.csv et priorisation.csv en option. Fichiers reconnus par leurs colonnes, jamais par leur nom. CSV : « ; » ou « , ».')]));
-    var body1 = el('div', { class: 'accordion-body' });
-    var dz = buildDropzone(false);
-    body1.appendChild(dz);
-    var planLoaded = !!(DB.planpte && DB.planpte.n > 0);
-    var btnLoad = el('button', { type: 'button', class: planLoaded ? 'btn' : 'btn btn-p', id: 'btn-load' }, [planLoaded ? 'Recharger le classeur' : 'Charger le classeur']);
-    btnLoad.addEventListener('click', function () { var inp = dz.querySelector('input[type=file]'); if (inp) inp.click(); });
-    // Même action que l'entrée « Effacer les données de ce navigateur » du
-    // menu ☰ : le bouton reste ici, à sa place dans le parcours de chargement.
-    var btnClear = el('button', { type: 'button', class: 'btn btn-danger', id: 'btn-effacer-donnees' }, ['Effacer les données de ce navigateur']);
-    btnClear.addEventListener('click', function () { demanderEffacement(); });
-    body1.appendChild(el('div', { class: 'toolbar', style: 'margin-top:.2em;' }, [btnLoad, btnClear, el('span', { class: 'muted small', id: 'import-summary' })]));
-    body1.appendChild(el('table', { id: 'tbl-files' }, [el('thead', {}, [el('tr', {}, [el('th', { class: 'no-sort' }, ['Fichier']), el('th', { class: 'no-sort' }, ['Type']), el('th', { class: 'no-sort' }, ['Lignes']), el('th', { class: 'no-sort' }, ['Statut'])])]), el('tbody')]));
-    accImport.appendChild(body1);
-    host.appendChild(accImport);
+    /* Bloc « Chargement » retiré le 02.10.2026 (demande d'Achim) : charger, recharger et effacer sont dans
+       l'en-tête. Il reste une ligne : ce qui a été lu. Les fichiers en option (decisions.csv, priorisation.csv)
+       passent par « Recharger le classeur » ou par un dépôt sur la page. */
+    host.appendChild(el('div', { class: 'muted small', id: 'import-summary', style: 'margin:0 0 12px;' }));
 
     var accComp = el('details', { class: 'accordion', open: '' });
     accComp.appendChild(el('summary', {}, ['Contrôle de complétude', infoIcon('Projets sans suivi du mois, sans sous-site, sans jalon ou jalon sans date, sans prévision annuelle, sans ligne PTE, risque sans probabilité, sous-site sans SRE, facteur CO₂ à renseigner.')]));
@@ -7134,17 +7275,15 @@ var PTE_COMMUN = (function () {
     d4.appendChild(b4); host.appendChild(d4);
   }
 
+  // Méthode : un onglet comme les autres, le dernier, marqué « ? » — même représentation
+  // que dans la priorisation (02.10.2026). openPanel / closePanel restent pour les appels existants.
+  var vueAvantMethode = 'reporting';
   function openPanel() {
-    renderMethodeView();
-    $('#panel-methode').hidden = false;
-    $('#panel-backdrop').hidden = false;
-    $('#btn-panel-close').focus();
+    var cur = $('#nav-tabs button.on');
+    if (cur && cur.dataset.view !== 'methode') vueAvantMethode = cur.dataset.view;
+    showView('methode');
   }
-  function closePanel() {
-    $('#panel-methode').hidden = true;
-    $('#panel-backdrop').hidden = true;
-    $('#btn-help').focus();
-  }
+  function closePanel() { showView(vueAvantMethode); }
 
   // ------------------------------------------------------------------
   // Navigation / rendu global
@@ -7203,6 +7342,7 @@ var PTE_COMMUN = (function () {
     if (name === 'portefeuille') renderPortefeuilleView();
     if (name === 'parc') renderParcView();
     if (name === 'donnees') renderDonneesView();
+    if (name === 'methode') renderMethodeView();
     markUnits();
   }
 
@@ -7221,10 +7361,11 @@ var PTE_COMMUN = (function () {
     sel.innerHTML = '';
     sel.appendChild(el('option', { value: 'ALL' }, ['Tout le parc']));
     var rpfs = Array.from(new Set(DB.projets.map(function (p) { return p.rpf; }).filter(function (v) { return v && v.trim(); }))).sort();
-    rpfs.forEach(function (r) { sel.appendChild(el('option', { value: 'RPF:' + r }, ['RPF — ' + r])); });
+    var nomP = (COMMUN && COMMUN.nomPropre) ? COMMUN.nomPropre : function (x) { return x; };   // affichage seul : la valeur reste celle du classeur
+    rpfs.forEach(function (r) { sel.appendChild(el('option', { value: 'RPF:' + r }, ['RPF — ' + nomP(r)])); });
     sel.appendChild(el('option', { value: 'HORS' }, ['Hors périmètre RPF']));
     var rps = Array.from(new Set(DB.projets.map(function (p) { return p.rp; }).filter(function (v) { return v && v.trim(); }))).sort();
-    rps.forEach(function (r) { sel.appendChild(el('option', { value: 'RP:' + r }, ['RP — ' + r])); });
+    rps.forEach(function (r) { sel.appendChild(el('option', { value: 'RP:' + r }, ['RP — ' + nomP(r)])); });
     sel.value = prev; if (sel.value !== prev) { STATE.perimetre = 'ALL'; sel.value = 'ALL'; }
   }
 
@@ -7247,7 +7388,8 @@ var PTE_COMMUN = (function () {
     $all('#nav-tabs button').forEach(function (b) { b.addEventListener('click', function () { showView(b.dataset.view); }); });
     $('#sel-mois').addEventListener('change', function (e) { STATE.mois = e.target.value; renderAll(); });
     $('#sel-filtre').addEventListener('change', function (e) { STATE.perimetre = e.target.value; renderAll(); });
-    $('#btn-help').addEventListener('click', openPanel);
+    var btnEff = $('#btnEff');
+    if (btnEff) btnEff.addEventListener('click', demanderEffacement);
     var btnQ = $('#btn-questions');
     if (btnQ) btnQ.addEventListener('click', function () {
       if (!STATE.mois) return;
@@ -7260,23 +7402,23 @@ var PTE_COMMUN = (function () {
     });
     if (COMMUN) window.addEventListener('hashchange', function () { var ss = COMMUN.ssDepuisHash(); if (ss && DB.projets.length) ouvrirSousSite(ss); });
     var btnReload = $('#btn-reload');
+    var fClasseur = $('#fClasseur');
+    if (fClasseur) {
+      fClasseur.setAttribute('accept', DROP_ACCEPT);
+      fClasseur.addEventListener('change', function (e) { handleFiles(Array.prototype.slice.call(e.target.files || [])); e.target.value = ''; });
+    }
     if (btnReload) btnReload.addEventListener('click', function () {
-      // Avant import : même sélecteur de fichier que la zone de dépôt visible ; après : onglet Données.
-      if (!planFileInfo()) { var inp = $('section.view:not([hidden]) .drop input[type=file]'); if (inp) { inp.click(); return; } }
-      showView('donnees'); var acc = $('#donnees-content details'); if (acc) acc.open = true;
+      // 02.10.2026 : le bouton ouvre le choix du fichier, avant comme après l'import (le bloc « Chargement » de l'onglet Données est retiré)
+      if (fClasseur) fClasseur.click();
     });
+    window.addEventListener('resize', majHauteurEntete);
     wireGlobalDrop();
     wireMenu();
-    $('#btn-panel-close').addEventListener('click', closePanel);
-    $('#panel-backdrop').addEventListener('click', closePanel);
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && $('#panel-methode') && !$('#panel-methode').hidden) closePanel(); });
 
     $('#search-projet').addEventListener('input', function () { renderFicheSelect(); buildFiche($('#sel-projet').value); });
     $('#sel-projet').addEventListener('change', function (e) { STATE.projetSel = e.target.value; buildFiche(STATE.projetSel); });
     $('#btn-print-fiche').addEventListener('click', function () { printWithSize('portrait'); });
     $('#btn-export-decisions-fiche').addEventListener('click', exportDecisionsProjet);
-    $('#btn-print-portefeuille').addEventListener('click', function () { printWithSize('landscape'); });
-    $('#btn-print-parc').addEventListener('click', function () { printWithSize('landscape'); });
     wireTooltips();
   }
 

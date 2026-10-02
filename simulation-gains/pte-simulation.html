@@ -466,6 +466,31 @@ a.btn{text-decoration:none;display:inline-block}
   body.night img,body.night svg image{filter:none}
   .menu-wrap,.tour-mask,.tour-hole,.tour-box{display:none !important}
 }
+/* ══════════════════════════════════════════════════════════════
+   EN-TÊTE COMMUN v2 — 02.10.2026 (Achim) — même bloc dans les outils.
+   Ligne 1 : titre · à droite, l'état des données (pastille + corbeille),
+             « Charger / Recharger le classeur », menu ☰.
+   Ligne 2 : onglets à gauche (« Méthode » en dernier, marqué « ? »),
+             filtres de contexte à droite. L'en-tête étant collant,
+             les filtres restent accessibles en tout point de la page.
+   ══════════════════════════════════════════════════════════════ */
+.data-set{display:inline-flex;align-items:center;gap:2px}
+.btn-eff{width:28px;height:28px;padding:0;border:0;border-radius:50%;background:none;color:var(--ink-muted);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;transition:.15s}
+.btn-eff:hover,.btn-eff:focus-visible{background:var(--tint-rouge);color:var(--red)}
+.btn-eff svg{width:15px;height:15px;display:block}
+.badge.none + .btn-eff{display:none}
+.hdr-row2{max-width:var(--wrap);margin:0 auto;padding:8px 24px 10px;display:flex;align-items:center;gap:6px 20px;flex-wrap:wrap}
+.hdr-row2 .tabs{max-width:none;margin:0;padding:0;flex:1 1 100%}
+.hdr-ctx{display:flex;align-items:center;gap:6px 22px;flex-wrap:wrap;font-size:12.5px;flex:1 1 100%;
+  margin-top:4px;padding-top:8px;border-top:1px solid var(--border)}
+.hdr-ctx .cx-l{display:inline-flex;align-items:center;gap:6px;margin:0;font-size:12.5px;font-weight:normal;
+  text-transform:none;letter-spacing:0;color:var(--ink-muted);white-space:nowrap}
+.hdr-ctx select.cx-in{width:auto;max-width:210px;padding:3px 6px;font:inherit;font-size:12.5px;font-weight:bold;color:var(--ink-70);
+  border:1px solid transparent;border-radius:6px;background-color:transparent;cursor:pointer}
+.hdr-ctx select.cx-in:hover,.hdr-ctx select.cx-in:focus{border-color:var(--border)}
+.hdr-ctx .btn{padding:4px 12px;font-size:12.5px}
+body.no-data .hdr-ctx{display:none !important}
 </style>
 </head>
 <body>
@@ -483,7 +508,7 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
     </div>
     <div class="grow"></div>
     <div class="hdr-right">
-      <span class="badge none" id="badge">Aucune donnée chargée</span>
+      <span class="data-set"><span class="badge none" id="badge">Aucune donnée chargée</span><button type="button" class="btn-eff" id="btnEff" title="Effacer les données de ce navigateur" aria-label="Effacer les données de ce navigateur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg></button></span>
       <button class="btn btn-p" id="btnCharger">Charger le classeur</button>
       <button class="btn hidden" id="btnUpdate">Recharger le classeur</button>
       <span class="menu-wrap">
@@ -498,8 +523,6 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
           <div class="grp">Affichage</div>
           <button class="item" data-act="theme">Mode nuit<span id="mTheme">désactivé</span></button>
           <button class="item" data-act="tour">Visite guidée</button>
-          <div class="sep"></div>
-          <button class="item danger" data-act="effacer">Effacer les données de ce navigateur</button>
         </div>
       </span>
       <input type="file" id="fSaisies" accept=".json,application/json" hidden>
@@ -658,7 +681,7 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Simulation des gains · <a href="#" data-pte-versions="simulation" title="Historique des versions">v3.3 · 30.09.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Simulation des gains · <a href="#" data-pte-versions="simulation" title="Historique des versions">v3.4 · 02.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 <div id="flash"></div>
@@ -1591,6 +1614,14 @@ var PTE_COMMUN = (function () {
     var p = function (n) { return (n < 10 ? '0' : '') + n; };
     return p(d.getDate()) + '.' + p(d.getMonth() + 1) + '.' + d.getFullYear();
   }
+  /* Nom de personne ou de portefeuille écrit en capitales dans le classeur (« REIS MENINO TIAGO ») :
+     affiché en casse de nom propre (« Reis Menino Tiago »). Affichage seulement : les filtres
+     continuent de comparer la valeur du classeur. (02.10.2026) */
+  function nomPropre(v) {
+    var t = String(v == null ? '' : v);
+    if (!/[A-Za-zÀ-ÿ]/.test(t) || t !== t.toLocaleUpperCase('fr')) return t;   /* seuls les libellés tout en capitales sont repris */
+    return t.toLocaleLowerCase('fr').replace(/(^|[\s\-'’.(/])([a-zà-ÿ])/g, function (m, a, b) { return a + b.toLocaleUpperCase('fr'); });
+  }
   /* Texte de la pastille d'état, identique dans les trois outils. */
   function texteBadge(n, meta, remarques) {
     if (!meta && !n) return 'Aucune donnée chargée';
@@ -1739,6 +1770,15 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.4", "titre": "Classement en sous-onglets, une seule recherche", "points": ["Le Classement a quatre sous-onglets : Liste, Matrice urgence × faisabilité, Top 20, Distribution et état SIA. Plus de défilement pour atteindre les trois derniers.", "Une seule recherche, dans l'en-tête : une proposition ouvre la fiche du sous-site ; un texte libre validé par Entrée filtre le classement, et une étiquette « Filtre » permet de le retirer.", "Carte : fond Esri World Street par défaut ; les fonds CARTO, qui exigent désormais une clé, sont retirés."]},
+    {"date": "02.10.2026", "objet": "revue", "version": "v0.15", "titre": "Diagramme CPI / SPI, ligne de filtres figée", "points": ["Reporting : nouveau diagramme coût et planning (CPI / SPI), un point par projet, quatre quadrants comptés ; il suit le périmètre et les filtres. Les projets sans avancement global ne sont pas placés, et c'est dit.", "La ligne « Aller à » et les filtres reste visible sous l'en-tête ; le mot « Programme » disparaît.", "Retirés : la situation par statut au niveau Programme, le bloc « Chargement » de l'onglet Données, les boutons d'impression du Parc et du Portefeuille.", "« Recharger le classeur » ouvre directement le choix du fichier."]},
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.3", "titre": "En-tête sur trois lignes, onglets allégés", "points": ["Les filtres Périmètre, Montants et CO₂ ont leur ligne sous les onglets, séparée par un filet ; la recherche d'un sous-site les rejoint. L'onglet Méthode n'a plus de « ? ».", "Le texte explicatif de chaque onglet est replié dans « Comment lire cet onglet » et repris dans l'info-bulle de l'onglet.", "Le classement s'ouvre sur « Tous les objectifs » ; IDC sans projection : « --- » ; la carte ne signale plus que l'échec du fond.", "Correction : dans l'Arbitrage, changer l'objectif à faire reculer recalcule de nouveau le portefeuille."]},
+    {"date": "02.10.2026", "objet": "revue", "version": "v0.14", "titre": "Cartes repliables, en-tête sur trois lignes", "points": ["Chaque carte se replie par le chevron de son titre ; toutes sont dépliées par défaut et le repli est gardé dans ce navigateur.", "Périmètre, Mois de revue et Questions du mois ont leur ligne sous les onglets ; l'onglet Méthode n'a plus de « ? ».", "Le texte explicatif de chaque onglet passe dans son info-bulle."]},
+    {"date": "02.10.2026", "objet": "commun", "version": null, "titre": "Noms de portefeuille lisibles", "points": ["Dans les menus Périmètre, un nom écrit en capitales dans le classeur s'affiche en casse de nom propre ; le filtre compare toujours la valeur du classeur."]},
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.2", "titre": "En-tête commun, filtres toujours accessibles", "points": ["Les filtres Périmètre (ex-Portefeuille), Montants et CO₂ montent dans l'en-tête collant, à droite des onglets : ils restent accessibles partout.", "À droite du titre, comme dans la simulation : état des données, « Recharger le classeur », menu ☰.", "« Effacer les données de ce navigateur » devient une corbeille à côté de l'état des données.", "Mode présentation supprimé ; l'onglet Méthode est marqué « ? »."]},
+    {"date": "02.10.2026", "objet": "revue", "version": "v0.13", "titre": "En-tête commun, Méthode en onglet", "points": ["Même en-tête que la priorisation : état des données, « Recharger le classeur » et menu ☰ à droite du titre.", "Périmètre, Mois de revue et « Questions du mois » à droite des onglets, toujours accessibles.", "Le bouton « ? » devient l'onglet Méthode, le dernier, comme dans la priorisation.", "« Effacer les données de ce navigateur » devient une corbeille à côté de l'état des données."]},
+    {"date": "02.10.2026", "objet": "simulation", "version": "v3.4", "titre": "Corbeille à côté de l'état des données", "points": ["« Effacer les données de ce navigateur » quitte le menu ☰ : une corbeille à côté de l'état des données, texte au survol, comme dans les deux autres outils."]},
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.1", "titre": "Facteurs non mesurables : cumul et franchissement recalculés", "points": ["Après un ajustement (imposé, priorisé, dépriorisé, exclu), le cumul, le % de l'écart et le rang de franchissement suivent l'ordre affiché ; un exclu ne compte plus dans le cumul.", "Toutes les lignes jusqu'au rang de franchissement sont surlignées, plus seulement la ligne de franchissement.", "Hors classement : le montant affiché est celui du menu Montants ; « — » s'il manque dans cette colonne."]},
     {"date": "01.10.2026", "objet": "priorisation", "version": "v2.0", "titre": "Numérotation alignée sur les autres outils", "points": ["Le numéro de version prend la même forme que dans les autres outils : v2.0 et la date.", "Contenu identique à la version du 30.09 (v30.09.2026), mise en ligne le 01.10.", "Les versions précédentes gardent leur numéro daté dans cet historique."]},
     {"date": "30.09.2026", "objet": "accueil", "version": "v1.6", "titre": "Situation du programme", "points": ["Au-dessus des trois outils : voté, engagé, dépensé et estimé, en MCHF, avec une phrase et leurs sources, recalculés à chaque dépôt du classeur.", "Voté : 1 250 MCHF, loi 13210 (1 000) et loi 12552, embrasures (250). Engagé et dépensé : GE-Invest. Estimé : somme de l'Estim PTE.", "Le contrôle à l'import se lit ici, une fois, sous l'en-tête.", "L'empreinte du classeur passe dans l'info-bulle de la barre du classeur."]},
     {"date": "30.09.2026", "objet": "priorisation", "version": "v30.09.2026", "titre": "Revue du Cabinet : lecture plus directe", "points": ["La visite guidée ne s'ouvre plus d'office ; elle reste dans le menu ☰, relue et sans l'étape « Mode nuit ».", "Hors classement, chaque objectif trie et affiche sa propre grandeur : l'eau pour l'eau, l'électricité pour l'électricité, le CO₂ pour le CO₂, la chaleur sinon.", "Quand la cible 2030 est déjà atteinte au niveau du parc, la note le dit au lieu de « Cible non atteinte ».", "Textes revus : tuile Développement durable en une ligne, « huit engagements du programme », « Arbitrages », montants en MCHF, enveloppe de 1 250 MCHF sourcée (lois 13210 et 12552) ; les énoncés de la Méthode qui dépendaient du classeur sont calculés ou neutres."]},
@@ -1887,7 +1927,7 @@ var PTE_COMMUN = (function () {
            lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,
            publierClassement: publierClassement, lireClassement: lireClassement,
            lireQuestions: lireQuestions, ecrireQuestions: ecrireQuestions,
-           dateCourte: dateCourte, texteBadge: texteBadge,
+           dateCourte: dateCourte, texteBadge: texteBadge, nomPropre: nomPropre,
            ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, situationProgramme: situationProgramme, mchf: mchf,
            VERSIONS: VERSIONS, OBJETS_VER: OBJETS_VER, versionsDe: versionsDe, afficherVersions: afficherVersions };
 })();
@@ -3225,10 +3265,11 @@ function init() {
     else if (a === 'import') $('#fSaisies').click();
     else if (a === 'theme') { PTE_COMMUN.basculerTheme(); majLibelleTheme(); }
     else if (a === 'tour') PTE_COMMUN.tour(ETAPES_SIM, { cle: 'pte.tour.simulation.v1' });
-    else if (a === 'effacer') {
-      if (confirm('Effacer les données de cet outil dans ce navigateur ?\nLe classeur commun de Pilotage PTE fera l’objet d’une seconde question.')) purger();
-    }
   }));
+  /* l'effacement a quitté le menu : corbeille à côté de l'état des données (02.10.2026) */
+  $('#btnEff').addEventListener('click', () => {
+    if (confirm('Effacer les données de cet outil dans ce navigateur ?\nLe classeur commun de Pilotage PTE fera l’objet d’une seconde question.')) purger();
+  });
   $('#fSaisies').addEventListener('change', e => {
     if (e.target.files[0]) menuImporterSaisies(e.target.files[0]);
     e.target.value = '';

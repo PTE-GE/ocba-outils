@@ -271,11 +271,6 @@ a.tab{text-decoration:none;display:inline-flex;align-items:center;line-height:1}
 #printCard{display:none}
 #printCard.on{display:block}
 
-.pres-mode .hdr p,.pres-mode .mini,.pres-mode .fb,.pres-mode .wt .ch{display:none!important}
-.pres-mode{font-size:16px}
-.pres-mode .cd{padding:18px 20px}
-.pres-mode .tr-val{font-size:2.1rem}
-.pres-mode table.tblx{font-size:.92rem}
 .lock-chip{display:inline-block;padding:1px 7px;border-radius:9px;font-size:.62rem;font-weight:700;background:var(--surf-dark);color:var(--on-surf-dark);margin-left:5px}
 
 /* ================= v10 — sobriété, hiérarchie, mode nuit ================= */
@@ -350,7 +345,7 @@ body.night svg text{fill:var(--ink2)}
   background-image:linear-gradient(45deg,transparent 50%,var(--ink3) 50%),linear-gradient(135deg,var(--ink3) 50%,transparent 50%);
   background-position:calc(100% - 7px) 55%,calc(100% - 3px) 55%;background-size:4px 4px,4px 4px;background-repeat:no-repeat}
 .cx-sel select{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;cursor:pointer;font:inherit}
-.cx-btn{border:0;background:none;font:inherit;cursor:pointer;text-align:left}
+.cx-btn{border:0;background-color:transparent;font:inherit;cursor:pointer;text-align:left}
 /* Le choix multiple de portefeuilles : une liste de cases, pas un <select
    multiple> — illisible dans une barre de contexte de 30 pixels de haut. */
 .rp-pop{display:none;position:absolute;left:0;top:calc(100% + 6px);z-index:320;width:290px;
@@ -560,6 +555,7 @@ body.night .errbox,body.night .warnbox{background:rgba(229,105,92,.10)}
 .geo-tip b{color:var(--pri)}
 .tile-select{padding:4px 8px;border:1px solid #cbd5e0;border-radius:6px;font-size:.73rem;background:var(--card);cursor:pointer;max-width:200px}
 .tile-status{font-size:.65rem;padding:2px 8px;border-radius:10px;font-weight:600;white-space:nowrap}
+.tile-status.tile-ok,.tile-status.tile-loading{display:none}   /* 02.10.2026 : seul l'échec s'affiche */
 .tile-ok{background:var(--bg-ok);color:var(--fg-ok)}.tile-loading{background:var(--bg-warn);color:var(--fg-warn)}.tile-err{background:var(--bg-err);color:var(--fg-err)}
 .leaflet-container img,.leaflet-container img.leaflet-tile{max-width:none!important;max-height:none!important;padding:0!important;border:none!important;border-radius:0!important;box-shadow:none!important}
 /* ---- spécifique optimiseur ---- */
@@ -868,6 +864,22 @@ details.howto>div,details.howto>p{margin-top:6px;line-height:1.55}
    forme d'un bandeau comme ceux du dessus — neutre par défaut, coloré s'il porte
    déjà part-warn ou attr-warn. */
 details.howto.plein{max-width:none}
+/* texte d'onglet replié par défaut (02.10.2026) : il ne prend plus de place sous l'en-tête */
+details.tab-howto{margin:0 0 10px}
+/* sous-onglets du Classement (02.10.2026) */
+.sous-onglets{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+.sous-onglets .so{font:inherit;font-size:12.5px;font-weight:bold;color:var(--teal);background:var(--card-bg);border:1px solid var(--border);
+  border-radius:100px;padding:5px 13px;cursor:pointer}
+.sous-onglets .so:hover{background:var(--blue-pale)}
+.sous-onglets .so.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.rank-vue{display:none}
+.rank-vue.on{display:block}
+/* recherche unique (02.10.2026) : le filtre de texte du classement se pose depuis l'en-tête et s'affiche ici */
+.f-chip{display:inline-flex;align-items:center;gap:6px;font-size:.76rem;padding:3px 4px 3px 10px;border:1px solid var(--teal);border-radius:100px;color:var(--ink);background:var(--blue-pale)}
+.f-chip b{font-weight:bold}
+.f-chip button{border:0;background:none;color:var(--teal);font:inherit;font-weight:bold;cursor:pointer;padding:0 6px;border-radius:50%}
+.f-chip[hidden]{display:none}
+.gs-it.gs-filtre{border-top:1px solid var(--border);color:var(--teal);font-weight:bold}
 details.howto.plein>div{background:var(--soft);border:1px solid var(--line);
   border-radius:8px;padding:7px 10px;font-size:.72rem;margin:6px 0 10px}
 details.howto.plein>div.part-warn{background:var(--bg-info);color:var(--fg-info);border-color:var(--acc)}
@@ -915,6 +927,39 @@ body.night .m-feas-tbl th{background:var(--surf-acc);color:var(--on-surf-acc)}
    plus sous l'en-tête collant. C1 : bandeau du classeur commun. C2 : liens
    croisés en bas de fiche (petits .btn texte). */
 body.no-data .gsearch{display:none!important}
+/* ══════════════════════════════════════════════════════════════
+   EN-TÊTE COMMUN v2 — 02.10.2026 (Achim) — même bloc dans les outils.
+   Ligne 1 : titre · à droite, l'état des données (pastille + corbeille),
+             « Charger / Recharger le classeur », menu ☰.
+   Ligne 2 : onglets (« Méthode » en dernier, sans « ? »).
+   Ligne 3 : filtres de contexte, alignés à gauche sous les onglets, séparés
+             par un filet ; la recherche d'un sous-site ferme la ligne à droite
+             (retours d'Achim du 02.10.2026). L'en-tête étant collant, les
+             filtres restent accessibles en tout point de la page.
+   ══════════════════════════════════════════════════════════════ */
+.data-set{display:inline-flex;align-items:center;gap:2px}
+.btn-eff{width:28px;height:28px;padding:0;border:0;border-radius:50%;background:none;color:var(--ink-muted);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;transition:.15s}
+.btn-eff:hover,.btn-eff:focus-visible{background:var(--tint-rouge);color:var(--red)}
+.btn-eff svg{width:15px;height:15px;display:block}
+.badge.none + .btn-eff{display:none}
+.hdr-row2{max-width:var(--wrap);margin:0 auto;padding:8px 24px 10px;display:flex;align-items:center;gap:6px 20px;flex-wrap:wrap}
+.hdr-row2 .tabs{max-width:none;margin:0;padding:0;flex:1 1 100%}
+.hdr-ctx{display:flex;align-items:center;gap:6px 22px;flex-wrap:wrap;font-size:12.5px;flex:1 1 100%;
+  margin-top:4px;padding-top:8px;border-top:1px solid var(--border)}
+.hdr-ctx .cx-txt{font:inherit;font-size:12.5px;font-weight:bold;color:var(--ink-70)}
+.hdr-ctx .gsearch{margin-left:auto}
+.hdr-ctx .gsearch input{width:220px;padding:4px 10px}
+.hdr-ctx .gs-res{left:auto;right:0}
+.hdr-ctx .cx-l{display:inline-flex;align-items:center;gap:6px;margin:0;font-size:12.5px;font-weight:normal;
+  text-transform:none;letter-spacing:0;color:var(--ink-muted);white-space:nowrap}
+.hdr-ctx select.cx-in{width:auto;max-width:210px;padding:3px 6px;font:inherit;font-size:12.5px;font-weight:bold;color:var(--ink-70);
+  border:1px solid transparent;border-radius:6px;background-color:transparent;cursor:pointer}
+.hdr-ctx select.cx-in:hover,.hdr-ctx select.cx-in:focus{border-color:var(--border)}
+.hdr-ctx .btn{padding:4px 12px;font-size:12.5px}
+body.no-data .hdr-ctx{display:none !important}
+body.no-data .hdr-row2{display:none !important}
+.rp-pop{max-width:calc(100vw - 32px)}
 #noticeCommun{max-width:var(--wrap);margin:10px auto 0;padding:0 24px}
 #noticeCommun .notice{display:block}
 #noticeCommun .notice-in{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -978,11 +1023,7 @@ body.night .fiche-card{background:var(--card-bg)}
   </div>
   <div class="grow"></div>
   <div class="hdr-right">
-  <span class="badge none" id="badge">Aucune donnée chargée</span>
-  <div class="gsearch">
-    <input id="gq" placeholder="Rechercher un sous-site…" autocomplete="off" oninput="gsRun()" onkeydown="gsKey(event)" title="Numéro de sous-site ou nom — Entrée pour ouvrir la fiche">
-    <div class="gs-res" id="gsRes"></div>
-  </div>
+  <span class="data-set"><span class="badge none" id="badge">Aucune donnée chargée</span><button type="button" class="btn-eff" id="btnEff" onclick="clearAllData()" title="Effacer les données de ce navigateur" aria-label="Effacer les données de ce navigateur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg></button></span>
   <button class="btn btn-p" id="btnLoad" onclick="$('fIn').click()" title="Choisir Plan_PTE.xlsx sur ce poste">Charger le classeur</button>
   <input type="file" id="fIn" accept=".csv,.xlsx,.xlsm,.xls" style="display:none" onchange="handleFileImport(event)">
   <span style="position:relative">
@@ -1002,10 +1043,7 @@ body.night .fiche-card{background:var(--card-bg)}
       <div class="sep"></div>
       <div class="grp">Affichage</div>
       <a onclick="tglTheme()">Mode nuit<span id="mTheme">désactivé</span></a>
-      <a onclick="tglPres()">Mode présentation</a>
       <a onclick="tourStart()">Visite guidée</a>
-      <div class="sep"></div>
-      <a onclick="clearAllData()" style="color:var(--red)">Effacer les données de ce navigateur</a>
     </div>
   </span>
   </div>
@@ -1074,14 +1112,34 @@ body.night .fiche-card{background:var(--card-bg)}
 <div class="pop-h" style="margin-top:6px">Mémorisés dans ce navigateur, appliqués à tous les onglets, rappelés dans l'onglet Méthode.</div>
 </div>
 </div>
+<div class="hdr-row2">
 <nav class="tabs">
-    <button class="tab on" data-panel="dash" onclick="sw('dash',this)">Vue d'ensemble</button>
-    <button class="tab" data-panel="rank" onclick="sw('rank',this)">Classement</button>
-    <button class="tab" data-panel="arb" onclick="sw('arb',this)">Arbitrage</button>
-    <button class="tab" data-panel="mapPnl" onclick="sw('mapPnl',this)">Carte</button>
-    <button class="tab" data-panel="data" onclick="sw('data',this)">Données</button>
-    <button class="tab" data-panel="manual" onclick="sw('manual',this)">Méthode</button>
+    <button class="tab on" data-panel="dash" onclick="sw('dash',this)" title="Les huit engagements du programme face à leurs cibles 2030, puis le portefeuille en cours. Une tuile ouvre sa trajectoire et ses sources.">Vue d'ensemble</button>
+    <button class="tab" data-panel="rank" onclick="sw('rank',this)" title="Chaque sous-site classé par coût de l'unité gagnée, objectif par objectif — sauf le photovoltaïque, la végétalisation et l'IDC, qui ont chacun leur propre clé de tri, annoncée au-dessus du tableau. Un clic sur une ligne ouvre sa fiche.">Classement</button>
+    <button class="tab" data-panel="arb" onclick="sw('arb',this)" title="Enveloppe, plafond annuel et cible : l'outil retient les sous-sites dans l'ordre du classement et montre ce qu'ils produisent.">Arbitrage</button>
+    <button class="tab" data-panel="mapPnl" onclick="sw('mapPnl',this)" title="Chaque sous-site sur la carte, avec les filtres du Classement et du portefeuille ; le survol d'un repère donne sa fiche courte.">Carte</button>
+    <button class="tab" data-panel="data" onclick="sw('data',this)" title="Ce que le classeur contient, ce qui manque, et ce que cela empêche de calculer.">Données</button>
+    <button class="tab" data-panel="manual" onclick="sw('manual',this)" title="Méthode et données : d'où vient chaque chiffre et comment il est calculé">Méthode</button>
 </nav>
+<div class="hdr-ctx" id="srcbar">
+  <label class="cx-l" title="Restreindre tout l'outil à un ou plusieurs portefeuilles">Périmètre
+    <span class="cx-sel"><button type="button" class="cx-txt cx-btn" id="gRPTxt" onclick="tglRP(event)">tous</button>
+      <div class="rp-pop" id="gRPPop" onclick="event.stopPropagation()">
+        <div class="rp-h">Cochez un ou plusieurs portefeuilles. Aucune case cochée = tout le parc.</div>
+        <div class="rp-list" id="gRPList"></div>
+        <div class="rp-f"><button class="bt bt-s" onclick="rpAll(false)">Tout décocher</button>
+          <button class="bt bt-p bt-s" style="flex:1" onclick="rpApply()">Appliquer</button></div>
+      </div></span></label>
+  <label class="cx-l" title="Colonne d'où viennent les montants — en changer recalcule tous les classements">Montants
+    <span class="cx-sel"><span class="cx-txt" id="gInvTxt">—</span><select id="gInv" onchange="onInvChange()"></select></span></label>
+  <label class="cx-l" title="Base de comptabilité du CO₂. « Mesuré » retient les émissions du fichier, réseaux de chaleur compris. « Convention légale » compte les réseaux de chaleur, le bois, les pompes à chaleur et le solaire à zéro émission. Elle ne touche PAS aux classements par objectif, qui se calculent sur les facteurs d'émission par agent : elle change les émissions du parc, les tonnes évitées, le prix de la tonne et tout l'onglet Arbitrage.">CO₂
+    <span class="cx-sel"><span class="cx-txt" id="gCo2Txt">—</span><select id="gCo2" onchange="onCo2ConvChange()"></select></span></label>
+  <div class="gsearch">
+    <input id="gq" placeholder="Rechercher un sous-site…" autocomplete="off" oninput="gsRun()" onkeydown="gsKey(event)" title="Numéro ou nom d'un sous-site : une proposition ouvre sa fiche. Texte libre + Entrée : filtre le classement.">
+    <div class="gs-res" id="gsRes"></div>
+  </div>
+</div>
+</div>
 </header>
 <div id="emptyState">
   <div class="drop" id="dropzone">
@@ -1093,28 +1151,10 @@ body.night .fiche-card{background:var(--card-bg)}
   </div>
 </div>
 <div id="noticeCommun" hidden></div>
-<div class="srcbar" id="srcbar"><div class="srcbar-in">
-  <span class="srcbar-left">
-  <label class="cx-l" title="Colonne d'où viennent les montants — en changer recalcule tous les classements">Montants
-    <span class="cx-sel"><span class="cx-txt" id="gInvTxt">—</span><select id="gInv" onchange="onInvChange()"></select></span></label>
-  <span class="cx-s">·</span>
-  <label class="cx-l" title="Base de comptabilité du CO₂. « Mesuré » retient les émissions du fichier, réseaux de chaleur compris. « Convention légale » compte les réseaux de chaleur, le bois, les pompes à chaleur et le solaire à zéro émission. Elle ne touche PAS aux classements par objectif, qui se calculent sur les facteurs d'émission par agent : elle change les émissions du parc, les tonnes évitées, le prix de la tonne et tout l'onglet Arbitrage.">CO₂
-    <span class="cx-sel"><span class="cx-txt" id="gCo2Txt">—</span><select id="gCo2" onchange="onCo2ConvChange()"></select></span></label>
-  <span class="cx-s">·</span>
-  <label class="cx-l" title="Restreindre tout l'outil à un ou plusieurs portefeuilles">Portefeuille
-    <span class="cx-sel"><button type="button" class="cx-txt cx-btn" id="gRPTxt" onclick="tglRP(event)">tous</button>
-      <div class="rp-pop" id="gRPPop" onclick="event.stopPropagation()">
-        <div class="rp-h">Cochez un ou plusieurs portefeuilles. Aucune case cochée = tout le parc.</div>
-        <div class="rp-list" id="gRPList"></div>
-        <div class="rp-f"><button class="bt bt-s" onclick="rpAll(false)">Tout décocher</button>
-          <button class="bt bt-p bt-s" style="flex:1" onclick="rpApply()">Appliquer</button></div>
-      </div></span></label>
-  </span>
-</div></div>
 <!-- ===== DASHBOARD ===== -->
 <div id="dash" class="pnl on">
   <div class="sec-h">Le parc et le portefeuille</div>
-  <p class="lead tab-lead">Les huit engagements du programme face à leurs cibles 2030, puis le portefeuille en cours. Une tuile ouvre sa trajectoire et ses sources.</p>
+  <details class="howto tab-howto"><summary>Comment lire cet onglet</summary><div>Les huit engagements du programme face à leurs cibles 2030, puis le portefeuille en cours. Une tuile ouvre sa trajectoire et ses sources.</div></details>
   <div class="statbar">
     <span title="Sous-sites présents dans le classeur"><b id="k1">—</b> sous-sites</span>
     <span title="Sous-sites encore chauffés au mazout ou au gaz"><b id="k2">—</b> fossiles</span>
@@ -1129,8 +1169,16 @@ body.night .fiche-card{background:var(--card-bg)}
 </div><!-- /dash -->
 
 <div id="rank" class="pnl">
-<div class="sec-h">Classement</div>
-<p class="lead tab-lead">Chaque sous-site classé par coût de l'unité gagnée, objectif par objectif — sauf le photovoltaïque, la végétalisation et l'IDC, qui ont chacun leur propre clé de tri, annoncée au-dessus du tableau. Un clic sur une ligne ouvre sa fiche.</p>
+<!-- Sous-onglets (02.10.2026, décision d'Achim) : la liste est si longue que la matrice, le top 20 et
+     la distribution n'étaient jamais atteints. Un seul bloc affiché à la fois. -->
+<nav class="sous-onglets" id="rankVues" aria-label="Vues du classement">
+<button type="button" class="so on" data-vue="liste" onclick="rankVue('liste')">Liste</button>
+<button type="button" class="so" data-vue="matrice" onclick="rankVue('matrice')">Matrice urgence × faisabilité</button>
+<button type="button" class="so" data-vue="top" onclick="rankVue('top')">Top 20</button>
+<button type="button" class="so" data-vue="dist" onclick="rankVue('dist')">Distribution et état SIA</button>
+</nav>
+<div class="rank-vue on" data-vue="liste">
+<details class="howto tab-howto"><summary>Comment lire cet onglet</summary><div>Chaque sous-site classé par coût de l'unité gagnée, objectif par objectif — sauf le photovoltaïque, la végétalisation et l'IDC, qui ont chacun leur propre clé de tri, annoncée au-dessus du tableau. Un clic sur une ligne ouvre sa fiche.</div></details>
 <div class="cd" id="objRankCard">
 <div class="wt op" onclick="tglS('objRankBody','objRankCh')" title="Cliquer pour déplier ou replier le classement"><h3 style="margin:0;border:none;padding:0">Classement par objectif</h3><span class="ch op" id="objRankCh">▼</span></div>
 <div class="wb op" id="objRankBody">
@@ -1143,7 +1191,7 @@ body.night .fiche-card{background:var(--card-bg)}
 <button class="bt bt-p bt-s" onclick="exportClassement()" title="Export pour l'outil de revue de projets">Exporter le classement (CSV)</button>
 </div>
 <div class="fb" id="objFilters" title="Le menu de gauche choisit l'objectif classé ; les suivants filtrent l'affichage sans changer les rangs">
-<select id="objSel" onchange="renR();try{renTop(scored(getGlobalRP()))}catch(e){}">
+<select id="objSel" onchange="renR();topSync();try{renTop(scored(getGlobalRP()))}catch(e){}">
 <option value="co2">CO₂</option>
 <option value="th">Thermique</option>
 <option value="idc">IDC</option>
@@ -1152,14 +1200,14 @@ body.night .fiche-card{background:var(--card-bg)}
 <option value="eau">Eau</option>
 <option value="pv">Photovoltaïque</option>
 <option value="veg">Développement durable</option>
-<option value="tous">Tous les objectifs</option>
+<option value="tous" selected>Tous les objectifs</option>
 </select>
 <span class="f-sel"><button type="button" class="f-bt" id="fFoTxt" onclick="tglF('fo',event)">Tout chauffage</button><div class="rp-pop" id="fFoPop" onclick="event.stopPropagation()"><div class="rp-h">Chauffage actuel — cochez un ou plusieurs choix. Aucune case cochée = pas de filtre.</div><div class="rp-list" id="fFoList"></div><div class="rp-f"><button class="bt bt-s" onclick="fselAll('fo',false)">Tout décocher</button><button class="bt bt-p bt-s" style="flex:1" onclick="fselApply('fo')">Appliquer</button></div></div></span>
 <span class="f-sel"><button type="button" class="f-bt" id="fPaTxt" onclick="tglF('pa',event)">Tout patrimoine</button><div class="rp-pop" id="fPaPop" onclick="event.stopPropagation()"><div class="rp-h">Classement au patrimoine — cochez un ou plusieurs choix. Aucune case cochée = pas de filtre.</div><div class="rp-list" id="fPaList"></div><div class="rp-f"><button class="bt bt-s" onclick="fselAll('pa',false)">Tout décocher</button><button class="bt bt-p bt-s" style="flex:1" onclick="fselApply('pa')">Appliquer</button></div></div></span>
 <span class="f-sel"><button type="button" class="f-bt" id="fRpjTxt" onclick="tglF('rpj',event)">Responsable projet : tous</button><div class="rp-pop" id="fRpjPop" onclick="event.stopPropagation()"><div class="rp-h">Responsable du projet — cochez un ou plusieurs choix. Aucune case cochée = pas de filtre.</div><div class="rp-list" id="fRpjList"></div><div class="rp-f"><button class="bt bt-s" onclick="fselAll('rpj',false)">Tout décocher</button><button class="bt bt-p bt-s" style="flex:1" onclick="fselApply('rpj')">Appliquer</button></div></div></span>
 <span class="f-sel"><button type="button" class="f-bt" id="fCeTxt" onclick="tglF('ce',event)">Tout CECB+</button><div class="rp-pop" id="fCePop" onclick="event.stopPropagation()"><div class="rp-h">État de l’audit CECB+ — cochez un ou plusieurs choix. Aucune case cochée = pas de filtre.</div><div class="rp-list" id="fCeList"></div><div class="rp-f"><button class="bt bt-s" onclick="fselAll('ce',false)">Tout décocher</button><button class="bt bt-p bt-s" style="flex:1" onclick="fselApply('ce')">Appliquer</button></div></div></span>
 <span class="f-sel"><button type="button" class="f-bt" id="fEtTxt" onclick="tglF('et',event)">État projet : tous</button><div class="rp-pop" id="fEtPop" onclick="event.stopPropagation()"><div class="rp-h">État du projet au sens SIA — cochez un ou plusieurs choix. Aucune case cochée = pas de filtre.</div><div class="rp-list" id="fEtList"></div><div class="rp-f"><button class="bt bt-s" onclick="fselAll('et',false)">Tout décocher</button><button class="bt bt-p bt-s" style="flex:1" onclick="fselApply('et')">Appliquer</button></div></div></span>
-<input type="text" id="fSe" placeholder="Rechercher…" oninput="renR();fselRzBtn()">
+<input type="hidden" id="fSe"><span class="f-chip" id="fSeChip" hidden title="Filtre de texte posé depuis la recherche de l'en-tête">Filtre : <b id="fSeTxt"></b><button type="button" onclick="fSeEffacer()" aria-label="Retirer le filtre de texte">×</button></span>
 <button type="button" class="f-rz" id="fRz" onclick="resetFiltres()" disabled>× Effacer les filtres <b id="fRzN"></b></button>
 </div>
 <div class="flat-warn" id="rankFlatWarn"></div>
@@ -1173,31 +1221,44 @@ body.night .fiche-card{background:var(--card-bg)}
 <div id="objBody" style="overflow:auto;max-height:72vh"></div>
 </div>
 </div>
+</div><!-- /vue liste -->
 
+<div class="rank-vue" data-vue="matrice">
 <div class="cd">
-<div class="wt" onclick="tglS('ufB','ufCh')"><h3 style="margin:0;border:none;padding:0">Matrice Urgence × Faisabilité</h3><span class="ch" id="ufCh">▼</span></div>
-<div class="wb" id="ufB"><div style="padding-top:8px">
+<div class="wt op" onclick="tglS('ufB','ufCh')"><h3 style="margin:0;border:none;padding:0">Matrice Urgence × Faisabilité</h3><span class="ch op" id="ufCh">▼</span></div>
+<div class="wb op" id="ufB"><div style="padding-top:8px">
 <p style="font-size:.72rem;color:var(--ink3);margin-bottom:4px">Quadrant <b>haut-droite</b> = urgent ET faisable → priorité maximale. Faisabilité = CECB+ (33) + Substitution (33) + Budget (34) − Protection patrimoniale (0 à −50).</p>
 <div id="gUF"></div>
 </div></div>
 </div>
+</div><!-- /vue matrice -->
+<div class="rank-vue" data-vue="top">
 <div class="cd">
 <div class="wt" onclick="tglS('topB','topCh')"><h3 style="margin:0;border:none;padding:0">Top 20 — <span id="topTitle" style="color:var(--sec);font-weight:400">Global</span></h3><span class="ch op" id="topCh">▼</span></div>
-<div class="wb op" id="topB"><div style="padding-top:8px"><div id="gTop" style="height:500px"></div></div></div>
+<div class="wb op" id="topB"><div style="padding-top:8px">
+<div class="fb"><label for="topObj" style="font-size:.76rem;color:var(--ink3)">Objectif</label>
+<select id="topObj" onchange="try{renTop(scored(getGlobalRP()))}catch(e){}" title="Objectif dont le Top 20 est affiché. Il suit le menu de la Liste quand un objectif précis y est choisi.">
+<option value="co2">CO₂</option><option value="th">Thermique</option><option value="idc">IDC</option><option value="ren">Renouvelable</option>
+<option value="elec">Électricité</option><option value="eau">Eau</option><option value="pv">Photovoltaïque</option><option value="veg">Développement durable</option>
+</select></div>
+<div id="gTop" style="height:500px"></div></div></div>
 </div>
+</div><!-- /vue top -->
+<div class="rank-vue" data-vue="dist">
 <div class="cd">
-<div class="wt" onclick="tglS('distB','distCh')"><h3 style="margin:0;border:none;padding:0">Distribution et état SIA</h3><span class="ch" id="distCh">▼</span></div>
-<div class="wb" id="distB"><div style="padding-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div class="wt op" onclick="tglS('distB','distCh')"><h3 style="margin:0;border:none;padding:0">Distribution et état SIA</h3><span class="ch op" id="distCh">▼</span></div>
+<div class="wb op" id="distB"><div style="padding-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
 <div class="cd"><h3>Distribution <span style="font-weight:400;font-size:.65rem;color:var(--ink3)">coût du kWh évité, CHF/kWh</span></h3><div id="gHist" style="height:210px"></div></div>
 <div class="cd"><h3>État SIA</h3><div id="gPie"></div></div>
 </div></div>
 </div>
+</div><!-- /vue dist -->
 </div><!-- /rank -->
 <!-- ===== CARTE ===== -->
 <div id="mapPnl" class="pnl">
 <div class="cd">
 <h3>Localisation des sous-sites</h3>
-<p class="lead tab-lead" style="margin-top:2px">Chaque sous-site sur la carte, avec les filtres du Classement et du portefeuille ; le survol d'un repère donne sa fiche courte.</p>
+<details class="howto tab-howto"><summary>Comment lire cet onglet</summary><div>Chaque sous-site sur la carte, avec les filtres du Classement et du portefeuille ; le survol d'un repère donne sa fiche courte.</div></details>
 <details class="howto" id="geoTip"><summary>Comment géolocaliser les adresses sans coordonnées</summary><div class="geo-tip">Les adresses sans coordonnées peuvent être géolocalisées sur demande (bouton ci-dessous) : elles sont alors envoyées à OpenStreetMap, service tiers, puis le résultat est mémorisé par le navigateur. Pour un résultat immédiat et définitif, ajoutez deux colonnes <b>Latitude</b> et <b>Longitude</b> au classeur.</div></details>
 <div class="fb">
 <div class="fb">
@@ -1218,14 +1279,11 @@ body.night .fiche-card{background:var(--card-bg)}
 <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
 <label style="font-size:.73rem;font-weight:600;color:var(--pri)">Fond de carte :</label>
 <select id="tileSelect" class="tile-select" onchange="switchTile(+this.value)">
-<option value="0">Esri World Street</option>
+<option value="0" selected="">Esri World Street</option>
 <option value="1">Esri World Topo</option>
 <option value="2">Esri Satellite</option>
-<option value="3" selected="">CARTO Voyager</option>
-<option value="4">CARTO Positron</option>
-<option value="5">CARTO Dark</option>
-<option value="6">OpenStreetMap</option>
-<option value="7">OpenTopoMap</option>
+<option value="3">OpenStreetMap</option>
+<option value="4">OpenTopoMap</option>
 </select>
 <span id="tileStatus" class="tile-status tile-loading">chargement…</span>
 </div>
@@ -1239,8 +1297,7 @@ body.night .fiche-card{background:var(--card-bg)}
 
 <!-- ================= ARBITRAGE ================= -->
 <div id="arb" class="pnl">
-<div class="sec-h">Arbitrage</div>
-<p class="lead tab-lead">Enveloppe, plafond annuel et cible : l'outil retient les sous-sites dans l'ordre du classement et montre ce qu'ils produisent.</p>
+<details class="howto tab-howto"><summary>Comment lire cet onglet</summary><div>Enveloppe, plafond annuel et cible : l'outil retient les sous-sites dans l'ordre du classement et montre ce qu'ils produisent.</div></details>
 <div class="cd">
 <h3 class="sec">Arbitrages</h3>
 <div class="flat-warn" id="arbFlatWarn"><b>Montants « hors chiffrage »</b> — dans ce mode le coût unitaire est déclaré identique pour tous les sous-sites, et <b>aucune colonne financière n'est lue</b>. Il n'y a donc pas de budget à arbitrer ici : l'enveloppe, le prix de la tonne évitée et le phasage n'ont pas de sens tant qu'il est actif. Revenez à <b>Estim PTE</b>, <b>Invest ImmOBA</b> ou <b>GE-Invest</b> pour arbitrer.</div>
@@ -1258,7 +1315,7 @@ body.night .fiche-card{background:var(--card-bg)}
 <div>
 <h4 class="sub">Objectif à faire reculer</h4>
 <details class="howto"><summary>Comment lire ce choix</summary><div>Un seul objectif à la fois : l'ordre obtenu est alors exactement celui du <b>Classement</b> — franc dépensé, gain obtenu. « Toutes cibles » répartit à parts égales, « Calé sur les écarts 2030 » pondère par le retard restant sur chaque cible.</div></details>
-<select id="optObj" onchange="syncObjectif('arb')" style="padding:6px 10px;border:1px solid #cbd5e0;border-radius:6px;font-size:.82rem;width:100%">
+<select id="optObj" onchange="runOpt()" style="padding:6px 10px;border:1px solid #cbd5e0;border-radius:6px;font-size:.82rem;width:100%">
 <option value="co">CO₂ seul</option>
 <option value="th">Thermique seul</option>
 <option value="el">Électricité seule</option>
@@ -1333,8 +1390,7 @@ body.night .fiche-card{background:var(--card-bg)}
 
 <div id="data" class="pnl">
 <div class="sec-h">Santé des données</div>
-<p class="lead tab-lead">Ce que le classeur contient, ce qui manque, et ce que cela empêche de calculer.</p>
-<details class="howto"><summary>Comment lire cet onglet</summary><div>Les cinq blocs vont du plus général au plus détaillé : anomalies détectées dans les séries, colonnes qui bloquent les classements, alertes sous-site par sous-site, taux de remplissage, puis la liste complète des sous-sites retenus et écartés.</div></details>
+<details class="howto tab-howto"><summary>Comment lire cet onglet</summary><div>Ce que le classeur contient, ce qui manque, et ce que cela empêche de calculer. Les cinq blocs vont du plus général au plus détaillé : anomalies détectées dans les séries, colonnes qui bloquent les classements, alertes sous-site par sous-site, taux de remplissage, puis la liste complète des sous-sites retenus et écartés.</div></details>
 <div class="cd" id="anoCard">
 <div class="wt op" onclick="tglS('anoBody','anoCh')" title="Anomalies détectées dans le classeur, exportables pour correction"><h3 style="margin:0;border:none;padding:0">Anomalies détectées dans les séries</h3>
 <div style="display:flex;align-items:center;gap:8px">
@@ -1422,7 +1478,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <b>CO₂</b> : gain = SRE × IDC × facteur du chauffage actuel − SRE × IDC projeté × facteur du chauffage prévu, en kg/an. Si le classeur fournit un CO₂ projeté par sous-site, c'est lui qui prime.<br>
 <b>Renouvelable</b> : gain = SRE × IDC, pour les bâtiments passant d'une énergie fossile à une énergie renouvelable.<br>
 <b>Coût unitaire</b> : montant ÷ (gain × durée de vie retenue). C'est le prix de l'unité gagnée, et c'est lui qui ordonne le classement, du moins cher au plus cher.<br>
-<b>Quel montant ?</b> celui de la colonne choisie dans le menu <b>Montants</b> de la barre de source — <code>Estim CECB+</code> (par défaut), <code>Estim PTE</code>, <code>DG 3.31 [CHF]</code> ou <code>Prévisionnel PTE GEI</code>. Le menu indique combien de montants chaque colonne contient réellement ; en changer recalcule tous les classements, tous les coûts unitaires et l'arbitrage.<br>
+<b>Quel montant ?</b> celui de la colonne choisie dans le menu <b>Montants</b> de l'en-tête — <code>Estim CECB+</code> (par défaut), <code>Estim PTE</code>, <code>DG 3.31 [CHF]</code> ou <code>Prévisionnel PTE GEI</code>. Le menu indique combien de montants chaque colonne contient réellement ; en changer recalcule tous les classements, tous les coûts unitaires et l'arbitrage.<br>
 <b>Durée de vie retenue</b> : 40 ans par défaut, <b>et réglable objectif par objectif</b> (menu ☰ → Paramètres de calcul → « Durée de vie »). <b>Ce n'est pas une norme SIA</b> — c'est la convention de calcul du coût de l'énergie économisée reprise de <code>Priorisation_PTE.xlsx</code>. Une seule durée pour tous supposerait qu'une isolation d'enveloppe, une pompe à chaleur et une robinetterie s'amortissent pareil ; en régler une par objectif évite d'avantager mécaniquement celui dont les mesures durent le plus longtemps. La durée réellement appliquée est écrite en tête de colonne de chaque classement.<br>
 <b>Rang de franchissement</b> : le rang auquel le cumul des gains atteint l'écart restant à combler pour 2030.</div></div>
 <p><b>La végétalisation fait exception elle aussi</b>, dans l'autre sens : elle est chiffrée mais ne se rapporte à aucune durée de vie. Une cour d'école désimperméabilisée ne produit pas un flux annuel de kWh évités ; elle crée une surface, une fois. Son classement se fait donc au <b>coût du m² créé</b> — montant TTC du projet ÷ m² créés — du moins cher au plus cher, sans actualisation ni durée de vie. Le rang de franchissement garde le même sens : le rang auquel le cumul des surfaces atteint la cible 2030. Attention à la lecture des surfaces : la colonne du classeur porte ce que les projets <b>créeraient</b>, pas ce qui est déjà créé — l'écart à combler est donc l'objectif entier.</p>
@@ -1463,7 +1519,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td><b>CECB+</b></td><td>Certificat énergétique cantonal des bâtiments, version avec rapport de conseil : il propose des variantes de rénovation (A, B, C), dont l'une est retenue.</td></tr>
 <tr><td><b>CEE</b></td><td>Coût de l'énergie économisée : le prix du kWh évité sur la durée de vie retenue (40 ans par défaut, modifiable dans les Paramètres de calcul). Ce n'est plus un classement depuis le 03.09.2026 — il doublonnait exactement le Thermique — mais une <b>mesure</b>, qui alimente la distribution de l'onglet Arbitrage.</td></tr>
 <tr><td><b>RP</b></td><td>Responsable de <b>projet</b> : celui qui conduit l'opération de rénovation, de l'étude à la réception. C'est lui que porte la colonne <code>RP</code> du classement.</td></tr>
-<tr><td><b>RPF</b></td><td>Responsable de <b>portefeuille</b> : celui qui suit un ensemble de bâtiments dans la durée, indépendamment des opérations en cours. Il figure sous le nom du sous-site et sert au filtre <b>Portefeuille</b> de la barre du haut. Le classeur le porte en colonne <code>Responsables Portefeuille</code>.</td></tr>
+<tr><td><b>RPF</b></td><td>Responsable de <b>portefeuille</b> : celui qui suit un ensemble de bâtiments dans la durée, indépendamment des opérations en cours. Il figure sous le nom du sous-site et sert au filtre <b>Périmètre</b> de l'en-tête. Le classeur le porte en colonne <code>Responsables Portefeuille</code>.</td></tr>
 <tr><td><b>CAD</b></td><td>Chauffage à distance : réseau qui livre au bâtiment de la chaleur produite ailleurs, à la place d'une chaudière sur place. Un bâtiment raccordé cesse d'être compté parmi les agents fossiles et reçoit la contribution CO₂ de la substitution, sans que son IDC baisse pour autant. Genève impose le raccordement au-delà de 50 kW.</td></tr>
 <tr><td><b>PAC</b></td><td>Pompe à chaleur : machine qui prélève de la chaleur dans l'air, le sol ou l'eau et la relève à la température du chauffage, en consommant de l'électricité. Elle ne produit pas de chaleur, elle en <b>déplace</b> : c'est pourquoi l'outil affiche à part l'électricité qu'elle achète, dès que le <b>SCOP</b> du bâtiment est saisi. Elle sort le bâtiment des agents fossiles — sauf en version hybride <b>PAC+Gaz</b>, dont la part renouvelable est une convention à fixer dans les Paramètres de calcul et qui, tant qu'elle ne l'est pas, reste comptée comme fossile.</td></tr>
 <tr><td><b>SCOP</b></td><td>Coefficient de performance saisonnier d'une pompe à chaleur, sans unité : le rapport entre la chaleur qu'elle livre sur une année et l'électricité qu'elle a consommée pour cela. Un SCOP de 3 signifie 3 kWh de chaleur pour 1 kWh d'électricité. C'est le seul facteur qui rende une PAC comparable à une chaudière : à chaleur livrée égale, il dit ce que chaque moyen achète. Il se saisit bâtiment par bâtiment dans la colonne <code>SCOP PAC [-]</code> du <code>Plan_PTE</code> — une PAC sur sonde géothermique et une PAC air/eau n'ont pas le même. Sans lui, l'outil n'affiche rien plutôt qu'une hypothèse.</td></tr>
@@ -1481,7 +1537,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <h3 class="sec">Ce que fait cet outil, et ce qu'il ne peut pas faire</h3>
 
 <h4 class="sub">1. L'unité de décision est le sous-site, pas la mesure</h4>
-<p class="mini">Chaque sous-site audité par CECB+ a une variante retenue, un IDC après travaux et un investissement — <b>un seul chiffre</b>, celui de la colonne choisie dans le menu <b>Montants</b> de la ligne de contexte (<code>Estim CECB+</code> par défaut, <code>Estim PTE</code>, <code>DG 3.31 [CHF]</code> ou <code>Prévisionnel PTE GEI</code>), qui porte déjà le remplacement de chaufferie quand il y en a un. <b>Changer de colonne recalcule tous les classements</b> : elles n'ont ni le même nombre de bâtiments chiffrés ni les mêmes montants, donc pas le même ordre. L'outil ne décompose pas le site en gestes séparés (chaufferie, éclairage, ventilation…) qu'on financerait indépendamment : il finance ou non le bâtiment entier, à ce prix, et récupère au passage tout ce que la rénovation apporte — thermique, CO₂, et le cas échéant une substitution d'agent renouvelable.</p>
+<p class="mini">Chaque sous-site audité par CECB+ a une variante retenue, un IDC après travaux et un investissement — <b>un seul chiffre</b>, celui de la colonne choisie dans le menu <b>Montants</b> de l'en-tête (<code>Estim CECB+</code> par défaut, <code>Estim PTE</code>, <code>DG 3.31 [CHF]</code> ou <code>Prévisionnel PTE GEI</code>), qui porte déjà le remplacement de chaufferie quand il y en a un. <b>Changer de colonne recalcule tous les classements</b> : elles n'ont ni le même nombre de bâtiments chiffrés ni les mêmes montants, donc pas le même ordre. L'outil ne décompose pas le site en gestes séparés (chaufferie, éclairage, ventilation…) qu'on financerait indépendamment : il finance ou non le bâtiment entier, à ce prix, et récupère au passage tout ce que la rénovation apporte — thermique, CO₂, et le cas échéant une substitution d'agent renouvelable.</p>
 <p class="mini">Le menu porte un quatrième choix qui n'est pas un référentiel : <b>Hors chiffrage</b>. Il <b>déclare le coût unitaire identique pour tous les bâtiments</b> — aucune colonne du classeur n'est lue. Le coût cesse alors de départager quoi que ce soit, et le seul critère qui subsiste est la <b>contribution</b> : le classement va du plus gros contributeur au plus petit, et le rang de franchissement y devient le <b>nombre minimal de bâtiments</b> qui comblent l'écart. Les colonnes Montant et CHF/unité n'ont plus de contenu.</p>
 <p class="mini">C'est la réponse à une limite gênante du classement par coût unitaire : un bâtiment sans montant saisi en est purement absent, si bien que l'ordre obtenu ne dit rien de lui. Hors chiffrage répond à « où est la matière », le référentiel financier à « où est le meilleur franc » ; les deux lectures se complètent et ne se remplacent pas. L'onglet Arbitrage est inopérant tant que le mode est actif : sans montants, il n'y a pas de budget à répartir.</p>
 <p class="mini"><b>Ce que ce mode ne débloque pas.</b> Il lève le verrou du <b>coût</b>, pas celui de l'<b>audit</b>. Un bâtiment sans CECB+ n'a pas d'IDC projeté, donc aucune contribution calculable, donc aucun rang — dans ce mode comme dans les autres. Sur le CO₂ la population classable s'élargit, mais reste loin de la totalité du parc ; le bandeau du classement dit à chaque fois combien manquent et pourquoi. Un forfait interne subsiste dans le code pour rendre éligible un bâtiment sans montant, la construction des contributions exigeant un coût pour retenir un bâtiment — il n'est affiché nulle part, et n'entre dans aucun calcul de classement.</p>
@@ -1523,7 +1579,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.0 · 01.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.4 · 02.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -2428,6 +2484,14 @@ var PTE_COMMUN = (function () {
     var p = function (n) { return (n < 10 ? '0' : '') + n; };
     return p(d.getDate()) + '.' + p(d.getMonth() + 1) + '.' + d.getFullYear();
   }
+  /* Nom de personne ou de portefeuille écrit en capitales dans le classeur (« REIS MENINO TIAGO ») :
+     affiché en casse de nom propre (« Reis Menino Tiago »). Affichage seulement : les filtres
+     continuent de comparer la valeur du classeur. (02.10.2026) */
+  function nomPropre(v) {
+    var t = String(v == null ? '' : v);
+    if (!/[A-Za-zÀ-ÿ]/.test(t) || t !== t.toLocaleUpperCase('fr')) return t;   /* seuls les libellés tout en capitales sont repris */
+    return t.toLocaleLowerCase('fr').replace(/(^|[\s\-'’.(/])([a-zà-ÿ])/g, function (m, a, b) { return a + b.toLocaleUpperCase('fr'); });
+  }
   /* Texte de la pastille d'état, identique dans les trois outils. */
   function texteBadge(n, meta, remarques) {
     if (!meta && !n) return 'Aucune donnée chargée';
@@ -2576,6 +2640,15 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.4", "titre": "Classement en sous-onglets, une seule recherche", "points": ["Le Classement a quatre sous-onglets : Liste, Matrice urgence × faisabilité, Top 20, Distribution et état SIA. Plus de défilement pour atteindre les trois derniers.", "Une seule recherche, dans l'en-tête : une proposition ouvre la fiche du sous-site ; un texte libre validé par Entrée filtre le classement, et une étiquette « Filtre » permet de le retirer.", "Carte : fond Esri World Street par défaut ; les fonds CARTO, qui exigent désormais une clé, sont retirés."]},
+    {"date": "02.10.2026", "objet": "revue", "version": "v0.15", "titre": "Diagramme CPI / SPI, ligne de filtres figée", "points": ["Reporting : nouveau diagramme coût et planning (CPI / SPI), un point par projet, quatre quadrants comptés ; il suit le périmètre et les filtres. Les projets sans avancement global ne sont pas placés, et c'est dit.", "La ligne « Aller à » et les filtres reste visible sous l'en-tête ; le mot « Programme » disparaît.", "Retirés : la situation par statut au niveau Programme, le bloc « Chargement » de l'onglet Données, les boutons d'impression du Parc et du Portefeuille.", "« Recharger le classeur » ouvre directement le choix du fichier."]},
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.3", "titre": "En-tête sur trois lignes, onglets allégés", "points": ["Les filtres Périmètre, Montants et CO₂ ont leur ligne sous les onglets, séparée par un filet ; la recherche d'un sous-site les rejoint. L'onglet Méthode n'a plus de « ? ».", "Le texte explicatif de chaque onglet est replié dans « Comment lire cet onglet » et repris dans l'info-bulle de l'onglet.", "Le classement s'ouvre sur « Tous les objectifs » ; IDC sans projection : « --- » ; la carte ne signale plus que l'échec du fond.", "Correction : dans l'Arbitrage, changer l'objectif à faire reculer recalcule de nouveau le portefeuille."]},
+    {"date": "02.10.2026", "objet": "revue", "version": "v0.14", "titre": "Cartes repliables, en-tête sur trois lignes", "points": ["Chaque carte se replie par le chevron de son titre ; toutes sont dépliées par défaut et le repli est gardé dans ce navigateur.", "Périmètre, Mois de revue et Questions du mois ont leur ligne sous les onglets ; l'onglet Méthode n'a plus de « ? ».", "Le texte explicatif de chaque onglet passe dans son info-bulle."]},
+    {"date": "02.10.2026", "objet": "commun", "version": null, "titre": "Noms de portefeuille lisibles", "points": ["Dans les menus Périmètre, un nom écrit en capitales dans le classeur s'affiche en casse de nom propre ; le filtre compare toujours la valeur du classeur."]},
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.2", "titre": "En-tête commun, filtres toujours accessibles", "points": ["Les filtres Périmètre (ex-Portefeuille), Montants et CO₂ montent dans l'en-tête collant, à droite des onglets : ils restent accessibles partout.", "À droite du titre, comme dans la simulation : état des données, « Recharger le classeur », menu ☰.", "« Effacer les données de ce navigateur » devient une corbeille à côté de l'état des données.", "Mode présentation supprimé ; l'onglet Méthode est marqué « ? »."]},
+    {"date": "02.10.2026", "objet": "revue", "version": "v0.13", "titre": "En-tête commun, Méthode en onglet", "points": ["Même en-tête que la priorisation : état des données, « Recharger le classeur » et menu ☰ à droite du titre.", "Périmètre, Mois de revue et « Questions du mois » à droite des onglets, toujours accessibles.", "Le bouton « ? » devient l'onglet Méthode, le dernier, comme dans la priorisation.", "« Effacer les données de ce navigateur » devient une corbeille à côté de l'état des données."]},
+    {"date": "02.10.2026", "objet": "simulation", "version": "v3.4", "titre": "Corbeille à côté de l'état des données", "points": ["« Effacer les données de ce navigateur » quitte le menu ☰ : une corbeille à côté de l'état des données, texte au survol, comme dans les deux autres outils."]},
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.1", "titre": "Facteurs non mesurables : cumul et franchissement recalculés", "points": ["Après un ajustement (imposé, priorisé, dépriorisé, exclu), le cumul, le % de l'écart et le rang de franchissement suivent l'ordre affiché ; un exclu ne compte plus dans le cumul.", "Toutes les lignes jusqu'au rang de franchissement sont surlignées, plus seulement la ligne de franchissement.", "Hors classement : le montant affiché est celui du menu Montants ; « — » s'il manque dans cette colonne."]},
     {"date": "01.10.2026", "objet": "priorisation", "version": "v2.0", "titre": "Numérotation alignée sur les autres outils", "points": ["Le numéro de version prend la même forme que dans les autres outils : v2.0 et la date.", "Contenu identique à la version du 30.09 (v30.09.2026), mise en ligne le 01.10.", "Les versions précédentes gardent leur numéro daté dans cet historique."]},
     {"date": "30.09.2026", "objet": "accueil", "version": "v1.6", "titre": "Situation du programme", "points": ["Au-dessus des trois outils : voté, engagé, dépensé et estimé, en MCHF, avec une phrase et leurs sources, recalculés à chaque dépôt du classeur.", "Voté : 1 250 MCHF, loi 13210 (1 000) et loi 12552, embrasures (250). Engagé et dépensé : GE-Invest. Estimé : somme de l'Estim PTE.", "Le contrôle à l'import se lit ici, une fois, sous l'en-tête.", "L'empreinte du classeur passe dans l'info-bulle de la barre du classeur."]},
     {"date": "30.09.2026", "objet": "priorisation", "version": "v30.09.2026", "titre": "Revue du Cabinet : lecture plus directe", "points": ["La visite guidée ne s'ouvre plus d'office ; elle reste dans le menu ☰, relue et sans l'étape « Mode nuit ».", "Hors classement, chaque objectif trie et affiche sa propre grandeur : l'eau pour l'eau, l'électricité pour l'électricité, le CO₂ pour le CO₂, la chaleur sinon.", "Quand la cible 2030 est déjà atteinte au niveau du parc, la note le dit au lieu de « Cible non atteinte ».", "Textes revus : tuile Développement durable en une ligne, « huit engagements du programme », « Arbitrages », montants en MCHF, enveloppe de 1 250 MCHF sourcée (lois 13210 et 12552) ; les énoncés de la Méthode qui dépendaient du classeur sont calculés ou neutres."]},
@@ -2724,7 +2797,7 @@ var PTE_COMMUN = (function () {
            lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,
            publierClassement: publierClassement, lireClassement: lireClassement,
            lireQuestions: lireQuestions, ecrireQuestions: ecrireQuestions,
-           dateCourte: dateCourte, texteBadge: texteBadge,
+           dateCourte: dateCourte, texteBadge: texteBadge, nomPropre: nomPropre,
            ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, situationProgramme: situationProgramme, mchf: mchf,
            VERSIONS: VERSIONS, OBJETS_VER: OBJETS_VER, versionsDe: versionsDe, afficherVersions: afficherVersions };
 })();
@@ -2879,9 +2952,10 @@ function rpActif(){return RP_SEL.length>0}
 /* Conservé pour l'affichage et les titres : rend le nom quand un seul
    portefeuille est retenu, « all » sinon. Plus aucun filtrage ne s'y appuie. */
 function getGlobalRP(){return RP_SEL.length===1?RP_SEL[0]:'all'}
+function rpNom(r){return (typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.nomPropre)?PTE_COMMUN.nomPropre(r):r}
 function rpLabel(){
   if(!RP_SEL.length)return'tous';
-  if(RP_SEL.length===1)return RP_SEL[0];
+  if(RP_SEL.length===1)return rpNom(RP_SEL[0]);
   return RP_SEL.length+' portefeuilles'}
 function tglRP(e){if(e)e.stopPropagation();
   const p=$('gRPPop');if(!p)return;
@@ -2894,7 +2968,7 @@ function rpFill(){
   const noms=Object.keys(cnt).sort(function(a,b){return a.localeCompare(b,'fr')});
   el.innerHTML=noms.map(function(r,i){
     return '<label class="rp-i"><input type="checkbox" value="'+esc(r)+'"'+
-      (RP_SEL.indexOf(r)>=0?' checked':'')+'>'+esc(r)+
+      (RP_SEL.indexOf(r)>=0?' checked':'')+'>'+esc(rpNom(r))+
       '<span class="n">'+cnt[r]+'</span></label>'}).join('')||
     '<div class="rp-h">Aucun portefeuille dans le fichier importé.</div>'}
 function rpAll(v){
@@ -3287,7 +3361,7 @@ function onInvChange(){
    précisément ce que l'outil doit rendre visible plutôt que masquer.
    ================================================================ */
 const CO2_CONV=[
-  {k:'mesure',lbl:'CO₂ mesuré',       short:'contenu carbone mesuré',
+  {k:'mesure',lbl:'CO₂ mesuré',       short:'mesuré',
    help:'Les émissions sont celles du fichier, réseaux de chaleur compris.'},
   {k:'legal', lbl:'CO₂ convention légale',short:'convention légale',
    help:'Réseaux de chaleur, bois, pompes à chaleur et solaire comptés à zéro émission.'}];
@@ -3776,6 +3850,12 @@ function exportClassement(){
 function popEtat(){fselSyncAll()}
 
 
+/* Sous-onglets du Classement : une vue à la fois ; les graphiques se recalent quand leur vue s'affiche. */
+function topSync(){const o=$('objSel'),t=$('topObj');if(o&&t&&o.value!=='tous'&&[...t.options].some(function(x){return x.value===o.value}))t.value=o.value}
+function rankVue(v){
+  document.querySelectorAll('#rankVues .so').forEach(function(b){const on=b.getAttribute('data-vue')===v;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on?'true':'false')});
+  document.querySelectorAll('#rank .rank-vue').forEach(function(d){d.classList.toggle('on',d.getAttribute('data-vue')===v)});
+  setTimeout(function(){try{if(typeof plotResize==='function')plotResize()}catch(e){}},60)}
 function tglS(bid,cid){const b=$(bid),c=$(cid);b.classList.toggle('op');c.classList.toggle('op');if(b.classList.contains('op'))setTimeout(function(){if(typeof plotResize==='function')plotResize()},400)}
 function tglM(n){$('mB'+n).classList.toggle('op');$('mCh'+n).classList.toggle('op')}
 
@@ -4967,6 +5047,10 @@ function rankObjectiveObj(items,gap,key,gap2){
     if(franchiRang2==null&&gap2&&cumG>=gap2)franchiRang2=k;
     it.franchi=franchiRang!=null&&k<=franchiRang;
     it.franchi2=franchiRang2!=null&&k<=franchiRang2});
+  /* les lignes AU-DESSUS du franchissement appartiennent à la zone : elles étaient
+     évaluées avant que le rang soit connu, donc jamais marquées (02.10.2026) */
+  items.forEach(function(it){it.franchi=franchiRang!=null&&it.rang<=franchiRang;
+    it.franchi2=franchiRang2!=null&&it.rang<=franchiRang2});
   return{items,franchiRang,franchiRang2,gap:gap,gap2:gap2}}
 
 /* tri par puissance décroissante (Photovoltaïque, classement d'intention,
@@ -4979,7 +5063,8 @@ function rankIntentionObj(items,gap){
   items.forEach((it,i)=>{const k=i+1;cumG+=it.gain;it.rang=k;it.cumulGain=cumG;it.pctGap=gap?cumG/gap:null;
     if(franchiRang==null&&gap&&cumG>=gap)franchiRang=k;
     it.franchi=franchiRang!=null&&k<=franchiRang});
-  return{items,franchiRang}}
+  items.forEach(function(it){it.franchi=franchiRang!=null&&it.rang<=franchiRang});
+  return{items,franchiRang,gap:gap}}
 
 /* Végétalisation — tri par COÛT DU M² CRÉÉ croissant, le moins cher en tête.
    Ni durée de vie ni actualisation : on achète une surface, pas un flux annuel.
@@ -5002,7 +5087,8 @@ function rankVegObj(items,gap){
     it.pctGap=gap?cumG/gap:null;
     if(franchiRang==null&&gap&&cumG>=gap)franchiRang=k;
     it.franchi=franchiRang!=null&&k<=franchiRang});
-  return{items:items,franchiRang:franchiRang}}
+  items.forEach(function(it){it.franchi=franchiRang!=null&&it.rang<=franchiRang});
+  return{items:items,franchiRang:franchiRang,gap:gap}}
 
 /* CEE — nouveau, pas dans Classements_Objectifs_PTE.xlsx. Tri par CHF/kWh
    croissant (même calcul que ceeCHFkWh() ci-dessus, sur 40 ans, référentiel
@@ -5073,7 +5159,7 @@ function computeObjRanking(){
      sous-sites listés sont au-dessus du seuil, un « rang au-delà duquel ce
      n'est plus nécessaire » n'aurait aucun sens ici. */
   const idc=rankIntentionObj(contribs.idc,(OBJ_GAPS.idc&&OBJ_GAPS.idc.gap)||null);
-  idc.franchiRang=null;idc.items.forEach(function(it){it.franchi=false});
+  idc.franchiRang=null;idc.sansFranchi=true;idc.items.forEach(function(it){it.franchi=false});
   const veg=rankVegObj(contribs.veg,(OBJ_GAPS.veg&&OBJ_GAPS.veg.gap)||null);
   const co2ById={};for(const it of co2.items)co2ById[it.id]=it.gain;
 
@@ -5434,7 +5520,8 @@ try{renCompleteness(all)}catch(e){}
 const OBJ_UNIT={co2:'kg CO₂/an',th:'kWh/an',idc:'kWh/an',ren:'kWh/an',elec:'kWh/an',eau:'m³/an',pv:'kWc',veg:'m²'};
 function renTop(all){
   const el=$('gTop');if(!el)return;
-  const key=($('objSel')&&$('objSel').value)||'co2';
+  /* Le Top 20 a son propre menu (02.10.2026) : la Liste s'ouvre sur « Tous les objectifs », qui n'a pas de top 20. */
+  const key=($('topObj')&&$('topObj').value)||'co2';
   const lbl=(typeof OBJ_META!=='undefined'&&OBJ_META[key])?OBJ_META[key].lbl:key;
   const tt=$('topTitle');
   const rp=getGlobalRP();
@@ -5695,7 +5782,12 @@ function fselActifs(){
   let n=0;Object.keys(FDEF).forEach(function(k){if(FSEL[k].length)n++});
   if(($('fSe')&&$('fSe').value||'').trim())n++;
   return n}
+function fSeChipMaj(){
+  const c=$('fSeChip'),t=$('fSeTxt'),v=(($('fSe')||{}).value||'').trim();
+  if(!c||!t)return;t.textContent=v;c.hidden=!v}
+function fSeEffacer(){const se=$('fSe');if(se)se.value='';fselRzBtn();renR()}
 function fselRzBtn(){
+  fSeChipMaj();
   const b=$('fRz');if(!b)return;
   const n=fselActifs(),s=$('fRzN');
   b.disabled=!n;
@@ -5827,7 +5919,7 @@ function pontData(key){
     nR:items.length,gap:gap,cum:cum,
     couv:(gap>0)?cum/gap:null,couvC:(gap>0)?Math.min(1,cum/gap):0,
     pct:pct,val:s.val,cible:s.cible,ref:s.ref2005,mesure:s.mesure,
-    franchi:R?R.franchiRang:null,
+    franchi:(function(){const a=rangAj(key);return a?a.franchiRang:null})(),
     vide:items.length===0,col:OBJ_COL_GAIN[key]||null,s:s}}
 
 /* Les libellés des trois zones — partagés par le ruban, la jauge et les
@@ -6138,7 +6230,7 @@ function convNote(key){
     'un raccordement à venir efface la totalité des émissions et devient '+
     '<b>imbattable au coût de la tonne</b>, alors même que la charge d\'exploitation augmente. '+
     'C\'est ce que dit la convention, pas ce que mesurent les compteurs — '+
-    'le menu <b>CO₂</b> de la ligne de contexte revient au contenu carbone mesuré.</div>'}
+    'le menu <b>CO₂</b> de l\'en-tête revient au contenu carbone mesuré.</div>'}
 function hpNote(key){
   if(typeof OBJRANK==='undefined'||!OBJRANK)return'';
   const L=hpCandidats();if(!L.length)return'';
@@ -6353,9 +6445,9 @@ function objTable(key,R,meta,bySiteId,f){
            s.idcVB<=cibIdc
              ? 'Les travaux arrêtés ramènent ce sous-site sous le seuil de '+objFmtNum(cibIdc,1)+' kWh/m²·an.'
              : 'Même après les travaux arrêtés, ce sous-site reste au-dessus du seuil de '+objFmtNum(cibIdc,1)+' kWh/m²·an.'))
-      : '<span style="color:var(--ink3)" title="Aucune variante CECB+ précise arrêtée pour ce sous-site : il n’y a pas d’IDC projeté à afficher, et rien ne dit encore ce que les travaux donneraient.">pas de projection</span>';
+      : '<span style="color:var(--ink3)" title="Aucune variante CECB+ précise arrêtée pour ce sous-site : il n’y a pas d’IDC projeté à afficher, et rien ne dit encore ce que les travaux donneraient.">---</span>';
     const _r=(it.rangAdj||it.rang);
-    html+='<tr class="row-click'+(_r===R.franchiRang?' franchi-row':'')+(_r===R.franchiRang2?' franchi-row-50':'')+'" data-id="'+esc(it.id)+'" onclick="toggleDetail('+jsArg(it.id)+')" style="'+objRowStyle(Object.assign({},it,{rang:_r}),R.franchiRang,R.franchiRang2)+'">'+
+    html+='<tr class="row-click'+(_r===adj.franchiRang?' franchi-row':'')+(_r===adj.franchiRang2?' franchi-row-50':'')+'" data-id="'+esc(it.id)+'" onclick="toggleDetail('+jsArg(it.id)+')" style="'+objRowStyle(Object.assign({},it,{rang:_r}),adj.franchiRang,adj.franchiRang2)+'">'+
       '<td>'+(it.rangAdj||it.rang)+((it.rangAdj&&rangObj[it.id]&&it.rangAdj!==rangObj[it.id])?'<br><span style="font-size:.6rem;color:var(--ink3)" title="rang du classement arithmétique, avant ajustement">obj. '+rangObj[it.id]+'</span>':'')+
       (snapCur()?('<br>'+snapDelta(key,it.id,(it.rangAdj||it.rang))):'')+'</td><td><b>'+esc(it.id)+'</b></td><td>'+esc(it.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem" title="RPF — responsable de portefeuille, qui suit le sous-site dans la durée. Le RP, responsable de projet, est dans la colonne RP.">RPF '+(estHorsPerimetre(s)?hpChip(s):esc(s.rp||'—'))+'</span></td>'+
       '<td style="font-size:.63rem">'+esc(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td><td>'+subBg(s.hsub)+(key==='ren'?pacChip(s,it.gain):'')+'</td>'+
@@ -6378,7 +6470,7 @@ function objTable(key,R,meta,bySiteId,f){
         '<td>'+(sc.t!=null?'repli':'—')+'</td><td><b>'+esc(s.id)+'</b></td><td>'+esc(s.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem" title="RPF — responsable de portefeuille, qui suit le sous-site dans la durée. Le RP, responsable de projet, est dans la colonne RP.">RPF '+(estHorsPerimetre(s)?hpChip(s):esc(s.rp||'—'))+'</span></td>'+
         '<td style="font-size:.63rem">'+esc(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td><td>'+subBg(s.hsub)+'</td>'+
         '<td colspan="'+(key==='th'?5:4)+'" style="text-align:center;font-size:.66rem">'+(key==='veg'?'surface végétalisée non renseignée':repliTexte(s,key))+'</td>'+
-        '<td style="text-align:right">'+(key==='veg'?'—':objFmtNum(s.invEstim,0))+'</td>'+
+        '<td style="text-align:right">'+(key==='veg'?'—':(s.invVB>0?objFmtNum(s.invVB,0):'—'))+'</td>'+
         '<td>'+alerteChip(alertsFor(s))+qualiChip(s.id)+'</td></tr>'}
   html+='</tbody></table>';
   return html}
@@ -6475,6 +6567,9 @@ function renR(){
     return}
   const meta=OBJ_META[key];
   const R=(OBJRANK&&OBJRANK[key])?OBJRANK[key]:{items:[],franchiRang:null};
+  /* rangs de franchissement dans l'ordre ajusté — ceux que le tableau affiche */
+  const _aj=applyQuali(R.items,key)||[];
+  const RA=Object.assign({},R,{franchiRang:_aj.franchiRang||null,franchiRang2:_aj.franchiRang2||null});
   if(note){
     if(!OBJRANK){note.innerHTML='Aucune cible calculée — le classement par objectif s\'active avec <b>Plan_PTE.xlsx</b>.'}
     else{
@@ -6498,14 +6593,14 @@ function renR(){
         :invHorsChiffrage()
         ?'Trié par <b>contribution décroissante</b> — le coût unitaire étant déclaré identique pour tous, il ne départage plus. Écart résiduel à combler : '+objFmtNum(gap,0)+' '+meta.unit+'. '
         :'Trié par CHF par '+meta.unit.replace('/an','')+' croissant, sur '+pDuree(key)+' ans'+((PARAMS.dureeObj&&+PARAMS.dureeObj[key]>0&&+PARAMS.dureeObj[key]!==pDuree())?' (durée propre à cet objectif)':'')+'. <span title="Ce qui manque encore pour atteindre la cible 2030 : la valeur mesurée aujourd\'hui moins la cible. La colonne de cumul dit quelle part de cet écart les sous-sites financés comblent." style="border-bottom:1px dotted currentColor;cursor:help">Écart résiduel</span> à combler : '+objFmtNum(gap,0)+' '+meta.unit+(ecC?(' <span title="Part de l\'objectif 2030 imputable aux '+ecC.n+' sous-sites dont la consommation projetée est chiffrée, prise au prorata de leur consommation : la cible étant une baisse de 20 %, chacun en porte 20 % de la sienne. L\'écart du parc entier vaut '+objFmtNum(OBJ_GAPS.elec.gap,0)+' kWh/an, mesuré sur la feuille Consommation par site qui couvre 427 lignes là où Plan_PTE n\'en chiffre que 287." style="border-bottom:1px dotted currentColor;cursor:help">sur le périmètre couvert</span>'):'')+'. '
-          +(key==='th'?thNote2Cibles(R):''))
+          +(key==='th'?thNote2Cibles(RA):''))
         /* le thermique a sa propre phrase de franchissement, qui couvre les
            deux cibles : la générique ferait doublon */
         +(key==='th'?('Population mesurable : '+nR+' sous-site(s).')
           :key==='idc'?''
           :nR===0?''
           :(gap<=0&&OBJ_GAPS[key]&&OBJ_GAPS[key].mesure!=null&&OBJ_GAPS[key].cible!=null)?'Cible 2030 atteinte au niveau du parc ; le classement montre ce qui ferait encore baisser.'
-          :R.franchiRang?('Rang de franchissement : <b>'+R.franchiRang+'</b> sur '+nR+' sous-site(s) mesurable(s) — au-delà, non nécessaires pour cette seule cible.')
+          :RA.franchiRang?('Rang de franchissement : <b>'+RA.franchiRang+'</b> sur '+nR+' sous-site(s) mesurable(s) — au-delà, non nécessaires pour cette seule cible.')
                         :('Cible non atteinte avec les '+nR+' sous-site(s) mesurable(s) disponibles.'))
         +(nR===0?objPont(key,R):'')
         /* L'électricité n'est plus une donnée héritée : depuis le 08.09.2026
@@ -6680,7 +6775,37 @@ function applyQuali(items,key){
     if(a._cu==null)return 1;if(b._cu==null)return -1;
     return (sk.desc?(b._cu-a._cu):(a._cu-b._cu))||(a.id<b.id?-1:1)});
   dec.forEach(function(it,i){it.rangAdj=i+1});
+  /* Un ajustement déplace des lignes : le cumul, le % de l'écart et le rang de
+     franchissement se lisent dans l'ordre AFFICHÉ, pas dans l'ordre arithmétique.
+     Un exclu ne compte plus dans le cumul. Sans ajustement, rien n'est recalculé.
+     (Achim, 02.10.2026) */
+  const R0=(typeof OBJRANK!=='undefined'&&OBJRANK&&key)?OBJRANK[key]:null;
+  dec.franchiRang=R0?R0.franchiRang:null;dec.franchiRang2=R0?(R0.franchiRang2||null):null;
+  if(R0&&R0.items===items&&qualiCount()>0){
+    const gap=R0.gap||null,gap2=R0.gap2||null;
+    let cumG=0,cumI=0,fr=null,fr2=null;
+    dec.forEach(function(it,i){const k=i+1;
+      cumG+=(+it.gain||0);cumI+=(+it.estim||0);
+      it.cumulGain=cumG;
+      if(it.cumulInvest!=null)it.cumulInvest=cumI;
+      it.pctGap=gap?cumG/gap:null;
+      if(it.pctGap2!==undefined)it.pctGap2=gap2?cumG/gap2:null;
+      if(!R0.sansFranchi){
+        if(fr==null&&gap&&cumG>=gap&&it.gain>0)fr=k;
+        if(fr2==null&&gap2&&cumG>=gap2)fr2=k;
+        it.franchi=fr!=null&&k<=fr;
+        if(it.franchi2!==undefined)it.franchi2=fr2!=null&&k<=fr2}});
+    if(!R0.sansFranchi)dec.forEach(function(it){it.franchi=fr!=null&&it.rangAdj<=fr;
+      if(it.franchi2!==undefined)it.franchi2=fr2!=null&&it.rangAdj<=fr2});
+    dec.franchiRang=fr;dec.franchiRang2=fr2}
   return dec}
+/* Le classement tel qu'il est AFFICHÉ : ordre, cumul et rangs de franchissement
+   ajustés. À lire partout où l'on montre un rang de franchissement. */
+function rangAj(k){
+  const R=(typeof OBJRANK!=='undefined'&&OBJRANK)?OBJRANK[k]:null;
+  if(!R)return null;
+  const a=applyQuali(R.items,k)||[];
+  return Object.assign({},R,{items:a,franchiRang:a.franchiRang||null,franchiRang2:a.franchiRang2||null})}
 /* ================================================================
    LES EXCLUS RESTENT VISIBLES  (02.09.2026)
    Une exclusion vaut pour le PROGRAMME, pas pour un objectif : le bloc
@@ -6827,7 +6952,7 @@ const TOUR=[
  {sel:'.tabs',t:'Six lectures des mêmes données',
   d:"<b>Vue d'ensemble</b> : où en est le parc face aux cibles 2030. <b>Classement</b> : par quoi commencer. <b>Arbitrage</b> : ce qu'une enveloppe permet vraiment, et le prix de la tonne évitée. <b>Carte</b> : où sont les sous-sites. <b>Données</b> : ce qui manque et ce que cela empêche de calculer. <b>Méthode</b> : d'où vient chaque chiffre."},
  {sel:'.gsearch',t:'Retrouver un sous-site',
-  d:"Un <b>numéro de sous-site</b> ou un <b>nom</b> suffit : la liste propose les correspondances avec leur responsable de portefeuille et leur priorité. <b>Entrée</b> ouvre directement la fiche du sous-site dans le classement, depuis n'importe quel onglet."},
+  d:"Un <b>numéro de sous-site</b> ou un <b>nom</b> suffit : la liste propose les correspondances avec leur responsable de portefeuille et leur priorité. Un clic sur une proposition ouvre la fiche du sous-site dans le classement, depuis n'importe quel onglet. <b>Entrée</b> sur un texte libre — un responsable, un type de chauffage — <b>filtre le classement</b> ; l'étiquette « Filtre » au-dessus du tableau le retire."},
  {sel:'#objTiles',t:'Huit indicateurs, un seul écran',panel:'dash',
   d:"Chaque tuile porte la <b>valeur mesurée</b> du parc, la cible 2030 et le chemin déjà parcouru depuis la référence 2005. Le segment clair de la barre est ce que le portefeuille arrêté ajouterait. La couleur juge l'ensemble : vert si la cible est en vue, rouge si le compte n'y est pas. L'<b>IDC</b> fait exception : il n'a pas de référence 2005 et se lit à deux niveaux — le parc en moyenne pondérée, et le seuil sous-site par sous-site. Son sous-titre compte donc les sous-sites encore au-dessus, pas un chemin parcouru. La <b>végétalisation</b>, elle, n'a plus de tuile propre : elle est devenue le volet le plus lourd de l'indice <b>développement durable</b>, et se lit là."},
  {sel:'#objDetail',t:'Une tuile, une trajectoire',panel:'dash',
@@ -6868,7 +6993,7 @@ let _tourI=-1,tourSeen=false;
 function franchiKey(){
   if(typeof OBJRANK==='undefined'||!OBJRANK)return null;
   const cur=($('objSel')&&$('objSel').value)||'co2';
-  const has=function(k){const R=OBJRANK[k];return !!(R&&R.franchiRang)};
+  const has=function(k){const R=rangAj(k);return !!(R&&R.franchiRang)};
   if(has(cur))return cur;
   return ['co2','th','ren','elec','eau'].find(has)||null}
 /* Fait défiler le conteneur du classement jusqu'à la ligne de franchissement,
@@ -6885,7 +7010,7 @@ function tourFranchiTxt(){
   const k=franchiKey();
   if(k){
     const lbl=(typeof OBJ_META!=='undefined'&&OBJ_META[k])?OBJ_META[k].lbl:k;
-    const R=OBJRANK[k];
+    const R=rangAj(k);
     return "Voici la ligne décisive, encadrée de vert, sur l'objectif <b>"+esc(String(lbl))+"</b> : "+
       "c'est le rang <b>"+R.franchiRang+"</b>, celui où le cumul des gains <b>atteint la cible 2030</b> si l'on "+
       "finance les sous-sites dans cet ordre. Tout ce qui est au-dessus est nécessaire ; en dessous, c'est du "+
@@ -6902,7 +7027,7 @@ function tourOpenFiche(){
   const r=document.querySelector('#objBody tr.row-click');
   if(r&&r.getAttribute('data-id'))toggleDetail(r.getAttribute('data-id'))}
 function tourOpen(id){
-  if(!id)return;const b=$(id);if(b&&!b.classList.contains('op')){
+  if(!id)return;if(id==='objRankBody')rankVue('liste');const b=$(id);if(b&&!b.classList.contains('op')){
     const ch=b.getAttribute('data-ch');tglS(id,ch||(id.replace('Body','Ch')))}}
 function tourVisible(el){
   if(!el)return false;
@@ -7035,7 +7160,7 @@ const TITLES=[
  ['#gUF','Combien de sous-sites à chaque croisement priorité × faisabilité ; le chiffre est écrit dans la case'],
  ['#gTop','Les 20 premiers du classement de l\'objectif sélectionné, situés sur l\'axe de la valeur qui les trie'],
  ['[onclick*="tglNotes"]','Notes et facteurs non mesurables : export et import dans un même CSV'],
- ['[onclick*="clearAllData"]','Efface les données importées et les préférences de ce navigateur'],
+ ['[onclick*="clearAllData"]','Effacer les données de ce navigateur'],
  ['[onclick*="tourStart"]','Relance la visite guidée']];
 function helpApply(){TITLES.forEach(function(p){
   try{document.querySelectorAll(p[0]).forEach(function(el){if(!el.getAttribute('title'))el.setAttribute('title',p[1])})}catch(e){}})}
@@ -7073,14 +7198,25 @@ function gsMatch(q){
   return gsPop().filter(function(s){
     return String(s.id).toLowerCase().indexOf(q)>=0||String(s.nom||'').toLowerCase().indexOf(q)>=0}).slice(0,12)}
 let gsSel=-1;
+/* Recherche unique (02.10.2026) : une suggestion ouvre la fiche du sous-site ; le texte libre filtre le
+   classement (nom, responsable, chauffage, adresse…), ce que faisait l'ancien champ « Rechercher… ». */
+function gsFiltre(){
+  const q=($('gq').value||'').trim();if(!q)return;
+  const gr=$('gsRes');if(gr)gr.classList.remove('on');$('gq').value='';
+  const tab=document.querySelector('.tab[data-panel="rank"]');if(tab)tab.click();
+  rankVue('liste');
+  const se=$('fSe');if(se)se.value=q;
+  fselRzBtn();renR()}
 function gsRun(){
   const box=$('gsRes'),q=$('gq').value,L=gsMatch(q);gsSel=-1;
-  if(!L.length){box.classList.remove('on');box.innerHTML='';return}
-  box.innerHTML=L.map(function(s,i){
+  const filtre=(q||'').trim()?'<div class="gs-it gs-filtre" onclick="gsFiltre()">Filtrer le classement sur « '+esc(q.trim())+' »</div>':'';
+  if(!L.length&&!filtre){box.classList.remove('on');box.innerHTML='';return}
+  box.innerHTML=filtre+L.map(function(s,i){
     const p=prioMap().v[String(s.id)];
     return '<div class="gs-it" data-i="'+i+'" onclick="gsGo('+jsArg(s.id)+')"><b>'+esc(s.id)+'</b> '+esc(String(s.nom||'').substring(0,42))+
       '<span class="s" title="RPF — responsable de portefeuille, qui suit le sous-site dans la durée. Le RP, responsable de projet, est dans la colonne RP.">RPF '+esc(s.rp||'—')+' · '+(p!=null?('priorité '+Math.round(p)):'non classé')+(qualiOf(s.id)?' · ajusté':'')+'</span></div>'}).join('');
   box.classList.add('on')}
+/* Entrée : la suggestion surlignée ; sinon l'unique sous-site trouvé ; sinon le filtre de texte. */
 function gsKey(e){
   const box=$('gsRes'),items=box.querySelectorAll('.gs-it');
   if(e.key==='Escape'){box.classList.remove('on');return}
@@ -7088,7 +7224,8 @@ function gsKey(e){
   if(e.key==='ArrowDown'){e.preventDefault();gsSel=Math.min(items.length-1,gsSel+1)}
   else if(e.key==='ArrowUp'){e.preventDefault();gsSel=Math.max(0,gsSel-1)}
   else if(e.key==='Enter'){e.preventDefault();
-    const i=gsSel>=0?gsSel:0;items[i].click();return}
+    const ss=box.querySelectorAll('.gs-it:not(.gs-filtre)');
+    if(gsSel>=0)items[gsSel].click();else if(ss.length===1)ss[0].click();else gsFiltre();return}
   items.forEach(function(el,i){el.style.background=(i===gsSel)?'#eef4fb':''})}
 /* Ouvrir la fiche : on va au Classement, on déplie, on filtre sur le numéro
    pour que la ligne existe forcément, puis on ouvre le détail. */
@@ -7096,8 +7233,9 @@ function gsGo(id){
   id=String(id);
   const gr=$('gsRes');if(gr)gr.classList.remove('on');const gq=$('gq');if(gq)gq.value='';
   const tab=document.querySelector('.tab[data-panel="rank"]');if(tab)tab.click();
+  rankVue('liste');
   const body=$('objRankBody');if(body&&!body.classList.contains('op'))tglS('objRankBody','objRankCh');
-  const se=$('fSe');if(se){se.value=id;renR()}
+  const se=$('fSe');if(se){se.value=id;fselRzBtn();renR()}
   /* Sans ligne dans l'objectif affiché, on bascule sur le premier objectif où le
      sous-site est classé, s'il y en a un — la fiche, elle, s'ouvre dans tous les cas. */
   let row=document.querySelector('#objBody tr[data-id="'+attrSel(id)+'"]');
@@ -7369,12 +7507,6 @@ function renAnomalies(){
     return esc(r.serie)+' : +'+nf(r.pct,1)+' % entre '+r.de+' et '+r.a+' ('+nf(r.avant/1e6,1)+' → '+nf(r.apres/1e6,1)+' M)'}).join('<br>')+'</div>';
   el.innerHTML=h}
 
-/* ---------- mode présentation -------------------------------------------- */
-let presOn=false;
-function tglPres(){presOn=!presOn;document.body.classList.toggle('pres-mode',presOn);
-  toast(presOn?'Mode présentation — interface allégée':'Retour à l\'affichage normal','ok');
-  setTimeout(function(){if(typeof plotResize==='function')plotResize()},350)}
-
 /* ---------- portefeuille verrouillé -------------------------------------- */
 let LOCK=null;const LS_LOCK='pte_lock_v1';
 function lockSave(){
@@ -7418,7 +7550,7 @@ function cxSync(){
     ta.classList.toggle('cx-conv',invMode==='flat')}
   const tb=$('gRPTxt');
   if(tb){tb.textContent=rpLabel();
-    tb.title=RP_SEL.length?('Périmètre restreint à : '+RP_SEL.join(', ')):'Tout le parc'}}
+    tb.title=RP_SEL.length?('Périmètre restreint à : '+RP_SEL.map(rpNom).join(', ')):'Tout le parc'}}
 function tglMenu(e){if(e)e.stopPropagation();const m=$('mainMenu');if(m)m.classList.toggle('on')}
 document.addEventListener('click',function(){
   /* pendant la visite guidée, c'est elle qui décide de l'ouverture du menu */
@@ -7819,7 +7951,7 @@ function drow(r){
 function ddVegBloc(){
   let s=null;try{s=indState('veg')}catch(e){}
   if(!s||s.sansCible)return'';
-  const R=(typeof OBJRANK!=='undefined'&&OBJRANK&&OBJRANK.veg)?OBJRANK.veg:null;
+  const R=rangAj('veg');
   if(!R||!R.items.length)return'';
   const fr=R.franchiRang;
   const it=fr?R.items[fr-1]:null;
@@ -8064,7 +8196,7 @@ function drawIndic(k){
     /* Pas de série annuelle : une cour d'école n'a pas d'historique de
        consommation. Ce qui se trace, c'est la courbe d'achat — combien de m²
        pour combien de francs, en commençant par le moins cher. */
-    const R=(typeof OBJRANK!=='undefined'&&OBJRANK&&OBJRANK.veg)?OBJRANK.veg:null;
+    const R=rangAj('veg');
     if(!R||!R.items.length){host.innerHTML='<p class="mini">Aucun projet de végétalisation chiffré dans le classeur importé.</p>';return}
     const it=R.items,W=920,H=250,L=62,Rm=150,T=16,B=34;
     const nMax=it.length;
@@ -8448,14 +8580,11 @@ var TILE_PROVIDERS = [
   {name:'Esri World Street',url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',attr:'© Esri · Sources: Esri, HERE, Garmin, USGS',maxZoom:18},
   {name:'Esri World Topo',url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',attr:'© Esri · Sources: Esri, HERE, Garmin, USGS',maxZoom:18},
   {name:'Esri Satellite',url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',attr:'© Esri · Sources: Esri, Maxar, Earthstar',maxZoom:18},
-  {name:'CARTO Voyager',url:'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',attr:'© <a href="https://www.openstreetmap.org/copyright">OSM</a> · © <a href="https://carto.com/">CARTO</a>',sub:'abcd',maxZoom:19},
-  {name:'CARTO Positron',url:'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',attr:'© OSM · © CARTO',sub:'abcd',maxZoom:19},
-  {name:'CARTO Dark',url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',attr:'© OSM · © CARTO',sub:'abcd',maxZoom:19},
   {name:'OpenStreetMap',url:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',attr:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',maxZoom:19},
   {name:'OpenTopoMap',url:'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',attr:'© OpenTopoMap · © OSM',sub:'abc',maxZoom:17}
 ];
 var currentTileIdx=0,tileLayer=null;
-var tileFailoverOrder=[3,0,1,6,4,5,2,7];
+var tileFailoverOrder=[0,1,3,2,4];   /* fonds CARTO retirés le 02.10.2026 : ils exigent une clé */
 var tileTried=new Set();
 var tileLoadTimer=null;
 
@@ -8476,7 +8605,7 @@ function initMap(){
   if(typeof L==='undefined'){$('mapWarn').innerHTML='<b>Leaflet non chargé.</b>';return}
   try{
     lMap=L.map('leafMap',{zoomControl:true,scrollWheelZoom:true}).setView([geoCtx.lat,geoCtx.lng],12);
-    var defIdx=+($('tileSelect').value||3);
+    var defIdx=+($('tileSelect').value||0);
     tileTried=new Set([defIdx]);
     addTileLayer(defIdx,{manual:true});
 
