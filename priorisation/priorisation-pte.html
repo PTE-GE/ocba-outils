@@ -548,7 +548,16 @@ body.night .errbox,body.night .warnbox{background:rgba(229,105,92,.10)}
 
 /* ---- carte ---- */
 #leafMap{z-index:1}
-.map-tooltip-custom{font-size:.75rem!important;line-height:1.5!important;padding:8px 12px!important}
+.map-tooltip-custom{font-size:.75rem!important;line-height:1.5!important;padding:8px 12px!important;white-space:normal!important;width:max-content;max-width:420px}
+.map-tooltip-custom .tip-sec,.map-pop .tip-sec{margin-top:6px;padding-top:5px;border-top:1px solid var(--border)}
+.map-tooltip-custom .tip-aide{color:var(--ink-70);font-size:.68rem}
+.map-pop{font-size:.76rem;line-height:1.5}
+.map-pop .tip-l{display:block;padding-left:9px;text-indent:-9px;color:var(--ink-70)}
+.map-pop a{color:var(--teal);text-decoration:underline}
+.map-pop .pop-go{display:block;font-weight:bold;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid var(--border);text-decoration:none}
+.map-pop .pop-go:hover{text-decoration:underline}
+.map-pop-wrap .leaflet-popup-content{margin:12px 14px}
+.map-tooltip-custom .tip-l{display:block;color:var(--ink-70);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}   /* une ligne par projet ou par commentaire ; le texte entier est dans Plan_PTE */
 .map-legend{background:var(--card);padding:8px 12px;border-radius:8px;box-shadow:0 1px 5px rgba(0,0,0,.2);font-size:.7rem;line-height:1.8}
 .map-legend i{width:11px;height:11px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle}
 .geo-tip{background:#eaf7ed;border:1px solid #b7e4c7;border-radius:8px;padding:10px 14px;margin:8px 0;font-size:.76rem}
@@ -1282,8 +1291,11 @@ body.night .fiche-card{background:var(--card-bg)}
 <option value="0" selected="">Esri World Street</option>
 <option value="1">Esri World Topo</option>
 <option value="2">Esri Satellite</option>
-<option value="3">OpenStreetMap</option>
-<option value="4">OpenTopoMap</option>
+<option value="3">CARTO Voyager</option>
+<option value="4">CARTO Positron</option>
+<option value="5">CARTO Dark</option>
+<option value="6">OpenStreetMap</option>
+<option value="7">OpenTopoMap</option>
 </select>
 <span id="tileStatus" class="tile-status tile-loading">chargement…</span>
 </div>
@@ -1454,6 +1466,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td>Surface de référence</td><td><code>SRE</code> de <code>Plan_PTE</code>, nombre &gt; 0 tel quel ; la SRE du parc est la somme de cette colonne (contrat de données, D1) — plus la « Surface de calcul »</td></tr>
 <tr><td>Chaleur, électricité, eau, CO₂ de l'année</td><td>chaleur = <code>ThTOT{année}</code> du site (<code>Consommation par site</code>) ventilée au sous-site au prorata SRE, marquée « mesuré » ; à défaut SRE × IDC, marquée « estimé » ; électricité, eau, CO₂ = <code>ELEC / EAU / CO2 Scope 1+2 {année}</code> du site (<code>Consommation par site</code>), ventilés de la même façon. Année = cellule <code>Année des mesures</code> de <code>Objectifs PTE</code> (repli : dernière année fiable)</td></tr>
 <tr><td>Gain d'eau (classement Eau)</td><td><code>Gain Eau estimé [m3/an]</code> de <code>Plan_PTE</code> : gain estimé par l'audit eau (fichier <code>Tableau_suivi_conso_O</code>, requête <code>Gains_Eau_O</code>), gain du site ventilé au sous-site au prorata SRE ; à défaut <code>Gain Eau simulé [m3/an]</code></td></tr>
+<tr><td>Carte : projets et surfaces de relais</td><td>Projets : <code>GEI_Projets</code>, rattachés au sous-site par les chiffres 7 à 12 de <code>Objet (actif)</code> (numéro, statut, nom). Commentaires des jalons : <code>Surfaces de relais (GEI)</code> de <code>Plan_PTE</code>, formule sur <code>GEI_Jalons</code> (« libellé du jalon : commentaire », séparés par « | »)</td></tr>
 <tr><td>IDC actuel / projeté</td><td><code>IDC [kWh]</code> / <code>IDC projeté [kWh]</code> (variante CECB+ retenue)</td></tr>
 <tr><td>Variante CECB+</td><td><code>Audit CECB+</code> (var_A, var_B, var_C)</td></tr>
 <tr><td>Chauffage actuel / prévu</td><td><code>Agent</code> (SITG, premier terme avant « | ») rapporté au libellé de la feuille <code>Data</code> qui porte le facteur ; <code>Chauffage Type Energie Prin</code> ne sert plus qu'à nommer le réseau (CADIOM, CAD_x) / <code>Chauffage de subsitution prévu</code></td></tr>
@@ -1579,7 +1592,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.4 · 02.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.5 · 06.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -1604,7 +1617,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
    Résultat :
      { annee, anneeSource, anneesDisponibles, series (fiabilité par année),
-       sousSites: [ { num, site, nom, nomSite, rpf, rp, projets, sre, idc, idcAnnee,
+       sousSites: [ { num, site, nom, nomSite, rpf, rp, projets, relais, sre, idc, idcAnnee,
                       chaleur:{val,source,origine}, elec:{…}, eau:{…}, co2:{…},
                       agent:{sitg, principal, cible, facteur, aRenseigner},
                       estimPte, investCecb, co2Projete, gainCo2T, gainEauEstime, perimetreSme, siteMesure } ],
@@ -1810,10 +1823,11 @@ var PTE_CONTRAT = (function () {
   /* ---------- D8 : responsables de projet depuis GE-Invest (Objet (actif), chiffres 7 à 12 = sous-site) ----------
      Feuille GEI_Projets (une ligne par projet) ou, à défaut, GEI_Suivi (plate : le projet y est répété). */
   function lireProjets(rowsG) {
-    var parSousSite = {}, vus = {}, idx, jO, jN, jR, jL, i, r, o, ss, n, rp;
+    var parSousSite = {}, vus = {}, idx, jO, jN, jR, jL, jS, i, r, o, ss, n, rp;
     if (!rowsG || rowsG.length < 2) return parSousSite;
     idx = entetes(rowsG);
     jO = col(idx, ['Objet (actif)']); jN = col(idx, ['Numéro']); jR = col(idx, ['Nom responsable suivi']); jL = col(idx, ['Nom long', 'Libellé']);
+    jS = col(idx, ['Statut']);   /* 06.10.2026 : statut GE-Invest du projet, pour la carte de la priorisation */
     if (jO == null || jR == null) return parSousSite;
     for (i = 1; i < rowsG.length; i++) {
       r = rowsG[i]; if (!r) continue;
@@ -1824,7 +1838,7 @@ var PTE_CONTRAT = (function () {
       if (vus[n + '|' + ss]) continue;   /* une ligne par projet (GEI_Suivi répète le projet par jalon / risque / livrable) */
       vus[n + '|' + ss] = true;
       rp = txt(cell(r, jR));
-      (parSousSite[ss] = parSousSite[ss] || []).push({ numero: n, nom: txt(cell(r, jL)), rp: rp });
+      (parSousSite[ss] = parSousSite[ss] || []).push({ numero: n, nom: txt(cell(r, jL)), rp: rp, statut: txt(cell(r, jS)) });
     }
     return parSousSite;
   }
@@ -1879,6 +1893,10 @@ var PTE_CONTRAT = (function () {
        gain d'eau ESTIMÉ par l'audit eau (fichier Tableau_suivi_conso_O, requête Gains_Eau_O),
        gain du site ventilé au sous-site au prorata de la SRE par le classeur lui-même. */
     var jGainEauEst = col(idx, ['Gain Eau estimé [m3/an]', 'Gain Eau estimé']);
+    /* Colonne facultative (06.10.2026, demande d'Achim) : commentaires des jalons GE-Invest des projets du
+       sous-site, réunis par le classeur lui-même (formule sur GEI_Projets et GEI_Jalons). Ils serviront à
+       dire le besoin de surfaces de relais pendant les travaux. Un classeur sans cette colonne : null. */
+    var jRelais = col(idx, ['Surfaces de relais (GEI)']);
 
     /* Consommation par site, indexée par SITES NUM */
     var mesures = {}, idxC = entetes(rowsC || []), jNum = col(idxC, ['SITES NUM']), jNomS = col(idxC, ['NOM SITE']),
@@ -1922,6 +1940,7 @@ var PTE_CONTRAT = (function () {
       /* D8 : responsables ; « --- » = vide */
       ss.rpf = txt(cell(r, C.rpf));
       ss.projets = projets[ss.num] || [];
+      ss.relais = jRelais == null ? null : txt(cell(r, jRelais));
       ss.rp = null; ss.rpSource = null;
       for (k = 0; k < ss.projets.length; k++) if (ss.projets[k].rp) { ss.rp = ss.projets[k].rp; ss.rpSource = nomG; break; }
       if (ss.rp == null) { ss.rp = txt(cell(r, C.rp)); if (ss.rp) ss.rpSource = 'Plan_PTE'; }
@@ -2184,11 +2203,18 @@ var PTE_COMMUN = (function () {
     for (k in L) if (k !== 'accueil' && k !== 'donnees' && p.indexOf('/' + L[k].split('/')[0] + '/') >= 0) return '../';
     return './';
   }
-  /* Lien vers un autre outil, avec éventuellement un sous-site. */
-  function lien(outil, ss) {
+  /* Lien vers un autre outil, avec éventuellement un sous-site et, depuis le 06.10.2026, un projet
+     GE-Invest (« #ss=…&projet=… ») : la Revue ouvre alors la fiche de ce projet. */
+  function lien(outil, ss, projet) {
     var L = LAYOUTS[layout()];
     if (!L[outil]) return null;
-    return racine() + L[outil] + (ss ? '#ss=' + encodeURIComponent(String(ss)) : '');
+    return racine() + L[outil] + (ss ? '#ss=' + encodeURIComponent(String(ss)) : '') +
+      (projet ? (ss ? '&' : '#') + 'projet=' + encodeURIComponent(String(projet)) : '');
+  }
+  function projetDepuisHash() {
+    var h = (typeof location !== 'undefined' && location.hash) || '';
+    var m = /[#&]projet=([0-9]{6,20})\b/.exec(h);
+    return m ? m[1] : null;
   }
 
   /* ---------- #ss=… dans l'adresse ---------- */
@@ -2640,6 +2666,9 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "06.10.2026", "objet": "revue", "version": "v0.17", "titre": "Périmètre à choix multiple, planning réglable", "points": ["Périmètre : plusieurs portefeuilles ou responsables de projet peuvent être cochés ensemble, comme dans la priorisation.", "Planning : une barre en tête résume la durée du périmètre affiché, du début le plus tôt à la fin la plus tardive ; elle reste visible, avec l'axe des années, quand la liste défile.", "Planning : hauteur de la liste au choix (normale, grande, toute la liste) et lignes normales ou serrées, pour voir davantage de sous-sites."]},
+    {"date": "06.10.2026", "objet": "revue", "version": "v0.16", "titre": "Fiche d'un projet ouverte par un lien", "points": ["Un lien venu de la carte de la priorisation ouvre directement la fiche du projet GE-Invest désigné. Si le projet n'est pas dans le classeur chargé, la Revue s'ouvre sur son sous-site."]},
+    {"date": "06.10.2026", "objet": "priorisation", "version": "v2.5", "titre": "Carte : projets et surfaces de relais au survol", "points": ["Au survol d'un repère de la carte : les projets GE-Invest du sous-site (numéro, nom, statut).", "Au même endroit : les commentaires des jalons de ces projets, lus dans la nouvelle colonne « Surfaces de relais (GEI) » de Plan_PTE. Ils serviront à indiquer le besoin de surfaces de relais pendant les travaux.", "Fonds de carte CARTO remis dans le menu ; Esri World Street reste le fond par défaut.", "Un clic sur un repère fige la fenêtre : lien vers le sous-site dans le Classement, et chaque projet ouvre sa fiche dans la Revue de projets."]},
     {"date": "02.10.2026", "objet": "priorisation", "version": "v2.4", "titre": "Classement en sous-onglets, une seule recherche", "points": ["Le Classement a quatre sous-onglets : Liste, Matrice urgence × faisabilité, Top 20, Distribution et état SIA. Plus de défilement pour atteindre les trois derniers.", "Une seule recherche, dans l'en-tête : une proposition ouvre la fiche du sous-site ; un texte libre validé par Entrée filtre le classement, et une étiquette « Filtre » permet de le retirer.", "Carte : fond Esri World Street par défaut ; les fonds CARTO, qui exigent désormais une clé, sont retirés."]},
     {"date": "02.10.2026", "objet": "revue", "version": "v0.15", "titre": "Diagramme CPI / SPI, ligne de filtres figée", "points": ["Reporting : nouveau diagramme coût et planning (CPI / SPI), un point par projet, quatre quadrants comptés ; il suit le périmètre et les filtres. Les projets sans avancement global ne sont pas placés, et c'est dit.", "La ligne « Aller à » et les filtres reste visible sous l'en-tête ; le mot « Programme » disparaît.", "Retirés : la situation par statut au niveau Programme, le bloc « Chargement » de l'onglet Données, les boutons d'impression du Parc et du Portefeuille.", "« Recharger le classeur » ouvre directement le choix du fichier."]},
     {"date": "02.10.2026", "objet": "priorisation", "version": "v2.3", "titre": "En-tête sur trois lignes, onglets allégés", "points": ["Les filtres Périmètre, Montants et CO₂ ont leur ligne sous les onglets, séparée par un filet ; la recherche d'un sous-site les rejoint. L'onglet Méthode n'a plus de « ? ».", "Le texte explicatif de chaque onglet est replié dans « Comment lire cet onglet » et repris dans l'info-bulle de l'onglet.", "Le classement s'ouvre sur « Tous les objectifs » ; IDC sans projection : « --- » ; la carte ne signale plus que l'échec du fond.", "Correction : dans l'Arbitrage, changer l'objectif à faire reculer recalcule de nouveau le portefeuille."]},
@@ -2791,7 +2820,7 @@ var PTE_COMMUN = (function () {
            tour: tour, tourVue: tourVue, relierAccueil: relierAccueil,
            exporterSaisies: exporterSaisies, importerSaisies: importerSaisies,
            resumeSaisies: resumeSaisies, telechargerSaisies: telechargerSaisies,
-           layout: layout, lien: lien, ssDepuisHash: ssDepuisHash, ecrireHash: ecrireHash,
+           layout: layout, lien: lien, ssDepuisHash: ssDepuisHash, projetDepuisHash: projetDepuisHash, ecrireHash: ecrireHash,
            publierClasseur: publierClasseur, lireClasseur: lireClasseur, effacerClasseur: effacerClasseur,
            demanderEffacerClasseur: demanderEffacerClasseur,
            lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,
@@ -2863,7 +2892,7 @@ function appliquerContrat(list){
     s.invEstim=x.estimPte;s.invCecb=x.investCecb;
     /* RPF = Responsable Portefeuille ; RP = GEI_Projets (ou GEI_Suivi) puis Responsable projet ; « --- » = vide */
     s.rp=x.rpf||'';s.drt=x.rp||'';s.rpSource=x.rpSource||null;
-    s.nbProjets=(x.projets||[]).length;
+    s.nbProjets=(x.projets||[]).length;s.projets=x.projets||[];s.relais=x.relais==null?null:x.relais;
     s.co2Proj=x.co2Projete;s.gainCo2T=x.gainCo2T;s.gainEauEst=x.gainEauEstime;s.perimetreSme=x.perimetreSme;s.siteMesure=!!x.siteMesure});
   return n}
 /* Facteur CO₂ courant d'un sous-site, selon le contrat (null = à renseigner). */
@@ -7147,7 +7176,6 @@ const TITLES=[
  ['#maccChart','Largeur d\'une barre = CO₂ évité par an ; hauteur = prix de la tonne évitée'],
  ['#maccTbl','Prix moyen de la tonne évitée par politique publique'],
  ['#tblAct','Détail sous-site par sous-site : retenus, écartés, coûts inconnus, alertes de fiabilité'],
- ['#leafMap','Couleur = statut CECB+. Les filtres du classement s\'appliquent à la carte'],
  ['#k1','Nombre de sous-sites du périmètre affiché'],
  ['#k2','Sous-sites chauffés par une énergie fossile'],
  ['#k3','Sous-sites protégés au titre du patrimoine'],
@@ -8580,11 +8608,14 @@ var TILE_PROVIDERS = [
   {name:'Esri World Street',url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',attr:'© Esri · Sources: Esri, HERE, Garmin, USGS',maxZoom:18},
   {name:'Esri World Topo',url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',attr:'© Esri · Sources: Esri, HERE, Garmin, USGS',maxZoom:18},
   {name:'Esri Satellite',url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',attr:'© Esri · Sources: Esri, Maxar, Earthstar',maxZoom:18},
+  {name:'CARTO Voyager',url:'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',attr:'© <a href="https://www.openstreetmap.org/copyright">OSM</a> · © <a href="https://carto.com/">CARTO</a>',sub:'abcd',maxZoom:19},
+  {name:'CARTO Positron',url:'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',attr:'© OSM · © CARTO',sub:'abcd',maxZoom:19},
+  {name:'CARTO Dark',url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',attr:'© OSM · © CARTO',sub:'abcd',maxZoom:19},
   {name:'OpenStreetMap',url:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',attr:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',maxZoom:19},
   {name:'OpenTopoMap',url:'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',attr:'© OpenTopoMap · © OSM',sub:'abc',maxZoom:17}
 ];
 var currentTileIdx=0,tileLayer=null;
-var tileFailoverOrder=[0,1,3,2,4];   /* fonds CARTO retirés le 02.10.2026 : ils exigent une clé */
+var tileFailoverOrder=[0,1,6,3,4,5,2,7];   /* 06.10.2026 : fonds CARTO remis (demande d'Achim) ; Esri reste le fond par défaut et CARTO passe après OpenStreetMap dans le repli */
 var tileTried=new Set();
 var tileLoadTimer=null;
 
@@ -8611,7 +8642,7 @@ function initMap(){
 
     lMarkers=L.layerGroup().addTo(lMap);
     var leg=L.control({position:'bottomright'});
-    leg.onAdd=function(){var d=L.DomUtil.create('div','map-legend');d.innerHTML='<b>Audit CECB+</b><br><i style="background:var(--grn)"></i> Réalisé (var. A/B/C)<br><i style="background:#B35F10"></i> En cours / à vérifier<br><i style="background:#B03A2E"></i> Aucun audit';return d};
+    leg.onAdd=function(){var d=L.DomUtil.create('div','map-legend');d.innerHTML='<b>Audit CECB+</b><br><i style="background:var(--grn)"></i> Réalisé (var. A/B/C)<br><i style="background:'+MAP_ORANGE+'"></i> En cours / à vérifier<br><i style="background:#B03A2E"></i> Aucun audit';return d};
     leg.addTo(lMap);
     mapReady=true;
     lMap.on('layeradd',patchTileImages);
@@ -8695,14 +8726,54 @@ function renM(){
     (npaG.length?', <b>'+nf(npaG.length)+'</b> par code postal':'')+
     (none.length?', <span style="color:#B35F10"><b>'+nf(none.length)+'</b> sans coordonnées</span>':'');
   if(fileG.length>0)$('geoTip').style.display='none';
-  const addM=(arr,border,op)=>{arr.forEach(s=>{const c=cecbInfo(s).col;const m=L.circleMarker([s.lat,s.lng],{radius:7,fillColor:c,color:border,weight:2,opacity:1,fillOpacity:op}).addTo(lMarkers);m.bindTooltip(mkTip(s),{direction:'top',className:'map-tooltip-custom'});bounds.push([s.lat,s.lng])})};
+  /* 06.10.2026 (retour d'Achim) : sur la carte, « en cours / à vérifier » prend un orange vif ; l'orange foncé des pastilles se confondait avec le rouge. */
+  const addM=(arr,border,op)=>{arr.forEach(s=>{const ci=cecbInfo(s),c=ci.fam==='orange'?MAP_ORANGE:ci.col;const m=L.circleMarker([s.lat,s.lng],{radius:7,fillColor:c,color:border,weight:2,opacity:1,fillOpacity:op}).addTo(lMarkers);m.bindTooltip(mkTip(s),{direction:'right',className:'map-tooltip-custom'});m.on('tooltipopen',tipPlace);m.on('click',function(){popOuvrir(m,s)});bounds.push([s.lat,s.lng])})};
   addM(fileG,'#1E8449',.9);addM(nomiG,'#fff',.85);addM(npaG,'#888',.35);
   if(bounds.length>1)lMap.fitBounds(bounds,{padding:[30,30],maxZoom:15});else if(bounds.length===1)lMap.setView(bounds[0],14);
   setTimeout(patchTileImages,200);
   setTimeout(patchTileImages,800);
 }
 
-function mkTip(s){return'<div style="min-width:180px;font-size:.76rem;line-height:1.5"><b style="color:var(--pri)">'+esc(s.id)+'</b> — '+esc(s.nom)+'<br>'+esc(s.adr||'—')+'<br>SRE : <b>'+(s.sre?s.sre.toLocaleString('fr-CH')+' m²':'—')+'</b><br>IDC : <b>'+fmtIDC(s.idcC)+'</b><br>CECB+ : <b>'+cecbInfo(s).ico+esc(s.cecbRaw?' '+s.cecbRaw.replace('var_','var. '):'')+'</b> · '+esc(s.etat||'État SIA —')+'<br>'+(s.sc.t==null?'<b>Non classé</b> — données insuffisantes':('Priorité (classements par objectif) : <b>'+s.sc.t+'</b>'))+'</div>'}
+function mkTip(s){return'<div style="min-width:180px;font-size:.76rem;line-height:1.5"><b style="color:var(--pri)">'+esc(s.id)+'</b> — '+esc(s.nom)+'<br>'+esc(s.adr||'—')+'<br>SRE : <b>'+(s.sre?s.sre.toLocaleString('fr-CH')+' m²':'—')+'</b><br>IDC : <b>'+fmtIDC(s.idcC)+'</b><br>CECB+ : <b>'+cecbInfo(s).ico+esc(s.cecbRaw?' '+s.cecbRaw.replace('var_','var. '):'')+'</b> · '+esc(s.etat||'État SIA —')+'<br>'+(s.sc.t==null?'<b>Non classé</b> — données insuffisantes':('Priorité (classements par objectif) : <b>'+s.sc.t+'</b>'))+tipProjets(s)+tipRelais(s)+'<div class="tip-sec tip-aide">Un clic sur le repère fige cette fenêtre : accès au Classement et aux fiches des projets.</div></div>'}
+/* Clic sur un repère (06.10.2026, demande d'Achim) : la fenêtre se fige (popup Leaflet). Elle donne le lien
+   vers le sous-site dans le Classement et chaque projet devient un lien vers sa fiche dans la Revue (même
+   onglet). Rien n'y est coupé : elle défile. Un clic sur la carte ou sur × la referme. */
+function mkPop(s){
+  return'<div class="map-pop"><a href="#" class="pop-go" onclick="popClassement(\''+esc(String(s.id))+'\');return false">Ouvrir le sous-site dans le Classement →</a>'+
+    '<div><b style="color:var(--pri)">'+esc(s.id)+'</b> — '+esc(s.nom)+'<br>'+esc(s.adr||'—')+'</div>'+tipProjets(s,true)+tipRelais(s,true)+'</div>'}
+function popClassement(id){try{lMap.closePopup()}catch(e){}gsGo(id)}
+function popOuvrir(m,s){
+  if(!lMap)return;
+  try{m.closeTooltip();m.unbindTooltip()}catch(e){}
+  var p=L.popup({maxWidth:440,minWidth:260,maxHeight:Math.max(180,lMap.getSize().y-90),className:'map-pop-wrap',autoPan:true}).setLatLng(m.getLatLng()).setContent(mkPop(s));
+  lMap.once('popupclose',function(){try{if(!m.getTooltip())m.bindTooltip(mkTip(s),{direction:'right',className:'map-tooltip-custom'})}catch(e){}});
+  p.openOn(lMap)}
+/* Survol d'un repère (06.10.2026, demande d'Achim) : projets GE-Invest du sous-site, puis commentaires de
+   leurs jalons, lus dans la colonne « Surfaces de relais (GEI) » de Plan_PTE (éléments séparés par « | »). */
+var TIP_MAX=10;
+var MAP_ORANGE='#F39C12';
+/* L'info-bulle, plus haute depuis le 06.10.2026, se place à droite ou à gauche du repère selon la moitié
+   de carte où il se trouve, et glisse verticalement pour rester entière dans la carte. */
+function tipPlace(e){
+  var t=e.tooltip,el=t&&t.getElement&&t.getElement();if(!el||!lMap)return;
+  var sz=lMap.getSize(),p=lMap.latLngToContainerPoint(e.target.getLatLng()),h=el.offsetHeight;
+  var dir=p.x<sz.x/2?'right':'left',top=p.y-h/2,c=Math.min(Math.max(6,top),Math.max(6,sz.y-h-6));
+  t.options.direction=dir;t.options.offset=L.point(dir==='right'?10:-10,Math.round(c-top));t.update()}
+function tipStatut(v){return String(v||'').replace(/^\s*\d+\s*-\s*/,'').toLocaleLowerCase('fr')}
+function tipProjets(s,fige){
+  var p=s.projets||[],max=fige?p.length:TIP_MAX;
+  if(!p.length)return'<div class="tip-sec">Projets GE-Invest : <b>aucun</b></div>';
+  return'<div class="tip-sec">Projets GE-Invest : <b>'+p.length+'</b>'+p.slice(0,max).map(function(x){var st=tipStatut(x.statut),t=esc(x.numero)+(st?' · '+esc(st):'')+(x.nom?' — '+esc(x.nom):''),u=null;
+    if(fige){try{u=PTE_COMMUN.lien('revue',String(s.id),x.numero)}catch(e){u=null}}
+    return'<span class="tip-l">· '+(u?'<a href="'+esc(u)+'" title="Ouvrir la fiche du projet dans la Revue de projets">'+t+'</a>':t)+'</span>'}).join('')+
+    (p.length>max?'<span class="tip-l">… et '+(p.length-max)+' de plus</span>':'')+'</div>'}
+function tipRelais(s,fige){
+  if(s.relais==null||s.relais==='')return'';
+  var l=String(s.relais).split(/\s*\|\s*/).filter(function(x){return x});
+  if(!l.length)return'';
+  return'<div class="tip-sec">Surfaces de relais (GEI) — commentaires des jalons : <b>'+l.length+'</b>'+l.slice(0,fige?l.length:TIP_MAX).map(function(x){
+    return'<span class="tip-l">· '+esc(x)+'</span>'}).join('')+
+    (!fige&&l.length>TIP_MAX?'<span class="tip-l">… et '+(l.length-TIP_MAX)+' de plus (colonne de Plan_PTE)</span>':'')+'</div>'}
 
 let geoRunning=false;
 async function geocodeSites(){

@@ -539,7 +539,7 @@ a.card .etat.none{color:var(--ink-muted)}
 
    Résultat :
      { annee, anneeSource, anneesDisponibles, series (fiabilité par année),
-       sousSites: [ { num, site, nom, nomSite, rpf, rp, projets, sre, idc, idcAnnee,
+       sousSites: [ { num, site, nom, nomSite, rpf, rp, projets, relais, sre, idc, idcAnnee,
                       chaleur:{val,source,origine}, elec:{…}, eau:{…}, co2:{…},
                       agent:{sitg, principal, cible, facteur, aRenseigner},
                       estimPte, investCecb, co2Projete, gainCo2T, gainEauEstime, perimetreSme, siteMesure } ],
@@ -745,10 +745,11 @@ var PTE_CONTRAT = (function () {
   /* ---------- D8 : responsables de projet depuis GE-Invest (Objet (actif), chiffres 7 à 12 = sous-site) ----------
      Feuille GEI_Projets (une ligne par projet) ou, à défaut, GEI_Suivi (plate : le projet y est répété). */
   function lireProjets(rowsG) {
-    var parSousSite = {}, vus = {}, idx, jO, jN, jR, jL, i, r, o, ss, n, rp;
+    var parSousSite = {}, vus = {}, idx, jO, jN, jR, jL, jS, i, r, o, ss, n, rp;
     if (!rowsG || rowsG.length < 2) return parSousSite;
     idx = entetes(rowsG);
     jO = col(idx, ['Objet (actif)']); jN = col(idx, ['Numéro']); jR = col(idx, ['Nom responsable suivi']); jL = col(idx, ['Nom long', 'Libellé']);
+    jS = col(idx, ['Statut']);   /* 06.10.2026 : statut GE-Invest du projet, pour la carte de la priorisation */
     if (jO == null || jR == null) return parSousSite;
     for (i = 1; i < rowsG.length; i++) {
       r = rowsG[i]; if (!r) continue;
@@ -759,7 +760,7 @@ var PTE_CONTRAT = (function () {
       if (vus[n + '|' + ss]) continue;   /* une ligne par projet (GEI_Suivi répète le projet par jalon / risque / livrable) */
       vus[n + '|' + ss] = true;
       rp = txt(cell(r, jR));
-      (parSousSite[ss] = parSousSite[ss] || []).push({ numero: n, nom: txt(cell(r, jL)), rp: rp });
+      (parSousSite[ss] = parSousSite[ss] || []).push({ numero: n, nom: txt(cell(r, jL)), rp: rp, statut: txt(cell(r, jS)) });
     }
     return parSousSite;
   }
@@ -814,6 +815,10 @@ var PTE_CONTRAT = (function () {
        gain d'eau ESTIMÉ par l'audit eau (fichier Tableau_suivi_conso_O, requête Gains_Eau_O),
        gain du site ventilé au sous-site au prorata de la SRE par le classeur lui-même. */
     var jGainEauEst = col(idx, ['Gain Eau estimé [m3/an]', 'Gain Eau estimé']);
+    /* Colonne facultative (06.10.2026, demande d'Achim) : commentaires des jalons GE-Invest des projets du
+       sous-site, réunis par le classeur lui-même (formule sur GEI_Projets et GEI_Jalons). Ils serviront à
+       dire le besoin de surfaces de relais pendant les travaux. Un classeur sans cette colonne : null. */
+    var jRelais = col(idx, ['Surfaces de relais (GEI)']);
 
     /* Consommation par site, indexée par SITES NUM */
     var mesures = {}, idxC = entetes(rowsC || []), jNum = col(idxC, ['SITES NUM']), jNomS = col(idxC, ['NOM SITE']),
@@ -857,6 +862,7 @@ var PTE_CONTRAT = (function () {
       /* D8 : responsables ; « --- » = vide */
       ss.rpf = txt(cell(r, C.rpf));
       ss.projets = projets[ss.num] || [];
+      ss.relais = jRelais == null ? null : txt(cell(r, jRelais));
       ss.rp = null; ss.rpSource = null;
       for (k = 0; k < ss.projets.length; k++) if (ss.projets[k].rp) { ss.rp = ss.projets[k].rp; ss.rpSource = nomG; break; }
       if (ss.rp == null) { ss.rp = txt(cell(r, C.rp)); if (ss.rp) ss.rpSource = 'Plan_PTE'; }
@@ -1123,11 +1129,18 @@ var PTE_COMMUN = (function () {
     for (k in L) if (k !== 'accueil' && k !== 'donnees' && p.indexOf('/' + L[k].split('/')[0] + '/') >= 0) return '../';
     return './';
   }
-  /* Lien vers un autre outil, avec éventuellement un sous-site. */
-  function lien(outil, ss) {
+  /* Lien vers un autre outil, avec éventuellement un sous-site et, depuis le 06.10.2026, un projet
+     GE-Invest (« #ss=…&projet=… ») : la Revue ouvre alors la fiche de ce projet. */
+  function lien(outil, ss, projet) {
     var L = LAYOUTS[layout()];
     if (!L[outil]) return null;
-    return racine() + L[outil] + (ss ? '#ss=' + encodeURIComponent(String(ss)) : '');
+    return racine() + L[outil] + (ss ? '#ss=' + encodeURIComponent(String(ss)) : '') +
+      (projet ? (ss ? '&' : '#') + 'projet=' + encodeURIComponent(String(projet)) : '');
+  }
+  function projetDepuisHash() {
+    var h = (typeof location !== 'undefined' && location.hash) || '';
+    var m = /[#&]projet=([0-9]{6,20})\b/.exec(h);
+    return m ? m[1] : null;
   }
 
   /* ---------- #ss=… dans l'adresse ---------- */
@@ -1579,6 +1592,9 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "06.10.2026", "objet": "revue", "version": "v0.17", "titre": "Périmètre à choix multiple, planning réglable", "points": ["Périmètre : plusieurs portefeuilles ou responsables de projet peuvent être cochés ensemble, comme dans la priorisation.", "Planning : une barre en tête résume la durée du périmètre affiché, du début le plus tôt à la fin la plus tardive ; elle reste visible, avec l'axe des années, quand la liste défile.", "Planning : hauteur de la liste au choix (normale, grande, toute la liste) et lignes normales ou serrées, pour voir davantage de sous-sites."]},
+    {"date": "06.10.2026", "objet": "revue", "version": "v0.16", "titre": "Fiche d'un projet ouverte par un lien", "points": ["Un lien venu de la carte de la priorisation ouvre directement la fiche du projet GE-Invest désigné. Si le projet n'est pas dans le classeur chargé, la Revue s'ouvre sur son sous-site."]},
+    {"date": "06.10.2026", "objet": "priorisation", "version": "v2.5", "titre": "Carte : projets et surfaces de relais au survol", "points": ["Au survol d'un repère de la carte : les projets GE-Invest du sous-site (numéro, nom, statut).", "Au même endroit : les commentaires des jalons de ces projets, lus dans la nouvelle colonne « Surfaces de relais (GEI) » de Plan_PTE. Ils serviront à indiquer le besoin de surfaces de relais pendant les travaux.", "Fonds de carte CARTO remis dans le menu ; Esri World Street reste le fond par défaut.", "Un clic sur un repère fige la fenêtre : lien vers le sous-site dans le Classement, et chaque projet ouvre sa fiche dans la Revue de projets."]},
     {"date": "02.10.2026", "objet": "priorisation", "version": "v2.4", "titre": "Classement en sous-onglets, une seule recherche", "points": ["Le Classement a quatre sous-onglets : Liste, Matrice urgence × faisabilité, Top 20, Distribution et état SIA. Plus de défilement pour atteindre les trois derniers.", "Une seule recherche, dans l'en-tête : une proposition ouvre la fiche du sous-site ; un texte libre validé par Entrée filtre le classement, et une étiquette « Filtre » permet de le retirer.", "Carte : fond Esri World Street par défaut ; les fonds CARTO, qui exigent désormais une clé, sont retirés."]},
     {"date": "02.10.2026", "objet": "revue", "version": "v0.15", "titre": "Diagramme CPI / SPI, ligne de filtres figée", "points": ["Reporting : nouveau diagramme coût et planning (CPI / SPI), un point par projet, quatre quadrants comptés ; il suit le périmètre et les filtres. Les projets sans avancement global ne sont pas placés, et c'est dit.", "La ligne « Aller à » et les filtres reste visible sous l'en-tête ; le mot « Programme » disparaît.", "Retirés : la situation par statut au niveau Programme, le bloc « Chargement » de l'onglet Données, les boutons d'impression du Parc et du Portefeuille.", "« Recharger le classeur » ouvre directement le choix du fichier."]},
     {"date": "02.10.2026", "objet": "priorisation", "version": "v2.3", "titre": "En-tête sur trois lignes, onglets allégés", "points": ["Les filtres Périmètre, Montants et CO₂ ont leur ligne sous les onglets, séparée par un filet ; la recherche d'un sous-site les rejoint. L'onglet Méthode n'a plus de « ? ».", "Le texte explicatif de chaque onglet est replié dans « Comment lire cet onglet » et repris dans l'info-bulle de l'onglet.", "Le classement s'ouvre sur « Tous les objectifs » ; IDC sans projection : « --- » ; la carte ne signale plus que l'échec du fond.", "Correction : dans l'Arbitrage, changer l'objectif à faire reculer recalcule de nouveau le portefeuille."]},
@@ -1730,7 +1746,7 @@ var PTE_COMMUN = (function () {
            tour: tour, tourVue: tourVue, relierAccueil: relierAccueil,
            exporterSaisies: exporterSaisies, importerSaisies: importerSaisies,
            resumeSaisies: resumeSaisies, telechargerSaisies: telechargerSaisies,
-           layout: layout, lien: lien, ssDepuisHash: ssDepuisHash, ecrireHash: ecrireHash,
+           layout: layout, lien: lien, ssDepuisHash: ssDepuisHash, projetDepuisHash: projetDepuisHash, ecrireHash: ecrireHash,
            publierClasseur: publierClasseur, lireClasseur: lireClasseur, effacerClasseur: effacerClasseur,
            demanderEffacerClasseur: demanderEffacerClasseur,
            lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,

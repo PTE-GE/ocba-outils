@@ -487,6 +487,40 @@ tr.ss-child:hover td, .qtable tbody tr.ss-child:hover td{background:var(--surfac
 /* Gantt */
 svg.gantt{width:100%; height:auto; display:block;}
 .gantt-scroll{max-height:440px; overflow-y:auto;}
+/* Planning (06.10.2026) : hauteur et densité réglables ; l'axe du temps et la barre de synthèse du périmètre
+   restent en haut de la liste quand elle défile */
+.gantt-scroll.gantt-h-g{max-height:max(440px, calc(100vh - 230px));}
+.gantt-scroll.gantt-h-t{max-height:none; overflow-y:visible;}
+.gantt-tete{position:sticky; top:0; z-index:2; background:var(--card-bg); border-bottom:1px solid var(--border);}
+.gantt-scroll.gantt-h-t .gantt-tete{position:static;}
+svg.gantt-axe{width:100%; height:auto; display:block;}
+.gantt-reglages{display:inline-flex; align-items:center; gap:4px 14px; flex-wrap:wrap; font-size:11.5px; font-weight:normal; color:var(--ink-muted);}
+.gantt-reglages .seg{display:inline-flex; border:1px solid var(--border); border-radius:999px; overflow:hidden; margin-left:5px;}
+.gantt-reglages .seg button{font:inherit; font-size:11.5px; border:0; background:var(--card-bg); color:var(--ink-70); padding:3px 10px; cursor:pointer;}
+.gantt-reglages .seg button + button{border-left:1px solid var(--border);}
+.gantt-reglages .seg button[aria-pressed="true"]{background:var(--slate); color:#fff; font-weight:bold;}
+.gantt-reglages .seg button:focus-visible{outline:2px solid var(--teal); outline-offset:-2px;}
+@media print{ .gantt-reglages{display:none;} .gantt-scroll{max-height:none !important; overflow:visible !important;} .gantt-tete{position:static;} }
+/* Périmètre à choix multiple (06.10.2026), à l'image de la priorisation */
+.pm-sel{position:relative; display:inline-flex; align-items:center;}
+.pm-txt{font:inherit; font-size:12.5px; font-weight:bold; color:var(--ink-70); border:1px solid transparent; border-radius:6px; background:transparent; cursor:pointer;
+  padding:3px 18px 3px 6px; max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  background-image:linear-gradient(45deg,transparent 50%,var(--ink-muted) 50%),linear-gradient(135deg,var(--ink-muted) 50%,transparent 50%);
+  background-position:calc(100% - 9px) 55%,calc(100% - 5px) 55%; background-size:4px 4px,4px 4px; background-repeat:no-repeat;}
+.pm-txt:hover,.pm-txt:focus-visible,.pm-txt[aria-expanded="true"]{border-color:var(--border);}
+.pm-pop{position:absolute; left:0; top:calc(100% + 6px); z-index:320; width:320px; max-width:calc(100vw - 32px); background:var(--card-bg); border:1px solid var(--border);
+  border-radius:10px; box-shadow:0 6px 26px rgba(0,0,0,.28); padding:10px; text-align:left; white-space:normal;}
+.pm-pop[hidden]{display:none;}
+.pm-h{font-size:11px; color:var(--ink-muted); line-height:1.5; margin-bottom:7px;}
+.pm-list{max-height:300px; overflow-y:auto; overscroll-behavior:contain; margin:0 -4px; padding:0 4px;}
+.pm-g{font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-muted); margin:8px 5px 3px;}
+.pm-g:first-child{margin-top:0;}
+.pm-i{display:flex; align-items:center; gap:7px; padding:4px 5px; border-radius:6px; cursor:pointer; font-size:12.5px; font-weight:normal; color:var(--ink); text-transform:none; letter-spacing:0; margin:0;}
+.pm-i:hover{background:var(--page-bg);}
+.pm-i input{margin:0; flex:none;}
+.pm-i .n{margin-left:auto; font-size:11px; color:var(--ink-muted); font-variant-numeric:tabular-nums;}
+.pm-f{display:flex; gap:8px; margin-top:9px;}
+.pm-f .pm-ok{flex:1; background:var(--teal); border-color:var(--teal); color:#fff;}
 /* 30.09.2026 : sommaire du reporting, planning dépliable, statut replié, fiche reliée */
 .rep-sommaire{display:flex; align-items:center; gap:.4em; flex-wrap:wrap; margin:0 0 12px;}
 .rep-saut{font:inherit; font-size:12.5px; font-weight:bold; color:var(--teal); background:var(--card-bg, #fff); border:1px solid var(--border); border-radius:100px; padding:4px 12px; cursor:pointer;}
@@ -813,7 +847,14 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
     <button type="button" class="tab" data-view="methode" id="btn-help" title="Règles des sémaphores, sources des données, lien avec la priorisation et calendrier du cycle mensuel.">Méthode</button>
   </nav>
   <div class="hdr-ctx">
-    <label class="cx-l" for="sel-filtre">Périmètre <select id="sel-filtre" class="cx-in"></select></label>
+    <span class="cx-l">Périmètre
+      <span class="pm-sel"><button type="button" class="pm-txt" id="pm-btn" aria-haspopup="true" aria-expanded="false" title="Restreindre tout l'outil à un ou plusieurs portefeuilles ou responsables de projet">Tout le parc</button>
+        <div class="pm-pop" id="pm-pop" hidden>
+          <div class="pm-h">Un ou plusieurs portefeuilles ou responsables de projet. Aucune case cochée = tout le parc. Plusieurs cases : les projets de l'un ou de l'autre.</div>
+          <div class="pm-list" id="pm-list"></div>
+          <div class="pm-f"><button type="button" class="btn" id="pm-aucun">Tout décocher</button><button type="button" class="btn pm-ok" id="pm-ok">Appliquer</button></div>
+        </div></span>
+      <select id="sel-filtre" hidden aria-hidden="true" tabindex="-1"></select></span>
     <label class="cx-l" for="sel-mois">Mois de revue <select id="sel-mois" class="cx-in"></select></label>
     <button type="button" class="btn" id="btn-questions" title="Générer les questions du mois par RPF (Reporting)">Questions du mois</button>
   </div>
@@ -861,7 +902,7 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.15 · 02.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.17 · 06.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -1189,7 +1230,7 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
 
    Résultat :
      { annee, anneeSource, anneesDisponibles, series (fiabilité par année),
-       sousSites: [ { num, site, nom, nomSite, rpf, rp, projets, sre, idc, idcAnnee,
+       sousSites: [ { num, site, nom, nomSite, rpf, rp, projets, relais, sre, idc, idcAnnee,
                       chaleur:{val,source,origine}, elec:{…}, eau:{…}, co2:{…},
                       agent:{sitg, principal, cible, facteur, aRenseigner},
                       estimPte, investCecb, co2Projete, gainCo2T, gainEauEstime, perimetreSme, siteMesure } ],
@@ -1395,10 +1436,11 @@ var PTE_CONTRAT = (function () {
   /* ---------- D8 : responsables de projet depuis GE-Invest (Objet (actif), chiffres 7 à 12 = sous-site) ----------
      Feuille GEI_Projets (une ligne par projet) ou, à défaut, GEI_Suivi (plate : le projet y est répété). */
   function lireProjets(rowsG) {
-    var parSousSite = {}, vus = {}, idx, jO, jN, jR, jL, i, r, o, ss, n, rp;
+    var parSousSite = {}, vus = {}, idx, jO, jN, jR, jL, jS, i, r, o, ss, n, rp;
     if (!rowsG || rowsG.length < 2) return parSousSite;
     idx = entetes(rowsG);
     jO = col(idx, ['Objet (actif)']); jN = col(idx, ['Numéro']); jR = col(idx, ['Nom responsable suivi']); jL = col(idx, ['Nom long', 'Libellé']);
+    jS = col(idx, ['Statut']);   /* 06.10.2026 : statut GE-Invest du projet, pour la carte de la priorisation */
     if (jO == null || jR == null) return parSousSite;
     for (i = 1; i < rowsG.length; i++) {
       r = rowsG[i]; if (!r) continue;
@@ -1409,7 +1451,7 @@ var PTE_CONTRAT = (function () {
       if (vus[n + '|' + ss]) continue;   /* une ligne par projet (GEI_Suivi répète le projet par jalon / risque / livrable) */
       vus[n + '|' + ss] = true;
       rp = txt(cell(r, jR));
-      (parSousSite[ss] = parSousSite[ss] || []).push({ numero: n, nom: txt(cell(r, jL)), rp: rp });
+      (parSousSite[ss] = parSousSite[ss] || []).push({ numero: n, nom: txt(cell(r, jL)), rp: rp, statut: txt(cell(r, jS)) });
     }
     return parSousSite;
   }
@@ -1464,6 +1506,10 @@ var PTE_CONTRAT = (function () {
        gain d'eau ESTIMÉ par l'audit eau (fichier Tableau_suivi_conso_O, requête Gains_Eau_O),
        gain du site ventilé au sous-site au prorata de la SRE par le classeur lui-même. */
     var jGainEauEst = col(idx, ['Gain Eau estimé [m3/an]', 'Gain Eau estimé']);
+    /* Colonne facultative (06.10.2026, demande d'Achim) : commentaires des jalons GE-Invest des projets du
+       sous-site, réunis par le classeur lui-même (formule sur GEI_Projets et GEI_Jalons). Ils serviront à
+       dire le besoin de surfaces de relais pendant les travaux. Un classeur sans cette colonne : null. */
+    var jRelais = col(idx, ['Surfaces de relais (GEI)']);
 
     /* Consommation par site, indexée par SITES NUM */
     var mesures = {}, idxC = entetes(rowsC || []), jNum = col(idxC, ['SITES NUM']), jNomS = col(idxC, ['NOM SITE']),
@@ -1507,6 +1553,7 @@ var PTE_CONTRAT = (function () {
       /* D8 : responsables ; « --- » = vide */
       ss.rpf = txt(cell(r, C.rpf));
       ss.projets = projets[ss.num] || [];
+      ss.relais = jRelais == null ? null : txt(cell(r, jRelais));
       ss.rp = null; ss.rpSource = null;
       for (k = 0; k < ss.projets.length; k++) if (ss.projets[k].rp) { ss.rp = ss.projets[k].rp; ss.rpSource = nomG; break; }
       if (ss.rp == null) { ss.rp = txt(cell(r, C.rp)); if (ss.rp) ss.rpSource = 'Plan_PTE'; }
@@ -1771,11 +1818,18 @@ var PTE_COMMUN = (function () {
     for (k in L) if (k !== 'accueil' && k !== 'donnees' && p.indexOf('/' + L[k].split('/')[0] + '/') >= 0) return '../';
     return './';
   }
-  /* Lien vers un autre outil, avec éventuellement un sous-site. */
-  function lien(outil, ss) {
+  /* Lien vers un autre outil, avec éventuellement un sous-site et, depuis le 06.10.2026, un projet
+     GE-Invest (« #ss=…&projet=… ») : la Revue ouvre alors la fiche de ce projet. */
+  function lien(outil, ss, projet) {
     var L = LAYOUTS[layout()];
     if (!L[outil]) return null;
-    return racine() + L[outil] + (ss ? '#ss=' + encodeURIComponent(String(ss)) : '');
+    return racine() + L[outil] + (ss ? '#ss=' + encodeURIComponent(String(ss)) : '') +
+      (projet ? (ss ? '&' : '#') + 'projet=' + encodeURIComponent(String(projet)) : '');
+  }
+  function projetDepuisHash() {
+    var h = (typeof location !== 'undefined' && location.hash) || '';
+    var m = /[#&]projet=([0-9]{6,20})\b/.exec(h);
+    return m ? m[1] : null;
   }
 
   /* ---------- #ss=… dans l'adresse ---------- */
@@ -2227,6 +2281,9 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "06.10.2026", "objet": "revue", "version": "v0.17", "titre": "Périmètre à choix multiple, planning réglable", "points": ["Périmètre : plusieurs portefeuilles ou responsables de projet peuvent être cochés ensemble, comme dans la priorisation.", "Planning : une barre en tête résume la durée du périmètre affiché, du début le plus tôt à la fin la plus tardive ; elle reste visible, avec l'axe des années, quand la liste défile.", "Planning : hauteur de la liste au choix (normale, grande, toute la liste) et lignes normales ou serrées, pour voir davantage de sous-sites."]},
+    {"date": "06.10.2026", "objet": "revue", "version": "v0.16", "titre": "Fiche d'un projet ouverte par un lien", "points": ["Un lien venu de la carte de la priorisation ouvre directement la fiche du projet GE-Invest désigné. Si le projet n'est pas dans le classeur chargé, la Revue s'ouvre sur son sous-site."]},
+    {"date": "06.10.2026", "objet": "priorisation", "version": "v2.5", "titre": "Carte : projets et surfaces de relais au survol", "points": ["Au survol d'un repère de la carte : les projets GE-Invest du sous-site (numéro, nom, statut).", "Au même endroit : les commentaires des jalons de ces projets, lus dans la nouvelle colonne « Surfaces de relais (GEI) » de Plan_PTE. Ils serviront à indiquer le besoin de surfaces de relais pendant les travaux.", "Fonds de carte CARTO remis dans le menu ; Esri World Street reste le fond par défaut.", "Un clic sur un repère fige la fenêtre : lien vers le sous-site dans le Classement, et chaque projet ouvre sa fiche dans la Revue de projets."]},
     {"date": "02.10.2026", "objet": "priorisation", "version": "v2.4", "titre": "Classement en sous-onglets, une seule recherche", "points": ["Le Classement a quatre sous-onglets : Liste, Matrice urgence × faisabilité, Top 20, Distribution et état SIA. Plus de défilement pour atteindre les trois derniers.", "Une seule recherche, dans l'en-tête : une proposition ouvre la fiche du sous-site ; un texte libre validé par Entrée filtre le classement, et une étiquette « Filtre » permet de le retirer.", "Carte : fond Esri World Street par défaut ; les fonds CARTO, qui exigent désormais une clé, sont retirés."]},
     {"date": "02.10.2026", "objet": "revue", "version": "v0.15", "titre": "Diagramme CPI / SPI, ligne de filtres figée", "points": ["Reporting : nouveau diagramme coût et planning (CPI / SPI), un point par projet, quatre quadrants comptés ; il suit le périmètre et les filtres. Les projets sans avancement global ne sont pas placés, et c'est dit.", "La ligne « Aller à » et les filtres reste visible sous l'en-tête ; le mot « Programme » disparaît.", "Retirés : la situation par statut au niveau Programme, le bloc « Chargement » de l'onglet Données, les boutons d'impression du Parc et du Portefeuille.", "« Recharger le classeur » ouvre directement le choix du fichier."]},
     {"date": "02.10.2026", "objet": "priorisation", "version": "v2.3", "titre": "En-tête sur trois lignes, onglets allégés", "points": ["Les filtres Périmètre, Montants et CO₂ ont leur ligne sous les onglets, séparée par un filet ; la recherche d'un sous-site les rejoint. L'onglet Méthode n'a plus de « ? ».", "Le texte explicatif de chaque onglet est replié dans « Comment lire cet onglet » et repris dans l'info-bulle de l'onglet.", "Le classement s'ouvre sur « Tous les objectifs » ; IDC sans projection : « --- » ; la carte ne signale plus que l'échec du fond.", "Correction : dans l'Arbitrage, changer l'objectif à faire reculer recalcule de nouveau le portefeuille."]},
@@ -2378,7 +2435,7 @@ var PTE_COMMUN = (function () {
            tour: tour, tourVue: tourVue, relierAccueil: relierAccueil,
            exporterSaisies: exporterSaisies, importerSaisies: importerSaisies,
            resumeSaisies: resumeSaisies, telechargerSaisies: telechargerSaisies,
-           layout: layout, lien: lien, ssDepuisHash: ssDepuisHash, ecrireHash: ecrireHash,
+           layout: layout, lien: lien, ssDepuisHash: ssDepuisHash, projetDepuisHash: projetDepuisHash, ecrireHash: ecrireHash,
            publierClasseur: publierClasseur, lireClasseur: lireClasseur, effacerClasseur: effacerClasseur,
            demanderEffacerClasseur: demanderEffacerClasseur,
            lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,
@@ -3994,7 +4051,7 @@ var PTE_COMMUN = (function () {
   function clearData() {
     DB = Engine.createDB();
     try { localStorage.removeItem(LS_DB); } catch (e) { /* ignoré */ }
-    STATE.mois = null; STATE.projetSel = null; STATE.perimetre = 'ALL';
+    STATE.mois = null; STATE.projetSel = null; STATE.perimetre = 'ALL'; STATE.perimetres = [];
     STATE.rep = { pf: null, ss: null, projet: null, rp: '', statut: '', type: '', q: '', expanded: {} };
     STATE.questionsOuvertes = false; STATE.hashMessage = null; STATE.communMeta = null;
     ecrireQuestionsStock({ mois: {} }); // les questions du mois sont des données propres de la revue ; le classeur commun et le classement publié restent
@@ -4019,13 +4076,22 @@ var PTE_COMMUN = (function () {
 
   function currentYear() { return STATE.mois ? +STATE.mois.slice(0, 4) : new Date().getFullYear(); }
 
+  /* Périmètre (06.10.2026, demande d'Achim) : choix multiple. STATE.perimetre garde ses valeurs d'origine
+     (« ALL », « HORS », « RPF:… », « RP:… ») pour un choix simple et vaut « MULTI » quand plusieurs cases
+     sont cochées ; la liste est alors dans STATE.perimetres. Plusieurs cases = réunion : un projet est retenu
+     s'il appartient à l'un des portefeuilles ou à l'un des RP cochés. */
+  function projetDansCle(p, key) {
+    if (!key || key === 'ALL') return true;
+    if (key === 'HORS') return !p.rpf || !p.rpf.trim();
+    if (key.indexOf('RPF:') === 0) return p.rpf === key.slice(4);
+    if (key.indexOf('RP:') === 0) return p.rp === key.slice(3);
+    if (key === 'MULTI') { var l = STATE.perimetres || []; for (var i = 0; i < l.length; i++) if (projetDansCle(p, l[i])) return true; return !l.length; }
+    return true;
+  }
   function projetsByPerimetre(key) {
     var all = computeAll();
     if (!key || key === 'ALL') return all;
-    if (key === 'HORS') return all.filter(function (c) { return !c.projet.rpf || !c.projet.rpf.trim(); });
-    if (key.indexOf('RPF:') === 0) { var v = key.slice(4); return all.filter(function (c) { return c.projet.rpf === v; }); }
-    if (key.indexOf('RP:') === 0) { var v2 = key.slice(3); return all.filter(function (c) { return c.projet.rp === v2; }); }
-    return all;
+    return all.filter(function (c) { return projetDansCle(c.projet, key); });
   }
 
   function labelPerimetre(key) {
@@ -4033,8 +4099,23 @@ var PTE_COMMUN = (function () {
     if (key === 'HORS') return 'hors périmètre RPF';
     if (key.indexOf('RPF:') === 0) return 'RPF ' + key.slice(4);
     if (key.indexOf('RP:') === 0) return 'RP ' + key.slice(3);
+    if (key === 'MULTI') {
+      var l = STATE.perimetres || [], nPf = l.filter(function (k) { return k === 'HORS' || k.indexOf('RPF:') === 0; }).length, nRp = l.length - nPf, t = [];
+      if (nPf) t.push(nPf + ' portefeuille' + (nPf > 1 ? 's' : ''));
+      if (nRp) t.push(nRp + ' RP');
+      return t.join(' et ');
+    }
     return key;
   }
+  /* Applique une liste de clés : aucune = tout le parc ; une = choix simple ; plusieurs = « MULTI ». */
+  function setPerimetres(cles) {
+    var l = [];
+    (cles || []).forEach(function (k) { if (k && k !== 'ALL' && k !== 'MULTI' && l.indexOf(k) === -1) l.push(k); });
+    if (l.length > 1 && DB.projets.length && DB.projets.every(function (p) { return l.some(function (k) { return projetDansCle(p, k); }); })) l = [];   /* tout coché = tout le parc */
+    STATE.perimetres = l.length > 1 ? l : [];
+    STATE.perimetre = !l.length ? 'ALL' : (l.length === 1 ? l[0] : 'MULTI');
+  }
+  function perimetreCles() { return STATE.perimetre === 'MULTI' ? (STATE.perimetres || []).slice() : ((!STATE.perimetre || STATE.perimetre === 'ALL') ? [] : [STATE.perimetre]); }
 
   // Alignement priorisation du périmètre courant : restreint l'univers des
   // sous-sites « à proposer » au même périmètre RPF que la liste filtrée
@@ -4043,6 +4124,13 @@ var PTE_COMMUN = (function () {
     var opts = {};
     if (key && key.indexOf('RPF:') === 0) { var v = key.slice(4); opts.filterRow = function (r) { return r.rpf === v; }; }
     else if (key === 'HORS') { opts.filterRow = function (r) { return !r.rpf || !r.rpf.trim(); }; }
+    else if (key === 'MULTI') {
+      /* seulement des portefeuilles : même restriction, sur leur réunion ; dès qu'un RP est coché, pas de restriction */
+      var lm = STATE.perimetres || [];
+      if (lm.length && lm.every(function (k) { return k === 'HORS' || k.indexOf('RPF:') === 0; })) {
+        opts.filterRow = function (r) { return lm.some(function (k) { return k === 'HORS' ? (!r.rpf || !r.rpf.trim()) : r.rpf === k.slice(4); }); };
+      }
+    }
     return Engine.alignementPerimetre(DB, list, PARAMS, opts);
   }
 
@@ -5235,10 +5323,7 @@ var PTE_COMMUN = (function () {
   function projetsDuPerimetre() {
     var key = STATE.perimetre;
     if (!key || key === 'ALL') return DB.projets;
-    if (key === 'HORS') return DB.projets.filter(function (p) { return !p.rpf || !p.rpf.trim(); });
-    if (key.indexOf('RPF:') === 0) { var v = key.slice(4); return DB.projets.filter(function (p) { return p.rpf === v; }); }
-    if (key.indexOf('RP:') === 0) { var v2 = key.slice(3); return DB.projets.filter(function (p) { return p.rp === v2; }); }
-    return DB.projets;
+    return DB.projets.filter(function (p) { return projetDansCle(p, key); });
   }
   function repRows() {
     var latestSuivi = {};
@@ -5787,11 +5872,52 @@ var PTE_COMMUN = (function () {
   // Barre = durée (début → fin) ; jalons en marqueurs : rond plein teal =
   // réalisé, losange blanc = prévu, losange rouge = échu non réalisé.
   // Ligne verticale tiretée = aujourd'hui. Un seul axe (temps).
+  /* Réglages du planning (06.10.2026, demande d'Achim) : hauteur de la liste et densité des lignes, gardées
+     dans ce navigateur. h : n (normale, 440 px), g (grande, hauteur de la fenêtre), t (toute la liste) ;
+     l : n (lignes normales), s (serrées). */
+  var LS_PLANNING = 'pte.revue.planning.v1';
+  var PLANNING = (function () {
+    var d = { h: 'n', l: 'n' };
+    try { var o = JSON.parse(localStorage.getItem(LS_PLANNING) || '{}'); if (o && /^[ngt]$/.test(o.h)) d.h = o.h; if (o && /^[ns]$/.test(o.l)) d.l = o.l; } catch (e) { /* stockage indisponible */ }
+    return d;
+  })();
+  function planningReglages(onChange) {
+    function seg(nom, cle, choix) {
+      var g = el('span', { class: 'seg', role: 'group', 'aria-label': nom });
+      choix.forEach(function (c) {
+        var b = el('button', { type: 'button', 'aria-pressed': PLANNING[cle] === c[0] ? 'true' : 'false', title: c[2] }, [c[1]]);
+        b.addEventListener('click', function (e) {
+          e.stopPropagation();
+          PLANNING[cle] = c[0];
+          try { localStorage.setItem(LS_PLANNING, JSON.stringify(PLANNING)); } catch (e2) { /* réglage valable pour la page seulement */ }
+          onChange();
+        });
+        g.appendChild(b);
+      });
+      return el('span', {}, [nom, g]);
+    }
+    return el('span', { class: 'gantt-reglages no-print' }, [
+      seg('Hauteur', 'h', [['n', 'Normale', 'Liste de hauteur fixe, qui défile'], ['g', 'Grande', 'Liste à la hauteur de la fenêtre'], ['t', 'Tout', 'Toute la liste, sans défilement']]),
+      seg('Lignes', 'l', [['n', 'Normales', 'Lignes de hauteur normale'], ['s', 'Serrées', 'Lignes plus basses : davantage de sous-sites à l’écran']])
+    ]);
+  }
+  function dureeTexte(d0, d1) {
+    var m = Math.round((d1 - d0) / (86400000 * 30.4375));
+    if (m < 12) return m + ' mois';
+    var a = Math.floor(m / 12), r = m % 12;
+    return a + ' an' + (a > 1 ? 's' : '') + (r ? ' ' + r + ' mois' : '');
+  }
+  function moisAnnee(iso) { var m = /^(\d{4})-(\d{2})/.exec(String(iso || '')); return m ? m[2] + '.' + m[1] : '?'; }
+
+  /* opts.resume : { label, tipLabel, debut, fin } — ligne de synthèse du périmètre, en tête, avec sa barre de
+     durée (début le plus tôt → fin la plus tardive). opts.reglages : fonction de redessin ; présente, la carte
+     porte les réglages de hauteur et de densité. L'axe du temps et la synthèse restent en haut quand la liste défile. */
   function repGantt(rowsG, opts) {
     opts = opts || {};
     var today = new Date();
     rowsG = rowsG.filter(function (r) { return r.ouvert || r.enfant || r.debut || r.fin || (r.jalons && r.jalons.length); });
     if (!rowsG.length) return null;
+    var resume = opts.resume || null;
     // bornes temporelles
     var tMin = null, tMax = null;
     function seen(dStr) {
@@ -5810,13 +5936,16 @@ var PTE_COMMUN = (function () {
     tMin = new Date(tMin.getTime() - 61 * 86400000);
     tMax = new Date(tMax.getTime() + 61 * 86400000);
 
-    var W = 960, padL = 318, padR = 14, padT = 26, padB = 8, rowH = 26;
+    var serre = !!opts.reglages && PLANNING.l === 's';
+    var W = 960, padL = 318, padR = 14, padT = 26, padB = 8, rowH = serre ? 17 : 26, fs = serre ? '9.5' : '11', mr = serre ? 3 : 4;
     var plotW = W - padL - padR;
-    var H = padT + rowsG.length * rowH + padB;
+    var H = rowsG.length * rowH + padB;
+    var Ht = padT + (resume ? 26 : 0);
     var svgNS = 'http://www.w3.org/2000/svg';
     function sv(tag, attrs) { var e = document.createElementNS(svgNS, tag); if (attrs) Object.keys(attrs).forEach(function (a) { e.setAttribute(a, attrs[a]); }); return e; }
     function x(d) { return padL + plotW * (d.getTime() - tMin.getTime()) / (tMax.getTime() - tMin.getTime()); }
     var svg = sv('svg', { class: 'chart gantt', viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': opts.aria || 'Planning des jalons : barres de durée et jalons prévus, réalisés ou en retard.' });
+    var tete = sv('svg', { class: 'chart gantt-axe', viewBox: '0 0 ' + W + ' ' + Ht, role: 'img', 'aria-label': 'Axe du temps' + (resume ? ' et durée du périmètre' : '') });
 
     // grille verticale : 1er janvier de chaque année visible (le libellé
     // d'une année trop proche du libellé « aujourd'hui » est omis)
@@ -5825,28 +5954,46 @@ var PTE_COMMUN = (function () {
       var d0 = new Date(Date.UTC(yy, 0, 1));
       if (d0 < tMin || d0 > tMax) continue;
       var gx = x(d0);
-      svg.appendChild(sv('line', { x1: gx, x2: gx, y1: padT - 4, y2: H - padB, stroke: JETON.grille, 'stroke-width': '1' }));
+      svg.appendChild(sv('line', { x1: gx, x2: gx, y1: 0, y2: H - padB, stroke: JETON.grille, 'stroke-width': '1' }));
+      tete.appendChild(sv('line', { x1: gx, x2: gx, y1: padT - 4, y2: Ht, stroke: JETON.grille, 'stroke-width': '1' }));
       if (gx > txToday - 8 && gx < txToday + 66) continue;
       var yl = sv('text', { x: gx + 3, y: padT - 10, 'font-size': '10', fill: JETON.inkMuted });
       yl.textContent = String(yy);
-      svg.appendChild(yl);
+      tete.appendChild(yl);
     }
     // aujourd'hui
     var tx = txToday;
-    svg.appendChild(sv('line', { x1: tx, x2: tx, y1: padT - 4, y2: H - padB, stroke: JETON.slate, 'stroke-width': '1.4', 'stroke-dasharray': '4 3' }));
+    svg.appendChild(sv('line', { x1: tx, x2: tx, y1: 0, y2: H - padB, stroke: JETON.slate, 'stroke-width': '1.4', 'stroke-dasharray': '4 3' }));
+    tete.appendChild(sv('line', { x1: tx, x2: tx, y1: padT - 4, y2: Ht, stroke: JETON.slate, 'stroke-width': '1.4', 'stroke-dasharray': '4 3' }));
     var tl = sv('text', { x: tx + 4, y: padT - 10, 'font-size': '10', 'font-weight': 'bold', fill: JETON.slate });
     tl.textContent = "aujourd'hui";
-    svg.appendChild(tl);
+    tete.appendChild(tl);
+
+    // synthèse du périmètre : une ligne, une barre
+    if (resume) {
+      var ry = padT + 13, rd0 = Engine.parseDate(resume.debut), rd1 = Engine.parseDate(resume.fin);
+      var rl = sv('text', { x: 8, y: ry + 4, 'text-anchor': 'start', 'font-size': '11.5', 'font-weight': 'bold', fill: JETON.ink, class: 'gantt-resume-lbl' });
+      var rtxt = resume.label + (rd0 && rd1 && rd1 > rd0 ? ' · ' + dureeTexte(rd0, rd1) : '');
+      rl.textContent = rtxt.length > 48 ? rtxt.slice(0, 47) + '…' : rtxt;
+      tip(rl, resume.tipLabel || resume.label);
+      tete.appendChild(rl);
+      if (rd0 && rd1 && rd1 > rd0) {
+        var rbx = x(rd0), rbw = Math.max(3, x(rd1) - rbx);
+        var rbar = sv('rect', { x: rbx, y: ry - 5, width: rbw, height: 10, rx: '5', fill: JETON.slate, class: 'gantt-resume' });
+        tip(rbar, (resume.tipLabel || resume.label) + ' — du ' + resume.debut + ' au ' + resume.fin + ' (' + dureeTexte(rd0, rd1) + ').');
+        tete.appendChild(rbar);
+      }
+    }
 
     rowsG.forEach(function (r, i) {
-      var yTop = padT + i * rowH;
+      var yTop = i * rowH;
       var yc = yTop + rowH / 2;
       if (i % 2 === 1) svg.appendChild(sv('rect', { x: 0, y: yTop, width: W, height: rowH, fill: JETON.bande }));
       if (r.enfant) svg.appendChild(sv('rect', { x: 0, y: yTop, width: 3, height: rowH, fill: JETON.teal }));
       // libellé, aligné à gauche comme dans les tableaux (30.09.2026) ; un projet est décalé sous son sous-site
       var x0 = r.enfant ? 28 : 8;
-      var lbl = sv('text', { x: x0, y: yc + 4, 'text-anchor': 'start', 'font-size': '11', fill: r.enfant ? JETON.inkMuted : JETON.ink });
-      var lmax = r.enfant ? 46 : 50;
+      var lbl = sv('text', { x: x0, y: yc + (serre ? 3.2 : 4), 'text-anchor': 'start', 'font-size': fs, fill: r.enfant ? JETON.inkMuted : JETON.ink });
+      var lmax = (r.enfant ? 46 : 50) + (serre ? 8 : 0);
       var txt = (r.depliable ? (r.ouvert ? '▾ ' : '▸ ') : '') + r.label;
       lbl.textContent = txt.length > lmax ? txt.slice(0, lmax - 1) + '…' : txt;
       tip(lbl, r.tipLabel || r.label);
@@ -5868,7 +6015,7 @@ var PTE_COMMUN = (function () {
       if (!dFin && jDates.length) dFin = new Date(Math.max.apply(null, jDates));
       if (dDeb && dFin && dFin > dDeb) {
         var bx = x(dDeb), bw = Math.max(3, x(dFin) - bx);
-        var bar = sv('rect', { x: bx, y: yc - 4, width: bw, height: 8, rx: '4', fill: JETON.piste });
+        var bar = sv('rect', { x: bx, y: yc - (serre ? 3 : 4), width: bw, height: serre ? 6 : 8, rx: serre ? '3' : '4', fill: JETON.piste });
         tip(bar, r.label + ' — du ' + r.debut + ' au ' + (r.fin || '?') + '.');
         svg.appendChild(bar);
       }
@@ -5880,11 +6027,11 @@ var PTE_COMMUN = (function () {
         var late = !j.realisee && Engine.parseDate(j.prevue) < today;
         var tipTxt = (j.projet ? j.projet + ' — ' : '') + j.libelle + ' : ' +
           (j.realisee ? ('réalisé le ' + j.realisee) : (late ? ('prévu le ' + j.prevue + ' — échu non réalisé') : ('prévu le ' + j.prevue))) + '.';
-        var m;
+        var m, c = mr * 0.9;
         if (j.realisee) {
-          m = sv('circle', { cx: mx, cy: yc, r: '4', fill: JETON.teal });
+          m = sv('circle', { cx: mx, cy: yc, r: String(mr), fill: JETON.teal });
         } else {
-          m = sv('rect', { x: mx - 3.6, y: yc - 3.6, width: 7.2, height: 7.2, transform: 'rotate(45 ' + mx + ' ' + yc + ')', fill: late ? JETON.rouge : JETON.carte, stroke: late ? JETON.rouge : JETON.slate, 'stroke-width': '1.2' });
+          m = sv('rect', { x: mx - c, y: yc - c, width: 2 * c, height: 2 * c, transform: 'rotate(45 ' + mx + ' ' + yc + ')', fill: late ? JETON.rouge : JETON.carte, stroke: late ? JETON.rouge : JETON.slate, 'stroke-width': '1.2' });
         }
         tip(m, tipTxt);
         svg.appendChild(m);
@@ -5892,15 +6039,19 @@ var PTE_COMMUN = (function () {
     });
 
     var legend = el('div', { class: 'rep-legend' }, [
+      resume ? el('span', {}, [el('span', { class: 'sw', style: 'background:' + JETON.slate + '; border-radius:4px;' }), 'Durée du périmètre']) : null,
       el('span', {}, [el('span', { class: 'sw', style: 'background:' + JETON.piste + '; border-radius:4px;' }), 'Durée (début → fin)']),
       el('span', {}, [el('span', { class: 'sw sw-dot' }), 'Jalon réalisé']),
       el('span', {}, [el('span', { class: 'sw sw-diamond' }), 'Jalon prévu']),
       el('span', {}, [el('span', { class: 'sw sw-diamond sw-late' }), 'Jalon échu non réalisé']),
       el('span', {}, [el('span', { class: 'sw sw-today' }), "Aujourd'hui"])
-    ]);
-    var wrap = rowsG.length > 14 ? el('div', { class: 'gantt-scroll' }, [svg]) : svg;
+    ].filter(Boolean));
+    var mode = opts.reglages ? PLANNING.h : 'n';
+    var defile = mode !== 't' && (rowsG.length > 14 || mode === 'g');
+    var wrap = el('div', { class: defile ? 'gantt-scroll' + (mode === 'g' ? ' gantt-h-g' : '') : 'gantt-scroll gantt-h-t' }, [el('div', { class: 'gantt-tete' }, [tete]), svg]);
     return el('div', { class: 'card' }, [
-      cardTitle(opts.title || 'Planning (jalons)', opts.tipText || 'Gantt sur les dates prévisionnelles des jalons GE-Invest. Barre : durée du sous-site (début le plus tôt → fin la plus tardive de ses projets). Un clic sur un sous-site affiche le planning de chacun de ses projets. Le survol des marqueurs donne le détail.'),
+      cardTitle(opts.title || 'Planning (jalons)', opts.tipText || 'Gantt sur les dates prévisionnelles des jalons GE-Invest. En tête, la durée du périmètre affiché (début le plus tôt → fin la plus tardive). Barre : durée du sous-site (début le plus tôt → fin la plus tardive de ses projets). Un clic sur un sous-site affiche le planning de chacun de ses projets. Le survol des marqueurs donne le détail.',
+        opts.reglages ? planningReglages(opts.reglages) : null),
       wrap, legend
     ]);
   }
@@ -5941,16 +6092,35 @@ var PTE_COMMUN = (function () {
     }).sort(function (a, b) { return a._deb < b._deb ? -1 : 1; });
     var aplat = [];
     rowsG.forEach(function (r) { aplat.push(r); (r.enfants || []).forEach(function (c) { aplat.push(c); }); });
+    if (opts.resumeLabel) {
+      /* durée du périmètre : début le plus tôt et fin la plus tardive des sous-sites affichés */
+      var rDeb = null, rFin = null, nPr = 0;
+      groups.forEach(function (g) { nPr += g.rows.length; });
+      rowsG.forEach(function (r) { if (r.debut && (!rDeb || r.debut < rDeb)) rDeb = r.debut; if (r.fin && (!rFin || r.fin > rFin)) rFin = r.fin; });
+      opts = Object.assign({}, opts, { resume: { label: opts.resumeLabel, debut: rDeb, fin: rFin,
+        tipLabel: opts.resumeLabel + ' : ' + groups.length + ' sous-site' + (groups.length > 1 ? 's' : '') + ', ' + nPr + ' projet' + (nPr > 1 ? 's' : '') } });
+    }
     return repGantt(aplat, opts);
   }
   // Hôte du planning : se redessine seul au dépliage, en gardant la position de défilement
+  /* Nom du périmètre affiché dans le Reporting : périmètre de l'en-tête, portefeuille ouvert, filtres actifs. */
+  function repPerimetreLibelle() {
+    var f = STATE.rep, lib = labelPerimetre(STATE.perimetre);
+    var nomP = (COMMUN && COMMUN.nomPropre) ? COMMUN.nomPropre : function (v) { return v; };
+    if (STATE.perimetre && STATE.perimetre.indexOf('RP:') === 0) lib = 'RP ' + nomP(STATE.perimetre.slice(3));
+    lib = lib.charAt(0).toUpperCase() + lib.slice(1);
+    if (f.pf && lib.indexOf(f.pf) === -1) lib = (STATE.perimetre && STATE.perimetre !== 'ALL' ? lib + ' · ' : '') + 'Portefeuille ' + f.pf;
+    if (f.rp && lib.indexOf(nomP(f.rp)) === -1) lib += ' · RP ' + nomP(f.rp);
+    if (f.statut || f.type || f.q) lib += ' (filtré)';
+    return lib;
+  }
   function repGanttHote(rows, opts) {
     var hote = el('div', { class: 'gantt-hote' });
     STATE.rep.ganttOuverts = STATE.rep.ganttOuverts || {};
     function dessiner() {
       var sc = hote.querySelector('.gantt-scroll'), haut = sc ? sc.scrollTop : 0;
       hote.innerHTML = '';
-      var g = repGanttSousSites(rows, Object.assign({}, opts, { ouverts: STATE.rep.ganttOuverts, onToggle: function (cle) {
+      var g = repGanttSousSites(rows, Object.assign({}, opts, { ouverts: STATE.rep.ganttOuverts, reglages: function () { hideTipBubble(); dessiner(); }, onToggle: function (cle) {
         STATE.rep.ganttOuverts[cle] = !STATE.rep.ganttOuverts[cle]; hideTipBubble(); dessiner();
       } }));
       if (g) hote.appendChild(g);
@@ -6470,6 +6640,22 @@ var PTE_COMMUN = (function () {
   function ecrireHashSs(num) { if (COMMUN) { try { COMMUN.ecrireHash(num || null); } catch (e) { /* ignoré */ } } }
   // Ouvre le sous-site : niveau Sous-site du Reporting, ou la fiche projet
   // s'il n'a qu'un projet ; message si aucun projet GE-Invest.
+  /* Adresse « #ss=…&projet=… » (06.10.2026, lien posé par la carte de la priorisation) : la fiche du projet
+     s'ouvre directement ; si le projet n'est pas dans le classeur chargé, repli sur le sous-site. */
+  function ouvrirDepuisAdresse() {
+    if (!COMMUN) return false;
+    var pj = COMMUN.projetDepuisHash ? COMMUN.projetDepuisHash() : null;
+    if (pj && DB.projets.some(function (p) { return p.numero_projet === pj; })) {
+      var ssA = COMMUN.ssDepuisHash();
+      STATE.hashMessage = null; STATE.projetSel = pj; showView('fiche');
+      /* la fiche réécrit l'adresse avec le seul sous-site : le projet y est remis, pour que la relecture
+         de l'adresse (fin du chargement, rechargement de la page) retombe sur la même fiche */
+      try { history.replaceState(null, '', '#' + (ssA ? 'ss=' + ssA + '&' : '') + 'projet=' + pj); } catch (e) { /* ignoré */ }
+      return true;
+    }
+    var ss = COMMUN.ssDepuisHash();
+    return ss ? ouvrirSousSite(ss) : false;
+  }
   function ouvrirSousSite(num) {
     num = String(num || '').trim();
     if (!num) return false;
@@ -6535,8 +6721,9 @@ var PTE_COMMUN = (function () {
     // (h) planning, remonté ici : dépliable par sous-site vers ses projets
     body.appendChild(el('div', { id: 'rep-sec-planning', class: 'rep-ancre' }));
     body.appendChild(repGanttHote(rows, {
-      title: STATE.rep.pf ? 'Planning du portefeuille (jalons par sous-site)' : 'Planning du parc (jalons par sous-site)',
-      aria: 'Planning des sous-sites : durée et jalons prévus, réalisés ou en retard.'
+      title: STATE.rep.pf ? 'Planning du portefeuille (jalons par sous-site)' : (STATE.perimetre && STATE.perimetre !== 'ALL' ? 'Planning du périmètre (jalons par sous-site)' : 'Planning du parc (jalons par sous-site)'),
+      aria: 'Planning des sous-sites : durée et jalons prévus, réalisés ou en retard.',
+      resumeLabel: repPerimetreLibelle()
     }));
 
     // (e)
@@ -7366,7 +7553,47 @@ var PTE_COMMUN = (function () {
     sel.appendChild(el('option', { value: 'HORS' }, ['Hors périmètre RPF']));
     var rps = Array.from(new Set(DB.projets.map(function (p) { return p.rp; }).filter(function (v) { return v && v.trim(); }))).sort();
     rps.forEach(function (r) { sel.appendChild(el('option', { value: 'RP:' + r }, ['RP — ' + nomP(r)])); });
-    sel.value = prev; if (sel.value !== prev) { STATE.perimetre = 'ALL'; sel.value = 'ALL'; }
+    if (prev === 'MULTI') {
+      /* une clé cochée qui n'existe plus dans le classeur chargé est retirée */
+      var connues = rpfs.map(function (r) { return 'RPF:' + r; }).concat(['HORS'], rps.map(function (r) { return 'RP:' + r; }));
+      setPerimetres((STATE.perimetres || []).filter(function (k) { return connues.indexOf(k) >= 0; }));
+      prev = STATE.perimetre;
+      if (prev === 'MULTI') sel.appendChild(el('option', { value: 'MULTI' }, ['Sélection multiple']));
+    }
+    sel.value = prev; if (sel.value !== prev) { STATE.perimetre = 'ALL'; STATE.perimetres = []; sel.value = 'ALL'; }
+    var btn = $('#pm-btn');
+    if (btn) {
+      var lib = labelPerimetre(STATE.perimetre), cles = perimetreCles();
+      if (cles.length === 1 && cles[0] !== 'HORS') lib = (cles[0].indexOf('RPF:') === 0 ? 'RPF — ' : 'RP — ') + nomP(cles[0].replace(/^RPF?:/, ''));
+      btn.textContent = lib.charAt(0).toUpperCase() + lib.slice(1);
+      btn.title = cles.length > 1 ? 'Périmètre : ' + cles.map(function (k) { return k === 'HORS' ? 'hors périmètre RPF' : (k.indexOf('RPF:') === 0 ? 'RPF ' : 'RP ') + nomP(k.replace(/^RPF?:/, '')); }).join(' ; ')
+                                  : "Restreindre tout l'outil à un ou plusieurs portefeuilles ou responsables de projet";
+    }
+  }
+  /* Liste à cocher du périmètre : portefeuilles, hors périmètre, puis responsables de projet, avec le nombre de projets. */
+  function pmRemplir() {
+    var liste = $('#pm-list'); if (!liste) return;
+    var nomP = (COMMUN && COMMUN.nomPropre) ? COMMUN.nomPropre : function (x) { return x; };
+    var cochees = perimetreCles(), nPf = {}, nRp = {}, nHors = 0;
+    DB.projets.forEach(function (p) {
+      if (p.rpf && p.rpf.trim()) nPf[p.rpf] = (nPf[p.rpf] || 0) + 1; else nHors++;
+      if (p.rp && p.rp.trim()) nRp[p.rp] = (nRp[p.rp] || 0) + 1;
+    });
+    liste.innerHTML = '';
+    function ligne(cle, texte, n) {
+      var c = el('input', { type: 'checkbox', value: cle }); c.checked = cochees.indexOf(cle) >= 0;
+      liste.appendChild(el('label', { class: 'pm-i' }, [c, texte, el('span', { class: 'n' }, [String(n)])]));
+    }
+    liste.appendChild(el('div', { class: 'pm-g' }, ['Portefeuilles (RPF)']));
+    Object.keys(nPf).sort().forEach(function (r) { ligne('RPF:' + r, nomP(r), nPf[r]); });
+    if (nHors) ligne('HORS', 'Hors périmètre RPF', nHors);
+    if (Object.keys(nRp).length) liste.appendChild(el('div', { class: 'pm-g' }, ['Responsables de projet (RP)']));
+    Object.keys(nRp).sort().forEach(function (r) { ligne('RP:' + r, nomP(r), nRp[r]); });
+  }
+  function pmOuvrir(ouvrir) {
+    var pop = $('#pm-pop'), btn = $('#pm-btn'); if (!pop || !btn) return;
+    if (ouvrir) pmRemplir();
+    pop.hidden = !ouvrir; btn.setAttribute('aria-expanded', ouvrir ? 'true' : 'false');
   }
 
   function renderAll() {
@@ -7387,7 +7614,19 @@ var PTE_COMMUN = (function () {
   function wireEvents() {
     $all('#nav-tabs button').forEach(function (b) { b.addEventListener('click', function () { showView(b.dataset.view); }); });
     $('#sel-mois').addEventListener('change', function (e) { STATE.mois = e.target.value; renderAll(); });
-    $('#sel-filtre').addEventListener('change', function (e) { STATE.perimetre = e.target.value; renderAll(); });
+    $('#sel-filtre').addEventListener('change', function (e) { if (e.target.value !== 'MULTI') { STATE.perimetre = e.target.value; STATE.perimetres = []; } renderAll(); });
+    var pmBtn = $('#pm-btn'), pmPop = $('#pm-pop');
+    if (pmBtn && pmPop) {
+      pmBtn.addEventListener('click', function (e) { e.stopPropagation(); pmOuvrir(pmPop.hidden); });
+      pmPop.addEventListener('click', function (e) { e.stopPropagation(); });
+      document.addEventListener('click', function () { if (!pmPop.hidden) pmOuvrir(false); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pmPop.hidden) { pmOuvrir(false); pmBtn.focus(); } });
+      $('#pm-aucun').addEventListener('click', function () { $all('#pm-list input').forEach(function (c) { c.checked = false; }); });
+      $('#pm-ok').addEventListener('click', function () {
+        setPerimetres($all('#pm-list input').filter(function (c) { return c.checked; }).map(function (c) { return c.value; }));
+        pmOuvrir(false); renderAll();
+      });
+    }
     var btnEff = $('#btnEff');
     if (btnEff) btnEff.addEventListener('click', demanderEffacement);
     var btnQ = $('#btn-questions');
@@ -7400,7 +7639,7 @@ var PTE_COMMUN = (function () {
       showView('reporting');
       try { window.scrollTo(0, 0); } catch (e) { /* la carte est le premier bloc du Reporting */ }
     });
-    if (COMMUN) window.addEventListener('hashchange', function () { var ss = COMMUN.ssDepuisHash(); if (ss && DB.projets.length) ouvrirSousSite(ss); });
+    if (COMMUN) window.addEventListener('hashchange', function () { if (DB.projets.length) ouvrirDepuisAdresse(); });
     var btnReload = $('#btn-reload');
     var fClasseur = $('#fClasseur');
     if (fClasseur) {
@@ -7476,7 +7715,7 @@ var PTE_COMMUN = (function () {
     }
     renderAll();
     if (res.detail && res.detail.gei) { showView('reporting'); }
-    if (COMMUN) { var ssH = COMMUN.ssDepuisHash(); if (ssH) ouvrirSousSite(ssH); }
+    ouvrirDepuisAdresse();
     return res;
   }
 
@@ -7715,7 +7954,7 @@ var PTE_COMMUN = (function () {
     computeAll: computeAll,
     getCompleteness: function () { return Engine.computeCompleteness(DB, STATE.mois); },
     getPortfolioSemaphore: function (key) { return Engine.computePortfolioSemaphore(projetsByPerimetre(key), PARAMS); },
-    projetsByPerimetre: projetsByPerimetre,
+    projetsByPerimetre: projetsByPerimetre, setPerimetres: function (l) { setPerimetres(l); renderAll(); },
     financeTotals: financeTotals,
     pteGainsFor: pteGainsFor,
     buildCSVString: buildCSVString,
@@ -7768,7 +8007,7 @@ var PTE_COMMUN = (function () {
       renderAll();
       // C1 : classeur commun (import automatique ou bandeau), puis C2 : #ss= dans l'adresse
       demarrerDepuisCommun().then(function () {
-        if (COMMUN && DB.projets.length) { var ss = COMMUN.ssDepuisHash(); if (ss) ouvrirSousSite(ss); }
+        if (DB.projets.length) ouvrirDepuisAdresse();
       });
     });
   }
