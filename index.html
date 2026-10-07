@@ -106,6 +106,16 @@ a.card .go::after{content:'';display:inline-block;width:6px;height:6px;margin-le
 .srcbar b{color:var(--ink)}
 .srcbar .actions{display:flex;gap:8px;flex-wrap:wrap}
 .notice.warn{background:var(--tint-orange);border-color:var(--tint-orange-strong);color:var(--ochre-text)}
+.notice a{color:var(--teal);font-weight:bold}
+.shp{max-width:var(--wrap);margin:-6px auto 18px;display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-muted)}
+.shp-adr{color:var(--ink-70);overflow-wrap:anywhere}
+.shp-lien{font:inherit;font-size:12.5px;border:0;background:none;color:var(--teal);text-decoration:underline;cursor:pointer;padding:0}
+.shp-form{flex:1 1 100%;display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--border);border-radius:var(--r-in);background:var(--card-bg)}
+.shp-form label{flex:1 1 100%;font-size:12.5px;color:var(--ink-70)}
+.shp-form input{flex:1 1 380px;min-width:0;font:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--border);border-radius:var(--r-in);background:var(--card-bg);color:var(--ink)}
+.shp-note{flex:1 1 100%;margin:0;font-size:12px;color:var(--ink-muted)}
+.shp.occupe #btnShp{opacity:.6;pointer-events:none}
+@media print{.shp{display:none !important}}
 a.card .etat{font-size:12px;color:var(--green);margin-top:2px}
 a.card .etat.none{color:var(--ink-muted)}
 @media print{.drop,.srcbar,.hdr-right{display:none !important}}
@@ -163,6 +173,22 @@ a.card .etat.none{color:var(--ink-muted)}
     <span class="actions"><button class="btn" id="btnUpdate">Recharger le classeur</button>
     <button class="btn btn-danger" id="btnEffacer">Effacer le classeur commun</button></span></div></div>
 
+  <!-- Import depuis l'intranet (07.10.2026) : l'adresse du classeur est saisie sur le poste et gardée dans ce
+       navigateur ; elle n'est jamais inscrite dans le code, qui est publié. -->
+  <div class="shp" id="shp">
+    <button type="button" class="btn" id="btnShp" title="Lit le classeur à son adresse sur l'intranet de l'État. À défaut, propose de le télécharger.">Importer depuis SharePoint</button>
+    <span class="shp-adr" id="shpAdr"></span>
+    <button type="button" class="shp-lien" id="btnShpAdr">Saisir l'adresse</button>
+    <form class="shp-form hidden" id="shpForm" autocomplete="off">
+      <label for="shpUrl">Adresse du classeur sur l'intranet (https://… .xlsx)</label>
+      <input type="url" id="shpUrl" spellcheck="false" placeholder="https://…/Plan_PTE.xlsx">
+      <button type="submit" class="btn btn-p">Enregistrer</button>
+      <button type="button" class="btn" id="btnShpAnn">Annuler</button>
+      <button type="button" class="shp-lien" id="btnShpOubli">Oublier l'adresse</button>
+      <p class="shp-note">L'adresse reste dans ce navigateur. Hors de l'intranet de l'État, le classeur n'est pas joignable : l'import manuel reste disponible.</p>
+    </form>
+  </div>
+
   <div id="msg" class="hidden"></div>
 
   <section class="situ hidden" id="situ" aria-labelledby="situTitre">
@@ -213,7 +239,7 @@ a.card .etat.none{color:var(--ink-muted)}
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Pilotage PTE · <a href="#" data-pte-versions="accueil" title="Historique des versions">v1.6 · 30.09.2026</a></span>
+  <span>Pilotage PTE · <a href="#" data-pte-versions="accueil" title="Historique des versions">v1.7 · 07.10.2026</a></span>
 </footer>
 
 <script>
@@ -1531,6 +1557,11 @@ var PTE_COMMUN = (function () {
        Estimé  : Σ « Estim PTE » des sous-sites de la feuille Plan_PTE (jamais Estim CECB+).
      Montants rendus en CHF ; l'affichage les divise par 1e6. GE-Invest : feuille GEI_Projets
      (une ligne par projet), à défaut l'ancienne GEI_Suivi (projet répété : dédoublonné par Numéro). */
+  /* Totaux gérés par l'OCBA (07.10.2026, demande de la direction) : dénominateurs des tuiles « sites »,
+     « sous-sites » et « projets » de la Revue. Ils viendront d'une extraction GE-Invest ; tant qu'une valeur
+     est null, l'outil le dit (« total OCBA à fournir ») et n'affiche aucun pourcentage sur l'OCBA.
+     À renseigner ici, avec la date et la source de l'extraction, quand elle est disponible. */
+  var TOTAUX_OCBA = { sites: null, sousSites: null, projets: null, date: null, source: null };
   var ENVELOPPE_VOTEE = [
     { loi: '13210', objet: 'Programme de transition écologique', chf: 1000e6 },
     { loi: '12552', objet: 'Embrasures', chf: 250e6 }
@@ -1592,6 +1623,9 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "07.10.2026", "objet": "accueil", "version": "v1.7", "titre": "Import depuis SharePoint", "points": ["Nouveau bouton « Importer depuis SharePoint » : le classeur est lu à son adresse sur l'intranet de l'État. L'adresse se saisit une fois et reste dans le navigateur.", "Si la lecture directe est refusée, la page propose le lien de téléchargement ; le classeur se dépose ensuite comme d'habitude.", "L'import manuel (dépôt ou choix du fichier) ne change pas."]},
+    {"date": "07.10.2026", "objet": "priorisation", "version": "v2.6", "titre": "Recherche globale", "points": ["La recherche de l'en-tête cherche aussi dans la note du sous-site, son adresse, ses responsables, son chauffage, son patrimoine, son état SIA, ses projets GE-Invest et ses surfaces de relais ; la proposition indique le champ où le texte a été trouvé.", "Le filtre du classement (texte libre validé par Entrée) cherche dans les mêmes champs. Casse et accents sont ignorés."]},
+    {"date": "07.10.2026", "objet": "revue", "version": "v0.18", "titre": "Périmètre d'action du programme, état SIA", "points": ["Reporting : nouvelle carte « Périmètre d'action du programme » — sites, sous-sites et projets sur lesquels le programme travaille, chacun avec sa définition. Le total géré par l'OCBA s'affichera dès qu'il sera fourni.", "Projets par phase SIA : la phase se déduit de l'avancement global saisi dans GE-Invest (table GPR.6MO.04) ; un projet sans avancement est compté « non renseigné ».", "Nouveau filtre « État SIA » ; un clic sur une phase de la barre filtre aussi le Reporting.", "Filtre « Type » réparé : études et réalisations sont de nouveau distinguées."]},
     {"date": "06.10.2026", "objet": "revue", "version": "v0.17", "titre": "Périmètre à choix multiple, planning réglable", "points": ["Périmètre : plusieurs portefeuilles ou responsables de projet peuvent être cochés ensemble, comme dans la priorisation.", "Planning : une barre en tête résume la durée du périmètre affiché, du début le plus tôt à la fin la plus tardive ; elle reste visible, avec l'axe des années, quand la liste défile.", "Planning : hauteur de la liste au choix (normale, grande, toute la liste) et lignes normales ou serrées, pour voir davantage de sous-sites."]},
     {"date": "06.10.2026", "objet": "revue", "version": "v0.16", "titre": "Fiche d'un projet ouverte par un lien", "points": ["Un lien venu de la carte de la priorisation ouvre directement la fiche du projet GE-Invest désigné. Si le projet n'est pas dans le classeur chargé, la Revue s'ouvre sur son sous-site."]},
     {"date": "06.10.2026", "objet": "priorisation", "version": "v2.5", "titre": "Carte : projets et surfaces de relais au survol", "points": ["Au survol d'un repère de la carte : les projets GE-Invest du sous-site (numéro, nom, statut).", "Au même endroit : les commentaires des jalons de ces projets, lus dans la nouvelle colonne « Surfaces de relais (GEI) » de Plan_PTE. Ils serviront à indiquer le besoin de surfaces de relais pendant les travaux.", "Fonds de carte CARTO remis dans le menu ; Esri World Street reste le fond par défaut.", "Un clic sur un repère fige la fenêtre : lien vers le sous-site dans le Classement, et chaque projet ouvre sa fiche dans la Revue de projets."]},
@@ -1753,7 +1787,7 @@ var PTE_COMMUN = (function () {
            publierClassement: publierClassement, lireClassement: lireClassement,
            lireQuestions: lireQuestions, ecrireQuestions: ecrireQuestions,
            dateCourte: dateCourte, texteBadge: texteBadge, nomPropre: nomPropre,
-           ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, situationProgramme: situationProgramme, mchf: mchf,
+           ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, TOTAUX_OCBA: TOTAUX_OCBA, situationProgramme: situationProgramme, mchf: mchf,
            VERSIONS: VERSIONS, OBJETS_VER: OBJETS_VER, versionsDe: versionsDe, afficherVersions: afficherVersions };
 })();
 
@@ -1923,29 +1957,79 @@ function dateHeure(iso) { const d = new Date(iso); if (isNaN(d)) return String(i
 function message(t, cl) { const z = $('#msg'); z.className = 'notice ' + (cl || ''); z.textContent = t; z.classList.remove('hidden'); }
 function cacherMessage() { const z = $('#msg'); z.className = 'hidden'; z.textContent = ''; }
 
+/* ---------- Import depuis l'intranet (SharePoint), 07.10.2026 ----------
+   L'adresse est saisie par l'utilisateur et gardée dans ce navigateur (jamais dans le code, publié).
+   Lecture directe tentée avec la session de l'intranet ; si le serveur ou le navigateur la refuse
+   (autre origine), l'outil propose le lien : le classeur se télécharge, puis se dépose comme d'habitude. */
+const LS_URL = 'pte.classeur.url.v1';
+function shpAdresse() { try { return shpValide(localStorage.getItem(LS_URL)); } catch (e) { return null; } }
+function shpValide(v) {
+  let u; try { u = new URL(String(v || '').trim()); } catch (e) { return null; }
+  const local = u.hostname === 'localhost' || u.hostname === '127.0.0.1';
+  if (u.protocol !== 'https:' && !(local && u.protocol === 'http:')) return null;       /* https seulement */
+  if (u.username || u.password) return null;                                             /* jamais d'identifiants dans l'adresse */
+  if (!/\.xls[xm]$/i.test(decodeURIComponent(u.pathname))) return null;
+  return u.href;
+}
+function shpNom(url) { try { const u = new URL(url); return decodeURIComponent(u.pathname.split('/').pop()) || 'Plan_PTE.xlsx'; } catch (e) { return 'Plan_PTE.xlsx'; } }
+function shpRendre() {
+  const url = shpAdresse(), adr = $('#shpAdr'), b = $('#btnShpAdr');
+  if (url) { const u = new URL(url); adr.textContent = u.hostname + ' › ' + shpNom(url); adr.title = url; b.textContent = 'Modifier l’adresse'; }
+  else { adr.textContent = 'Sur l’intranet de l’État : l’adresse du classeur se saisit une fois.'; adr.title = ''; b.textContent = 'Saisir l’adresse'; }
+}
+function shpFormulaire(ouvrir) {
+  const f = $('#shpForm'); f.classList.toggle('hidden', !ouvrir);
+  if (ouvrir) { $('#shpUrl').value = shpAdresse() || ''; $('#btnShpOubli').classList.toggle('hidden', !shpAdresse()); $('#shpUrl').focus(); }
+}
+function shpEchec(url, motif) {
+  const z = $('#msg'); z.className = 'notice warn'; z.textContent = '';
+  z.appendChild(document.createTextNode('Lecture directe impossible (' + motif + '). '));
+  const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = 'Télécharger le classeur';
+  z.appendChild(a);
+  z.appendChild(document.createTextNode(' depuis l’intranet, puis le déposer dans cette page.'));
+}
+async function shpImporter() {
+  const url = shpAdresse();
+  if (!url) { shpFormulaire(true); return; }
+  const zone = $('#shp'); zone.classList.add('occupe'); message('Lecture du classeur à son adresse…');
+  const ctl = new AbortController(), minuterie = setTimeout(() => ctl.abort(), 30000);
+  try {
+    const r = await fetch(url, { credentials: 'include', cache: 'no-store', redirect: 'follow', signal: ctl.signal });
+    if (!r.ok) throw new Error('réponse ' + r.status + ' du serveur');
+    const buf = await r.arrayBuffer(), t = new Uint8Array(buf.slice(0, 4));
+    /* un classeur .xlsx est une archive : elle commence par « PK ». Une page de connexion renvoyée à sa place est écartée. */
+    if (!(t[0] === 0x50 && t[1] === 0x4B)) throw new Error('la réponse n’est pas un classeur Excel — session de l’intranet à ouvrir ?');
+    await deposerBuf(buf, shpNom(url));
+  } catch (err) {
+    const m = err && err.name === 'AbortError' ? 'pas de réponse en 30 secondes'
+      : (err && err.name === 'TypeError' ? 'adresse injoignable d’ici, ou lecture refusée par le serveur pour ce site' : (err && err.message ? err.message : String(err)));
+    shpEchec(url, m);
+  } finally { clearTimeout(minuterie); zone.classList.remove('occupe'); }
+}
+
 function deposer(file) {
   if (!file) return;
   const fr = new FileReader();
-  fr.onload = async e => {
-    const buf = e.target.result;
-    let n = null, avert = '';
-    try { n = await compterPlanPTE(buf); }
-    catch (err) { avert = 'Le nombre de sous-sites n’a pas pu être lu (' + (err && err.message ? err.message : err) + ') ; le classeur est gardé tel quel.'; }
-    try {
-      const meta = await PTE_COMMUN.publierClasseur(buf, file.name, 'accueil');
-      try { localStorage.setItem(LS_COMPTE, JSON.stringify({ empreinte: meta.empreinte, n: n })); } catch (e2) {}
-      rendre();
-      /* La barre de source dit déjà le nom, la date et le nombre de sous-sites :
-         on ne répète pas. Le message ne sert qu'à ce qu'elle ne peut pas dire. */
-      if (avert) message(avert, 'warn'); else cacherMessage();
-      try { await analyserClasseur(buf, meta.empreinte); }
-      catch (err2) { message('La situation du programme n’a pas pu être calculée (' + (err2 && err2.message ? err2.message : err2) + ') ; les trois outils restent utilisables.', 'warn'); }
-      rendre();
-    } catch (err) {
-      message('Le classeur n’a pas pu être gardé dans ce navigateur : ' + (err && err.message ? err.message : err), 'warn');
-    }
-  };
+  fr.onload = e => deposerBuf(e.target.result, file.name);
   fr.readAsArrayBuffer(file);
+}
+async function deposerBuf(buf, nomFichier) {
+  let n = null, avert = '';
+  try { n = await compterPlanPTE(buf); }
+  catch (err) { avert = 'Le nombre de sous-sites n’a pas pu être lu (' + (err && err.message ? err.message : err) + ') ; le classeur est gardé tel quel.'; }
+  try {
+    const meta = await PTE_COMMUN.publierClasseur(buf, nomFichier, 'accueil');
+    try { localStorage.setItem(LS_COMPTE, JSON.stringify({ empreinte: meta.empreinte, n: n })); } catch (e2) {}
+    rendre();
+    /* La barre de source dit déjà le nom, la date et le nombre de sous-sites :
+       on ne répète pas. Le message ne sert qu'à ce qu'elle ne peut pas dire. */
+    if (avert) message(avert, 'warn'); else cacherMessage();
+    try { await analyserClasseur(buf, meta.empreinte); }
+    catch (err2) { message('La situation du programme n’a pas pu être calculée (' + (err2 && err2.message ? err2.message : err2) + ') ; les trois outils restent utilisables.', 'warn'); }
+    rendre();
+  } catch (err) {
+    message('Le classeur n’a pas pu être gardé dans ce navigateur : ' + (err && err.message ? err.message : err), 'warn');
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1960,6 +2044,18 @@ document.addEventListener('DOMContentLoaded', () => {
   fi.addEventListener('change', e => deposer(e.target.files[0]));
   $('#btnCharger').addEventListener('click', () => fi.click());
   $('#btnUpdate').addEventListener('click', () => fi.click());
+  $('#btnShp').addEventListener('click', shpImporter);
+  $('#btnShpAdr').addEventListener('click', () => shpFormulaire($('#shpForm').classList.contains('hidden')));
+  $('#btnShpAnn').addEventListener('click', () => shpFormulaire(false));
+  $('#btnShpOubli').addEventListener('click', () => { try { localStorage.removeItem(LS_URL); } catch (e) {} shpFormulaire(false); shpRendre(); });
+  $('#shpForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const v = shpValide($('#shpUrl').value);
+    if (!v) { message('Adresse non retenue : elle doit commencer par https:// et désigner un classeur .xlsx ou .xlsm.', 'warn'); return; }
+    try { localStorage.setItem(LS_URL, v); } catch (err) { message('L’adresse n’a pas pu être gardée dans ce navigateur.', 'warn'); return; }
+    cacherMessage(); shpFormulaire(false); shpRendre();
+  });
+  shpRendre();
   $('#btnEffacer').addEventListener('click', () => {
     if (!confirm('Effacer le classeur commun de ce navigateur ? Les données propres à chaque outil ne sont pas touchées.')) return;
     PTE_COMMUN.effacerClasseur().then(() => { try { localStorage.removeItem(LS_COMPTE); localStorage.removeItem(LS_SITUATION); } catch (e) {} rendre(); message('Classeur commun effacé.'); });

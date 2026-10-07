@@ -1722,6 +1722,11 @@ var PTE_COMMUN = (function () {
        Estimé  : Σ « Estim PTE » des sous-sites de la feuille Plan_PTE (jamais Estim CECB+).
      Montants rendus en CHF ; l'affichage les divise par 1e6. GE-Invest : feuille GEI_Projets
      (une ligne par projet), à défaut l'ancienne GEI_Suivi (projet répété : dédoublonné par Numéro). */
+  /* Totaux gérés par l'OCBA (07.10.2026, demande de la direction) : dénominateurs des tuiles « sites »,
+     « sous-sites » et « projets » de la Revue. Ils viendront d'une extraction GE-Invest ; tant qu'une valeur
+     est null, l'outil le dit (« total OCBA à fournir ») et n'affiche aucun pourcentage sur l'OCBA.
+     À renseigner ici, avec la date et la source de l'extraction, quand elle est disponible. */
+  var TOTAUX_OCBA = { sites: null, sousSites: null, projets: null, date: null, source: null };
   var ENVELOPPE_VOTEE = [
     { loi: '13210', objet: 'Programme de transition écologique', chf: 1000e6 },
     { loi: '12552', objet: 'Embrasures', chf: 250e6 }
@@ -1783,6 +1788,9 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "07.10.2026", "objet": "accueil", "version": "v1.7", "titre": "Import depuis SharePoint", "points": ["Nouveau bouton « Importer depuis SharePoint » : le classeur est lu à son adresse sur l'intranet de l'État. L'adresse se saisit une fois et reste dans le navigateur.", "Si la lecture directe est refusée, la page propose le lien de téléchargement ; le classeur se dépose ensuite comme d'habitude.", "L'import manuel (dépôt ou choix du fichier) ne change pas."]},
+    {"date": "07.10.2026", "objet": "priorisation", "version": "v2.6", "titre": "Recherche globale", "points": ["La recherche de l'en-tête cherche aussi dans la note du sous-site, son adresse, ses responsables, son chauffage, son patrimoine, son état SIA, ses projets GE-Invest et ses surfaces de relais ; la proposition indique le champ où le texte a été trouvé.", "Le filtre du classement (texte libre validé par Entrée) cherche dans les mêmes champs. Casse et accents sont ignorés."]},
+    {"date": "07.10.2026", "objet": "revue", "version": "v0.18", "titre": "Périmètre d'action du programme, état SIA", "points": ["Reporting : nouvelle carte « Périmètre d'action du programme » — sites, sous-sites et projets sur lesquels le programme travaille, chacun avec sa définition. Le total géré par l'OCBA s'affichera dès qu'il sera fourni.", "Projets par phase SIA : la phase se déduit de l'avancement global saisi dans GE-Invest (table GPR.6MO.04) ; un projet sans avancement est compté « non renseigné ».", "Nouveau filtre « État SIA » ; un clic sur une phase de la barre filtre aussi le Reporting.", "Filtre « Type » réparé : études et réalisations sont de nouveau distinguées."]},
     {"date": "06.10.2026", "objet": "revue", "version": "v0.17", "titre": "Périmètre à choix multiple, planning réglable", "points": ["Périmètre : plusieurs portefeuilles ou responsables de projet peuvent être cochés ensemble, comme dans la priorisation.", "Planning : une barre en tête résume la durée du périmètre affiché, du début le plus tôt à la fin la plus tardive ; elle reste visible, avec l'axe des années, quand la liste défile.", "Planning : hauteur de la liste au choix (normale, grande, toute la liste) et lignes normales ou serrées, pour voir davantage de sous-sites."]},
     {"date": "06.10.2026", "objet": "revue", "version": "v0.16", "titre": "Fiche d'un projet ouverte par un lien", "points": ["Un lien venu de la carte de la priorisation ouvre directement la fiche du projet GE-Invest désigné. Si le projet n'est pas dans le classeur chargé, la Revue s'ouvre sur son sous-site."]},
     {"date": "06.10.2026", "objet": "priorisation", "version": "v2.5", "titre": "Carte : projets et surfaces de relais au survol", "points": ["Au survol d'un repère de la carte : les projets GE-Invest du sous-site (numéro, nom, statut).", "Au même endroit : les commentaires des jalons de ces projets, lus dans la nouvelle colonne « Surfaces de relais (GEI) » de Plan_PTE. Ils serviront à indiquer le besoin de surfaces de relais pendant les travaux.", "Fonds de carte CARTO remis dans le menu ; Esri World Street reste le fond par défaut.", "Un clic sur un repère fige la fenêtre : lien vers le sous-site dans le Classement, et chaque projet ouvre sa fiche dans la Revue de projets."]},
@@ -1944,7 +1952,7 @@ var PTE_COMMUN = (function () {
            publierClassement: publierClassement, lireClassement: lireClassement,
            lireQuestions: lireQuestions, ecrireQuestions: ecrireQuestions,
            dateCourte: dateCourte, texteBadge: texteBadge, nomPropre: nomPropre,
-           ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, situationProgramme: situationProgramme, mchf: mchf,
+           ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, TOTAUX_OCBA: TOTAUX_OCBA, situationProgramme: situationProgramme, mchf: mchf,
            VERSIONS: VERSIONS, OBJETS_VER: OBJETS_VER, versionsDe: versionsDe, afficherVersions: afficherVersions };
 })();
 

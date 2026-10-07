@@ -601,8 +601,30 @@ svg.chart .mark:hover, svg.chart .mark.hover{filter:brightness(1.1);}
 
 /* ---------------------------------------------------------------- Vague 2 (20.09.2026) */
 /* Bandeau KPI fusionné : 10 tuiles sur deux rangées de 5 */
-.rep-kpis.rep-kpis-10{grid-template-columns:repeat(5,1fr);}
-@media (max-width:1050px){ .rep-kpis.rep-kpis-10{grid-template-columns:repeat(3,1fr);} }
+.rep-kpis.rep-kpis-10{grid-template-columns:repeat(4,1fr);}
+/* Périmètre d'action du programme (07.10.2026, demande de la direction) : trois décomptes, leur définition, et les projets par phase SIA */
+.perim-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px 26px; margin-bottom:16px;}
+@media (max-width:820px){ .perim-grid{grid-template-columns:1fr;} }
+.perim-m{min-width:0;}
+.perim-lbl{font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-muted); font-weight:bold;}
+.perim-l1{display:flex; align-items:baseline; gap:.5em; flex-wrap:wrap; margin-top:2px;}
+.perim-v{font-size:30px; font-weight:bold; color:var(--ink); line-height:1.1; font-variant-numeric:tabular-nums;}
+.perim-sur{font-size:13px; color:var(--ink-70);}
+.perim-sur b{color:var(--ink);}
+.perim-prov{font-size:10.5px; font-weight:bold; color:var(--ochre-text); border:1px solid var(--ochre); border-radius:999px; padding:0 7px; white-space:nowrap;}
+.perim-jauge{height:6px; border-radius:3px; background:var(--graph-track); margin:7px 0 6px; overflow:hidden;}
+.perim-jauge i{display:block; height:100%; background:var(--teal); border-radius:3px;}
+.perim-def{font-size:12px; line-height:1.45; color:var(--ink-70); margin:0;}
+.perim-def b{color:var(--ink);}
+.perim-sia-t{font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-muted); font-weight:bold; margin:2px 0 6px;}
+.distbar.sia .seg{color:#fff;}
+.distbar.sia .seg-s31{background:#CFE8EC; color:#12343B;} .distbar.sia .seg-s32{background:#A6D3DA; color:#12343B;} .distbar.sia .seg-s33{background:#7BBCC6; color:#12343B;}
+.distbar.sia .seg-s41{background:#4FA3B0;} .distbar.sia .seg-s51{background:#2A8796;} .distbar.sia .seg-s52{background:#0E6C7C;} .distbar.sia .seg-s53{background:#00485A;}
+.distbar.sia .seg-snr{background:var(--graph-track); color:var(--ink-70);}
+.sia-sw{display:inline-block; width:10px; height:10px; border-radius:2px; flex:none;}
+.sia-sw.s31{background:#CFE8EC;} .sia-sw.s32{background:#A6D3DA;} .sia-sw.s33{background:#7BBCC6;} .sia-sw.s41{background:#4FA3B0;} .sia-sw.s51{background:#2A8796;} .sia-sw.s52{background:#0E6C7C;} .sia-sw.s53{background:#00485A;} .sia-sw.snr{background:var(--graph-track); border:1px solid var(--border);}
+.perim-note{font-size:12px; line-height:1.45; color:var(--ink-70); margin:8px 0 0;}
+@media (max-width:1050px){ .rep-kpis.rep-kpis-10{grid-template-columns:repeat(2,1fr);} }
 @media (max-width:640px){ .rep-kpis.rep-kpis-10{grid-template-columns:1fr 1fr;} }
 .kpi.kpi-questions{border-color:var(--teal); background:var(--teal-bg);}
 /* Sémaphore + répartition + complétude (ex-Tableau de bord) : trois boîtes */
@@ -902,7 +924,7 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.17 · 06.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.18 · 07.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -2220,6 +2242,11 @@ var PTE_COMMUN = (function () {
        Estimé  : Σ « Estim PTE » des sous-sites de la feuille Plan_PTE (jamais Estim CECB+).
      Montants rendus en CHF ; l'affichage les divise par 1e6. GE-Invest : feuille GEI_Projets
      (une ligne par projet), à défaut l'ancienne GEI_Suivi (projet répété : dédoublonné par Numéro). */
+  /* Totaux gérés par l'OCBA (07.10.2026, demande de la direction) : dénominateurs des tuiles « sites »,
+     « sous-sites » et « projets » de la Revue. Ils viendront d'une extraction GE-Invest ; tant qu'une valeur
+     est null, l'outil le dit (« total OCBA à fournir ») et n'affiche aucun pourcentage sur l'OCBA.
+     À renseigner ici, avec la date et la source de l'extraction, quand elle est disponible. */
+  var TOTAUX_OCBA = { sites: null, sousSites: null, projets: null, date: null, source: null };
   var ENVELOPPE_VOTEE = [
     { loi: '13210', objet: 'Programme de transition écologique', chf: 1000e6 },
     { loi: '12552', objet: 'Embrasures', chf: 250e6 }
@@ -2281,6 +2308,9 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "07.10.2026", "objet": "accueil", "version": "v1.7", "titre": "Import depuis SharePoint", "points": ["Nouveau bouton « Importer depuis SharePoint » : le classeur est lu à son adresse sur l'intranet de l'État. L'adresse se saisit une fois et reste dans le navigateur.", "Si la lecture directe est refusée, la page propose le lien de téléchargement ; le classeur se dépose ensuite comme d'habitude.", "L'import manuel (dépôt ou choix du fichier) ne change pas."]},
+    {"date": "07.10.2026", "objet": "priorisation", "version": "v2.6", "titre": "Recherche globale", "points": ["La recherche de l'en-tête cherche aussi dans la note du sous-site, son adresse, ses responsables, son chauffage, son patrimoine, son état SIA, ses projets GE-Invest et ses surfaces de relais ; la proposition indique le champ où le texte a été trouvé.", "Le filtre du classement (texte libre validé par Entrée) cherche dans les mêmes champs. Casse et accents sont ignorés."]},
+    {"date": "07.10.2026", "objet": "revue", "version": "v0.18", "titre": "Périmètre d'action du programme, état SIA", "points": ["Reporting : nouvelle carte « Périmètre d'action du programme » — sites, sous-sites et projets sur lesquels le programme travaille, chacun avec sa définition. Le total géré par l'OCBA s'affichera dès qu'il sera fourni.", "Projets par phase SIA : la phase se déduit de l'avancement global saisi dans GE-Invest (table GPR.6MO.04) ; un projet sans avancement est compté « non renseigné ».", "Nouveau filtre « État SIA » ; un clic sur une phase de la barre filtre aussi le Reporting.", "Filtre « Type » réparé : études et réalisations sont de nouveau distinguées."]},
     {"date": "06.10.2026", "objet": "revue", "version": "v0.17", "titre": "Périmètre à choix multiple, planning réglable", "points": ["Périmètre : plusieurs portefeuilles ou responsables de projet peuvent être cochés ensemble, comme dans la priorisation.", "Planning : une barre en tête résume la durée du périmètre affiché, du début le plus tôt à la fin la plus tardive ; elle reste visible, avec l'axe des années, quand la liste défile.", "Planning : hauteur de la liste au choix (normale, grande, toute la liste) et lignes normales ou serrées, pour voir davantage de sous-sites."]},
     {"date": "06.10.2026", "objet": "revue", "version": "v0.16", "titre": "Fiche d'un projet ouverte par un lien", "points": ["Un lien venu de la carte de la priorisation ouvre directement la fiche du projet GE-Invest désigné. Si le projet n'est pas dans le classeur chargé, la Revue s'ouvre sur son sous-site."]},
     {"date": "06.10.2026", "objet": "priorisation", "version": "v2.5", "titre": "Carte : projets et surfaces de relais au survol", "points": ["Au survol d'un repère de la carte : les projets GE-Invest du sous-site (numéro, nom, statut).", "Au même endroit : les commentaires des jalons de ces projets, lus dans la nouvelle colonne « Surfaces de relais (GEI) » de Plan_PTE. Ils serviront à indiquer le besoin de surfaces de relais pendant les travaux.", "Fonds de carte CARTO remis dans le menu ; Esri World Street reste le fond par défaut.", "Un clic sur un repère fige la fenêtre : lien vers le sous-site dans le Classement, et chaque projet ouvre sa fiche dans la Revue de projets."]},
@@ -2442,7 +2472,7 @@ var PTE_COMMUN = (function () {
            publierClassement: publierClassement, lireClassement: lireClassement,
            lireQuestions: lireQuestions, ecrireQuestions: ecrireQuestions,
            dateCourte: dateCourte, texteBadge: texteBadge, nomPropre: nomPropre,
-           ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, situationProgramme: situationProgramme, mchf: mchf,
+           ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, TOTAUX_OCBA: TOTAUX_OCBA, situationProgramme: situationProgramme, mchf: mchf,
            VERSIONS: VERSIONS, OBJETS_VER: OBJETS_VER, versionsDe: versionsDe, afficherVersions: afficherVersions };
 })();
 
@@ -2697,7 +2727,8 @@ var PTE_COMMUN = (function () {
         rpf: cleanRPF(r0.portefeuille),
         rp: (r0.nom_responsable_suivi || '').trim(),
         amo: '',
-        projet_etude: /^oui$/i.test((r0.est_projet_d_etude || '').trim()) ? 'oui' : 'non',
+        /* 07.10.2026 : GE-Invest exporte « 1 » / « 0 » (menu Étude : oui / non) ; le filtre Type ne trouvait donc aucune étude */
+        projet_etude: /^(oui|1|vrai|true|x)$/i.test(String(r0.est_projet_d_etude == null ? '' : r0.est_projet_d_etude).trim()) ? 'oui' : 'non',
         description: (r0.description || '').trim(),
         statut: (r0.statut || '').trim(),
         date_debut_prevue: parseDateFR(r0.date_de_debut_initiale) || '',
@@ -3829,7 +3860,7 @@ var PTE_COMMUN = (function () {
   var DB = Engine.createDB();
   var PARAMS = Engine.defaultParams();
   var STATE = { mois: null, projetSel: null, perimetre: 'ALL', heatmapSort: { key: 'gravite', dir: -1 },
-    rep: { pf: null, ss: null, projet: null, rp: '', statut: '', type: '', q: '', expanded: {} },
+    rep: { pf: null, ss: null, projet: null, rp: '', statut: '', type: '', sia: '', q: '', expanded: {} },
     questionsOuvertes: false,   // carte « Questions du mois » affichée dans le Reporting
     hashMessage: null,          // message « aucun projet GE-Invest sur ce sous-site » (#ss=)
     communMeta: null };         // fiche du classeur commun si l'import vient de Pilotage PTE (C1)
@@ -4052,7 +4083,7 @@ var PTE_COMMUN = (function () {
     DB = Engine.createDB();
     try { localStorage.removeItem(LS_DB); } catch (e) { /* ignoré */ }
     STATE.mois = null; STATE.projetSel = null; STATE.perimetre = 'ALL'; STATE.perimetres = [];
-    STATE.rep = { pf: null, ss: null, projet: null, rp: '', statut: '', type: '', q: '', expanded: {} };
+    STATE.rep = { pf: null, ss: null, projet: null, rp: '', statut: '', type: '', sia: '', q: '', expanded: {} };
     STATE.questionsOuvertes = false; STATE.hashMessage = null; STATE.communMeta = null;
     ecrireQuestionsStock({ mois: {} }); // les questions du mois sont des données propres de la revue ; le classeur commun et le classement publié restent
     ecrireHashSs(null);
@@ -5371,6 +5402,25 @@ var PTE_COMMUN = (function () {
     });
   }
 
+  /* Phase SIA d'un projet (07.10.2026, définition fournie par Achim) : elle se déduit de l'« Avancement global »
+     saisi dans GE-Invest, selon la table du modèle GPR.6MO.04 « Suivi des projets dans GE-Invest ».
+     53a à 53d (96 à 100 %) sont réunies en « 53 ». Avancement vide = phase non renseignée (jamais 31 par défaut). */
+  var PHASES_SIA = [
+    { k: '31', de: 0, a: 9, nom: 'Avant-projet' },
+    { k: '32', de: 10, a: 30, nom: 'Projet de l’ouvrage' },
+    { k: '33', de: 31, a: 32, nom: 'Demande d’autorisation' },
+    { k: '41', de: 33, a: 50, nom: 'Appel d’offres' },
+    { k: '51', de: 51, a: 66, nom: 'Projet d’exécution' },
+    { k: '52', de: 67, a: 95, nom: 'Exécution de l’ouvrage' },
+    { k: '53', de: 96, a: 100, nom: 'Mise en service et clôture' }
+  ];
+  function phaseSia(av) {
+    if (av === null || av === undefined || av === '' || isNaN(av)) return null;
+    av = +av;
+    for (var i = 0; i < PHASES_SIA.length; i++) if (av < PHASES_SIA[i].a + 1) return PHASES_SIA[i].k;
+    return '53';
+  }
+
   function repFilterRows(rows, ignorePf) {
     var f = STATE.rep;
     return rows.filter(function (r) {
@@ -5379,6 +5429,7 @@ var PTE_COMMUN = (function () {
       if (f.statut && r.statut !== f.statut) return false;
       if (f.type === 'etude' && r.p.projet_etude !== 'oui') return false;
       if (f.type === 'realisation' && r.p.projet_etude === 'oui') return false;
+      if (f.sia && (phaseSia(r.avancement) || 'nr') !== f.sia) return false;
       if (f.q) {
         var hay = (r.p.numero_projet + ' ' + r.p.nom_projet + ' ' + (r.p.numero_sous_site || '') + ' ' + (r.p.nom_sous_site || '') + ' ' + (r.p.rp || '')).toLowerCase();
         if (hay.indexOf(f.q.toLowerCase()) === -1) return false;
@@ -6111,7 +6162,7 @@ var PTE_COMMUN = (function () {
     lib = lib.charAt(0).toUpperCase() + lib.slice(1);
     if (f.pf && lib.indexOf(f.pf) === -1) lib = (STATE.perimetre && STATE.perimetre !== 'ALL' ? lib + ' · ' : '') + 'Portefeuille ' + f.pf;
     if (f.rp && lib.indexOf(nomP(f.rp)) === -1) lib += ' · RP ' + nomP(f.rp);
-    if (f.statut || f.type || f.q) lib += ' (filtré)';
+    if (f.statut || f.type || f.sia || f.q) lib += ' (filtré)';
     return lib;
   }
   function repGanttHote(rows, opts) {
@@ -6301,12 +6352,18 @@ var PTE_COMMUN = (function () {
     typeSel.value = f.type;
     typeSel.addEventListener('change', function (e) { f.type = e.target.value; renderReportingView(); });
     bar.appendChild(el('span', { class: 'filter-item' }, [el('label', {}, ['Type']), typeSel]));
+    /* État SIA (07.10.2026) : phase déduite de l'avancement global, table GPR.6MO.04 */
+    var siaSel = el('select', { title: 'Phase SIA déduite de l’« Avancement global » saisi dans GE-Invest' });
+    [['', 'Tous']].concat(PHASES_SIA.map(function (p) { return [p.k, p.k + ' · ' + p.nom]; }), [['nr', 'Non renseigné']]).forEach(function (o) { siaSel.appendChild(el('option', { value: o[0] }, [o[1]])); });
+    siaSel.value = f.sia || '';
+    siaSel.addEventListener('change', function (e) { f.sia = e.target.value; renderReportingView(); });
+    bar.appendChild(el('span', { class: 'filter-item' }, [el('label', {}, ['État SIA']), siaSel]));
     var q = el('input', { type: 'text', placeholder: 'N°, nom, sous-site, RP…', value: f.q || '' });
     q.addEventListener('input', function (e) { f.q = e.target.value; renderRepBody(); });
     bar.appendChild(el('span', { class: 'filter-item filter-search' }, [el('label', {}, ['Rechercher']), q]));
-    if (f.rp || f.statut || f.type || f.q) {
+    if (f.rp || f.statut || f.type || f.sia || f.q) {
       var reset = el('button', { type: 'button', class: 'btn' }, ['Réinitialiser']);
-      reset.addEventListener('click', function () { f.rp = ''; f.statut = ''; f.type = ''; f.q = ''; renderReportingView(); });
+      reset.addEventListener('click', function () { f.rp = ''; f.statut = ''; f.type = ''; f.sia = ''; f.q = ''; renderReportingView(); });
       bar.appendChild(reset);
     }
     return bar;
@@ -6328,8 +6385,6 @@ var PTE_COMMUN = (function () {
       var qVal = tr.taux === null ? '—' : Math.round(tr.taux * 100) + ' %';
       var qSub = tr.moisPrecedent ? (tr.soldees + ' sur ' + tr.posees + ' · ' + moisLibelle(tr.moisPrecedent)) : (tr.premieres ? 'premières questions posées ce mois' : 'aucune question posée');
       tile('Questions soldées', qVal, qSub, 'Taux de réponse aux questions du mois précédent : questions soldées (trou comblé dans le nouveau classeur) ÷ questions posées. Bouton « Questions du mois » dans l’en-tête.', 'kpi-questions');
-      tile('Sous-sites reliés', String(opts.sousSites || 0), 'à un projet GE-Invest', 'Nombre de sous-sites du périmètre affiché reliés à au moins un projet GE-Invest (objectif à terme : un seul projet par sous-site).');
-      tile('Projets', String(agg.n), null, 'Nombre de projets GE-Invest du périmètre affiché (après filtres).');
     }
     tile('Crédit total, MCHF', fmtK(agg.credit), 'crédits des projets', 'Somme des crédits totaux (dépenses) GE-Invest des projets affichés. À ne pas confondre avec l’enveloppe votée par les lois (page d’accueil).');
     tile('Dépensé cumulé, MCHF', fmtK(agg.depenseCumul), '≤ ' + (N - 1) + ' : ' + fmtK(agg.cumulN1) + ' · ' + N + ' : ' + fmtK(agg.comptaN), 'Comptabilisé cumulé à fin ' + (N - 1) + ' plus comptabilisé ' + N + '.');
@@ -6350,6 +6405,71 @@ var PTE_COMMUN = (function () {
       tile('Risques ouverts', String(risquesMajeurs.length), 'score ≥ ' + fmtDec(PARAMS.risqueOrangeMin), topRisqueTxt);
     }
     return tiles;
+  }
+
+  /* Périmètre d'action du programme (07.10.2026, demande de la direction) : sites, sous-sites et projets sur
+     lesquels le programme travaille, chacun avec sa définition, face au total géré par l'OCBA ; puis les projets
+     par phase SIA. Les totaux OCBA viennent de PTE_COMMUN.TOTAUX_OCBA ; absents, la carte le dit et donne, pour
+     les sites et les sous-sites, le décompte du Plan_PTE, nommé comme tel. Suit le périmètre et les filtres. */
+  function repPerimetreCard(rows) {
+    var nf = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); };
+    var ss = {}, sites = {}, parStatut = {}, sansSs = 0;
+    rows.forEach(function (r) {
+      var n = String(r.p.numero_sous_site || '').trim();
+      if (/^\d{6}$/.test(n)) { ss[n] = 1; sites[n.slice(0, 4)] = 1; } else sansSs++;
+      var st = String(r.statut || '—').replace(/^\s*\d+\s*-\s*/, '').toLocaleLowerCase('fr');
+      parStatut[st] = (parStatut[st] || 0) + 1;
+    });
+    var nSs = Object.keys(ss).length, nSites = Object.keys(sites).length, nPr = rows.length;
+    var T = (COMMUN && COMMUN.TOTAUX_OCBA) || {};
+    var plan = (DB.planpte && DB.planpte.bySousSite) ? Object.keys(DB.planpte.bySousSite) : [];
+    var planSites = {}; plan.forEach(function (k) { planSites[String(k).slice(0, 4)] = 1; });
+    function metrique(cle, lbl, n, total, repli, def) {
+      var l1 = [el('span', { class: 'perim-v' }, [nf(n)])], jauge = null;
+      if (total) {
+        l1.push(el('span', { class: 'perim-sur' }, ['sur ', el('b', {}, [nf(total)]), ' gérés par l’OCBA', n <= total ? ' · ' + Math.round(100 * n / total) + ' %' : '']));
+        jauge = Math.min(1, n / total);
+      } else if (repli) {
+        l1.push(el('span', { class: 'perim-sur' }, ['sur ', el('b', {}, [nf(repli)]), ' du Plan_PTE']));
+        l1.push(el('span', { class: 'perim-prov' }, ['total OCBA à fournir']));
+        jauge = Math.min(1, n / repli);
+      } else l1.push(el('span', { class: 'perim-prov' }, ['total OCBA à fournir']));
+      var m = el('div', { class: 'perim-m', 'data-m': cle }, [el('div', { class: 'perim-lbl' }, [lbl]), el('div', { class: 'perim-l1' }, l1)]);
+      var j = el('div', { class: 'perim-jauge' }); if (jauge !== null) j.appendChild(el('i', { style: 'width:' + (100 * jauge).toFixed(1) + '%;' }));
+      m.appendChild(j); m.appendChild(def);
+      return m;
+    }
+    var detStatut = Object.keys(parStatut).sort(function (a, b) { return parStatut[b] - parStatut[a]; }).map(function (k) { return nf(parStatut[k]) + ' ' + (k === 'termine' ? 'terminé' + (parStatut[k] > 1 ? 's' : '') : k); }).join(', ');   /* GE-Invest écrit « TERMINE » sans accent */
+    var grille = el('div', { class: 'perim-grid' }, [
+      metrique('sites', 'Sites', nSites, T.sites, Object.keys(planSites).length || null,
+        el('div', { class: 'perim-def' }, [el('b', {}, ['Site']), ' : ensemble de bâtiments, désigné par les 4 premiers chiffres du numéro de sous-site. Compté dès qu’un de ses sous-sites porte un projet.'])),
+      metrique('sous-sites', 'Sous-sites', nSs, T.sousSites, plan.length || null,
+        el('div', { class: 'perim-def' }, [el('b', {}, ['Sous-site']), ' : bâtiment, désigné par un numéro à 6 chiffres (site + 2 chiffres). Compté dès qu’il porte au moins un projet.'])),
+      metrique('projets', 'Projets', nPr, T.projets, null,
+        el('div', { class: 'perim-def' }, [el('b', {}, ['Projet']), ' : dossier ouvert dans GE-Invest, quel que soit son statut' + (detStatut ? ' : ' + detStatut : '') + '.' + (sansSs ? ' ' + nf(sansSs) + ' sans sous-site reconnu.' : '')]))
+    ]);
+    // projets par phase SIA
+    var parPhase = {}, nr = 0;
+    rows.forEach(function (r) { var k = phaseSia(r.avancement); if (k) parPhase[k] = (parPhase[k] || 0) + 1; else nr++; });
+    var bar = el('div', { class: 'distbar sia' }), legend = el('div', { class: 'distbar-legend' });
+    function segment(k, nom, v, plage) {
+      legend.appendChild(el('span', {}, [el('span', { class: 'sia-sw s' + k }), (k === 'nr' ? '' : k + ' · ') + nom + ' (' + nf(v) + ')']));
+      if (!v) return;
+      var sg = el('div', { class: 'seg seg-s' + k + (STATE.rep.sia === k ? ' active' : ''), style: 'flex:' + v + ';', role: 'button', tabindex: '0' }, [v / (nPr || 1) >= 0.05 ? nf(v) : '']);
+      tip(sg, nf(v) + ' projet(s) — ' + (k === 'nr' ? 'phase non renseignée : avancement global non saisi dans GE-Invest' : 'phase SIA ' + k + ', ' + nom + ' (avancement global de ' + plage + ')') + '. Un clic filtre le Reporting sur cet état.');
+      function filtrer() { STATE.rep.sia = STATE.rep.sia === k ? '' : k; renderReportingView(); }
+      sg.addEventListener('click', filtrer);
+      sg.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); filtrer(); } });
+      bar.appendChild(sg);
+    }
+    PHASES_SIA.forEach(function (p) { segment(p.k, p.nom, parPhase[p.k] || 0, p.de + ' à ' + p.a + ' %'); });
+    segment('nr', 'Non renseigné', nr, '');
+    var note = el('div', { class: 'perim-note' }, [el('b', {}, ['Phase SIA']), ' : déduite de l’« Avancement global » saisi par le responsable de projet dans GE-Invest, selon la table du modèle GPR.6MO.04 (31 : 0 à 9 % · 32 : 10 à 30 % · 33 : 31 à 32 % · 41 : 33 à 50 % · 51 : 51 à 66 % · 52 : 67 à 95 % · 53 : 96 à 100 %).' +
+      (nPr ? ' Avancement saisi pour ' + nf(nPr - nr) + ' projet' + (nPr - nr > 1 ? 's' : '') + ' sur ' + nf(nPr) + '.' : '')]);
+    return el('div', { class: 'card', id: 'perim-card' }, [
+      cardTitle('Périmètre d’action du programme', 'Sites, sous-sites et projets sur lesquels le programme travaille, dans le périmètre et avec les filtres affichés. Un site ou un sous-site est compté dès qu’il porte au moins un projet GE-Invest. Totaux gérés par l’OCBA : extraction GE-Invest, à fournir.'),
+      grille, el('div', { class: 'perim-sia-t' }, ['Projets par phase SIA']), bar, legend, note
+    ]);
   }
 
   // (c) Sémaphore du périmètre + répartition + complétude (ex-Tableau de bord)
@@ -6668,7 +6788,7 @@ var PTE_COMMUN = (function () {
       showView('reporting'); return false;
     }
     STATE.rep.pf = null; STATE.rep.projet = null; STATE.rep.ss = num;
-    STATE.rep.rp = ''; STATE.rep.statut = ''; STATE.rep.type = ''; STATE.rep.q = '';
+    STATE.rep.rp = ''; STATE.rep.statut = ''; STATE.rep.type = ''; STATE.rep.sia = ''; STATE.rep.q = '';
     showView('reporting'); return true;
   }
 
@@ -6700,6 +6820,8 @@ var PTE_COMMUN = (function () {
        (renderReportingView), le planning suit les sémaphores et le diagramme CPI / SPI. */
     // (b)
     var nbSS = repSousSiteGroups(rows).filter(function (g) { return !!g.num; }).length;
+    body.appendChild(repPerimetreCard(rows));
+    body.appendChild(el('div', { style: 'height:16px;' }));
     body.appendChild(repKPIStrip(agg, { sousSites: nbSS, list: list }));
     body.appendChild(el('div', { style: 'height:16px;', id: 'rep-sec-semaphores', class: 'rep-ancre' }));
 
@@ -6897,7 +7019,7 @@ var PTE_COMMUN = (function () {
         consol.addEventListener('click', function (e) {
           e.preventDefault();
           STATE.rep.pf = null; STATE.rep.projet = null; STATE.rep.ss = ssF;
-          STATE.rep.rp = ''; STATE.rep.statut = ''; STATE.rep.type = ''; STATE.rep.q = '';
+          STATE.rep.rp = ''; STATE.rep.statut = ''; STATE.rep.type = ''; STATE.rep.sia = ''; STATE.rep.q = '';
           showView('reporting');
         });
         ligneF.appendChild(document.createTextNode(' · '));
@@ -7950,7 +8072,7 @@ var PTE_COMMUN = (function () {
     setParams: function (p) { Object.assign(PARAMS, p); saveState(); renderAll(); },
     getMonth: function () { return STATE.mois; },
     setMonth: function (m) { STATE.mois = m; if (typeof document !== 'undefined') renderAll(); },
-    getState: function () { return STATE; },
+    getState: function () { return STATE; }, phaseSia: phaseSia,
     computeAll: computeAll,
     getCompleteness: function () { return Engine.computeCompleteness(DB, STATE.mois); },
     getPortfolioSemaphore: function (key) { return Engine.computePortfolioSemaphore(projetsByPerimetre(key), PARAMS); },

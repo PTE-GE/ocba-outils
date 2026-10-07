@@ -889,6 +889,8 @@ details.tab-howto{margin:0 0 10px}
 .f-chip button{border:0;background:none;color:var(--teal);font:inherit;font-weight:bold;cursor:pointer;padding:0 6px;border-radius:50%}
 .f-chip[hidden]{display:none}
 .gs-it.gs-filtre{border-top:1px solid var(--border);color:var(--teal);font-weight:bold}
+.gs-it .gs-hit{color:var(--ink-70);white-space:normal}
+.gs-it .gs-hit b{color:var(--ink-70)}
 details.howto.plein>div{background:var(--soft);border:1px solid var(--line);
   border-radius:8px;padding:7px 10px;font-size:.72rem;margin:6px 0 10px}
 details.howto.plein>div.part-warn{background:var(--bg-info);color:var(--fg-info);border-color:var(--acc)}
@@ -958,7 +960,7 @@ body.no-data .gsearch{display:none!important}
   margin-top:4px;padding-top:8px;border-top:1px solid var(--border)}
 .hdr-ctx .cx-txt{font:inherit;font-size:12.5px;font-weight:bold;color:var(--ink-70)}
 .hdr-ctx .gsearch{margin-left:auto}
-.hdr-ctx .gsearch input{width:220px;padding:4px 10px}
+.hdr-ctx .gsearch input{width:270px;padding:4px 10px}
 .hdr-ctx .gs-res{left:auto;right:0}
 .hdr-ctx .cx-l{display:inline-flex;align-items:center;gap:6px;margin:0;font-size:12.5px;font-weight:normal;
   text-transform:none;letter-spacing:0;color:var(--ink-muted);white-space:nowrap}
@@ -1144,7 +1146,7 @@ body.night .fiche-card{background:var(--card-bg)}
   <label class="cx-l" title="Base de comptabilité du CO₂. « Mesuré » retient les émissions du fichier, réseaux de chaleur compris. « Convention légale » compte les réseaux de chaleur, le bois, les pompes à chaleur et le solaire à zéro émission. Elle ne touche PAS aux classements par objectif, qui se calculent sur les facteurs d'émission par agent : elle change les émissions du parc, les tonnes évitées, le prix de la tonne et tout l'onglet Arbitrage.">CO₂
     <span class="cx-sel"><span class="cx-txt" id="gCo2Txt">—</span><select id="gCo2" onchange="onCo2ConvChange()"></select></span></label>
   <div class="gsearch">
-    <input id="gq" placeholder="Rechercher un sous-site…" autocomplete="off" oninput="gsRun()" onkeydown="gsKey(event)" title="Numéro ou nom d'un sous-site : une proposition ouvre sa fiche. Texte libre + Entrée : filtre le classement.">
+    <input id="gq" placeholder="Rechercher : sous-site, note, adresse, projet…" autocomplete="off" oninput="gsRun()" onkeydown="gsKey(event)" title="Numéro, nom, note, adresse, responsable, chauffage, projet GE-Invest ou surface de relais : une proposition ouvre la fiche du sous-site. Texte libre + Entrée : filtre le classement.">
     <div class="gs-res" id="gsRes"></div>
   </div>
 </div>
@@ -1592,7 +1594,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.5 · 06.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.6 · 07.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -2605,6 +2607,11 @@ var PTE_COMMUN = (function () {
        Estimé  : Σ « Estim PTE » des sous-sites de la feuille Plan_PTE (jamais Estim CECB+).
      Montants rendus en CHF ; l'affichage les divise par 1e6. GE-Invest : feuille GEI_Projets
      (une ligne par projet), à défaut l'ancienne GEI_Suivi (projet répété : dédoublonné par Numéro). */
+  /* Totaux gérés par l'OCBA (07.10.2026, demande de la direction) : dénominateurs des tuiles « sites »,
+     « sous-sites » et « projets » de la Revue. Ils viendront d'une extraction GE-Invest ; tant qu'une valeur
+     est null, l'outil le dit (« total OCBA à fournir ») et n'affiche aucun pourcentage sur l'OCBA.
+     À renseigner ici, avec la date et la source de l'extraction, quand elle est disponible. */
+  var TOTAUX_OCBA = { sites: null, sousSites: null, projets: null, date: null, source: null };
   var ENVELOPPE_VOTEE = [
     { loi: '13210', objet: 'Programme de transition écologique', chf: 1000e6 },
     { loi: '12552', objet: 'Embrasures', chf: 250e6 }
@@ -2666,6 +2673,9 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "07.10.2026", "objet": "accueil", "version": "v1.7", "titre": "Import depuis SharePoint", "points": ["Nouveau bouton « Importer depuis SharePoint » : le classeur est lu à son adresse sur l'intranet de l'État. L'adresse se saisit une fois et reste dans le navigateur.", "Si la lecture directe est refusée, la page propose le lien de téléchargement ; le classeur se dépose ensuite comme d'habitude.", "L'import manuel (dépôt ou choix du fichier) ne change pas."]},
+    {"date": "07.10.2026", "objet": "priorisation", "version": "v2.6", "titre": "Recherche globale", "points": ["La recherche de l'en-tête cherche aussi dans la note du sous-site, son adresse, ses responsables, son chauffage, son patrimoine, son état SIA, ses projets GE-Invest et ses surfaces de relais ; la proposition indique le champ où le texte a été trouvé.", "Le filtre du classement (texte libre validé par Entrée) cherche dans les mêmes champs. Casse et accents sont ignorés."]},
+    {"date": "07.10.2026", "objet": "revue", "version": "v0.18", "titre": "Périmètre d'action du programme, état SIA", "points": ["Reporting : nouvelle carte « Périmètre d'action du programme » — sites, sous-sites et projets sur lesquels le programme travaille, chacun avec sa définition. Le total géré par l'OCBA s'affichera dès qu'il sera fourni.", "Projets par phase SIA : la phase se déduit de l'avancement global saisi dans GE-Invest (table GPR.6MO.04) ; un projet sans avancement est compté « non renseigné ».", "Nouveau filtre « État SIA » ; un clic sur une phase de la barre filtre aussi le Reporting.", "Filtre « Type » réparé : études et réalisations sont de nouveau distinguées."]},
     {"date": "06.10.2026", "objet": "revue", "version": "v0.17", "titre": "Périmètre à choix multiple, planning réglable", "points": ["Périmètre : plusieurs portefeuilles ou responsables de projet peuvent être cochés ensemble, comme dans la priorisation.", "Planning : une barre en tête résume la durée du périmètre affiché, du début le plus tôt à la fin la plus tardive ; elle reste visible, avec l'axe des années, quand la liste défile.", "Planning : hauteur de la liste au choix (normale, grande, toute la liste) et lignes normales ou serrées, pour voir davantage de sous-sites."]},
     {"date": "06.10.2026", "objet": "revue", "version": "v0.16", "titre": "Fiche d'un projet ouverte par un lien", "points": ["Un lien venu de la carte de la priorisation ouvre directement la fiche du projet GE-Invest désigné. Si le projet n'est pas dans le classeur chargé, la Revue s'ouvre sur son sous-site."]},
     {"date": "06.10.2026", "objet": "priorisation", "version": "v2.5", "titre": "Carte : projets et surfaces de relais au survol", "points": ["Au survol d'un repère de la carte : les projets GE-Invest du sous-site (numéro, nom, statut).", "Au même endroit : les commentaires des jalons de ces projets, lus dans la nouvelle colonne « Surfaces de relais (GEI) » de Plan_PTE. Ils serviront à indiquer le besoin de surfaces de relais pendant les travaux.", "Fonds de carte CARTO remis dans le menu ; Esri World Street reste le fond par défaut.", "Un clic sur un repère fige la fenêtre : lien vers le sous-site dans le Classement, et chaque projet ouvre sa fiche dans la Revue de projets."]},
@@ -2827,7 +2837,7 @@ var PTE_COMMUN = (function () {
            publierClassement: publierClassement, lireClassement: lireClassement,
            lireQuestions: lireQuestions, ecrireQuestions: ecrireQuestions,
            dateCourte: dateCourte, texteBadge: texteBadge, nomPropre: nomPropre,
-           ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, situationProgramme: situationProgramme, mchf: mchf,
+           ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, TOTAUX_OCBA: TOTAUX_OCBA, situationProgramme: situationProgramme, mchf: mchf,
            VERSIONS: VERSIONS, OBJETS_VER: OBJETS_VER, versionsDe: versionsDe, afficherVersions: afficherVersions };
 })();
 
@@ -5861,7 +5871,7 @@ function passRankFilters(s,f){
   if(!fHit('rpj',s,f))return false;
   if(!fHit('ce',s,f))return false;
   if(!fHit('et',s,f))return false;
-  if(f.se&&!(s.id+s.nom+(s.rp||'')+(s.drt||'')+(s.hsub||'')+(s.pat||'')+(s.adr||'')+(s.etat||'')).toLowerCase().includes(f.se))return false;
+  if(f.se&&!gsTexte(s).includes(gsNorm(f.se)))return false;   /* mêmes champs que la recherche de l'en-tête (07.10.2026) */
   return true}
 /* Tri de repli : voir repliSorted() — grandeur de l'objectif décroissante. */
 /* Grandeur de constat du repli, PROPRE À L'OBJECTIF (30.09.2026) : jusqu'ici le repli
@@ -7221,10 +7231,30 @@ function renFresh(){
 
 /* ---------- recherche globale ---------- */
 function gsPop(){return (S_ALL&&S_ALL.length)?S_ALL:S}
+/* Recherche globale (07.10.2026, demande d'Achim) : au-delà du numéro et du nom, le texte est cherché dans
+   la note du sous-site, son adresse, ses responsables, son chauffage, son patrimoine, son état SIA, ses projets
+   GE-Invest et ses surfaces de relais. La proposition dit dans quel champ le texte a été trouvé. Le filtre du
+   classement (texte libre + Entrée) cherche dans les mêmes champs. Casse et accents ignorés. */
+function gsNorm(t){return String(t==null?'':t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+function gsChamps(s){
+  var id=String(s.id),p=s.projets||[];
+  return [['Note',siteNotes[id]],['Adresse',s.adr],['RPF',s.rp],['RP',s.drt],['Chauffage',s.ht],['Chauffage prévu',s.hsub],
+    ['Patrimoine',s.pat],['État SIA',s.etat],['Projet GE-Invest',p.map(function(x){return x.numero+' '+(x.nom||'')}).join(' · ')],
+    ['Surfaces de relais',s.relais]].filter(function(c){return c[1]!=null&&String(c[1]).trim()!==''})}
+function gsTexte(s){return gsNorm(String(s.id)+' '+(s.nom||'')+' '+gsChamps(s).map(function(c){return c[1]}).join(' '))}
+function gsExtrait(t,q){
+  t=String(t).replace(/\s+/g,' ');var i=gsNorm(t).indexOf(q);if(i<0)return t.substring(0,70);
+  var a=Math.max(0,i-24),b=Math.min(t.length,i+q.length+40);
+  return (a>0?'…':'')+t.substring(a,b)+(b<t.length?'…':'')}
 function gsMatch(q){
-  q=String(q||'').trim().toLowerCase();if(q.length<2)return[];
-  return gsPop().filter(function(s){
-    return String(s.id).toLowerCase().indexOf(q)>=0||String(s.nom||'').toLowerCase().indexOf(q)>=0}).slice(0,12)}
+  q=gsNorm(String(q||'').trim());if(q.length<2)return[];
+  var direct=[],autres=[];
+  gsPop().forEach(function(s){
+    if(gsNorm(s.id).indexOf(q)>=0||gsNorm(s.nom).indexOf(q)>=0){s._gsHit=null;direct.push(s);return}
+    var c=gsChamps(s);
+    for(var i=0;i<c.length;i++)if(gsNorm(c[i][1]).indexOf(q)>=0){s._gsHit={champ:c[i][0],extrait:gsExtrait(c[i][1],q)};autres.push(s);return}});
+  gsMatch.total=direct.length+autres.length;
+  return direct.concat(autres).slice(0,12)}
 let gsSel=-1;
 /* Recherche unique (02.10.2026) : une suggestion ouvre la fiche du sous-site ; le texte libre filtre le
    classement (nom, responsable, chauffage, adresse…), ce que faisait l'ancien champ « Rechercher… ». */
@@ -7237,12 +7267,13 @@ function gsFiltre(){
   fselRzBtn();renR()}
 function gsRun(){
   const box=$('gsRes'),q=$('gq').value,L=gsMatch(q);gsSel=-1;
-  const filtre=(q||'').trim()?'<div class="gs-it gs-filtre" onclick="gsFiltre()">Filtrer le classement sur « '+esc(q.trim())+' »</div>':'';
+  const nTot=gsMatch.total||0;
+  const filtre=(q||'').trim()?'<div class="gs-it gs-filtre" onclick="gsFiltre()">Filtrer le classement sur « '+esc(q.trim())+' »'+(nTot>L.length?' — '+nTot+' sous-sites':'')+'</div>':'';
   if(!L.length&&!filtre){box.classList.remove('on');box.innerHTML='';return}
   box.innerHTML=filtre+L.map(function(s,i){
     const p=prioMap().v[String(s.id)];
     return '<div class="gs-it" data-i="'+i+'" onclick="gsGo('+jsArg(s.id)+')"><b>'+esc(s.id)+'</b> '+esc(String(s.nom||'').substring(0,42))+
-      '<span class="s" title="RPF — responsable de portefeuille, qui suit le sous-site dans la durée. Le RP, responsable de projet, est dans la colonne RP.">RPF '+esc(s.rp||'—')+' · '+(p!=null?('priorité '+Math.round(p)):'non classé')+(qualiOf(s.id)?' · ajusté':'')+'</span></div>'}).join('');
+      '<span class="s" title="RPF — responsable de portefeuille, qui suit le sous-site dans la durée. Le RP, responsable de projet, est dans la colonne RP.">RPF '+esc(s.rp||'—')+' · '+(p!=null?('priorité '+Math.round(p)):'non classé')+(qualiOf(s.id)?' · ajusté':'')+'</span>'+(s._gsHit?'<span class="s gs-hit"><b>'+esc(s._gsHit.champ)+'</b> : '+esc(s._gsHit.extrait)+'</span>':'')+'</div>'}).join('');
   box.classList.add('on')}
 /* Entrée : la suggestion surlignée ; sinon l'unique sous-site trouvé ; sinon le filtre de texte. */
 function gsKey(e){
