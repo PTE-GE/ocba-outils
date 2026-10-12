@@ -196,8 +196,33 @@ table.info tr:nth-child(even) td{background:var(--bleupale)}
 body.admin .adm{display:inline-block}
 footer{border-top:1px solid var(--bord);padding:9px 18px;font-size:10px;color:var(--gris);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 
+/* ---------- VUE 3D ---------- */
+.v3wrap{position:relative;height:calc(100vh - 182px);min-height:430px;border:1px solid var(--bord);
+ border-radius:3px;overflow:hidden;background:#fff}
+.v3wrap canvas{display:block;cursor:grab;touch-action:none}
+.v3hud{position:absolute;z-index:3;font-size:11.5px}
+.v3tl{top:10px;left:12px;background:rgba(255,255,255,.93);border:1px solid var(--bord);
+ border-left:3px solid var(--teal);border-radius:3px;padding:7px 11px;max-width:min(58%,520px);line-height:1.5}
+.v3tl b{font-size:13px}
+.v3uo{font-size:10px;color:var(--gris);font-weight:bold}
+.v3pt{color:var(--gris);font-size:10.5px}
+.v3tr{top:10px;right:12px;display:flex;gap:5px;flex-wrap:wrap}
+.v3bl{bottom:10px;left:12px;color:var(--gris);background:rgba(255,255,255,.88);border-radius:3px;
+ padding:4px 9px;font-size:10.5px;max-width:min(66%,720px)}
+.v3leg{position:absolute;z-index:3;bottom:10px;right:12px;display:flex;flex-direction:column;gap:3px;
+ background:rgba(255,255,255,.92);border:1px solid var(--bord);border-radius:3px;padding:7px 10px;font-size:10.5px}
+.v3leg span{display:flex;align-items:center;gap:6px}
+.v3leg i{width:11px;height:11px;border-radius:50%;display:inline-block;flex:0 0 auto}
+.v3leg i.o{background:#fff;border:2px solid}
+.v3tip{position:absolute;z-index:4;display:none;pointer-events:none;background:var(--ardoise);color:#fff;
+ border-radius:3px;padding:5px 9px;font-size:11px;line-height:1.45;max-width:240px;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+.v3tip i{color:var(--turquoise);font-style:normal}
+@media(max-width:760px){.v3bl,.v3leg{display:none}.v3tl{max-width:76%}}
+
 @media print{
- header,footer,.ovl,.toastz,.admin-on,.hrow2{display:none!important}
+
+ header,footer,.ovl,.toastz,.admin-on,.hrow2,.v3hud,.v3tip,.v3leg{display:none!important}
+ .v3wrap{height:520px;border:0}
  body{font-size:10px}
  .grille{grid-template-columns:repeat(5,1fr);gap:6px}
  .fiche{break-inside:avoid;border:1px solid #999}
@@ -249,6 +274,7 @@ footer{border-top:1px solid var(--bord);padding:9px 18px;font-size:10px;color:va
    <button id="vCompact" onclick="setVue('compact')" title="Compact">▪▪</button>
    <button id="vListe" onclick="setVue('liste')" title="Liste">☰</button>
    <button id="vOrga" onclick="setVue('orga')" title="Organigramme">🌳</button>
+   <button id="v3D" onclick="setVue('troisd')" title="Organigramme 3D" style="font-weight:bold;font-size:11px">3D</button>
   </div>
  </div>
 </header>
@@ -345,7 +371,7 @@ footer{border-top:1px solid var(--bord);padding:9px 18px;font-size:10px;color:va
    qui restent toujours accessibles.<br><br>
    <b>Cette copie publique n'ouvre pas le mode administration.</b> Utilisez la version complète
    distribuée sur l'intranet, ou importez simplement le JSON : le bouton d'import reste accessible
-   ci-dessous sans mot de passe.</div>
+   sans mot de passe.</div>
  </div>
  <div class="mod-f"><span></span><div><button class="bt bt-s" onclick="fermer('mPass')">Annuler</button>
   <button class="bt bt-s bt-p" onclick="verifPass()">Valider</button></div></div>
@@ -440,7 +466,7 @@ footer{border-top:1px solid var(--bord);padding:9px 18px;font-size:10px;color:va
 const MDP = null;   /* copie publique : mode administration désactivé */
 
 let DONNEES = [];
-const SOURCE = 'Trombi OCBA août 2026 + organigramme du 17.08.2026';
+const SOURCE = 'Trombi OCBA août 2026 + organigramme du 01.10.2026';
 
 let vue='grille', admin=false, courant=null, listeAff=[], photoTmp='';
 let filtreNotes=false, voirVacants=false, replies=new Set();
@@ -481,8 +507,19 @@ function ouvrir(id){$(id).classList.add('on')}
 function fermer(id){$(id).classList.remove('on')}
 document.querySelectorAll('.ovl').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('on')}));
 document.addEventListener('keydown',e=>{
+  const modale=!!document.querySelector('.ovl.on');
   if(e.key==='Escape')document.querySelectorAll('.ovl.on').forEach(o=>o.classList.remove('on'));
-  if($('mFiche').classList.contains('on')){if(e.key==='ArrowLeft')naviguer(-1);if(e.key==='ArrowRight')naviguer(1)}
+  if($('mFiche').classList.contains('on')){if(e.key==='ArrowLeft')naviguer(-1);if(e.key==='ArrowRight')naviguer(1);return}
+  if(modale||vue!=='troisd'||!V3.ctx)return;
+  const a=document.activeElement, saisie=a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.tagName==='SELECT');
+  if(saisie)return;
+  const K={'Escape':()=>reset3D(),
+    'ArrowLeft':()=>{V3.but=null;V3.cam.yaw-=.09},
+    'ArrowRight':()=>{V3.but=null;V3.cam.yaw+=.09},
+    'ArrowUp':()=>{V3.but=null;V3.cam.pitch=Math.min(1.42,V3.cam.pitch+.06)},
+    'ArrowDown':()=>{V3.but=null;V3.cam.pitch=Math.max(-.22,V3.cam.pitch-.06)},
+    '+':()=>zoom3D(.82),'=':()=>zoom3D(.82),'-':()=>zoom3D(1.22)};
+  if(K[e.key]){K[e.key]();e.preventDefault()}
 });
 function tel(blob,nom){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=nom;a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
@@ -516,7 +553,7 @@ function basculeVacants(){voirVacants=!voirVacants;
   $('btVac').textContent=voirVacants?'Vacants affichés':'Vacants masqués';
   $('btVac').classList.toggle('on',voirVacants);rendre()}
 function setVue(v){vue=v;
-  [['Grille','grille'],['Compact','compact'],['Liste','liste'],['Orga','orga']].forEach(([k,n])=>$('v'+k).classList.toggle('on',n===v));
+  [['Grille','grille'],['Compact','compact'],['Liste','liste'],['Orga','orga'],['3D','troisd']].forEach(([k,n])=>$('v'+k).classList.toggle('on',n===v));
   rendre()}
 
 /* ---------- RENDU ---------- */
@@ -549,12 +586,14 @@ function carte(p){
   </div>`;
 }
 function rendre(){
+  if(vue!=='troisd')stop3D();
   if(!DONNEES.length){accueil();return}
   const L=filtrer(), tri=$('fTri').value;
   listeAff=L.map(p=>p.id);
   $('cAff').textContent=L.length+' affiché'+(L.length>1?'s':'')+' / '+DONNEES.filter(p=>voirVacants||p.statut!=='vacant').length;
   const z=$('zone');
   if(vue==='orga'){rendreOrga(L);return}
+  if(vue==='troisd'){rendre3D(L);$('nbNotes').textContent=nbNotes()?'('+nbNotes()+')':'';return}
   if(!L.length){z.innerHTML='<div class="vide"><div style="font-size:30px">🔍</div><p>Aucun résultat.</p></div>';return}
   const cls='grille'+(vue==='compact'?' compact':vue==='liste'?' liste':'');
   if(tri==='org'||tri==='unite'){
@@ -583,7 +622,7 @@ function compter(){
 function accueil(){
   $('cAff').textContent='0 affiché';
   $('zone').innerHTML=`<div class="accueil"><h2>Trombinoscope OCBA — outil vierge</h2><div class="c">
-   <p>Cette copie publique de l'outil ne contient <b>aucune donnée nominative</b>, et c'est voulu :
+   <p>Cette copie publique ne contient <b>aucune donnée nominative</b>, et c'est voulu :
       les données de l'OCBA ne se diffusent que par les canaux internes. Pour l'utiliser :</p>
    <ol>
     <li>Récupérer sur l'<b>intranet OCBA</b> le fichier <b>trombinoscope_data.json</b> (annuaire + photos) ;</li>
@@ -591,8 +630,6 @@ function accueil(){
    </ol>
    <p>À défaut de JSON, un <b>CSV</b> (annuaire seul) et un dossier de <b>photos</b> nommées « Prénom Nom.jpg »
       produisent le même résultat, en deux imports successifs.</p>
-   <p style="margin-top:10px;font-size:11.5px;color:var(--gris)">Les données importées restent sur votre poste :
-      aucune requête réseau, rien n'est transmis. Vos notes personnelles, elles, sont conservées d'une session à l'autre.</p>
    <p style="margin-top:12px"><button class="bt bt-p" onclick="ouvrir('mImport');ongl('jsn')">📥 Importer les données maintenant</button></p>
   </div></div>`;
 }
@@ -1071,6 +1108,472 @@ function zoneDrop(id,cb){
   z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('over')});
   z.addEventListener('dragleave',()=>z.classList.remove('over'));
   z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('over');cb(e.dataTransfer.files)});
+}
+
+/* ================================================================
+   VUE 3D — ARBRE CONIQUE NAVIGABLE (cone tree)
+   Une unité est un plateau ; ses sous-unités se répartissent en
+   cercle au niveau du dessous, ce qui dessine un cône. Les personnes
+   sont des vignettes posées en couronne autour de leur unité.
+   Seule la branche ouverte est dépliée : l'arbre entier à plat
+   serait illisible (100 unités, 5 niveaux). Ouvrir une unité la
+   déplie et y amène la caméra.
+   Rendu : canvas 2D, projection perspective écrite à la main.
+   Aucune librairie, aucune requête réseau.
+   ================================================================ */
+const V3={cv:null,ctx:null,W:0,H:0,dpr:1,raf:0,rac:null,map:{},U:[],P:[],E:[],hits:[],
+  cam:{yaw:-.6,pitch:.36,dist:1700,tx:0,ty:-300,tz:0},
+  but:null,drag:null,sel:null,surv:null,auto:false,img:{},charge:0,sig:'',gl:false,ro:null,
+  ouv:{}};
+const V3C={0:'#005F73',1:'#856EBE',2:'#30E5D9',3:'#06E9A8',4:'#64F7A3',5:'#6EF93C',6:'#D7FF37'};
+const V3N=['Office','Directions','Services','Secteurs','Équipes','Groupes','Sous-groupes'];
+const PR=15, GAP=300, FOCAL=900;
+
+function stop3D(){
+  if(V3.raf){cancelAnimationFrame(V3.raf);V3.raf=0}
+  if(V3.ro){try{V3.ro.disconnect()}catch(e){}V3.ro=null}
+  V3.cv=null;V3.ctx=null;V3.hits=[];V3.surv=null;V3.drag=null;
+}
+const k3=n=>n.path.join('›');
+
+/* ---------- 1. arbre complet (indépendant de l'ouverture) ---------- */
+function construit3D(L){
+  const rac={n:'Office cantonal des bâtiments',e:{},p:[],o:-1};
+  L.forEach(p=>{
+    const ch=chemin(p); let cur=rac;
+    (ch.length?ch.slice(1):[p.direction,p.service]).filter(Boolean).forEach(seg=>{
+      cur.e[seg]=cur.e[seg]||{n:seg,e:{},p:[],o:99};
+      cur.e[seg].o=Math.min(cur.e[seg].o,p.ordre??99); cur=cur.e[seg];
+    });
+    cur.p.push(p);
+  });
+  const uo={}; L.forEach(p=>{const c=chemin(p).slice(1).join('›');if(p.uo&&!uo[c])uo[c]=p.uo});
+  V3.map={};
+  (function prep(n,path,lvl){
+    n.path=path; n.lvl=lvl; n.uo=uo[path.join('›')]||'';
+    n.kids=Object.keys(n.e).sort((a,b)=>(n.e[a].o-n.e[b].o)||a.localeCompare(b,'fr')).map(c=>n.e[c]);
+    n.kids.forEach(c=>prep(c,path.concat(c.n),lvl+1));
+    n.tot=n.p.length+n.kids.reduce((s,c)=>s+c.tot,0);
+    V3.map[k3(n)]=n;
+  })(rac,[],0);
+  V3.rac=rac;
+}
+
+/* ---------- 2. disposition de la partie dépliée ---------- */
+function couronnes3D(k){
+  const out=[]; let i=0,r=58,anneau=0;
+  while(i<k&&anneau<9){
+    const cap=Math.max(1,Math.floor(2*Math.PI*r/(3.05*PR)));
+    const n=Math.min(cap,k-i);
+    for(let j=0;j<n;j++) out.push({r:r,a:j/n*2*Math.PI+anneau*.5,h:anneau*26});
+    i+=n; r+=3.0*PR; anneau++;
+  }
+  return out;
+}
+function dispose3D(){
+  (function mes(n){
+    n.ouvert=!!V3.ouv[k3(n)];
+    n.pos=n.ouvert?couronnes3D(n.p.length):[];
+    n.pr=n.pos.length?Math.max.apply(null,n.pos.map(o=>o.r))+PR:0;
+    n.vk=n.ouvert?n.kids:[];
+    n.vk.forEach(mes);
+    if(!n.vk.length){n.cr=0;n.R=Math.max(n.pr,42+Math.min(46,Math.sqrt(n.tot)*7));return}
+    const mx=Math.max.apply(null,n.vk.map(c=>c.R)), m=n.vk.length;
+    let R=m===1?Math.max(n.pr+56,110)
+          :Math.max(mx/Math.sin(Math.PI/m), n.vk.reduce((s,c)=>s+c.R,0)/Math.PI);
+    n.cr=Math.max(R,n.pr+56); n.R=n.cr+mx;
+  })(V3.rac);
+  V3.U=[];V3.P=[];V3.E=[];
+  (function place(n,x,z,a0){
+    n.x=x;n.z=z;n.y=-n.lvl*GAP;V3.U.push(n);
+    if(n.ouvert) n.p.forEach((p,i)=>{const o=n.pos[i]; if(!o)return;
+      V3.P.push({p:p,n:n,x:x+Math.cos(o.a)*o.r,y:n.y+9+(o.h||0),z:z+Math.sin(o.a)*o.r})});
+    const m=n.vk.length;
+    n.vk.forEach((c,i)=>{
+      const a=a0+(i+.5)/m*2*Math.PI;
+      place(c,x+Math.cos(a)*n.cr,z+Math.sin(a)*n.cr,a+Math.PI*.37);
+      V3.E.push({a:n,b:c});
+    });
+  })(V3.rac,0,0,.4);
+}
+
+/* ---------- 3. vignettes rondes, décodées à la demande ---------- */
+function vign(p){
+  const c=V3.img[p.id];
+  if(c!==undefined) return c;
+  if(!p.photo){V3.img[p.id]=false;return false}
+  if(V3.charge>=8) return undefined;
+  V3.charge++; V3.img[p.id]=null;
+  const im=new Image();
+  im.onload=()=>{
+    const S=88,cv=document.createElement('canvas');cv.width=cv.height=S;
+    const x=cv.getContext('2d');
+    x.save();x.beginPath();x.arc(S/2,S/2,S/2,0,7);x.clip();
+    const k=Math.max(S/im.width,S/im.height),w=im.width*k,h=im.height*k;
+    x.drawImage(im,(S-w)/2,(S-h)/2-h*.07,w,h);x.restore();
+    V3.img[p.id]=cv;
+  };
+  im.onerror=()=>{V3.img[p.id]=false};
+  im.src=p.photo;
+  return null;
+}
+
+/* ---------- 4. caméra et projection ---------- */
+function base3D(){
+  const c=V3.cam, cp=Math.cos(c.pitch), sp=Math.sin(c.pitch);
+  const d=[cp*Math.sin(c.yaw), sp, cp*Math.cos(c.yaw)];
+  const pos=[c.tx+d[0]*c.dist, c.ty+d[1]*c.dist, c.tz+d[2]*c.dist];
+  const f=[-d[0],-d[1],-d[2]];
+  const r=[-f[2],0,f[0]], rl=Math.hypot(r[0],r[2])||1; r[0]/=rl; r[2]/=rl;
+  const u=[-r[2]*f[1], r[2]*f[0]-r[0]*f[2], r[0]*f[1]];
+  return {pos:pos,f:f,r:r,u:u};
+}
+function proj(B,x,y,z){
+  const vx=x-B.pos[0],vy=y-B.pos[1],vz=z-B.pos[2];
+  const d=vx*B.f[0]+vy*B.f[1]+vz*B.f[2];
+  if(d<70) return null;
+  const s=FOCAL/d;
+  return {x:V3.W/2+(vx*B.r[0]+vy*B.r[1]+vz*B.r[2])*s,
+          y:V3.H/2-(vx*B.u[0]+vy*B.u[1]+vz*B.u[2])*s, s:s, d:d};
+}
+/* brume relative à la distance de la caméra : lisible à toutes les échelles */
+function brume(col,d){
+  const t=Math.min(.74,Math.max(0,(d-V3.cam.dist*.62)/(V3.cam.dist*1.5)));
+  const n=parseInt(col.slice(1),16), R=n>>16, G=(n>>8)&255, Bl=n&255;
+  return 'rgb('+Math.round(R+(255-R)*t)+','+Math.round(G+(255-G)*t)+','+Math.round(Bl+(255-Bl)*t)+')';
+}
+
+/* ---------- 5. cadrage et navigation ---------- */
+/* cadrage générique : ajustement itératif en espace écran */
+function fitPts3D(pts,marge,dmin,pitch){
+  if(!pts.length||!V3.W)return;
+  let x=0,y0=0,y1=0,z=0,r=0;
+  pts.forEach(n=>{x+=n.x;z+=n.z;y0=Math.min(y0===0?n.y:y0,n.y);y1=Math.max(y1===0?n.y:y1,n.y);
+    r=Math.max(r,Math.hypot(n.x,n.z))});
+  const c={yaw:V3.cam.yaw,pitch:(pitch===undefined?V3.cam.pitch:pitch),tx:x/pts.length,ty:(y0+y1)/2,tz:z/pts.length,
+           dist:Math.max(dmin,r*1.6+500)};
+  const sauve=V3.cam;
+  for(let it=0;it<6;it++){
+    V3.cam=c; const B=base3D();
+    let X0=1e9,X1=-1e9,Y0=1e9,Y1=-1e9,ok=false;
+    for(let i=0;i<pts.length;i++){
+      const n=pts[i], q=proj(B,n.x,n.y,n.z); if(!q)continue; ok=true;
+      const m=(n.pr?n.pr:34)*q.s;
+      if(q.x-m<X0)X0=q.x-m; if(q.x+m>X1)X1=q.x+m;
+      if(q.y-m<Y0)Y0=q.y-m; if(q.y+m>Y1)Y1=q.y+m;
+    }
+    if(!ok)break;
+    const k=c.dist/FOCAL;
+    const cx=(X0+X1)/2-V3.W/2, cy=(Y0+Y1)/2-V3.H/2;
+    c.tx+=(B.r[0]*cx-B.u[0]*cy)*k; c.ty+=(B.r[1]*cx-B.u[1]*cy)*k; c.tz+=(B.r[2]*cx-B.u[2]*cy)*k;
+    const f=Math.min((V3.W*marge)/Math.max(1,X1-X0),(V3.H*marge*.95)/Math.max(1,Y1-Y0));
+    c.dist=Math.max(dmin,Math.min(12000,c.dist/f));
+  }
+  V3.cam=sauve;
+  V3.but={tx:c.tx,ty:c.ty,tz:c.tz,dist:c.dist};
+  if(pitch!==undefined)V3.but.pitch=pitch;
+}
+function fit3D(){fitPts3D(V3.U.concat(V3.P),.84,620)}
+function cadre3D(n){
+  const dans=new Set(), pts=[];
+  (function w(x){dans.add(x);pts.push(x);x.vk.forEach(w)})(n);
+  V3.P.forEach(o=>{if(dans.has(o.n))pts.push(o)});
+  /* on garde le parent dans le cadre seulement si la branche est petite (contexte) */
+  if(pts.length<6&&n.path.length){const par=V3.map[n.path.slice(0,-1).join('›')];
+    if(par&&par.x!==undefined)pts.push(par)}
+  /* une couronne de visages se lit mal sous un angle rasant : on relève un peu la caméra */
+  const k=n.p.length+n.vk.reduce((s2,c)=>s2+c.p.length,0);
+  fitPts3D(pts,.62,430, k>=5?Math.max(V3.cam.pitch,.62):undefined);
+}
+function fil3D(){
+  const f=$('v3Fil'); if(!f)return;
+  const n=V3.sel||V3.rac, ch=[];
+  for(let i=0;i<=n.path.length;i++){
+    const p=n.path.slice(0,i), nd=V3.map[p.join('›')];
+    if(nd) ch.push(i===n.path.length
+      ? '<b>'+esc(i?nd.n:'Office cantonal des bâtiments')+'</b>'
+      : '<a class="lien" onclick="vers3D('+JSON.stringify(p.join('›')).replace(/"/g,'&quot;')+')">'
+        +esc(i?nd.n:'Office')+'</a>');
+  }
+  f.innerHTML=ch.join(' <span class="v3pt">›</span> ')
+    +(n.uo?' <span class="v3uo">'+esc(n.uo)+'</span>':'')
+    +'<br><span class="v3pt">'+n.tot+' personne'+(n.tot>1?'s':'')
+    +(n.kids.length?' · '+n.kids.length+' sous-unité'+(n.kids.length>1?'s':''):'')
+    +(n.p.length?' · '+n.p.length+' rattachée'+(n.p.length>1?'s':'')+' directement':'')+'</span>';
+}
+function ouvre3D(n,fermer){
+  const key=k3(n);
+  if(fermer&&V3.ouv[key]){
+    Object.keys(V3.ouv).forEach(c=>{if(c===key||c.indexOf(key+'›')===0)delete V3.ouv[c]});
+    V3.sel=n.path.length?V3.map[n.path.slice(0,-1).join('›')]:n;
+  }else{
+    for(let i=0;i<=n.path.length;i++) V3.ouv[n.path.slice(0,i).join('›')]=1;
+    V3.sel=n;
+  }
+  dispose3D(); cadre3D(V3.sel); fil3D();
+}
+function vers3D(key){const n=V3.map[key];if(n){V3.sel=n;cadre3D(n);fil3D()}}
+function base3Douv(){
+  V3.ouv={'':1};
+  V3.rac.kids.forEach(c=>{V3.ouv[k3(c)]=1});
+}
+function reset3D(){
+  V3.cam.yaw=-.6;V3.cam.pitch=.36;
+  base3Douv();V3.sel=null;dispose3D();fit3D();fil3D();
+}
+function tout3D(){
+  V3.ouv={};
+  Object.keys(V3.map).forEach(c=>{V3.ouv[c]=1});
+  V3.sel=null;dispose3D();fit3D();fil3D();
+}
+function auto3D(){V3.auto=!V3.auto;const b=$('v3Auto');if(b)b.classList.toggle('on',V3.auto)}
+function zoom3D(f){V3.but=null;V3.cam.dist=Math.min(9000,Math.max(240,V3.cam.dist*f))}
+
+/* ---------- 6. boucle de rendu ---------- */
+function dessine3D(){
+  const ctx=V3.ctx; if(!ctx){V3.raf=0;return}
+  if(V3.but){
+    const c=V3.cam,b=V3.but; let fini=true;
+    ['tx','ty','tz','dist','yaw','pitch'].forEach(k=>{
+      if(b[k]===undefined)return;
+      const e=b[k]-c[k];
+      if(Math.abs(e)>(k==='yaw'||k==='pitch'?.003:1.5))fini=false;
+      c[k]+=e*.13;
+    });
+    if(fini)V3.but=null;
+  }
+  if(V3.auto&&!V3.drag&&!V3.but) V3.cam.yaw+=.0022;
+  V3.charge=0;
+  const B=base3D(), W=V3.W, H=V3.H;
+  ctx.setTransform(V3.dpr,0,0,V3.dpr,0,0);
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#ffffff'); g.addColorStop(1,'#e7f1f4');
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+
+  const items=[];
+  V3.E.forEach(e=>{
+    const a=proj(B,e.a.x,e.a.y,e.a.z), b=proj(B,e.b.x,e.b.y,e.b.z);
+    if(a&&b) items.push({t:0,d:(a.d+b.d)/2,a:a,b:b,n:e.b});
+  });
+  V3.U.forEach(n=>{const q=proj(B,n.x,n.y,n.z); if(q) items.push({t:1,d:q.d,q:q,n:n})});
+  V3.P.forEach(o=>{const q=proj(B,o.x,o.y,o.z); if(q) items.push({t:2,d:q.d,q:q,o:o})});
+  items.sort((a,b)=>b.d-a.d);
+
+  const sp=V3.sel&&V3.sel.path.length?k3(V3.sel):null;
+  const actif=n=>sp===null||k3(n)===sp||k3(n).indexOf(sp+'›')===0||sp.indexOf(k3(n)+'›')===0||!n.path.length;
+  V3.hits=[]; const lab=[];
+  ctx.lineCap='round'; ctx.textAlign='center'; ctx.textBaseline='middle';
+
+  for(let i=0;i<items.length;i++){
+    const it=items[i];
+    if(it.t===0){
+      const a=actif(it.n);
+      ctx.globalAlpha=a?.92:.14;
+      ctx.strokeStyle=brume(a?'#85a0ac':'#c2d4da',it.d);
+      ctx.lineWidth=Math.max(.7,(a?2.6:1.5)*it.a.s);
+      ctx.beginPath();ctx.moveTo(it.a.x,it.a.y);ctx.lineTo(it.b.x,it.b.y);ctx.stroke();
+      ctx.globalAlpha=1; continue;
+    }
+    if(it.t===1){
+      const n=it.n,q=it.q,a=actif(n),col=V3C[Math.min(6,n.lvl)];
+      const plie=!n.ouvert&&(n.kids.length||n.p.length);
+      const base=(n.lvl===0?46:40-n.lvl*3)+(plie?Math.min(26,Math.sqrt(n.tot)*4.2):0);
+      const rx=Math.max(5,base*q.s), ry=rx*.42;
+      const srv=V3.surv&&V3.surv.k==='u'&&V3.surv.n===n;
+      if(plie){   /* halo : une branche repliée */
+        ctx.globalAlpha=a?.3:.06;
+        ctx.beginPath();ctx.ellipse(q.x,q.y+ry*.5,rx*1.3,ry*1.5,0,0,7);
+        ctx.fillStyle=brume(col,it.d);ctx.fill();
+      }
+      ctx.globalAlpha=a?1:.15;
+      ctx.beginPath();ctx.ellipse(q.x,q.y,rx,ry,0,0,7);
+      ctx.fillStyle=brume(col,it.d);ctx.fill();
+      ctx.globalAlpha=a?.5:.07;
+      ctx.lineWidth=Math.max(.5,1.5*q.s);ctx.strokeStyle=brume('#2C3E50',it.d);ctx.stroke();
+      ctx.globalAlpha=1;
+      if(n===V3.sel||srv){
+        ctx.beginPath();ctx.ellipse(q.x,q.y,rx+8*q.s,ry+8*q.s,0,0,7);
+        ctx.strokeStyle=srv?'#856EBE':'#005F73';ctx.lineWidth=Math.max(1.3,2.8*q.s);ctx.stroke();
+      }
+      const Fx=n.lvl===0?21:(n.lvl===1?17:(n.lvl===2?13.5:12));
+      const F=Math.max(9.5,Math.min(Fx,Math.round((n.lvl<=1?26:20)*q.s)));
+      if(a&&(F>=11||srv)&&!(n===V3.sel&&!srv)){
+        const bas=n.pos.length>0;      /* visages au-dessus → étiquette en dessous */
+        lab.push({x:q.x, y:bas?q.y+ry+F/2+7:q.y-ry-7, bas:bas, F:F,
+          t:n.n.length>38?n.n.slice(0,36)+'…':n.n,
+          sous:(n.uo?n.uo+'  ':'')+(plie?'▾ '+n.tot+' pers.':''),
+          sy:bas?q.y+ry+F+12:q.y+ry, cs:plie?'#005F73':'#7d8f98',
+          pri:srv?0:1+Math.min(5,n.lvl), d:it.d, force:!!srv});
+      }
+      V3.hits.push({k:'u',n:n,x:q.x,y:q.y,r:Math.max(12,rx)});
+      continue;
+    }
+    const o=it.o,q=it.q,p=o.p,a=actif(o.n);
+    const r=Math.max(2,PR*q.s*1.35);
+    const srv=V3.surv&&V3.surv.k==='p'&&V3.surv.o===o;
+    ctx.globalAlpha=a?1:.12;
+    const im=r>7?vign(p):undefined;
+    if(im){
+      ctx.save();ctx.beginPath();ctx.arc(q.x,q.y,r,0,7);ctx.clip();
+      ctx.drawImage(im,q.x-r,q.y-r,r*2,r*2);ctx.restore();
+      const t=Math.min(.5,Math.max(0,(it.d-V3.cam.dist*.62)/(V3.cam.dist*1.5)));
+      if(t>.02){ctx.globalAlpha=t*(a?1:.12);ctx.beginPath();ctx.arc(q.x,q.y,r,0,7);
+        ctx.fillStyle='#fff';ctx.fill();ctx.globalAlpha=a?1:.12}
+    }else{
+      ctx.beginPath();ctx.arc(q.x,q.y,r,0,7);
+      ctx.fillStyle=brume(p.statut==='vacant'?'#eccfca':'#cfe3ea',it.d);ctx.fill();
+    }
+    const bord=p.statut==='vacant'?'#C0392B':(p.resp?'#1A8554':'');
+    if(bord||srv){
+      ctx.beginPath();ctx.arc(q.x,q.y,r,0,7);
+      ctx.strokeStyle=srv?'#856EBE':brume(bord,it.d);
+      ctx.lineWidth=Math.max(1,(srv?3.2:2.3)*q.s);ctx.stroke();
+    }
+    if(a&&(r>22||srv))
+      lab.push({x:q.x,y:q.y+r+3+Math.max(9,Math.min(13,r*.48))/2+2,bas:true,
+        F:Math.max(9,Math.min(13,r*.48)), t:p.nom.length>24?p.nom.slice(0,22)+'…':p.nom,
+        pri:srv?0:9, d:it.d, force:!!srv});
+    ctx.globalAlpha=1;
+    V3.hits.push({k:'p',o:o,x:q.x,y:q.y,r:Math.max(8,r)});
+  }
+  /* étiquettes : du plus prioritaire au moins, sans chevauchement */
+  lab.sort((a,b)=>a.pri-b.pri||a.d-b.d);
+  const pris=[];
+  for(let i=0;i<lab.length;i++){
+    const L=lab[i];
+    ctx.font='bold '+L.F+'px Arial,Helvetica,sans-serif';
+    const w=ctx.measureText(L.t).width+10, h=L.F+7;
+    const R={x:L.x-w/2,y:(L.bas?L.y-h/2:L.y-h),w:w,h:h};
+    if(!L.force){
+      let ch=false;
+      for(let j=0;j<pris.length;j++){const o=pris[j];
+        if(R.x<o.x+o.w&&R.x+R.w>o.x&&R.y<o.y+o.h&&R.y+R.h>o.y){ch=true;break}}
+      if(ch)continue;
+    }
+    pris.push(R);
+    ctx.fillStyle='rgba(255,255,255,.9)';ctx.fillRect(R.x,R.y,R.w,R.h);
+    if(L.pri===0){ctx.strokeStyle='#005F73';ctx.lineWidth=1;ctx.strokeRect(R.x+.5,R.y+.5,R.w-1,R.h-1)}
+    ctx.fillStyle='#17323d';ctx.fillText(L.t,L.x,R.y+h/2);
+    if(L.sous&&L.F>=12){
+      ctx.font=Math.round(L.F*.72)+'px Arial,Helvetica,sans-serif';
+      const w2=ctx.measureText(L.sous).width+8,h2=L.F*.72+5;
+      const R2={x:L.x-w2/2,y:L.sy+3,w:w2,h:h2};
+      let ch2=false;
+      for(let j=0;j<pris.length;j++){const o=pris[j];
+        if(R2.x<o.x+o.w&&R2.x+R2.w>o.x&&R2.y<o.y+o.h&&R2.y+R2.h>o.y){ch2=true;break}}
+      if(!ch2){pris.push(R2);ctx.fillStyle=L.cs;ctx.fillText(L.sous,L.x,R2.y+h2/2)}
+    }
+  }
+  V3.raf=requestAnimationFrame(dessine3D);
+}
+
+/* ---------- 7. interactions ---------- */
+function hit3D(mx,my){
+  let best=null,bd=1e9;
+  for(let i=V3.hits.length-1;i>=0;i--){
+    const h=V3.hits[i], d=Math.hypot(h.x-mx,h.y-my);
+    if(d<=h.r+3&&d<bd){bd=d;best=h}
+  }
+  return best;
+}
+
+/* ---------- 8. mise en place ---------- */
+function rendre3D(L){
+  const z=$('zone');
+  if(!L.length){z.innerHTML='<div class="vide">Aucun résultat.</div>';return}
+  z.innerHTML='<div class="v3wrap">'
+    +'<canvas id="v3cv"></canvas>'
+    +'<div class="v3hud v3tl" id="v3Fil"></div>'
+    +'<div class="v3hud v3tr">'
+      +'<button class="bt bt-s" id="v3Auto" onclick="auto3D()">↻ Rotation</button>'
+      +'<button class="bt bt-s" onclick="zoom3D(0.78)" title="Zoom avant">＋</button>'
+      +'<button class="bt bt-s" onclick="zoom3D(1.3)" title="Zoom arrière">－</button>'
+      +'<button class="bt bt-s" onclick="tout3D()" title="Déplier toute la hiérarchie">Tout déplier</button>'
+      +'<button class="bt bt-s bt-p" onclick="reset3D()">Vue d\'ensemble</button>'
+    +'</div>'
+    +'<div class="v3hud v3bl">Glisser : pivoter · Molette : zoomer · Maj + glisser : déplacer · '
+      +'Clic sur une unité : la déplier et s\'y rendre · Clic à nouveau : replier · '
+      +'Clic sur un visage : ouvrir la fiche · Échap : vue d\'ensemble</div>'
+    +'<div class="v3leg" id="v3Leg"></div>'
+    +'<div class="v3tip" id="v3Tip"></div></div>';
+  const cv=$('v3cv'); V3.cv=cv; V3.ctx=cv.getContext('2d');
+
+  const sigAv=V3.sig;
+  construit3D(L);
+  V3.sig=L.length+'/'+Object.keys(V3.map).length;
+  if(V3.sig!==sigAv||!Object.keys(V3.ouv).length){base3Douv();V3.sel=null}
+  else{Object.keys(V3.ouv).forEach(c=>{if(!V3.map[c])delete V3.ouv[c]});
+       if(V3.sel)V3.sel=V3.map[k3(V3.sel)]||null}
+  dispose3D();
+  fil3D();
+  const recadre = V3.sig!==sigAv;
+
+  const prof=Math.max.apply(null,Object.keys(V3.map).map(c=>V3.map[c].lvl));
+  $('v3Leg').innerHTML=V3N.slice(0,prof+1).map((t,i)=>'<span><i style="background:'+V3C[i]+'"></i>'+t+'</span>').join('')
+    +'<span><i class="o" style="border-color:#1A8554"></i>Responsable</span>'
+    +'<span><i class="o" style="border-color:#C0392B"></i>Poste vacant</span>';
+
+  function taille(){
+    if(!V3.cv)return;
+    const r=cv.parentNode.getBoundingClientRect();
+    V3.dpr=Math.min(2,window.devicePixelRatio||1);
+    V3.W=Math.max(320,Math.round(r.width)); V3.H=Math.max(300,Math.round(r.height));
+    cv.width=Math.round(V3.W*V3.dpr); cv.height=Math.round(V3.H*V3.dpr);
+    cv.style.width=V3.W+'px'; cv.style.height=V3.H+'px';
+  }
+  taille();
+  if(recadre)fit3D();
+  if(window.ResizeObserver){V3.ro=new ResizeObserver(taille);V3.ro.observe(cv.parentNode)}
+  if(!V3.gl){V3.gl=true;
+    window.addEventListener('mouseup',()=>{setTimeout(()=>{V3.drag=null},0)});
+    window.addEventListener('resize',()=>{if(V3.cv)taille()})}
+
+  cv.onmousedown=e=>{V3.drag={x:e.clientX,y:e.clientY,pan:e.shiftKey||e.button===1,bouge:false};e.preventDefault()};
+  cv.onmousemove=e=>{
+    const r=cv.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
+    if(V3.drag){
+      const dx=e.clientX-V3.drag.x, dy=e.clientY-V3.drag.y;
+      if(Math.abs(dx)+Math.abs(dy)>3)V3.drag.bouge=true;
+      V3.but=null;
+      if(V3.drag.pan){
+        const B=base3D(),k=V3.cam.dist/FOCAL;
+        V3.cam.tx-=(B.r[0]*dx-B.u[0]*dy)*k;
+        V3.cam.ty-=(B.r[1]*dx-B.u[1]*dy)*k;
+        V3.cam.tz-=(B.r[2]*dx-B.u[2]*dy)*k;
+      }else{
+        V3.cam.yaw-=dx*.006;
+        V3.cam.pitch=Math.max(-.2,Math.min(1.4,V3.cam.pitch+dy*.005));
+      }
+      V3.drag.x=e.clientX;V3.drag.y=e.clientY;return;
+    }
+    const h=hit3D(mx,my); V3.surv=h;
+    const tip=$('v3Tip'); if(!tip)return;
+    if(h){
+      cv.style.cursor='pointer'; tip.style.display='block';
+      tip.style.left=Math.max(4,Math.min(V3.W-252,mx+16))+'px';
+      tip.style.top=Math.min(V3.H-92,my+16)+'px';
+      tip.innerHTML = h.k==='p'
+        ? '<b>'+esc(h.o.p.nom)+'</b><br>'+esc(h.o.p.fonction||'')
+          +(h.o.p.unite?'<br><i>'+esc(h.o.p.unite)+'</i>':'')
+          +'<br><u>Ouvrir la fiche</u>'
+        : '<b>'+esc(h.n.n)+'</b><br>'+h.n.tot+' personne'+(h.n.tot>1?'s':'')
+          +(h.n.uo?' · '+esc(h.n.uo):'')
+          +'<br><u>'+(h.n.ouvert&&(h.n.kids.length||h.n.p.length)?'Replier':'Déplier')+'</u>';
+    }else{cv.style.cursor='grab';tip.style.display='none'}
+  };
+  cv.onmouseleave=()=>{V3.surv=null;const t=$('v3Tip');if(t)t.style.display='none'};
+  cv.onclick=e=>{
+    if(V3.drag&&V3.drag.bouge)return;
+    const r=cv.getBoundingClientRect(), h=hit3D(e.clientX-r.left,e.clientY-r.top);
+    if(!h)return;
+    if(h.k==='p'){fiche(h.o.p.id);return}
+    ouvre3D(h.n, h.n.ouvert&&h.n===V3.sel);
+  };
+  cv.ondblclick=()=>reset3D();
+  cv.onwheel=e=>{e.preventDefault();V3.but=null;
+    V3.cam.dist=Math.min(9000,Math.max(240,V3.cam.dist*(e.deltaY>0?1.12:.89)))};
+  cv.oncontextmenu=e=>e.preventDefault();
+  if(!V3.raf)V3.raf=requestAnimationFrame(dessine3D);
 }
 
 /* ---------- DÉMARRAGE ---------- */

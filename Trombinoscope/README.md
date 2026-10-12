@@ -34,8 +34,9 @@ plutôt que celle-ci.
 |---|---|
 | **Chercher** | plein texte sur nom, fonction, service, unité, code UO, site, responsable |
 | **Filtrer** | par direction, par service, par site |
-| **Voir** | quatre vues : grille, compact, liste, **organigramme** dépliable |
+| **Voir** | cinq vues : grille, compact, liste, **organigramme** dépliable, **organigramme 3D** |
 | **Organigramme** | Office → directions → services → secteurs → équipes, avec les codes CR/UO et les responsables |
+| **3D** | la même hiérarchie en arbre conique navigable : glisser pour pivoter, molette pour zoomer, clic pour déplier une unité et y amener la caméra, clic sur un visage pour ouvrir la fiche |
 | **Fiche** | photo, hiérarchie complète, responsable cliquable, collègues de la même unité, téléphone, courriel |
 | **Annoter** | une note libre et vos propres étiquettes sur chaque personne |
 | **Mémoriser** | un quiz photo → nom pour apprendre les visages, service par service |
@@ -57,7 +58,8 @@ définissez vous-même (renommer, supprimer, créer).
 ## Fonctionnement technique
 
 Un seul fichier HTML. Aucune librairie externe, aucun CDN, **aucune requête réseau** : ouvrez la
-page, coupez le réseau, tout continue de fonctionner. L'import CSV, le rapprochement des photos,
+page, coupez le réseau, tout continue de fonctionner. La vue 3D elle-même est écrite à la main —
+canvas 2D et projection perspective, pas de moteur 3D embarqué. L'import CSV, le rapprochement des photos,
 le redimensionnement des images et la construction de l'organigramme se font intégralement dans
 le navigateur.
 
