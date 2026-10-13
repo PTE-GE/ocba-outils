@@ -195,6 +195,8 @@ table.info tr:nth-child(even) td{background:var(--bleupale)}
 .adm{display:none}
 body.admin .adm{display:inline-block}
 footer{border-top:1px solid var(--bord);padding:9px 18px;font-size:10px;color:var(--gris);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer a{color:var(--teal);font-weight:bold;text-decoration:none;border-bottom:1px dotted var(--bord)}
+footer a:hover{color:var(--violet);border-bottom-color:var(--violet)}
 
 /* ---------- VUE 3D ---------- */
 .v3wrap{position:relative;height:calc(100vh - 182px);min-height:430px;border:1px solid var(--bord);
@@ -283,6 +285,7 @@ footer{border-top:1px solid var(--bord);padding:9px 18px;font-size:10px;color:va
 
 <footer>
  <span id="fSrc"></span>
+ <span>Trombinoscope OCBA · <a href="#" data-pte-versions="trombinoscope" title="Historique des versions">v3.2 · 13.10.2026</a></span>
  <span>Données nominatives internes — usage interne OCBA. Aucune donnée ne quitte ce poste.</span>
 </footer>
 
@@ -1575,6 +1578,177 @@ function rendre3D(L){
   cv.oncontextmenu=e=>e.preventDefault();
   if(!V3.raf)V3.raf=requestAnimationFrame(dessine3D);
 }
+
+/* ================================================================
+   HISTORIQUE DES VERSIONS — module commun aux outils OCBA
+   Repris tel quel de pte-commun.js (priorisation, simulation, revue,
+   accueil). Le numéro de version du pied de page ouvre la fenêtre :
+   tout élément portant data-pte-versions="<outil>" suffit.
+   RÈGLE DE TENUE : à chaque nouvelle version, ajouter l'entrée dans
+   VERSIONS ci-dessous, dans 00_Contexte/Versioning_PTE.md, puis
+   recopier le bloc VERSIONS + OBJETS_VER dans les cinq outils.
+   ================================================================ */
+(function(){
+  var VERSIONS = [
+    {"date": "13.10.2026", "objet": "trombinoscope", "version": "v3.2", "titre": "Numéro de version et historique", "points": ["Le pied de page porte le numéro de version de l'outil ; un clic dessus ouvre cet historique, comme dans les autres outils OCBA.", "L'historique affiché est le même partout : « Cet outil » ne montre que le trombinoscope, « Tous les outils » montre les cinq."]},
+    {"date": "12.10.2026", "objet": "trombinoscope", "version": "v3.1", "titre": "Organigramme du 01.10.2026", "points": ["Chaque fiche a été comparée à sa case dans l'organigramme d'octobre : 289 → 294 fiches (270 personnes, 24 postes vacants).", "Mutations vers la DPTE : Clara Jousson, Lucas Cohen Adad, Monica Alvarez Ozainne, Marina Galiano, Piergiorgio Loiacono, et le nouveau Pôle spécialistes techniques (Luc Gibrat, Flavio Pittueo, Adrien Tabarini, Emmanuel Maidonis, Sylvain Vergnal). Bernard Wenger rejoint la DRT.", "Les neuf responsables de secteur de la DPTE deviennent « Chef / Cheffe de projets » ; le Secteur projets DRT 6 disparaît au profit du Secteur portefeuille 9.", "Départs : Sibylle Da Silva (poste devenu vacant), Jean-Marc Campana (fiche supprimée). Détail : RAPPORT-changements_20261001.md."]},
+    {"date": "12.10.2026", "objet": "trombinoscope", "version": "v3.0", "titre": "Cinquième vue : organigramme 3D", "points": ["La hiérarchie en arbre conique navigable : une unité est un plateau, ses sous-unités se répartissent en cercle au niveau du dessous, les personnes forment une couronne autour de leur unité.", "Seule la branche ouverte est dépliée. Un clic sur une unité la déplie et y amène la caméra, un clic sur un visage ouvre la fiche ; glisser pour pivoter, molette pour zoomer, Échap pour revenir à la vue d'ensemble.", "Canvas 2D et projection perspective écrits à la main : aucune librairie 3D, aucune requête réseau.", "Le CSV est régénéré depuis le JSON : la désynchronisation signalée en septembre est résorbée."]},
+    {"date": "07.10.2026", "objet": "accueil", "version": "v1.7", "titre": "Import depuis SharePoint", "points": ["Nouveau bouton « Importer depuis SharePoint » : le classeur est lu à son adresse sur l'intranet de l'État. L'adresse se saisit une fois et reste dans le navigateur.", "Si la lecture directe est refusée, la page propose le lien de téléchargement ; le classeur se dépose ensuite comme d'habitude.", "L'import manuel (dépôt ou choix du fichier) ne change pas."]},
+    {"date": "07.10.2026", "objet": "priorisation", "version": "v2.6", "titre": "Recherche globale", "points": ["La recherche de l'en-tête cherche aussi dans la note du sous-site, son adresse, ses responsables, son chauffage, son patrimoine, son état SIA, ses projets GE-Invest et ses surfaces de relais ; la proposition indique le champ où le texte a été trouvé.", "Le filtre du classement (texte libre validé par Entrée) cherche dans les mêmes champs. Casse et accents sont ignorés."]},
+    {"date": "07.10.2026", "objet": "revue", "version": "v0.18", "titre": "Périmètre d'action du programme, état SIA", "points": ["Reporting : nouvelle carte « Périmètre d'action du programme » — sites, sous-sites et projets sur lesquels le programme travaille, chacun avec sa définition. Le total géré par l'OCBA s'affichera dès qu'il sera fourni.", "Projets par phase SIA : la phase se déduit de l'avancement global saisi dans GE-Invest (table GPR.6MO.04) ; un projet sans avancement est compté « non renseigné ».", "Nouveau filtre « État SIA » ; un clic sur une phase de la barre filtre aussi le Reporting.", "Filtre « Type » réparé : études et réalisations sont de nouveau distinguées."]},
+    {"date": "06.10.2026", "objet": "revue", "version": "v0.17", "titre": "Périmètre à choix multiple, planning réglable", "points": ["Périmètre : plusieurs portefeuilles ou responsables de projet peuvent être cochés ensemble, comme dans la priorisation.", "Planning : une barre en tête résume la durée du périmètre affiché, du début le plus tôt à la fin la plus tardive ; elle reste visible, avec l'axe des années, quand la liste défile.", "Planning : hauteur de la liste au choix (normale, grande, toute la liste) et lignes normales ou serrées, pour voir davantage de sous-sites."]},
+    {"date": "06.10.2026", "objet": "revue", "version": "v0.16", "titre": "Fiche d'un projet ouverte par un lien", "points": ["Un lien venu de la carte de la priorisation ouvre directement la fiche du projet GE-Invest désigné. Si le projet n'est pas dans le classeur chargé, la Revue s'ouvre sur son sous-site."]},
+    {"date": "06.10.2026", "objet": "priorisation", "version": "v2.5", "titre": "Carte : projets et surfaces de relais au survol", "points": ["Au survol d'un repère de la carte : les projets GE-Invest du sous-site (numéro, nom, statut).", "Au même endroit : les commentaires des jalons de ces projets, lus dans la nouvelle colonne « Surfaces de relais (GEI) » de Plan_PTE. Ils serviront à indiquer le besoin de surfaces de relais pendant les travaux.", "Fonds de carte CARTO remis dans le menu ; Esri World Street reste le fond par défaut.", "Un clic sur un repère fige la fenêtre : lien vers le sous-site dans le Classement, et chaque projet ouvre sa fiche dans la Revue de projets."]},
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.4", "titre": "Classement en sous-onglets, une seule recherche", "points": ["Le Classement a quatre sous-onglets : Liste, Matrice urgence × faisabilité, Top 20, Distribution et état SIA. Plus de défilement pour atteindre les trois derniers.", "Une seule recherche, dans l'en-tête : une proposition ouvre la fiche du sous-site ; un texte libre validé par Entrée filtre le classement, et une étiquette « Filtre » permet de le retirer.", "Carte : fond Esri World Street par défaut ; les fonds CARTO, qui exigent désormais une clé, sont retirés."]},
+    {"date": "02.10.2026", "objet": "revue", "version": "v0.15", "titre": "Diagramme CPI / SPI, ligne de filtres figée", "points": ["Reporting : nouveau diagramme coût et planning (CPI / SPI), un point par projet, quatre quadrants comptés ; il suit le périmètre et les filtres. Les projets sans avancement global ne sont pas placés, et c'est dit.", "La ligne « Aller à » et les filtres reste visible sous l'en-tête ; le mot « Programme » disparaît.", "Retirés : la situation par statut au niveau Programme, le bloc « Chargement » de l'onglet Données, les boutons d'impression du Parc et du Portefeuille.", "« Recharger le classeur » ouvre directement le choix du fichier."]},
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.3", "titre": "En-tête sur trois lignes, onglets allégés", "points": ["Les filtres Périmètre, Montants et CO₂ ont leur ligne sous les onglets, séparée par un filet ; la recherche d'un sous-site les rejoint. L'onglet Méthode n'a plus de « ? ».", "Le texte explicatif de chaque onglet est replié dans « Comment lire cet onglet » et repris dans l'info-bulle de l'onglet.", "Le classement s'ouvre sur « Tous les objectifs » ; IDC sans projection : « --- » ; la carte ne signale plus que l'échec du fond.", "Correction : dans l'Arbitrage, changer l'objectif à faire reculer recalcule de nouveau le portefeuille."]},
+    {"date": "02.10.2026", "objet": "revue", "version": "v0.14", "titre": "Cartes repliables, en-tête sur trois lignes", "points": ["Chaque carte se replie par le chevron de son titre ; toutes sont dépliées par défaut et le repli est gardé dans ce navigateur.", "Périmètre, Mois de revue et Questions du mois ont leur ligne sous les onglets ; l'onglet Méthode n'a plus de « ? ».", "Le texte explicatif de chaque onglet passe dans son info-bulle."]},
+    {"date": "02.10.2026", "objet": "commun", "version": null, "titre": "Noms de portefeuille lisibles", "points": ["Dans les menus Périmètre, un nom écrit en capitales dans le classeur s'affiche en casse de nom propre ; le filtre compare toujours la valeur du classeur."]},
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.2", "titre": "En-tête commun, filtres toujours accessibles", "points": ["Les filtres Périmètre (ex-Portefeuille), Montants et CO₂ montent dans l'en-tête collant, à droite des onglets : ils restent accessibles partout.", "À droite du titre, comme dans la simulation : état des données, « Recharger le classeur », menu ☰.", "« Effacer les données de ce navigateur » devient une corbeille à côté de l'état des données.", "Mode présentation supprimé ; l'onglet Méthode est marqué « ? »."]},
+    {"date": "02.10.2026", "objet": "revue", "version": "v0.13", "titre": "En-tête commun, Méthode en onglet", "points": ["Même en-tête que la priorisation : état des données, « Recharger le classeur » et menu ☰ à droite du titre.", "Périmètre, Mois de revue et « Questions du mois » à droite des onglets, toujours accessibles.", "Le bouton « ? » devient l'onglet Méthode, le dernier, comme dans la priorisation.", "« Effacer les données de ce navigateur » devient une corbeille à côté de l'état des données."]},
+    {"date": "02.10.2026", "objet": "simulation", "version": "v3.4", "titre": "Corbeille à côté de l'état des données", "points": ["« Effacer les données de ce navigateur » quitte le menu ☰ : une corbeille à côté de l'état des données, texte au survol, comme dans les deux autres outils."]},
+    {"date": "02.10.2026", "objet": "priorisation", "version": "v2.1", "titre": "Facteurs non mesurables : cumul et franchissement recalculés", "points": ["Après un ajustement (imposé, priorisé, dépriorisé, exclu), le cumul, le % de l'écart et le rang de franchissement suivent l'ordre affiché ; un exclu ne compte plus dans le cumul.", "Toutes les lignes jusqu'au rang de franchissement sont surlignées, plus seulement la ligne de franchissement.", "Hors classement : le montant affiché est celui du menu Montants ; « — » s'il manque dans cette colonne."]},
+    {"date": "01.10.2026", "objet": "priorisation", "version": "v2.0", "titre": "Numérotation alignée sur les autres outils", "points": ["Le numéro de version prend la même forme que dans les autres outils : v2.0 et la date.", "Contenu identique à la version du 30.09 (v30.09.2026), mise en ligne le 01.10.", "Les versions précédentes gardent leur numéro daté dans cet historique."]},
+    {"date": "30.09.2026", "objet": "accueil", "version": "v1.6", "titre": "Situation du programme", "points": ["Au-dessus des trois outils : voté, engagé, dépensé et estimé, en MCHF, avec une phrase et leurs sources, recalculés à chaque dépôt du classeur.", "Voté : 1 250 MCHF, loi 13210 (1 000) et loi 12552, embrasures (250). Engagé et dépensé : GE-Invest. Estimé : somme de l'Estim PTE.", "Le contrôle à l'import se lit ici, une fois, sous l'en-tête.", "L'empreinte du classeur passe dans l'info-bulle de la barre du classeur."]},
+    {"date": "30.09.2026", "objet": "priorisation", "version": "v30.09.2026", "titre": "Revue du Cabinet : lecture plus directe", "points": ["La visite guidée ne s'ouvre plus d'office ; elle reste dans le menu ☰, relue et sans l'étape « Mode nuit ».", "Hors classement, chaque objectif trie et affiche sa propre grandeur : l'eau pour l'eau, l'électricité pour l'électricité, le CO₂ pour le CO₂, la chaleur sinon.", "Quand la cible 2030 est déjà atteinte au niveau du parc, la note le dit au lieu de « Cible non atteinte ».", "Textes revus : tuile Développement durable en une ligne, « huit engagements du programme », « Arbitrages », montants en MCHF, enveloppe de 1 250 MCHF sourcée (lois 13210 et 12552) ; les énoncés de la Méthode qui dépendaient du classeur sont calculés ou neutres."]},
+    {"date": "30.09.2026", "objet": "simulation", "version": "v3.3", "titre": "Écran d'ouverture allégé", "points": ["L'ouverture ne garde que « Quel site ? » : la couverture du classeur et les points à compléter passent dans « Comment ces chiffres sont calculés ».", "Textes de l'écran reformulés sans s'adresser à l'utilisateur."]},
+    {"date": "30.09.2026", "objet": "revue", "version": "v0.12", "titre": "Reporting plus court, planning par projet", "points": ["Montants en MCHF dans toute la revue ; sémaphores : la complétude du suivi d'abord, puis la répartition des projets renseignés, les projets gris restant à un clic.", "Un sommaire « Aller à » en tête du reporting ; le planning remonte après les sémaphores ; la situation par statut est repliée.", "Planning : un clic sur un sous-site affiche le planning de chacun de ses projets ; libellés alignés à gauche.", "Fiche projet : liens vers les autres projets du même sous-site et vers sa vue consolidée."]},
+    {"date": "30.09.2026", "objet": "commun", "version": null, "titre": "Contrôle à l'import discret, situation du programme", "points": ["Les outils n'affichent plus « rien d'anormal » : seulement une alerte, placée sous l'en-tête, jamais par-dessus.", "Sous-titre court dans les trois outils : « Pilotage PTE · OCBA ».", "Calcul commun de la situation du programme, repris par l'accueil."]},
+    {"date": "29.09.2026", "objet": "priorisation", "version": "v29.09.2026", "titre": "Gains d'eau estimés, liens rétablis, historique des versions", "points": ["Le classement Eau lit le gain estimé par l'audit eau : gain du site réparti entre ses sous-sites au prorata de la SRE.", "Le classement Eau se trie sur le volume économisé : les mesures d'eau n'ont pas de coût propre, le montant de rénovation ne les départage pas.", "Les liens vers l'accueil, la simulation et la revue sont de nouveau actifs.", "Un clic sur le numéro de version ouvre cet historique."]},
+    {"date": "29.09.2026", "objet": "simulation", "version": "v3.2", "titre": "Gain d'eau estimé affiché, historique des versions", "points": ["La fiche du site affiche le gain d'eau estimé par l'audit, à côté de l'eau mesurée : un repère pour les mesures « Eau ».", "L'export Excel reprend ce gain estimé.", "Un clic sur le numéro de version ouvre cet historique."]},
+    {"date": "29.09.2026", "objet": "revue", "version": "v0.11", "titre": "Gain d'eau estimé, historique des versions", "points": ["La ligne « Mesures » du sous-site affiche le gain d'eau estimé par l'audit.", "Pour l'objectif eau, le gain estimé prime sur le gain simulé.", "Un clic sur le numéro de version ouvre cet historique."]},
+    {"date": "29.09.2026", "objet": "accueil", "version": "v1.5", "titre": "Historique des versions", "points": ["Un clic sur le numéro de version ouvre l'historique de tous les outils et du classeur."]},
+    {"date": "29.09.2026", "objet": "commun", "version": null, "titre": "Gain d'eau estimé et historique partagés", "points": ["Le contrat de données lit la colonne « Gain Eau estimé [m3/an] » quand le classeur la contient ; sinon rien ne change.", "Électricité, eau et CO₂ sont lus dans la feuille « Consommation par site », à l'année des mesures, pour les trois outils.", "L'historique des versions est le même dans les quatre pages."]},
+    {"date": "25.09.2026", "objet": "priorisation", "version": "v25.09.2026", "titre": "Menu Montants revu et contrôle à l'import", "points": ["Menu Montants : Estim CECB+ par défaut, DG 3.31 ajouté, Invest ImmOBA retiré.", "À chaque import, l'outil signale ce qui a changé dans le classeur : colonnes, sous-sites, totaux du parc.", "L'outil ne lit plus que les feuilles dont il a besoin ; le résultat est inchangé.", "Le fichier local prend le nom de la version en ligne. Cette version n'est pas encore publiée."]},
+    {"date": "25.09.2026", "objet": "simulation", "version": null, "titre": "Mise en ligne de la v3.1, puis contrôle à l'import", "points": ["Version 3.1 mise en ligne le 25.09 à 7 h 11.", "À chaque import, l'outil signale ce qui a changé dans le classeur : colonnes, sous-sites, totaux du parc.", "L'outil ne lit plus que les feuilles dont il a besoin ; le résultat est inchangé.", "Ces deux améliorations ne sont pas encore publiées."]},
+    {"date": "25.09.2026", "objet": "revue", "version": null, "titre": "Colonnes renommées de nouveau lues, contrôle à l'import", "points": ["Correction : 4 colonnes renommées le 23.09 n'étaient plus lues (Estim CECB+, gains élec et eau simulés, surface végétalisée).", "La surface végétalisée est de nouveau lue : 39 sous-sites au lieu de 0.", "À chaque import, l'outil signale ce qui a changé dans le classeur : colonnes, sous-sites, totaux du parc.", "Pas encore publiée."]},
+    {"date": "25.09.2026", "objet": "commun", "version": null, "titre": "Contrôle à l'import, commun aux 3 outils", "points": ["Chaque import est comparé à l'import de référence : colonnes introuvables, sous-sites apparus ou disparus, totaux du parc à ±10 %.", "Un bandeau n'apparaît que si le classeur a changé.", "« C'est normal, retenir ce classeur » fait du nouvel import la référence."]},
+    {"date": "24.09.2026", "objet": "accueil", "version": "v1.4", "titre": "Accueil unifié", "points": ["Les trois cartes calculent leur lien au chargement : le même fichier fonctionne en local et en ligne.", "Fin des deux numéros pour un même contenu (v1.2 en local, v1.3 en ligne).", "Mise en ligne le 24.09 à 19 h 02."]},
+    {"date": "24.09.2026", "objet": "priorisation", "version": "v24.09.2026", "titre": "Lecture de GE-Invest en 4 feuilles", "points": ["Lit les nouvelles feuilles GE-Invest ; les anciens classeurs restent lisibles.", "Mêmes données pour les 582 sous-sites ; import en 5,0 s au lieu de 18,2 s.", "Mise en ligne le 24.09 à 19 h 02."]},
+    {"date": "24.09.2026", "objet": "simulation", "version": "v3.1", "titre": "Report vers les colonnes « simulé »", "points": ["Les 8 résultats se reportent dans les colonnes « simulé » de Plan_PTE.", "L'IDC projeté et le coût du kWh économisé ont leurs propres colonnes : aucune colonne calculée n'est plus écrasée.", "Lit les nouvelles feuilles GE-Invest ; import en 3,7 s au lieu de 11,0 s.", "Mise en ligne le 25.09 à 7 h 11."]},
+    {"date": "24.09.2026", "objet": "revue", "version": "v0.10", "titre": "Lecture de GE-Invest en 4 feuilles", "points": ["Lit les 4 nouvelles feuilles GE-Invest ; projets, jalons, risques, livrables et finances identiques.", "Lecture du classeur en 3,1 s au lieu de 20,4 s.", "Corrections du 23.09 reportées dans les sources : elles ne disparaîtront plus à la reconstruction.", "Mise en ligne le 24.09 à 19 h 02."]},
+    {"date": "24.09.2026", "objet": "commun", "version": null, "titre": "Modules communs à source unique", "points": ["Les modules communs ont une seule source, copiée à l'identique dans les quatre pages.", "Le contrat de données lit les nouvelles feuilles GE-Invest, avec repli sur l'ancienne feuille GEI_Suivi."]},
+    {"date": "23.09.2026", "objet": "priorisation", "version": null, "titre": "Libellé Estim CECB+", "points": ["Le menu Montants suit le nouveau nom Estim CECB+ ; l'ancien nom reste reconnu.", "Mise en ligne le 23.09."]},
+    {"date": "23.09.2026", "objet": "commun", "version": null, "titre": "Effacement du classeur commun clarifié", "points": ["« Effacer les données » pose une seconde question qui nomme le fichier et prévient que les trois outils le perdront.", "Une fois effacé, le classeur ne revient plus au rechargement.", "Mise en ligne le 23.09."]},
+    {"date": "22.09.2026", "objet": "priorisation", "version": null, "titre": "Liens sortants masqués", "points": ["Les quatre liens vers Pilotage PTE, la simulation et la revue sont masqués, à la demande d'Achim.", "Modification faite dans la version en ligne."]},
+    {"date": "21.09.2026", "objet": "accueil", "version": "v1.3", "titre": "Copie en ligne aux liens réécrits", "points": ["Version en ligne dont les liens ont été adaptés à la main au site publié.", "Non reportée en local, resté en v1.2 : écart résolu par la v1.4."]},
+    {"date": "20.09.2026", "objet": "accueil", "version": "v1.2", "titre": "Version locale", "points": ["Version tenue en local ; le détail des changements n'est pas consigné."]},
+    {"date": "19.09.2026", "objet": "commun", "version": null, "titre": "Contrat de données commun", "points": ["La simulation et la revue lisent les colonnes du classeur avec les mêmes règles.", "Une colonne est trouvée par son nom, jamais par sa position."]},
+    {"date": "17.09.2026", "objet": "accueil", "version": "v1.1", "titre": "Nouvelle version et première mise en ligne", "points": ["Le détail des changements de cette version n'est pas consigné.", "Le même jour, première mise en ligne de l'accueil, de la priorisation et de la revue."]},
+    {"date": "17.09.2026", "objet": "priorisation", "version": null, "titre": "Première mise en ligne", "points": ["Outil mis en ligne pour la première fois, avec l'accueil et la revue."]},
+    {"date": "16.09.2026", "objet": "accueil", "version": "v1.0", "titre": "Page d'accueil Pilotage PTE", "points": ["Première version de la page d'accueil « Pilotage PTE »."]},
+    {"date": "16.09.2026", "objet": "revue", "version": "v0.7", "titre": "Plan_PTE, seul fichier d'entrée", "points": ["Le classeur Plan_PTE devient le seul fichier d'entrée ; les anciens CSV ne sont plus acceptés.", "Restent acceptés en complément : le registre des décisions et l'export de la priorisation.", "Objectifs 2030 lus dans la feuille Objectifs PTE quand elle existe ; jamais de valeur par défaut.", "Mise en ligne le 17.09."]},
+    {"date": "16.09.2026", "objet": "revue", "version": "v0.6", "titre": "Chaîne financière et classeur Plan_PTE", "points": ["Le classeur Plan_PTE devient le fichier d'import de référence ; les anciens CSV restent acceptés en transition.", "Chaîne financière Estim PTE → DG → crédit GE-Invest, avec une carte « Cohérence financière ».", "Rappel du nom de projet recommandé quand le n° de sous-site manque dans le nom."]},
+    {"date": "15.09.2026", "objet": "revue", "version": "v0.5", "titre": "Reporting par sous-site et Gantt des jalons", "points": ["Tableaux organisés par sous-site, dépliables vers les projets ; badge si un sous-site porte plusieurs projets.", "Gantt des jalons prévisionnels, par sous-site et par projet."]},
+    {"date": "15.09.2026", "objet": "revue", "version": "v0.4", "titre": "Extraction GE-Invest unique et vue Reporting", "points": ["Une seule extraction GE-Invest « tous champs » remplace 5 fichiers CSV.", "Nouvelle vue Reporting à trois niveaux : programme, portefeuille, projet."]},
+    {"date": "13.09.2026", "objet": "revue", "version": "v0.3", "titre": "Lien avec la priorisation PTE", "points": ["Chaque projet affiche son rang dans la priorisation PTE, grâce à l'export CSV de la priorisation.", "Cartes « Priorisation PTE » sur la fiche projet et « Alignement » sur le portefeuille.", "Contrastes renforcés ; la couleur n'est jamais le seul repère."]},
+    {"date": "12.09.2026", "objet": "revue", "version": "v0.2", "titre": "Refonte visuelle", "points": ["Tableau de bord en ouverture ; import, complétude et paramètres regroupés dans Données.", "Filtre RPF/RP commun à toutes les vues ; graphiques et info-bulles au lieu de tableaux."]},
+    {"date": "12.09.2026", "objet": "revue", "version": "v0.1.1", "titre": "Corrections", "points": ["Impact de risque « Assez faible » : l'indicateur ne passe plus à tort en gris.", "Trajectoire 2030 : l'écart à combler est exprimé en valeur absolue."]},
+    {"date": "03.09.2026", "objet": "trombinoscope", "version": "v2.2", "titre": "Organigramme du 01.09.2026", "points": ["Huit changements repris de l'organigramme de septembre : arrivée de Marisa Sava, départ d'Olivier Favot (Secteur 3 sans chef), deux postes vacants pourvus, deux nouveaux postes vacants.", "Seul le JSON a été corrigé à cette date ; l'outil et le CSV ont été régénérés le 12.10."]},
+    {"date": "24.08.2026", "objet": "trombinoscope", "version": "v2.1", "titre": "Quiz « Mémoriser » fiable", "points": ["Les quatre noms proposés sont du même sexe que la personne recherchée (nouvelle colonne « sexe » du CSV).", "Les fiches sans photo et celles portant la silhouette générique du PDF sont exclues du tirage ; la fenêtre Effectifs en donne la liste, pour réclamer les photos manquantes."]},
+    {"date": "24.08.2026", "objet": "trombinoscope", "version": "v2.0", "titre": "Organigramme fusionné, copie publique", "points": ["L'organigramme du 17.08.2026 est fusionné au trombinoscope : 108 unités avec leur code CR/UO, leur responsable et leur hiérarchie complète, portée par la colonne « hierarchie » du CSV.", "Quatrième vue : organigramme dépliable. Photos agrandies, étiquettes de notes éditables par l'utilisateur, champs téléphone et courriel, mode « Mémoriser ».", "Deux copies : l'outil complet pour l'intranet, et une copie vierge sans aucune donnée nominative, publiable en accès libre."]},
+    {"date": "24.08.2026", "objet": "trombinoscope", "version": "v1.0", "titre": "Première version", "points": ["284 fiches et 270 photos extraites du PDF « Trombi OCBA août 2026 » par lecture positionnelle.", "Refonte à la charte OCBA / DPTE : recherche, filtres, trois vues, fiches, effectifs, impression.", "Notes personnelles : texte libre et étiquettes, enregistrées dans le navigateur du poste, jamais transmises, conservées lors des mises à jour."]},
+    {"date": "22.08.2026", "objet": "priorisation", "version": null, "titre": "Outil de priorisation en page unique", "points": ["Six onglets : tableau de bord, classement, arbitrage, coût d'abattement, carte, méthode.", "Références 2005 et cibles lues dans l'onglet Objectifs PTE : plus aucune cible écrite dans l'outil.", "Séries de consommation douteuses détectées et écartées ; paramètres réglables (durée de vie, productible PV)."]},
+    {"date": "18.08.2026", "objet": "simulation", "version": null, "titre": "Première mise en ligne", "points": ["Publication sur le site des outils OCBA (GitHub Pages)."]},
+    {"date": "17.08.2026", "objet": "simulation", "version": null, "titre": "Création de l'outil de simulation des gains", "points": ["Remplace la Matrice Excel : une fiche par bâtiment, une carte par mesure, variantes I, II et III comparées.", "Lecture de Plan_PTE par nom de colonne ; export Excel et impression."]},
+    {"date": "11.08.2026", "objet": "priorisation", "version": null, "titre": "Méthode bâtiment par bâtiment (CECB+)", "points": ["Classements par objectif : CO₂, thermique, renouvelable, électricité, eau et photovoltaïque.", "Coût de chaque bâtiment lu dans Estim PTE ; l'ancienne méthode par familles est abandonnée."]}
+  ];
+  var OBJETS_VER = { accueil: 'Accueil', priorisation: 'Priorisation', simulation: 'Simulation',
+                     revue: 'Revue de projets', trombinoscope: 'Trombinoscope', commun: 'Commun aux outils' };
+  /* Entrées d'un outil (et celles qui le concernent toutes : « commun ») ; tout si tous = true. */
+  function versionsDe(outil, tous) {
+    return VERSIONS.filter(function (v) {
+      return tous || !outil || outil === 'accueil' || v.objet === outil || v.objet === 'commun';
+    });
+  }
+  function echapperV(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function afficherVersions(outil) {
+    if (typeof document === 'undefined' || !document.body || !document.createElement) return null;
+    var ancien = document.getElementById('pte-versions');
+    if (ancien && ancien.parentNode) ancien.parentNode.removeChild(ancien);
+    var nuit = !!(document.body.classList && document.body.classList.contains && document.body.classList.contains('night'));
+    var c = nuit ? { fond: '#1b2631', encre: '#e6edf3', doux: '#9fb0c0', trait: '#34495e', acc: '#30E5D9', puce: '#26394a' }
+                 : { fond: '#ffffff', encre: '#1f2d3d', doux: '#5b6b7b', trait: '#dfe6ec', acc: '#005F73', puce: '#e9f1f4' };
+    var tous = !outil || outil === 'accueil' || !OBJETS_VER[outil];
+    var voile = document.createElement('div');
+    voile.id = 'pte-versions';
+    voile.style.cssText = 'position:fixed;left:0;top:0;right:0;bottom:0;z-index:10000;background:rgba(15,23,32,.55);' +
+      'display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box';
+    var boite = document.createElement('div');
+    boite.setAttribute('role', 'dialog'); boite.setAttribute('aria-modal', 'true');
+    boite.setAttribute('aria-labelledby', 'pte-versions-titre');
+    boite.style.cssText = 'background:' + c.fond + ';color:' + c.encre + ';width:100%;max-width:760px;max-height:86vh;display:flex;' +
+      'flex-direction:column;border-radius:10px;box-shadow:0 14px 44px rgba(0,0,0,.35);font:14px/1.45 Arial,Helvetica,sans-serif;text-align:left';
+    var bouton = function (lib, actif) {
+      return '<button type="button" data-v="' + lib + '" style="font:inherit;font-size:12.5px;padding:3px 10px;border-radius:14px;cursor:pointer;' +
+        'border:1px solid ' + c.acc + ';background:' + (actif ? c.acc : 'transparent') + ';color:' + (actif ? c.fond : c.acc) + '">' +
+        (lib === 'outil' ? 'Cet outil' : 'Tous les outils') + '</button>';
+    };
+    boite.innerHTML =
+      '<div style="display:flex;align-items:center;gap:10px;padding:14px 18px 10px;border-bottom:1px solid ' + c.trait + '">' +
+        '<h2 id="pte-versions-titre" style="margin:0;font-size:17px;flex:1;color:' + c.encre + '">Historique des versions' +
+          (tous ? '' : ' — ' + echapperV(OBJETS_VER[outil])) + '</h2>' +
+        '<button type="button" data-fermer="1" aria-label="Fermer" title="Fermer (Échap)" style="font:inherit;font-size:20px;line-height:1;' +
+          'background:transparent;border:0;color:' + c.doux + ';cursor:pointer;padding:2px 6px">×</button></div>' +
+      '<div data-filtres="1" style="display:' + (outil && outil !== 'accueil' && OBJETS_VER[outil] ? 'flex' : 'none') + ';gap:8px;padding:10px 18px 0"></div>' +
+      '<div data-liste="1" style="overflow:auto;padding:4px 18px 8px"></div>' +
+      '<div style="padding:10px 18px 14px;border-top:1px solid ' + c.trait + ';font-size:12px;color:' + c.doux + '">' +
+        'Les plus récentes en haut. Détail complet : <code>Versioning_PTE.md</code> (dossier 00_Contexte du projet). ' +
+        'Les évolutions du classeur <code>Plan_PTE.xlsx</code> sont dans sa feuille « Versions ».</div>';
+    voile.appendChild(boite);
+    var liste = boite.querySelector('[data-liste]'), filtres = boite.querySelector('[data-filtres]');
+    function rendre() {
+      filtres.innerHTML = bouton('outil', !tous) + bouton('tous', tous);
+      var L = versionsDe(outil, tous);
+      liste.innerHTML = L.length ? L.map(function (v) {
+        return '<div style="padding:10px 0;border-bottom:1px solid ' + c.trait + '">' +
+          '<div style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap">' +
+            '<span style="color:' + c.doux + ';font-size:12.5px;min-width:74px">' + echapperV(v.date) + '</span>' +
+            '<span style="background:' + c.puce + ';border-radius:10px;padding:1px 8px;font-size:12px;white-space:nowrap">' +
+              echapperV(OBJETS_VER[v.objet] || v.objet) + (v.version ? ' · <b>' + echapperV(v.version) + '</b>' : '') + '</span>' +
+            '<b>' + echapperV(v.titre) + '</b></div>' +
+          '<ul style="margin:5px 0 0;padding:0 0 0 20px">' + (v.points || []).map(function (p) {
+            return '<li style="margin:2px 0">' + echapperV(p) + '</li>';
+          }).join('') + '</ul></div>';
+      }).join('') : '<p style="color:' + c.doux + '">Aucune entrée.</p>';
+    }
+    function fermer() {
+      document.removeEventListener('keydown', clavier, true);
+      if (voile.parentNode) voile.parentNode.removeChild(voile);
+    }
+    function clavier(e) { if (e.key === 'Escape' || e.key === 'Esc') { e.stopPropagation(); fermer(); } }
+    voile.addEventListener('click', function (e) {
+      var t = e.target;
+      if (t === voile || (t.getAttribute && t.getAttribute('data-fermer'))) { fermer(); return; }
+      var v = t.getAttribute && t.getAttribute('data-v');
+      if (v) { tous = v === 'tous'; rendre(); }
+    });
+    document.addEventListener('keydown', clavier, true);
+    rendre();
+    document.body.appendChild(voile);
+    try { boite.querySelector('[data-fermer]').focus(); } catch (e) {}
+    return voile;
+  }
+  /* Délégation : un seul écouteur pour toute la page. */
+  if (typeof document !== 'undefined' && document.addEventListener) {
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      while (t && t !== document) {
+        if (t.getAttribute && t.getAttribute('data-pte-versions') != null) {
+          e.preventDefault();
+          afficherVersions(t.getAttribute('data-pte-versions'));
+          return;
+        }
+        t = t.parentNode;
+      }
+    });
+  }
+
+})();
 
 /* ---------- DÉMARRAGE ---------- */
 chargerNotes();majFiltres();compter();rendre();
