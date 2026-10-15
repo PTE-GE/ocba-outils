@@ -984,11 +984,276 @@ body.no-data .hdr-row2{display:none !important}
 .fiche-liens a.btn{text-decoration:none;font-weight:normal;font-size:12px;padding:4px 11px}
 .fiche-mes{display:flex;gap:12px;font-size:.73rem;margin-bottom:8px;flex-wrap:wrap}
 .fiche-mes .src{font-size:.63rem;color:var(--ink3)}
+/* fiche du sous-site, structurée en blocs (14.10.2026) */
+.fiche-head .fh-t{display:flex;flex-direction:column;gap:2px}
+.fiche-head .fh-t h4{font-size:1.02rem}
+.fiche-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;margin:4px 0 10px}
+.fiche-card h5{margin:0 0 6px;font-size:.7rem;font-weight:600;color:var(--ink3);letter-spacing:.02em}
+.fiche-grid .fs{background:var(--soft);border-radius:10px;padding:10px 12px}
+.fk{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:4px 0;font-size:.76rem;border-top:1px solid var(--line)}
+.fs h5 + .fk{border-top:0}
+.fk-l{color:var(--ink2);flex:0 1 auto}
+.fk-v{text-align:right;color:var(--ink);font-variant-numeric:tabular-nums;display:flex;flex-direction:column;align-items:flex-end}
+.fk-s{font-size:.63rem;color:var(--ink3);font-weight:400;margin-top:1px}
+.fk-v .src{font-size:.63rem;color:var(--ink3)}
+.fiche-al{background:var(--bg-err);color:var(--fg-err);border-radius:10px;padding:9px 12px;margin-bottom:10px;font-size:.74rem}
+.fiche-al h5{color:var(--fg-err)}
+.fiche-al ul{margin:0;padding-left:18px}
+.fiche-al li{margin:2px 0}
+.fiche-act{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:10px}
+.fiche-act .q-box{margin-bottom:0;background:var(--soft);border:0;border-radius:10px}
+.fiche-act .q-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.fiche-act .q-row select{flex:1 1 190px;min-width:0;padding:5px 8px;border:1px solid var(--line);border-radius:6px;font-size:.76rem;max-width:100%}
+.fiche-act .q-row input{flex:2 1 200px;min-width:0;padding:5px 8px;border:1px solid var(--line);border-radius:6px;font-size:.76rem}
+.fiche-notes{background:var(--soft);border-radius:10px;padding:9px 11px;display:flex;flex-direction:column}
+.fiche-notes textarea{width:100%;flex:1;min-height:70px;border:1px solid var(--line);border-radius:6px;padding:6px;font-size:.76rem;resize:vertical;box-sizing:border-box}
 .autre-lecture{font-size:.7rem;color:var(--teal);cursor:pointer;text-decoration:underline dotted}
 tr.row-expanded td{box-shadow:inset 3px 0 0 var(--teal)}
 body.night .fiche-card{background:var(--card-bg)}
 
 </style>
+<!-- PTE-EPURE:tete — module commun 00_Design-System/pte-epure.css, recopié par build/integrer-epure.py -->
+<script>/* présentation épurée par défaut ; « classique » si elle a été choisie sur ce poste (pied de page). Posée avant le premier rendu : pas d'éclair. */
+(function(){var c=null;try{c=localStorage.getItem('pte.presentation.v1')}catch(e){}if(c!=='classique')document.documentElement.classList.add('epure')})();</script>
+<style id="pte-epure-css">
+/* ==========================================================================
+   PTE — présentation épurée (proposée le 13.10.2026 par Victor, Théo, Pauline
+   et Hélène ; présentation par défaut depuis le 14.10.2026, décision d'Achim)
+   Module commun, recopié tel quel dans les quatre pages par
+   00_Design-System/build/integrer-epure.py. Aucun calcul, aucune fonction ni
+   aucun contenu retiré : elle ne change que la manière de montrer.
+     1. Calme : fond gris clair, cartes blanches sans bordure, une seule couleur
+        d'accent (le teal OCBA) ; la couleur reste réservée aux états.
+     2. Typographie système (SF sur Mac, Segoe sur le poste de l'État), pas de
+        capitales, titres en casse de phrase, chiffres alignés.
+     3. Le texte d'explication passe derrière un « i » : il reste entier, il
+        attend qu'on le demande.
+     4. Mode nuit (14.10.2026) : les mêmes règles, d'autres valeurs de jetons ;
+        les jetons des pages classiques sont alignés dessus, pour que cartes,
+        graphiques et tableaux parlent la même langue.
+   Toutes les règles sont préfixées par html.epure : la présentation classique
+   n'est jamais touchée.
+   ========================================================================== */
+
+html.epure{
+  --ep-bg:#F5F5F7; --ep-card:#FFFFFF; --ep-ctl:#FFFFFF; --ep-ctl-hover:#FAFAFC; --ep-row-hover:#F7F9FA;
+  --ep-seg-on:#FFFFFF; --ep-seg-hover:rgba(255,255,255,.55); --ep-seg-shadow:0 1px 3px rgba(0,0,0,.12),0 0 0 .5px rgba(0,0,0,.04);
+  --ep-glass:rgba(255,255,255,.78); --ep-glass2:rgba(245,245,247,.86); --ep-pop:rgba(255,255,255,.96);
+  --ep-ink:#1D1D1F; --ep-ink2:#6E6E73; --ep-ink3:#86868B;
+  --ep-line:rgba(0,0,0,.08); --ep-fill:rgba(118,118,128,.12); --ep-drop:rgba(0,0,0,.14);
+  --ep-accent:#005F73; --ep-accent-bg:#005F73; --ep-on-accent:#FFFFFF; --ep-accent-soft:rgba(0,95,115,.08); --ep-focus:rgba(0,95,115,.35);
+  --ep-warn-bg:#FFF8E6; --ep-warn-fg:#7A5200; --ep-info-fg:#00495A;
+  --ep-err:#B3261E; --ep-ok:#1A8554; --ep-mid:#B58900;
+  --ep-r:16px; --ep-shadow:0 1px 1px rgba(0,0,0,.03),0 6px 22px rgba(0,0,0,.05);
+  --ep-shadow-hover:0 2px 4px rgba(0,0,0,.04),0 12px 32px rgba(0,0,0,.08);
+  --ep-shadow-pop:0 0 0 .5px rgba(0,0,0,.08),0 12px 40px rgba(0,0,0,.16);
+  --ep-font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable","Segoe UI","Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}
+/* ---------- mode nuit : gris profonds d'Apple, teal éclairci pour le texte ---------- */
+html.epure body.night{
+  --ep-bg:#111113; --ep-card:#1C1C1E; --ep-ctl:#2C2C2E; --ep-ctl-hover:#3A3A3C; --ep-row-hover:rgba(255,255,255,.04);
+  --ep-seg-on:#5A5A5F; --ep-seg-hover:rgba(255,255,255,.08); --ep-seg-shadow:0 1px 3px rgba(0,0,0,.5);
+  --ep-glass:rgba(28,28,30,.74); --ep-glass2:rgba(17,17,19,.84); --ep-pop:rgba(44,44,46,.97);
+  --ep-ink:#F5F5F7; --ep-ink2:#AEAEB2; --ep-ink3:#8E8E93;
+  --ep-line:rgba(255,255,255,.10); --ep-fill:rgba(118,118,128,.24); --ep-drop:rgba(255,255,255,.22);
+  --ep-accent:#5CC6D4; --ep-accent-bg:#0E7C8C; --ep-on-accent:#FFFFFF; --ep-accent-soft:rgba(92,198,212,.14); --ep-focus:rgba(92,198,212,.45);
+  --ep-warn-bg:rgba(255,196,0,.12); --ep-warn-fg:#F5C451; --ep-info-fg:#8ED6E0;
+  --ep-err:#FF6961; --ep-ok:#30D158; --ep-mid:#FFD60A;
+  --ep-shadow:0 0 0 .5px rgba(255,255,255,.06);
+  --ep-shadow-hover:0 0 0 .5px rgba(255,255,255,.12),0 10px 30px rgba(0,0,0,.5);
+  --ep-shadow-pop:0 0 0 .5px rgba(255,255,255,.12),0 16px 44px rgba(0,0,0,.6);
+  /* jetons des pages classiques, alignés sur ceux de la présentation épurée */
+  --page-bg:#111113; --bg:#111113; --card-bg:#1C1C1E; --card:#1C1C1E; --soft:#2C2C2E;
+  --border:rgba(255,255,255,.10); --line:rgba(255,255,255,.12);
+  --ink:#F5F5F7; --ink-70:#AEAEB2; --ink2:#AEAEB2; --ink-muted:#8E8E93; --ink3:#8E8E93; --pri:#F5F5F7;
+  --tint-gris:#2C2C2E; --tint-gris-strong:#3A3A3C; --surf-dark:#2C2C2E; --on-surf-dark:#F5F5F7;
+  /* couleurs d'état de nuit des outils, posées aussi sur l'accueil qui n'en avait pas */
+  --teal:#3FB6C6; --green:#3DBF84; --ochre:#D8AE3A; --ochre-text:#E8CB72; --red:#D25B4E; --gray:#9AA3AB; --blue-pale:#232326;
+  --tint-vert:#17301F; --tint-vert-strong:#1F4A2E; --tint-orange:#332C16; --tint-orange-strong:#4A4020;
+  --tint-rouge:#3A2220; --tint-rouge-strong:#55302C;
+  --bg-err:#3A2220; --bg-warn:#332C16; --bg-ok:#17301F; --bg-info:#16262F;
+  --fg-err:#F0A69C; --fg-warn:#E8CB72; --fg-ok:#7FD9A9; --fg-info:#9DC9E8;
+  color-scheme:dark;
+}
+html.epure body{background:var(--ep-bg)!important;color:var(--ep-ink);font-family:var(--ep-font)!important;letter-spacing:-.005em}
+html.epure body::before,html.epure body::after{background:none!important;height:0!important;border:0!important}
+html.epure body *{text-transform:none!important}
+html.epure .band{height:2px!important;opacity:.85}
+html.epure .ep-sr{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important}
+html.epure .ep-titre{font-size:28px;font-weight:700;letter-spacing:-.025em;color:var(--ep-ink);margin:18px 0 14px;display:flex;align-items:center}
+html.epure .ep-sec + .ep-sec{margin-top:14px;padding-top:14px;border-top:1px solid var(--ep-line)}
+html.epure .ep-pop-s{font-weight:600;font-size:13px;margin:0 0 4px;color:var(--ep-ink)}
+html.epure .ep-cmds{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+html.epure .ep-cmds select{min-width:240px}
+html.epure .ep-grp::after{content:'';display:inline-block;width:5px;height:5px;margin-left:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px)}
+html.epure #pte-controle-import{font-family:var(--ep-font)!important;border-left:0!important;border-radius:14px!important;box-shadow:var(--ep-shadow);max-width:1100px!important}
+html.epure .filter-item select{border-radius:980px!important;padding:5px 30px 5px 13px!important;width:auto!important;min-width:0!important;font-size:13px!important;background-color:var(--ep-ctl);color:var(--ep-ink)}
+html.epure .filter-item{gap:0!important}
+html.epure .filter-search input{border-radius:980px!important;padding:5px 13px!important;background:var(--ep-fill)!important;border:0!important;color:var(--ep-ink)}
+html.epure .num,html.epure td,html.epure .kpi-value,html.epure .perim-v,html.epure .situ-k .n{font-variant-numeric:tabular-nums}
+
+/* ---------- en-tête : verre dépoli, titre net, onglets en contrôle segmenté ---------- */
+html.epure header.hdr,html.epure .hdr{background:var(--ep-glass)!important;-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--ep-line)!important;box-shadow:none!important}
+html.epure .hdr h1{font-size:21px;font-weight:600;letter-spacing:-.02em;color:var(--ep-ink)}
+html.epure .hdr .sub{font-size:12px;color:var(--ep-ink3)}
+html.epure .hdr .sub a{border-bottom:0;color:var(--ep-ink3)}
+html.epure .hdr .sub a:hover{color:var(--ep-accent)}
+html.epure .tabs{gap:0!important}
+html.epure .hdr .tabs,html.epure .hdr-row2 .tabs,html.epure nav.tabs{display:inline-flex!important;flex:0 0 auto!important;width:auto!important;max-width:100%;
+  background:var(--ep-fill);border-radius:10px;padding:2px!important;margin:6px 0 4px!important}
+html.epure .tab{border:0!important;border-radius:8px!important;background:transparent!important;color:var(--ep-ink)!important;font-weight:500!important;
+  font-size:13px!important;padding:5px 16px!important;box-shadow:none!important;transition:background .15s}
+html.epure .tab:hover{background:var(--ep-seg-hover)!important}
+html.epure .tab.on,html.epure .tab[aria-current="true"]{background:var(--ep-seg-on)!important;color:var(--ep-ink)!important;font-weight:600!important;
+  box-shadow:var(--ep-seg-shadow)!important}
+html.epure .hdr-ctx{border-top:0!important;padding-top:2px!important;margin-top:0!important;gap:4px 18px!important;color:var(--ep-ink2)}
+html.epure .hdr-ctx .cx-l{color:var(--ep-ink3)!important;font-size:12px!important}
+html.epure .hdr-ctx .cx-txt,html.epure .pm-txt,html.epure .hdr-ctx select.cx-in{color:var(--ep-ink)!important;font-weight:500!important}
+html.epure .badge{font-weight:500!important;font-size:12px!important;background:transparent!important;border:1px solid var(--ep-line)!important;color:var(--ep-ink2)!important}
+html.epure .badge::before,html.epure .badge .dot{transform:scale(.9)}
+
+/* ---------- boutons : capsules sobres, une seule action pleine par écran ---------- */
+html.epure .btn,html.epure .bt{border-radius:980px!important;font-weight:500!important;border:1px solid var(--ep-line)!important;background:var(--ep-ctl)!important;color:var(--ep-ink)!important;box-shadow:none!important}
+html.epure .btn:hover,html.epure .bt:hover{background:var(--ep-ctl-hover)!important}
+html.epure .btn-p,html.epure .bt-p,html.epure .pm-ok{background:var(--ep-accent-bg)!important;border-color:var(--ep-accent-bg)!important;color:var(--ep-on-accent)!important}
+html.epure .btn-danger{color:var(--ep-err)!important}
+
+/* ---------- cartes : blanches (gris profond la nuit), sans bordure, rayon généreux ---------- */
+html.epure .card,html.epure .cd,html.epure .bloc,html.epure .situ,html.epure a.card,html.epure .srcbar-in{background:var(--ep-card)!important;border:0!important;
+  border-radius:var(--ep-r)!important;box-shadow:var(--ep-shadow)!important;color:var(--ep-ink)}
+html.epure .card,html.epure .cd{padding:22px 24px!important;margin-bottom:20px!important}
+html.epure a.card{border-top:0!important}
+html.epure a.card:hover{box-shadow:var(--ep-shadow-hover)!important;transform:translateY(-1px)}
+
+/* ---------- titres : casse de phrase, plus grands, plus calmes ---------- */
+html.epure .card-title,html.epure .sec-h,html.epure .situ-h h2,html.epure .perim-lbl,html.epure .perim-sia-t,html.epure .kpi-label,html.epure .kpi .l,
+html.epure .card h2,html.epure .cd h3,html.epure .tr-h,html.epure th,html.epure .qtable th,html.epure label.cx-l,html.epure .filter-item label,html.epure .situ-k .l,
+html.epure .rep-toprow label{text-transform:none!important;letter-spacing:-.005em!important}
+html.epure .card-title{font-size:17px!important;font-weight:600!important;color:var(--ep-ink)!important}
+html.epure .sec-h{font-size:22px!important;font-weight:600!important;color:var(--ep-ink)!important;margin:30px 0 14px!important}
+html.epure .cd h3{font-size:16px;font-weight:600}
+html.epure .perim-lbl,html.epure .kpi-label,html.epure .situ-k .l,html.epure .perim-sia-t{font-size:13px!important;font-weight:500!important;color:var(--ep-ink2)!important}
+html.epure .kpi-value,html.epure .perim-v,html.epure .situ-k .n{font-weight:600!important;letter-spacing:-.02em;color:var(--ep-ink)!important}
+html.epure .kpi{border:0!important;border-radius:var(--ep-r)!important;box-shadow:var(--ep-shadow)!important;background:var(--ep-card)!important}
+html.epure .kpi.state-rouge,html.epure .kpi.state-vert{border-left:0!important}
+html.epure .kpi.state-rouge .kpi-value{color:var(--ep-err)!important}
+
+/* ---------- tableaux : en-tête clair, filets fins, pas de bandeau coloré ---------- */
+html.epure table th,html.epure .tblx th,html.epure #objBody table th,html.epure .qtable th,html.epure th{background:var(--ep-card)!important;color:var(--ep-ink2)!important;
+  font-size:12px!important;font-weight:600!important;border-bottom:1px solid var(--ep-line)!important;height:auto}
+html.epure th:hover,html.epure .tblx th:hover{background:var(--ep-ctl-hover)!important;color:var(--ep-ink)!important}
+html.epure td{border-color:var(--ep-line)!important}
+html.epure tbody tr:nth-child(even) td{background:transparent}
+html.epure tbody tr:hover td{background:var(--ep-row-hover)}
+
+/* ---------- formulaires ---------- */
+html.epure select,html.epure input[type=text],html.epure input[type=search],html.epure input[type=url],html.epure input:not([type]),html.epure .f-bt,html.epure textarea{
+  border-radius:9px!important;border:1px solid var(--ep-line)!important;background-color:var(--ep-ctl);color:var(--ep-ink);font-family:inherit}
+html.epure input::placeholder,html.epure textarea::placeholder{color:var(--ep-ink3)}
+html.epure .gsearch input,html.epure #gq{background:var(--ep-fill)!important;border:0!important;border-radius:9px!important;color:var(--ep-ink)!important}
+
+/* ---------- textes : la phrase principale reste, le reste attend derrière un i ---------- */
+html.epure .ep-iw{display:inline-flex;vertical-align:middle;margin-left:8px;position:relative}
+html.epure .ep-i{width:20px;height:20px;border-radius:50%;border:1.5px solid currentColor;background:transparent;color:var(--ep-ink3);
+  font:italic 600 12px/1 Georgia,"Times New Roman",serif;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex:none;
+  transition:color .15s,background .15s}
+html.epure .ep-i:hover,html.epure .ep-i[aria-expanded="true"]{color:var(--ep-on-accent);background:var(--ep-accent-bg);border-color:var(--ep-accent-bg)}
+html.epure .ep-i:focus-visible{outline:3px solid var(--ep-focus);outline-offset:2px}
+html.epure .ep-garde{display:none!important}
+html.epure .ep-place{display:none!important}
+html.epure .ep-ligne{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin:-4px 0 6px;color:var(--ep-ink3);font-size:12px}
+html.epure .ep-ligne .ep-iw{margin-left:0}
+html.epure .ep-pop{position:fixed;z-index:4000;width:min(440px,calc(100vw - 32px));max-height:min(60vh,520px);overflow:auto;
+  background:var(--ep-pop);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+  border-radius:14px;box-shadow:var(--ep-shadow-pop);padding:16px 18px;
+  font-size:13px;line-height:1.55;color:var(--ep-ink);text-align:left;font-family:var(--ep-font)}
+html.epure .ep-pop[hidden]{display:none}
+html.epure .ep-pop-t{font-size:13px;font-weight:600;margin:0 0 6px;color:var(--ep-ink)}
+html.epure .ep-pop > *:not(.ep-pop-t){display:block!important;margin:0!important;max-width:none!important;color:var(--ep-ink)!important;font-size:13px!important;
+  background:transparent!important;border:0!important;padding:0!important}
+html.epure .ep-pop details,html.epure .ep-pop summary{display:block}
+html.epure .ep-pop a{color:var(--ep-accent)}
+html.epure .ep-pop code{background:var(--ep-fill);border-radius:4px;padding:0 4px}
+/* bandeau d'alerte réduit à sa première phrase */
+html.epure .ep-banner{display:flex;align-items:center;gap:10px;padding:10px 14px;margin:0 0 12px;border-radius:12px;font-size:13px;line-height:1.4;
+  background:var(--ep-warn-bg);color:var(--ep-warn-fg)}
+html.epure .ep-banner.ep-info{background:var(--ep-accent-soft);color:var(--ep-info-fg)}
+html.epure .ep-banner .ep-banner-t{flex:1 1 auto}
+html.epure .ep-banner .ep-i{color:inherit}
+
+/* ---------- accueil ---------- */
+html.epure .drop{border:1.5px dashed var(--ep-drop)!important;border-radius:20px!important;background:var(--ep-card)!important;padding:34px 30px!important;color:var(--ep-ink)}
+html.epure .drop h2{font-weight:600;letter-spacing:-.02em;color:var(--ep-ink)}
+html.epure .situ-k{border-left:0!important;padding-left:0!important}
+html.epure .situ-k .n{font-size:34px!important}
+html.epure .situ-phrase{font-size:15px!important;color:var(--ep-ink2)!important;line-height:1.5}
+html.epure .situ-phrase b{color:var(--ep-ink)}
+html.epure a.card .kick,html.epure a.card .eyebrow{text-transform:none!important;letter-spacing:0!important}
+html.epure .shp{color:var(--ep-ink3)}
+
+/* ---------- revue : ligne des filtres et sauts ---------- */
+html.epure .rep-toprow{background:var(--ep-glass2)!important;-webkit-backdrop-filter:saturate(180%) blur(16px);backdrop-filter:saturate(180%) blur(16px)}
+html.epure .rep-saut{border-radius:980px!important;font-weight:500!important;background:var(--ep-ctl)!important;border:1px solid var(--ep-line)!important;color:var(--ep-ink)!important}
+html.epure .rep-saut:hover{border-color:var(--ep-accent)!important;color:var(--ep-accent)!important}
+html.epure .filter-item label{font-size:12px!important;color:var(--ep-ink3)!important;font-weight:500!important}
+html.epure .distbar{border:0!important;border-radius:8px!important;height:24px!important}
+html.epure .perim-prov{border-color:rgba(181,137,0,.4)!important}
+html.epure .perim-jauge{height:4px!important;background:var(--ep-fill)!important}
+
+/* ---------- priorisation : tuiles du tableau de bord, chips ---------- */
+html.epure .tile,html.epure .obj-tile,html.epure .eng-tile{border:0!important;border-radius:14px!important;box-shadow:var(--ep-shadow)!important}
+html.epure .chip,html.epure .so{border-radius:980px!important}
+html.epure .sous-onglets{background:var(--ep-fill);border-radius:10px;padding:2px;display:inline-flex!important;gap:0!important}
+html.epure .sous-onglets .so{border:0!important;background:transparent!important;color:var(--ep-ink)!important;font-weight:500!important;border-radius:8px!important}
+html.epure .sous-onglets .so.on{background:var(--ep-seg-on)!important;font-weight:600!important;box-shadow:var(--ep-seg-shadow)!important}
+/* fiche d'un sous-site : les blocs gardent leur fond doux sur la carte */
+html.epure .fiche-card{border:0!important;background:var(--ep-card)!important;border-radius:var(--ep-r)!important;box-shadow:var(--ep-shadow)!important;padding:16px 18px 14px!important}
+html.epure .fiche-grid .fs,html.epure .fiche-act .q-box,html.epure .fiche-notes{background:var(--ep-bg)!important;border-radius:12px!important}
+html.epure .fk{border-top-color:var(--ep-line)}
+
+/* ---------- pied de page ---------- */
+html.epure footer,html.epure .ft{color:var(--ep-ink3)!important;font-size:12px!important;border-top:1px solid var(--ep-line)!important;background:transparent!important}
+html.epure .ep-bascule{color:var(--ep-ink3);text-decoration:none;border-bottom:1px dotted currentColor}
+html.epure .ep-bascule:hover{color:var(--ep-accent)}
+
+/* ---------- détails de finition ---------- */
+html.epure .card .kpi,html.epure .card .kpi-tiles .kpi{box-shadow:none!important;background:var(--ep-bg)!important;border-radius:12px!important}
+html.epure tbody tr:nth-child(even),html.epure tbody tr.alt{background:transparent!important}
+html.epure .map-tooltip-custom{font-family:var(--ep-font)!important;line-height:1.36!important;padding:8px 12px!important;border-radius:12px!important;border:0!important;box-shadow:var(--ep-shadow-pop)!important}
+html.epure .leaflet-popup-content-wrapper{border-radius:14px!important;box-shadow:var(--ep-shadow-pop)!important}
+html.epure body.night .map-tooltip-custom,html.epure body.night .leaflet-popup-content-wrapper,html.epure body.night .leaflet-popup-tip{background:var(--ep-pop)!important;color:var(--ep-ink)!important}
+html.epure body.night .leaflet-tooltip-left::before{border-left-color:var(--ep-pop)!important}
+html.epure body.night .leaflet-tooltip-right::before{border-right-color:var(--ep-pop)!important}
+html.epure body.night .leaflet-bar a,html.epure body.night .leaflet-control-attribution{background:var(--ep-ctl)!important;color:var(--ep-ink2)!important;border-color:var(--ep-line)!important}
+html.epure body.night .leaflet-control-attribution a{color:var(--ep-accent)!important}
+html.epure .cd h3,html.epure h3.sec{border-bottom:0!important;color:var(--ep-ink)!important;font-size:17px!important;font-weight:600!important;padding-bottom:0!important}
+html.epure .tr-card{border:0!important;box-shadow:var(--ep-shadow)!important;border-radius:14px!important;position:relative}
+html.epure .tr-card::before{content:'';position:absolute;left:14px;top:16px;width:6px;height:6px;border-radius:50%;background:var(--ep-ink3)}
+html.epure .tr-card.ok::before{background:var(--ep-ok)} html.epure .tr-card.ko::before{background:var(--ep-err)} html.epure .tr-card.mid::before{background:var(--ep-mid)}
+html.epure .tr-card .tr-h{padding-left:12px}
+html.epure .info-icon{width:17px!important;height:17px!important;border:1.5px solid var(--ep-ink3)!important;color:var(--ep-ink3)!important;font:italic 600 11px/1 Georgia,serif!important}
+html.epure .ch,html.epure .card-pli{color:var(--ep-ink3)!important}
+html.epure .rep-toprow{flex-wrap:wrap!important;align-items:center!important;gap:8px 12px!important}
+html.epure .rep-toprow .filterbar{margin:0 0 0 auto!important;gap:6px!important;flex-wrap:wrap;align-items:center}
+html.epure .rep-toprow .filter-item select{max-width:170px}
+html.epure .filter-search label{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important}
+html.epure .rep-sommaire{display:inline-flex!important;background:var(--ep-fill);border-radius:10px;padding:2px;gap:0!important;flex-wrap:wrap}
+html.epure .rep-sommaire > .muted{display:none}
+html.epure .rep-sommaire .rep-saut{border:0!important;background:transparent!important;border-radius:8px!important;padding:5px 13px!important;font-size:13px!important}
+html.epure .rep-sommaire .rep-saut:hover{background:var(--ep-seg-hover)!important;color:var(--ep-ink)!important}
+html.epure .rep-sommaire .rep-saut[aria-pressed="true"]{background:var(--ep-seg-on)!important;font-weight:600!important;box-shadow:var(--ep-seg-shadow)!important;color:var(--ep-ink)!important}
+html.epure .ep-cache{display:none!important}
+/* réglages du planning (hauteur, lignes) : contrôle segmenté */
+html.epure .gantt-reglages .seg{background:var(--ep-fill)!important;border:0!important;border-radius:8px!important;padding:2px!important;gap:0}
+html.epure .gantt-reglages .seg button{background:transparent!important;color:var(--ep-ink)!important;border:0!important;border-radius:6px!important;font-weight:500!important;padding:3px 11px!important}
+html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-seg-on)!important;color:var(--ep-ink)!important;font-weight:600!important;box-shadow:var(--ep-seg-shadow)!important}
+
+@media print{ html.epure .ep-cache{display:revert!important} html.epure .ep-i,html.epure .ep-pop{display:none!important} html.epure .ep-garde{display:block!important} html.epure .hdr{backdrop-filter:none} }
+@media (prefers-reduced-motion:reduce){ html.epure *{transition:none!important} }
+</style>
+<!-- /PTE-EPURE:tete -->
 </head>
 <body>
 <div style="display:none"><div class="cd" id="trajCard">
@@ -1495,7 +1760,8 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <b>Coût unitaire</b> : montant ÷ (gain × durée de vie retenue). C'est le prix de l'unité gagnée, et c'est lui qui ordonne le classement, du moins cher au plus cher.<br>
 <b>Quel montant ?</b> celui de la colonne choisie dans le menu <b>Montants</b> de l'en-tête — <code>Estim CECB+</code> (par défaut), <code>Estim PTE</code>, <code>DG 3.31 [CHF]</code> ou <code>Prévisionnel PTE GEI</code>. Le menu indique combien de montants chaque colonne contient réellement ; en changer recalcule tous les classements, tous les coûts unitaires et l'arbitrage.<br>
 <b>Durée de vie retenue</b> : 40 ans par défaut, <b>et réglable objectif par objectif</b> (menu ☰ → Paramètres de calcul → « Durée de vie »). <b>Ce n'est pas une norme SIA</b> — c'est la convention de calcul du coût de l'énergie économisée reprise de <code>Priorisation_PTE.xlsx</code>. Une seule durée pour tous supposerait qu'une isolation d'enveloppe, une pompe à chaleur et une robinetterie s'amortissent pareil ; en régler une par objectif évite d'avantager mécaniquement celui dont les mesures durent le plus longtemps. La durée réellement appliquée est écrite en tête de colonne de chaque classement.<br>
-<b>Rang de franchissement</b> : le rang auquel le cumul des gains atteint l'écart restant à combler pour 2030.</div></div>
+<b>% de l'objectif</b> : la part de l'objectif atteinte à chaque rang — 0 % = référence 2005, 100 % = cible 2030, comme la tuile de la Vue d'ensemble. La première ligne part de ce qui est déjà fait ; chaque ligne y ajoute le gain du sous-site ; au-delà de 100 %, l'objectif est dépassé. Sans référence 2005 (végétalisation, IDC, électricité au périmètre couvert), 0 % = aujourd'hui.<br>
+<b>Rang de franchissement</b> : le rang auquel le cumul des gains atteint l'écart restant à combler pour 2030 — la ligne où la colonne « % de l'objectif » atteint 100 %.</div></div>
 <p><b>La végétalisation fait exception elle aussi</b>, dans l'autre sens : elle est chiffrée mais ne se rapporte à aucune durée de vie. Une cour d'école désimperméabilisée ne produit pas un flux annuel de kWh évités ; elle crée une surface, une fois. Son classement se fait donc au <b>coût du m² créé</b> — montant TTC du projet ÷ m² créés — du moins cher au plus cher, sans actualisation ni durée de vie. Le rang de franchissement garde le même sens : le rang auquel le cumul des surfaces atteint la cible 2030. Attention à la lecture des surfaces : la colonne du classeur porte ce que les projets <b>créeraient</b>, pas ce qui est déjà créé — l'écart à combler est donc l'objectif entier.</p>
 <p>Le photovoltaïque fait exception : sans coût fiable, il est classé par puissance décroissante — un classement d'intention. Sa cible est en revanche chiffrée : <b>20 % de la consommation électrique</b>, convertie en kWc avec le productible paramétrable.</p>
 <h4 class="sub">Unités : ce qui est une intensité, ce qui est un total</h4>
@@ -1594,7 +1860,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.6 · 07.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.7 · 14.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -2673,6 +2939,10 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "14.10.2026", "objet": "accueil", "version": "v1.8", "titre": "Présentation épurée par défaut", "points": ["La présentation épurée devient celle des quatre pages : fond calme, cartes sans bordure, une seule couleur d'accent, titres en casse de phrase, un grand titre par onglet.", "Les textes d'explication attendent derrière un « i » ; les alertes tiennent en une phrase, le détail est derrière le « i ». Aucun contenu ni aucune fonction retirés.", "Mode nuit retravaillé : gris profonds, teal éclairci pour le texte, mêmes repères que de jour.", "« Présentation classique », en pied de page, rend la présentation d'origine ; le choix est gardé sur le poste."]},
+    {"date": "14.10.2026", "objet": "priorisation", "version": "v2.7", "titre": "Part de l'objectif, fiche du sous-site restructurée", "points": ["Classements par objectif : la colonne « % de l'écart » devient « % de l'objectif » — 0 % = référence 2005, 100 % = cible, comme la tuile de la Vue d'ensemble. Elle part de ce qui est déjà fait et passe au-delà de 100 % quand l'objectif est dépassé.", "Fiche du sous-site restructurée : trois blocs (bâtiment, chaleur et travaux, mesures de l'année), une valeur par ligne, alertes en liste, ajustement et notes côte à côte.", "Carte : l'info-bulle la plus longue reste dans la carte ; les lignes en trop sont comptées dans « … et N de plus » et la phrase qui annonce le clic reste visible.", "Présentation épurée par défaut et mode nuit retravaillé (voir l'accueil v1.8)."]},
+    {"date": "14.10.2026", "objet": "simulation", "version": "v3.5", "titre": "Présentation épurée par défaut", "points": ["Présentation épurée par défaut, mode nuit retravaillé, retour à la présentation classique en pied de page (voir l'accueil v1.8). Aucun calcul modifié."]},
+    {"date": "14.10.2026", "objet": "revue", "version": "v0.19", "titre": "Présentation épurée par défaut", "points": ["Présentation épurée par défaut et mode nuit retravaillé (voir l'accueil v1.8).", "Reporting : une partie à la fois — Synthèse (ouverte par défaut), Sémaphores, CPI / SPI, Planning, Finances, Portefeuilles, Sous-sites ou Tout. L'impression montre toujours tout.", "Filtres en capsules (« RP : tous », « Statut : tous »…)."]},
     {"date": "13.10.2026", "objet": "trombinoscope", "version": "v3.2", "titre": "Numéro de version et historique", "points": ["Le pied de page porte le numéro de version de l'outil ; un clic dessus ouvre cet historique, comme dans les autres outils OCBA.", "L'historique affiché est le même partout : « Cet outil » ne montre que le trombinoscope, « Tous les outils » montre les cinq."]},
     {"date": "12.10.2026", "objet": "trombinoscope", "version": "v3.1", "titre": "Organigramme du 01.10.2026", "points": ["Chaque fiche a été comparée à sa case dans l'organigramme d'octobre : 289 → 294 fiches (270 personnes, 24 postes vacants).", "Mutations vers la DPTE : Clara Jousson, Lucas Cohen Adad, Monica Alvarez Ozainne, Marina Galiano, Piergiorgio Loiacono, et le nouveau Pôle spécialistes techniques (Luc Gibrat, Flavio Pittueo, Adrien Tabarini, Emmanuel Maidonis, Sylvain Vergnal). Bernard Wenger rejoint la DRT.", "Les neuf responsables de secteur de la DPTE deviennent « Chef / Cheffe de projets » ; le Secteur projets DRT 6 disparaît au profit du Secteur portefeuille 9.", "Départs : Sibylle Da Silva (poste devenu vacant), Jean-Marc Campana (fiche supprimée). Détail : RAPPORT-changements_20261001.md."]},
     {"date": "12.10.2026", "objet": "trombinoscope", "version": "v3.0", "titre": "Cinquième vue : organigramme 3D", "points": ["La hiérarchie en arbre conique navigable : une unité est un plateau, ses sous-unités se répartissent en cercle au niveau du dessous, les personnes forment une couronne autour de leur unité.", "Seule la branche ouverte est dépliée. Un clic sur une unité la déplie et y amène la caméra, un clic sur un visage ouvre la fiche ; glisser pour pivoter, molette pour zoomer, Échap pour revenir à la vue d'ensemble.", "Canvas 2D et projection perspective écrits à la main : aucune librairie 3D, aucune requête réseau.", "Le CSV est régénéré depuis le JSON : la désynchronisation signalée en septembre est résorbée."]},
@@ -5965,6 +6235,9 @@ function pontData(key){
     nR:items.length,gap:gap,cum:cum,
     couv:(gap>0)?cum/gap:null,couvC:(gap>0)?Math.min(1,cum/gap):0,
     pct:pct,val:s.val,cible:s.cible,ref:s.ref2005,mesure:s.mesure,
+    /* la part de l'objectif à la dernière ligne du classement — le même
+       chiffre que la colonne « % de l'objectif » (14.10.2026) */
+    tot:(gap>0)?((pct==null?0:pct)+(100-(pct==null?0:pct))*cum/gap):null,
     franchi:(function(){const a=rangAj(key);return a?a.franchiRang:null})(),
     vide:items.length===0,col:OBJ_COL_GAIN[key]||null,s:s}}
 
@@ -5984,9 +6257,9 @@ function pontZones(D){
         :'Chemin parcouru depuis la référence 2005 : '+pc(P0)+'. C\'est le pourcentage affiché sur la tuile de la Vue d\'ensemble.')};
   const couvert=D.vide
     ?{t:'aucun sous-site classable',d:'Aucun sous-site n\'est classable pour cet objectif : la colonne « '+(D.col||'de gain')+' » du classeur n\'est renseignée pour aucun sous-site. Ce n\'est pas un gain nul, c\'est une donnée absente — voir l\'onglet Données.'}
-    :{t:'couvert par le classement',d:'Ce que les '+D.nR+' sous-sites classables comblent de l\'écart restant : '+nf(D.couv*100)+' %'
-        +(D.couv>1?(', soit '+nf(D.couv,1)+' fois l\'écart — le potentiel repéré dépasse largement l\'objectif.'):'.')
-        +' C\'est le pourcentage de la colonne « % de l\'écart comblé », et son dénominateur est l\'écart qui reste, pas le chemin total.'};
+    :{t:'couvert par le classement',d:'Ce que les '+D.nR+' sous-sites classables ajoutent : la part de l\'objectif passe de '+pc(P0)+' à '+pc(D.tot==null?P0:D.tot)
+        +((D.tot!=null&&D.tot>100)?' — le potentiel repéré dépasse l\'objectif.':'.')
+        +' C\'est la dernière ligne de la colonne « % de l\'objectif » du classement.'};
   const reste={t:'non couvert',d:'Ce que ni les travaux déjà faits ni les sous-sites classables ne couvrent : '+pc(restePc)+' du chemin total.'
     +(D.vide?' Tout l\'écart restant est dans ce cas, faute de donnée.':'')};
   return{acquis:acquis,couvert:couvert,reste:reste,restePc:restePc}}
@@ -6014,25 +6287,23 @@ function objPont(key,R){
      cumulatif : la végétalisation ne comble pas un écart, elle crée. */
   const mot=(key==='veg')?'la cible':'l\'écart';
   const surplus=(couv!=null&&couv>1)
-    ?(' — soit <b>'+nf(couv,1)+' fois</b> '+mot+' : le potentiel repéré dépasse largement l\'objectif, et la colonne est plafonnée à 100 % ligne à ligne')
+    ?(' — soit <b>'+nf(couv,1)+' fois</b> '+mot+' restant : le potentiel repéré dépasse l\'objectif, et la colonne passe au-delà de 100 %')
     :'';
   /* Renouvelable et photovoltaïque : la tuile dit un niveau atteint, pas un
      chemin parcouru. Il n'y a pas de référence 2005 à laquelle se comparer. */
   if(s&&s.niveau)
-    return' <b>Deux pourcentages, deux dénominateurs.</b> La tuile « '+esc(meta.lbl)+' » affiche un <b>niveau atteint</b> ('
-      +nf(s.val,1)+' % pour une cible de '+nf(s.cible,1)+' %), pas un chemin parcouru : sans référence 2005, il n\'y a pas de chemin à mesurer. Cette colonne dit tout autre chose — la part de l\'<b>écart restant</b> que le cumul comble. Les '
-      +nR+' sous-sites repérés en couvrent <b>'+nf(pcCouv)+' %</b>'+surplus+'.';
+    return' <b>Un seul pourcentage, celui de l\'objectif.</b> La tuile « '+esc(meta.lbl)+' » affiche le <b>niveau atteint</b> ('
+      +nf(s.val,1)+' % pour une cible de '+nf(s.cible,1)+' %), soit <b>'+nf(s.pct)+' %</b> de l\'objectif. La colonne « % de l\'objectif » part de ce chiffre et y ajoute, ligne à ligne, le gain des sous-sites. Les '
+      +nR+' sous-sites repérés couvrent <b>'+nf(pcCouv)+' %</b> de ce qui reste'+surplus+'.';
   /* Végétalisation : objectif cumulatif, rien n'est encore réalisé. */
   if(s&&s.cumul)
-    return' <b>Deux pourcentages, deux dénominateurs.</b> La tuile « '+esc(meta.lbl)+' » n\'affiche pas un chemin parcouru : aucune surface n\'est encore créée. Elle dit quelle part de la cible 2030 les projets repérés couvriraient s\'ils étaient tous financés. Cette colonne suit le même cumul, projet par projet, du m² le moins cher au plus cher : les '
+    return' <b>Un seul pourcentage, celui de l\'objectif.</b> Aucune surface n\'est encore créée : la tuile « '+esc(meta.lbl)+' » dit quelle part de la cible 2030 les projets repérés couvriraient s\'ils étaient tous financés. La colonne « % de l\'objectif » suit le même cumul, projet par projet, du m² le moins cher au plus cher : les '
       +nR+' projets chiffrés en couvrent <b>'+nf(pcCouv)+' %</b>'+surplus+'.';
   if(!s||s.sansRef||s.pct==null||couv==null)return'';
-  const tot=s.pct+(100-s.pct)*Math.min(1,couv);
-  return' <b>Deux pourcentages, deux dénominateurs.</b> La tuile « '+esc(meta.lbl)+' » de la Vue d\'ensemble affiche <b>'
-    +nf(s.pct)+' %</b> : le chemin parcouru <b>depuis la référence 2005</b>. Cette colonne mesure la part de l\'<b>écart qui reste</b> ('
-    +objFmtNum(gap,0)+' '+esc(meta.unit)+'), pas du chemin total. Les '+nR+' sous-sites classables en couvrent <b>'
-    +nf(pcCouv)+' %</b>'+surplus+', ce qui porte l\'ensemble à <b>'+nf(tot)+' % du chemin</b> depuis 2005 ('
-    +nf(s.pct)+' % + '+nf(Math.min(100,pcCouv))+' % des '+nf(100-s.pct)+' % restants). Les deux chiffres ne se contredisent pas : ils se composent.'}
+  const totN=s.pct+(100-s.pct)*couv;
+  return' <b>Un seul pourcentage, celui de l\'objectif.</b> La tuile « '+esc(meta.lbl)+' » de la Vue d\'ensemble affiche <b>'
+    +nf(s.pct)+' %</b> : le chemin parcouru <b>depuis la référence 2005</b> (0 %) vers la cible 2030 (100 %). La colonne « % de l\'objectif » part de ce chiffre et y ajoute, ligne à ligne, le gain des sous-sites. Les '+nR+' sous-sites classables couvrent <b>'
+    +nf(pcCouv)+' %</b> de ce qui reste ('+objFmtNum(gap,0)+' '+esc(meta.unit)+')'+surplus+', ce qui porte l\'ensemble à <b>'+nf(totN)+' % de l\'objectif</b>.'}
 
 /* La jauge horizontale : la même règle que le ruban du graphique, mise à
    plat. Sert sous le classement, où il n'y a pas de courbe pour l'accueillir. */
@@ -6040,11 +6311,64 @@ function objPont(key,R){
    sans rien apprendre de plus. L'accumulation se lit dans la jauge au-dessus
    du tableau, une fois, plutôt que répétée à chaque ligne. */
 function pctCell(v,alt){
-  if(v==null)return'<td class="pcell">—</td>';
-  const p=Math.min(1,v)*100;
-  return'<td class="pcell" title="'+Math.round(p)+' % de l\'écart RESTANT comblé à ce rang'
-    +(alt?' (cible 2050)':'')+' — cumul des gains ÷ écart à combler">'
-    +Math.round(p)+'%</td>'}
+  if(v==null||isNaN(v))return'<td class="pcell">—</td>';
+  /* arrondi par défaut : « 100 % » ne s'affiche qu'une fois l'objectif
+     réellement atteint, jamais une ligne trop tôt (14.10.2026) */
+  const p=Math.floor(v*100+1e-9);
+  return'<td class="pcell" title="'+nf(p)+' % de l\'objectif'+(alt?' 2050':' 2030')+' atteint à ce rang : ce qui est déjà fait, plus le cumul des gains jusqu\'à cette ligne'+(p>100?' — au-delà de 100 %, l\'objectif est dépassé':'')+'">'
+    +nf(p)+'%</td>'}
+
+/* ── La part de l'objectif (décision d'Achim, 14.10.2026) ───────────────
+   La colonne de pourcentage des classements se rapporte à l'OBJECTIF
+   ENTIER, comme la tuile de la Vue d'ensemble : 0 % = référence 2005,
+   100 % = cible. Elle part de ce qui est déjà fait et ajoute, ligne à
+   ligne, le cumul des gains. Plus de plafond : au-delà de 100 %,
+   l'objectif est dépassé. Le rang de franchissement ne change pas (il
+   tombe là où la colonne atteint 100 %).
+   valeur = p0 + cumul / den
+   - chemin (CO₂, thermique, eau) : den = référence − cible, p0 = (référence − mesure) / den ;
+     pour 2050 (thermique), den = référence − cible 2050 ;
+   - niveau (renouvelable, photovoltaïque) : p0 = niveau atteint ÷ cible, den = écart ÷ (1 − p0) ;
+   - végétalisation (rien de créé), IDC (chaleur en trop), électricité
+     (périmètre couvert) : pas de chemin depuis 2005, p0 = 0 et den = l'objectif
+     de ces sous-sites. */
+function objBaseObj(key,alt){
+  if(typeof OBJ_GAPS==='undefined'||!OBJ_GAPS||!OBJ_GAPS[key])return null;
+  const G=OBJ_GAPS[key];
+  const brut=function(g,mode){return(g>0)?{p0:0,den:g,mode:mode}:null};
+  if(key==='veg')return brut(G.gap,'cumul');
+  if(key==='idc')return brut(G.gap,'exces');
+  if(key==='elec'&&G.couvert)return brut(G.couvert.gap,'couvert');
+  let st=null;try{st=indState(key)}catch(e){}
+  if(!st)return null;
+  if(st.niveau){
+    const gap=(key==='pv')?G.gapKw:G.gap;const p0=(st.pct||0)/100;
+    if(p0<1&&gap>0)return{p0:p0,den:gap/(1-p0),mode:'niveau'};
+    const c=(key==='pv')?G.cibleKw:G.cible;
+    return(c>0)?{p0:p0,den:c,mode:'niveau'}:null}
+  if(st.sansRef||st.pct==null)return brut(G.gap,'restant');
+  const ref=(st.enIntensite&&st.refEquiv)?st.refEquiv:st.ref2005;
+  const cib=alt?G.cible2050:st.cible;
+  if(!(ref>0)||cib==null||!(ref-cib>0))return brut(alt?G.gap2050:G.gap,'restant');
+  const den=ref-cib;
+  return{p0:(ref-st.mesure)/den,den:den,mode:'chemin'}}
+function pctObj(key,it,alt,B){
+  B=B||objBaseObj(key,alt);
+  if(!B||!(B.den>0)||it==null||it.cumulGain==null)return null;
+  return B.p0+it.cumulGain/B.den}
+/* l'en-tête de la colonne et son survol, selon le type d'objectif */
+function objPctHead(key,alt){
+  const B=objBaseObj(key,alt);
+  const mode=B?B.mode:'chemin';
+  const an=alt?'2050':'2030';
+  const def={
+    chemin:'0 % = référence 2005, 100 % = cible '+an+'. La première ligne part de ce qui est déjà fait depuis 2005 — le pourcentage de la tuile de la Vue d\'ensemble —, chaque ligne y ajoute le gain du sous-site.',
+    niveau:'0 % = rien, 100 % = cible '+an+'. La première ligne part du niveau déjà atteint — le pourcentage de la tuile de la Vue d\'ensemble —, chaque ligne y ajoute le gain du sous-site.',
+    cumul:'0 % = rien de créé, 100 % = cible '+an+'. Aucune surface n\'est encore créée : la colonne part de zéro et suit le cumul des projets.',
+    exces:'0 % = la chaleur en trop d\'aujourd\'hui, 100 % = plus aucun sous-site au-dessus du seuil. Il n\'y a pas de référence 2005 pour cet objectif.',
+    couvert:'Objectif du périmètre couvert : 100 % = la baisse visée sur les sous-sites dont la consommation projetée est chiffrée, au prorata de leur consommation.',
+    restant:'Sans référence 2005 dans le classeur : 0 % = aujourd\'hui, 100 % = cible '+an+'.'}[mode];
+  return'<th style="text-align:right" title="'+def+' Au-delà de 100 %, l\'objectif est dépassé. La ligne où la colonne atteint 100 % est le rang de franchissement.">% de l\'objectif<br>'+(mode==='couvert'?'couvert':(mode==='exces'?'IDC':an))+'</th>'}
 
 /* Le bandeau du mode hors chiffrage, écrit avec les chiffres du classement
    affiché : combien de bâtiments sont retenus, combien le mode a fait
@@ -6083,7 +6407,7 @@ function jaugeHtml(key){
   return'<div class="jbloc" title="'+esc('Les deux pourcentages de l\'outil sur une seule règle : la tuile mesure le premier segment, le classement une part du second.')+'">'
     +'<div class="jauge">'
     +z('jz-fait',wF,nf(wF)+' %',Z.acquis.t.charAt(0).toUpperCase()+Z.acquis.t.slice(1)+' — '+Z.acquis.d)
-    +z('jz-couv',wC,nf(D.couv*100)+' % de l\'écart',Z.couvert.t.charAt(0).toUpperCase()+Z.couvert.t.slice(1)+' — '+Z.couvert.d)
+    +z('jz-couv',wC,'→ '+nf(D.tot==null?wF:D.tot)+' %',Z.couvert.t.charAt(0).toUpperCase()+Z.couvert.t.slice(1)+' — '+Z.couvert.d)
     +z('jz-reste',wR,nf(Z.restePc)+' %',Z.reste.t.charAt(0).toUpperCase()+Z.reste.t.slice(1)+' — '+Z.reste.d)
     +'</div>'
     +'<div class="jlbl"><span style="left:0">'+esc(lblDeb)+'</span>'
@@ -6222,7 +6546,7 @@ function elecNote(key){
   if(neg.length)s+=', <b>'+neg.length+'</b> en hausse pour <b>'+gw(gN)+'</b> — '+
     'net <b>'+gw(gP-gN)+'</b>';
   s+='.';
-  if(C)s+=' Le <b>% de l\'écart</b> se rapporte à l\'écart du <b>périmètre couvert</b> : '+
+  if(C)s+=' Le <b>% de l\'objectif</b> se rapporte à l\'objectif du <b>périmètre couvert</b> : '+
     'les <b>'+C.n+'</b> sous-sites chiffrés pèsent '+gw(C.conso)+' de consommation, dont '+
     Math.round(C.pct*100)+' % à retrancher, soit <b>'+gw(C.gap)+'</b>'+
     (parc?' — l\'écart du parc entier vaut '+gw(parc)+', mesuré sur la feuille <code>Consommation par site</code> qui couvre 427 lignes là où Plan_PTE n\'en chiffre que 287':'')+'.';
@@ -6432,14 +6756,7 @@ function objTable(key,R,meta,bySiteId,f){
       :srcTip(SRC_CONTRIB[key]))+'>'+(key==='pv'?'Puissance':key==='idc'?'Chaleur en trop ▼':key==='eau'?'Volume économisé ▼':'Contribution')
       +((invHorsChiffrage()&&key!=='veg'&&key!=='pv'&&key!=='idc'&&key!=='eau')?' ▼':'')+'<br>['+meta.unit+']</th>'+
     '<th style="text-align:right" title="Somme des contributions depuis le haut du classement. Sur l\'Électricité, les hausses de fin de tableau sont déduites : la dernière ligne donne donc le gain NET du parc chiffré.">Cumul<br>['+meta.unit+']</th>'+
-    (key==='th'
-      ? '<th style="text-align:right" title="Part de l\'écart RESTANT à 2030 que le cumul comble, en descendant le classement — pas le chemin depuis 2005, que donne la tuile de la Vue d\'ensemble">% écart<br>2030</th>'+
-        '<th style="text-align:right" title="Part de l\'écart RESTANT à 2050 que le cumul comble — cible d\'intensité de 63 kWh/m²·an">% écart<br>2050</th>'
-      : key==='idc'
-      ? '<th style="text-align:right" title="Part de la chaleur en trop du PARC ENTIER que portent les sous-sites depuis le haut du classement. Il n\'y a pas de rang de franchissement : tous les sous-sites listés sont au-dessus du seuil.">% de l\'excédent<br>du parc</th>'
-      : ((key==='elec'&&typeof OBJ_GAPS!=='undefined'&&OBJ_GAPS&&OBJ_GAPS.elec&&OBJ_GAPS.elec.couvert)
-        ? '<th style="text-align:right" title="Part de l\'écart du PÉRIMÈTRE COUVERT que le cumul comble. Le dénominateur n\'est pas l\'écart du parc entier mais la part imputable aux '+OBJ_GAPS.elec.couvert.n+' sous-sites dont la consommation projetée est chiffrée, prise au prorata de leur consommation. La jauge au-dessus du tableau, elle, reste à l\'échelle du parc : les deux ne disent pas la même chose et c\'est voulu.">% de l\'écart<br>couvert</th>'
-        : '<th style="text-align:right" title="Part de l\'écart RESTANT (mesuré − cible) que le cumul comble, en descendant le classement. Ce n\'est pas le chemin parcouru depuis 2005, que donne la tuile de la Vue d\'ensemble : les deux s\'additionnent, et la jauge au-dessus du tableau montre comment.">% de l\'écart<br>comblé</th>'))+
+    objPctHead(key,false)+(key==='th'?objPctHead(key,true):'')+
     (key==='idc'
       ? '<th style="text-align:right" title="Dernier indice de dépense de chaleur relevé, colonne « IDC [kWh] » de Plan_PTE — l\'indice OCEN ramené en kWh/m²·an (÷ 3,6). Le millésime du relevé est indiqué dessous quand il diffère de l\'année des mesures du classeur. Cette colonne remplace ici le montant : le classement IDC ne trie pas au coût.">IDC actuel<br>[kWh/m²·an]</th>'
       : '<th style="text-align:right" title="'+(key==='veg'?'Coût TTC du projet de végétalisation, colonne « Coût végétalisation TTC [CHF] » — sans rapport avec le référentiel financier de la rénovation énergétique':'Colonne d\'où viennent les montants — menu « Montants » au-dessus')+'">'+(key==='veg'?'Coût TTC<br>végétalisation':esc(invDef().short))+'</th>')+
@@ -6451,6 +6768,7 @@ function objTable(key,R,meta,bySiteId,f){
       +'>'+((invHorsChiffrage()&&key!=='veg'&&key!=='pv'&&key!=='eau')?'Coût unitaire<br>(identique)'
         :(key==='pv'||key==='eau'?'—':key==='veg'?'CHF/m²<br>créé (tri)':'CHF/unité<br>('+pDuree(key)+' ans)'))+'</th>')+
     '<th>Alerte</th></tr></thead><tbody>';
+  const _B1=objBaseObj(key,false),_B2=(key==='th')?objBaseObj(key,true):null;
   for(const it of rankedRows){
     const s=bySiteId[it.id];
     /* Une contribution NÉGATIVE est une hausse de consommation, pas un gain.
@@ -6498,8 +6816,8 @@ function objTable(key,R,meta,bySiteId,f){
       (snapCur()?('<br>'+snapDelta(key,it.id,(it.rangAdj||it.rang))):'')+'</td><td><b>'+esc(it.id)+'</b></td><td>'+esc(it.nom||'')+'<br><span style="color:var(--ink3);font-size:.63rem" title="RPF — responsable de portefeuille, qui suit le sous-site dans la durée. Le RP, responsable de projet, est dans la colonne RP.">RPF '+(estHorsPerimetre(s)?hpChip(s):esc(s.rp||'—'))+'</span></td>'+
       '<td style="font-size:.63rem">'+esc(s.drt||'—')+'</td><td>'+patBg(s.pat)+'</td><td>'+cecbBg(s)+'</td><td>'+hBg(s.ht)+'</td><td>'+subBg(s.hsub)+(key==='ren'?pacChip(s,it.gain):'')+'</td>'+
       '<td style="text-align:right">'+gainDisp+'</td><td style="text-align:right">'+objFmtNum(it.cumulGain,0)+'</td>'+
-      pctCell(it.pctGap,false)+
-      (key==='th'?pctCell(it.pctGap2,true):'')+
+      pctCell(pctObj(key,it,false,_B1),false)+
+      (key==='th'?pctCell(pctObj(key,it,true,_B2),true):'')+
       (key==='idc'
         ? '<td style="text-align:right">'+idcActDisp+'</td><td style="text-align:right">'+idcProjDisp+'</td>'
         : '<td style="text-align:right">'+estimDisp+'</td><td style="text-align:right">'+coutDisp+'</td>')+
@@ -6696,47 +7014,62 @@ const row=document.querySelector('#objBody tr[data-id="'+attrSel(id)+'"]');
 if(row)row.classList.add('row-expanded');
 const box=$('objFiche');if(!box)return;
 const A=anneeMesures();
-/* mesures de l'année selon le contrat de données (chaleur avec sa source) */
-let mes='';
+/* Fiche réorganisée le 14.10.2026 (retour d'Achim : « très difficile à lire,
+   manque de structure ») : trois blocs nommés — le bâtiment, la chaleur et
+   les travaux, les mesures de l'année —, une valeur par ligne, libellé à
+   gauche et chiffre à droite ; puis les alertes en liste, l'ajustement et
+   les notes côte à côte. Aucune donnée ni aucun survol retiré. */
+const kv=function(lbl,val,sub,titre){
+  return '<div class="fk"'+(titre?' title="'+esc(titre)+'"':'')+'><span class="fk-l">'+lbl+'</span>'
+    +'<span class="fk-v"><span>'+val+'</span>'+(sub?'<span class="fk-s">'+sub+'</span>':'')+'</span></div>'};
+const val=function(v,unit){return (v==null)?'—':('<b>'+nf(v,0)+'</b> '+unit)};
+const bloc=function(t,corps){return '<section class="fs"><h5>'+t+'</h5>'+corps+'</section>'};
+const dotCp=(cp>=80?'dot-vert':cp>=50?'dot-orange':'dot-rouge'),motCp=(cp>=80?'complète':cp>=50?'partielle':'lacunaire');
+const bBat=bloc('Bâtiment',
+  kv('SRE','<b>'+fmtSRE(site.sre)+'</b>','','Surface de référence énergétique : la surface chauffée du sous-site, en mètres carrés. C\'est elle qui ramène toutes les consommations au mètre carré et rend comparables deux sous-sites de tailles différentes.')+
+  kv('État du projet (SIA)','<b>'+esc(site.etat||'—')+'</b>','','Société suisse des ingénieurs et des architectes, dont la norme découpe un projet en phases successives — étude, appel d\'offres, réalisation. La phase indiquée ici dit où en est le projet, pas dans quel état énergétique il se trouve.')+
+  kv('Montant actif','<b>'+fmtInv(site.invVB)+'</b>',invDef().short)+
+  kv('Complétude','<b>'+cp+' %</b> <span class="sem sm"><i class="sem-dot '+dotCp+'"></i>'+motCp+'</span>','')+
+  (sc.t!=null?kv('Priorité (classements par objectif)','<b>'+sc.t+'</b>',''):''));
+let agent='';
 if(site.contrat){
-  const chSrc=site.consoTherm==null?'':(site.chaleurSrc==='estimé'?'estimé (SRE × IDC)':'mesuré, '+(site.chaleurOrig||'ThTOT du site ventilée au prorata SRE'));
-  mes='<div class="fiche-mes">'+
-    ficheMes('Chaleur'+(A?' '+A:''),site.consoTherm,'kWh/an',chSrc,'Chaleur de l\'année des mesures. « Mesuré » : facturation ThTOT du site (feuille Consommation par site) ventilée au sous-site au prorata de la SRE. « Estimé » : SRE × IDC, quand le site est absent de la feuille ou que sa facturation est vide — jamais mélangé sans le dire.')+
-    ficheMes('Électricité'+(A?' '+A:''),site.elec,'kWh/an',site.elecSrc?'':'','Colonne Conso Elec de l\'année dans Plan_PTE')+
-    ficheMes('Eau'+(A?' '+A:''),site.eau,'m³/an','','Colonne Conso Eau de l\'année dans Plan_PTE')+
-    ficheMes('CO₂'+(A?' '+A:''),site.co2!=null?site.co2/1000:null,'t/an','','Colonne Co2 de l\'année dans Plan_PTE, scope 1+2')+
-    '<span title="Agent de chauffage : premier terme de la colonne « Agent » (SITG), rapporté au libellé de la feuille Data qui porte le facteur d\'émission.">Agent : <b>'+esc(site.agentSitg||'—')+'</b>'+
-      (site.agentCible&&site.agentCible!==site.agentSitg?' <span class="src">→ '+esc(site.agentCible)+'</span>':'')+
-      (site.agentCible?(site.agentARenseigner
-        ?' <span class="sem sm" style="margin-left:4px"><i class="sem-dot dot-orange"></i>facteur CO₂ « '+esc(site.agentCible)+' » à renseigner dans Data — non chiffrable en CO₂</span>'
-        :' <span class="src">'+nf(site.agentFacteur*1000,0)+' g CO₂/kWh</span>'):'')+'</span>'+
-    '</div>'}
+  agent=kv('Agent','<b>'+esc(site.agentSitg||'—')+'</b>'+
+      (site.agentCible&&site.agentCible!==site.agentSitg?' <span class="src">→ '+esc(site.agentCible)+'</span>':''),
+    (site.agentCible?(site.agentARenseigner
+      ?'<span class="sem sm"><i class="sem-dot dot-orange"></i>facteur CO₂ « '+esc(site.agentCible)+' » à renseigner dans Data — non chiffrable en CO₂</span>'
+      :nf(site.agentFacteur*1000,0)+' g CO₂/kWh'):''),
+    'Agent de chauffage : premier terme de la colonne « Agent » (SITG), rapporté au libellé de la feuille Data qui porte le facteur d\'émission.')}
+const bCh=bloc('Chaleur et travaux',
+  kv('IDC actuel','<b>'+fmtIDC(site.idcC)+'</b>',(site.anneeIDC&&A&&site.anneeIDC!==A?'millésime '+esc(site.anneeIDC):''),'Indice de dépense de chaleur : la chaleur consommée en une année par mètre carré chauffé. Plus il est élevé, plus le sous-site consomme pour se chauffer, et c\'est sa baisse qui mesure l\'effet des travaux.')+
+  kv('IDC projeté','<b>'+fmtIDC(site.idcVB)+'</b>',esc(site.cecbRaw?site.cecbRaw.replace('var_','var. '):'—'))+
+  kv('Substitution','<b>'+esc(site.hsub||'—')+'</b>','')+agent);
+let bMes='';
+if(site.contrat){
+  const chSrc=site.consoTherm==null?'':(site.chaleurSrc==='estimé'?'estimé (SRE × IDC)':'mesuré, '+esc(site.chaleurOrig||'ThTOT du site ventilée au prorata SRE'));
+  bMes=bloc('Mesures'+(A?' '+A:''),
+    kv('Chaleur',val(site.consoTherm,'kWh/an'),chSrc,'Chaleur de l\'année des mesures. « Mesuré » : facturation ThTOT du site (feuille Consommation par site) ventilée au sous-site au prorata de la SRE. « Estimé » : SRE × IDC, quand le site est absent de la feuille ou que sa facturation est vide — jamais mélangé sans le dire.')+
+    kv('Électricité',val(site.elec,'kWh/an'),'','Colonne Conso Elec de l\'année dans Plan_PTE')+
+    kv('Eau',val(site.eau,'m³/an'),'','Colonne Conso Eau de l\'année dans Plan_PTE')+
+    kv('CO₂',val(site.co2!=null?site.co2/1000:null,'t/an'),'','Colonne Co2 de l\'année dans Plan_PTE, scope 1+2'))}
 box.innerHTML='<div class="fiche-card">'+
-  '<div class="fiche-head"><h4>'+esc(site.id)+' — '+esc(site.nom||'')+'</h4>'+
-  '<span class="mini" title="RPF — responsable de portefeuille ; RP — responsable de projet'+(site.rpSource?' (source : '+esc(site.rpSource)+')':'')+'">RPF '+esc(site.rp||'—')+' · RP '+esc(site.drt||'—')+(site.nbProjets?' · '+site.nbProjets+' projet'+(site.nbProjets>1?'s':'')+' GE-Invest':'')+'</span>'+
+  '<div class="fiche-head"><div class="fh-t"><h4>'+esc(site.id)+' — '+esc(site.nom||'')+'</h4>'+
+  '<span class="mini" title="RPF — responsable de portefeuille ; RP — responsable de projet'+(site.rpSource?' (source : '+esc(site.rpSource)+')':'')+'">RPF '+esc(site.rp||'—')+' · RP '+esc(site.drt||'—')+(site.nbProjets?' · '+site.nbProjets+' projet'+(site.nbProjets>1?'s':'')+' GE-Invest':'')+'</span></div>'+
   '<span class="grow"></span>'+
   '<button class="bt bt-i bt-s" onclick="printSite('+jsArg(id)+')" title="Imprimer ou enregistrer en PDF une fiche d\'une page pour ce sous-site">Fiche imprimable (PDF)</button>'+
   '<button class="bt bt-s bt-x" onclick="fermerFiche()" title="Fermer la fiche">Fermer</button></div>'+
-  '<div style="display:flex;gap:12px;font-size:.73rem;margin-bottom:8px;flex-wrap:wrap">'+
-  '<span title="Surface de référence énergétique : la surface chauffée du sous-site, en mètres carrés. C\'est elle qui ramène toutes les consommations au mètre carré et rend comparables deux sous-sites de tailles différentes.">SRE : <b>'+fmtSRE(site.sre)+'</b></span>'+
-  '<span title="Indice de dépense de chaleur : la chaleur consommée en une année par mètre carré chauffé. Plus il est élevé, plus le sous-site consomme pour se chauffer, et c\'est sa baisse qui mesure l\'effet des travaux.">IDC actuel : <b>'+fmtIDC(site.idcC)+'</b>'+(site.anneeIDC&&A&&site.anneeIDC!==A?' <span class="src">(millésime '+esc(site.anneeIDC)+')</span>':'')+'</span>'+
-  '<span>IDC projeté ('+esc(site.cecbRaw?site.cecbRaw.replace('var_','var. '):'—')+') : <b>'+fmtIDC(site.idcVB)+'</b></span>'+
-  '<span>Substitution : <b>'+esc(site.hsub||'—')+'</b></span>'+
-  '<span title="Société suisse des ingénieurs et des architectes, dont la norme découpe un projet en phases successives — étude, appel d\'offres, réalisation. La phase indiquée ici dit où en est le projet, pas dans quel état énergétique il se trouve.">État du projet (SIA) : <b>'+esc(site.etat||'—')+'</b></span>'+
-  '<span>Montant actif : <b>'+fmtInv(site.invVB)+'</b> <span style="font-size:.63rem;color:var(--ink3)">('+invDef().short+')</span></span>'+
-  '<span>Complétude : <b>'+cp+' %</b> <span class="sem sm"><i class="sem-dot '+(cp>=80?'dot-vert':cp>=50?'dot-orange':'dot-rouge')+'"></i>'+(cp>=80?'complète':cp>=50?'partielle':'lacunaire')+'</span></span>'+
-  (sc.t!=null?'<span>Priorité (classements par objectif) : <b>'+sc.t+'</b></span>':'')+
-  '</div>'+mes+
-  (al.length?'<div style="font-size:.73rem;color:var(--fg-err);margin-bottom:8px"><b>Alertes :</b> '+al.join(' ; ')+'</div>':'')+
-  '<div class="q-box"><div style="font-size:.75rem;font-weight:600;color:var(--pri);margin-bottom:4px">Facteur non mesurable (choix politique, urgence, vente prévue, contrainte technique…)</div>'+
-  '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'+
-  '<select id="qSel" style="padding:5px 8px;border:1px solid #cbd5e0;border-radius:6px;font-size:.76rem">'+
+  '<div class="fiche-grid">'+bBat+bCh+bMes+'</div>'+
+  (al.length?'<div class="fiche-al"><h5>Alertes</h5><ul>'+al.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></div>':'')+
+  '<div class="fiche-act">'+
+  '<div class="q-box"><h5>Facteur non mesurable (choix politique, urgence, vente prévue, contrainte technique…)</h5>'+
+  '<div class="q-row">'+
+  '<select id="qSel">'+
   QUALI_DEF.map(function(d){return '<option value="'+d.k+'"'+(((siteQuali[id]||{}).p||'0')===d.k?' selected':'')+'>'+d.lbl+'</option>'}).join('')+'</select>'+
-  '<input id="qMot" placeholder="Motif (obligatoire) — ex. : vente prévue 2027, décision DT du 12.03" value="'+esc((siteQuali[id]||{}).m||'')+'" style="flex:1;min-width:220px;padding:5px 8px;border:1px solid #cbd5e0;border-radius:6px;font-size:.76rem">'+
+  '<input id="qMot" placeholder="Motif (obligatoire) — ex. : vente prévue 2027, décision DT du 12.03" value="'+esc((siteQuali[id]||{}).m||'')+'">'+
   '<button class="bt bt-p bt-s" onclick="setQuali('+jsArg(id)+')">Appliquer</button></div>'+
-  '<p class="mini" style="margin-top:4px">L\'ajustement ne modifie jamais la donnée : il déplace le sous-site dans le classement et le motif reste affiché à côté du rang.</p></div>'+
-  '<div style="font-size:.75rem;margin-bottom:4px;font-weight:600;color:var(--pri)">Notes et commentaires :</div>'+
-  '<textarea id="noteTA" placeholder="Note conservée lors des mises à jour du fichier de données — exportable séparément via « Notes et ajustements »" onblur="saveNote('+jsArg(id)+')" style="width:100%;height:60px;border:1px solid #cbd5e0;border-radius:6px;padding:6px;font-size:.76rem;resize:vertical">'+esc(siteNotes[id]||'')+'</textarea>'+
+  '<p class="mini" style="margin-top:6px">L\'ajustement ne modifie jamais la donnée : il déplace le sous-site dans le classement et le motif reste affiché à côté du rang.</p></div>'+
+  '<div class="fiche-notes"><h5>Notes et commentaires :</h5>'+
+  '<textarea id="noteTA" placeholder="Note conservée lors des mises à jour du fichier de données — exportable séparément via « Notes et ajustements »" onblur="saveNote('+jsArg(id)+')">'+esc(siteNotes[id]||'')+'</textarea></div>'+
+  '</div>'+
   /* Le bloc entier disparaît quand les liens sortants sont coupés : un
      conteneur vide laisserait une marge sous les notes. */
   (LIENS_SORTANTS
@@ -7060,9 +7393,9 @@ function tourFranchiTxt(){
     return "Voici la ligne décisive, encadrée de vert, sur l'objectif <b>"+esc(String(lbl))+"</b> : "+
       "c'est le rang <b>"+R.franchiRang+"</b>, celui où le cumul des gains <b>atteint la cible 2030</b> si l'on "+
       "finance les sous-sites dans cet ordre. Tout ce qui est au-dessus est nécessaire ; en dessous, c'est du "+
-      "surplus pour cette cible-là. La colonne « % de l'écart comblé » dit, à chaque rang, quelle part de l'écart "+
-      "<b>restant</b> le cumul a comblée — pas le chemin depuis 2005, que donne la tuile de la Vue d'ensemble. "+
-      "La jauge au-dessus du tableau met les deux bout à bout."}
+      "surplus pour cette cible-là. La colonne « % de l'objectif » dit, à chaque rang, quelle part de l'objectif "+
+      "est atteinte : elle part de ce qui est déjà fait depuis 2005 — le chiffre de la tuile de la Vue d'ensemble — "+
+      "et atteint 100 % sur cette ligne."}
   return "Normalement, une ligne encadrée de vert marque le <b>rang de franchissement</b> : celui où le cumul des "+
     "gains atteint la cible 2030. <b>Aucun objectif ne l'atteint aujourd'hui</b> avec les sous-sites qui portent un "+
     "coût dans le référentiel actif — c'est écrit sous les filtres. Ce n'est pas un défaut de l'outil, c'est le "+
@@ -7180,7 +7513,7 @@ const TITLES=[
  ['#gCo2','Base de comptabilité CO₂ : valeurs mesurées du parc, ou facteurs de la convention légale'],
  ['#objSel','Objectif servi par le classement — un objectif, un classement par coût unitaire croissant'],
  ['#objNote','Méthode appliquée : source de la cible, écart restant à combler, population retenue'],
- ['#objBody','Rang, contribution annuelle, cumul, part de l\'écart RESTANT comblée (pas le chemin depuis 2005), coût unitaire. Ligne verte = rang de franchissement de la cible 2030'],
+ ['#objBody','Rang, contribution annuelle, cumul, part de l\'objectif atteinte (0 % = référence 2005, 100 % = cible), coût unitaire. Ligne verte = rang de franchissement de la cible 2030'],
  ['#objRankCard h3','Cliquer pour replier ou déplier le classement'],
  ['#bBud',"Enveloppe totale disponible sur l'horizon 2025–2037"],
  ['#bCap','Plafond de dépense annuelle : ce qui étale les projets dans le temps'],
@@ -8794,9 +9127,29 @@ var MAP_ORANGE='#F39C12';
    de carte où il se trouve, et glisse verticalement pour rester entière dans la carte. */
 function tipPlace(e){
   var t=e.tooltip,el=t&&t.getElement&&t.getElement();if(!el||!lMap)return;
-  var sz=lMap.getSize(),p=lMap.latLngToContainerPoint(e.target.getLatLng()),h=el.offsetHeight;
+  var sz=lMap.getSize(),p=lMap.latLngToContainerPoint(e.target.getLatLng());
+  /* Plus haute que la carte (24 commentaires de jalons, par ex.) : on retire
+     des lignes en partant de la fin de la dernière liste, la ligne « … et N
+     de plus » le dit, et la phrase qui annonce le clic reste visible ; le
+     texte entier est dans la fenêtre ouverte d'un clic (14.10.2026).
+     t.update() réécrirait le contenu : la position est recalculée sans lui. */
+  var hMax=Math.max(80,sz.y-12);
+  var haut=function(){return Math.max(el.offsetHeight,el.scrollHeight)};
+  var garde=60;
+  while(haut()>hMax&&garde-->0){
+    var secs=[].slice.call(el.querySelectorAll('.tip-sec')).filter(function(x){
+      return x.querySelectorAll('.tip-l:not(.tip-plus):not([data-coupe])').length>1});
+    if(!secs.length)break;
+    var sec=secs[secs.length-1],ls=sec.querySelectorAll('.tip-l:not(.tip-plus):not([data-coupe])'),der=ls[ls.length-1];
+    der.setAttribute('data-coupe','1');der.style.display='none';
+    var pl=sec.querySelector('.tip-plus');
+    if(!pl){pl=document.createElement('span');pl.className='tip-l tip-plus';pl.setAttribute('data-n','0');pl.setAttribute('data-suf','');sec.appendChild(pl)}
+    var n=(+pl.getAttribute('data-n')||0)+1;pl.setAttribute('data-n',n);
+    pl.textContent='… et '+n+' de plus'+(pl.getAttribute('data-suf')||'')}
+  var h=Math.min(haut(),hMax);
   var dir=p.x<sz.x/2?'right':'left',top=p.y-h/2,c=Math.min(Math.max(6,top),Math.max(6,sz.y-h-6));
-  t.options.direction=dir;t.options.offset=L.point(dir==='right'?10:-10,Math.round(c-top));t.update()}
+  t.options.direction=dir;t.options.offset=L.point(dir==='right'?10:-10,Math.round(c-top));
+  if(typeof t._updatePosition==='function')t._updatePosition();else t.update()}
 function tipStatut(v){return String(v||'').replace(/^\s*\d+\s*-\s*/,'').toLocaleLowerCase('fr')}
 function tipProjets(s,fige){
   var p=s.projets||[],max=fige?p.length:TIP_MAX;
@@ -8804,14 +9157,14 @@ function tipProjets(s,fige){
   return'<div class="tip-sec">Projets GE-Invest : <b>'+p.length+'</b>'+p.slice(0,max).map(function(x){var st=tipStatut(x.statut),t=esc(x.numero)+(st?' · '+esc(st):'')+(x.nom?' — '+esc(x.nom):''),u=null;
     if(fige){try{u=PTE_COMMUN.lien('revue',String(s.id),x.numero)}catch(e){u=null}}
     return'<span class="tip-l">· '+(u?'<a href="'+esc(u)+'" title="Ouvrir la fiche du projet dans la Revue de projets">'+t+'</a>':t)+'</span>'}).join('')+
-    (p.length>max?'<span class="tip-l">… et '+(p.length-max)+' de plus</span>':'')+'</div>'}
+    (p.length>max?'<span class="tip-l tip-plus" data-n="'+(p.length-max)+'" data-suf="">… et '+(p.length-max)+' de plus</span>':'')+'</div>'}
 function tipRelais(s,fige){
   if(s.relais==null||s.relais==='')return'';
   var l=String(s.relais).split(/\s*\|\s*/).filter(function(x){return x});
   if(!l.length)return'';
   return'<div class="tip-sec">Surfaces de relais (GEI) — commentaires des jalons : <b>'+l.length+'</b>'+l.slice(0,fige?l.length:TIP_MAX).map(function(x){
     return'<span class="tip-l">· '+esc(x)+'</span>'}).join('')+
-    (!fige&&l.length>TIP_MAX?'<span class="tip-l">… et '+(l.length-TIP_MAX)+' de plus (colonne de Plan_PTE)</span>':'')+'</div>'}
+    (!fige&&l.length>TIP_MAX?'<span class="tip-l tip-plus" data-n="'+(l.length-TIP_MAX)+'" data-suf=" (colonne de Plan_PTE)">… et '+(l.length-TIP_MAX)+' de plus (colonne de Plan_PTE)</span>':'')+'</div>'}
 
 let geoRunning=false;
 async function geocodeSites(){
@@ -9301,7 +9654,7 @@ function rubanV(key,x0,yDeb,yAuj,yCib,C,lblDeb,lblAuj,lblCib){
     +'<rect width="6" height="6" fill="'+C.soft+'"/><line x1="0" y1="0" x2="0" y2="6" stroke="'+C.line+'" stroke-width="3"/></pattern></defs>';
   g+=band(yDeb,yAuj,C.fait,nf(D.pct==null?0:D.pct)+' %',
         Z.acquis.t.charAt(0).toUpperCase()+Z.acquis.t.slice(1)+' — '+Z.acquis.d,C.onFait,C.fait);
-  g+=band(yAuj,yCouv,C.couv,nf(Math.min(100,D.couv*100))+' %',
+  g+=band(yAuj,yCouv,C.couv,'→'+nf(D.tot==null?(D.pct||0):D.tot)+'%',
         Z.couvert.t.charAt(0).toUpperCase()+Z.couvert.t.slice(1)+' — '+Z.couvert.d,C.onCouv,C.couv);
   g+=band(yCouv,yCib,'url(#hatchR)','',
         Z.reste.t.charAt(0).toUpperCase()+Z.reste.t.slice(1)+' — '+Z.reste.d,C.ink3,C.ink3);
@@ -9660,5 +10013,344 @@ function onPanelShown(id){
   if(id==='mapPnl'){if(!mapReady)initMap();fixMap();geoButtonRefresh()}
 }
 </script>
+<!-- PTE-EPURE:corps — module commun 00_Design-System/pte-epure.js, recopié par build/integrer-epure.py -->
+<script id="pte-epure-js">
+/* ==========================================================================
+   PTE — présentation épurée : comportement (proposée le 13.10.2026,
+   présentation par défaut depuis le 14.10.2026, décision d'Achim)
+   Module commun, recopié tel quel dans les quatre pages par
+   00_Design-System/build/integrer-epure.py. Il ne calcule rien et ne retire
+   rien : il déplace les textes d'explication derrière un bouton « i » (le texte
+   reste dans la page, masqué, et s'ouvre dans une bulle) et réduit les
+   bandeaux d'alerte à leur première phrase. La classe « epure » est posée sur
+   <html> dès l'en-tête, sauf si la présentation classique a été choisie sur ce
+   poste (localStorage « pte.presentation.v1 ») ; le pied de page permet de
+   passer de l'une à l'autre. Les pages se redessinent souvent : un
+   observateur traite ce qui apparaît.
+   ========================================================================== */
+(function () {
+  'use strict';
+  if (window.__PTE_EPURE) return;
+  window.__PTE_EPURE = true;
+  var LS_PRES = 'pte.presentation.v1';
+  var EPURE = document.documentElement.classList.contains('epure');
+
+  /* ---------- 1. Passer d'une présentation à l'autre (pied de page) ---------- */
+  function bascule() {
+    if (document.querySelector('.ep-bascule')) return;
+    var v = document.querySelector('footer [data-pte-versions], [data-pte-versions]');
+    var cible = v ? v.parentNode : document.querySelector('footer');
+    if (!cible) return;
+    var a = document.createElement('a'); a.className = 'ep-bascule'; a.href = '#';
+    a.textContent = EPURE ? 'Présentation classique' : 'Présentation épurée';
+    a.title = EPURE ? 'Même outil, même classeur, présentation d’origine — choix gardé sur ce poste'
+                    : 'Même outil, même classeur, présentation épurée — choix gardé sur ce poste';
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      try { localStorage.setItem(LS_PRES, EPURE ? 'classique' : 'epure'); } catch (e2) { /* choix valable pour cette visite seulement */ }
+      if (EPURE) document.documentElement.classList.remove('epure');
+      location.reload();
+    });
+    if (v) { cible.insertBefore(a, v.nextSibling); cible.insertBefore(document.createTextNode(' · '), a); } else cible.appendChild(a);
+  }
+  if (!EPURE) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bascule); else bascule();
+    window.PTE_EPURE = { actif: false };
+    return;
+  }
+
+  /* Le mode nuit est commun aux outils (clé « pte.theme.v1 ») : l'accueil, qui
+     ne l'appliquait pas, le suit désormais dans la présentation épurée. */
+  try {
+    if (window.PTE_COMMUN && PTE_COMMUN.themeCourant && PTE_COMMUN.themeCourant() === 'nuit' && !document.body.classList.contains('night'))
+      PTE_COMMUN.appliquerTheme('nuit');
+  } catch (e) { /* thème de jour */ }
+
+  /* ---------- 2. Bulle d'information unique ---------- */
+  var pop = document.createElement('div');
+  pop.className = 'ep-pop'; pop.hidden = true; pop.setAttribute('role', 'dialog');
+  var ouvert = null;   // { bouton, garde, noeuds }
+  function fermer() {
+    if (!ouvert) return;
+    ouvert.noeuds.forEach(function (n) { ouvert.garde.appendChild(n); });
+    pop.innerHTML = ''; pop.hidden = true;
+    ouvert.bouton.setAttribute('aria-expanded', 'false');
+    ouvert = null;
+  }
+  function placer(b) {
+    var r = b.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight, vw = window.innerWidth, vh = window.innerHeight;
+    var x = Math.min(Math.max(12, r.left - 16), vw - w - 12), y = r.bottom + 8;
+    if (y + h > vh - 12 && r.top - h - 8 > 12) y = r.top - h - 8;
+    pop.style.left = x + 'px'; pop.style.top = Math.max(12, y) + 'px';
+  }
+  function ouvrir(b, garde, titre) {
+    if (ouvert && ouvert.bouton === b) { fermer(); return; }
+    fermer();
+    if (!pop.parentNode) document.body.appendChild(pop);
+    var noeuds = Array.prototype.slice.call(garde.childNodes);
+    pop.innerHTML = '';
+    noeuds.forEach(function (n) { pop.appendChild(n); });
+    /* un <details> déplacé s'ouvre d'office : on le lit en entier */
+    pop.querySelectorAll('details').forEach(function (d) { d.open = true; });
+    pop.hidden = false; b.setAttribute('aria-expanded', 'true');
+    ouvert = { bouton: b, garde: garde, noeuds: noeuds };
+    placer(b);
+  }
+  document.addEventListener('click', function (e) {
+    if (!ouvert) return;
+    if (pop.contains(e.target) || ouvert.bouton.contains(e.target)) return;
+    fermer();
+  }, true);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && ouvert) { var b = ouvert.bouton; fermer(); b.focus(); } });
+  window.addEventListener('resize', fermer);
+  window.addEventListener('scroll', function () { if (ouvert) placer(ouvert.bouton); }, true);
+
+  /* Crée le bouton « i » et sa garde (élément masqué qui conserve le texte dans la page). */
+  function bouton(titre) {
+    var iw = document.createElement('span'); iw.className = 'ep-iw';
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'ep-i'; b.textContent = 'i';
+    b.setAttribute('aria-expanded', 'false'); b.setAttribute('aria-label', titre || 'Information');
+    b.title = titre || 'Information';
+    var garde = document.createElement('div'); garde.className = 'ep-garde';
+    b.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); ouvrir(b, garde, titre); });
+    iw.appendChild(b); iw.appendChild(garde);
+    return { iw: iw, garde: garde };
+  }
+
+  /* ---------- 3. Où poser le « i » : sur le titre le plus proche ---------- */
+  var TITRES = 'h1,h2,h3,h4,h5,.card-title,.sec-h,.perim-lbl,.perim-sia-t,.situ-h h2,.etape h2,.tr-h,.m-hdr h2';
+  function titreProche(el) {
+    var p = el.previousElementSibling, n = 0;
+    while (p && n < 3) {
+      if (p.matches && p.matches(TITRES)) return p;
+      var q = p.querySelector && p.querySelector(':scope > ' + TITRES.split(',').join(', :scope > '));
+      if (q && p.matches('.etape, .situ-h, .card-title, .perim-l1')) return q;
+      p = p.previousElementSibling; n++;
+    }
+    var par = el.parentElement;
+    if (par) {
+      var t = par.querySelector(':scope > ' + TITRES.split(',').join(', :scope > '));
+      if (t && t !== el && (t.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)) return t;
+    }
+    return null;
+  }
+  /* Un seul « i » par titre : les textes qui s'y rattachent s'ajoutent à la même bulle, chacun sous son intitulé. */
+  var GENERIQUES = /^(En savoir plus|Information|Détail)$/;
+  function section(el, titre) {
+    var sec = document.createElement('div'); sec.className = 'ep-sec';
+    if (titre && !GENERIQUES.test(titre)) { var h = document.createElement('div'); h.className = 'ep-pop-s'; h.textContent = titre; sec.appendChild(h); }
+    sec.appendChild(el);
+    return sec;
+  }
+  /* Signature de l'emplacement d'origine d'un texte : quand la page redessine
+     un bloc, le texte revient au même endroit et remplace sa version
+     précédente dans la bulle, au lieu de s'y ajouter une fois de plus. */
+  function signature(el) {
+    /* chemin exact depuis l'ancêtre nommé (id) le plus proche : unique pour
+       chaque emplacement, identique quand le même bloc est redessiné */
+    var chemin = [], n = el;
+    while (n && n.parentElement && !(n !== el && n.id)) {
+      var i = 0, f = n.parentElement.firstElementChild;
+      while (f && f !== n) { i++; f = f.nextElementSibling; }
+      chemin.push(n.tagName + ':' + i); n = n.parentElement;
+    }
+    return (n && n.id ? '#' + n.id : '') + '>' + chemin.reverse().join('>');
+  }
+  function ranger(garde, el, titre, sig) {
+    var sec = section(el, titre); sec.setAttribute('data-ep-sig', sig);
+    var vieux = null, t = texte(sec);
+    Array.prototype.forEach.call(garde.querySelectorAll(':scope > .ep-sec'), function (x) {
+      if (x.getAttribute('data-ep-sig') === sig) vieux = x;
+      else if (texte(x) === t) x.remove();   /* le même texte, arrivé par un autre chemin : une seule fois */
+    });
+    if (vieux) garde.replaceChild(sec, vieux); else garde.appendChild(sec);
+  }
+  function poserSur(cible, el, titre) {
+    var sig = signature(el);
+    /* une marque vide reste à la place du texte : les rangs des voisins ne
+       bougent pas, et deux textes d'un même bloc gardent deux signatures */
+    if (el.parentNode) { var m = document.createElement('span'); m.className = 'ep-place'; m.hidden = true; el.parentNode.insertBefore(m, el); }
+    var iw = cible.querySelector(':scope > .ep-iw');
+    if (iw && iw.__garde) { ranger(iw.__garde, el, titre, sig); el.setAttribute('data-ep', '1'); return; }
+    var x = bouton(GENERIQUES.test(titre || '') ? 'En savoir plus' : titre);
+    x.iw.__garde = x.garde;
+    var droite = cible.querySelector(':scope > .card-title-right, :scope > .ch, :scope > .tgl');
+    if (droite) cible.insertBefore(x.iw, droite); else cible.appendChild(x.iw);
+    ranger(x.garde, el, titre, sig);
+    el.setAttribute('data-ep', '1');
+  }
+  /* Titre de l'onglet (grand titre, comme dans les applications d'Apple) quand un panneau n'en a pas. */
+  function grandTitre(el) {
+    var pnl = el.closest('.pnl, section.view, [id^="view-"]');
+    if (!pnl) return null;
+    var exist = pnl.querySelector(':scope > .ep-titre');
+    if (exist) return exist;
+    var tab = pnl.id ? document.querySelector('.tab[data-panel="' + pnl.id + '"], .tab[data-view="' + pnl.id.replace(/^view-/, '') + '"]') : null;
+    if (!tab) return null;
+    var h = document.createElement('h2'); h.className = 'ep-titre'; h.textContent = texte(tab);
+    pnl.insertBefore(h, pnl.firstChild);
+    return h;
+  }
+  function deposerIcone(el, titre, ou) {
+    var cible = null;
+    if (ou === 'entete') cible = document.querySelector('header h1');
+    if (!cible) cible = titreProche(el);
+    if (!cible && ou === 'onglet') cible = grandTitre(el);
+    if (!cible) { var c = el.closest('.cd, .card, .bloc'); if (c) cible = c.querySelector('.card-title, .etape h2, h2, h3'); if (cible && !(cible.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)) cible = null; }
+    if (cible) { poserSur(cible, el, titre); return; }
+    var ligne = document.createElement('div'); ligne.className = 'ep-ligne';
+    el.parentNode.insertBefore(ligne, el);
+    poserSur(ligne, el, titre);
+  }
+  /* Regrouper des commandes secondaires derrière un bouton : elles restent les mêmes, un clic plus loin. */
+  function regrouper(noeuds, libelle) {
+    noeuds = noeuds.filter(Boolean);
+    if (!noeuds.length || noeuds[0].getAttribute('data-ep')) return;
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'bt bt-s ep-grp'; b.textContent = libelle;
+    b.setAttribute('aria-expanded', 'false');
+    var garde = document.createElement('div'); garde.className = 'ep-garde';
+    var box = document.createElement('div'); box.className = 'ep-cmds';
+    noeuds[0].parentNode.insertBefore(b, noeuds[0]);
+    noeuds[0].parentNode.insertBefore(garde, b.nextSibling);
+    noeuds.forEach(function (n) { n.setAttribute('data-ep', '1'); box.appendChild(n); });
+    garde.appendChild(box);
+    b.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); ouvrir(b, garde, null); });
+  }
+
+  /* ---------- 4. Règles ---------- */
+  function estLegende(el) {
+    /* une ligne de légende de graphique (pastilles colorées) reste visible */
+    return !!el.querySelector('[style*="background"], .sw, .dot, .sem-dot, svg, i[class]');
+  }
+  function texte(el) { return (el.textContent || '').replace(/\s+/g, ' ').trim(); }
+  function premierePhrase(el) {
+    var b = el.querySelector('b, strong');
+    if (b && texte(b).length > 12) return texte(b).replace(/[.:]\s*$/, '');
+    var t = texte(el), i = t.search(/[.:;]\s/);
+    return (i > 20 && i < 160 ? t.slice(0, i) : t.slice(0, 120) + (t.length > 120 ? '…' : ''));
+  }
+
+  function traiter(racine) {
+    racine = racine || document;
+    commandes(racine);
+    sommaire(); appliquerPartie();
+    /* le panneau Méthode est la documentation : il reste lu en entier, rien n'y passe derrière un « i » */
+    var dans = function (el) { return el.closest('.ep-garde, .ep-pop, .ep-ligne, .tour-box, #tour, .modal, dialog, #manual, #view-methode, .meth'); };
+
+    /* a. « Comment lire… » et autres <details class="howto"> : deviennent un « i » */
+    racine.querySelectorAll('details.howto:not([data-ep])').forEach(function (d) {
+      if (dans(d)) return;
+      var s = d.querySelector(':scope > summary'), titre = s ? texte(s) : 'Comment lire';
+      if (s) s.remove();
+      var corps = document.createElement('div');
+      while (d.firstChild) corps.appendChild(d.firstChild);
+      d.appendChild(corps); d.open = true;
+      deposerIcone(d, titre, d.classList.contains('tab-howto') ? 'onglet' : null);
+    });
+
+    /* b. phrases d'explication sous un titre */
+    racine.querySelectorAll('p.lead:not([data-ep]), .tab-lead:not([data-ep]), .perim-def:not([data-ep]), .perim-note:not([data-ep]), .cpi-note:not([data-ep]), ' +
+      '.dash-foot:not([data-ep]), p.aide:not([data-ep]), .drop .opt:not([data-ep]), .wrap > p.lead:not([data-ep]), p.mini:not([data-ep]), ' +
+      '#reporting-content .card > p.small.muted:not([data-ep])').forEach(function (p) {
+      if (dans(p) || p.closest('.m-hdr, .hdr, .tile, .obj-tile, td, th, label, .perim-l1')) return;
+      if (texte(p).length < 40) return;
+      if (p.matches('p.mini') && estLegende(p)) return;
+      var titre = p.matches('.perim-def') ? 'Définition' : (p.matches('.perim-note') ? 'Phase SIA' : 'En savoir plus');
+      deposerIcone(p, titre, p.matches('.wrap > p.lead') ? 'entete' : null);
+    });
+
+    /* c. bandeaux d'alerte : la première phrase reste, le détail passe derrière le « i » */
+    racine.querySelectorAll('.part-warn:not([data-ep]), .attr-warn:not([data-ep]), .warnbox:not([data-ep]), .notices-corps > .notice:not([data-ep])').forEach(function (w) {
+      if (dans(w) || w.closest('details.howto')) return;
+      if (texte(w).length < 110) { w.setAttribute('data-ep', '1'); return; }
+      var ban = document.createElement('div');
+      ban.className = 'ep-banner' + (w.matches('.attr-warn') ? ' ep-info' : '');
+      var t = document.createElement('span'); t.className = 'ep-banner-t'; t.textContent = premierePhrase(w);
+      ban.appendChild(t);
+      var x = bouton('Détail');
+      ban.appendChild(x.iw);
+      w.parentNode.insertBefore(ban, w);
+      x.garde.appendChild(w);
+      w.setAttribute('data-ep', '1');
+      /* le texte d'origine peut changer (même élément mis à jour) : la phrase suit */
+      new MutationObserver(function () { t.textContent = premierePhrase(w); }).observe(w, { childList: true, subtree: true, characterData: true });
+    });
+  }
+
+  /* ---------- 4 bis. Commandes : filtres de la revue en capsules, instantanés de la priorisation regroupés ---------- */
+  function commandes(racine) {
+    racine.querySelectorAll('.filter-item:not([data-ep])').forEach(function (fi) {
+      var l = fi.querySelector(':scope > label'), sel = fi.querySelector(':scope > select');
+      fi.setAttribute('data-ep', '1');
+      if (!l || !sel) return;
+      var nom = texte(l), o = sel.options[0];
+      if (o && o.value === '' && /^Tous$/i.test(texte(o))) o.textContent = nom + ' : tous';
+      sel.setAttribute('aria-label', nom); l.classList.add('ep-sr');
+    });
+    var snap = document.getElementById('snapSel');
+    if (snap && !snap.getAttribute('data-ep')) {
+      var row = snap.parentNode, bt = row.querySelector('[onclick^="snapSave"]'), del = row.querySelector('[onclick^="snapDel"]'), inf = document.getElementById('snapInfo');
+      regrouper([bt, snap, del, inf], 'Instantanés');
+    }
+  }
+
+  /* ---------- 4 ter. Revue : une partie du reporting à la fois ----------
+     Les boutons « Aller à » deviennent un sélecteur : Synthèse, Sémaphores… ou Tout. La partie choisie seule
+     est montrée (les autres restent dans la page, masquées) ; « Tout » rend la page entière, comme avant.
+     L'impression montre toujours tout. */
+  var LS_PART = 'pte.epure.revue.partie';
+  function partieChoisie() { try { return localStorage.getItem(LS_PART) || 'synthese'; } catch (e) { return 'synthese'; } }
+  function appliquerPartie() {
+    var body = document.getElementById('rep-body'), nav = document.querySelector('.rep-sommaire');
+    if (!body || !nav) return;
+    var ancres = body.querySelectorAll(':scope > .rep-ancre');
+    if (!ancres.length) return;
+    var choix = partieChoisie(), cur = 'synthese';
+    Array.prototype.forEach.call(body.children, function (n) {
+      if (n.classList.contains('rep-ancre') && n.id) cur = n.id;
+      var montrer = choix === 'tout' || cur === choix;
+      if (n.classList.contains('ep-cache') === montrer) n.classList.toggle('ep-cache', !montrer);
+    });
+    nav.querySelectorAll('.rep-saut').forEach(function (b) { var v = b.getAttribute('data-ep-partie') === choix ? 'true' : 'false'; if (b.getAttribute('aria-pressed') !== v) b.setAttribute('aria-pressed', v); });
+  }
+  function sommaire() {
+    var nav = document.querySelector('.rep-sommaire:not([data-ep])');
+    if (!nav) return;
+    nav.setAttribute('data-ep', '1');
+    var ids = ['rep-sec-semaphores', 'rep-sec-cpi', 'rep-sec-planning', 'rep-sec-finances', 'rep-sec-portefeuilles', 'rep-sec-sous-sites'];
+    var bs = nav.querySelectorAll('.rep-saut');
+    bs.forEach(function (b, i) { if (ids[i]) b.setAttribute('data-ep-partie', ids[i]); });
+    function bouton(id, lib) { var b = document.createElement('button'); b.type = 'button'; b.className = 'rep-saut'; b.textContent = lib; b.setAttribute('data-ep-partie', id); return b; }
+    nav.insertBefore(bouton('synthese', 'Synthèse'), bs[0] || null);
+    nav.appendChild(bouton('tout', 'Tout'));
+    nav.addEventListener('click', function (e) {
+      var b = e.target.closest('.rep-saut'); if (!b) return;
+      try { localStorage.setItem(LS_PART, b.getAttribute('data-ep-partie')); } catch (e2) { /* choix valable pour la page seulement */ }
+      appliquerPartie();
+      if (b.getAttribute('data-ep-partie') === 'synthese' || b.getAttribute('data-ep-partie') === 'tout') window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, true);
+  }
+
+  /* ---------- 6. Démarrage et suivi des redessins ---------- */
+  var attente = false;
+  function planifier() {
+    if (attente) return; attente = true;
+    requestAnimationFrame(function () { attente = false; try { traiter(document); } catch (e) { if (window.console) console.warn('épuré :', e); } });
+  }
+  function demarrer() {
+    traiter(document); bascule();
+    new MutationObserver(function (muts) {
+      for (var i = 0; i < muts.length; i++) {
+        var t = muts[i].target;
+        if (t === pop || (pop.contains && pop.contains(t)) || (t.closest && t.closest('.ep-garde'))) continue;
+        planifier(); return;
+      }
+    }).observe(document.body, { childList: true, subtree: true });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer); else demarrer();
+  window.PTE_EPURE = { actif: true, traiter: traiter, fermer: fermer };
+})();
+</script>
+<!-- /PTE-EPURE:corps -->
 </body>
 </html>
