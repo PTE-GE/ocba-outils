@@ -1306,16 +1306,17 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
     <button class="btn btn-ic" onclick="tglMenu(event)" title="Menu" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <div class="menu" id="mainMenu" onclick="event.stopPropagation()">
       <div class="grp">Données</div>
-      <a onclick="tglNotes(event)">Notes et ajustements<span id="mNotes">CSV</span></a>
+      <a onclick="tglNotes(event)">Notes et ajustements<span id="mNotes">Excel</span></a>
       <a onclick="goData()">Santé des données<span id="mAno">—</span></a>
       <div class="sep"></div>
       <div class="grp">Réglages</div>
       <a onclick="tglPar(event)">Paramètres de calcul<span id="mDur">40 ans</span></a>
       <div class="sep"></div>
       <div class="grp">Mes saisies</div>
-      <a onclick="saisiesExport()">Exporter mes saisies (JSON)<span>3 outils</span></a>
-      <a onclick="$('fSaisies').click()">Importer mes saisies…</a>
-      <input type="file" id="fSaisies" accept=".json,application/json" style="display:none" onchange="saisiesImport(event)">
+      <a onclick="saisiesExport()">Exporter mes saisies (Excel)<span>3 outils</span></a>
+      <a onclick="$('fSaisies').click()">Importer des saisies…</a>
+      <input type="file" id="fSaisies" accept=".xlsx,.json,.csv" style="display:none" onchange="saisiesImport(event)">
+      <a onclick="PTE_COMMUN.ouvrirRetours('priorisation')">Retours et demandes…<span>serveur</span></a>
       <div class="sep"></div>
       <div class="grp">Affichage</div>
       <a onclick="tglTheme()">Mode nuit<span id="mTheme">désactivé</span></a>
@@ -1327,11 +1328,9 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 <div id="notePop" class="pop" onclick="event.stopPropagation()">
 <div class="pop-t">Notes et commentaires</div>
 <div class="pop-i" id="notePopInfo"></div>
-<button class="bt bt-p bt-s" style="width:100%;margin-bottom:5px" onclick="exportNotes()">Exporter les notes (CSV)</button>
-<button class="bt bt-p bt-s" style="width:100%;margin-bottom:5px" onclick="exportClassement()" title="Export pour l'outil de revue de projets">Exporter le classement (CSV)</button>
-<button class="bt bt-i bt-s" style="width:100%" onclick="$('nIn').click()">Importer des notes (CSV)</button>
-<input type="file" id="nIn" accept=".csv,.txt" style="display:none" onchange="handleNotesImport(event)">
-<div class="pop-h">Fichier indépendant des données : colonnes <b>N°</b> et <b>Note</b>. Les notes existantes sont complétées, jamais effacées, et survivent aux mises à jour du classeur.</div>
+<button class="bt bt-p bt-s" style="width:100%;margin-bottom:5px" onclick="closeNotes();saisiesExport()">Exporter mes saisies (Excel)</button>
+<button class="bt bt-i bt-s" style="width:100%" onclick="closeNotes();$('fSaisies').click()">Importer des saisies…</button>
+<div class="pop-h">Un seul fichier Excel pour les trois outils : notes et ajustements d'ici, décisions de la revue. Une ligne par saisie, avec son auteur et sa date ; il se complète dans Excel, se partage et se réimporte. À l'import, chaque changement est montré avant d'être appliqué.</div>
 </div><div class="pop" id="parPop" onclick="event.stopPropagation()">
 <div class="pop-t">Paramètres de calcul</div>
 <div class="pop-body">
@@ -1779,7 +1778,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td>−− Déprioriser fortement</td><td>compte comme 2,5× plus cher</td></tr>
 <tr><td>Exclu</td><td>retiré des classements, du classement de repli, de la vue d'ensemble et de l'arbitrage — mais listé dans le bloc <b>Exclus du programme</b>, au-dessus du tableau du Classement</td></tr>
 </tbody></table>
-<p>La donnée du classeur n'est jamais modifiée. Le rang arithmétique d'origine reste affiché sous le rang ajusté, et le motif apparaît au survol de la pastille. Tout s'exporte avec les notes dans un même CSV, qui se complète dans Excel, se partage et se réimporte.</p>
+<p>La donnée du classeur n'est jamais modifiée. Le rang arithmétique d'origine reste affiché sous le rang ajusté, et le motif apparaît au survol de la pastille. Ajustements et notes s'exportent dans un même fichier Excel (« Exporter mes saisies », menu ☰), une ligne par saisie avec son auteur et sa date ; il se complète dans Excel, se partage et se réimporte, chaque changement étant montré avant d'être appliqué.</p>
 <p>Le bouton <b>Exporter le classement (CSV)</b> produit un second fichier, <code>priorisation_PTE_&lt;date&gt;.csv</code> : une ligne par sous-site de la population entière, rangs par objectif et ajustements compris, qui alimente l'outil de revue de projets (<code>09_Revues-projets/revue-projets.html</code>).</p>
 <p><b>Une exclusion reste réversible.</b> Elle vaut pour le programme entier, pas pour un objectif : le bloc <b>Exclus du programme</b> affiche donc les mêmes bâtiments quel que soit le classement à l'écran, et aucun filtre de la barre ne peut l'amputer. Chaque ligne y rappelle le motif écrit au moment de la décision et le rang que le bâtiment tenait avant d'en sortir, et porte de quoi rejuger sur place — changer l'ajustement, ou <b>réintégrer</b>. Le bâtiment reste par ailleurs visible sur la carte et dans sa fiche.</p>
 </div></div></div>
@@ -1860,7 +1859,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.8 · 15.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.9 · 17.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -2939,6 +2938,10 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "17.10.2026", "objet": "accueil", "version": "v1.9", "titre": "Saisies partagées et consolidation", "points": ["Nouveau bloc « Saisies partagées » : exporter ses saisies dans un fichier Excel, importer celles d'un collègue.", "Mode consolidateur (réservé aux 2-3 personnes désignées) : réunit plusieurs fichiers, montre les désaccords côte à côte, produit la version de référence « consolidée par … le … ».", "Chacun signe ses saisies de son nom, demandé une fois par navigateur.", "Serveur partagé (prototype) : connexion par compte personnel, envoi des saisies, consolidation et référence publiées sur le serveur, retours et demandes avec 3 votes par personne."]},
+    {"date": "17.10.2026", "objet": "priorisation", "version": "v2.9", "titre": "Un seul fichier Excel pour les notes et ajustements", "points": ["Les exports « Notes (CSV) » et « Mes saisies (JSON) » sont remplacés par un seul fichier Excel : une ligne par note ou ajustement, avec son auteur et sa date.", "À l'import, chaque changement est montré avant d'être appliqué ; l'import peut être annulé. Une note n'est plus écrasée sans avertissement.", "Les anciens fichiers JSON et CSV se relisent toujours.", "L'export du classement pour la revue (CSV) reste dans la barre du classement."]},
+    {"date": "17.10.2026", "objet": "simulation", "version": "v3.6", "titre": "Saisies au format Excel", "points": ["« Exporter mes saisies » produit le fichier Excel commun aux trois outils ; les variantes simulées voyagent dans sa feuille masquée.", "« Importer des saisies » montre ce qui change avant de l'appliquer.", "Menu : « Retours et demandes… » (serveur partagé, prototype)."]},
+    {"date": "17.10.2026", "objet": "revue", "version": "v0.20", "titre": "Décisions et escalades dans le fichier Excel des saisies", "points": ["Les décisions et escalades s'exportent dans le fichier Excel commun, une ligne par décision ; elles se corrigent dans Excel et se réimportent.", "Chaque décision reçoit un identifiant : un statut changé dans Excel met à jour la décision au lieu d'en créer un doublon.", "Un registre importé sur un poste où la revue n'avait jamais servi n'est plus effacé au premier classeur.", "Menu : « Retours et demandes… » (serveur partagé, prototype)."]},
     {"date": "15.10.2026", "objet": "priorisation", "version": "v2.8", "titre": "Jauge de l'électricité, colonnes propres à chaque objectif", "points": ["Classement Électricité : la jauge suit la même base que la colonne « % de l'objectif » — le périmètre couvert (0 % = aujourd'hui, 100 % = baisse visée sur les sous-sites chiffrés). Elle affichait le 100 % du parc entier, déjà sous sa cible, pendant que le tableau annonçait un rang de franchissement.", "Photovoltaïque : colonnes CECB+, Chauffage, Substitution et montant retirées ; ajout du PV déjà en place, du potentiel du cadastre solaire SITG [kWc] et de la couverture de la consommation électrique par le projet. Développement durable : CECB+, Chauffage et Substitution retirées ; ajout de la surface de toiture SITG et de la toiture déjà végétalisée.", "Lisibilité : IDC projeté au-dessus du seuil en pastille rouge, mentions « sous le seuil » / « au-dessus » retirées ; une substitution identique au chauffage actuel s'affiche « == » ; pourcentages de la jauge arrondis par défaut.", "Pompes à chaleur : leur consommation électrique n'est pas comprise dans les données de consommation électrique — elle se compte à part, par des compteurs dédiés (principe d'Achim) ; le classement Électricité s'appuie sur les consommations telles quelles. SCOP de 3 par défaut quand la colonne « SCOP PAC [-] » est vide, signalé à l'écran."]},
     {"date": "14.10.2026", "objet": "accueil", "version": "v1.8", "titre": "Présentation épurée par défaut", "points": ["La présentation épurée devient celle des quatre pages : fond calme, cartes sans bordure, une seule couleur d'accent, titres en casse de phrase, un grand titre par onglet.", "Les textes d'explication attendent derrière un « i » ; les alertes tiennent en une phrase, le détail est derrière le « i ». Aucun contenu ni aucune fonction retirés.", "Mode nuit retravaillé : gris profonds, teal éclairci pour le texte, mêmes repères que de jour.", "« Présentation classique », en pied de page, rend la présentation d'origine ; le choix est gardé sur le poste."]},
     {"date": "14.10.2026", "objet": "priorisation", "version": "v2.7", "titre": "Part de l'objectif, fiche du sous-site restructurée", "points": ["Classements par objectif : la colonne « % de l'écart » devient « % de l'objectif » — 0 % = référence 2005, 100 % = cible, comme la tuile de la Vue d'ensemble. Elle part de ce qui est déjà fait et passe au-delà de 100 % quand l'objectif est dépassé.", "Fiche du sous-site restructurée : trois blocs (bâtiment, chaleur et travaux, mesures de l'année), une valeur par ligne, alertes en liste, ajustement et notes côte à côte.", "Carte : l'info-bulle la plus longue reste dans la carte ; les lignes en trop sont comptées dans « … et N de plus » et la phrase qui annonce le clic reste visible.", "Présentation épurée par défaut et mode nuit retravaillé (voir l'accueil v1.8)."]},
@@ -3118,6 +3121,1492 @@ var PTE_COMMUN = (function () {
            ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, TOTAUX_OCBA: TOTAUX_OCBA, situationProgramme: situationProgramme, mchf: mchf,
            VERSIONS: VERSIONS, OBJETS_VER: OBJETS_VER, versionsDe: versionsDe, afficherVersions: afficherVersions };
 })();
+/* ============================================================================
+   SAISIES PARTAGÉES — un classeur Excel, une ligne par saisie (17.10.2026)
+   ----------------------------------------------------------------------------
+   Remplace les deux exports concurrents (« Notes (CSV) » de la priorisation et
+   « Mes saisies (JSON) » des trois outils) par un seul fichier .xlsx :
+     Lisez-moi · Notes · Ajustements · Décisions · _technique (masquée)
+   - chaque saisie porte un auteur et une date de dernière modification,
+     tenus à part dans `pte.saisies.fiches.v1` (empreinte du contenu : une
+     modification se voit sans toucher au code de saisie des outils) ;
+   - l'import montre un APERÇU des changements avant de les appliquer et fait
+     une sauvegarde de l'état d'avant, annulable ;
+   - la consolidation (accueil, mode consolidateur) fusionne plusieurs
+     fichiers, montre les versions concurrentes côte à côte et produit un
+     fichier de référence « consolidé par … le … ».
+   Aucune bibliothèque externe : écriture ZIP « stockée » + CRC32, lecture par
+   DecompressionStream du navigateur (repli sur XLSXReader s'il est présent).
+   Les réglages (paramètres de calcul, variantes simulées, instantanés, seuils,
+   questions du mois) voyagent dans la feuille masquée _technique.
+   ========================================================================== */
+(function (C) {
+  'use strict';
+  if (!C) return;
+
+  var LS_UTIL = 'pte.utilisateur.v1';           /* nom qui signe les saisies de ce navigateur */
+  var LS_FICHES = 'pte.saisies.fiches.v1';      /* {v, init, f:{cle:{h, auteur, modifie}}} */
+  var LS_SAUVE = 'pte.saisies.sauvegarde.v1';   /* {date, fichier, cles:{cle: texte brut | null}} */
+  var LS_CONSO = 'pte.consolidateur.v1';        /* '1' = mode consolidateur sur ce poste */
+  var K_PRIO = 'pte_state_v2', K_REVUE = 'ocba_revue_db_v1', K_DATA = 'pte_data_v2';
+  var FORMAT = 'pte-saisies-xlsx', VERSION_FORMAT = 1;
+  var SEP = '␟';
+  var PIEGES = { '__proto__': 1, 'constructor': 1, 'prototype': 1 };
+
+  /* ---------- petits outils ---------- */
+  function lire(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lireJ(k) { try { return JSON.parse(lire(k) || 'null'); } catch (e) { return null; } }
+  function ecrireJ(k, o) { try { localStorage.setItem(k, JSON.stringify(o)); return true; } catch (e) { return false; } }
+  function maintenant() { return new Date().toISOString(); }
+  function txt(v) { return v == null ? '' : String(v); }
+  function hash(s) {
+    var h = 0x811c9dc5;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+    return ('0000000' + h.toString(16)).slice(-8);
+  }
+  function deux(n) { return (n < 10 ? '0' : '') + n; }
+  /* date lisible ET relue sans ambiguïté : AAAA-MM-JJ HH:MM:SS (heure locale) */
+  function dateFichier(iso) {
+    if (!iso) return '';
+    var d = new Date(iso); if (isNaN(d)) return txt(iso);
+    return d.getFullYear() + '-' + deux(d.getMonth() + 1) + '-' + deux(d.getDate()) + ' ' + deux(d.getHours()) + ':' + deux(d.getMinutes()) + ':' + deux(d.getSeconds());
+  }
+  function dateLisible(iso) {
+    if (!iso) return '';
+    var d = new Date(iso); if (isNaN(d)) return txt(iso);
+    return deux(d.getDate()) + '.' + deux(d.getMonth() + 1) + '.' + d.getFullYear() + ' ' + deux(d.getHours()) + ':' + deux(d.getMinutes());
+  }
+  /* relit « AAAA-MM-JJ[ HH:MM] », « JJ.MM.AAAA[ HH:MM] » ou un numéro de série Excel */
+  function relireDate(v) {
+    if (v == null || v === '') return '';
+    if (typeof v === 'number' && isFinite(v)) {
+      var ms = Math.round((v - 25569) * 86400000), d0 = new Date(ms);
+      if (isNaN(d0)) return '';
+      return new Date(d0.getUTCFullYear(), d0.getUTCMonth(), d0.getUTCDate(), d0.getUTCHours(), d0.getUTCMinutes()).toISOString();
+    }
+    var s = txt(v).trim(), m;
+    if ((m = /^(\d{4})-(\d{1,2})-(\d{1,2})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2}))?)?/.exec(s)))
+      return new Date(+m[1], +m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0)).toISOString();
+    if ((m = /^(\d{1,2})\.(\d{1,2})\.(\d{4})(?:\s+(\d{1,2}):(\d{2}))?/.exec(s)))
+      return new Date(+m[3], +m[2] - 1, +m[1], +(m[4] || 0), +(m[5] || 0)).toISOString();
+    return '';
+  }
+  /* jour seul (échéance, date de revue) : gardé en AAAA-MM-JJ */
+  function relireJour(v) {
+    if (v == null || v === '') return '';
+    if (typeof v === 'number') { var iso = relireDate(v); if (!iso) return ''; var d = new Date(iso); return d.getFullYear() + '-' + deux(d.getMonth() + 1) + '-' + deux(d.getDate()); }
+    var s = txt(v).trim(), m;
+    if ((m = /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/.exec(s))) return m[3] + '-' + deux(+m[2]) + '-' + deux(+m[1]);
+    return s;
+  }
+  function normEnt(s) {
+    return txt(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
+  }
+  function oui(v) { return /^(oui|o|x|yes|y|1|vrai|true|supprimer)$/i.test(txt(v).trim()); }
+
+  /* ---------- qui signe ---------- */
+  function utilisateur() { return txt(lire(LS_UTIL)).trim(); }
+  function definirUtilisateur(n) {
+    n = txt(n).replace(/\s+/g, ' ').trim().slice(0, 80);
+    try { if (n) localStorage.setItem(LS_UTIL, n); else localStorage.removeItem(LS_UTIL); } catch (e) {}
+    return n;
+  }
+  function modeConsolidateur(on) {
+    if (on !== undefined) { try { if (on) localStorage.setItem(LS_CONSO, '1'); else localStorage.removeItem(LS_CONSO); } catch (e) {} }
+    return lire(LS_CONSO) === '1';
+  }
+
+  /* ---------- ajustements : libellés du fichier (sans + ni − en tête : Excel les prendrait pour une formule) ---------- */
+  var AJUST = [
+    { k: 'in', lib: 'Imposé (traiter en premier)' },
+    { k: '2', lib: 'Priorité forte (++)' },
+    { k: '1', lib: 'Priorité (+)' },
+    { k: '-1', lib: 'Déprioriser (−)' },
+    { k: '-2', lib: 'Déprioriser fortement (−−)' },
+    { k: 'ex', lib: 'Exclu (hors programme)' }
+  ];
+  var AUCUN = 'Aucun ajustement';
+  function libAjust(k) { k = txt(k); for (var i = 0; i < AJUST.length; i++) if (AJUST[i].k === k) return AJUST[i].lib; return k; }
+  /* '0' = aucun ajustement ; null = valeur inconnue */
+  function codeAjust(v) {
+    var s = txt(v).trim(); if (!s) return '0';
+    var n = s.toLowerCase().replace(/[−–—]/g, '-').replace(/\s+/g, ' ');
+    var a = n.normalize('NFD').replace(/[̀-ͯ]/g, '');
+    if (n === 'in' || /^impos/.test(a)) return 'in';
+    if (n === 'ex' || /^exclu|^hors/.test(a)) return 'ex';
+    if (n === '0' || /^aucun|^•|^neutre/.test(a)) return '0';
+    if (n === '2' || n === '+2' || /^\+\+/.test(n) || /^priorite forte/.test(a)) return '2';
+    if (n === '1' || n === '+1' || /^\+/.test(n) || /^priorite/.test(a)) return '1';
+    if (n === '-2' || /^--/.test(n) || /^depriorise[rz]? fortement/.test(a)) return '-2';
+    if (n === '-1' || /^-/.test(n) || /^depriorise/.test(a)) return '-1';
+    return null;
+  }
+  var NIVEAUX = { projet: 'Projet', portefeuille: 'Portefeuille', parc: 'Parc' };
+  function codeNiveau(v) { var a = normEnt(v); return NIVEAUX[a] ? a : (a ? txt(v).trim() : ''); }
+
+  /* ---------- lecture des saisies dans le stockage des trois outils ---------- */
+  var CH_DEC = ['date', 'niveau', 'numero_projet', 'portefeuille', 'decision', 'responsable', 'echeance', 'statut', 'escalade_vers'];
+  function contenuDecision(d) { return CH_DEC.map(function (c) { return txt(d[c]).trim(); }).join(SEP); }
+  function idDecision(d) { return d && d.id ? txt(d.id) : 'D-' + hash(contenuDecision(d || {})); }
+  /* forme normalisée d'une décision : celle que donne la relecture du fichier (statut vide = ouverte,
+     niveau en minuscules, dates JJ.MM.AAAA en AAAA-MM-JJ). Sert à comparer, jamais à réécrire. */
+  function normDecision(f) {
+    var o = {}; CH_DEC.forEach(function (c) { o[c] = txt(f[c]).trim(); });
+    o.statut = o.statut || 'ouverte'; o.niveau = codeNiveau(o.niveau); o.date = relireJour(o.date); o.echeance = relireJour(o.echeance);
+    return o;
+  }
+  function contenu(f) {
+    if (f.rubrique === 'note') return txt(f.texte).replace(/\r\n?/g, '\n').trim();
+    if (f.rubrique === 'ajustement') return txt(f.niveau) + SEP + txt(f.motif).trim();
+    if (f.rubrique === 'decision') return contenuDecision(normDecision(f));
+    return '';
+  }
+  function nomsSites() {
+    var d = lireJ(K_DATA), m = {}, L = d && (d.sitesAll || d.sites);
+    if (L && L.length) L.forEach(function (s) { if (s && s.id != null) m[txt(s.id)] = txt(s.nom); });
+    return m;
+  }
+  function lireFichesBrutes() {
+    var out = [], vus = {}, st = lireJ(K_PRIO) || {}, noms = nomsSites();
+    var N = st.siteNotes || {};
+    Object.keys(N).forEach(function (id) {
+      var t = txt(N[id]); if (!t.trim() || PIEGES[id]) return;
+      out.push({ cle: 'note|' + id, rubrique: 'note', site: id, nom: noms[id] || '', texte: t });
+    });
+    var Q = st.siteQuali || {};
+    Object.keys(Q).forEach(function (id) {
+      var q = Q[id] || {}, p = txt(q.p); if (!p || p === '0' || PIEGES[id]) return;
+      out.push({ cle: 'ajustement|' + id, rubrique: 'ajustement', site: id, nom: noms[id] || '', niveau: p, motif: txt(q.m) });
+    });
+    var db = lireJ(K_REVUE) || {};
+    (db.decisions || []).forEach(function (d) {
+      if (!d) return;
+      var f = { rubrique: 'decision' };
+      CH_DEC.forEach(function (c) { f[c] = txt(d[c]); });
+      f.id = idDecision(d); f.cle = 'decision|' + f.id;
+      if (vus[f.cle]) return;            /* doublon exact laissé par l'ancien import : compté une fois */
+      vus[f.cle] = 1; out.push(f);
+    });
+    return out;
+  }
+  /* Tient à jour auteur et date de chaque saisie, par empreinte du contenu.
+     Appelée par les outils à chaque enregistrement. Au tout premier passage,
+     les saisies déjà là n'ont ni auteur ni date connus (laissés vides). */
+  function synchroniserFiches() {
+    var m = lireJ(LS_FICHES), premiere = !(m && m.f);
+    if (premiere) m = { v: 1, init: maintenant(), f: {} };
+    var vus = {}, now = maintenant(), u = utilisateur(), change = premiere;
+    lireFichesBrutes().forEach(function (f) {
+      var h = hash(contenu(f)), x = m.f[f.cle]; vus[f.cle] = 1;
+      if (!x) { m.f[f.cle] = { h: h, auteur: premiere ? '' : u, modifie: premiere ? '' : now }; change = true; }
+      else if (x.h !== h) { x.h = h; x.auteur = u; x.modifie = now; change = true; }
+    });
+    Object.keys(m.f).forEach(function (k) { if (!vus[k]) { delete m.f[k]; change = true; } });
+    if (change) ecrireJ(LS_FICHES, m);
+    return m;
+  }
+  function lireFiches() {
+    var m = synchroniserFiches();
+    return lireFichesBrutes().map(function (f) {
+      var x = m.f[f.cle] || {}; f.auteur = x.auteur || ''; f.modifie = x.modifie || ''; return f;
+    });
+  }
+  function coquilleRevue() {
+    return { projets: [], suivi: [], jalons: [], finances: [], risques: [], pte: [], decisions: [], objectifs: [],
+             priorisation: [], livrables: [], gei: {}, planpte: null, contrat: null, meta: { files: {} } };
+  }
+  /* Écrit et supprime des saisies dans le stockage des outils, puis leur fiche (auteur, date). */
+  function ecrireFiches(aEcrire, aSupprimer) {
+    var st = lireJ(K_PRIO), stC = false, db = lireJ(K_REVUE), dbC = false;
+    if (!st || typeof st !== 'object') st = {};
+    if (!st.siteNotes || typeof st.siteNotes !== 'object') st.siteNotes = {};
+    if (!st.siteQuali || typeof st.siteQuali !== 'object') st.siteQuali = {};
+    function decisions() {
+      if (!db || typeof db !== 'object') db = coquilleRevue();
+      if (!Array.isArray(db.projets)) db.projets = [];       /* sans « projets », la revue ignorerait le registre */
+      if (!Array.isArray(db.decisions)) db.decisions = [];
+      return db.decisions;
+    }
+    function rang(L, id) { for (var i = 0; i < L.length; i++) if (idDecision(L[i]) === id) return i; return -1; }
+    (aEcrire || []).forEach(function (f) {
+      if (f.rubrique === 'note' && !PIEGES[f.site]) { st.siteNotes[f.site] = txt(f.texte); stC = true; }
+      else if (f.rubrique === 'ajustement' && !PIEGES[f.site]) { st.siteQuali[f.site] = { p: txt(f.niveau), m: txt(f.motif) }; stC = true; }
+      else if (f.rubrique === 'decision') {
+        var L = decisions(), i = rang(L, f.id), o = { id: f.id };
+        CH_DEC.forEach(function (c) { o[c] = txt(f[c]); });
+        if (i >= 0) {        /* les copies exactes laissées par l'ancien import sont remplacées par une seule */
+          var base = L[i], L2 = L.filter(function (d) { return idDecision(d) !== f.id; });
+          L2.splice(i, 0, Object.assign({}, base, o)); db.decisions = L2;
+        } else L.push(o);
+        dbC = true;
+      }
+    });
+    (aSupprimer || []).forEach(function (f) {
+      if (f.rubrique === 'note') { if (f.site in st.siteNotes) { delete st.siteNotes[f.site]; stC = true; } }
+      else if (f.rubrique === 'ajustement') { if (f.site in st.siteQuali) { delete st.siteQuali[f.site]; stC = true; } }
+      else if (f.rubrique === 'decision') {
+        var L2 = decisions(), avant = L2.length;
+        db.decisions = L2.filter(function (d) { return idDecision(d) !== f.id; });
+        if (db.decisions.length !== avant) dbC = true;
+      }
+    });
+    var ok = true;
+    if (stC) ok = ecrireJ(K_PRIO, st) && ok;
+    if (dbC) ok = ecrireJ(K_REVUE, db) && ok;
+    var m = lireJ(LS_FICHES); if (!(m && m.f)) m = { v: 1, init: maintenant(), f: {} };
+    (aEcrire || []).forEach(function (f) { m.f[f.cle] = { h: hash(contenu(f)), auteur: f.auteur || '', modifie: f.modifie || '' }; });
+    (aSupprimer || []).forEach(function (f) { delete m.f[f.cle]; });
+    ecrireJ(LS_FICHES, m);
+    synchroniserFiches();
+    return ok;
+  }
+
+  /* ---------- réglages (feuille _technique) : tout sauf les saisies en lignes ---------- */
+  function blocsReglages() {
+    var o = C.exporterSaisies(), out = [];
+    o.blocs.forEach(function (b) {
+      var c = b.contenu;
+      if (b.cle === K_PRIO) { c = Object.assign({}, c); delete c.siteNotes; delete c.siteQuali; if (!Object.keys(c).length) return; }
+      if (b.cle === K_REVUE) { c = Object.assign({}, c); delete c.decisions; if (!Object.keys(c).length) return; }
+      out.push({ outil: b.outil, cle: b.cle, contenu: c, resume: resumeBloc(b.cle, c) });
+    });
+    return out;
+  }
+  function resumeBloc(cle, c) {
+    if (cle === K_PRIO) return 'paramètres de calcul de la priorisation';
+    if (cle === 'pte_snapshots_v1') return (c && c.length ? c.length : 0) + ' instantané(s) de la priorisation';
+    if (cle === 'ocba_revue_params_v1') return 'seuils des sémaphores de la revue';
+    if (cle === 'pte-simulation-v3') { var n = 0, v = c && c.variantes; if (v) for (var k in v) if (v[k] && v[k].length) n += v[k].length; return n + ' mesure(s) simulée(s)'; }
+    if (cle === C.LS_QUESTIONS) return (c && c.mois ? Object.keys(c.mois).length : 0) + ' mois de questions de la revue';
+    return cle;
+  }
+
+  /* ---------- écriture .xlsx (ZIP stocké, sans compression) ---------- */
+  var CRC_T = null;
+  function crc32(u8) {
+    if (!CRC_T) { CRC_T = new Int32Array(256); for (var n = 0; n < 256; n++) { var c = n; for (var k = 0; k < 8; k++) c = c & 1 ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); CRC_T[n] = c; } }
+    var crc = -1; for (var i = 0; i < u8.length; i++) crc = CRC_T[(crc ^ u8[i]) & 0xff] ^ (crc >>> 8);
+    return (crc ^ -1) >>> 0;
+  }
+  function utf8(s) { return new TextEncoder().encode(s); }
+  function zip(fichiers) {
+    var d = new Date(), heure = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1);
+    var jour = ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate();
+    var morceaux = [], central = [], pos = 0;
+    fichiers.forEach(function (f) {
+      var nom = utf8(f.nom), data = f.data, crc = crc32(data);
+      var h = new DataView(new ArrayBuffer(30));
+      h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(8, 0, true);
+      h.setUint16(10, heure, true); h.setUint16(12, jour, true); h.setUint32(14, crc, true);
+      h.setUint32(18, data.length, true); h.setUint32(22, data.length, true); h.setUint16(26, nom.length, true); h.setUint16(28, 0, true);
+      var c = new DataView(new ArrayBuffer(46));
+      c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x0800, true);
+      c.setUint16(10, 0, true); c.setUint16(12, heure, true); c.setUint16(14, jour, true); c.setUint32(16, crc, true);
+      c.setUint32(20, data.length, true); c.setUint32(24, data.length, true); c.setUint16(28, nom.length, true);
+      c.setUint16(30, 0, true); c.setUint16(32, 0, true); c.setUint16(34, 0, true); c.setUint16(36, 0, true);
+      c.setUint32(38, 0, true); c.setUint32(42, pos, true);
+      morceaux.push(new Uint8Array(h.buffer), nom, data); central.push(new Uint8Array(c.buffer), nom);
+      pos += 30 + nom.length + data.length;
+    });
+    var tailleC = 0; central.forEach(function (x) { tailleC += x.length; });
+    var fin = new DataView(new ArrayBuffer(22));
+    fin.setUint32(0, 0x06054b50, true); fin.setUint16(8, fichiers.length, true); fin.setUint16(10, fichiers.length, true);
+    fin.setUint32(12, tailleC, true); fin.setUint32(16, pos, true);
+    var tout = morceaux.concat(central, [new Uint8Array(fin.buffer)]), n = 0;
+    tout.forEach(function (x) { n += x.length; });
+    var out = new Uint8Array(n), o = 0;
+    tout.forEach(function (x) { out.set(x, o); o += x.length; });
+    return out;
+  }
+  function xe(s) {
+    return txt(s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F￾￿]/g, '')
+      .replace(/_(x[0-9A-Fa-f]{4})_/g, '_x005F_' + '$1' + '_')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function lettre(i) { var s = ''; i++; while (i > 0) { var m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); } return s; }
+  var NS = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+  var NSR = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+  var ENTETE_XML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n';
+  /* styles : 0 normal · 1 en-tête · 2 texte (format @, renvoi à la ligne, haut) · 3 texte gris · 4 titre Lisez-moi */
+  var STYLES = ENTETE_XML + '<styleSheet xmlns="' + NS + '">' +
+    '<fonts count="4"><font><sz val="11"/><name val="Calibri"/><family val="2"/></font>' +
+    '<font><b/><sz val="11"/><color rgb="FF1F2D3D"/><name val="Calibri"/><family val="2"/></font>' +
+    '<font><sz val="11"/><color rgb="FF6B7785"/><name val="Calibri"/><family val="2"/></font>' +
+    '<font><b/><sz val="14"/><color rgb="FF1F2D3D"/><name val="Calibri"/><family val="2"/></font></fonts>' +
+    '<fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill>' +
+    '<fill><patternFill patternType="solid"><fgColor rgb="FFE4EAEF"/><bgColor indexed="64"/></patternFill></fill></fills>' +
+    '<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>' +
+    '<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>' +
+    '<cellXfs count="5"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>' +
+    '<xf numFmtId="49" fontId="1" fillId="2" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center" wrapText="1"/></xf>' +
+    '<xf numFmtId="49" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>' +
+    '<xf numFmtId="49" fontId="2" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>' +
+    '<xf numFmtId="49" fontId="3" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/></cellXfs>' +
+    '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>' +
+    '<dxfs count="0"/><tableStyles count="0" defaultTableStyle="TableStyleMedium2" defaultPivotStyle="PivotStyleLight16"/></styleSheet>';
+
+  /* feuilles : [{nom, entetes?, lignes:[[...]], largeurs:[...], gris:{col:1}, listes:{col:[...]}, cachee, titre}] */
+  function classeurXlsx(feuilles, proprietes) {
+    var sst = [], idx = Object.create(null);
+    function s(v) { v = txt(v); if (!(v in idx)) { idx[v] = sst.length; sst.push(v); } return idx[v]; }
+    var parts = [], noms = [];
+    feuilles.forEach(function (F, n) {
+      var lignes = (F.entetes ? [F.entetes] : []).concat(F.lignes || []);
+      var nbCol = 1; lignes.forEach(function (l) { if (l.length > nbCol) nbCol = l.length; });
+      var nbLig = Math.max(lignes.length, 1), dern = lettre(nbCol - 1);
+      var xml = ENTETE_XML + '<worksheet xmlns="' + NS + '" xmlns:r="' + NSR + '">' +
+        '<dimension ref="A1:' + dern + nbLig + '"/>' +
+        '<sheetViews><sheetView workbookViewId="0"' + (n === 0 ? ' tabSelected="1"' : '') + '>' +
+        (F.entetes ? '<pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/><selection pane="bottomLeft" activeCell="A2" sqref="A2"/>' : '') +
+        '</sheetView></sheetViews><sheetFormatPr defaultRowHeight="15"/><cols>';
+      for (var c = 0; c < nbCol; c++) {
+        var st = (F.gris && F.gris[c]) ? 3 : 2;
+        xml += '<col min="' + (c + 1) + '" max="' + (c + 1) + '" width="' + ((F.largeurs && F.largeurs[c]) || 16) + '" style="' + st + '" customWidth="1"/>';
+      }
+      xml += '</cols><sheetData>';
+      lignes.forEach(function (l, r) {
+        xml += '<row r="' + (r + 1) + '">';
+        l.forEach(function (v, c2) {
+          if (v == null || v === '') return;
+          var style = (F.entetes && r === 0) ? 1 : (F.titre && r === 0) ? 4 : ((F.gris && F.gris[c2]) ? 3 : 2);
+          xml += '<c r="' + lettre(c2) + (r + 1) + '" s="' + style + '" t="s"><v>' + s(v) + '</v></c>';
+        });
+        xml += '</row>';
+      });
+      xml += '</sheetData>';
+      if (F.entetes) xml += '<autoFilter ref="A1:' + dern + nbLig + '"/>';
+      var listes = F.listes ? Object.keys(F.listes) : [];
+      if (listes.length) {
+        xml += '<dataValidations count="' + listes.length + '">';
+        listes.forEach(function (c3) {
+          var col = lettre(+c3);
+          xml += '<dataValidation type="list" allowBlank="1" showErrorMessage="1" errorStyle="warning" sqref="' + col + '2:' + col + '5000">' +
+            '<formula1>' + xe('"' + F.listes[c3].join(',') + '"') + '</formula1></dataValidation>';
+        });
+        xml += '</dataValidations>';
+      }
+      xml += '<pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3"/></worksheet>';
+      parts.push({ nom: 'xl/worksheets/sheet' + (n + 1) + '.xml', data: utf8(xml) });
+      noms.push({ nom: F.nom, cachee: !!F.cachee, filtre: F.entetes ? ("'" + F.nom.replace(/'/g, "''") + "'!$A$1:$" + dern + '$' + nbLig) : null });
+    });
+    var wb = ENTETE_XML + '<workbook xmlns="' + NS + '" xmlns:r="' + NSR + '"><workbookPr/><bookViews><workbookView activeTab="0"/></bookViews><sheets>';
+    noms.forEach(function (f, n) { wb += '<sheet name="' + xe(f.nom) + '" sheetId="' + (n + 1) + '"' + (f.cachee ? ' state="hidden"' : '') + ' r:id="rId' + (n + 1) + '"/>'; });
+    wb += '</sheets>';
+    var dn = noms.map(function (f, n) { return f.filtre ? '<definedName name="_xlnm._FilterDatabase" localSheetId="' + n + '" hidden="1">' + xe(f.filtre) + '</definedName>' : ''; }).join('');
+    if (dn) wb += '<definedNames>' + dn + '</definedNames>';
+    wb += '</workbook>';
+    var rels = ENTETE_XML + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
+    noms.forEach(function (f, n) { rels += '<Relationship Id="rId' + (n + 1) + '" Type="' + NSR + '/worksheet" Target="worksheets/sheet' + (n + 1) + '.xml"/>'; });
+    rels += '<Relationship Id="rId' + (noms.length + 1) + '" Type="' + NSR + '/styles" Target="styles.xml"/>' +
+      '<Relationship Id="rId' + (noms.length + 2) + '" Type="' + NSR + '/sharedStrings" Target="sharedStrings.xml"/></Relationships>';
+    var sx = ENTETE_XML + '<sst xmlns="' + NS + '" count="' + sst.length + '" uniqueCount="' + sst.length + '">' +
+      sst.map(function (v) { return '<si><t xml:space="preserve">' + xe(v) + '</t></si>'; }).join('') + '</sst>';
+    var ct = ENTETE_XML + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+      '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>' +
+      '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' +
+      noms.map(function (f, n) { return '<Override PartName="/xl/worksheets/sheet' + (n + 1) + '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'; }).join('') +
+      '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>' +
+      '<Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/>' +
+      '<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>' +
+      '<Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>';
+    var racineRels = ENTETE_XML + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Id="rId1" Type="' + NSR + '/officeDocument" Target="xl/workbook.xml"/>' +
+      '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/>' +
+      '<Relationship Id="rId3" Type="' + NSR + '/extended-properties" Target="docProps/app.xml"/></Relationships>';
+    var iso = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'), p = proprietes || {};
+    var core = ENTETE_XML + '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' +
+      '<dc:title>' + xe(p.titre || 'Saisies PTE') + '</dc:title><dc:creator>' + xe(p.auteur || '') + '</dc:creator>' +
+      '<dcterms:created xsi:type="dcterms:W3CDTF">' + iso + '</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">' + iso + '</dcterms:modified></cp:coreProperties>';
+    var app = ENTETE_XML + '<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"><Application>Pilotage PTE</Application></Properties>';
+    return zip([{ nom: '[Content_Types].xml', data: utf8(ct) }, { nom: '_rels/.rels', data: utf8(racineRels) },
+      { nom: 'docProps/core.xml', data: utf8(core) }, { nom: 'docProps/app.xml', data: utf8(app) },
+      { nom: 'xl/workbook.xml', data: utf8(wb) }, { nom: 'xl/_rels/workbook.xml.rels', data: utf8(rels) },
+      { nom: 'xl/styles.xml', data: utf8(STYLES) }, { nom: 'xl/sharedStrings.xml', data: utf8(sx) }].concat(parts));
+  }
+
+  /* ---------- le classeur des saisies ---------- */
+  var ENT_NOTES = ['N° sous-site', 'Sous-site', 'Note', 'Auteur', 'Modifiée le', 'Supprimer (oui)'];
+  var ENT_AJUST = ['N° sous-site', 'Sous-site', 'Ajustement', 'Motif', 'Auteur', 'Modifié le', 'Supprimer (oui)'];
+  var ENT_DEC = ['Identifiant', 'Date de revue', 'Niveau', 'N° projet', 'Portefeuille', 'Décision', 'Responsable', 'Échéance', 'Statut', 'Escalade vers', 'Auteur', 'Modifiée le', 'Supprimer (oui)'];
+  function tri(a, b) { return a.site < b.site ? -1 : a.site > b.site ? 1 : 0; }
+  function morceaux(s, n) {
+    var out = [], i = 0;
+    while (i < s.length) {
+      var j = Math.min(i + n, s.length), c = s.charCodeAt(j - 1);
+      if (j < s.length && c >= 0xD800 && c <= 0xDBFF) j--;      /* jamais au milieu d'une paire (emoji) */
+      out.push(s.slice(i, j)); i = j;
+    }
+    return out.length ? out : [''];
+  }
+  /* paquet : {fiches, blocs, info:{auteur, date, consolide:{par, le, sources}}} */
+  var MAX_CELLULE = 32767;
+  function construireClasseur(paquet) {
+    var info = paquet.info || {}, F = paquet.fiches || [], u = info.auteur || '';
+    var trop = F.filter(function (f) { return [f.texte, f.motif, f.decision].some(function (v) { return txt(v).length > MAX_CELLULE; }); });
+    if (trop.length) throw new Error(trop.length + ' saisie(s) trop longue(s) pour une cellule Excel (32 767 caractères au plus) : ' +
+      trop.slice(0, 5).map(function (f) { return RUBRIQUES[f.rubrique] + ' ' + (f.site || f.numero_projet || f.id); }).join(', ') + ' — à raccourcir avant l’export');
+    var notes = F.filter(function (f) { return f.rubrique === 'note'; }).sort(tri);
+    var ajust = F.filter(function (f) { return f.rubrique === 'ajustement'; }).sort(tri);
+    var dec = F.filter(function (f) { return f.rubrique === 'decision'; })
+      .sort(function (a, b) { return (txt(b.date) > txt(a.date) ? 1 : txt(b.date) < txt(a.date) ? -1 : 0) || (a.numero_projet < b.numero_projet ? -1 : 1); });
+    var sup = function (f) { return f.supprimer ? 'oui' : ''; };
+    var conso = info.consolide;
+    var lisez = [['Saisies PTE'],
+      [conso ? 'Version consolidée par ' + conso.par + ', le ' + dateLisible(conso.le) + ', à partir de ' + (conso.sources || []).length + ' fichier(s).'
+             : 'Exporté par ' + (u || '(nom non renseigné)') + ', le ' + dateLisible(info.date) + '.'],
+      [notes.length + ' note(s) · ' + ajust.length + ' ajustement(s) · ' + dec.length + ' décision(s) et escalade(s)' + ((paquet.blocs || []).length ? ' · réglages des outils (feuille masquée)' : '') + '.'],
+      [''],
+      ['À quoi sert ce fichier'],
+      ['Ce fichier réunit les saisies faites dans les outils de pilotage PTE : notes et facteurs non mesurables (ajustements) de la priorisation, décisions et escalades de la revue de projets. Il se relit dans les outils par « Importer des saisies » (menu ☰ de chaque outil, ou page Pilotage PTE).'],
+      [''],
+      ['Modification dans Excel'],
+      ['• Une ligne = une saisie. Le texte se corrige directement : à la réimportation, l’outil montre chaque changement avant de l’appliquer.'],
+      ['• Suppression : « oui » dans la colonne « Supprimer (oui) ». Effacer la ligne ne supprime rien dans les outils.'],
+      ['• Ajustement : valeur choisie dans la liste, motif obligatoire (règle de la priorisation). « Aucun ajustement » le retire.'],
+      ['• Décisions : la colonne « Identifiant » relie la ligne à sa décision et ne se modifie pas. Une nouvelle ligne sans identifiant crée une nouvelle décision.'],
+      ['• Les colonnes « Auteur » et « … le » sont tenues par les outils : une ligne modifiée dans Excel est reconnue comme telle et signée par la personne qui a exporté le fichier.'],
+      ['• Noms des feuilles et titres des colonnes à garder tels quels ; feuille masquée « _technique » à laisser intacte.'],
+      [''],
+      ['Note : les notes et ajustements de la priorisation sont rattachés au N° de sous-site ; une note par sous-site.']];
+    if (conso && conso.sources && conso.sources.length) {
+      lisez.push([''], ['Fichiers consolidés']);
+      conso.sources.forEach(function (s) { lisez.push(['• ' + (s.fichier || '') + ' — ' + (s.auteur || 'auteur inconnu') + (s.date ? ', ' + dateLisible(s.date) : '')]); });
+    }
+    var empreintes = {};
+    F.forEach(function (f) { empreintes[f.cle] = hash(contenu(f) + SEP + (f.supprimer ? '1' : '')); });
+    var tech = [['format', FORMAT], ['version', String(VERSION_FORMAT)], ['auteur', u], ['date', info.date || ''],
+      ['consolide', conso ? JSON.stringify(conso) : '']];
+    morceaux(JSON.stringify(empreintes), 30000).forEach(function (m, i) { tech.push(['empreintes', m, String(i)]); });
+    if (paquet.vues) morceaux(JSON.stringify(paquet.vues), 30000).forEach(function (m, i) { tech.push(['vues', m, String(i)]); });
+    (paquet.blocs || []).forEach(function (b) {
+      morceaux(JSON.stringify(b.contenu), 30000).forEach(function (m, i) { tech.push(['bloc', m, String(i), b.cle, b.outil]); });
+    });
+    var feuilles = [
+      { nom: 'Lisez-moi', titre: true, lignes: lisez, largeurs: [100] },
+      { nom: 'Notes', entetes: ENT_NOTES, largeurs: [13, 30, 70, 20, 17, 11], gris: { 4: 1 },
+        lignes: notes.map(function (f) { return [f.site, f.nom, f.texte, f.auteur, dateFichier(f.modifie), sup(f)]; }),
+        listes: { 5: ['oui'] } },
+      { nom: 'Ajustements', entetes: ENT_AJUST, largeurs: [13, 30, 28, 60, 20, 17, 11], gris: { 5: 1 },
+        lignes: ajust.map(function (f) { return [f.site, f.nom, libAjust(f.niveau), f.motif, f.auteur, dateFichier(f.modifie), sup(f)]; }),
+        listes: { 2: AJUST.map(function (a) { return a.lib; }).concat([AUCUN]), 6: ['oui'] } },
+      { nom: 'Décisions', entetes: ENT_DEC, largeurs: [13, 12, 13, 15, 18, 60, 20, 12, 11, 20, 20, 17, 11], gris: { 0: 1, 11: 1 },
+        lignes: dec.map(function (f) { return [f.id, f.date, NIVEAUX[f.niveau] || f.niveau, f.numero_projet, f.portefeuille, f.decision, f.responsable, f.echeance, f.statut, f.escalade_vers, f.auteur, dateFichier(f.modifie), sup(f)]; }),
+        listes: { 2: ['Projet', 'Portefeuille', 'Parc'], 12: ['oui'] } },
+      { nom: '_technique', cachee: true, lignes: tech, largeurs: [14, 60, 8, 22, 14] }
+    ];
+    return classeurXlsx(feuilles, { auteur: u, titre: conso ? 'Saisies PTE consolidées' : 'Saisies PTE' });
+  }
+  function paquetLocal() {
+    var u = utilisateur(), m = lireJ(LS_FICHES), change = false;
+    var fiches = lireFiches().map(function (f) {
+      if (!f.auteur && u) { f.auteur = u; if (m && m.f && m.f[f.cle]) { m.f[f.cle].auteur = u; change = true; } }
+      return f;
+    });
+    if (change) ecrireJ(LS_FICHES, m);
+    return { fiches: fiches, blocs: blocsReglages(), info: { auteur: u, date: maintenant() } };
+  }
+  function resumePaquet(p) {
+    var n = { note: 0, ajustement: 0, decision: 0 };
+    (p.fiches || []).forEach(function (f) { if (!f.supprimer) n[f.rubrique]++; });
+    var out = [];
+    if (n.note) out.push(n.note + ' note(s)');
+    if (n.ajustement) out.push(n.ajustement + ' ajustement(s)');
+    if (n.decision) out.push(n.decision + ' décision(s)');
+    (p.blocs || []).forEach(function (b) { out.push(b.resume || resumeBloc(b.cle, b.contenu)); });
+    return out;
+  }
+  function slug(s) { return txt(s).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'sans-nom'; }
+  function jourFichier(d) { d = d || new Date(); return d.getFullYear() + '-' + deux(d.getMonth() + 1) + '-' + deux(d.getDate()); }
+  function telecharger(octets, nom) {
+    if (typeof document === 'undefined' || !document.createElement) return false;
+    var blob = new Blob([octets], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nom;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); if (a.parentNode) a.parentNode.removeChild(a); }, 0);
+    return true;
+  }
+
+  /* ---------- lecture .xlsx ---------- */
+  function inflate(u8) {
+    if (typeof DecompressionStream === 'function' && typeof Response === 'function' && typeof Blob === 'function') {
+      return new Response(new Blob([u8]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer()
+        .then(function (b) { return new Uint8Array(b); });
+    }
+    var X = (typeof XLSXReader !== 'undefined') ? XLSXReader : null;
+    if (X && X.inflateRaw) { try { return Promise.resolve(X.inflateRaw(u8)); } catch (e) { return Promise.reject(e); } }
+    return Promise.reject(new Error('ce navigateur ne sait pas décompresser un fichier Excel (navigateur à mettre à jour)'));
+  }
+  function entreesZip(u8) {
+    var v = new DataView(u8.buffer, u8.byteOffset, u8.byteLength), fin = -1;
+    for (var i = u8.length - 22; i >= Math.max(0, u8.length - 65557); i--) if (v.getUint32(i, true) === 0x06054b50) { fin = i; break; }
+    if (fin < 0) throw new Error('fichier Excel abîmé (archive incomplète)');
+    var n = v.getUint16(fin + 10, true), p = v.getUint32(fin + 16, true), out = {};
+    var dec = new TextDecoder('utf-8');
+    for (var k = 0; k < n; k++) {
+      if (v.getUint32(p, true) !== 0x02014b50) throw new Error('fichier Excel abîmé (répertoire)');
+      var meth = v.getUint16(p + 10, true), csize = v.getUint32(p + 20, true);
+      var ln = v.getUint16(p + 28, true), le = v.getUint16(p + 30, true), lc = v.getUint16(p + 32, true), off = v.getUint32(p + 42, true);
+      var nom = dec.decode(u8.subarray(p + 46, p + 46 + ln));
+      var d0 = off + 30 + v.getUint16(off + 26, true) + v.getUint16(off + 28, true);
+      out[nom] = { meth: meth, data: u8.subarray(d0, d0 + csize) };
+      p += 46 + ln + le + lc;
+    }
+    return out;
+  }
+  function texteEntree(E, nom) {
+    var e = E[nom]; if (!e) return Promise.resolve(null);
+    var p = e.meth === 0 ? Promise.resolve(e.data) : e.meth === 8 ? inflate(e.data) : Promise.reject(new Error('compression inconnue'));
+    return p.then(function (b) { return new TextDecoder('utf-8').decode(b); });
+  }
+  function ent(s) {
+    return txt(s).replace(/&(lt|gt|amp|quot|apos|#\d+|#x[0-9a-fA-F]+);/g, function (m, c) {
+      if (c === 'lt') return '<'; if (c === 'gt') return '>'; if (c === 'amp') return '&'; if (c === 'quot') return '"'; if (c === 'apos') return "'";
+      return String.fromCodePoint(c.charAt(1) === 'x' ? parseInt(c.slice(2), 16) : parseInt(c.slice(1), 10));
+    }).replace(/_x([0-9A-Fa-f]{4})_/g, function (m, h) { return String.fromCharCode(parseInt(h, 16)); });
+  }
+  function attr(tag, nom) { var m = new RegExp('\\s' + nom + '="([^"]*)"').exec(tag); return m ? ent(m[1]) : null; }
+  function colIdx(ref) { var n = 0, i = 0; for (; i < ref.length; i++) { var c = ref.charCodeAt(i); if (c < 65 || c > 90) break; n = n * 26 + (c - 64); } return i ? n - 1 : -1; }
+  function textesT(x) {
+    var s = '', re = /<t(?:\s[^>]*)?>([\s\S]*?)<\/t>/g, m;
+    x = x.replace(/<rPh\b[\s\S]*?<\/rPh>/g, '');
+    while ((m = re.exec(x))) s += ent(m[1]);
+    return s;
+  }
+  function lignesFeuille(xml, sst) {
+    var out = [], reR = /<row\b([^>]*?)(?:\/>|>([\s\S]*?)<\/row>)/g, m, auto = 0;
+    while ((m = reR.exec(xml))) {
+      var r = +(attr(m[1], 'r') || (auto + 1)); auto = r;
+      var L = [], reC = /<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g, c, pos = 0, corps = m[2] || '';
+      while ((c = reC.exec(corps))) {
+        var ref = attr(c[1], 'r'), t = attr(c[1], 't'), in2 = c[2] || '', ci = ref ? colIdx(ref) : pos, v = '';
+        if (t === 'inlineStr') v = textesT(in2);
+        else {
+          var vm = /<v>([\s\S]*?)<\/v>/.exec(in2), raw = vm ? ent(vm[1]) : '';
+          if (t === 's') v = raw === '' ? '' : (sst[+raw] != null ? sst[+raw] : '');
+          else if (t === 'str' || t === 'e') v = t === 'e' ? '' : raw;
+          else if (t === 'b') v = raw === '1' ? 'VRAI' : 'FAUX';
+          else v = (raw !== '' && !isNaN(+raw)) ? +raw : raw;
+        }
+        while (L.length < ci) L.push('');
+        L[ci] = v; pos = ci + 1;
+      }
+      out[r - 1] = L;
+    }
+    for (var i = 0; i < out.length; i++) if (!out[i]) out[i] = [];
+    return out;
+  }
+  function lireXlsx(u8) {
+    var E;
+    try { E = entreesZip(u8); } catch (e) { return Promise.reject(e); }
+    return Promise.all([texteEntree(E, 'xl/workbook.xml'), texteEntree(E, 'xl/_rels/workbook.xml.rels'), texteEntree(E, 'xl/sharedStrings.xml')])
+      .then(function (r) {
+        if (!r[0]) throw new Error('ce fichier n’est pas un classeur Excel');
+        var rels = {}, m, re = /<Relationship\b[^>]*>/g;
+        while (r[1] && (m = re.exec(r[1]))) rels[attr(m[0], 'Id')] = attr(m[0], 'Target');
+        var sst = [], reS = /<si>([\s\S]*?)<\/si>|<si\/>/g;
+        while (r[2] && (m = reS.exec(r[2]))) sst.push(m[1] ? textesT(m[1]) : '');
+        var feuilles = [], reF = /<sheet\b[^>]*>/g;
+        while ((m = reF.exec(r[0]))) {
+          var id = attr(m[0], 'r:id'), cible = rels[id] || '';
+          cible = cible.charAt(0) === '/' ? cible.slice(1) : 'xl/' + cible.replace(/^\.\//, '');
+          feuilles.push({ nom: attr(m[0], 'name'), chemin: cible });
+        }
+        return Promise.all(feuilles.map(function (f) { return texteEntree(E, f.chemin); })).then(function (xs) {
+          var out = {};
+          feuilles.forEach(function (f, i) { out[f.nom] = xs[i] ? lignesFeuille(xs[i], sst) : []; });
+          return out;
+        });
+      });
+  }
+
+  /* ---------- d'un fichier (xlsx, ancien json, ancien csv de notes) à un « paquet » ---------- */
+  function feuille(F, nom) { var k = Object.keys(F); for (var i = 0; i < k.length; i++) if (normEnt(k[i]) === normEnt(nom)) return F[k[i]]; return null; }
+  function colonnes(entetes, voulues) {
+    var h = (entetes || []).map(normEnt), out = {};
+    Object.keys(voulues).forEach(function (cle) {
+      var cands = voulues[cle].map(normEnt), j = -1;
+      cands.some(function (c) { j = h.indexOf(c); return j >= 0; });
+      if (j < 0) cands.some(function (c) { for (var i = 0; i < h.length; i++) if (h[i] && h[i].indexOf(c) === 0) { j = i; return true; } return false; });
+      out[cle] = j;
+    });
+    return out;
+  }
+  function cel(L, j) { return j >= 0 && L[j] != null ? L[j] : ''; }
+  function paquetDepuisXlsx(F) {
+    var T = feuille(F, '_technique') || [], info = {}, blocs = Object.create(null), emp = '', vues = '';
+    T.forEach(function (l) {
+      var k = txt(l[0]);
+      if (k === 'format' || k === 'version' || k === 'auteur' || k === 'date') info[k] = txt(l[1]);
+      else if (k === 'consolide' && l[1]) {
+        try { var cs = JSON.parse(txt(l[1]));    /* fichier venu d'ailleurs : forme vérifiée avant usage */
+          if (cs && typeof cs.par === 'string' && typeof cs.le === 'string' && Array.isArray(cs.sources)) info.consolide = cs; } catch (e) {}
+      }
+      else if (k === 'empreintes') emp += txt(l[1]);
+      else if (k === 'vues') vues += txt(l[1]);
+      else if (k === 'bloc') { var c = txt(l[3]); (blocs[c] = blocs[c] || { cle: c, outil: txt(l[4]), parts: [] }).parts[+l[2] || 0] = txt(l[1]); }
+    });
+    var notesF = feuille(F, 'Notes'), ajF = feuille(F, 'Ajustements'), decF = feuille(F, 'Décisions');
+    if (info.format !== FORMAT && !(notesF || ajF || decF)) throw new Error('ce classeur n’est pas un fichier de saisies PTE');
+    var empreintes = {}; try { empreintes = emp ? JSON.parse(emp) : {}; } catch (e) {}
+    if (info.consolide && vues) { try { var vv = JSON.parse(vues); if (vv && typeof vv === 'object') info.consolide.vues = vv; } catch (e) {} }
+    var fiches = [], avert = [], dateFichierIso = info.date || '', deja = Object.create(null);
+    function marquer(f, ligneAuteur, ligneDate) {
+      f.auteur = txt(ligneAuteur).trim(); f.modifie = relireDate(ligneDate);
+      var h = hash(contenu(f) + SEP + (f.supprimer ? '1' : ''));
+      /* modifiée dans le tableur : datée de l'export, signée par la personne qui a exporté le fichier */
+      if (!Object.prototype.hasOwnProperty.call(empreintes, f.cle) || empreintes[f.cle] !== h) { f.excel = true; f.modifie = dateFichierIso || maintenant(); f.auteur = info.auteur || f.auteur; }
+      /* deux lignes pour la même saisie : jamais d'abandon silencieux */
+      var d = deja[f.cle];
+      if (d) {
+        if (contenu(d) === contenu(f) && !!d.supprimer === !!f.supprimer) return;
+        if (f.rubrique === 'note') {
+          if (!f.supprimer && txt(f.texte).trim()) { d.texte = txt(d.texte).trim() + '\n\n' + txt(f.texte).trim(); d.supprimer = false; d.excel = true; d.modifie = dateFichierIso || maintenant(); }
+          avert.push('Notes : deux lignes pour le sous-site ' + f.site + ', textes réunis');
+          return;
+        }
+        if (f.rubrique === 'ajustement') { avert.push('Ajustements : deux lignes pour le sous-site ' + f.site + ', seule la première est retenue'); return; }
+        f.id = 'D-' + hash(contenuDecision(f)); f.cle = 'decision|' + f.id; f.sansId = true;
+        if (deja[f.cle]) return;
+        avert.push('Décisions : identifiant ' + d.id + ' présent sur deux lignes différentes, la seconde est reprise comme une nouvelle décision');
+      }
+      deja[f.cle] = f;
+      fiches.push(f);
+    }
+    if (notesF && notesF.length) {
+      var cn = colonnes(notesF[0], { site: ['N° sous-site', 'nsoussite', 'N°'], nom: ['Sous-site'], texte: ['Note'], auteur: ['Auteur'], modifie: ['Modifiée le', 'Modifie'], sup: ['Supprimer'] });
+      if (cn.site < 0 || cn.texte < 0) avert.push('feuille Notes : colonnes « N° sous-site » ou « Note » introuvables, feuille ignorée');
+      else notesF.slice(1).forEach(function (L) {
+        var site = txt(cel(L, cn.site)).trim(); if (!site || PIEGES[site]) return;
+        var t = txt(cel(L, cn.texte)), f = { cle: 'note|' + site, rubrique: 'note', site: site, nom: txt(cel(L, cn.nom)), texte: t, supprimer: oui(cel(L, cn.sup)) || !t.trim() };
+        marquer(f, cel(L, cn.auteur), cel(L, cn.modifie));
+      });
+    }
+    if (ajF && ajF.length) {
+      var ca = colonnes(ajF[0], { site: ['N° sous-site', 'nsoussite', 'N°'], nom: ['Sous-site'], niveau: ['Ajustement', 'Priorité'], motif: ['Motif'], auteur: ['Auteur'], modifie: ['Modifié le', 'Modifie'], sup: ['Supprimer'] });
+      if (ca.site < 0 || ca.niveau < 0) avert.push('feuille Ajustements : colonnes « N° sous-site » ou « Ajustement » introuvables, feuille ignorée');
+      else ajF.slice(1).forEach(function (L, i) {
+        var site = txt(cel(L, ca.site)).trim(); if (!site || PIEGES[site]) return;
+        var code = codeAjust(cel(L, ca.niveau)), motif = txt(cel(L, ca.motif)).trim(), sup = oui(cel(L, ca.sup));
+        if (code === null) { avert.push('Ajustements, ligne ' + (i + 2) + ' (sous-site ' + site + ') : ajustement « ' + txt(cel(L, ca.niveau)) + ' » inconnu, ligne ignorée'); return; }
+        if (code === '0') sup = true;
+        if (!sup && !motif) { avert.push('Ajustements, ligne ' + (i + 2) + ' (sous-site ' + site + ') : motif manquant, ligne ignorée'); return; }
+        marquer({ cle: 'ajustement|' + site, rubrique: 'ajustement', site: site, nom: txt(cel(L, ca.nom)), niveau: code === '0' ? '' : code, motif: motif, supprimer: sup },
+          cel(L, ca.auteur), cel(L, ca.modifie));
+      });
+    }
+    if (decF && decF.length) {
+      var cd = colonnes(decF[0], { id: ['Identifiant'], date: ['Date de revue', 'Date'], niveau: ['Niveau'], numero_projet: ['N° projet', 'nprojet', 'numero_projet'],
+        portefeuille: ['Portefeuille'], decision: ['Décision'], responsable: ['Responsable'], echeance: ['Échéance'], statut: ['Statut'],
+        escalade_vers: ['Escalade vers'], auteur: ['Auteur'], modifie: ['Modifiée le', 'Modifie'], sup: ['Supprimer'] });
+      if (cd.decision < 0) avert.push('feuille Décisions : colonne « Décision » introuvable, feuille ignorée');
+      else decF.slice(1).forEach(function (L) {
+        var f = { rubrique: 'decision' };
+        CH_DEC.forEach(function (c) { f[c] = txt(cel(L, cd[c])).trim(); });
+        f.date = relireJour(cel(L, cd.date)); f.echeance = relireJour(cel(L, cd.echeance)); f.niveau = codeNiveau(f.niveau);
+        if (!f.decision && !f.numero_projet) return;
+        if (!f.statut) f.statut = 'ouverte';
+        f.id = txt(cel(L, cd.id)).trim(); f.sansId = !f.id;
+        if (!f.id) f.id = 'D-' + hash(contenuDecision(f));
+        f.cle = 'decision|' + f.id; f.supprimer = oui(cel(L, cd.sup));
+        marquer(f, cel(L, cd.auteur), cel(L, cd.modifie));
+      });
+    }
+    var B = Object.keys(blocs).map(function (k) {
+      var b = blocs[k], c; try { c = JSON.parse(b.parts.join('')); } catch (e) { avert.push('réglages « ' + k + ' » illisibles, ignorés'); return null; }
+      return { cle: k, outil: b.outil, contenu: c, resume: resumeBloc(k, c) };
+    }).filter(Boolean);
+    return { fiches: fiches, blocs: B, info: { auteur: info.auteur || '', date: info.date || '', consolide: info.consolide || null }, avertissements: avert };
+  }
+  function paquetDepuisJson(o) {
+    if (!o || o.format !== 'pte-saisies' || !o.blocs) throw new Error('ce fichier n’est pas un export de saisies PTE');
+    var fiches = [], blocs = [];
+    o.blocs.forEach(function (b) {
+      var c = b.contenu;
+      if (b.cle === K_PRIO && c) {
+        var N = c.siteNotes || {}, Q = c.siteQuali || {};
+        Object.keys(N).forEach(function (id) { var t = txt(N[id]); if (t.trim() && !PIEGES[id]) fiches.push({ cle: 'note|' + id, rubrique: 'note', site: id, nom: '', texte: t, auteur: '', modifie: '' }); });
+        Object.keys(Q).forEach(function (id) { var q = Q[id] || {}, p = txt(q.p); if (p && p !== '0' && !PIEGES[id]) fiches.push({ cle: 'ajustement|' + id, rubrique: 'ajustement', site: id, nom: '', niveau: p, motif: txt(q.m), auteur: '', modifie: '' }); });
+        c = Object.assign({}, c); delete c.siteNotes; delete c.siteQuali;
+        if (!Object.keys(c).length) return;
+      }
+      if (b.cle === K_REVUE && c) {
+        var vus = {};
+        (c.decisions || []).forEach(function (d) {
+          var f = { rubrique: 'decision', auteur: '', modifie: '' }; CH_DEC.forEach(function (k) { f[k] = txt(d[k]); });
+          f.id = idDecision(d); f.cle = 'decision|' + f.id; if (vus[f.cle]) return; vus[f.cle] = 1; fiches.push(f);
+        });
+        c = Object.assign({}, c); delete c.decisions;
+        if (!Object.keys(c).length) return;
+      }
+      blocs.push({ cle: b.cle, outil: b.outil, contenu: c, resume: resumeBloc(b.cle, c) });
+    });
+    return { fiches: fiches, blocs: blocs, info: { auteur: '', date: o.date || '', ancien: 'json' }, avertissements: [] };
+  }
+  function lignesCsv(t) {
+    var sep = (t.split('\n')[0].match(/;/g) || []).length >= (t.split('\n')[0].match(/,/g) || []).length ? ';' : ',';
+    var out = [], L = [], v = '', q = false;
+    for (var i = 0; i < t.length; i++) {
+      var ch = t.charAt(i);
+      if (q) { if (ch === '"') { if (t.charAt(i + 1) === '"') { v += '"'; i++; } else q = false; } else v += ch; }
+      else if (ch === '"') q = true;
+      else if (ch === sep) { L.push(v); v = ''; }
+      else if (ch === '\n' || ch === '\r') { if (ch === '\r' && t.charAt(i + 1) === '\n') i++; L.push(v); out.push(L); L = []; v = ''; }
+      else v += ch;
+    }
+    if (v !== '' || L.length) { L.push(v); out.push(L); }
+    return out;
+  }
+  function paquetDepuisCsv(t) {
+    var R = lignesCsv(t.replace(/^﻿/, ''));
+    if (!R.length) throw new Error('fichier vide');
+    var c = colonnes(R[0], { site: ['N° sous site', 'N°', 'nsoussite', 'Identifiant', 'ID'], texte: ['Note', 'Notes', 'Commentaire'], niveau: ['Priorité', 'Ajustement'], motif: ['Motif priorité', 'Motif'] });
+    if (c.site < 0 || c.texte < 0) throw new Error('fichier CSV non reconnu : colonnes « N° » et « Note » introuvables');
+    var fiches = [], avert = [];
+    R.slice(1).forEach(function (L) {
+      var site = txt(cel(L, c.site)).trim(); if (!site || PIEGES[site]) return;
+      var t2 = txt(cel(L, c.texte));
+      if (t2.trim()) fiches.push({ cle: 'note|' + site, rubrique: 'note', site: site, nom: '', texte: t2, auteur: '', modifie: '' });
+      var code = c.niveau >= 0 ? codeAjust(cel(L, c.niveau)) : '0', motif = txt(cel(L, c.motif)).trim();
+      if (code && code !== '0' && motif) fiches.push({ cle: 'ajustement|' + site, rubrique: 'ajustement', site: site, nom: '', niveau: code, motif: motif, auteur: '', modifie: '' });
+    });
+    return { fiches: fiches, blocs: [], info: { auteur: '', date: '', ancien: 'csv' }, avertissements: avert };
+  }
+  function lireOctets(fichier) {
+    if (fichier && typeof fichier.arrayBuffer === 'function') return fichier.arrayBuffer().then(function (b) { return new Uint8Array(b); });
+    return new Promise(function (ok, ko) {
+      var fr = new FileReader();
+      fr.onload = function () { ok(new Uint8Array(fr.result)); };
+      fr.onerror = function () { ko(new Error('lecture du fichier impossible')); };
+      fr.readAsArrayBuffer(fichier);
+    });
+  }
+  /* Uint8Array ou File → Promise<paquet> */
+  function lireFichierSaisies(src, nom) {
+    var p = src instanceof Uint8Array ? Promise.resolve(src) : lireOctets(src);
+    return p.then(function (u8) {
+      var pq;
+      if (u8.length > 4 && u8[0] === 0x50 && u8[1] === 0x4b) pq = lireXlsx(u8).then(paquetDepuisXlsx);
+      else {
+        var t = new TextDecoder('utf-8').decode(u8).replace(/^﻿/, '');
+        if (/^\s*\{/.test(t)) { var o; try { o = JSON.parse(t); } catch (e) { throw new Error('fichier JSON illisible'); } pq = Promise.resolve(paquetDepuisJson(o)); }
+        else pq = Promise.resolve(paquetDepuisCsv(t));
+      }
+      return pq.then(function (paquet) { paquet.fichier = nom || (src && src.name) || ''; return paquet; });
+    });
+  }
+
+  /* ---------- comparer un paquet à ce navigateur ---------- */
+  function etiquette(f) {
+    if (f.rubrique === 'decision') return 'Projet ' + (f.numero_projet || '—') + (f.date ? ' · revue du ' + f.date : '');
+    var noms = etiquette.noms || (etiquette.noms = nomsSites());
+    return 'Sous-site ' + f.site + (f.nom || noms[f.site] ? ' · ' + (f.nom || noms[f.site]) : '');
+  }
+  function apercu(f) {
+    if (!f) return '';
+    if (f.supprimer) return '(à supprimer)';
+    if (f.rubrique === 'note') return txt(f.texte);
+    if (f.rubrique === 'ajustement') return libAjust(f.niveau) + ' — ' + txt(f.motif);
+    return txt(f.decision) + (f.responsable ? ' · resp. ' + f.responsable : '') + (f.echeance ? ' · échéance ' + f.echeance : '') + (f.statut ? ' · ' + f.statut : '') + (f.escalade_vers ? ' · escalade vers ' + f.escalade_vers : '');
+  }
+  var RUBRIQUES = { note: 'Note', ajustement: 'Ajustement', decision: 'Décision' };
+  function analyser(paquet) {
+    etiquette.noms = null;
+    var locales = Object.create(null), ref = paquet.info && paquet.info.consolide, out = { lignes: [], identiques: 0, ignorees: 0 };
+    var dateExport = (paquet.info && paquet.info.date) || '';
+    lireFiches().forEach(function (f) { locales[f.cle] = f; });
+    /* la version d'ici a-t-elle été vue ? Référence : par les empreintes des versions consolidées ;
+       sinon : modifiée ici après l'export du fichier = modifiée des deux côtés. */
+    function vueParLaReference(l) {
+      if (ref.vues) { var v = ref.vues[l.cle]; return !!(v && v.indexOf(hash(contenu(l))) >= 0); }
+      return !(l.modifie && ref.le && l.modifie > ref.le);
+    }
+    function apresExport(l) { return !!(l && l.modifie && dateExport && l.modifie > dateExport); }
+    var vus = Object.create(null);
+    (paquet.fiches || []).forEach(function (f) {
+      /* ligne ajoutée dans Excel sans identifiant : rattachée à une décision existante de même date, projet et texte */
+      if (f.rubrique === 'decision' && f.sansId && !locales[f.cle]) {
+        var cleN = [txt(f.date), txt(f.numero_projet), txt(f.decision).trim()].join(SEP);
+        for (var k in locales) { var x = locales[k]; if (x.rubrique === 'decision' && [relireJour(x.date), txt(x.numero_projet).trim(), txt(x.decision).trim()].join(SEP) === cleN) { f = Object.assign({}, f, { id: x.id, cle: x.cle }); break; } }
+      }
+      if (vus[f.cle]) return; vus[f.cle] = 1;
+      var l = locales[f.cle], ligne = { cle: f.cle, rubrique: f.rubrique, etiquette: etiquette(f), locale: l || null, entrante: f };
+      if (f.supprimer) {
+        if (!l) { out.ignorees++; return; }
+        ligne.sorte = 'suppression';
+        if (ref) { ligne.defaut = vueParLaReference(l); ligne.raison = ligne.defaut ? 'retirée de la version de référence' : 'retirée de la référence, mais modifiée ici depuis l’envoi : gardée par défaut'; }
+        else if (apresExport(l)) { ligne.defaut = false; ligne.raison = 'marquée « supprimer », mais modifiée ici après l’export du fichier : gardée par défaut'; }
+        else { ligne.defaut = true; ligne.raison = 'marquée « supprimer » dans le fichier'; }
+      } else if (!l) { ligne.sorte = 'nouvelle'; ligne.defaut = true; ligne.raison = ''; }
+      else if (contenu(l) === contenu(f)) { out.identiques++; return; }
+      else {
+        ligne.sorte = 'modifiee';
+        if (ref) { ligne.defaut = vueParLaReference(l); ligne.raison = ligne.defaut ? 'version de référence' : 'modifiée ici depuis l’envoi au consolidateur : gardée par défaut'; }
+        else if (f.excel) {
+          if (apresExport(l)) { ligne.defaut = false; ligne.raison = 'modifiée des deux côtés (ici et dans Excel) : la version d’ici est gardée par défaut'; }
+          else { ligne.defaut = true; ligne.raison = 'modifiée dans le fichier Excel'; }
+        }
+        else if (f.modifie && (!l.modifie || f.modifie > l.modifie)) { ligne.defaut = true; ligne.raison = 'plus récente dans le fichier'; }
+        else { ligne.defaut = false; ligne.raison = l.modifie && f.modifie ? 'plus récente ici : gardée par défaut' : 'dates inconnues : la version d’ici est gardée par défaut'; }
+      }
+      out.lignes.push(ligne);
+    });
+    var ordre = { suppression: 0, modifiee: 1, nouvelle: 2 };
+    out.lignes.sort(function (a, b) { return (ordre[a.sorte] - ordre[b.sorte]) || (a.rubrique < b.rubrique ? -1 : a.rubrique > b.rubrique ? 1 : 0) || (a.etiquette < b.etiquette ? -1 : 1); });
+    return out;
+  }
+  /* Sauvegarde de l'état d'avant import, réduite à ce que l'import peut toucher : notes et ajustements,
+     registre des décisions (pas les données GE-Invest de la revue), champs des réglages repris.
+     Un seul emplacement, remplacé à chaque import ; purgé au bout de 30 jours. */
+  function sauvegarder(fichier, blocs) {
+    var st = lireJ(K_PRIO), db = lireJ(K_REVUE);
+    var s = { v: 2, date: maintenant(), fichier: fichier || '',
+      prio: st && typeof st === 'object' ? { siteNotes: st.siteNotes || {}, siteQuali: st.siteQuali || {} } : null,
+      decisions: db && Array.isArray(db.decisions) ? db.decisions : null, fiches: lire(LS_FICHES), blocs: {} };
+    (blocs || []).forEach(function (b) {
+      var cur = lireJ(b.cle);
+      if (Array.isArray(b.contenu) || !cur || typeof cur !== 'object' || Array.isArray(cur)) s.blocs[b.cle] = { brut: lire(b.cle) };
+      else { var champs = {}; Object.keys(b.contenu).forEach(function (k) { if (k in cur) champs[k] = cur[k]; }); s.blocs[b.cle] = { champs: champs, cles: Object.keys(b.contenu) }; }
+    });
+    return ecrireJ(LS_SAUVE, s);
+  }
+  function derniereSauvegarde() { return lireJ(LS_SAUVE); }
+  function annulerDernierImport() {
+    var s = lireJ(LS_SAUVE); if (!s || s.v !== 2) return false;
+    var st = lireJ(K_PRIO);
+    if (s.prio) { st = st && typeof st === 'object' ? st : {}; st.siteNotes = s.prio.siteNotes; st.siteQuali = s.prio.siteQuali; ecrireJ(K_PRIO, st); }
+    else if (st && typeof st === 'object') { st.siteNotes = {}; st.siteQuali = {}; ecrireJ(K_PRIO, st); }
+    var db = lireJ(K_REVUE);
+    if (db && typeof db === 'object') { db.decisions = s.decisions || []; ecrireJ(K_REVUE, db); }
+    try { if (s.fiches == null) localStorage.removeItem(LS_FICHES); else localStorage.setItem(LS_FICHES, s.fiches); } catch (e) {}
+    Object.keys(s.blocs || {}).forEach(function (k) {
+      var b = s.blocs[k];
+      if ('brut' in b) { try { if (b.brut == null) localStorage.removeItem(k); else localStorage.setItem(k, b.brut); } catch (e) {} return; }
+      var cur = lireJ(k); if (!cur || typeof cur !== 'object') return;
+      (b.cles || []).forEach(function (c) { if (c in b.champs) cur[c] = b.champs[c]; else delete cur[c]; });
+      ecrireJ(k, cur);
+    });
+    try { localStorage.removeItem(LS_SAUVE); } catch (e) {}
+    return true;
+  }
+  (function purgerSauvegarde() {
+    var s = lireJ(LS_SAUVE);
+    if (s && (s.v !== 2 || !s.date || (Date.now() - new Date(s.date).getTime()) > 30 * 86400000)) { try { localStorage.removeItem(LS_SAUVE); } catch (e) {} }
+  })();
+  /* opts.sauvegarde : résultat d'une sauvegarde déjà tentée (false = l'utilisateur a accepté d'importer sans) */
+  function appliquer(lignes, blocs, fichier, opts) {
+    var sauve = (opts && 'sauvegarde' in opts) ? opts.sauvegarde : sauvegarder(fichier, blocs);
+    var ecr = [], sup = [], n = { nouvelle: 0, modifiee: 0, suppression: 0 };
+    lignes.forEach(function (l) { n[l.sorte]++; if (l.sorte === 'suppression') sup.push(l.entrante); else ecr.push(l.entrante); });
+    var ok = ecrireFiches(ecr, sup), faits = [];
+    if (n.nouvelle) faits.push(n.nouvelle + ' saisie(s) ajoutée(s)');
+    if (n.modifiee) faits.push(n.modifiee + ' remplacée(s)');
+    if (n.suppression) faits.push(n.suppression + ' supprimée(s)');
+    if (blocs && blocs.length) { C.importerSaisies({ format: 'pte-saisies', blocs: blocs }); faits.push('réglages repris (' + blocs.map(function (b) { return b.resume; }).join(', ') + ')'); }
+    return { faits: faits, sauvegarde: sauve, ok: ok };
+  }
+
+  /* ---------- fenêtres ---------- */
+  function couleurs() {
+    var nuit = !!(document.body && document.body.classList && document.body.classList.contains('night'));
+    try { if (!nuit && C.themeCourant && C.themeCourant() === 'nuit') nuit = true; } catch (e) {}
+    return nuit ? { fond: '#1b2631', encre: '#e6edf3', doux: '#9fb0c0', trait: '#34495e', acc: '#30E5D9', accTexte: '#0b1a24', puce: '#26394a', vert: '#7fd4a8', orange: '#f2b866', rouge: '#ff8a80', ligne: '#22303d' }
+                : { fond: '#ffffff', encre: '#1f2d3d', doux: '#5b6b7b', trait: '#dfe6ec', acc: '#005F73', accTexte: '#ffffff', puce: '#e9f1f4', vert: '#1A8554', orange: '#8A5A00', rouge: '#B3261E', ligne: '#f5f8fa' };
+  }
+  function esc(s) { return txt(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function court(s, n) { s = txt(s).replace(/\s+/g, ' ').trim(); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+  function fenetre(id, titre, largeur) {
+    var ancien = document.getElementById(id); if (ancien && ancien.parentNode) ancien.parentNode.removeChild(ancien);
+    var c = couleurs(), voile = document.createElement('div');
+    voile.id = id;
+    voile.style.cssText = 'position:fixed;left:0;top:0;right:0;bottom:0;z-index:10001;background:rgba(15,23,32,.55);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box';
+    var b = document.createElement('div');
+    b.setAttribute('role', 'dialog'); b.setAttribute('aria-modal', 'true'); b.setAttribute('aria-labelledby', id + '-t');
+    b.style.cssText = 'background:' + c.fond + ';color:' + c.encre + ';width:100%;max-width:' + (largeur || 860) + 'px;max-height:88vh;display:flex;flex-direction:column;border-radius:10px;box-shadow:0 14px 44px rgba(0,0,0,.35);font:14px/1.45 Arial,Helvetica,sans-serif;text-align:left';
+    b.innerHTML = '<div style="display:flex;align-items:center;gap:10px;padding:14px 18px 10px;border-bottom:1px solid ' + c.trait + '">' +
+      '<h2 id="' + id + '-t" style="margin:0;font-size:17px;flex:1;color:' + c.encre + '">' + esc(titre) + '</h2>' +
+      '<button type="button" data-x="fermer" aria-label="Fermer" title="Fermer (Échap)" style="font:inherit;font-size:20px;line-height:1;background:transparent;border:0;color:' + c.doux + ';cursor:pointer;padding:2px 6px">×</button></div>' +
+      '<div data-corps="1" style="overflow:auto;padding:12px 18px;flex:1"></div>' +
+      '<div data-pied="1" style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;align-items:center;padding:10px 18px 14px;border-top:1px solid ' + c.trait + '"></div>';
+    voile.appendChild(b);
+    var W = { voile: voile, boite: b, corps: b.querySelector('[data-corps]'), pied: b.querySelector('[data-pied]'), c: c, surFermer: null };
+    function clavier(e) { if (e.key === 'Escape' || e.key === 'Esc') { e.stopPropagation(); W.fermer(); } }
+    W.fermer = function () { document.removeEventListener('keydown', clavier, true); if (voile.parentNode) voile.parentNode.removeChild(voile); if (W.surFermer) { var f = W.surFermer; W.surFermer = null; f(); } };
+    voile.addEventListener('click', function (e) { var t = e.target; if (t === voile || (t.getAttribute && t.getAttribute('data-x') === 'fermer')) W.fermer(); });
+    document.addEventListener('keydown', clavier, true);
+    document.body.appendChild(voile);
+    return W;
+  }
+  function bouton(W, lib, principal, action) {
+    var c = W.c, b = document.createElement('button');
+    b.type = 'button'; b.textContent = lib;
+    b.style.cssText = 'font:inherit;font-size:13.5px;padding:7px 14px;border-radius:7px;cursor:pointer;border:1px solid ' + c.acc + ';' +
+      (principal ? 'background:' + c.acc + ';color:' + c.accTexte + ';font-weight:bold' : 'background:transparent;color:' + c.acc);
+    b.addEventListener('click', action);
+    W.pied.appendChild(b);
+    return b;
+  }
+  function puce(c, lib, couleur) { return '<span style="display:inline-block;background:' + c.puce + ';border-radius:10px;padding:1px 9px;margin:0 6px 4px 0;font-size:12.5px;color:' + (couleur || c.encre) + '">' + lib + '</span>'; }
+
+  /* Demande le nom une fois par navigateur (il signe les saisies) ; cb(nom) ou cb(null) si annulé. */
+  function demanderNom(cb, forcer) {
+    var u = utilisateur();
+    if (u && !forcer) { cb(u); return; }
+    if (typeof document === 'undefined' || !document.body) { cb(u || null); return; }
+    var W = fenetre('pte-nom', 'Qui signe ces saisies ?', 520), c = W.c, fini = false;
+    W.corps.innerHTML = '<p style="margin:0 0 10px">Ce nom signe les notes, ajustements et décisions de ce navigateur dans les fichiers échangés : à la consolidation, chacun voit qui a écrit quoi. Il reste dans ce navigateur.</p>' +
+      '<label style="display:block;font-size:12.5px;color:' + c.doux + ';margin-bottom:4px" for="pte-nom-i">Prénom Nom</label>' +
+      '<input id="pte-nom-i" type="text" maxlength="80" autocomplete="name" value="' + esc(u) + '" style="font:inherit;width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid ' + c.trait + ';border-radius:6px;background:' + c.fond + ';color:' + c.encre + '">';
+    var i = W.corps.querySelector('input');
+    function valider() { var n = definirUtilisateur(i.value); if (!n) { i.focus(); i.style.borderColor = c.rouge; return; } fini = true; W.fermer(); cb(n); }
+    i.addEventListener('keydown', function (e) { if (e.key === 'Enter') valider(); });
+    W.surFermer = function () { if (!fini) cb(null); };
+    bouton(W, 'Annuler', false, function () { W.fermer(); });
+    bouton(W, 'Enregistrer', true, valider);
+    try { i.focus(); i.select(); } catch (e) {}
+  }
+
+  /* ---------- export ---------- */
+  function exporterSaisiesFichier(cb) {
+    demanderNom(function (u) {
+      if (u == null) { if (cb) cb(null); return; }
+      var p = paquetLocal(), oct, nom = 'Saisies_PTE_' + slug(u) + '_' + jourFichier() + '.xlsx';
+      try { oct = construireClasseur(p); } catch (e) { montrerErreur('Export impossible', (e && e.message) || String(e)); if (cb) cb(null); return; }
+      telecharger(oct, nom);
+      if (cb) cb({ nom: nom, resume: resumePaquet(p), octets: oct });
+    });
+  }
+
+  /* ---------- import avec aperçu ---------- */
+  /* cb({faits, annule}) ; opts.titre facultatif */
+  function importerSaisiesFichier(fichier, cb) {
+    var fin = function (r) { if (cb) { var f = cb; cb = null; f(r); } };
+    lireFichierSaisies(fichier).then(function (paquet) { montrerApercu(paquet, fin); })
+      .catch(function (e) { montrerErreur('Import impossible', (e && e.message) || String(e)); fin({ faits: [], annule: true, erreur: (e && e.message) || String(e) }); });
+  }
+  function montrerErreur(titre, message) {
+    if (typeof document === 'undefined' || !document.body) return;
+    var W = fenetre('pte-saisies-erreur', titre, 520);
+    W.corps.innerHTML = '<p style="margin:0">' + esc(message.charAt(0).toUpperCase() + message.slice(1)) + '.</p>';
+    bouton(W, 'Fermer', true, function () { W.fermer(); });
+  }
+  function enTeteSource(c, info, fichier) {
+    var conso = info && info.consolide;
+    var qui = conso ? '<b>Version de référence</b> consolidée par ' + esc(conso.par) + ' le ' + esc(dateLisible(conso.le)) + ' (' + esc(String((conso.sources || []).length)) + ' fichier(s))'
+      : info && info.ancien ? 'Ancien format (' + esc(info.ancien.toUpperCase()) + ') : auteurs et dates inconnus'
+      : 'Exporté par ' + esc(info && info.auteur || 'auteur inconnu') + (info && info.date ? ' le ' + esc(dateLisible(info.date)) : '');
+    return '<p style="margin:0 0 8px;color:' + c.doux + '">' + esc(fichier || '') + ' — ' + qui + '.</p>';
+  }
+  function montrerApercu(paquet, fin) {
+    var A = analyser(paquet), u = utilisateur();
+    if (typeof document === 'undefined' || !document.body) {
+      var r = appliquer(A.lignes.filter(function (l) { return l.defaut; }), [], paquet.fichier);
+      fin({ faits: r.faits, annule: false }); return;
+    }
+    var W = fenetre('pte-saisies-import', 'Importer des saisies'), c = W.c;
+    var nb = { nouvelle: 0, modifiee: 0, suppression: 0 };
+    A.lignes.forEach(function (l) { nb[l.sorte]++; });
+    var blocs = paquet.blocs || [], memeAuteur = !!(paquet.info && paquet.info.auteur && u && paquet.info.auteur === u);
+    var h = enTeteSource(c, paquet.info, paquet.fichier) +
+      '<div style="margin:4px 0 10px">' + puce(c, nb.nouvelle + ' nouvelle(s)', c.vert) + puce(c, nb.modifiee + ' différente(s)', c.orange) +
+      puce(c, nb.suppression + ' à supprimer', c.rouge) + puce(c, A.identiques + ' identique(s), ignorée(s)', c.doux) + '</div>';
+    if ((paquet.avertissements || []).length) h += '<div style="margin:0 0 10px;padding:8px 10px;border-left:3px solid ' + c.orange + ';background:' + c.ligne + '"><b>Lignes ignorées</b><ul style="margin:4px 0 0;padding-left:18px">' +
+      paquet.avertissements.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('') + '</ul></div>';
+    if (A.lignes.length) {
+      h += '<p style="margin:0 0 6px">Seules les lignes cochées sont appliquées dans ce navigateur ; rien n’est écrit avant « Importer ».' +
+        ' <a href="#" data-x="tout" style="color:' + c.acc + '">tout cocher</a> · <a href="#" data-x="rien" style="color:' + c.acc + '">tout décocher</a></p>' +
+        '<table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="text-align:left;color:' + c.doux + '">' +
+        '<th style="padding:4px"></th><th style="padding:4px">Saisie</th><th style="padding:4px">Ici aujourd’hui</th><th style="padding:4px">Dans le fichier</th></tr></thead><tbody>' +
+        A.lignes.map(function (l, i) {
+          var ici = l.locale ? court(apercu(l.locale), 180) : '—', fic = court(apercu(l.entrante), 180);
+          var qui = function (f) { return f && (f.auteur || f.modifie) ? '<div style="color:' + c.doux + ';font-size:11.5px">' + esc(f.auteur || '?') + (f.modifie ? ', ' + esc(dateLisible(f.modifie)) : '') + '</div>' : ''; };
+          return '<tr style="border-top:1px solid ' + c.trait + ';vertical-align:top">' +
+            '<td style="padding:6px 4px"><input type="checkbox" data-i="' + i + '"' + (l.defaut ? ' checked' : '') + ' aria-label="Appliquer"></td>' +
+            '<td style="padding:6px 4px;min-width:150px"><b>' + RUBRIQUES[l.rubrique] + '</b> · ' + esc({ nouvelle: 'nouvelle', modifiee: 'différente', suppression: 'à supprimer' }[l.sorte]) +
+              '<div>' + esc(l.etiquette) + '</div>' + (l.raison ? '<div style="color:' + c.doux + ';font-size:11.5px">' + esc(l.raison) + '</div>' : '') + '</td>' +
+            '<td style="padding:6px 4px" title="' + esc(l.locale ? apercu(l.locale) : '') + '">' + esc(ici) + qui(l.locale) + '</td>' +
+            '<td style="padding:6px 4px" title="' + esc(apercu(l.entrante)) + '">' + esc(fic) + qui(l.entrante) + '</td></tr>';
+        }).join('') + '</tbody></table>';
+    } else h += '<p style="margin:6px 0">Aucune différence avec ce navigateur pour les notes, ajustements et décisions.</p>';
+    if (blocs.length) h += '<label style="display:flex;gap:8px;align-items:flex-start;margin:12px 0 0;padding:8px 10px;background:' + c.ligne + ';border-radius:6px">' +
+      '<input type="checkbox" data-x="reglages"' + (memeAuteur ? ' checked' : '') + '><span><b>Reprendre aussi les réglages</b> : ' + esc(blocs.map(function (b) { return b.resume; }).join(', ')) +
+      '.<br><span style="color:' + c.doux + ';font-size:12px">Utile pour passer ses propres saisies d’un poste à l’autre ; à laisser décoché pour le fichier d’un collègue, dont les réglages remplaceraient ceux de ce poste.</span></span></label>';
+    h += '<p style="margin:12px 0 0;color:' + c.doux + ';font-size:12px">Avant d’appliquer, l’état actuel est sauvegardé dans ce navigateur : l’import pourra être annulé. Les autres outils ouverts dans d’autres onglets reprennent aussitôt les saisies importées.</p>';
+    W.corps.innerHTML = h;
+    var cases = W.corps.querySelectorAll('input[data-i]'), reg = W.corps.querySelector('input[data-x="reglages"]'), bImp;
+    function compter() {
+      var n = 0; for (var i = 0; i < cases.length; i++) if (cases[i].checked) n++;
+      var possible = n > 0 || !!(reg && reg.checked);
+      bImp.textContent = 'Importer' + (cases.length ? ' (' + n + ')' : '');
+      bImp.disabled = !possible; bImp.style.opacity = possible ? '1' : '.5';
+    }
+    W.corps.addEventListener('click', function (e) {
+      var x = e.target.getAttribute && e.target.getAttribute('data-x');
+      if (x === 'tout' || x === 'rien') { e.preventDefault(); for (var i = 0; i < cases.length; i++) cases[i].checked = x === 'tout'; compter(); }
+    });
+    W.corps.addEventListener('change', compter);
+    var annule = true;
+    W.surFermer = function () { if (annule) fin({ faits: [], annule: true }); };
+    bouton(W, 'Annuler', false, function () { W.fermer(); });
+    var sansSauvegarde = false;
+    bImp = bouton(W, 'Importer', true, function () {
+      var choix = []; for (var i = 0; i < cases.length; i++) if (cases[i].checked) choix.push(A.lignes[+cases[i].getAttribute('data-i')]);
+      var bl = reg && reg.checked ? blocs : [];
+      var sauve = sansSauvegarde ? false : sauvegarder(paquet.fichier, bl);
+      if (!sauve && !sansSauvegarde) {
+        sansSauvegarde = true; bImp.textContent = 'Importer sans sauvegarde';
+        var av = document.createElement('p');
+        av.style.cssText = 'margin:10px 0 0;padding:8px 10px;border-left:3px solid ' + c.rouge + ';background:' + c.ligne;
+        av.textContent = 'La sauvegarde de l’état actuel n’a pas pu être faite (mémoire du navigateur pleine) : cet import ne pourra pas être annulé. Exporter d’abord ses saisies permet de garder une copie.';
+        W.corps.appendChild(av); try { av.scrollIntoView(); } catch (e) {}
+        return;
+      }
+      var r = appliquer(choix, bl, paquet.fichier, { sauvegarde: sauve });
+      annule = false; W.surFermer = null;
+      montrerResultat(W, r, fin);
+    });
+    compter();
+  }
+  function montrerResultat(W, r, fin) {
+    var c = W.c;
+    W.corps.innerHTML = '<p style="margin:0 0 8px"><b>' + (r.faits.length ? 'Import terminé' : 'Rien n’a été modifié') + '.</b> ' + esc(r.faits.join(' · ')) + '</p>' +
+      (r.ok ? '' : '<p style="color:' + c.rouge + '">Une partie n’a pas pu être écrite : mémoire du navigateur pleine ?</p>') +
+      (r.sauvegarde ? '<p style="margin:0;color:' + c.doux + '">L’état d’avant est sauvegardé : « Annuler cet import » le rétablit.</p>'
+                    : '<p style="margin:0;color:' + c.orange + '">La sauvegarde de l’état d’avant n’a pas pu être faite (mémoire du navigateur pleine) : l’import ne peut pas être annulé.</p>');
+    W.pied.innerHTML = '';
+    if (r.sauvegarde && r.faits.length) bouton(W, 'Annuler cet import', false, function () {
+      annulerDernierImport(); W.surFermer = null; W.fermer(); fin({ faits: ['import annulé, état d’avant rétabli'], annule: true, retabli: true });
+    });
+    bouton(W, 'Fermer', true, function () { W.surFermer = null; W.fermer(); fin({ faits: r.faits, annule: false }); });
+    W.surFermer = function () { fin({ faits: r.faits, annule: false }); };
+  }
+
+  /* ---------- consolidation de plusieurs fichiers ---------- */
+  function consolider(paquets, avecLocal) {
+    var sources = paquets.map(function (p) { return { fichier: p.fichier || '', auteur: (p.info && p.info.auteur) || '', date: (p.info && p.info.date) || '', fiches: p.fiches || [] }; });
+    if (avecLocal) sources.unshift({ fichier: 'ce navigateur', auteur: utilisateur(), date: maintenant(), fiches: lireFiches(), local: true });
+    var groupes = {}, ordre = [];
+    sources.forEach(function (s, si) {
+      var vus = {};
+      s.fiches.forEach(function (f) {
+        if (vus[f.cle]) return; vus[f.cle] = 1;
+        var g = groupes[f.cle]; if (!g) { g = groupes[f.cle] = { cle: f.cle, rubrique: f.rubrique, etiquette: etiquette(f), versions: [] }; ordre.push(f.cle); }
+        var empreinte = contenu(f) + SEP + (f.supprimer ? '1' : ''), v = null;
+        g.versions.forEach(function (x) { if (x.empreinte === empreinte) v = x; });
+        if (!v) { v = { empreinte: empreinte, fiche: f, sources: [], dateSource: s.date || '' }; g.versions.push(v); }
+        else if ((f.modifie || '') > (v.fiche.modifie || '')) v.fiche = f;
+        v.sources.push(s.fichier + (s.auteur ? ' (' + s.auteur + ')' : ''));
+      });
+    });
+    var G = ordre.map(function (k) {
+      var g = groupes[k];
+      /* la plus récente d'abord ; à date égale ou inconnue, celle du fichier exporté le plus tard */
+      var cle2 = function (v) { return (v.fiche.modifie || '') + '|' + (v.dateSource || ''); };
+      g.versions.sort(function (a, b) { return cle2(b) > cle2(a) ? 1 : cle2(b) < cle2(a) ? -1 : 0; });
+      g.conflit = g.versions.length > 1; g.choix = 0;
+      return g;
+    });
+    G.sort(function (a, b) { return (b.conflit - a.conflit) || (a.rubrique < b.rubrique ? -1 : a.rubrique > b.rubrique ? 1 : 0) || (a.etiquette < b.etiquette ? -1 : 1); });
+    return { groupes: G, sources: sources.map(function (s) { return { fichier: s.fichier, auteur: s.auteur, date: s.date, local: !!s.local, n: s.fiches.length }; }) };
+  }
+  function fusionnerNotes(g, par) {
+    var t = g.versions.filter(function (v) { return !v.fiche.supprimer && txt(v.fiche.texte).trim(); }).map(function (v) {
+      return '[' + (v.fiche.auteur || 'auteur inconnu') + (v.fiche.modifie ? ', ' + dateLisible(v.fiche.modifie).slice(0, 10) : '') + '] ' + txt(v.fiche.texte).trim();
+    }).join('\n\n');
+    var f0 = g.versions[0].fiche;
+    return { cle: g.cle, rubrique: 'note', site: f0.site, nom: f0.nom, texte: t, auteur: par, modifie: maintenant() };
+  }
+  function resultatConsolidation(K, par) {
+    return K.groupes.map(function (g) {
+      if (g.choix === 'fusion') return fusionnerNotes(g, par);
+      if (g.choix === 'suppr') return Object.assign({}, g.versions[0].fiche, { supprimer: true });
+      var f = g.versions[g.choix || 0].fiche;
+      return Object.assign({}, f, { excel: false });
+    });
+  }
+  function paquetConsolide(K, par) {
+    var le = maintenant();
+    var vues = {};
+    K.groupes.forEach(function (g) { vues[g.cle] = g.versions.map(function (v) { return hash(contenu(v.fiche)); }); });
+    return { fiches: resultatConsolidation(K, par), blocs: [], vues: vues,
+             info: { auteur: par, date: le, consolide: { par: par, le: le, sources: K.sources.map(function (s) { return { fichier: s.fichier, auteur: s.auteur, date: s.date }; }) } } };
+  }
+  /* Fenêtre de consolidation (accueil, mode consolidateur). cb(résultat) à la fermeture. */
+  function ouvrirConsolidation(cb) {
+    var fin = function (r) { if (cb) { var f = cb; cb = null; f(r || {}); } };
+    demanderNom(function (par) {
+      if (par == null) { fin({ annule: true }); return; }
+      var W = fenetre('pte-consolidation', 'Consolider des fichiers de saisies', 980), c = W.c;
+      W.surFermer = function () { fin({ annule: true }); };
+      W.corps.innerHTML = '<p style="margin:0 0 10px">Fichiers de saisies reçus (Excel, ou anciens JSON / CSV) : ils sont lus dans ce navigateur, rien n’est envoyé.</p>' +
+        '<p style="margin:0 0 10px"><input type="file" multiple accept=".xlsx,.json,.csv" data-x="fichiers"></p>' +
+        '<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-x="local" checked> Inclure les saisies de ce navigateur</label>' +
+        '<p style="margin:12px 0 0;color:' + c.doux + ';font-size:12px">Version consolidée signée : <b>' + esc(par) + '</b>. Les désaccords entre fichiers sont montrés côte à côte avant tout export.</p>';
+      var inp = W.corps.querySelector('[data-x="fichiers"]'), loc = W.corps.querySelector('[data-x="local"]');
+      bouton(W, 'Annuler', false, function () { W.fermer(); });
+      var bA = bouton(W, 'Comparer', true, function () {
+        var fs = Array.prototype.slice.call(inp.files || []);
+        if (!fs.length && !loc.checked) { inp.focus(); return; }
+        bA.disabled = true; bA.textContent = 'Lecture…';
+        Promise.all(fs.map(function (f) { return lireFichierSaisies(f).catch(function (e) { return { erreur: f.name + ' : ' + ((e && e.message) || e) }; }); }))
+          .then(function (ps) {
+            var erreurs = ps.filter(function (p) { return p.erreur; }).map(function (p) { return p.erreur; });
+            var bons = ps.filter(function (p) { return !p.erreur; });
+            montrerConsolidation(W, consolider(bons, loc.checked), par, erreurs, fin);
+          });
+      });
+    }, false);
+  }
+  function montrerConsolidation(W, K, par, erreurs, fin, opts) {
+    var c = W.c, nbC = K.groupes.filter(function (g) { return g.conflit; }).length;
+    var h = '<div style="margin:0 0 8px">' + K.sources.map(function (s) {
+      return puce(c, esc(s.fichier) + ' — ' + esc(s.auteur || 'auteur inconnu') + ' · ' + s.n + ' saisie(s)');
+    }).join('') + '</div>';
+    if (erreurs.length) h += '<div style="margin:0 0 10px;padding:8px 10px;border-left:3px solid ' + c.rouge + ';background:' + c.ligne + '"><b>Fichiers non lus</b><ul style="margin:4px 0 0;padding-left:18px">' + erreurs.map(function (e) { return '<li>' + esc(e) + '</li>'; }).join('') + '</ul></div>';
+    h += '<p style="margin:0 0 10px"><b>' + K.groupes.length + '</b> saisie(s) au total · <b style="color:' + (nbC ? c.orange : c.vert) + '">' + nbC + ' en désaccord</b> à trancher · ' + (K.groupes.length - nbC) + ' concordante(s), reprises telles quelles.</p>';
+    if (nbC) h += '<p style="margin:0 0 6px;color:' + c.doux + '">Par défaut, la version la plus récente est retenue. Pour une note, « Réunir les textes » garde toutes les versions, signées.</p>';
+    K.groupes.forEach(function (g, gi) {
+      if (!g.conflit) return;
+      h += '<fieldset style="border:1px solid ' + c.trait + ';border-radius:8px;margin:0 0 10px;padding:8px 12px"><legend style="padding:0 6px"><b>' + RUBRIQUES[g.rubrique] + '</b> · ' + esc(g.etiquette) + '</legend>';
+      g.versions.forEach(function (v, vi) {
+        h += '<label style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px dashed ' + c.trait + '"><input type="radio" name="g' + gi + '" value="' + vi + '"' + (vi === 0 ? ' checked' : '') + '>' +
+          '<span style="flex:1"><span style="white-space:pre-wrap">' + esc(apercu(v.fiche)) + '</span>' +
+          '<span style="display:block;color:' + c.doux + ';font-size:11.5px">' + esc(v.fiche.auteur || 'auteur inconnu') + (v.fiche.modifie ? ', ' + esc(dateLisible(v.fiche.modifie)) : ', date inconnue') +
+          (v.fiche.excel ? ' · modifiée dans Excel' : '') + ' — ' + esc(v.sources.join(' ; ')) + '</span></span></label>';
+      });
+      if (g.rubrique === 'note' && g.versions.filter(function (v) { return !v.fiche.supprimer; }).length > 1)
+        h += '<label style="display:flex;gap:8px;padding:5px 0"><input type="radio" name="g' + gi + '" value="fusion"> <span>Réunir les textes (chaque version précédée de son auteur)</span></label>';
+      if (!g.versions.some(function (v) { return v.fiche.supprimer; }))
+        h += '<label style="display:flex;gap:8px;padding:5px 0"><input type="radio" name="g' + gi + '" value="suppr"> <span>Supprimer cette saisie partout</span></label>';
+      h += '</fieldset>';
+    });
+    h += '<label style="display:flex;gap:8px;align-items:center;margin:8px 0 0"><input type="checkbox" data-x="appliquer" checked> Appliquer aussi la version consolidée dans ce navigateur (avec aperçu et sauvegarde)</label>';
+    W.corps.innerHTML = h;
+    W.corps.addEventListener('change', function (e) {
+      var n = e.target.name; if (!n || n.charAt(0) !== 'g') return;
+      var g = K.groupes[+n.slice(1)], v = e.target.value;
+      g.choix = (v === 'fusion' || v === 'suppr') ? v : +v;
+    });
+    W.pied.innerHTML = '';
+    bouton(W, 'Fermer', false, function () { W.fermer(); });
+    if (opts && opts.publier) {     /* consolidation depuis le serveur partagé : la référence y est publiée */
+      var bPub = bouton(W, 'Publier la référence sur le serveur', true, function () {
+        var p = paquetConsolide(K, par), app = W.corps.querySelector('[data-x="appliquer"]');
+        bPub.disabled = true; bPub.textContent = 'Publication…';
+        opts.publier(p, K).then(function (n) {
+          var resultat = { publie: n, resume: resumePaquet(p) };
+          W.surFermer = null; W.fermer();
+          if (app && app.checked) { p.fichier = 'référence du serveur'; montrerApercu(p, function (r) { resultat.import = r; fin(resultat); }); }
+          else fin(resultat);
+        }).catch(function (e) { bPub.disabled = false; bPub.textContent = 'Publier la référence sur le serveur'; montrerErreur('Publication impossible', (e && e.message) || String(e)); });
+      });
+    }
+    bouton(W, (opts && opts.publier) ? 'Exporter en Excel' : 'Exporter la version consolidée', !(opts && opts.publier), function () {
+      var p = paquetConsolide(K, par), oct, nom = 'Saisies_PTE_consolidees_' + jourFichier() + '.xlsx';
+      try { oct = construireClasseur(p); } catch (e) { montrerErreur('Export impossible', (e && e.message) || String(e)); return; }
+      telecharger(oct, nom);
+      var app = W.corps.querySelector('[data-x="appliquer"]');
+      var resultat = { nom: nom, resume: resumePaquet(p), octets: oct };
+      W.surFermer = null; W.fermer();
+      if (app && app.checked) { p.fichier = nom; montrerApercu(p, function (r) { resultat.import = r; fin(resultat); }); }
+      else fin(resultat);
+    });
+  }
+
+
+  /* ==========================================================================
+     SERVEUR PARTAGÉ (prototype, 17.10.2026) — PocketBase
+     ----------------------------------------------------------------------------
+     Adresse et session gardées dans ce navigateur (jamais dans le code publié).
+     Comptes créés par l'administrateur ; rôles contributeur / consolidateur,
+     contrôlés par le serveur. Collections : saisies (la version de chacun),
+     reference (la version consolidée), consolidations (journal), retours, votes.
+     ========================================================================== */
+  var LS_SRV = 'pte.serveur.v1';              /* {adresse} */
+  var LS_SES = 'pte.serveur.session.v1';      /* {token, user:{id, name, email, role}} */
+  function adresseServeur() { var o = lireJ(LS_SRV); return o && o.adresse ? o.adresse : ''; }
+  function definirAdresseServeur(a) {
+    a = txt(a).trim().replace(/\/+$/, '');
+    if (a && !/^https:\/\/[^\s/]+$/i.test(a) && !/^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i.test(a)) throw new Error('adresse attendue : https://nom-du-serveur (sans chemin)');
+    try { if (a) localStorage.setItem(LS_SRV, JSON.stringify({ adresse: a })); else localStorage.removeItem(LS_SRV); } catch (e) {}
+    if (!a) deconnecter();
+    return a;
+  }
+  function session() { var s = lireJ(LS_SES); return s && s.token && s.user ? s : null; }
+  function deconnecter() { try { localStorage.removeItem(LS_SES); } catch (e) {} }
+  function estConsolidateur() { var s = session(); return !!(s && s.user.role === 'consolidateur'); }
+  function messageErreur(st, j) {
+    var m = j && j.message ? j.message : ('erreur ' + st);
+    if (j && j.data && typeof j.data === 'object') {
+      var d = Object.keys(j.data).map(function (k) { return j.data[k] && j.data[k].message ? k + ' : ' + j.data[k].message : ''; }).filter(Boolean);
+      if (d.length) m += ' (' + d.join(' ; ') + ')';
+    }
+    if (st === 401) m = 'session expirée : nouvelle connexion nécessaire';
+    if (st === 403 && !/Administration/.test(m)) m = 'action non autorisée pour ce compte (' + m + ')';
+    return m;
+  }
+  function api(methode, chemin, corps) {
+    var a = adresseServeur();
+    if (!a) return Promise.reject(new Error('adresse du serveur non renseignée (page Pilotage PTE)'));
+    var s = session(), h = { 'Content-Type': 'application/json' };
+    if (s) h.Authorization = s.token;
+    var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null, to = ctl ? setTimeout(function () { ctl.abort(); }, 25000) : null;
+    return fetch(a + chemin, { method: methode, headers: h, body: corps ? JSON.stringify(corps) : undefined, signal: ctl ? ctl.signal : undefined })
+      .then(function (r) {
+        return r.text().then(function (t) {
+          if (to) clearTimeout(to);
+          var j = null; try { j = t ? JSON.parse(t) : null; } catch (e) {}
+          if (!r.ok) { if (r.status === 401) deconnecter(); var err = new Error(messageErreur(r.status, j)); err.status = r.status; throw err; }
+          return j;
+        });
+      }, function (e) {
+        if (to) clearTimeout(to);
+        throw new Error(e && e.name === 'AbortError' ? 'le serveur ne répond pas (délai dépassé)' : 'serveur injoignable : machine éteinte, Tailscale arrêté, ou adresse bloquée par le réseau');
+      });
+  }
+  function connecter(courriel, mdp) {
+    return api('POST', '/api/collections/users/auth-with-password', { identity: txt(courriel).trim(), password: txt(mdp) }).then(function (j) {
+      var u = j.record || {};
+      var s = { token: j.token, user: { id: u.id, name: u.name || u.email || '', email: u.email || '', role: u.role || 'contributeur' } };
+      ecrireJ(LS_SES, s);
+      if (s.user.name && !utilisateur()) definirUtilisateur(s.user.name);
+      return s;
+    });
+  }
+  function rafraichirSession() {
+    if (!session()) return Promise.resolve(null);
+    return api('POST', '/api/collections/users/auth-refresh').then(function (j) {
+      var u = j.record || {}, s = { token: j.token, user: { id: u.id, name: u.name || u.email || '', email: u.email || '', role: u.role || 'contributeur' } };
+      ecrireJ(LS_SES, s); return s;
+    }).catch(function (e) { if (e.status === 401) deconnecter(); return session(); });
+  }
+  /* identifiant d'enregistrement stable (15 caractères [0-9a-f]) : rend l'envoi idempotent (PUT = créer ou remplacer) */
+  function idStable(s) { return (hash(s) + hash(s + '#1') + hash(s + '#2')).slice(0, 15); }
+  function toutLire(collection, filtre, tri) {
+    var out = [];
+    function page(n) {
+      return api('GET', '/api/collections/' + collection + '/records?perPage=500&page=' + n + (filtre ? '&filter=' + encodeURIComponent(filtre) : '') + (tri ? '&sort=' + encodeURIComponent(tri) : ''))
+        .then(function (j) { out = out.concat(j.items || []); return n < (j.totalPages || 1) ? page(n + 1) : out; });
+    }
+    return page(1);
+  }
+  function parLots(requetes, taille) {
+    var lots = []; for (var i = 0; i < requetes.length; i += taille) lots.push(requetes.slice(i, i + taille));
+    return lots.reduce(function (p, lot) { return p.then(function () { return api('POST', '/api/batch', { requests: lot }); }); }, Promise.resolve())
+      .then(function () { return requetes.length; });
+  }
+  function isoServeur(d) { return d ? txt(d).replace(' ', 'T') : ''; }
+  function ficheVersServeur(f) {
+    var o = {}; Object.keys(f).forEach(function (k) { if (k !== 'auteur' && k !== 'modifie' && k !== 'excel' && k !== 'sansId') o[k] = f[k]; });
+    return o;
+  }
+  function ficheDepuisServeur(r) {
+    return Object.assign({}, r.fiche || {}, { cle: r.cle, rubrique: r.rubrique, auteur: r.auteur_nom || '', modifie: r.modifie || isoServeur(r.updated), supprimer: !!r.supprime });
+  }
+
+  /* Envoie les saisies de ce navigateur comme « ma version » ; une saisie retirée ici est marquée supprimée. */
+  function envoyerSaisies() {
+    var s = session(); if (!s) return Promise.reject(new Error('connexion nécessaire'));
+    var u = s.user, locales = lireFiches();
+    return toutLire('saisies', 'auteur = "' + u.id + '"').then(function (miennes) {
+      var surServeur = {}; miennes.forEach(function (r) { surServeur[r.cle] = r; });
+      var req = [], ici = {}, n = { envoyees: 0, retirees: 0 };
+      locales.forEach(function (f) {
+        ici[f.cle] = 1;
+        var emp = hash(contenu(f)), r = surServeur[f.cle];
+        if (r && r.empreinte === emp && !r.supprime) return;
+        n.envoyees++;
+        req.push({ method: 'PUT', url: '/api/collections/saisies/records', body: { id: r ? r.id : idStable(u.id + '|' + f.cle), cle: f.cle, rubrique: f.rubrique,
+          site: txt(f.site), projet: txt(f.numero_projet), fiche: ficheVersServeur(f), empreinte: emp, supprime: false,
+          modifie: f.modifie || maintenant(), auteur: u.id, auteur_nom: f.auteur || u.name } });
+      });
+      miennes.forEach(function (r) {
+        if (ici[r.cle] || r.supprime) return;
+        n.retirees++;
+        req.push({ method: 'PATCH', url: '/api/collections/saisies/records/' + r.id, body: { supprime: true, modifie: maintenant() } });
+      });
+      return parLots(req, 50).then(function () { return n; });
+    });
+  }
+  /* Toutes les versions du serveur, un « paquet » par auteur (pour la consolidation existante). */
+  function paquetsDuServeur() {
+    return toutLire('saisies').then(function (L) {
+      var parAuteur = {};
+      L.forEach(function (r) {
+        var k = r.auteur, p = parAuteur[k] || (parAuteur[k] = { fichier: 'serveur', fiches: [], info: { auteur: r.auteur_nom || '', date: '' } });
+        p.fiches.push(ficheDepuisServeur(r));
+        var d = isoServeur(r.updated); if (d > p.info.date) p.info.date = d;
+      });
+      return Object.keys(parAuteur).map(function (k) { var p = parAuteur[k]; p.fichier = 'serveur · ' + (p.info.auteur || 'auteur inconnu'); return p; });
+    });
+  }
+  function paquetReference() {
+    return Promise.all([toutLire('reference'), toutLire('consolidations', '', '-created')]).then(function (r) {
+      var refs = r[0], der = r[1][0];
+      if (!refs.length) throw new Error('aucune version de référence publiée sur le serveur pour l’instant');
+      var vues = {}; refs.forEach(function (x) { if (Array.isArray(x.vues)) vues[x.cle] = x.vues; });
+      var le = der ? isoServeur(der.created) : '', par = der ? der.par_nom : '';
+      return { fichier: 'référence du serveur', fiches: refs.map(ficheDepuisServeur), blocs: [],
+               info: { auteur: par, date: le, consolide: { par: par || 'consolidateur', le: le || maintenant(), sources: (der && Array.isArray(der.sources)) ? der.sources : [], vues: vues } } };
+    });
+  }
+  function publierReference(p) {
+    var s = session(); if (!s || s.user.role !== 'consolidateur') return Promise.reject(new Error('publication réservée aux consolidateurs'));
+    var req = p.fiches.map(function (f) {
+      return { method: 'PUT', url: '/api/collections/reference/records', body: { id: idStable('ref|' + f.cle), cle: f.cle, rubrique: f.rubrique, site: txt(f.site),
+        projet: txt(f.numero_projet), fiche: ficheVersServeur(f), empreinte: hash(contenu(f)), supprime: !!f.supprimer, modifie: f.modifie || '',
+        auteur_nom: f.auteur || '', vues: (p.vues && p.vues[f.cle]) || [], consolide_par: s.user.id } };
+    });
+    return parLots(req, 50).then(function (n) {
+      return api('POST', '/api/collections/consolidations/records', { par: s.user.id, par_nom: s.user.name, nombre: n,
+        sources: (p.info.consolide.sources || []).map(function (x) { return { fichier: x.fichier, auteur: x.auteur, date: x.date }; }) }).then(function () { return n; });
+    });
+  }
+
+  /* ---------- fenêtres : connexion, échange, retours ---------- */
+  function demanderConnexion(cb) {
+    if (session() && adresseServeur()) { cb(session()); return; }
+    var W = fenetre('pte-connexion', 'Connexion au serveur partagé', 520), c = W.c, fini = false;
+    var champ = function (id, lib, type, val, auto) {
+      return '<label style="display:block;font-size:12.5px;color:' + c.doux + ';margin:8px 0 4px" for="' + id + '">' + lib + '</label>' +
+        '<input id="' + id + '" type="' + type + '" value="' + esc(val || '') + '" autocomplete="' + auto + '" spellcheck="false" style="font:inherit;width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid ' + c.trait + ';border-radius:6px;background:' + c.fond + ';color:' + c.encre + '">';
+    };
+    W.corps.innerHTML = '<p style="margin:0 0 6px">Compte créé par l’administrateur du serveur. L’adresse et la session restent dans ce navigateur.</p>' +
+      champ('pte-srv-a', 'Adresse du serveur (https://…)', 'url', adresseServeur(), 'off') +
+      champ('pte-srv-c', 'Courriel', 'email', (session() && session().user.email) || '', 'username') +
+      champ('pte-srv-m', 'Mot de passe', 'password', '', 'current-password') +
+      '<p data-x="err" style="margin:10px 0 0;color:' + c.rouge + '"></p>';
+    var err = W.corps.querySelector('[data-x="err"]');
+    W.surFermer = function () { if (!fini) cb(null); };
+    bouton(W, 'Annuler', false, function () { W.fermer(); });
+    var bC = bouton(W, 'Se connecter', true, function () {
+      err.textContent = '';
+      try { definirAdresseServeur(W.corps.querySelector('#pte-srv-a').value); } catch (e) { err.textContent = e.message; return; }
+      bC.disabled = true; bC.textContent = 'Connexion…';
+      connecter(W.corps.querySelector('#pte-srv-c').value, W.corps.querySelector('#pte-srv-m').value)
+        .then(function (s) { fini = true; W.fermer(); cb(s); })
+        .catch(function (e) { bC.disabled = false; bC.textContent = 'Se connecter'; err.textContent = e.message.charAt(0).toUpperCase() + e.message.slice(1) + '.'; });
+    });
+    W.corps.addEventListener('keydown', function (e) { if (e.key === 'Enter') bC.click(); });
+    try { W.corps.querySelector(adresseServeur() ? '#pte-srv-c' : '#pte-srv-a').focus(); } catch (e) {}
+  }
+  function avecSession(cb, fin) { demanderConnexion(function (s) { if (!s) { if (fin) fin(null); return; } cb(s); }); }
+  function envoyerSaisiesUI(fin) {
+    avecSession(function () {
+      envoyerSaisies().then(function (n) { if (fin) fin(n); })
+        .catch(function (e) { montrerErreur('Envoi impossible', e.message); if (fin) fin(null); });
+    }, fin);
+  }
+  function recevoirReferenceUI(fin) {
+    avecSession(function () {
+      paquetReference().then(function (p) { montrerApercu(p, function (r) { if (fin) fin(r); }); })
+        .catch(function (e) { montrerErreur('Réception impossible', e.message); if (fin) fin(null); });
+    }, fin);
+  }
+  /* consolidateur : ses propres saisies sont d'abord envoyées, puis toutes les versions comparées */
+  function consoliderDepuisServeur(fin) {
+    avecSession(function (s) {
+      if (s.user.role !== 'consolidateur') { montrerErreur('Consolidation réservée', 'ce compte n’a pas le rôle de consolidateur'); if (fin) fin(null); return; }
+      envoyerSaisies().then(paquetsDuServeur).then(function (ps) {
+        var W = fenetre('pte-consolidation', 'Consolider les saisies du serveur', 980);
+        W.surFermer = function () { if (fin) fin({ annule: true }); };
+        montrerConsolidation(W, consolider(ps, false), s.user.name || utilisateur(), [], function (r) { if (fin) fin(r); }, { publier: publierReference });
+      }).catch(function (e) { montrerErreur('Consolidation impossible', e.message); if (fin) fin(null); });
+    }, fin);
+  }
+
+  var STATUTS = { nouveau: 'Nouveau', a_clarifier: 'Question posée', accepte: 'Accepté', en_cours: 'En cours', fait: 'Fait', rejete: 'Écarté' };
+  var OUTILS = { accueil: 'Accueil', priorisation: 'Priorisation', simulation: 'Simulation', revue: 'Revue de projets', general: 'Général' };
+  /* Retours (demandes d'évolution) : dépôt, liste commune, 3 votes actifs par personne ; réponse et statut par un consolidateur. */
+  function ouvrirRetours(outil) {
+    avecSession(function (s) {
+      var W = fenetre('pte-retours', 'Retours et demandes d’évolution', 900), c = W.c, cons = s.user.role === 'consolidateur';
+      var etat = { retours: [], votes: [], filtre: 'ouverts' };
+      function opt(o, sel) { return Object.keys(o).map(function (k) { return '<option value="' + k + '"' + (k === sel ? ' selected' : '') + '>' + esc(o[k]) + '</option>'; }).join(''); }
+      function charger() {
+        W.corps.innerHTML = '<p style="color:' + c.doux + '">Chargement…</p>';
+        return Promise.all([toutLire('retours', '', '-created'), toutLire('votes')]).then(function (r) { etat.retours = r[0]; etat.votes = r[1]; rendre(); })
+          .catch(function (e) { W.corps.innerHTML = '<p style="color:' + c.rouge + '">' + esc(e.message) + '</p>'; });
+      }
+      function rendre() {
+        var nb = {}, miens = {};
+        etat.votes.forEach(function (v) { nb[v.retour] = (nb[v.retour] || 0) + 1; if (v.votant === s.user.id) miens[v.retour] = v.id; });
+        var ouvert = function (r) { return r.statut !== 'fait' && r.statut !== 'rejete'; };
+        var actifs = etat.retours.filter(function (r) { return miens[r.id] && ouvert(r); }).length;
+        var L = etat.retours.filter(function (r) { return etat.filtre === 'tous' || ouvert(r); })
+          .sort(function (a, b) { return ((nb[b.id] || 0) - (nb[a.id] || 0)) || (a.created < b.created ? 1 : -1); });
+        var h = '<details style="margin:0 0 12px;border:1px solid ' + c.trait + ';border-radius:8px;padding:8px 12px"' + (etat.retours.length ? '' : ' open') + '><summary style="cursor:pointer"><b>Déposer une demande</b></summary>' +
+          '<div style="display:grid;gap:6px;margin-top:8px"><input data-x="titre" maxlength="200" placeholder="Titre court" style="font:inherit;padding:7px 9px;border:1px solid ' + c.trait + ';border-radius:6px;background:' + c.fond + ';color:' + c.encre + '">' +
+          '<select data-x="outil" style="font:inherit;padding:6px;border:1px solid ' + c.trait + ';border-radius:6px;background:' + c.fond + ';color:' + c.encre + '">' + opt(OUTILS, outil && OUTILS[outil] ? outil : 'general') + '</select>' +
+          '<textarea data-x="desc" rows="3" maxlength="5000" placeholder="Ce qui manque ou gêne, et pourquoi" style="font:inherit;padding:7px 9px;border:1px solid ' + c.trait + ';border-radius:6px;background:' + c.fond + ';color:' + c.encre + '"></textarea>' +
+          '<div><button type="button" data-x="deposer" style="font:inherit;padding:6px 14px;border-radius:7px;border:1px solid ' + c.acc + ';background:' + c.acc + ';color:' + c.accTexte + ';cursor:pointer">Déposer</button></div></div></details>' +
+          '<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:0 0 8px;color:' + c.doux + ';font-size:12.5px">' +
+          '<span>Votes utilisés : <b style="color:' + c.encre + '">' + actifs + ' / 3</b> (les demandes faites ou écartées libèrent leur vote)</span>' +
+          '<label><input type="radio" name="pte-rf" value="ouverts"' + (etat.filtre === 'ouverts' ? ' checked' : '') + '> en cours</label>' +
+          '<label><input type="radio" name="pte-rf" value="tous"' + (etat.filtre === 'tous' ? ' checked' : '') + '> toutes</label></div>';
+        if (!L.length) h += '<p style="color:' + c.doux + '">Aucune demande pour l’instant.</p>';
+        L.forEach(function (r) {
+          var vote = !!miens[r.id], peut = vote || (actifs < 3 && ouvert(r));
+          h += '<div style="display:flex;gap:12px;padding:10px 0;border-top:1px solid ' + c.trait + '">' +
+            '<button type="button" data-vote="' + esc(r.id) + '" title="' + (vote ? 'Retirer mon vote' : (peut ? 'Voter pour cette demande' : 'Trois votes déjà utilisés')) + '"' + (peut ? '' : ' disabled') +
+              ' style="min-width:48px;font:inherit;font-weight:bold;border-radius:8px;cursor:' + (peut ? 'pointer' : 'default') + ';border:1px solid ' + c.acc + ';background:' + (vote ? c.acc : 'transparent') + ';color:' + (vote ? c.accTexte : c.acc) + ';opacity:' + (peut ? 1 : .45) + '">▲<br>' + (nb[r.id] || 0) + '</button>' +
+            '<div style="flex:1;min-width:0"><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:baseline"><b>' + esc(r.titre) + '</b>' + puce(c, esc(STATUTS[r.statut] || r.statut)) + puce(c, esc(OUTILS[r.outil] || r.outil || '')) + '</div>' +
+            (r.description ? '<div style="white-space:pre-wrap;margin:3px 0">' + esc(r.description) + '</div>' : '') +
+            '<div style="color:' + c.doux + ';font-size:11.5px">' + esc(r.auteur_nom || '') + ', ' + esc(dateLisible(isoServeur(r.created))) + '</div>' +
+            (r.reponse ? '<div style="margin:6px 0 0;padding:6px 9px;border-left:3px solid ' + c.acc + ';background:' + c.ligne + ';white-space:pre-wrap"><b>Réponse</b> — ' + esc(r.reponse) + '</div>' : '') +
+            (cons ? '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><select data-statut="' + esc(r.id) + '" style="font:inherit;font-size:12.5px;padding:3px">' + opt(STATUTS, r.statut) + '</select>' +
+              '<input data-reponse="' + esc(r.id) + '" value="' + esc(r.reponse || '') + '" placeholder="Réponse ou question" style="flex:1;min-width:180px;font:inherit;font-size:12.5px;padding:3px 7px;border:1px solid ' + c.trait + ';border-radius:5px;background:' + c.fond + ';color:' + c.encre + '">' +
+              '<button type="button" data-maj="' + esc(r.id) + '" style="font:inherit;font-size:12.5px;padding:3px 10px;border-radius:6px;border:1px solid ' + c.acc + ';background:transparent;color:' + c.acc + ';cursor:pointer">Enregistrer</button></div>' : '') +
+            '</div></div>';
+        });
+        W.corps.innerHTML = h;
+      }
+      function agir(p) { return p.then(charger).catch(function (e) { montrerErreur('Action impossible', e.message); }); }
+      W.corps.addEventListener('change', function (e) { if (e.target.name === 'pte-rf') { etat.filtre = e.target.value; rendre(); } });
+      W.corps.addEventListener('click', function (e) {
+        var t = e.target, g = function (a) { return t.getAttribute && t.getAttribute(a); };
+        if (g('data-x') === 'deposer') {
+          var ti = W.corps.querySelector('[data-x="titre"]').value.trim();
+          if (!ti) { W.corps.querySelector('[data-x="titre"]').focus(); return; }
+          agir(api('POST', '/api/collections/retours/records', { titre: ti, outil: W.corps.querySelector('[data-x="outil"]').value,
+            description: W.corps.querySelector('[data-x="desc"]').value.trim(), statut: 'nouveau', auteur: s.user.id, auteur_nom: s.user.name }));
+        } else if (g('data-vote')) {
+          var id = g('data-vote'), v = etat.votes.filter(function (x) { return x.retour === id && x.votant === s.user.id; })[0];
+          agir(v ? api('DELETE', '/api/collections/votes/records/' + v.id) : api('POST', '/api/collections/votes/records', { retour: id, votant: s.user.id }));
+        } else if (g('data-maj')) {
+          var id2 = g('data-maj');
+          agir(api('PATCH', '/api/collections/retours/records/' + id2, { statut: W.corps.querySelector('[data-statut="' + id2 + '"]').value,
+            reponse: W.corps.querySelector('[data-reponse="' + id2 + '"]').value.trim() }));
+        }
+      });
+      W.pied.innerHTML = '<span style="margin-right:auto;color:' + c.doux + ';font-size:12px">Connecté : ' + esc(s.user.name) + (cons ? ' · consolidateur' : '') + '</span>';
+      bouton(W, 'Actualiser', false, charger);
+      bouton(W, 'Fermer', true, function () { W.fermer(); });
+      charger();
+    });
+  }
+  try { if (typeof document !== 'undefined' && document.body !== undefined && session()) rafraichirSession(); } catch (e) {}
+
+  C.serveur = { adresse: adresseServeur, definirAdresse: definirAdresseServeur, session: session, connecter: connecter, deconnecter: deconnecter,
+    estConsolidateur: estConsolidateur, envoyerSaisies: envoyerSaisies, paquetsDuServeur: paquetsDuServeur, paquetReference: paquetReference,
+    publierReference: publierReference, demanderConnexion: demanderConnexion, envoyerSaisiesUI: envoyerSaisiesUI,
+    recevoirReferenceUI: recevoirReferenceUI, consoliderDepuisServeur: consoliderDepuisServeur, idStable: idStable };
+  C.ouvrirRetours = ouvrirRetours;
+
+  /* Référence posée dès le chargement de la page : une saisie faite ensuite reçoit sa date et son auteur. */
+  try { if (typeof localStorage !== 'undefined' && typeof document !== 'undefined') synchroniserFiches(); } catch (e) {}
+
+  /* ---------- API ---------- */
+  C.LS_UTIL = LS_UTIL; C.LS_FICHES = LS_FICHES; C.LS_SAUVE = LS_SAUVE;
+  C.utilisateur = utilisateur; C.definirUtilisateur = definirUtilisateur; C.demanderNom = demanderNom;
+  C.modeConsolidateur = modeConsolidateur;
+  C.synchroniserFiches = synchroniserFiches; C.lireFiches = lireFiches; C.ecrireFiches = ecrireFiches;
+  C.construireClasseurSaisies = construireClasseur; C.paquetLocal = paquetLocal; C.resumePaquet = resumePaquet;
+  C.lireFichierSaisies = lireFichierSaisies; C.lireXlsx = lireXlsx; C.analyserSaisies = analyser; C.appliquerSaisies = appliquer;
+  C.exporterSaisiesFichier = exporterSaisiesFichier; C.importerSaisiesFichier = importerSaisiesFichier;
+  C.consoliderSaisies = consolider; C.paquetConsolide = paquetConsolide; C.ouvrirConsolidation = ouvrirConsolidation;
+  C.annulerDernierImport = annulerDernierImport; C.derniereSauvegarde = derniereSauvegarde;
+  C.libelleAjustement = libAjust; C.codeAjustement = codeAjust; C.idDecision = idDecision;
+})(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
 
 /* ==== FIN DES MODULES COMMUNS ==== */
 /* ================================================================
@@ -3229,8 +4718,9 @@ const STORE=(function(){
 const HAS_LS=STORE.kind==='local';
 let _lsWriting=false;
 function saveData(){try{_lsWriting=true;STORE.set(LS_DATA,JSON.stringify({sites:S,sitesAll:S_ALL,fileName:lastFileName,fileTime:lastFileTime,ts:Date.now(),objGaps:OBJ_GAPS,objCoFactors:OBJ_COFACTORS,contrat:contratLite(CONTRAT),importIso:importIso,importEmpreinte:importEmpreinte,depuisCommun:importDepuisCommun}))}catch(e){toast('Jeu de données trop volumineux pour la mémoire du navigateur','wr')}finally{_lsWriting=false}}
-function saveState(){try{_lsWriting=true;STORE.set(LS_STATE,JSON.stringify({night:nightOn,params:PARAMS,tourSeen:tourSeen,phaseOverrides:phaseOverrides,siteNotes:siteNotes,siteQuali:siteQuali,inv:invMode,invV:2,co2c:co2Conv,rpSel:RP_SEL}))}catch(e){}finally{_lsWriting=false}}
-function loadState(){try{const o=JSON.parse(STORE.get(LS_STATE)||'null');/* thème : la clé commune aux trois outils fait foi ; l'état local ne sert que de repli pour un navigateur qui n'a connu que la priorisation. */if(typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.themeCourant){if(PTE_COMMUN.themeCourant()==='nuit'||((!localStorage.getItem(PTE_COMMUN.LS_THEME))&&o&&o.night)){nightOn=true;document.body.classList.add('night');try{localStorage.setItem(PTE_COMMUN.LS_THEME,'nuit')}catch(e){}}}if(!o)return null;if(o.night){nightOn=true;document.body.classList.add('night')}if(o.params){PARAMS=Object.assign({},PARAMS_DEF,o.params);
+function saveState(){try{_lsWriting=true;STORE.set(LS_STATE,JSON.stringify({night:nightOn,params:PARAMS,tourSeen:tourSeen,phaseOverrides:phaseOverrides,siteNotes:siteNotes,siteQuali:siteQuali,inv:invMode,invV:2,co2c:co2Conv,rpSel:RP_SEL}))}catch(e){}finally{_lsWriting=false}
+  try{if(typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.synchroniserFiches)PTE_COMMUN.synchroniserFiches()}catch(e){}}
+function loadState(){try{const o=JSON.parse(STORE.get(LS_STATE)||'null');/* thème : la clé commune aux trois outils fait foi ; l'état local ne sert que de repli pour un navigateur qui n'a connu que la priorisation. */if(typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.themeCourant){if(PTE_COMMUN.themeCourant()==='nuit'||((!localStorage.getItem(PTE_COMMUN.LS_THEME))&&o&&o.night)){nightOn=true;document.body.classList.add('night');try{localStorage.setItem(PTE_COMMUN.LS_THEME,'nuit')}catch(e){}}}/* pas d'état (import annulé sur un poste neuf) : plus de notes ni d'ajustements en mémoire */if(!o){siteNotes={};siteQuali={};return null}if(o.night){nightOn=true;document.body.classList.add('night')}if(o.params){PARAMS=Object.assign({},PARAMS_DEF,o.params);
     /* un état enregistré avant le 27.08 ne connaît que « cibleMJ » : on le
        convertit plutôt que de le perdre */
     if(PARAMS.cibleMJ&&!o.params.cibleKwh30)PARAMS.cibleKwh30=Math.round(+PARAMS.cibleMJ/3.6);
@@ -3240,7 +4730,7 @@ function loadState(){try{const o=JSON.parse(STORE.get(LS_STATE)||'null');/* thè
        écraser une cible que l'utilisateur aurait réglée lui-même. */
     if(+PARAMS.cibleKwh30===97)PARAMS.cibleKwh30=97.2;
     delete PARAMS.cibleMJ;
-    CIBLE_MJ_M2_OBJ=pCible30()*3.6}if(o.tourSeen)tourSeen=true;if(o.siteQuali)siteQuali=o.siteQuali;if(o.phaseOverrides)phaseOverrides=o.phaseOverrides;if(o.siteNotes)siteNotes=o.siteNotes;if(o.inv&&o.invV===2&&INV_MODES.some(m=>m.k===o.inv))invMode=o.inv;if(o.co2c&&CO2_CONV.some(c=>c.k===o.co2c))co2Conv=o.co2c;
+    CIBLE_MJ_M2_OBJ=pCible30()*3.6}if(o.tourSeen)tourSeen=true;siteQuali=o.siteQuali||{};if(o.phaseOverrides)phaseOverrides=o.phaseOverrides;siteNotes=o.siteNotes||{};if(o.inv&&o.invV===2&&INV_MODES.some(m=>m.k===o.inv))invMode=o.inv;if(o.co2c&&CO2_CONV.some(c=>c.k===o.co2c))co2Conv=o.co2c;
     if(Array.isArray(o.rpSel))RP_SEL=o.rpSel.slice();
     else if(o.rp&&o.rp!=='all')RP_SEL=[o.rp];   /* état enregistré avant le 28.08 */
     return o}catch(e){return null}}
@@ -3944,66 +5434,25 @@ function _noteIdsObsolete(){return Object.keys(siteNotes).filter(function(k){ret
    d'un poste ou d'un navigateur à l'autre. Le classeur n'y est pas. */
 function saisiesExport(){
   try{
-    const r=PTE_COMMUN.telechargerSaisies(),d=PTE_COMMUN.resumeSaisies();
-    toast(d.length?('Saisies exportées ('+r.nom+') — '+d.join(' · ')):'Aucune saisie à exporter pour l\'instant.', d.length?'ok':'wr');
+    PTE_COMMUN.exporterSaisiesFichier(function(r){
+      if(!r)return;
+      toast(r.resume.length?('Saisies exportées ('+r.nom+') — '+r.resume.join(' · ')):('Aucune saisie pour l\'instant : '+r.nom+' est vide.'),r.resume.length?'ok':'wr')});
   }catch(e){toast('Export impossible : '+(e&&e.message?e.message:e),'wr')}
 }
+/* Excel (17.10.2026), ou ancien JSON « mes saisies » / ancien CSV de notes. L'aperçu
+   des changements est montré par le module commun ; rien n'est écrit avant « Importer ». */
 function saisiesImport(e){
   const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;
-  const fr=new FileReader();
-  fr.onload=function(){
-    try{
-      const faits=PTE_COMMUN.importerSaisies(JSON.parse(fr.result));
-      if(!faits.length){toast('Rien à reprendre dans ce fichier.','wr');return}
-      /* les notes et ajustements de cet outil sont relus depuis la mémoire */
-      const o=JSON.parse(STORE.get(LS_STATE)||'null')||{};
-      if(o.siteNotes)siteNotes=o.siteNotes;
-      if(o.siteQuali)siteQuali=o.siteQuali;
-      if(o.phaseOverrides)phaseOverrides=o.phaseOverrides;
-      try{ren()}catch(err){}
-      toast('Saisies reprises — '+faits.join(' · ')+'. Les deux autres outils les retrouveront à leur prochain chargement.','ok');
-    }catch(err){toast('Fichier illisible : '+(err&&err.message?err.message:err),'wr')}
-  };
-  fr.readAsText(f);
+  PTE_COMMUN.importerSaisiesFichier(f,function(r){
+    if(!r||(r.annule&&!r.retabli))return;
+    /* tout l'état est relu (notes, ajustements, et réglages s'ils ont été repris), comme après une
+       modification faite dans un autre onglet ; sinon le prochain enregistrement réécrirait l'ancien */
+    loadState();const gi=$('gInv');if(gi)gi.value=invMode;
+    _prioCache=null;
+    try{applyInvMode();ren()}catch(err){}
+    if(r.faits&&r.faits.length)toast('Saisies : '+r.faits.join(' · ')+'. Les deux autres outils les retrouveront à leur prochain chargement.','ok');
+  });
 }
-function exportNotes(){
-  const ids=noteIds();
-  if(!ids.length){toast('Aucune note à exporter','wr');return}
-  const d=dstamp();let c='N°;Nom du site;Note;Priorité;Motif priorité;Date\n';
-  const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
-  ids.sort().forEach(function(id){const s=pop.find(function(x){return x.id===id});
-    const q=siteQuali[String(id)]||{};
-    c+=[csvEsc(id),csvTxt(s?s.nom:''),csvTxt(siteNotes[id]||''),csvEsc(q.p||''),csvTxt(q.m||''),d].join(';')+'\n'});
-  dl(new Blob(['﻿'+c],{type:'text/csv;charset=utf-8;'}),'notes_PTE_'+d+'.csv');
-  toast(''+ids.length+' notes exportées','ok');closeNotes()}
-function handleNotesImport(e){const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=function(ev){try{finishNotesImport(parseCSVtoRows(ev.target.result))}catch(er){toast(''+er.message,'wr')}};
-  r.readAsText(f,'UTF-8');e.target.value=''}
-function finishNotesImport(rows){
-  if(!rows||rows.length<2){toast('Fichier de notes vide ou illisible','wr');return}
-  const h=rows[0].map(function(v){return String(v||'').trim()});
-  const ci=fc(h,['N° sous site','N°','nsoussite','Identifiant','ID']);
-  const cn=fc(h,['Note','Notes','Commentaire','Commentaires','Remarques']);
-  const cp=fc(h,['Priorité','Priorite','Ajustement']);
-  const cm=fc(h,['Motif priorité','Motif','Motif priorite']);
-  if(ci<0||cn<0){toast('Colonnes « N° » et « Note » introuvables','wr');return}
-  let n=0,unknown=0;
-  for(let r=1;r<rows.length;r++){
-    const id=String(rows[r][ci]||'').trim();if(!id)continue;
-    /* un identifiant qui est aussi un nom de propriété d'Object remplacerait le prototype de siteQuali */
-    if(id==='__proto__'||id==='constructor'||id==='prototype')continue;
-    const nt=String(rows[r][cn]==null?'':rows[r][cn]);
-    const pq=cp>=0?String(rows[r][cp]==null?'':rows[r][cp]).trim():'';
-    const mq=cm>=0?String(rows[r][cm]==null?'':rows[r][cm]).trim():'';
-    /* une priorité hors barème (faute de frappe, autre version du fichier) est ignorée, pas stockée */
-    if(pq&&pq!=='0'&&QUALI_DEF.some(function(d){return d.k===pq})){siteQuali[id]={p:pq,m:mq};n++}
-    if(!nt.trim())continue;
-    if(!S.some(function(s){return s.id===id}))unknown++;
-    siteNotes[id]=nt;n++}
-  _prioCache=null;
-  saveState();ren();closeNotes();
-  toast(''+n+' notes importées'+(unknown?' · '+unknown+' N° inconnus':''),unknown?'wr':'ok')}
 function tglNotes(e){if(e)e.stopPropagation();
   const p=$('notePop');if(!p)return;
   const open=!p.classList.contains('on');
@@ -7168,7 +8617,7 @@ try{box.scrollIntoView({block:'nearest'})}catch(e){}}
    patrimoniale ne se mesurent pas — mais ils décident. Ils se saisissent
    ici, bâtiment par bâtiment, avec un motif obligatoire, et leur effet est
    affiché séparément : on voit toujours le rang objectif ET le rang ajusté.
-   Stockés avec les notes, exportés dans le même CSV.
+   Stockés avec les notes, exportés dans le même fichier Excel des saisies (17.10.2026).
    ================================================================ */
 let siteQuali={};   /* id -> {p:-2..2 | 'in' | 'ex', m:'motif'} */
 const QUALI_DEF=[
@@ -7615,7 +9064,7 @@ const TITLES=[
  ['#gPie','Une barre, une part par état d\'avancement SIA — effectif et pourcentage sous la barre'],
  ['#gUF','Combien de sous-sites à chaque croisement priorité × faisabilité ; le chiffre est écrit dans la case'],
  ['#gTop','Les 20 premiers du classement de l\'objectif sélectionné, situés sur l\'axe de la valeur qui les trie'],
- ['[onclick*="tglNotes"]','Notes et facteurs non mesurables : export et import dans un même CSV'],
+ ['[onclick*="tglNotes"]','Notes et facteurs non mesurables : export et import dans le fichier Excel des saisies'],
  ['[onclick*="clearAllData"]','Effacer les données de ce navigateur'],
  ['[onclick*="tourStart"]','Relance la visite guidée']];
 function helpApply(){TITLES.forEach(function(p){
