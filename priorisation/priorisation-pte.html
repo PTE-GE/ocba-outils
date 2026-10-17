@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Priorisation PTE</title>
 <!-- ÉTAPE 1 (10 min) — SRI + CSP + referrer, librairies toujours sur CDN -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://cdn.plot.ly https://cdnjs.cloudflare.com; style-src 'unsafe-inline' https://cdnjs.cloudflare.com; img-src data: https://*.basemaps.cartocdn.com https://server.arcgisonline.com https://tile.openstreetmap.org https://*.tile.opentopomap.org; connect-src https://nominatim.openstreetmap.org; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; worker-src 'none'; media-src 'none'; manifest-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://cdn.plot.ly https://cdnjs.cloudflare.com; style-src 'unsafe-inline' https://cdnjs.cloudflare.com; img-src data: https://*.basemaps.cartocdn.com https://server.arcgisonline.com https://tile.openstreetmap.org https://*.tile.opentopomap.org; connect-src https://nominatim.openstreetmap.org https://*.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; worker-src 'none'; media-src 'none'; manifest-src 'none'">
+<!-- connect-src (18.10.2026) : *.ts.net = serveur partagé (prototype, Tailscale Funnel) ; 127.0.0.1 et localhost : serveur de test. Sans cela, Saisies et Retours étaient « injoignables » depuis la priorisation. -->
 <meta name="referrer" content="no-referrer">
 <script src="https://cdn.plot.ly/plotly-cartesian-2.27.0.min.js" integrity="sha384-CGZbcmzn+iZSKWyq5VvS+rJZTj2ya470zOv7mLCSCwcb2aOM8xpNMTGevT3iEPPY" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha384-c6Rcwz4e4CITMbu/NBmnNS8yN2sC3cUElMEMfP3vqqKFp7GOYaaBBCqmaWBjmkjb" crossorigin="anonymous">
@@ -1302,36 +1303,26 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
   <span class="data-set"><span class="badge none" id="badge">Aucune donnée chargée</span><button type="button" class="btn-eff" id="btnEff" onclick="clearAllData()" title="Effacer les données de ce navigateur" aria-label="Effacer les données de ce navigateur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg></button></span>
   <button class="btn btn-p" id="btnLoad" onclick="$('fIn').click()" title="Choisir Plan_PTE.xlsx sur ce poste">Charger le classeur</button>
   <input type="file" id="fIn" accept=".csv,.xlsx,.xlsm,.xls" style="display:none" onchange="handleFileImport(event)">
-  <span style="position:relative">
+  <span style="position:relative" id="menuWrap">
     <button class="btn btn-ic" onclick="tglMenu(event)" title="Menu" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <div class="menu" id="mainMenu" onclick="event.stopPropagation()">
       <div class="grp">Données</div>
-      <a onclick="tglNotes(event)">Notes et ajustements<span id="mNotes">Excel</span></a>
-      <a onclick="goData()">Santé des données<span id="mAno">—</span></a>
+      <a onclick="goData()" data-ic="sante">Santé des données<span id="mAno">—</span></a>
       <div class="sep"></div>
       <div class="grp">Réglages</div>
-      <a onclick="tglPar(event)">Paramètres de calcul<span id="mDur">40 ans</span></a>
-      <div class="sep"></div>
-      <div class="grp">Mes saisies</div>
-      <a onclick="saisiesExport()">Exporter mes saisies (Excel)<span>3 outils</span></a>
-      <a onclick="$('fSaisies').click()">Importer des saisies…</a>
-      <input type="file" id="fSaisies" accept=".xlsx,.json,.csv" style="display:none" onchange="saisiesImport(event)">
-      <a onclick="PTE_COMMUN.ouvrirRetours('priorisation')">Retours et demandes…<span>serveur</span></a>
+      <a onclick="tglPar(event)" data-ic="reglages">Paramètres de calcul<span id="mDur">40 ans</span></a>
       <div class="sep"></div>
       <div class="grp">Affichage</div>
-      <a onclick="tglTheme()">Mode nuit<span id="mTheme">désactivé</span></a>
-      <a onclick="tourStart()">Visite guidée</a>
+      <a onclick="tglTheme()" data-ic="nuit">Mode nuit<span id="mTheme">désactivé</span></a>
+      <div class="sep"></div>
+      <div class="grp">Aide</div>
+      <a onclick="tourStart()" data-ic="visite">Visite guidée</a>
+      <a onclick="PTE_COMMUN.ouvrirRetours('priorisation')" data-ic="retours">Retours et demandes…</a>
     </div>
   </span>
   </div>
 </div>
-<div id="notePop" class="pop" onclick="event.stopPropagation()">
-<div class="pop-t">Notes et commentaires</div>
-<div class="pop-i" id="notePopInfo"></div>
-<button class="bt bt-p bt-s" style="width:100%;margin-bottom:5px" onclick="closeNotes();saisiesExport()">Exporter mes saisies (Excel)</button>
-<button class="bt bt-i bt-s" style="width:100%" onclick="closeNotes();$('fSaisies').click()">Importer des saisies…</button>
-<div class="pop-h">Un seul fichier Excel pour les trois outils : notes et ajustements d'ici, décisions de la revue. Une ligne par saisie, avec son auteur et sa date ; il se complète dans Excel, se partage et se réimporte. À l'import, chaque changement est montré avant d'être appliqué.</div>
-</div><div class="pop" id="parPop" onclick="event.stopPropagation()">
+<div class="pop" id="parPop" onclick="event.stopPropagation()">
 <div class="pop-t">Paramètres de calcul</div>
 <div class="pop-body">
 
@@ -1778,7 +1769,7 @@ mesurée. Aucune des deux n'est corrigée par l'autre.</p>
 <tr><td>−− Déprioriser fortement</td><td>compte comme 2,5× plus cher</td></tr>
 <tr><td>Exclu</td><td>retiré des classements, du classement de repli, de la vue d'ensemble et de l'arbitrage — mais listé dans le bloc <b>Exclus du programme</b>, au-dessus du tableau du Classement</td></tr>
 </tbody></table>
-<p>La donnée du classeur n'est jamais modifiée. Le rang arithmétique d'origine reste affiché sous le rang ajusté, et le motif apparaît au survol de la pastille. Ajustements et notes s'exportent dans un même fichier Excel (« Exporter mes saisies », menu ☰), une ligne par saisie avec son auteur et sa date ; il se complète dans Excel, se partage et se réimporte, chaque changement étant montré avant d'être appliqué.</p>
+<p>La donnée du classeur n'est jamais modifiée. Le rang arithmétique d'origine reste affiché sous le rang ajusté, et le motif apparaît au survol de la pastille. Ajustements et notes s'exportent dans un même fichier Excel (bouton <b>Saisies</b>, en haut à droite), une ligne par saisie avec son auteur et sa date ; il se complète dans Excel, se partage et se réimporte, chaque changement étant montré avant d'être appliqué.</p>
 <p>Le bouton <b>Exporter le classement (CSV)</b> produit un second fichier, <code>priorisation_PTE_&lt;date&gt;.csv</code> : une ligne par sous-site de la population entière, rangs par objectif et ajustements compris, qui alimente l'outil de revue de projets (<code>09_Revues-projets/revue-projets.html</code>).</p>
 <p><b>Une exclusion reste réversible.</b> Elle vaut pour le programme entier, pas pour un objectif : le bloc <b>Exclus du programme</b> affiche donc les mêmes bâtiments quel que soit le classement à l'écran, et aucun filtre de la barre ne peut l'amputer. Chaque ligne y rappelle le motif écrit au moment de la décision et le rang que le bâtiment tenait avant d'en sortir, et porte de quoi rejuger sur place — changer l'ajustement, ou <b>réintégrer</b>. Le bâtiment reste par ailleurs visible sur la carte et dans sa fiche.</p>
 </div></div></div>
@@ -1859,7 +1850,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.9 · 17.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.10 · 18.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -2938,6 +2929,10 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "18.10.2026", "objet": "accueil", "version": "v1.10", "titre": "Bouton Saisies et menu", "points": ["Le grand bloc « Saisies partagées » laisse la place à un bouton Saisies dans l'en-tête, qui ouvre un panneau : compte et dernière synchronisation en haut, puis envoyer, recevoir, consolider, et le fichier Excel.", "Une pastille sur le bouton dit si tout est envoyé (vert) ou s'il reste des modifications à envoyer (orange).", "Nouveau menu ☰ : mode nuit, nouveautés, retours et demandes.", "Icônes devant chaque entrée des menus."]},
+    {"date": "18.10.2026", "objet": "priorisation", "version": "v2.10", "titre": "Bouton Saisies, menu sans doublons", "points": ["Le bouton Saisies de l'en-tête réunit tout le partage : serveur (envoyer, recevoir la référence, consolider) et fichier Excel (exporter, importer).", "Le menu ☰ perd « Notes et ajustements » et « Mes saisies », qui faisaient doublon ; « Retours et demandes » rejoint le groupe Aide.", "Icônes devant chaque entrée du menu."]},
+    {"date": "18.10.2026", "objet": "simulation", "version": "v3.7", "titre": "Bouton Saisies dans l'en-tête", "points": ["Le bouton Saisies de l'en-tête remplace les entrées « Mes saisies » du menu ; une référence reçue du serveur est relue aussitôt.", "« Retours et demandes » rejoint le groupe Aide du menu ☰ ; icônes devant chaque entrée."]},
+    {"date": "18.10.2026", "objet": "revue", "version": "v0.21", "titre": "Bouton Saisies dans l'en-tête", "points": ["Le bouton Saisies de l'en-tête remplace les entrées « Mes saisies » du menu ; une référence reçue du serveur est relue aussitôt.", "« Retours et demandes » rejoint le groupe Aide du menu ☰ ; icônes devant chaque entrée."]},
     {"date": "17.10.2026", "objet": "accueil", "version": "v1.9", "titre": "Saisies partagées et consolidation", "points": ["Nouveau bloc « Saisies partagées » : exporter ses saisies dans un fichier Excel, importer celles d'un collègue.", "Mode consolidateur (réservé aux 2-3 personnes désignées) : réunit plusieurs fichiers, montre les désaccords côte à côte, produit la version de référence « consolidée par … le … ».", "Chacun signe ses saisies de son nom, demandé une fois par navigateur.", "Serveur partagé (prototype) : connexion par compte personnel, envoi des saisies, consolidation et référence publiées sur le serveur, retours et demandes avec 3 votes par personne."]},
     {"date": "17.10.2026", "objet": "priorisation", "version": "v2.9", "titre": "Un seul fichier Excel pour les notes et ajustements", "points": ["Les exports « Notes (CSV) » et « Mes saisies (JSON) » sont remplacés par un seul fichier Excel : une ligne par note ou ajustement, avec son auteur et sa date.", "À l'import, chaque changement est montré avant d'être appliqué ; l'import peut être annulé. Une note n'est plus écrasée sans avertissement.", "Les anciens fichiers JSON et CSV se relisent toujours.", "L'export du classement pour la revue (CSV) reste dans la barre du classement."]},
     {"date": "17.10.2026", "objet": "simulation", "version": "v3.6", "titre": "Saisies au format Excel", "points": ["« Exporter mes saisies » produit le fichier Excel commun aux trois outils ; les variantes simulées voyagent dans sa feuille masquée.", "« Importer des saisies » montre ce qui change avant de l'appliquer.", "Menu : « Retours et demandes… » (serveur partagé, prototype)."]},
@@ -3302,7 +3297,8 @@ var PTE_COMMUN = (function () {
       else if (x.h !== h) { x.h = h; x.auteur = u; x.modifie = now; change = true; }
     });
     Object.keys(m.f).forEach(function (k) { if (!vus[k]) { delete m.f[k]; change = true; } });
-    if (change) ecrireJ(LS_FICHES, m);
+    if (change && !premiere) m.dm = now;   /* dernière modification, suppressions comprises (pastille du bouton Saisies) */
+    if (change) { ecrireJ(LS_FICHES, m); planifierMaj(); }
     return m;
   }
   function lireFiches() {
@@ -3557,7 +3553,7 @@ var PTE_COMMUN = (function () {
       [notes.length + ' note(s) · ' + ajust.length + ' ajustement(s) · ' + dec.length + ' décision(s) et escalade(s)' + ((paquet.blocs || []).length ? ' · réglages des outils (feuille masquée)' : '') + '.'],
       [''],
       ['À quoi sert ce fichier'],
-      ['Ce fichier réunit les saisies faites dans les outils de pilotage PTE : notes et facteurs non mesurables (ajustements) de la priorisation, décisions et escalades de la revue de projets. Il se relit dans les outils par « Importer des saisies » (menu ☰ de chaque outil, ou page Pilotage PTE).'],
+      ['Ce fichier réunit les saisies faites dans les outils de pilotage PTE : notes et facteurs non mesurables (ajustements) de la priorisation, décisions et escalades de la revue de projets. Il se relit dans les outils par le bouton Saisies, en haut à droite de chaque page → « Importer un fichier… ».'],
       [''],
       ['Modification dans Excel'],
       ['• Une ligne = une saisie. Le texte se corrige directement : à la réimportation, l’outil montre chaque changement avant de l’appliquer.'],
@@ -4592,6 +4588,279 @@ var PTE_COMMUN = (function () {
     recevoirReferenceUI: recevoirReferenceUI, consoliderDepuisServeur: consoliderDepuisServeur, idStable: idStable };
   C.ouvrirRetours = ouvrirRetours;
 
+  /* ==========================================================================
+     PANNEAU « SAISIES » ET ICÔNES (18.10.2026)
+     Un bouton à icône dans l'en-tête des quatre pages ouvre un panneau ancré, sur le modèle des
+     panneaux de partage et de synchronisation des apps Apple : l'état en haut (compte, dernière
+     synchronisation), les actions au milieu, le fichier Excel ensuite, le compte en pied.
+     Il remplace le bloc « Saisies partagées » de l'accueil et les entrées « Mes saisies » des menus.
+     ========================================================================== */
+  var LS_SYNC = 'pte.serveur.synchro.v1';      /* {envoi, reception, publication} : dates ISO */
+  var ICONES = {
+    saisies: 'M21 12a9 9 0 0 1-15.4 6.4M3 12a9 9 0 0 1 15.4-6.4M18.6 2.6v3.8h-3.8M5.4 21.4v-3.8h3.8',
+    envoyer: 'M7 18.5a4.5 4.5 0 0 1-.6-9A6 6 0 0 1 18 9a4 4 0 0 1 0 9.5M12 13v8M9 16l3-3 3 3',
+    recevoir: 'M7 18.5a4.5 4.5 0 0 1-.6-9A6 6 0 0 1 18 9a4 4 0 0 1 0 9.5M12 13v8M9 18l3 3 3-3',
+    consolider: 'M6 3v4c0 3.5 6 5 6 9v5M18 3v4c0 3.5-6 5-6 9M3.5 5.5 6 3l2.5 2.5M15.5 5.5 18 3l2.5 2.5',
+    exporter: 'M12 3v12M7 10l5 5 5-5M4 20h16',
+    importer: 'M12 15V3M7 8l5-5 5 5M4 20h16',
+    retours: 'M20 12a8 8 0 0 1-11.7 7.1L4 20l1-4.2A8 8 0 1 1 20 12zM8.5 12h.01M12 12h.01M15.5 12h.01',
+    nuit: 'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z',
+    visite: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9.5 9.2a2.6 2.6 0 1 1 3.6 2.4c-.7.3-1.1.9-1.1 1.6v.6M12 17h.01',
+    sante: 'M3 12h4l2.5-6 5 12 2.5-6h4',
+    reglages: 'M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1M15 4v4M9 10v4M17 16v4',
+    versions: 'M3.5 12a8.5 8.5 0 1 0 2.5-6M3.5 4v4.5H8M12 7.5V12l3 2',
+    annuler: 'M9 14 4 9l5-5M4 9h10.5a5.5 5.5 0 0 1 0 11H11',
+    deconnexion: 'M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3M15 17l5-5-5-5M20 12H9',
+    connexion: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4.5 20.5a7.5 7.5 0 0 1 15 0',
+    nom: 'M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4',
+    presentation: 'M4 5h16v11H4zM12 16v4M8 20h8',
+    fichier: 'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13l2 2 4-4',
+    effacer: 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6'
+  };
+  function icone(nom, taille) {
+    var d = ICONES[nom]; if (!d) return '';
+    return '<svg class="pte-ic" width="' + (taille || 16) + '" height="' + (taille || 16) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="' + d + '"/></svg>';
+  }
+  function styleCommun() {
+    if (typeof document === 'undefined' || document.getElementById('pte-pop-css')) return;
+    var s = document.createElement('style'); s.id = 'pte-pop-css';
+    s.textContent =
+      '.pte-mi{display:inline-flex;align-items:center;gap:9px;color:inherit !important;font-size:inherit !important;font-weight:inherit}' +
+      '.pte-mi .pte-ic{flex:none;opacity:.78}' +
+      '.pte-sbtn{position:relative}.pte-sbtn .pte-ic{display:block}' +
+      '.pte-sbtn .pte-dot{position:absolute;right:3px;top:3px;width:8px;height:8px;border-radius:50%;box-shadow:0 0 0 2px var(--card-bg,var(--card,#fff))}' +
+      '.pte-pop{position:fixed;z-index:10000;width:316px;max-width:calc(100vw - 24px);border-radius:12px;padding:6px;box-sizing:border-box;' +
+        'font:13.5px/1.4 Arial,Helvetica,sans-serif;text-align:left;background:var(--pp-fond);color:var(--pp-encre);border:1px solid var(--pp-trait);box-shadow:0 12px 36px rgba(0,0,0,.22)}' +
+      '.pte-pop .pp-tete{display:flex;gap:11px;align-items:center;padding:10px 10px 12px}' +
+      '.pte-pop .pp-av{flex:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:13px;background:var(--pp-acc);color:var(--pp-acct)}' +
+      '.pte-pop .pp-av.off{background:var(--pp-puce);color:var(--pp-doux)}' +
+      '.pte-pop .pp-nom{font-weight:bold;font-size:14px}.pte-pop .pp-sous{color:var(--pp-doux);font-size:12px}' +
+      '.pte-pop .pp-sep{height:1px;background:var(--pp-trait);margin:5px 8px}' +
+      '.pte-pop .pp-grp{padding:7px 10px 3px;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--pp-doux);font-weight:bold}' +
+      '.pte-pop button.pp-l{display:flex;align-items:center;gap:11px;width:100%;box-sizing:border-box;padding:8px 10px;border:0;border-radius:8px;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer}' +
+      '.pte-pop button.pp-l:hover,.pte-pop button.pp-l:focus-visible{background:var(--pp-ligne);outline:none}' +
+      '.pte-pop button.pp-l .pte-ic{flex:none;color:var(--pp-acc)}' +
+      '.pte-pop button.pp-l .pp-x{flex:1}.pte-pop button.pp-l .pp-d{color:var(--pp-doux);font-size:12px;white-space:nowrap}' +
+      '.pte-pop button.pp-l .pp-d.pp-a{color:var(--pp-orange);font-weight:bold}' +
+      '.pte-pop button.pp-l.pp-doux{color:var(--pp-doux);font-size:12.5px;padding:6px 10px}.pte-pop button.pp-l.pp-doux .pte-ic{color:var(--pp-doux)}' +
+      '.pte-pop .pp-p{display:block;width:calc(100% - 20px);margin:0 10px 8px;padding:8px 12px;border-radius:8px;border:0;background:var(--pp-acc);color:var(--pp-acct);font:inherit;font-weight:bold;cursor:pointer}' +
+      '.pte-pop .pp-msg{margin:2px 10px 8px;padding:7px 10px;border-radius:8px;background:var(--pp-ligne);font-size:12.5px}' +
+      '.pte-toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:10002;max-width:min(560px,calc(100vw - 32px));padding:10px 16px;border-radius:12px;' +
+        'font:13px/1.45 Arial,Helvetica,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:opacity .25s}';
+    document.head.appendChild(s);
+  }
+  /* Icônes des menus ☰ : chaque entrée porte data-ic="nom" ; le texte et l'icône sont réunis dans
+     <span class="pte-mi">, la valeur à droite (« activé », « 40 ans »…) reste à sa place. */
+  function iconesMenus(racine) {
+    if (typeof document === 'undefined') return;
+    styleCommun();
+    var L = (racine || document).querySelectorAll('[data-ic]');
+    for (var i = 0; i < L.length; i++) {
+      var el = L[i]; if (el.querySelector('.pte-mi')) continue;
+      var w = document.createElement('span'); w.className = 'pte-mi'; w.innerHTML = icone(el.getAttribute('data-ic'));
+      while (el.firstChild && el.firstChild.nodeType === 3) w.appendChild(el.firstChild);
+      el.insertBefore(w, el.firstChild);
+    }
+  }
+  function signaler(texte, sorte) {
+    if (typeof document === 'undefined' || !document.body || !texte) return;
+    styleCommun();
+    var c = couleurs(), t = document.getElementById('pte-toast');
+    if (!t) { t = document.createElement('div'); t.id = 'pte-toast'; t.className = 'pte-toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
+    t.style.background = c.encre; t.style.color = c.fond; t.style.opacity = '1';
+    t.style.borderLeft = '4px solid ' + (sorte === 'wr' ? c.orange : c.vert);
+    t.textContent = texte;
+    clearTimeout(t._h); t._h = setTimeout(function () { t.style.opacity = '0'; }, 5200);
+  }
+  function lireSynchro() { return lireJ(LS_SYNC) || {}; }
+  function noterSynchro(k) { var o = lireSynchro(); o[k] = maintenant(); ecrireJ(LS_SYNC, o); }
+  function heureLisible(iso) {
+    if (!iso) return '';
+    var d = new Date(iso); if (isNaN(d)) return '';
+    var j = new Date(), hh = ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+    if (d.toDateString() === j.toDateString()) return hh;
+    var h = new Date(j.getTime() - 864e5);
+    if (d.toDateString() === h.toDateString()) return 'hier ' + hh;
+    return ('0' + d.getDate()).slice(-2) + '.' + ('0' + (d.getMonth() + 1)).slice(-2) + ' ' + hh;
+  }
+  function nomServeur(a) {
+    var h = txt(a).replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+    return /^[\d.:\[\]]+$/.test(h) || /^localhost/.test(h) ? h : h.split('.')[0];
+  }
+  function initiales(n) {
+    var p = txt(n).trim().split(/\s+/).filter(Boolean);
+    return ((p[0] || '?').charAt(0) + (p.length > 1 ? p[p.length - 1].charAt(0) : '')).toUpperCase();
+  }
+  /* saisies d'ici modifiées depuis le dernier envoi (toutes, si rien n'a jamais été envoyé) */
+  function nonEnvoyees() {
+    var e = lireSynchro().envoi || '', n = 0, m;
+    try { lireFiches().forEach(function (f) { if (!e || (f.modifie && f.modifie > e)) n++; }); m = lireJ(LS_FICHES); } catch (err) {}
+    if (!n && e && m && m.dm && m.dm > e) n = 1;   /* une suppression depuis le dernier envoi */
+    return n;
+  }
+  /* une saisie vient de changer : pastille mise à jour peu après (jamais pendant sa propre lecture) */
+  var minuteurMaj = null, enMaj = false;
+  function planifierMaj() {
+    if (enMaj || !BOUTONS || !BOUTONS.length || minuteurMaj || typeof setTimeout === 'undefined') return;
+    minuteurMaj = setTimeout(function () { minuteurMaj = null; majBoutons(); }, 400);
+  }
+
+  var BOUTONS = [];
+  function majBoutons() {
+    if (!BOUTONS.length) return;
+    enMaj = true;
+    var s = session(), a = 0, c = couleurs();
+    try { a = s ? nonEnvoyees() : 0; } finally { enMaj = false; }
+    BOUTONS.forEach(function (b) {
+      var d = b.querySelector('.pte-dot');
+      d.style.display = s ? 'block' : 'none';
+      d.style.background = a ? c.orange : c.vert;
+      b.title = s ? 'Saisies partagées — ' + s.user.name + (a ? ' · ' + a + ' modification' + (a > 1 ? 's' : '') + ' à envoyer' : ' · à jour') : 'Saisies partagées — non connecté';
+    });
+  }
+  /* opts : { avant: élément devant lequel placer le bouton, outil, classe (classe CSS du bouton),
+              exporter(), importer(fichier), apresReception(r) } — sans exporter/importer, le panneau
+     fait lui-même l'export et l'import et l'annonce ; apresReception relit l'état de la page. */
+  function installerSaisies(opts) {
+    opts = opts || {};
+    if (typeof document === 'undefined' || !opts.avant || !opts.avant.parentNode) return null;
+    styleCommun();
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = (opts.classe || 'btn btn-ic') + ' pte-sbtn';
+    b.setAttribute('aria-haspopup', 'dialog'); b.setAttribute('aria-expanded', 'false'); b.setAttribute('aria-label', 'Saisies partagées');
+    b.innerHTML = icone('saisies', 17) + '<span class="pte-dot" style="display:none"></span>';
+    opts.avant.parentNode.insertBefore(b, opts.avant);
+    var f = document.createElement('input'); f.type = 'file'; f.accept = '.xlsx,.json,.csv'; f.hidden = true; f.style.display = 'none';
+    b.parentNode.insertBefore(f, b.nextSibling);
+    BOUTONS.push(b);
+    var pop = null, msg = '';
+    function fermer() {
+      if (!pop) return;
+      document.removeEventListener('mousedown', dehors, true); document.removeEventListener('keydown', clavier, true);
+      window.removeEventListener('resize', fermer);
+      if (pop.parentNode) pop.parentNode.removeChild(pop); pop = null; b.setAttribute('aria-expanded', 'false');
+    }
+    function dehors(e) { if (pop && !pop.contains(e.target) && !b.contains(e.target)) fermer(); }
+    function clavier(e) { if (e.key === 'Escape' || e.key === 'Esc') { e.stopPropagation(); fermer(); try { b.focus(); } catch (er) {} } }
+    function ligne(act, ic, lib, detail, classe) {
+      return '<button type="button" class="pp-l' + (classe ? ' ' + classe : '') + '" data-act="' + act + '">' + icone(ic, 18) +
+        '<span class="pp-x">' + esc(lib) + '</span>' + (detail || '') + '</button>';
+    }
+    function rendre() {
+      var s = session(), a = adresseServeur(), sy = lireSynchro(), cons = !!(s && s.user.role === 'consolidateur');
+      var nb = 0; try { nb = lireFiches().length; } catch (e) {}
+      var h = '';
+      if (s) {
+        var ne = nonEnvoyees(), etat = [];
+        if (sy.envoi) etat.push('envoyé ' + heureLisible(sy.envoi));
+        if (sy.reception) etat.push('reçu ' + heureLisible(sy.reception));
+        h += '<div class="pp-tete"><div class="pp-av">' + esc(initiales(s.user.name)) + '</div><div style="min-width:0">' +
+          '<div class="pp-nom">' + esc(s.user.name) + '</div>' +
+          '<div class="pp-sous">' + (cons ? 'Consolidateur' : 'Contributeur') + ' · ' + esc(nomServeur(a)) + '</div>' +
+          '<div class="pp-sous">' + esc(etat.length ? etat.join(' · ') : 'aucune synchronisation sur ce poste') + '</div></div></div>';
+        if (msg) h += '<div class="pp-msg" role="status">' + esc(msg) + '</div>';
+        h += ligne('envoyer', 'envoyer', 'Envoyer mes saisies', ne ? '<span class="pp-d pp-a">' + ne + ' à envoyer</span>' : '<span class="pp-d">à jour</span>');
+        h += ligne('recevoir', 'recevoir', 'Recevoir la référence', sy.reception ? '' : '<span class="pp-d">jamais reçue</span>');
+        if (cons) h += ligne('consolider', 'consolider', 'Consolider et publier…', '');
+        h += ligne('retours', 'retours', 'Retours et demandes…', '');
+      } else {
+        h += '<div class="pp-tete"><div class="pp-av off">' + icone('connexion', 18) + '</div><div style="min-width:0">' +
+          '<div class="pp-nom">Saisies partagées</div><div class="pp-sous">' + (a ? 'Non connecté · ' + esc(nomServeur(a)) : 'Non connecté au serveur') + '</div></div></div>';
+        if (msg) h += '<div class="pp-msg" role="status">' + esc(msg) + '</div>';
+        h += '<button type="button" class="pp-p" data-act="connexion">Se connecter…</button>';
+      }
+      h += '<div class="pp-sep"></div><div class="pp-grp">Fichier Excel</div>';
+      h += ligne('exporter', 'exporter', 'Exporter mes saisies', '<span class="pp-d">' + nb + ' saisie' + (nb > 1 ? 's' : '') + '</span>');
+      h += ligne('importer', 'importer', 'Importer un fichier…', '');
+      if (modeConsolidateur()) h += ligne('consoFichiers', 'consolider', 'Consolider des fichiers…', '');
+      var pied = '';
+      var sv = derniereSauvegarde(); if (sv && sv.v === 2) pied += ligne('annuler', 'annuler', 'Annuler le dernier import', '', 'pp-doux');
+      if (s) pied += ligne('deconnexion', 'deconnexion', 'Se déconnecter', '', 'pp-doux');
+      else pied += ligne('nom', 'nom', utilisateur() ? 'Signé : ' + utilisateur() : 'Nom de signature', '<span class="pp-d">' + (utilisateur() ? 'changer' : 'à saisir') + '</span>', 'pp-doux');
+      if (modeConsolidateur()) pied += ligne('quitterConso', 'consolider', 'Quitter le mode consolidateur', '', 'pp-doux');
+      if (pied) h += '<div class="pp-sep"></div>' + pied;
+      pop.innerHTML = h;
+    }
+    function placer() {
+      var r = b.getBoundingClientRect(), W = window.innerWidth || document.documentElement.clientWidth;
+      pop.style.top = Math.round(r.bottom + 8) + 'px';
+      pop.style.right = Math.max(12, Math.round(W - r.right)) + 'px';
+    }
+    function ouvrir() {
+      if (pop) { fermer(); return; }
+      var c = couleurs();
+      pop = document.createElement('div'); pop.className = 'pte-pop'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', 'Saisies partagées');
+      ['fond', 'encre', 'doux', 'trait', 'acc', 'puce', 'ligne', 'orange'].forEach(function (k) { pop.style.setProperty('--pp-' + k, c[k]); });
+      pop.style.setProperty('--pp-acct', c.accTexte);
+      msg = ''; rendre(); document.body.appendChild(pop); placer();
+      b.setAttribute('aria-expanded', 'true');
+      document.addEventListener('mousedown', dehors, true); document.addEventListener('keydown', clavier, true);
+      window.addEventListener('resize', fermer);
+      pop.addEventListener('click', agir);
+      try { var p = pop.querySelector('button'); if (p) p.focus(); } catch (e) {}
+    }
+    function apres(r) { majBoutons(); if (opts.apresReception) { try { opts.apresReception(r); } catch (e) { if (typeof console !== 'undefined') console.error(e); } } }
+    function agir(e) {
+      var t = e.target && e.target.closest ? e.target.closest('[data-act]') : null; if (!t) return;
+      var act = t.getAttribute('data-act');
+      if (act === 'envoyer') {
+        msg = 'Envoi en cours…'; rendre();
+        envoyerSaisiesUI(function (n) {
+          if (n) noterSynchro('envoi');
+          majBoutons(); msg = n ? 'Envoyé : ' + n.envoyees + ' saisie' + (n.envoyees > 1 ? 's' : '') + (n.retirees ? ', ' + n.retirees + ' retirée' + (n.retirees > 1 ? 's' : '') : '') + '.' : '';
+          if (pop) rendre(); else if (n) signaler(msg);
+        });
+        return;
+      }
+      fermer();
+      if (act === 'connexion') demanderConnexion(function (s) { majBoutons(); if (s) { ouvrir(); } });
+      else if (act === 'recevoir') recevoirReferenceUI(function (r) {
+        if (r && !r.annule) { noterSynchro('reception'); apres(r); signaler((r.faits && r.faits.length ? r.faits.join(' · ') : 'Référence reçue, rien à changer') + '.'); }
+        else if (r && r.retabli) { apres(r); signaler('Réception annulée : état d’avant rétabli.'); }
+        else majBoutons();
+      });
+      else if (act === 'consolider') consoliderDepuisServeur(function (r) {
+        if (r && r.publie) { noterSynchro('envoi'); noterSynchro('publication'); signaler('Référence publiée : ' + r.publie + ' saisie' + (r.publie > 1 ? 's' : '') + '. Chacun la reçoit par « Recevoir la référence ».'); }
+        majBoutons();
+      });
+      else if (act === 'retours') ouvrirRetours(opts.outil || 'general');
+      else if (act === 'exporter') {
+        if (opts.exporter) opts.exporter();
+        else exporterSaisiesFichier(function (r) { if (r) signaler(r.resume.length ? 'Exporté : ' + r.nom + ' — ' + r.resume.join(' · ') + '.' : 'Aucune saisie pour l’instant : ' + r.nom + ' est vide.', r.resume.length ? 'ok' : 'wr'); });
+      }
+      else if (act === 'importer') f.click();
+      else if (act === 'consoFichiers') ouvrirConsolidation(function (r) {
+        if (r && !r.annule) signaler('Version consolidée exportée : ' + r.nom + '. À transmettre aux collègues, qui l’importent.');
+      });
+      else if (act === 'annuler') {
+        if (typeof confirm === 'function' && !confirm('Rétablir les saisies d’avant le dernier import ?')) return;
+        if (annulerDernierImport()) { apres({ retabli: true }); signaler('Dernier import annulé : saisies rétablies.'); }
+      }
+      else if (act === 'deconnexion') { deconnecter(); majBoutons(); signaler('Déconnecté du serveur partagé.'); }
+      else if (act === 'nom') demanderNom(function () { majBoutons(); }, true);
+      else if (act === 'quitterConso') { modeConsolidateur(false); signaler('Mode consolidateur retiré de ce poste.'); }
+    }
+    f.addEventListener('change', function () {
+      var x = f.files && f.files[0]; f.value = ''; if (!x) return;
+      if (opts.importer) { opts.importer(x); setTimeout(majBoutons, 0); return; }
+      importerSaisiesFichier(x, function (r) {
+        if (!r || (r.annule && !r.retabli)) return;
+        apres(r); signaler((r.faits || []).join(' · ') + '. Les outils les reprennent à leur prochaine ouverture.');
+      });
+    });
+    b.addEventListener('click', function (e) { e.stopPropagation(); ouvrir(); });
+    majBoutons();
+    return { bouton: b, ouvrir: ouvrir, fermer: fermer, maj: majBoutons };
+  }
+  try {
+    if (typeof window !== 'undefined' && window.addEventListener) {
+      window.addEventListener('storage', function (e) { if (!e.key || /^(pte|ocba)/.test(e.key)) majBoutons(); });
+      window.addEventListener('focus', majBoutons);
+    }
+  } catch (e) {}
+  C.icone = icone; C.ICONES = ICONES; C.iconesMenus = iconesMenus; C.signaler = signaler;
+  C.installerSaisies = installerSaisies; C.majBoutonsSaisies = majBoutons; C.lireSynchro = lireSynchro;
+
   /* Référence posée dès le chargement de la page : une saisie faite ensuite reçoit sa date et son auteur. */
   try { if (typeof localStorage !== 'undefined' && typeof document !== 'undefined') synchroniserFiches(); } catch (e) {}
 
@@ -4740,7 +5009,7 @@ function loadState(){try{const o=JSON.parse(STORE.get(LS_STATE)||'null');/* thè
    par objectif survive à un rechargement de page sans réimport. */
 function loadData(){try{const o=JSON.parse(STORE.get(LS_DATA)||'null');if(!o||!o.sites||!o.sites.length)return false;S=o.sites;S_ALL=o.sitesAll||[];
   if(S_ALL.length>S.length){S=S_ALL}   /* cache d'une version antérieure : population complète */lastFileName=o.fileName||'fichier importé';lastFileTime=o.fileTime||0;OBJ_GAPS=o.objGaps||null;OBJ_COFACTORS=o.objCoFactors||null;CONTRAT=o.contrat||null;importIso=o.importIso||(o.ts?new Date(o.ts).toISOString():'');importEmpreinte=o.importEmpreinte||'';importDepuisCommun=!!o.depuisCommun;return true}catch(e){return false}}
-function clearAllData(){if(!confirm('Effacer de ce navigateur tout ce que l’outil y a enregistré ?\n— le fichier importé (tous les sous-sites),\n— les notes, ajustements et exclusions,\n— les instantanés et le portefeuille validé.\nPour les garder, exporter d’abord les notes (menu ☰).'))return;
+function clearAllData(){if(!confirm('Effacer de ce navigateur tout ce que l’outil y a enregistré ?\n— le fichier importé (tous les sous-sites),\n— les notes, ajustements et exclusions,\n— les instantanés et le portefeuille validé.\nPour les garder, les exporter ou les envoyer d’abord (bouton Saisies, en haut à droite).'))return;
   try{[LS_DATA,LS_STATE,'pte_snapshots_v1','pte_lock_v1','pte_opt_v2'].forEach(function(k){STORE.del(k)})}catch(e){}
   /* le classement publié pour la revue est produit par cet outil : il part avec ses données. */
   try{localStorage.removeItem(PTE_COMMUN.LS_CLASSEMENT)}catch(e){}
@@ -5453,14 +5722,6 @@ function saisiesImport(e){
     if(r.faits&&r.faits.length)toast('Saisies : '+r.faits.join(' · ')+'. Les deux autres outils les retrouveront à leur prochain chargement.','ok');
   });
 }
-function tglNotes(e){if(e)e.stopPropagation();
-  const p=$('notePop');if(!p)return;
-  const open=!p.classList.contains('on');
-  p.classList.toggle('on',open);
-  if(open){const n=noteIds().length;
-    $('notePopInfo').innerHTML=n?('<b>'+n+'</b> sous-site'+(n>1?'s':'')+' annoté'+(n>1?'s':'')+' actuellement.'):'Aucune note enregistrée pour l’instant.'}}
-function closeNotes(){const p=$('notePop');if(p)p.classList.remove('on')}
-document.addEventListener('click',function(e){const p=$('notePop');if(p&&p.classList.contains('on')&&!p.contains(e.target))closeNotes()});
 
 /* ================================================================
    EXPORT « CLASSEMENT » — nourrit l'outil de revue de projets
@@ -8595,7 +8856,7 @@ box.innerHTML='<div class="fiche-card">'+
   '<button class="bt bt-p bt-s" onclick="setQuali('+jsArg(id)+')">Appliquer</button></div>'+
   '<p class="mini" style="margin-top:6px">L\'ajustement ne modifie jamais la donnée : il déplace le sous-site dans le classement et le motif reste affiché à côté du rang.</p></div>'+
   '<div class="fiche-notes"><h5>Notes et commentaires :</h5>'+
-  '<textarea id="noteTA" placeholder="Note conservée lors des mises à jour du fichier de données — exportable séparément via « Notes et ajustements »" onblur="saveNote('+jsArg(id)+')">'+esc(siteNotes[id]||'')+'</textarea></div>'+
+  '<textarea id="noteTA" placeholder="Note conservée lors des mises à jour du fichier de données — partagée par le bouton Saisies, en haut à droite" onblur="saveNote('+jsArg(id)+')">'+esc(siteNotes[id]||'')+'</textarea></div>'+
   '</div>'+
   /* Le bloc entier disparaît quand les liens sortants sont coupés : un
      conteneur vide laisserait une marge sous les notes. */
@@ -8798,7 +9059,7 @@ function exclusHtml(key,bySiteId){
 
   html+='</tbody></table>'+
     '<p class="mini" style="margin-top:6px;color:var(--ink3)">Les exclusions sont enregistrées avec les notes '+
-    'et reprises dans l\'export <b>Notes et ajustements</b> — motif compris. Elles restent visibles sur la carte, '+
+    'et partagées par le bouton <b>Saisies</b> — motif compris. Elles restent visibles sur la carte, '+
     'où le sous-site existe toujours.</p></div></div>';
   return html}
 
@@ -8886,8 +9147,8 @@ const TOUR=[
   d:"Vue <b>Sous-site par sous-site</b> : le parc est rangé du CO₂ le moins cher au plus cher, une barre par sous-site — largeur = tonnes évitées, hauteur = prix de la tonne. <b>L'aire sous la courbe jusqu'au trait vertical est ce que l'enveloppe achète réellement.</b> Le bouton <b>Vue d'ensemble</b>, en haut, regroupe les mêmes sous-sites par tranche de prix quand le détail devient illisible. Le tableau dessous donne le prix moyen par politique publique : l'écart entre la moins chère et la plus chère mesure l'enjeu de l'ordre de financement."},
  {sel:'#anoCard',t:'Ce qui manque, et ce que cela coûte',panel:'data',
   d:"L'onglet <b>Données</b> réunit tout ce qui limite les calculs : séries annuelles suspectes, colonnes qui bloquent les classements, alertes sous-site par sous-site, taux de remplissage. « Ce qui bloque les classements » indique les saisies les plus rentables — une cellule remplie, un sous-site qui entre au classement."},
- {sel:'#mainMenu a[onclick*="tglNotes"]',t:'Emporter les décisions',menu:true,
-  d:"Notes et facteurs non mesurables s'exportent dans un <b>même fichier CSV</b>. Ce fichier s'ouvre dans Excel : on peut le compléter hors de l'outil, l'envoyer à un collègue, récupérer le sien, fusionner les deux — puis le réimporter ici. C'est ainsi qu'on partage sans droit d'écriture sur le classeur."},
+ {sel:'.pte-sbtn',t:'Partager les décisions',
+  d:"Le bouton <b>Saisies</b>, en haut à droite, ouvre le panneau des saisies partagées : notes, facteurs non mesurables et décisions. Avec un compte, <b>Envoyer mes saisies</b> et <b>Recevoir la référence</b> les échangent par le serveur ; sans compte, le même panneau les exporte dans un fichier Excel qui se complète, se partage et se réimporte. Chaque changement est montré avant d'être appliqué."},
  {sel:'#mainMenu a[onclick*="tglPar"]',t:'Les hypothèses sont des réglages',menu:true,
   d:"Durée de vie — générale et par objectif —, productible photovoltaïque, <b>cibles d'intensité thermique 2030 et 2050</b> : rien n'est figé dans le code. Le panneau est en sections repliables ; les réglages sont rappelés dans l'onglet Méthode et mémorisés dans ce navigateur. Les <b>pondérations du développement durable</b>, elles, ne s'y règlent pas : elles viennent de la feuille <code>Objectifs PTE</code>, comme les cibles."}];
 let _tourI=-1,tourSeen=false;
@@ -9064,7 +9325,7 @@ const TITLES=[
  ['#gPie','Une barre, une part par état d\'avancement SIA — effectif et pourcentage sous la barre'],
  ['#gUF','Combien de sous-sites à chaque croisement priorité × faisabilité ; le chiffre est écrit dans la case'],
  ['#gTop','Les 20 premiers du classement de l\'objectif sélectionné, situés sur l\'axe de la valeur qui les trie'],
- ['[onclick*="tglNotes"]','Notes et facteurs non mesurables : export et import dans le fichier Excel des saisies'],
+ 
  ['[onclick*="clearAllData"]','Effacer les données de ce navigateur'],
  ['[onclick*="tourStart"]','Relance la visite guidée']];
 function helpApply(){TITLES.forEach(function(p){
@@ -11879,5 +12140,17 @@ function onPanelShown(id){
 })();
 </script>
 <!-- /PTE-EPURE:corps -->
+<script>
+/* Bouton « Saisies » de l'en-tête (18.10.2026) : panneau commun aux quatre pages (PTE_COMMUN).
+   L'export et l'import gardent leur logique d'ici ; une référence reçue du serveur est relue aussitôt. */
+(function(){
+  if(typeof PTE_COMMUN==='undefined'||!PTE_COMMUN.installerSaisies)return;
+  PTE_COMMUN.installerSaisies({avant:document.getElementById('menuWrap'),outil:'priorisation',classe:'btn btn-ic',
+    exporter:saisiesExport,
+    importer:function(f){saisiesImport({target:{files:[f],value:''}})},
+    apresReception:function(){loadState();const gi=$('gInv');if(gi)gi.value=invMode;_prioCache=null;try{applyInvMode();ren()}catch(err){}}});
+  PTE_COMMUN.iconesMenus(document.getElementById('mainMenu'));
+})();
+</script>
 </body>
 </html>
