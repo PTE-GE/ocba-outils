@@ -135,16 +135,28 @@ a.card .etat.none{color:var(--ink-muted)}
 
 /* ---- Situation du programme (30.09.2026) : quatre montants, une phrase, leurs sources ---- */
 .situ{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 20px 16px;margin:0 0 20px}
-.situ-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-.situ-h h2{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-muted);margin:0}
-.situ-src{font-size:12px;color:var(--ink-muted)}
+/* 18.10.2026 : présentée comme la « Synthèse » de la revue — titre repliable, quatre tuiles, la phrase derrière le « i » */
+.situ .card-title{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:bold;color:var(--ink);margin:0 0 12px}
+.card-pli{flex:none;width:18px;height:18px;margin:0 2px 0 -4px;padding:0;border:0;border-radius:4px;background:none;color:var(--ink-muted);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.card-pli::before{content:'';width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(45deg) translate(-1px,-1px);transition:transform .15s}
+.card-pli:hover,.card-pli:focus-visible{background:var(--tint-gris,#EDEFF1);color:var(--teal)}
+.situ.pli-ferme .card-title{margin-bottom:0}
+.situ.pli-ferme .card-pli::before{transform:rotate(-45deg) translate(-1px,-1px)}
+.situ.pli-ferme > :not(.card-title){display:none!important}
 .situ-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 @media(max-width:920px){.situ-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.situ-k{border-left:3px solid var(--border);padding:2px 0 2px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
-.situ-k.k-vote{border-left-color:var(--slate)}
-.situ-k.k-eng{border-left-color:var(--ochre)}
-.situ-k.k-dep{border-left-color:var(--teal)}
-.situ-k.k-est{border-left-color:var(--gray)}
+.situ-k{background:var(--page-bg);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0;cursor:help}
+html.epure .situ .situ-k{background:var(--ep-bg)!important;padding:12px 14px!important;border-radius:12px!important}
+html.epure .situ .situ-k .n{font-size:30px!important}
+/* en-tête comme les trois outils (18.10.2026) : pastille, corbeille, commandes */
+.data-set{display:inline-flex;align-items:center;gap:2px}
+.btn-eff{width:28px;height:28px;padding:0;border:0;border-radius:50%;background:none;color:var(--ink-muted);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;transition:.15s}
+.btn-eff:hover,.btn-eff:focus-visible{background:var(--tint-rouge);color:var(--red)}
+.btn-eff svg{width:15px;height:15px;display:block}
+.badge.none + .btn-eff{display:none}
+#btnShp:disabled{opacity:.6;cursor:progress}
+.shp:has(> .shp-form.hidden){display:none}
 .situ-k .l{font-size:12px;font-weight:bold;color:var(--ink-70)}
 .situ-k .n{font-size:26px;font-weight:bold;letter-spacing:-.01em;line-height:1.1;font-variant-numeric:tabular-nums}
 .situ-k .n small{font-size:13px;font-weight:bold;color:var(--ink-70);margin-left:4px}
@@ -154,8 +166,8 @@ a.card .etat.none{color:var(--ink-muted)}
 @media print{.situ{box-shadow:none;border-color:#ccc}}
 </style>
 <!-- PTE-EPURE:tete — module commun 00_Design-System/pte-epure.css, recopié par build/integrer-epure.py -->
-<script>/* présentation épurée par défaut ; « classique » si elle a été choisie sur ce poste (pied de page). Posée avant le premier rendu : pas d'éclair. */
-(function(){var c=null;try{c=localStorage.getItem('pte.presentation.v1')}catch(e){}if(c!=='classique')document.documentElement.classList.add('epure')})();</script>
+<script>/* présentation épurée, seule présentation depuis le 18.10.2026. Posée avant le premier rendu : pas d'éclair. */
+document.documentElement.classList.add('epure');</script>
 <style id="pte-epure-css">
 /* ==========================================================================
    PTE — présentation épurée (proposée le 13.10.2026 par Victor, Théo, Pauline
@@ -407,13 +419,18 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
     </div>
     <div class="grow"></div>
     <div class="hdr-right">
-      <span class="badge none" id="badge">Aucune donnée chargée</span>
+      <span class="data-set"><span class="badge none" id="badge">Aucune donnée chargée</span><button type="button" class="btn-eff" id="btnEff" title="Effacer le classeur commun de ce navigateur" aria-label="Effacer le classeur commun de ce navigateur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg></button></span>
+      <button type="button" class="btn" id="btnShp" title="Importer le classeur depuis l'intranet de l'État (SharePoint). L'adresse se saisit au premier clic et reste dans ce navigateur.">SharePoint</button>
       <button class="btn btn-p" id="btnCharger">Charger le classeur</button>
+      <button class="btn hidden" id="btnUpdate" title="Choisir un nouveau Plan_PTE.xlsx sur ce poste">Recharger le classeur</button>
       <span class="menu-wrap" id="menuWrap">
         <button class="btn btn-ic" id="btnMenu" aria-haspopup="true" aria-expanded="false" title="Menu" aria-label="Menu">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         </button>
         <div class="menu" id="mainMenu">
+          <div class="grp">Données</div>
+          <button class="item" data-act="shp" data-ic="importer">Adresse SharePoint…<span id="mShp">à saisir</span></button>
+          <div class="sep"></div>
           <div class="grp">Affichage</div>
           <button class="item" data-act="theme" data-ic="nuit">Mode nuit<span id="mTheme">désactivé</span></button>
           <div class="sep"></div>
@@ -437,18 +454,12 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
     <input type="file" id="fileInput" accept=".xlsx,.xlsm">
   </div>
 
-  <div class="srcbar hidden" id="srcbar"><div class="srcbar-in"><span id="srcTexte"></span>
-    <span class="actions"><button class="btn" id="btnUpdate">Recharger le classeur</button>
-    <button class="btn btn-danger" id="btnEffacer">Effacer le classeur commun</button></span></div></div>
 
   <!-- Import depuis l'intranet (07.10.2026) : l'adresse du classeur est saisie sur le poste et gardée dans ce
        navigateur ; elle n'est jamais inscrite dans le code, qui est publié. -->
   <div class="shp" id="shp">
-    <button type="button" class="btn" id="btnShp" title="Lit le classeur à son adresse sur l'intranet de l'État. À défaut, propose de le télécharger.">Importer depuis SharePoint</button>
-    <span class="shp-adr" id="shpAdr"></span>
-    <button type="button" class="shp-lien" id="btnShpAdr">Saisir l'adresse</button>
     <form class="shp-form hidden" id="shpForm" autocomplete="off">
-      <label for="shpUrl">Adresse du classeur sur l'intranet (https://… .xlsx)</label>
+      <label for="shpUrl">Adresse du classeur Plan_PTE sur l'intranet de l'État (https://… .xlsx). Elle se saisit une fois ; « SharePoint », dans l'en-tête, lit ensuite le classeur à cette adresse. <span class="shp-adr" id="shpAdr"></span></label>
       <input type="url" id="shpUrl" spellcheck="false" placeholder="https://…/Plan_PTE.xlsx">
       <button type="submit" class="btn btn-p">Enregistrer</button>
       <button type="button" class="btn" id="btnShpAnn">Annuler</button>
@@ -460,7 +471,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
   <div id="msg" class="hidden"></div>
 
   <section class="situ hidden" id="situ" aria-labelledby="situTitre">
-    <div class="situ-h"><h2 id="situTitre">Situation du programme</h2><span class="situ-src" id="situSrc"></span></div>
+    <h2 class="card-title" id="situTitre"><button type="button" class="card-pli" id="situPli" aria-expanded="true" aria-label="Replier « Situation du programme »"></button>Situation du programme</h2>
     <p class="situ-attente hidden" id="situAttente">Lecture du classeur…</p>
     <div class="situ-grid" id="situGrid">
       <div class="situ-k k-vote" id="kVote"><span class="l">Voté</span><span class="n"><span id="sVote">—</span><small>MCHF</small></span><span class="d" id="sVoteD"></span></div>
@@ -508,7 +519,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Pilotage PTE · <a href="#" data-pte-versions="accueil" title="Historique des versions">v1.11 · 18.10.2026</a></span>
+  <span>Pilotage PTE · <a href="#" data-pte-versions="accueil" title="Historique des versions">v1.12 · 18.10.2026</a></span>
 </footer>
 
 <script>
@@ -1892,6 +1903,10 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "18.10.2026", "objet": "accueil", "version": "v1.12", "titre": "En-tête comme les outils, page allégée", "points": ["En-tête comme dans les trois outils : pastille du classeur (détail au survol), corbeille, « Recharger le classeur », « SharePoint » (adresse saisie au premier clic, changée par le menu ☰) ; la barre du classeur, qui doublait la pastille, est retirée.", "Situation du programme présentée comme la « Synthèse » de la revue : titre repliable, quatre tuiles, la phrase derrière le « i » ; les explications des trois tuiles derrière un « i », lisible au survol.", "Retours et demandes : filtre par statut à choix multiple et export Excel de la liste affichée.", "La « Présentation classique » est retirée : la présentation épurée est la seule."]},
+    {"date": "18.10.2026", "objet": "priorisation", "version": "v2.12", "titre": "Retours filtrés et exportés, une seule présentation", "points": ["Retours et demandes : filtre par statut à choix multiple (Nouveau, Question posée, Accepté, En cours, Fait, Écarté) et export Excel de la liste affichée.", "Les « i » s'ouvrent au survol ; un clic garde la bulle ouverte.", "La « Présentation classique » est retirée."]},
+    {"date": "18.10.2026", "objet": "simulation", "version": "v3.9", "titre": "Retours filtrés et exportés, une seule présentation", "points": ["Retours et demandes : filtre par statut à choix multiple et export Excel de la liste affichée.", "Les « i » s'ouvrent au survol ; un clic garde la bulle ouverte.", "La « Présentation classique » est retirée."]},
+    {"date": "18.10.2026", "objet": "revue", "version": "v0.23", "titre": "Retours filtrés et exportés, une seule présentation", "points": ["Retours et demandes : filtre par statut à choix multiple et export Excel de la liste affichée.", "Les « i » s'ouvrent au survol ; un clic garde la bulle ouverte.", "La « Présentation classique » est retirée."]},
     {"date": "18.10.2026", "objet": "accueil", "version": "v1.11", "titre": "Retours modifiables", "points": ["Retours et demandes : bouton « Modifier » sur une demande (titre, outil, description) — pour son auteur tant qu'elle est nouvelle, pour un consolidateur toujours ; « Supprimer » pour un consolidateur.", "Décisions et escalades : notes libres, dans le fichier Excel des saisies (colonne « Notes ») comme sur le serveur."]},
     {"date": "18.10.2026", "objet": "priorisation", "version": "v2.11", "titre": "Retours modifiables", "points": ["Retours et demandes : « Modifier » (auteur tant que la demande est nouvelle, consolidateur toujours) et « Supprimer » (consolidateur)."]},
     {"date": "18.10.2026", "objet": "simulation", "version": "v3.8", "titre": "Retours modifiables", "points": ["Retours et demandes : « Modifier » (auteur tant que la demande est nouvelle, consolidateur toujours) et « Supprimer » (consolidateur)."]},
@@ -3489,7 +3504,11 @@ var PTE_COMMUN = (function () {
   function ouvrirRetours(outil) {
     avecSession(function (s) {
       var W = fenetre('pte-retours', 'Retours et demandes d’évolution', 900), c = W.c, cons = s.user.role === 'consolidateur';
-      var etat = { retours: [], votes: [], filtre: 'ouverts', edition: null };
+      /* filtre par statut, à choix multiple (18.10.2026) : gardé dans ce navigateur ; par défaut, les demandes ouvertes */
+      var LS_RF = 'pte.retours.statuts.v1', parDefaut = ['nouveau', 'a_clarifier', 'accepte', 'en_cours'];
+      var choisis = lireJ(LS_RF); if (!Array.isArray(choisis)) choisis = parDefaut.slice();
+      choisis = choisis.filter(function (k) { return STATUTS[k]; });
+      var etat = { retours: [], votes: [], statuts: choisis, edition: null, liste: [] };
       function opt(o, sel) { return Object.keys(o).map(function (k) { return '<option value="' + k + '"' + (k === sel ? ' selected' : '') + '>' + esc(o[k]) + '</option>'; }).join(''); }
       function charger() {
         W.corps.innerHTML = '<p style="color:' + c.doux + '">Chargement…</p>';
@@ -3501,18 +3520,25 @@ var PTE_COMMUN = (function () {
         etat.votes.forEach(function (v) { nb[v.retour] = (nb[v.retour] || 0) + 1; if (v.votant === s.user.id) miens[v.retour] = v.id; });
         var ouvert = function (r) { return r.statut !== 'fait' && r.statut !== 'rejete'; };
         var actifs = etat.retours.filter(function (r) { return miens[r.id] && ouvert(r); }).length;
-        var L = etat.retours.filter(function (r) { return etat.filtre === 'tous' || ouvert(r); })
+        var L = etat.retours.filter(function (r) { return etat.statuts.indexOf(r.statut) >= 0; })
           .sort(function (a, b) { return ((nb[b.id] || 0) - (nb[a.id] || 0)) || (a.created < b.created ? 1 : -1); });
+        etat.liste = L; etat.nb = nb;
+        var parStatut = {}; etat.retours.forEach(function (r) { parStatut[r.statut] = (parStatut[r.statut] || 0) + 1; });
+        var puces = Object.keys(STATUTS).map(function (k) {
+          var on = etat.statuts.indexOf(k) >= 0;
+          return '<button type="button" data-rf="' + k + '" aria-pressed="' + on + '" style="font:inherit;font-size:12.5px;padding:3px 10px;border-radius:14px;cursor:pointer;border:1px solid ' + (on ? c.acc : c.trait) + ';background:' + (on ? c.acc : 'transparent') + ';color:' + (on ? c.accTexte : c.doux) + '">' +
+            esc(STATUTS[k]) + ' <span style="opacity:.8">' + (parStatut[k] || 0) + '</span></button>';
+        }).join('');
         var h = '<details style="margin:0 0 12px;border:1px solid ' + c.trait + ';border-radius:8px;padding:8px 12px"' + (etat.retours.length ? '' : ' open') + '><summary style="cursor:pointer"><b>Déposer une demande</b></summary>' +
           '<div style="display:grid;gap:6px;margin-top:8px"><input data-x="titre" maxlength="200" placeholder="Titre court" style="font:inherit;padding:7px 9px;border:1px solid ' + c.trait + ';border-radius:6px;background:' + c.fond + ';color:' + c.encre + '">' +
           '<select data-x="outil" style="font:inherit;padding:6px;border:1px solid ' + c.trait + ';border-radius:6px;background:' + c.fond + ';color:' + c.encre + '">' + opt(OUTILS, outil && OUTILS[outil] ? outil : 'general') + '</select>' +
           '<textarea data-x="desc" rows="3" maxlength="5000" placeholder="Ce qui manque ou gêne, et pourquoi" style="font:inherit;padding:7px 9px;border:1px solid ' + c.trait + ';border-radius:6px;background:' + c.fond + ';color:' + c.encre + '"></textarea>' +
           '<div><button type="button" data-x="deposer" style="font:inherit;padding:6px 14px;border-radius:7px;border:1px solid ' + c.acc + ';background:' + c.acc + ';color:' + c.accTexte + ';cursor:pointer">Déposer</button></div></div></details>' +
           '<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:0 0 8px;color:' + c.doux + ';font-size:12.5px">' +
-          '<span>Votes utilisés : <b style="color:' + c.encre + '">' + actifs + ' / 3</b> (les demandes faites ou écartées libèrent leur vote)</span>' +
-          '<label><input type="radio" name="pte-rf" value="ouverts"' + (etat.filtre === 'ouverts' ? ' checked' : '') + '> en cours</label>' +
-          '<label><input type="radio" name="pte-rf" value="tous"' + (etat.filtre === 'tous' ? ' checked' : '') + '> toutes</label></div>';
-        if (!L.length) h += '<p style="color:' + c.doux + '">Aucune demande pour l’instant.</p>';
+          '<span>Votes utilisés : <b style="color:' + c.encre + '">' + actifs + ' / 3</b> (les demandes faites ou écartées libèrent leur vote)</span></div>' +
+          '<div role="group" aria-label="Statuts affichés" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:0 0 8px">' + puces +
+          '<button type="button" data-rf="*" style="font:inherit;font-size:12px;padding:3px 8px;border:0;background:transparent;color:' + c.acc + ';cursor:pointer;text-decoration:underline">' + (etat.statuts.length === Object.keys(STATUTS).length ? 'demandes ouvertes' : 'tous') + '</button></div>';
+        if (!L.length) h += '<p style="color:' + c.doux + '">' + (etat.retours.length ? 'Aucune demande dans les statuts choisis.' : 'Aucune demande pour l’instant.') + '</p>';
         /* modifier une demande (18.10.2026) : l'auteur tant qu'elle est « nouvelle », un consolidateur toujours
            (règles du serveur) ; supprimer : consolidateur seulement */
         var champ = 'font:inherit;padding:6px 8px;border:1px solid ' + c.trait + ';border-radius:6px;background:' + c.fond + ';color:' + c.encre;
@@ -3547,9 +3573,27 @@ var PTE_COMMUN = (function () {
         W.corps.innerHTML = h;
       }
       function agir(p) { return p.then(charger).catch(function (e) { montrerErreur('Action impossible', e.message); }); }
-      W.corps.addEventListener('change', function (e) { if (e.target.name === 'pte-rf') { etat.filtre = e.target.value; rendre(); } });
+      function exporter() {
+        var L = etat.liste || [], nb = etat.nb || {};
+        var lignes = L.map(function (r) { return [r.titre, OUTILS[r.outil] || r.outil || '', STATUTS[r.statut] || r.statut, nb[r.id] || 0, r.auteur_nom || '', dateFichier(isoServeur(r.created)), dateFichier(isoServeur(r.updated)), r.description || '', r.reponse || '']; });
+        var oct;
+        try {
+          oct = classeurXlsx([{ nom: 'Retours', entetes: ['Titre', 'Outil', 'Statut', 'Votes', 'Auteur', 'Déposée le', 'Modifiée le', 'Description', 'Réponse'],
+            largeurs: [44, 16, 15, 8, 22, 19, 19, 70, 50], lignes: lignes }], { auteur: s.user.name, titre: 'Retours et demandes PTE' });
+        } catch (e) { montrerErreur('Export impossible', (e && e.message) || String(e)); return; }
+        var nom = 'Retours_PTE_' + jourFichier() + '.xlsx';
+        telecharger(oct, nom);
+        signaler('Exporté : ' + nom + ' — ' + L.length + ' demande' + (L.length > 1 ? 's' : '') + ' (statuts affichés).');
+      }
       W.corps.addEventListener('click', function (e) {
         var t = (e.target && e.target.closest && e.target.closest('button')) || e.target, g = function (a) { return t.getAttribute && t.getAttribute(a); };
+        if (g('data-rf')) {
+          var k = g('data-rf'), tous = Object.keys(STATUTS);
+          if (k === '*') etat.statuts = etat.statuts.length === tous.length ? parDefaut.slice() : tous.slice();
+          else if (etat.statuts.indexOf(k) >= 0) etat.statuts = etat.statuts.filter(function (x) { return x !== k; });
+          else etat.statuts = tous.filter(function (x) { return x === k || etat.statuts.indexOf(x) >= 0; });
+          ecrireJ(LS_RF, etat.statuts); rendre(); return;
+        }
         if (g('data-x') === 'deposer') {
           var ti = W.corps.querySelector('[data-x="titre"]').value.trim();
           if (!ti) { W.corps.querySelector('[data-x="titre"]').focus(); return; }
@@ -3580,6 +3624,7 @@ var PTE_COMMUN = (function () {
         }
       });
       W.pied.innerHTML = '<span style="margin-right:auto;color:' + c.doux + ';font-size:12px">Connecté : ' + esc(s.user.name) + (cons ? ' · consolidateur' : '') + '</span>';
+      bouton(W, 'Exporter (Excel)', false, exporter);
       bouton(W, 'Actualiser', false, charger);
       bouton(W, 'Fermer', true, function () { W.fermer(); });
       charger();
@@ -3942,8 +3987,8 @@ function rendre() {
   const n = (meta && c && c.empreinte === meta.empreinte) ? c.n : null;
   const badge = $('#badge');
   $('#drop').classList.toggle('hidden', !!meta);
-  $('#srcbar').classList.toggle('hidden', !meta);
   $('#btnCharger').classList.toggle('hidden', !!meta);
+  $('#btnUpdate').classList.toggle('hidden', !meta);
   document.querySelectorAll('[data-etat]').forEach(e => {
     e.textContent = meta ? 'chargé · ' + PTE_COMMUN.dateCourte(meta.date) : 'Aucun classeur commun';
     e.classList.toggle('none', !meta);
@@ -3951,13 +3996,13 @@ function rendre() {
   if (!meta) { badge.className = 'badge none'; badge.textContent = 'Aucune donnée chargée'; badge.title = ''; return; }
   badge.className = 'badge ok';
   badge.textContent = PTE_COMMUN.texteBadge(n, meta);
-  badge.title = 'Classeur commun aux trois outils, déposé ' + (meta.outil === 'accueil' ? 'ici' : 'dans l’outil « ' + meta.outil + ' »');
+  /* la barre du classeur (nom, date, sous-sites, taille, empreinte) est retirée le 18.10.2026 : doublon de la
+     pastille ; son contenu passe dans l'info-bulle de la pastille */
   const ko = Math.round((meta.taille || 0) / 1024);
-  $('#srcTexte').innerHTML = 'Classeur commun : <b>' + esc(meta.nom) + '</b> · déposé le <b>' + esc(dateHeure(meta.date)) + '</b>' +
+  badge.title = 'Classeur commun aux trois outils : ' + meta.nom + ', déposé le ' + dateHeure(meta.date) +
+    (meta.outil && meta.outil !== 'accueil' ? ' dans l’outil « ' + meta.outil + ' »' : ' ici') +
     (n != null ? ' · ' + n + ' sous-sites' : '') + (ko ? ' · ' + ko.toLocaleString('fr-CH') + ' Ko' : '') +
-    (meta.outil && meta.outil !== 'accueil' ? ' · chargé depuis l’outil « ' + esc(meta.outil) + ' »' : '');
-  /* A9 (30.09.2026) : l'empreinte sert au contrôle, pas à la lecture : elle passe dans l'info-bulle */
-  $('#srcTexte').title = 'Empreinte du classeur : ' + (meta.empreinte || '—');
+    '\nEmpreinte : ' + (meta.empreinte || '—');
   rendreSituation(meta);
 }
 
@@ -3987,7 +4032,7 @@ function rendreSituation(meta) {
   $('#situAttente').classList.toggle('hidden', pret);
   $('#situGrid').classList.toggle('hidden', !pret);
   $('#situPhrase').classList.toggle('hidden', !pret);
-  if (!pret) { $('#situSrc').textContent = ''; return; }
+  if (!pret) return;
   const g = sit.gei, lois = PTE_COMMUN.ENVELOPPE_VOTEE;   /* constante du module, jamais relue du stockage */
   $('#sVote').textContent = M(sit.vote, 0);
   $('#sVoteD').textContent = lois.map(l => 'loi ' + l.loi + (l.loi === '12552' ? ' (embrasures)' : '') + ' : ' + M(l.chf, 0)).join(' · ');
@@ -4016,7 +4061,6 @@ function rendreSituation(meta) {
   else ph.appendChild(txt('les dépenses ne sont pas connues (GE-Invest absent du classeur). '));
   [txt('Les estimations chiffrent '), gras(M(sit.estime) + ' MCHF'), txt(' de travaux pour ' + sit.nbEstimes.toLocaleString('fr-CH') +
     ' sous-sites sur ' + sit.nbSousSites.toLocaleString('fr-CH') + ' : les autres ne sont pas encore chiffrés.')].forEach(n => ph.appendChild(n));
-  $('#situSrc').textContent = (g ? 'Plan_PTE et GE-Invest' : 'Plan_PTE') + ' · classeur du ' + PTE_COMMUN.dateCourte(meta.date);
 }
 /* Lit le classeur : contrat de données (comptage, contrôle à l'import) et situation du programme.
    Le contrôle s'affiche ici, une fois ; les outils ne l'affichent plus que s'il y a une alerte. */
@@ -4064,9 +4108,12 @@ function shpValide(v) {
 }
 function shpNom(url) { try { const u = new URL(url); return decodeURIComponent(u.pathname.split('/').pop()) || 'Plan_PTE.xlsx'; } catch (e) { return 'Plan_PTE.xlsx'; } }
 function shpRendre() {
-  const url = shpAdresse(), adr = $('#shpAdr'), b = $('#btnShpAdr');
-  if (url) { const u = new URL(url); adr.textContent = u.hostname + ' › ' + shpNom(url); adr.title = url; b.textContent = 'Modifier l’adresse'; }
-  else { adr.textContent = 'Sur l’intranet de l’État : l’adresse du classeur se saisit une fois.'; adr.title = ''; b.textContent = 'Saisir l’adresse'; }
+  const url = shpAdresse(), adr = $('#shpAdr'), m = $('#mShp');
+  if (url) { const u = new URL(url); adr.textContent = 'Adresse actuelle : ' + u.hostname + ' › ' + shpNom(url) + '.'; adr.title = url; }
+  else { adr.textContent = ''; adr.title = ''; }
+  if (m) m.textContent = url ? shpNom(url) : 'à saisir';
+  $('#btnShp').title = url ? 'Lire le classeur à son adresse sur l’intranet de l’État : ' + url
+                           : 'Importer le classeur depuis l’intranet de l’État (SharePoint). L’adresse se saisit au premier clic et reste dans ce navigateur.';
 }
 function shpFormulaire(ouvrir) {
   const f = $('#shpForm'); f.classList.toggle('hidden', !ouvrir);
@@ -4082,7 +4129,7 @@ function shpEchec(url, motif) {
 async function shpImporter() {
   const url = shpAdresse();
   if (!url) { shpFormulaire(true); return; }
-  const zone = $('#shp'); zone.classList.add('occupe'); message('Lecture du classeur à son adresse…');
+  const btn = $('#btnShp'); btn.disabled = true; message('Lecture du classeur à son adresse…');
   const ctl = new AbortController(), minuterie = setTimeout(() => ctl.abort(), 30000);
   try {
     const r = await fetch(url, { credentials: 'include', cache: 'no-store', redirect: 'follow', signal: ctl.signal });
@@ -4095,7 +4142,7 @@ async function shpImporter() {
     const m = err && err.name === 'AbortError' ? 'pas de réponse en 30 secondes'
       : (err && err.name === 'TypeError' ? 'adresse injoignable d’ici, ou lecture refusée par le serveur pour ce site' : (err && err.message ? err.message : String(err)));
     shpEchec(url, m);
-  } finally { clearTimeout(minuterie); zone.classList.remove('occupe'); }
+  } finally { clearTimeout(minuterie); btn.disabled = false; }
 }
 
 function deposer(file) {
@@ -4136,7 +4183,6 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#btnCharger').addEventListener('click', () => fi.click());
   $('#btnUpdate').addEventListener('click', () => fi.click());
   $('#btnShp').addEventListener('click', shpImporter);
-  $('#btnShpAdr').addEventListener('click', () => shpFormulaire($('#shpForm').classList.contains('hidden')));
   $('#btnShpAnn').addEventListener('click', () => shpFormulaire(false));
   $('#btnShpOubli').addEventListener('click', () => { try { localStorage.removeItem(LS_URL); } catch (e) {} shpFormulaire(false); shpRendre(); });
   $('#shpForm').addEventListener('submit', e => {
@@ -4147,7 +4193,13 @@ document.addEventListener('DOMContentLoaded', () => {
     cacherMessage(); shpFormulaire(false); shpRendre();
   });
   shpRendre();
-  $('#btnEffacer').addEventListener('click', () => {
+  (function () {
+    const sec = $('#situ'), b = $('#situPli'), LS_PLI = 'pte.accueil.situation.repliee';
+    function poser(f) { sec.classList.toggle('pli-ferme', f); b.setAttribute('aria-expanded', f ? 'false' : 'true'); b.setAttribute('aria-label', (f ? 'Déplier' : 'Replier') + ' « Situation du programme »'); }
+    try { poser(localStorage.getItem(LS_PLI) === '1'); } catch (e) { poser(false); }
+    b.addEventListener('click', e => { e.stopPropagation(); const f = !sec.classList.contains('pli-ferme'); poser(f); try { if (f) localStorage.setItem(LS_PLI, '1'); else localStorage.removeItem(LS_PLI); } catch (e2) {} });
+  })();
+  $('#btnEff').addEventListener('click', () => {
     if (!confirm('Effacer le classeur commun de ce navigateur ? Les données propres à chaque outil ne sont pas touchées.')) return;
     PTE_COMMUN.effacerClasseur().then(() => { try { localStorage.removeItem(LS_COMPTE); localStorage.removeItem(LS_SITUATION); } catch (e) {} rendre(); message('Classeur commun effacé.'); });
   });
@@ -4178,10 +4230,11 @@ document.addEventListener('DOMContentLoaded', () => {
    rien : il déplace les textes d'explication derrière un bouton « i » (le texte
    reste dans la page, masqué, et s'ouvre dans une bulle) et réduit les
    bandeaux d'alerte à leur première phrase. La classe « epure » est posée sur
-   <html> dès l'en-tête, sauf si la présentation classique a été choisie sur ce
-   poste (localStorage « pte.presentation.v1 ») ; le pied de page permet de
-   passer de l'une à l'autre. Les pages se redessinent souvent : un
-   observateur traite ce qui apparaît.
+   <html> dès l'en-tête. Depuis le 18.10.2026 (décision d'Achim), c'est la seule
+   présentation : le lien « Présentation classique » est retiré, et un choix
+   « classique » gardé sur un poste est effacé. Un « i » s'ouvre au survol
+   (lecture rapide) ou au clic (la bulle reste ouverte). Les pages se
+   redessinent souvent : un observateur traite ce qui apparaît.
    ========================================================================== */
 (function () {
   'use strict';
@@ -4190,29 +4243,10 @@ document.addEventListener('DOMContentLoaded', () => {
   var LS_PRES = 'pte.presentation.v1';
   var EPURE = document.documentElement.classList.contains('epure');
 
-  /* ---------- 1. Passer d'une présentation à l'autre (pied de page) ---------- */
-  function bascule() {
-    if (document.querySelector('.ep-bascule')) return;
-    var v = document.querySelector('footer [data-pte-versions], [data-pte-versions]');
-    var cible = v ? v.parentNode : document.querySelector('footer');
-    if (!cible) return;
-    var a = document.createElement('a'); a.className = 'ep-bascule'; a.href = '#';
-    a.textContent = EPURE ? 'Présentation classique' : 'Présentation épurée';
-    a.title = EPURE ? 'Même outil, même classeur, présentation d’origine — choix gardé sur ce poste'
-                    : 'Même outil, même classeur, présentation épurée — choix gardé sur ce poste';
-    a.addEventListener('click', function (e) {
-      e.preventDefault();
-      try { localStorage.setItem(LS_PRES, EPURE ? 'classique' : 'epure'); } catch (e2) { /* choix valable pour cette visite seulement */ }
-      if (EPURE) document.documentElement.classList.remove('epure');
-      location.reload();
-    });
-    if (v) { cible.insertBefore(a, v.nextSibling); cible.insertBefore(document.createTextNode(' · '), a); } else cible.appendChild(a);
-  }
-  if (!EPURE) {
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bascule); else bascule();
-    window.PTE_EPURE = { actif: false };
-    return;
-  }
+  /* ---------- 1. Une seule présentation (18.10.2026) ---------- */
+  document.documentElement.classList.add('epure');
+  try { if (localStorage.getItem(LS_PRES) === 'classique') localStorage.removeItem(LS_PRES); } catch (e) { /* stockage indisponible */ }
+  EPURE = true;
 
   /* Le mode nuit est commun aux outils (clé « pte.theme.v1 ») : l'accueil, qui
      ne l'appliquait pas, le suit désormais dans la présentation épurée. */
@@ -4257,6 +4291,14 @@ document.addEventListener('DOMContentLoaded', () => {
     fermer();
   }, true);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && ouvert) { var b = ouvert.bouton; fermer(); b.focus(); } });
+  /* lecture au survol : la bulle se ferme peu après la sortie du « i », sauf si le pointeur entre dans la bulle */
+  var minuteurSurvol = null;
+  function fermerApresSurvol() {
+    clearTimeout(minuteurSurvol);
+    minuteurSurvol = setTimeout(function () { if (ouvert && ouvert.survol) fermer(); }, 300);
+  }
+  pop.addEventListener('mouseenter', function () { clearTimeout(minuteurSurvol); });
+  pop.addEventListener('mouseleave', function () { if (ouvert && ouvert.survol) fermerApresSurvol(); });
   window.addEventListener('resize', fermer);
   window.addEventListener('scroll', function () { if (ouvert) placer(ouvert.bouton); }, true);
 
@@ -4267,7 +4309,19 @@ document.addEventListener('DOMContentLoaded', () => {
     b.setAttribute('aria-expanded', 'false'); b.setAttribute('aria-label', titre || 'Information');
     b.title = titre || 'Information';
     var garde = document.createElement('div'); garde.className = 'ep-garde';
-    b.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); ouvrir(b, garde, titre); });
+    b.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      /* ouverte au survol : le clic la garde ouverte ; sinon, il l'ouvre ou la ferme */
+      if (ouvert && ouvert.bouton === b && ouvert.survol) { ouvert.survol = false; return; }
+      ouvrir(b, garde, titre);
+    });
+    b.addEventListener('mouseenter', function () {
+      clearTimeout(minuteurSurvol);
+      if (ouvert && ouvert.bouton === b) return;
+      if (ouvert && !ouvert.survol) return;          /* une bulle ouverte au clic n'est pas remplacée au passage */
+      ouvrir(b, garde, titre); if (ouvert) ouvert.survol = true;
+    });
+    b.addEventListener('mouseleave', fermerApresSurvol);
     iw.appendChild(b); iw.appendChild(garde);
     return { iw: iw, garde: garde };
   }
@@ -4406,9 +4460,9 @@ document.addEventListener('DOMContentLoaded', () => {
     /* b. phrases d'explication sous un titre */
     racine.querySelectorAll('p.lead:not([data-ep]), .tab-lead:not([data-ep]), .perim-def:not([data-ep]), .perim-note:not([data-ep]), .cpi-note:not([data-ep]), ' +
       '.dash-foot:not([data-ep]), p.aide:not([data-ep]), .drop .opt:not([data-ep]), .wrap > p.lead:not([data-ep]), p.mini:not([data-ep]), ' +
-      '#reporting-content .card > p.small.muted:not([data-ep])').forEach(function (p) {
+      '#reporting-content .card > p.small.muted:not([data-ep]), .situ-phrase:not([data-ep]), .cards > a.card > p:not([data-ep])').forEach(function (p) {
       if (dans(p) || p.closest('.m-hdr, .hdr, .tile, .obj-tile, td, th, label, .perim-l1')) return;
-      if (texte(p).length < 40) return;
+      if (texte(p).length < 40 && !p.matches('.situ-phrase')) return;
       if (p.matches('p.mini') && estLegende(p)) return;
       var titre = p.matches('.perim-def') ? 'Définition' : (p.matches('.perim-note') ? 'Phase SIA' : 'En savoir plus');
       deposerIcone(p, titre, p.matches('.wrap > p.lead') ? 'entete' : null);
@@ -4493,7 +4547,7 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(function () { attente = false; try { traiter(document); } catch (e) { if (window.console) console.warn('épuré :', e); } });
   }
   function demarrer() {
-    traiter(document); bascule();
+    traiter(document);
     new MutationObserver(function (muts) {
       for (var i = 0; i < muts.length; i++) {
         var t = muts[i].target;
@@ -4538,6 +4592,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (a === 'theme') C.basculerTheme();
     else if (a === 'versions') C.afficherVersions('accueil');
     else if (a === 'retours') C.ouvrirRetours('accueil');
+    else if (a === 'shp' && typeof shpFormulaire === 'function') { shpFormulaire(true); try { document.getElementById('shp').scrollIntoView({ block: 'nearest' }); } catch (e) {} }
   });
 })();
 </script>
