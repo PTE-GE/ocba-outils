@@ -1850,7 +1850,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.10 · 18.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.11 · 18.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -2929,6 +2929,10 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "18.10.2026", "objet": "accueil", "version": "v1.11", "titre": "Retours modifiables", "points": ["Retours et demandes : bouton « Modifier » sur une demande (titre, outil, description) — pour son auteur tant qu'elle est nouvelle, pour un consolidateur toujours ; « Supprimer » pour un consolidateur.", "Décisions et escalades : notes libres, dans le fichier Excel des saisies (colonne « Notes ») comme sur le serveur."]},
+    {"date": "18.10.2026", "objet": "priorisation", "version": "v2.11", "titre": "Retours modifiables", "points": ["Retours et demandes : « Modifier » (auteur tant que la demande est nouvelle, consolidateur toujours) et « Supprimer » (consolidateur)."]},
+    {"date": "18.10.2026", "objet": "simulation", "version": "v3.8", "titre": "Retours modifiables", "points": ["Retours et demandes : « Modifier » (auteur tant que la demande est nouvelle, consolidateur toujours) et « Supprimer » (consolidateur)."]},
+    {"date": "18.10.2026", "objet": "revue", "version": "v0.22", "titre": "Fiches en blocs, notes des décisions", "points": ["Fiche du sous-site et fiche du projet en blocs, comme dans la priorisation : Projet, Délais, Finances, Sous-site, Chaleur et travaux, Mesures de l'année ; une valeur par ligne, libellé à gauche, chiffre à droite.", "La carte « Contribution PTE », la ligne « Mesures » et la phrase « Chaîne financière » sont reprises dans ces blocs, sans perte d'information.", "Décisions et escalades : champ « Notes libres », affiché dans le registre, exporté (fichier Excel des saisies, CSV des décisions) et partagé par le serveur.", "Retours et demandes : « Modifier » et « Supprimer » selon le rôle."]},
     {"date": "18.10.2026", "objet": "accueil", "version": "v1.10", "titre": "Bouton Saisies et menu", "points": ["Le grand bloc « Saisies partagées » laisse la place à un bouton Saisies dans l'en-tête, qui ouvre un panneau : compte et dernière synchronisation en haut, puis envoyer, recevoir, consolider, et le fichier Excel.", "Une pastille sur le bouton dit si tout est envoyé (vert) ou s'il reste des modifications à envoyer (orange).", "Nouveau menu ☰ : mode nuit, nouveautés, retours et demandes.", "Icônes devant chaque entrée des menus."]},
     {"date": "18.10.2026", "objet": "priorisation", "version": "v2.10", "titre": "Bouton Saisies, menu sans doublons", "points": ["Le bouton Saisies de l'en-tête réunit tout le partage : serveur (envoyer, recevoir la référence, consolider) et fichier Excel (exporter, importer).", "Le menu ☰ perd « Notes et ajustements » et « Mes saisies », qui faisaient doublon ; « Retours et demandes » rejoint le groupe Aide.", "Icônes devant chaque entrée du menu."]},
     {"date": "18.10.2026", "objet": "simulation", "version": "v3.7", "titre": "Bouton Saisies dans l'en-tête", "points": ["Le bouton Saisies de l'en-tête remplace les entrées « Mes saisies » du menu ; une référence reçue du serveur est relue aussitôt.", "« Retours et demandes » rejoint le groupe Aide du menu ☰ ; icônes devant chaque entrée."]},
@@ -3241,12 +3245,18 @@ var PTE_COMMUN = (function () {
 
   /* ---------- lecture des saisies dans le stockage des trois outils ---------- */
   var CH_DEC = ['date', 'niveau', 'numero_projet', 'portefeuille', 'decision', 'responsable', 'echeance', 'statut', 'escalade_vers'];
-  function contenuDecision(d) { return CH_DEC.map(function (c) { return txt(d[c]).trim(); }).join(SEP); }
+  /* « notes » : notes libres d'une décision (18.10.2026). Hors de CH_DEC pour l'empreinte : une décision
+     sans note garde exactement l'empreinte (et l'identifiant calculé) d'avant ce champ. */
+  var CH_DEC_TOUS = CH_DEC.concat(['notes']);
+  function contenuDecision(d) {
+    var n = txt(d.notes).replace(/\r\n?/g, '\n').trim();
+    return CH_DEC.map(function (c) { return txt(d[c]).trim(); }).join(SEP) + (n ? SEP + 'notes:' + n : '');
+  }
   function idDecision(d) { return d && d.id ? txt(d.id) : 'D-' + hash(contenuDecision(d || {})); }
   /* forme normalisée d'une décision : celle que donne la relecture du fichier (statut vide = ouverte,
      niveau en minuscules, dates JJ.MM.AAAA en AAAA-MM-JJ). Sert à comparer, jamais à réécrire. */
   function normDecision(f) {
-    var o = {}; CH_DEC.forEach(function (c) { o[c] = txt(f[c]).trim(); });
+    var o = {}; CH_DEC_TOUS.forEach(function (c) { o[c] = txt(f[c]).trim(); });
     o.statut = o.statut || 'ouverte'; o.niveau = codeNiveau(o.niveau); o.date = relireJour(o.date); o.echeance = relireJour(o.echeance);
     return o;
   }
@@ -3277,7 +3287,7 @@ var PTE_COMMUN = (function () {
     (db.decisions || []).forEach(function (d) {
       if (!d) return;
       var f = { rubrique: 'decision' };
-      CH_DEC.forEach(function (c) { f[c] = txt(d[c]); });
+      CH_DEC_TOUS.forEach(function (c) { f[c] = txt(d[c]); });
       f.id = idDecision(d); f.cle = 'decision|' + f.id;
       if (vus[f.cle]) return;            /* doublon exact laissé par l'ancien import : compté une fois */
       vus[f.cle] = 1; out.push(f);
@@ -3329,7 +3339,7 @@ var PTE_COMMUN = (function () {
       else if (f.rubrique === 'ajustement' && !PIEGES[f.site]) { st.siteQuali[f.site] = { p: txt(f.niveau), m: txt(f.motif) }; stC = true; }
       else if (f.rubrique === 'decision') {
         var L = decisions(), i = rang(L, f.id), o = { id: f.id };
-        CH_DEC.forEach(function (c) { o[c] = txt(f[c]); });
+        CH_DEC_TOUS.forEach(function (c) { o[c] = txt(f[c]); });
         if (i >= 0) {        /* les copies exactes laissées par l'ancien import sont remplacées par une seule */
           var base = L[i], L2 = L.filter(function (d) { return idDecision(d) !== f.id; });
           L2.splice(i, 0, Object.assign({}, base, o)); db.decisions = L2;
@@ -3523,7 +3533,7 @@ var PTE_COMMUN = (function () {
   /* ---------- le classeur des saisies ---------- */
   var ENT_NOTES = ['N° sous-site', 'Sous-site', 'Note', 'Auteur', 'Modifiée le', 'Supprimer (oui)'];
   var ENT_AJUST = ['N° sous-site', 'Sous-site', 'Ajustement', 'Motif', 'Auteur', 'Modifié le', 'Supprimer (oui)'];
-  var ENT_DEC = ['Identifiant', 'Date de revue', 'Niveau', 'N° projet', 'Portefeuille', 'Décision', 'Responsable', 'Échéance', 'Statut', 'Escalade vers', 'Auteur', 'Modifiée le', 'Supprimer (oui)'];
+  var ENT_DEC = ['Identifiant', 'Date de revue', 'Niveau', 'N° projet', 'Portefeuille', 'Décision', 'Responsable', 'Échéance', 'Statut', 'Escalade vers', 'Notes', 'Auteur', 'Modifiée le', 'Supprimer (oui)'];
   function tri(a, b) { return a.site < b.site ? -1 : a.site > b.site ? 1 : 0; }
   function morceaux(s, n) {
     var out = [], i = 0;
@@ -3585,9 +3595,9 @@ var PTE_COMMUN = (function () {
       { nom: 'Ajustements', entetes: ENT_AJUST, largeurs: [13, 30, 28, 60, 20, 17, 11], gris: { 5: 1 },
         lignes: ajust.map(function (f) { return [f.site, f.nom, libAjust(f.niveau), f.motif, f.auteur, dateFichier(f.modifie), sup(f)]; }),
         listes: { 2: AJUST.map(function (a) { return a.lib; }).concat([AUCUN]), 6: ['oui'] } },
-      { nom: 'Décisions', entetes: ENT_DEC, largeurs: [13, 12, 13, 15, 18, 60, 20, 12, 11, 20, 20, 17, 11], gris: { 0: 1, 11: 1 },
-        lignes: dec.map(function (f) { return [f.id, f.date, NIVEAUX[f.niveau] || f.niveau, f.numero_projet, f.portefeuille, f.decision, f.responsable, f.echeance, f.statut, f.escalade_vers, f.auteur, dateFichier(f.modifie), sup(f)]; }),
-        listes: { 2: ['Projet', 'Portefeuille', 'Parc'], 12: ['oui'] } },
+      { nom: 'Décisions', entetes: ENT_DEC, largeurs: [13, 12, 13, 15, 18, 60, 20, 12, 11, 20, 50, 20, 17, 11], gris: { 0: 1, 12: 1 },
+        lignes: dec.map(function (f) { return [f.id, f.date, NIVEAUX[f.niveau] || f.niveau, f.numero_projet, f.portefeuille, f.decision, f.responsable, f.echeance, f.statut, f.escalade_vers, f.notes || '', f.auteur, dateFichier(f.modifie), sup(f)]; }),
+        listes: { 2: ['Projet', 'Portefeuille', 'Parc'], 13: ['oui'] } },
       { nom: '_technique', cachee: true, lignes: tech, largeurs: [14, 60, 8, 22, 14] }
     ];
     return classeurXlsx(feuilles, { auteur: u, titre: conso ? 'Saisies PTE consolidées' : 'Saisies PTE' });
@@ -3793,11 +3803,11 @@ var PTE_COMMUN = (function () {
     if (decF && decF.length) {
       var cd = colonnes(decF[0], { id: ['Identifiant'], date: ['Date de revue', 'Date'], niveau: ['Niveau'], numero_projet: ['N° projet', 'nprojet', 'numero_projet'],
         portefeuille: ['Portefeuille'], decision: ['Décision'], responsable: ['Responsable'], echeance: ['Échéance'], statut: ['Statut'],
-        escalade_vers: ['Escalade vers'], auteur: ['Auteur'], modifie: ['Modifiée le', 'Modifie'], sup: ['Supprimer'] });
+        escalade_vers: ['Escalade vers'], notes: ['Notes', 'Notes libres'], auteur: ['Auteur'], modifie: ['Modifiée le', 'Modifie'], sup: ['Supprimer'] });
       if (cd.decision < 0) avert.push('feuille Décisions : colonne « Décision » introuvable, feuille ignorée');
       else decF.slice(1).forEach(function (L) {
         var f = { rubrique: 'decision' };
-        CH_DEC.forEach(function (c) { f[c] = txt(cel(L, cd[c])).trim(); });
+        CH_DEC_TOUS.forEach(function (c) { f[c] = cd[c] >= 0 ? txt(cel(L, cd[c])).trim() : ''; });
         f.date = relireJour(cel(L, cd.date)); f.echeance = relireJour(cel(L, cd.echeance)); f.niveau = codeNiveau(f.niveau);
         if (!f.decision && !f.numero_projet) return;
         if (!f.statut) f.statut = 'ouverte';
@@ -3828,7 +3838,7 @@ var PTE_COMMUN = (function () {
       if (b.cle === K_REVUE && c) {
         var vus = {};
         (c.decisions || []).forEach(function (d) {
-          var f = { rubrique: 'decision', auteur: '', modifie: '' }; CH_DEC.forEach(function (k) { f[k] = txt(d[k]); });
+          var f = { rubrique: 'decision', auteur: '', modifie: '' }; CH_DEC_TOUS.forEach(function (k) { f[k] = txt(d[k]); });
           f.id = idDecision(d); f.cle = 'decision|' + f.id; if (vus[f.cle]) return; vus[f.cle] = 1; fiches.push(f);
         });
         c = Object.assign({}, c); delete c.decisions;
@@ -3902,7 +3912,7 @@ var PTE_COMMUN = (function () {
     if (f.supprimer) return '(à supprimer)';
     if (f.rubrique === 'note') return txt(f.texte);
     if (f.rubrique === 'ajustement') return libAjust(f.niveau) + ' — ' + txt(f.motif);
-    return txt(f.decision) + (f.responsable ? ' · resp. ' + f.responsable : '') + (f.echeance ? ' · échéance ' + f.echeance : '') + (f.statut ? ' · ' + f.statut : '') + (f.escalade_vers ? ' · escalade vers ' + f.escalade_vers : '');
+    return txt(f.decision) + (f.responsable ? ' · resp. ' + f.responsable : '') + (f.echeance ? ' · échéance ' + f.echeance : '') + (f.statut ? ' · ' + f.statut : '') + (f.escalade_vers ? ' · escalade vers ' + f.escalade_vers : '') + (txt(f.notes).trim() ? ' · notes : ' + txt(f.notes).trim() : '');
   }
   var RUBRIQUES = { note: 'Note', ajustement: 'Ajustement', decision: 'Décision' };
   function analyser(paquet) {
@@ -4516,7 +4526,7 @@ var PTE_COMMUN = (function () {
   function ouvrirRetours(outil) {
     avecSession(function (s) {
       var W = fenetre('pte-retours', 'Retours et demandes d’évolution', 900), c = W.c, cons = s.user.role === 'consolidateur';
-      var etat = { retours: [], votes: [], filtre: 'ouverts' };
+      var etat = { retours: [], votes: [], filtre: 'ouverts', edition: null };
       function opt(o, sel) { return Object.keys(o).map(function (k) { return '<option value="' + k + '"' + (k === sel ? ' selected' : '') + '>' + esc(o[k]) + '</option>'; }).join(''); }
       function charger() {
         W.corps.innerHTML = '<p style="color:' + c.doux + '">Chargement…</p>';
@@ -4540,14 +4550,31 @@ var PTE_COMMUN = (function () {
           '<label><input type="radio" name="pte-rf" value="ouverts"' + (etat.filtre === 'ouverts' ? ' checked' : '') + '> en cours</label>' +
           '<label><input type="radio" name="pte-rf" value="tous"' + (etat.filtre === 'tous' ? ' checked' : '') + '> toutes</label></div>';
         if (!L.length) h += '<p style="color:' + c.doux + '">Aucune demande pour l’instant.</p>';
+        /* modifier une demande (18.10.2026) : l'auteur tant qu'elle est « nouvelle », un consolidateur toujours
+           (règles du serveur) ; supprimer : consolidateur seulement */
+        var champ = 'font:inherit;padding:6px 8px;border:1px solid ' + c.trait + ';border-radius:6px;background:' + c.fond + ';color:' + c.encre;
+        var petit = function (attr, id, lib, ic, couleur) {
+          return '<button type="button" ' + attr + '="' + esc(id) + '" title="' + lib + '" aria-label="' + lib + '" style="display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:12px;padding:2px 8px;border-radius:6px;border:1px solid ' + c.trait + ';background:transparent;color:' + (couleur || c.doux) + ';cursor:pointer">' + icone(ic, 13) + lib + '</button>';
+        };
         L.forEach(function (r) {
+          var editable = cons || (r.auteur === s.user.id && r.statut === 'nouveau');
+          if (etat.edition === r.id && editable) {
+            h += '<div style="padding:10px 0;border-top:1px solid ' + c.trait + '"><div style="display:grid;gap:6px">' +
+              '<input data-e="titre" maxlength="200" value="' + esc(r.titre) + '" style="' + champ + '">' +
+              '<select data-e="outil" style="' + champ + '">' + opt(OUTILS, r.outil || 'general') + '</select>' +
+              '<textarea data-e="desc" rows="3" maxlength="5000" style="' + champ + '">' + esc(r.description || '') + '</textarea>' +
+              '<div style="display:flex;gap:8px"><button type="button" data-enreg="' + esc(r.id) + '" style="font:inherit;padding:5px 14px;border-radius:7px;border:1px solid ' + c.acc + ';background:' + c.acc + ';color:' + c.accTexte + ';cursor:pointer">Enregistrer</button>' +
+              '<button type="button" data-x="annulerEd" style="font:inherit;padding:5px 14px;border-radius:7px;border:1px solid ' + c.acc + ';background:transparent;color:' + c.acc + ';cursor:pointer">Annuler</button></div></div></div>';
+            return;
+          }
           var vote = !!miens[r.id], peut = vote || (actifs < 3 && ouvert(r));
           h += '<div style="display:flex;gap:12px;padding:10px 0;border-top:1px solid ' + c.trait + '">' +
             '<button type="button" data-vote="' + esc(r.id) + '" title="' + (vote ? 'Retirer mon vote' : (peut ? 'Voter pour cette demande' : 'Trois votes déjà utilisés')) + '"' + (peut ? '' : ' disabled') +
               ' style="min-width:48px;font:inherit;font-weight:bold;border-radius:8px;cursor:' + (peut ? 'pointer' : 'default') + ';border:1px solid ' + c.acc + ';background:' + (vote ? c.acc : 'transparent') + ';color:' + (vote ? c.accTexte : c.acc) + ';opacity:' + (peut ? 1 : .45) + '">▲<br>' + (nb[r.id] || 0) + '</button>' +
             '<div style="flex:1;min-width:0"><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:baseline"><b>' + esc(r.titre) + '</b>' + puce(c, esc(STATUTS[r.statut] || r.statut)) + puce(c, esc(OUTILS[r.outil] || r.outil || '')) + '</div>' +
             (r.description ? '<div style="white-space:pre-wrap;margin:3px 0">' + esc(r.description) + '</div>' : '') +
-            '<div style="color:' + c.doux + ';font-size:11.5px">' + esc(r.auteur_nom || '') + ', ' + esc(dateLisible(isoServeur(r.created))) + '</div>' +
+            '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:' + c.doux + ';font-size:11.5px">' + esc(r.auteur_nom || '') + ', ' + esc(dateLisible(isoServeur(r.created))) +
+              (editable ? ' ' + petit('data-edit', r.id, 'Modifier', 'nom') : '') + (cons ? ' ' + petit('data-suppr', r.id, 'Supprimer', 'effacer', c.rouge) : '') + '</div>' +
             (r.reponse ? '<div style="margin:6px 0 0;padding:6px 9px;border-left:3px solid ' + c.acc + ';background:' + c.ligne + ';white-space:pre-wrap"><b>Réponse</b> — ' + esc(r.reponse) + '</div>' : '') +
             (cons ? '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><select data-statut="' + esc(r.id) + '" style="font:inherit;font-size:12.5px;padding:3px">' + opt(STATUTS, r.statut) + '</select>' +
               '<input data-reponse="' + esc(r.id) + '" value="' + esc(r.reponse || '') + '" placeholder="Réponse ou question" style="flex:1;min-width:180px;font:inherit;font-size:12.5px;padding:3px 7px;border:1px solid ' + c.trait + ';border-radius:5px;background:' + c.fond + ';color:' + c.encre + '">' +
@@ -4559,7 +4586,7 @@ var PTE_COMMUN = (function () {
       function agir(p) { return p.then(charger).catch(function (e) { montrerErreur('Action impossible', e.message); }); }
       W.corps.addEventListener('change', function (e) { if (e.target.name === 'pte-rf') { etat.filtre = e.target.value; rendre(); } });
       W.corps.addEventListener('click', function (e) {
-        var t = e.target, g = function (a) { return t.getAttribute && t.getAttribute(a); };
+        var t = (e.target && e.target.closest && e.target.closest('button')) || e.target, g = function (a) { return t.getAttribute && t.getAttribute(a); };
         if (g('data-x') === 'deposer') {
           var ti = W.corps.querySelector('[data-x="titre"]').value.trim();
           if (!ti) { W.corps.querySelector('[data-x="titre"]').focus(); return; }
@@ -4568,6 +4595,21 @@ var PTE_COMMUN = (function () {
         } else if (g('data-vote')) {
           var id = g('data-vote'), v = etat.votes.filter(function (x) { return x.retour === id && x.votant === s.user.id; })[0];
           agir(v ? api('DELETE', '/api/collections/votes/records/' + v.id) : api('POST', '/api/collections/votes/records', { retour: id, votant: s.user.id }));
+        } else if (g('data-edit')) {
+          etat.edition = g('data-edit'); rendre();
+          try { W.corps.querySelector('[data-e="titre"]').focus(); } catch (er) {}
+        } else if (g('data-x') === 'annulerEd') {
+          etat.edition = null; rendre();
+        } else if (g('data-enreg')) {
+          var ti2 = W.corps.querySelector('[data-e="titre"]').value.trim();
+          if (!ti2) { W.corps.querySelector('[data-e="titre"]').focus(); return; }
+          var id3 = g('data-enreg'); etat.edition = null;
+          agir(api('PATCH', '/api/collections/retours/records/' + id3, { titre: ti2, outil: W.corps.querySelector('[data-e="outil"]').value,
+            description: W.corps.querySelector('[data-e="desc"]').value.trim() }));
+        } else if (g('data-suppr')) {
+          var r4 = etat.retours.filter(function (x) { return x.id === g('data-suppr'); })[0];
+          if (r4 && (typeof confirm !== 'function' || confirm('Supprimer définitivement la demande « ' + r4.titre + ' » et ses votes ?')))
+            agir(api('DELETE', '/api/collections/retours/records/' + r4.id));
         } else if (g('data-maj')) {
           var id2 = g('data-maj');
           agir(api('PATCH', '/api/collections/retours/records/' + id2, { statut: W.corps.querySelector('[data-statut="' + id2 + '"]').value,

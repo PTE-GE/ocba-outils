@@ -172,6 +172,25 @@ input[type=text], input[type=number], input[type=date], select, textarea{padding
 input:focus, select:focus, textarea:focus{outline:none; border-color:var(--teal); box-shadow:0 0 0 3px rgba(0,95,115,.09);}
 label{display:block; font-size:11px; color:var(--ink-muted); margin-bottom:.2em; font-weight:bold; text-transform:uppercase; letter-spacing:.03em;}
 .field{margin-bottom:.7em;}
+/* fiches sous-site et projet en blocs (18.10.2026) : même lecture que la fiche de la priorisation */
+.rv-fiche-grid{flex:1 1 100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin:12px 0 4px}
+.rv-fiche-grid.rv-cols3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:900px){.rv-fiche-grid.rv-cols3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}}
+.rv-fiche-grid .fs{background:var(--page-bg);border-radius:10px;padding:10px 12px;min-width:0}
+.rv-fiche-grid .fs h5{margin:0 0 4px;font-size:12px;font-weight:bold;color:var(--ink-70)}
+.rv-fiche-grid .fk{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:4px 0;font-size:12.5px;border-top:1px solid var(--border)}
+.rv-fiche-grid .fs h5 + .fk{border-top:0}
+.rv-fiche-grid .fk-l{color:var(--ink-70);flex:0 1 auto}
+.rv-fiche-grid .fk-v{text-align:right;color:var(--ink);font-weight:bold;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;align-items:flex-end;min-width:0;overflow-wrap:anywhere}
+.rv-fiche-grid .fk-s{font-size:11px;color:var(--ink-muted);font-weight:normal;margin-top:1px}
+.rv-fiche-grid .fk-v .mes-warn{color:var(--ochre-text,#8A5A00)}
+.rep-proj-head{flex-wrap:wrap}
+.dec-notes{white-space:pre-wrap;margin-top:2px}
+html.epure .rv-fiche-grid .fs{background:var(--ep-bg)!important;border-radius:12px!important}
+html.epure .rv-fiche-grid .fk{border-top-color:var(--ep-line)}
+html.epure .rv-fiche-grid .fk-l,html.epure .rv-fiche-grid .fs h5{color:var(--ep-ink2)}
+html.epure .rv-fiche-grid .fk-v{color:var(--ep-ink)}
+html.epure .rv-fiche-grid .fk-s{color:var(--ep-ink3)}
 .small{font-size:12px;}
 .muted{color:var(--ink-muted);}
 .alert-text{color:var(--red); font-weight:bold;}
@@ -1164,7 +1183,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.21 · 18.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.22 · 18.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -2548,6 +2567,10 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "18.10.2026", "objet": "accueil", "version": "v1.11", "titre": "Retours modifiables", "points": ["Retours et demandes : bouton « Modifier » sur une demande (titre, outil, description) — pour son auteur tant qu'elle est nouvelle, pour un consolidateur toujours ; « Supprimer » pour un consolidateur.", "Décisions et escalades : notes libres, dans le fichier Excel des saisies (colonne « Notes ») comme sur le serveur."]},
+    {"date": "18.10.2026", "objet": "priorisation", "version": "v2.11", "titre": "Retours modifiables", "points": ["Retours et demandes : « Modifier » (auteur tant que la demande est nouvelle, consolidateur toujours) et « Supprimer » (consolidateur)."]},
+    {"date": "18.10.2026", "objet": "simulation", "version": "v3.8", "titre": "Retours modifiables", "points": ["Retours et demandes : « Modifier » (auteur tant que la demande est nouvelle, consolidateur toujours) et « Supprimer » (consolidateur)."]},
+    {"date": "18.10.2026", "objet": "revue", "version": "v0.22", "titre": "Fiches en blocs, notes des décisions", "points": ["Fiche du sous-site et fiche du projet en blocs, comme dans la priorisation : Projet, Délais, Finances, Sous-site, Chaleur et travaux, Mesures de l'année ; une valeur par ligne, libellé à gauche, chiffre à droite.", "La carte « Contribution PTE », la ligne « Mesures » et la phrase « Chaîne financière » sont reprises dans ces blocs, sans perte d'information.", "Décisions et escalades : champ « Notes libres », affiché dans le registre, exporté (fichier Excel des saisies, CSV des décisions) et partagé par le serveur.", "Retours et demandes : « Modifier » et « Supprimer » selon le rôle."]},
     {"date": "18.10.2026", "objet": "accueil", "version": "v1.10", "titre": "Bouton Saisies et menu", "points": ["Le grand bloc « Saisies partagées » laisse la place à un bouton Saisies dans l'en-tête, qui ouvre un panneau : compte et dernière synchronisation en haut, puis envoyer, recevoir, consolider, et le fichier Excel.", "Une pastille sur le bouton dit si tout est envoyé (vert) ou s'il reste des modifications à envoyer (orange).", "Nouveau menu ☰ : mode nuit, nouveautés, retours et demandes.", "Icônes devant chaque entrée des menus."]},
     {"date": "18.10.2026", "objet": "priorisation", "version": "v2.10", "titre": "Bouton Saisies, menu sans doublons", "points": ["Le bouton Saisies de l'en-tête réunit tout le partage : serveur (envoyer, recevoir la référence, consolider) et fichier Excel (exporter, importer).", "Le menu ☰ perd « Notes et ajustements » et « Mes saisies », qui faisaient doublon ; « Retours et demandes » rejoint le groupe Aide.", "Icônes devant chaque entrée du menu."]},
     {"date": "18.10.2026", "objet": "simulation", "version": "v3.7", "titre": "Bouton Saisies dans l'en-tête", "points": ["Le bouton Saisies de l'en-tête remplace les entrées « Mes saisies » du menu ; une référence reçue du serveur est relue aussitôt.", "« Retours et demandes » rejoint le groupe Aide du menu ☰ ; icônes devant chaque entrée."]},
@@ -2860,12 +2883,18 @@ var PTE_COMMUN = (function () {
 
   /* ---------- lecture des saisies dans le stockage des trois outils ---------- */
   var CH_DEC = ['date', 'niveau', 'numero_projet', 'portefeuille', 'decision', 'responsable', 'echeance', 'statut', 'escalade_vers'];
-  function contenuDecision(d) { return CH_DEC.map(function (c) { return txt(d[c]).trim(); }).join(SEP); }
+  /* « notes » : notes libres d'une décision (18.10.2026). Hors de CH_DEC pour l'empreinte : une décision
+     sans note garde exactement l'empreinte (et l'identifiant calculé) d'avant ce champ. */
+  var CH_DEC_TOUS = CH_DEC.concat(['notes']);
+  function contenuDecision(d) {
+    var n = txt(d.notes).replace(/\r\n?/g, '\n').trim();
+    return CH_DEC.map(function (c) { return txt(d[c]).trim(); }).join(SEP) + (n ? SEP + 'notes:' + n : '');
+  }
   function idDecision(d) { return d && d.id ? txt(d.id) : 'D-' + hash(contenuDecision(d || {})); }
   /* forme normalisée d'une décision : celle que donne la relecture du fichier (statut vide = ouverte,
      niveau en minuscules, dates JJ.MM.AAAA en AAAA-MM-JJ). Sert à comparer, jamais à réécrire. */
   function normDecision(f) {
-    var o = {}; CH_DEC.forEach(function (c) { o[c] = txt(f[c]).trim(); });
+    var o = {}; CH_DEC_TOUS.forEach(function (c) { o[c] = txt(f[c]).trim(); });
     o.statut = o.statut || 'ouverte'; o.niveau = codeNiveau(o.niveau); o.date = relireJour(o.date); o.echeance = relireJour(o.echeance);
     return o;
   }
@@ -2896,7 +2925,7 @@ var PTE_COMMUN = (function () {
     (db.decisions || []).forEach(function (d) {
       if (!d) return;
       var f = { rubrique: 'decision' };
-      CH_DEC.forEach(function (c) { f[c] = txt(d[c]); });
+      CH_DEC_TOUS.forEach(function (c) { f[c] = txt(d[c]); });
       f.id = idDecision(d); f.cle = 'decision|' + f.id;
       if (vus[f.cle]) return;            /* doublon exact laissé par l'ancien import : compté une fois */
       vus[f.cle] = 1; out.push(f);
@@ -2948,7 +2977,7 @@ var PTE_COMMUN = (function () {
       else if (f.rubrique === 'ajustement' && !PIEGES[f.site]) { st.siteQuali[f.site] = { p: txt(f.niveau), m: txt(f.motif) }; stC = true; }
       else if (f.rubrique === 'decision') {
         var L = decisions(), i = rang(L, f.id), o = { id: f.id };
-        CH_DEC.forEach(function (c) { o[c] = txt(f[c]); });
+        CH_DEC_TOUS.forEach(function (c) { o[c] = txt(f[c]); });
         if (i >= 0) {        /* les copies exactes laissées par l'ancien import sont remplacées par une seule */
           var base = L[i], L2 = L.filter(function (d) { return idDecision(d) !== f.id; });
           L2.splice(i, 0, Object.assign({}, base, o)); db.decisions = L2;
@@ -3142,7 +3171,7 @@ var PTE_COMMUN = (function () {
   /* ---------- le classeur des saisies ---------- */
   var ENT_NOTES = ['N° sous-site', 'Sous-site', 'Note', 'Auteur', 'Modifiée le', 'Supprimer (oui)'];
   var ENT_AJUST = ['N° sous-site', 'Sous-site', 'Ajustement', 'Motif', 'Auteur', 'Modifié le', 'Supprimer (oui)'];
-  var ENT_DEC = ['Identifiant', 'Date de revue', 'Niveau', 'N° projet', 'Portefeuille', 'Décision', 'Responsable', 'Échéance', 'Statut', 'Escalade vers', 'Auteur', 'Modifiée le', 'Supprimer (oui)'];
+  var ENT_DEC = ['Identifiant', 'Date de revue', 'Niveau', 'N° projet', 'Portefeuille', 'Décision', 'Responsable', 'Échéance', 'Statut', 'Escalade vers', 'Notes', 'Auteur', 'Modifiée le', 'Supprimer (oui)'];
   function tri(a, b) { return a.site < b.site ? -1 : a.site > b.site ? 1 : 0; }
   function morceaux(s, n) {
     var out = [], i = 0;
@@ -3204,9 +3233,9 @@ var PTE_COMMUN = (function () {
       { nom: 'Ajustements', entetes: ENT_AJUST, largeurs: [13, 30, 28, 60, 20, 17, 11], gris: { 5: 1 },
         lignes: ajust.map(function (f) { return [f.site, f.nom, libAjust(f.niveau), f.motif, f.auteur, dateFichier(f.modifie), sup(f)]; }),
         listes: { 2: AJUST.map(function (a) { return a.lib; }).concat([AUCUN]), 6: ['oui'] } },
-      { nom: 'Décisions', entetes: ENT_DEC, largeurs: [13, 12, 13, 15, 18, 60, 20, 12, 11, 20, 20, 17, 11], gris: { 0: 1, 11: 1 },
-        lignes: dec.map(function (f) { return [f.id, f.date, NIVEAUX[f.niveau] || f.niveau, f.numero_projet, f.portefeuille, f.decision, f.responsable, f.echeance, f.statut, f.escalade_vers, f.auteur, dateFichier(f.modifie), sup(f)]; }),
-        listes: { 2: ['Projet', 'Portefeuille', 'Parc'], 12: ['oui'] } },
+      { nom: 'Décisions', entetes: ENT_DEC, largeurs: [13, 12, 13, 15, 18, 60, 20, 12, 11, 20, 50, 20, 17, 11], gris: { 0: 1, 12: 1 },
+        lignes: dec.map(function (f) { return [f.id, f.date, NIVEAUX[f.niveau] || f.niveau, f.numero_projet, f.portefeuille, f.decision, f.responsable, f.echeance, f.statut, f.escalade_vers, f.notes || '', f.auteur, dateFichier(f.modifie), sup(f)]; }),
+        listes: { 2: ['Projet', 'Portefeuille', 'Parc'], 13: ['oui'] } },
       { nom: '_technique', cachee: true, lignes: tech, largeurs: [14, 60, 8, 22, 14] }
     ];
     return classeurXlsx(feuilles, { auteur: u, titre: conso ? 'Saisies PTE consolidées' : 'Saisies PTE' });
@@ -3412,11 +3441,11 @@ var PTE_COMMUN = (function () {
     if (decF && decF.length) {
       var cd = colonnes(decF[0], { id: ['Identifiant'], date: ['Date de revue', 'Date'], niveau: ['Niveau'], numero_projet: ['N° projet', 'nprojet', 'numero_projet'],
         portefeuille: ['Portefeuille'], decision: ['Décision'], responsable: ['Responsable'], echeance: ['Échéance'], statut: ['Statut'],
-        escalade_vers: ['Escalade vers'], auteur: ['Auteur'], modifie: ['Modifiée le', 'Modifie'], sup: ['Supprimer'] });
+        escalade_vers: ['Escalade vers'], notes: ['Notes', 'Notes libres'], auteur: ['Auteur'], modifie: ['Modifiée le', 'Modifie'], sup: ['Supprimer'] });
       if (cd.decision < 0) avert.push('feuille Décisions : colonne « Décision » introuvable, feuille ignorée');
       else decF.slice(1).forEach(function (L) {
         var f = { rubrique: 'decision' };
-        CH_DEC.forEach(function (c) { f[c] = txt(cel(L, cd[c])).trim(); });
+        CH_DEC_TOUS.forEach(function (c) { f[c] = cd[c] >= 0 ? txt(cel(L, cd[c])).trim() : ''; });
         f.date = relireJour(cel(L, cd.date)); f.echeance = relireJour(cel(L, cd.echeance)); f.niveau = codeNiveau(f.niveau);
         if (!f.decision && !f.numero_projet) return;
         if (!f.statut) f.statut = 'ouverte';
@@ -3447,7 +3476,7 @@ var PTE_COMMUN = (function () {
       if (b.cle === K_REVUE && c) {
         var vus = {};
         (c.decisions || []).forEach(function (d) {
-          var f = { rubrique: 'decision', auteur: '', modifie: '' }; CH_DEC.forEach(function (k) { f[k] = txt(d[k]); });
+          var f = { rubrique: 'decision', auteur: '', modifie: '' }; CH_DEC_TOUS.forEach(function (k) { f[k] = txt(d[k]); });
           f.id = idDecision(d); f.cle = 'decision|' + f.id; if (vus[f.cle]) return; vus[f.cle] = 1; fiches.push(f);
         });
         c = Object.assign({}, c); delete c.decisions;
@@ -3521,7 +3550,7 @@ var PTE_COMMUN = (function () {
     if (f.supprimer) return '(à supprimer)';
     if (f.rubrique === 'note') return txt(f.texte);
     if (f.rubrique === 'ajustement') return libAjust(f.niveau) + ' — ' + txt(f.motif);
-    return txt(f.decision) + (f.responsable ? ' · resp. ' + f.responsable : '') + (f.echeance ? ' · échéance ' + f.echeance : '') + (f.statut ? ' · ' + f.statut : '') + (f.escalade_vers ? ' · escalade vers ' + f.escalade_vers : '');
+    return txt(f.decision) + (f.responsable ? ' · resp. ' + f.responsable : '') + (f.echeance ? ' · échéance ' + f.echeance : '') + (f.statut ? ' · ' + f.statut : '') + (f.escalade_vers ? ' · escalade vers ' + f.escalade_vers : '') + (txt(f.notes).trim() ? ' · notes : ' + txt(f.notes).trim() : '');
   }
   var RUBRIQUES = { note: 'Note', ajustement: 'Ajustement', decision: 'Décision' };
   function analyser(paquet) {
@@ -4135,7 +4164,7 @@ var PTE_COMMUN = (function () {
   function ouvrirRetours(outil) {
     avecSession(function (s) {
       var W = fenetre('pte-retours', 'Retours et demandes d’évolution', 900), c = W.c, cons = s.user.role === 'consolidateur';
-      var etat = { retours: [], votes: [], filtre: 'ouverts' };
+      var etat = { retours: [], votes: [], filtre: 'ouverts', edition: null };
       function opt(o, sel) { return Object.keys(o).map(function (k) { return '<option value="' + k + '"' + (k === sel ? ' selected' : '') + '>' + esc(o[k]) + '</option>'; }).join(''); }
       function charger() {
         W.corps.innerHTML = '<p style="color:' + c.doux + '">Chargement…</p>';
@@ -4159,14 +4188,31 @@ var PTE_COMMUN = (function () {
           '<label><input type="radio" name="pte-rf" value="ouverts"' + (etat.filtre === 'ouverts' ? ' checked' : '') + '> en cours</label>' +
           '<label><input type="radio" name="pte-rf" value="tous"' + (etat.filtre === 'tous' ? ' checked' : '') + '> toutes</label></div>';
         if (!L.length) h += '<p style="color:' + c.doux + '">Aucune demande pour l’instant.</p>';
+        /* modifier une demande (18.10.2026) : l'auteur tant qu'elle est « nouvelle », un consolidateur toujours
+           (règles du serveur) ; supprimer : consolidateur seulement */
+        var champ = 'font:inherit;padding:6px 8px;border:1px solid ' + c.trait + ';border-radius:6px;background:' + c.fond + ';color:' + c.encre;
+        var petit = function (attr, id, lib, ic, couleur) {
+          return '<button type="button" ' + attr + '="' + esc(id) + '" title="' + lib + '" aria-label="' + lib + '" style="display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:12px;padding:2px 8px;border-radius:6px;border:1px solid ' + c.trait + ';background:transparent;color:' + (couleur || c.doux) + ';cursor:pointer">' + icone(ic, 13) + lib + '</button>';
+        };
         L.forEach(function (r) {
+          var editable = cons || (r.auteur === s.user.id && r.statut === 'nouveau');
+          if (etat.edition === r.id && editable) {
+            h += '<div style="padding:10px 0;border-top:1px solid ' + c.trait + '"><div style="display:grid;gap:6px">' +
+              '<input data-e="titre" maxlength="200" value="' + esc(r.titre) + '" style="' + champ + '">' +
+              '<select data-e="outil" style="' + champ + '">' + opt(OUTILS, r.outil || 'general') + '</select>' +
+              '<textarea data-e="desc" rows="3" maxlength="5000" style="' + champ + '">' + esc(r.description || '') + '</textarea>' +
+              '<div style="display:flex;gap:8px"><button type="button" data-enreg="' + esc(r.id) + '" style="font:inherit;padding:5px 14px;border-radius:7px;border:1px solid ' + c.acc + ';background:' + c.acc + ';color:' + c.accTexte + ';cursor:pointer">Enregistrer</button>' +
+              '<button type="button" data-x="annulerEd" style="font:inherit;padding:5px 14px;border-radius:7px;border:1px solid ' + c.acc + ';background:transparent;color:' + c.acc + ';cursor:pointer">Annuler</button></div></div></div>';
+            return;
+          }
           var vote = !!miens[r.id], peut = vote || (actifs < 3 && ouvert(r));
           h += '<div style="display:flex;gap:12px;padding:10px 0;border-top:1px solid ' + c.trait + '">' +
             '<button type="button" data-vote="' + esc(r.id) + '" title="' + (vote ? 'Retirer mon vote' : (peut ? 'Voter pour cette demande' : 'Trois votes déjà utilisés')) + '"' + (peut ? '' : ' disabled') +
               ' style="min-width:48px;font:inherit;font-weight:bold;border-radius:8px;cursor:' + (peut ? 'pointer' : 'default') + ';border:1px solid ' + c.acc + ';background:' + (vote ? c.acc : 'transparent') + ';color:' + (vote ? c.accTexte : c.acc) + ';opacity:' + (peut ? 1 : .45) + '">▲<br>' + (nb[r.id] || 0) + '</button>' +
             '<div style="flex:1;min-width:0"><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:baseline"><b>' + esc(r.titre) + '</b>' + puce(c, esc(STATUTS[r.statut] || r.statut)) + puce(c, esc(OUTILS[r.outil] || r.outil || '')) + '</div>' +
             (r.description ? '<div style="white-space:pre-wrap;margin:3px 0">' + esc(r.description) + '</div>' : '') +
-            '<div style="color:' + c.doux + ';font-size:11.5px">' + esc(r.auteur_nom || '') + ', ' + esc(dateLisible(isoServeur(r.created))) + '</div>' +
+            '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:' + c.doux + ';font-size:11.5px">' + esc(r.auteur_nom || '') + ', ' + esc(dateLisible(isoServeur(r.created))) +
+              (editable ? ' ' + petit('data-edit', r.id, 'Modifier', 'nom') : '') + (cons ? ' ' + petit('data-suppr', r.id, 'Supprimer', 'effacer', c.rouge) : '') + '</div>' +
             (r.reponse ? '<div style="margin:6px 0 0;padding:6px 9px;border-left:3px solid ' + c.acc + ';background:' + c.ligne + ';white-space:pre-wrap"><b>Réponse</b> — ' + esc(r.reponse) + '</div>' : '') +
             (cons ? '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><select data-statut="' + esc(r.id) + '" style="font:inherit;font-size:12.5px;padding:3px">' + opt(STATUTS, r.statut) + '</select>' +
               '<input data-reponse="' + esc(r.id) + '" value="' + esc(r.reponse || '') + '" placeholder="Réponse ou question" style="flex:1;min-width:180px;font:inherit;font-size:12.5px;padding:3px 7px;border:1px solid ' + c.trait + ';border-radius:5px;background:' + c.fond + ';color:' + c.encre + '">' +
@@ -4178,7 +4224,7 @@ var PTE_COMMUN = (function () {
       function agir(p) { return p.then(charger).catch(function (e) { montrerErreur('Action impossible', e.message); }); }
       W.corps.addEventListener('change', function (e) { if (e.target.name === 'pte-rf') { etat.filtre = e.target.value; rendre(); } });
       W.corps.addEventListener('click', function (e) {
-        var t = e.target, g = function (a) { return t.getAttribute && t.getAttribute(a); };
+        var t = (e.target && e.target.closest && e.target.closest('button')) || e.target, g = function (a) { return t.getAttribute && t.getAttribute(a); };
         if (g('data-x') === 'deposer') {
           var ti = W.corps.querySelector('[data-x="titre"]').value.trim();
           if (!ti) { W.corps.querySelector('[data-x="titre"]').focus(); return; }
@@ -4187,6 +4233,21 @@ var PTE_COMMUN = (function () {
         } else if (g('data-vote')) {
           var id = g('data-vote'), v = etat.votes.filter(function (x) { return x.retour === id && x.votant === s.user.id; })[0];
           agir(v ? api('DELETE', '/api/collections/votes/records/' + v.id) : api('POST', '/api/collections/votes/records', { retour: id, votant: s.user.id }));
+        } else if (g('data-edit')) {
+          etat.edition = g('data-edit'); rendre();
+          try { W.corps.querySelector('[data-e="titre"]').focus(); } catch (er) {}
+        } else if (g('data-x') === 'annulerEd') {
+          etat.edition = null; rendre();
+        } else if (g('data-enreg')) {
+          var ti2 = W.corps.querySelector('[data-e="titre"]').value.trim();
+          if (!ti2) { W.corps.querySelector('[data-e="titre"]').focus(); return; }
+          var id3 = g('data-enreg'); etat.edition = null;
+          agir(api('PATCH', '/api/collections/retours/records/' + id3, { titre: ti2, outil: W.corps.querySelector('[data-e="outil"]').value,
+            description: W.corps.querySelector('[data-e="desc"]').value.trim() }));
+        } else if (g('data-suppr')) {
+          var r4 = etat.retours.filter(function (x) { return x.id === g('data-suppr'); })[0];
+          if (r4 && (typeof confirm !== 'function' || confirm('Supprimer définitivement la demande « ' + r4.titre + ' » et ses votes ?')))
+            agir(api('DELETE', '/api/collections/retours/records/' + r4.id));
         } else if (g('data-maj')) {
           var id2 = g('data-maj');
           agir(api('PATCH', '/api/collections/retours/records/' + id2, { statut: W.corps.querySelector('[data-statut="' + id2 + '"]').value,
@@ -4625,7 +4686,7 @@ var PTE_COMMUN = (function () {
   // de l'outil de priorisation PTE) restent des imports CSV séparés.
   // -------------------------------------------------------------------
   var SCHEMAS = {
-    decisions: { key: 'decisions', required: ['decision', 'responsable', 'statut'], all: ['date','niveau','numero_projet','portefeuille','decision','responsable','echeance','statut','escalade_vers'] },
+    decisions: { key: 'decisions', required: ['decision', 'responsable', 'statut'], all: ['date','niveau','numero_projet','portefeuille','decision','responsable','echeance','statut','escalade_vers','notes'] },
     // export de l'outil de priorisation PTE. Reconnu par ses colonnes
     // (jamais par son nom) : numero_sous_site + (rang_global OU rang_co2).
     priorisation: { key: 'priorisation', required: ['numero_sous_site'], requiredAnyOf: [['rang_global'], ['rang_co2']],
@@ -7124,6 +7185,91 @@ var PTE_COMMUN = (function () {
     return wrap;
   }
 
+  /* Fiche du sous-site en blocs (18.10.2026, demande d'Achim : « même présentation que la fiche de la
+     priorisation ») : un bloc par thème, une valeur par ligne, libellé à gauche, chiffre à droite.
+     Remplace la ligne « Mesures » et la phrase « Chaîne financière » dans les fiches sous-site et projet.
+     null reste « — », jamais 0 ; « estimé » toujours dit ; les survols d'origine des données sont gardés.
+     opts : { creditSS (kCHF, somme des crédits GE-Invest du sous-site), nbProjets } */
+  function ficheKV(lbl, val, sub, titre, cls) {
+    var v = el('span', { class: 'fk-v' }, [el('span', { class: cls || '' }, [val === null || val === undefined || val === '' ? '—' : val])]);
+    if (sub) v.appendChild(el('span', { class: 'fk-s' }, [sub]));
+    var row = el('div', { class: 'fk' }, [el('span', { class: 'fk-l' }, [lbl]), v]);
+    return titre ? tip(row, titre) : row;
+  }
+  function ficheBloc(titre, lignes) {
+    var sec = el('section', { class: 'fs' }, [el('h5', {}, [titre])]);
+    lignes.filter(Boolean).forEach(function (l) { sec.appendChild(l); });
+    return sec;
+  }
+  function blocsSousSite(num, opts) {
+    opts = opts || {};
+    var m = mesuresDe(num), pp = (DB.planpte && DB.planpte.bySousSite) ? DB.planpte.bySousSite[num] : null;
+    var pteRow = num ? (DB.pte || []).filter(function (r) { return r.numero_sous_site === num; })[0] : null;
+    var grid = opts.grille || el('div', { class: 'rv-fiche-grid' });
+    var kv = ficheKV;
+    function n(v, dec, unit) { return (v === null || v === undefined || isNaN(v)) ? null : fmt(v, dec || 0) + (unit ? ' ' + unit : ''); }
+    var blocs = [];
+    function bloc(titre, lignes) { blocs.push(ficheBloc(titre, lignes)); }
+    if (!m && !pp) {
+      grid.appendChild(el('p', { class: 'muted small', style: 'grid-column:1/-1;margin:0;' }, [num ? 'Sous-site absent du Plan_PTE, ou classeur sans contrat de données : pas de mesures.' : 'Sous-site non renseigné.']));
+      return grid;
+    }
+    // 1. Sous-site
+    var prioRow = (DB.priorisation || []).filter(function (r) { return r.numero_sous_site === num; })[0];
+    var rang = prioRow ? Engine.parseNum(prioRow.rang_global) : null;
+    bloc('Sous-site', [
+      m && m.site ? kv('Site', m.site + (m.nomSite ? ' — ' + m.nomSite : '')) : null,
+      kv('RPF', (m && m.rpf) || (pp && pp.rpf_ou_agent) || null, '', 'RPF = Plan_PTE!Responsable Portefeuille.'),
+      m ? kv('RP', m.rp || null, m.rpSource || '', 'RP = GEI_Projets!Nom responsable suivi (ou GEI_Suivi), sinon Plan_PTE!Responsable projet (contrat D8).') : null,
+      kv('SRE', n(m ? m.sre : (pp && pp.sre_m2), 0, 'm²'), '', 'Surface de référence énergétique (Plan_PTE!SRE) : la surface chauffée, qui ramène les consommations au mètre carré.'),
+      opts.nbProjets !== undefined ? kv('Projets GE-Invest', String(opts.nbProjets), opts.nbProjets > 1 ? 'à consolider à terme en un seul' : '') : null,
+      DB.priorisation && DB.priorisation.length ? kv('Rang (priorisation)', rang === null ? 'non classé' : '#' + rang + (prioRow.nb_classes ? ' / ' + prioRow.nb_classes : ''), prioSourceLabel()) : null
+    ]);
+    // 2. Chaleur et travaux
+    if (m || pteRow) {
+      var ag = m && m.agent ? m.agent : null;
+      var agVal = ag ? (ag.sitg || '—') + (ag.cible && ag.cible !== ag.sitg ? ' → ' + ag.cible : '') : null;
+      var agSub = ag ? (ag.aRenseigner ? 'facteur CO₂ « ' + ag.cible + ' » à renseigner dans Data' : (ag.facteur !== null && ag.facteur !== undefined ? fmt(ag.facteur * 1000, 0) + ' g CO₂/kWh' : '')) : '';
+      bloc('Chaleur et travaux', [
+        m ? kv('IDC actuel', n(m.idc, 0, 'kWh/m²·an'), m.idcAnnee && m.annee && m.idcAnnee !== m.annee ? 'millésime ' + m.idcAnnee : '', 'Plan_PTE!IDC [kWh] : chaleur consommée en une année par mètre carré chauffé (indice OCEN ÷ 3,6).') : null,
+        pteRow ? kv('État CECB+', pteRow.etat_cecb || null) : null,
+        pteRow && pteRow.variante_retenue ? kv('Variante retenue', pteRow.variante_retenue) : null,
+        agVal ? kv('Agent', agVal, agSub, 'Agent de chauffage (SITG), rapporté au libellé de la feuille Data qui porte le facteur d’émission.', ag && ag.aRenseigner ? 'mes-warn' : '') : null,
+        pteRow ? kv('Gain thermique', n(Engine.parseNum(pteRow.gain_kwh_th), 0, 'kWh/an'), '', 'Gain d’IDC retenu × SRE.') : null,
+        kv('Gain CO₂ réel', m ? n(m.gainCo2T, 1, 't/an') : null, '', 'Gain réel (contrat D5) = CO₂ mesuré − CO₂ projeté × SRE ; vide si l’un des deux manque, jamais 0.')
+      ]);
+    }
+    // 3. Mesures de l'année
+    if (m) {
+      var ch = m.chaleur || {};
+      bloc('Mesures ' + (m.annee || ''), [
+        kv('Chaleur', ch.val === null || ch.val === undefined ? null : fmt(Math.round(ch.val)) + ' kWh/an', ch.source === 'estimé' ? 'estimé (SRE × IDC)' : (ch.source ? 'mesuré' : ''), ch.origine || 'Chaleur non calculable (ni facturation du site, ni SRE × IDC).', ch.source === 'estimé' ? 'mes-warn' : ''),
+        kv('Électricité', m.elec && m.elec.val !== null ? fmt(Math.round(m.elec.val)) + ' kWh/an' : null, '', (m.elec && m.elec.origine) || 'Électricité non renseignée pour cette année.'),
+        kv('Eau', m.eau && m.eau.val !== null ? fmt(Math.round(m.eau.val)) + ' m³/an' : null, m.gainEauEstime !== null && m.gainEauEstime !== undefined ? 'gain estimé ' + fmt(Math.round(m.gainEauEstime)) + ' m³/an' : '', (m.eau && m.eau.origine) || 'Eau non renseignée pour cette année.'),
+        kv('CO₂', m.co2 && m.co2.val !== null ? fmt(Math.round(m.co2.val / 100) / 10, 1) + ' t/an' : null, 'scope 1+2', (m.co2 && m.co2.origine) || 'CO₂ non renseigné pour cette année.')
+      ]);
+    }
+    // 4. Finances : chaîne Estim PTE → DG → crédit GE-Invest
+    var chain = finChainInfo(num);
+    if (chain) {
+      var ecart = null, ecartCls = '';
+      if (chain.ref && opts.creditSS !== null && opts.creditSS !== undefined) {
+        var pct = (opts.creditSS - chain.ref) / chain.ref * 100, abs = Math.abs(pct);
+        ecart = (pct >= 0 ? '+' : '−') + Math.round(abs) + ' %';
+        ecartCls = abs > PARAMS.ecartFinRougePct ? 'alert-text' : (abs > PARAMS.ecartFinOrangePct ? 'mes-warn' : '');
+      }
+      bloc('Finances, MCHF', [
+        kv('Estim PTE', chain.estim === null || chain.estim === undefined ? null : fmtK(chain.estim), 'CECB+', 'Ordre de grandeur de l’investissement (Plan_PTE!Estim PTE).'),
+        kv('Devis général (DG)', chain.dg === null || chain.dg === undefined ? null : fmtK(chain.dg), chain.pp && chain.pp.date_dg ? 'du ' + chain.pp.date_dg : '', 'Le DG fige la base du crédit.'),
+        opts.creditSS !== undefined ? kv('Crédit GE-Invest', opts.creditSS === null ? null : fmtK(opts.creditSS), opts.nbProjets > 1 ? opts.nbProjets + ' projets additionnés' : '', 'Crédit voté, porté par GE-Invest.') : null,
+        opts.creditSS !== undefined ? kv('Écart', ecart, ecart ? 'référence : ' + chain.refLabel : '', 'Écart du crédit GE-Invest à la référence (DG, à défaut Estim PTE) ; teinté au-delà des seuils de l’onglet Données.', ecartCls) : null
+      ]);
+      if (opts.financesAvant) blocs.unshift(blocs.pop());
+    }
+    blocs.forEach(function (b) { grid.appendChild(b); });
+    return grid;
+  }
+
   // Liens croisés vers les deux autres outils (C2) : petits .btn texte, sans icône.
   function liensCroises(num) {
     var wrap = el('div', { class: 'liens-croises no-print' });
@@ -8610,27 +8756,15 @@ var PTE_COMMUN = (function () {
     ]);
     // Chaîne financière du sous-site (Estim PTE → DG → Crédit GE-Invest)
     var chain = finChainInfo(ssNum);
-    if (ssNum) left.appendChild(mesuresLine(ssNum, { sansRp: true }));
-    if (chain) {
-      var creditSS = null;
-      rows.forEach(function (x) {
-        if ((x.p.numero_sous_site || '').trim() !== ssNum) return;
-        if (x.credit === null || x.credit === undefined) return;
-        creditSS = (creditSS || 0) + x.credit;
-      });
-      var chainP = el('p', { class: 'muted small' }, [
-        'Chaîne financière du sous-site : Estim PTE ' + fmtK(chain.estim) + ' → DG ' + fmtK(chain.dg) + ' → Crédit GE-Invest ' + fmtK(creditSS) + ' MCHF'
-      ]);
-      if (chain.ref && creditSS !== null) {
-        var pctSS = (creditSS - chain.ref) / chain.ref * 100;
-        var txtSS = ' (écart ' + (pctSS >= 0 ? '+' : '−') + Math.round(Math.abs(pctSS)) + ' %)';
-        chainP.appendChild(Math.abs(pctSS) > PARAMS.ecartFinRougePct ? el('span', { class: 'alert-text' }, [txtSS]) : document.createTextNode(txtSS));
-      }
-      tip(chainP, 'L\'Estim PTE (CECB+) donne l\'ordre de grandeur, le Devis général (DG) fige la base du crédit, GE-Invest porte le crédit voté et son exécution. Référence de l\'écart : ' + chain.refLabel + '.');
-      left.appendChild(chainP);
-      if (chain.pp && chain.pp.nom) {
-        left.appendChild(el('p', { class: 'small muted' }, ['Nom recommandé pour un nouveau projet : LTE - ' + chain.pp.nom + ' - ' + ssNum]));
-      }
+    var creditSS = null, nbSS = 0;
+    rows.forEach(function (x) {
+      if ((x.p.numero_sous_site || '').trim() !== ssNum) return;
+      nbSS++;
+      if (x.credit === null || x.credit === undefined) return;
+      creditSS = (creditSS || 0) + x.credit;
+    });
+    if (chain && chain.pp && chain.pp.nom) {
+      left.appendChild(el('p', { class: 'small muted' }, ['Nom recommandé pour un nouveau projet : LTE - ' + chain.pp.nom + ' - ' + ssNum]));
     }
     var right = el('div', { class: 'rep-proj-sems' }, [
       el('div', {}, [perfSem(r.perf)]),
@@ -8656,6 +8790,7 @@ var PTE_COMMUN = (function () {
     }
     if (ssNum) left.appendChild(liensCroises(ssNum));
     headCard.appendChild(left); headCard.appendChild(right);
+    if (ssNum) headCard.appendChild(blocsSousSite(ssNum, { creditSS: creditSS, nbProjets: nbSS }));
     host.appendChild(headCard);
     ecrireHashSs(ssNum || null);
 
@@ -8751,20 +8886,14 @@ var PTE_COMMUN = (function () {
     var head = el('div', { class: 'card rep-proj-head' });
     var left = el('div', { class: 'rep-proj-id' }, [el('h2', {}, ['Sous-site ' + num + (nom ? ' — ' + nom : '')])]);
     left.appendChild(el('p', { class: 'muted small' }, [(m && m.site ? 'Site ' + m.site + ' · ' : '') + mine.length + ' projet(s) GE-Invest' + (mine.length > 1 ? ' — à consolider à terme en un seul projet' : '') + (m && m.rpf ? ' · RPF ' + m.rpf : '') + (m && m.rp ? ' · RP ' + m.rp + (m.rpSource ? ' (' + m.rpSource + ')' : '') : '')]));
-    left.appendChild(mesuresLine(num, { sansRp: true }));
-    var chain = finChainInfo(num);
-    if (chain) {
-      var creditSS = null; mine.forEach(function (x) { if (x.credit !== null && x.credit !== undefined) creditSS = (creditSS || 0) + x.credit; });
-      var chainP = el('p', { class: 'muted small' }, ['Chaîne financière : Estim PTE ' + fmtK(chain.estim) + ' → DG ' + fmtK(chain.dg) + ' → Crédit GE-Invest ' + fmtK(creditSS) + ' MCHF']);
-      if (chain.ref && creditSS !== null) { var pctSS = (creditSS - chain.ref) / chain.ref * 100; chainP.appendChild(document.createTextNode(' (écart ' + (pctSS >= 0 ? '+' : '−') + Math.round(Math.abs(pctSS)) + ' %)')); }
-      left.appendChild(chainP);
-    }
+    var creditSS = null; mine.forEach(function (x) { if (x.credit !== null && x.credit !== undefined) creditSS = (creditSS || 0) + x.credit; });
     left.appendChild(liensCroises(num));
     var right = el('div', { class: 'rep-proj-sems' });
     if (!mine.length) right.appendChild(el('div', { class: 'small muted' }, ['Aucun projet GE-Invest sur ce sous-site.']));
     else right.appendChild(el('div', {}, [perfDistMini(repAgg(mine).perfCounts, mine.length)]));
     var badge = rangBadgeSs(num); if (badge) right.appendChild(el('div', { class: 'small muted', style: 'margin-top:.4em;' }, [badge, ' ' + prioSourceLabel()]));
     head.appendChild(left); head.appendChild(right);
+    head.appendChild(blocsSousSite(num, { creditSS: creditSS, nbProjets: mine.length }));
     host.appendChild(head);
     ecrireHashSs(num);
     if (mine.length) {
@@ -9022,13 +9151,38 @@ var PTE_COMMUN = (function () {
       comp.suiviRow ? ('Avancement ' + fmtPct(Engine.parseNum(comp.suiviRow.avancement_pct))) : null
     ].filter(Boolean).join(' · ');
     head.appendChild(el('div', { class: 'small muted' }, [identityLine]));
-    var dates = el('div', { class: 'fiche-dates' });
-    function dateItem(l, v) { return el('div', {}, [l + ' : ', el('b', {}, [v || '—'])]); }
-    dates.appendChild(dateItem('Début prévu', projet.date_debut_prevue));
-    dates.appendChild(dateItem('Fin prévue', projet.date_fin_prevue));
-    dates.appendChild(dateItem('Fin ré-estimée', comp.suiviRow ? comp.suiviRow.date_fin_reestimee : null));
-    dates.appendChild(dateItem('Mise en service', comp.suiviRow ? comp.suiviRow.date_mise_en_service : null));
-    head.appendChild(dates);
+    /* Fiche en blocs (18.10.2026) : le projet et ses délais, puis le sous-site (mêmes blocs que la fiche
+       de la priorisation) ; ils remplacent la ligne des dates, la ligne « Mesures » et la carte « Contribution PTE ». */
+    var ssB = (projet.numero_sous_site || '').trim();
+    var grilleF = el('div', { class: 'rv-fiche-grid rv-cols3' });
+    var avF = comp.suiviRow ? Engine.parseNum(comp.suiviRow.avancement_pct) : null;
+    var creditF = Engine.parseNum(projet.credit_total_kchf);
+    grilleF.appendChild(ficheBloc('Projet', [
+      ficheKV('N° GE-Invest', projet.numero_projet),
+      ficheKV('Type', projet.projet_etude === 'oui' ? 'Étude' : 'Réalisation'),
+      ficheKV('Phase SIA', projet.phase_sia || null),
+      ficheKV('Avancement', avF === null ? null : fmtPct(avF), comp.suiviRow ? 'suivi ' + (comp.suiviRow.date_maj || comp.suiviRow.mois || '') : 'aucune fiche de suivi'),
+      ficheKV('RP', projet.rp || null),
+      projet.amo ? ficheKV('AMO+', projet.amo) : null,
+      ficheKV('Crédit du projet', creditF === null ? null : fmtK(creditF) + ' MCHF')
+    ]));
+    var finReest = comp.suiviRow ? comp.suiviRow.date_fin_reestimee : null;
+    grilleF.appendChild(ficheBloc('Délais', [
+      ficheKV('Début prévu', projet.date_debut_prevue || null),
+      ficheKV('Fin prévue', projet.date_fin_prevue || null),
+      ficheKV('Fin ré-estimée', finReest || null, finReest && projet.date_fin_prevue && finReest > projet.date_fin_prevue ? 'après la fin prévue' : '', null, finReest && projet.date_fin_prevue && finReest > projet.date_fin_prevue ? 'alert-text' : ''),
+      ficheKV('Mise en service', comp.suiviRow ? (comp.suiviRow.date_mise_en_service || null) : null)
+    ]));
+    if (ssB) {
+      var creditSSF = null, nbSSF = 0;
+      DB.projets.forEach(function (p) {
+        if ((p.numero_sous_site || '').trim() !== ssB) return;
+        nbSSF++; var c2 = Engine.parseNum(p.credit_total_kchf); if (c2 !== null) creditSSF = (creditSSF || 0) + c2;
+      });
+      blocsSousSite(ssB, { creditSS: creditSSF, nbProjets: nbSSF, grille: grilleF, financesAvant: true });
+    }
+    head.appendChild(grilleF);
+    if (ssB) head.appendChild(liensCroises(ssB));
     /* Accès direct aux projets du même sous-site, pour une revue liée ou consolidée
        (remarque d'Achim, 30.09.2026). */
     var ssF = (projet.numero_sous_site || '').trim();
@@ -9129,31 +9283,8 @@ var PTE_COMMUN = (function () {
     riskCard.appendChild(el('div', { class: 'small muted', style: 'margin-top:.5em;' }, [allOpen.length + ' risque(s) ouvert(s) au total.']));
     right.appendChild(riskCard);
 
-    // DROITE — PTE
-    var ss = projet.numero_sous_site;
-    var pteRow = ss ? DB.pte.filter(function (r) { return r.numero_sous_site === ss; })[0] : null;
-    var pteCard = el('div', { class: 'card pte-box' });
-    pteCard.appendChild(cardTitle('Contribution PTE'));
-    if (!pteRow) {
-      pteCard.appendChild(el('p', { class: 'small' }, [ss ? ('Aucune ligne PTE pour le sous-site ' + ss + '.') : 'Sous-site non renseigné.']));
-    } else {
-      var pg = el('div', { class: 'grid cols-2 small' });
-      function info(l, v) { return el('div', {}, [el('div', { class: 'muted' }, [l]), el('div', { style: 'font-weight:bold;' }, [v === null || v === undefined || v === '' ? '—' : String(v)])]); }
-      pg.appendChild(info('État CECB+', pteRow.etat_cecb));
-      pg.appendChild(info('Variante retenue', pteRow.variante_retenue));
-      pg.appendChild(info('Gain kWh th/an', fmt(Engine.parseNum(pteRow.gain_kwh_th))));
-      var gainCo2 = Engine.parseNum(pteRow.gain_t_co2);
-      var gainCo2Node = info('Gain t CO₂/an', gainCo2 === null ? null : fmt(gainCo2, 1));
-      tip(gainCo2Node, gainCo2 === null ? 'Non chiffrable : CO₂ mesuré de l’année ou CO₂ projeté manquant (jamais 0).' : 'Gain réel (contrat D5) : ' + dispLabel(pteRow.gain_t_co2_source || 'CO₂ mesuré − CO₂ projeté × SRE') + '.');
-      pg.appendChild(gainCo2Node);
-      pg.appendChild(info('Estim PTE, MCHF', fmtK(Engine.parseNum(pteRow.estim_pte_kchf))));
-      var mFiche = mesuresDe(ss);
-      pg.appendChild(info('IDC actuel → projeté', (mFiche && mFiche.idc !== null ? fmt(mFiche.idc) + ' kWh/m²·an' : (pteRow.idc_actuel || '—')) + ' → ' + (pteRow.idc_projete || '—')));
-      pteCard.appendChild(pg);
-    }
-    if (ss) { pteCard.appendChild(mesuresLine(ss)); pteCard.appendChild(liensCroises(ss)); }
-    right.appendChild(pteCard);
-    ecrireHashSs(ss || null);
+    // DROITE — PTE : la contribution PTE est dans les blocs de l'en-tête (18.10.2026)
+    ecrireHashSs((projet.numero_sous_site || '').trim() || null);
 
     // DROITE — Priorisation PTE (liseré violet, comme Contribution PTE)
     var prioCard = el('div', { class: 'card pte-box' });
@@ -9239,19 +9370,22 @@ var PTE_COMMUN = (function () {
     var iEch = el('input', { type: 'date' });
     var iNiv = el('select', {}, [el('option', { value: 'projet' }, ['Projet']), el('option', { value: 'portefeuille' }, ['Portefeuille']), el('option', { value: 'parc' }, ['Parc'])]);
     var iEsc = el('input', { type: 'text', placeholder: 'Escalade vers (optionnel)' });
+    // Notes libres (18.10.2026, demande d'Achim) : contexte, conditions, suite donnée ; partagées avec la décision
+    var iNotes = el('textarea', { rows: '2', placeholder: 'Notes libres (optionnel) : contexte, conditions, suite donnée…' });
     form.appendChild(el('div', { class: 'field' }, [el('label', {}, ['Décision']), iDec]));
     form.appendChild(el('div', { class: 'field' }, [el('label', {}, ['Responsable']), iResp]));
     form.appendChild(el('div', { class: 'field' }, [el('label', {}, ['Échéance']), iEch]));
     form.appendChild(el('div', { class: 'field' }, [el('label', {}, ['Niveau']), iNiv]));
     form.appendChild(el('div', { class: 'field', style: 'grid-column:1/3;' }, [el('label', {}, ['Escalade vers']), iEsc]));
+    form.appendChild(el('div', { class: 'field', style: 'grid-column:1/3;' }, [el('label', {}, ['Notes libres']), iNotes]));
     var btnAdd = el('button', { type: 'submit', class: 'btn btn-p' }, ['Ajouter la décision']);
     form.appendChild(el('div', { class: 'field', style: 'align-self:end;' }, [btnAdd]));
     form.addEventListener('submit', function (ev) {
       ev.preventDefault();
       if (!iDec.value.trim()) return;
-      DB.decisions.push({ id: nouvelIdDecision(), date: STATE.mois + '-' + String(PARAMS.dateGelJour || 5).padStart(2, '0'), niveau: iNiv.value, numero_projet: numeroProjet, portefeuille: projet.rpf || '', decision: iDec.value.trim(), responsable: iResp.value.trim(), echeance: iEch.value || '', statut: 'ouverte', escalade_vers: iEsc.value.trim() });
+      DB.decisions.push({ id: nouvelIdDecision(), date: STATE.mois + '-' + String(PARAMS.dateGelJour || 5).padStart(2, '0'), niveau: iNiv.value, numero_projet: numeroProjet, portefeuille: projet.rpf || '', decision: iDec.value.trim(), responsable: iResp.value.trim(), echeance: iEch.value || '', statut: 'ouverte', escalade_vers: iEsc.value.trim(), notes: iNotes.value.trim() });
       saveState();
-      iDec.value = ''; iEch.value = ''; iEsc.value = '';
+      iDec.value = ''; iEch.value = ''; iEsc.value = ''; iNotes.value = '';
       buildFiche(numeroProjet);
     });
     decFormWrap.appendChild(form);
@@ -9262,7 +9396,10 @@ var PTE_COMMUN = (function () {
     var rb2 = el('tbody');
     regRows.forEach(function (d) {
       var echue = d.statut === 'ouverte' && d.echeance && d.echeance < STATE.mois + '-05';
-      rb2.appendChild(el('tr', {}, [el('td', {}, [d.date]), el('td', {}, [d.decision]), el('td', {}, [d.responsable]), el('td', {}, [d.echeance, echue ? el('span', { class: 'alert-text' }, [' (échue)']) : '']), el('td', {}, [semInline(d.statut === 'faite' ? 'vert' : (d.statut === 'abandonnée' ? 'gris' : (echue ? 'rouge' : 'orange')), d.statut)])]));
+      var tdDec = el('td', {}, [d.decision]);
+      if (d.escalade_vers) tdDec.appendChild(el('div', { class: 'muted small' }, ['Escalade vers ' + d.escalade_vers]));
+      if (d.notes) tdDec.appendChild(el('div', { class: 'muted small dec-notes' }, [d.notes]));
+      rb2.appendChild(el('tr', {}, [el('td', {}, [d.date]), tdDec, el('td', {}, [d.responsable]), el('td', {}, [d.echeance, echue ? el('span', { class: 'alert-text' }, [' (échue)']) : '']), el('td', {}, [semInline(d.statut === 'faite' ? 'vert' : (d.statut === 'abandonnée' ? 'gris' : (echue ? 'rouge' : 'orange')), d.statut)])]));
     });
     if (!regRows.length) rb2.appendChild(el('tr', {}, [el('td', { colspan: 5, class: 'muted' }, ['Aucune décision enregistrée.'])]));
     rt2.appendChild(rb2); decCard.appendChild(rt2);
@@ -9276,7 +9413,7 @@ var PTE_COMMUN = (function () {
   function exportDecisionsProjet() {
     var np = STATE.projetSel;
     var rows = DB.decisions.filter(function (d) { return !np || d.numero_projet === np; });
-    downloadCSV('decisions' + (np ? '_' + np : '') + '.csv', ['date', 'niveau', 'numero_projet', 'portefeuille', 'decision', 'responsable', 'echeance', 'statut', 'escalade_vers'], rows);
+    downloadCSV('decisions' + (np ? '_' + np : '') + '.csv', ['date', 'niveau', 'numero_projet', 'portefeuille', 'decision', 'responsable', 'echeance', 'statut', 'escalade_vers', 'notes'], rows);
   }
 
   // ------------------------------------------------------------------
