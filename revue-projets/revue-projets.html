@@ -637,7 +637,7 @@ svg.chart .mark:hover, svg.chart .mark.hover{filter:brightness(1.1);}
 .perim-def b{color:var(--ink);}
 .perim-sia-t{font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-muted); font-weight:bold; margin:2px 0 6px;}
 .distbar.sia .seg{color:#fff;}
-.distbar.sia .seg-s31{background:#CFE8EC; color:#12343B;} .distbar.sia .seg-s32{background:#A6D3DA; color:#12343B;} .distbar.sia .seg-s33{background:#7BBCC6; color:#12343B;}
+.distbar.sia .seg-s21{background:#EAF4F6; color:#12343B;} .distbar.sia .seg-s31{background:#CFE8EC; color:#12343B;} .distbar.sia .seg-s32{background:#A6D3DA; color:#12343B;} .distbar.sia .seg-s33{background:#7BBCC6; color:#12343B;}
 .distbar.sia .seg-s41{background:#4FA3B0;} .distbar.sia .seg-s51{background:#2A8796;} .distbar.sia .seg-s52{background:#0E6C7C;} .distbar.sia .seg-s53{background:#00485A;}
 .distbar.sia .seg-snr{background:var(--graph-track); color:var(--ink-70);}
 .sia-sw{display:inline-block; width:10px; height:10px; border-radius:2px; flex:none;}
@@ -1183,7 +1183,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.23 · 18.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.24 · 18.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -1511,7 +1511,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
    Résultat :
      { annee, anneeSource, anneesDisponibles, series (fiabilité par année),
-       sousSites: [ { num, site, nom, nomSite, rpf, rp, projets, relais, sre, idc, idcAnnee,
+       sousSites: [ { num, site, nom, nomSite, rpf, rp, projets, engage, relais, sre, idc, idcAnnee,
                       chaleur:{val,source,origine}, elec:{…}, eau:{…}, co2:{…},
                       agent:{sitg, principal, cible, facteur, aRenseigner},
                       estimPte, investCecb, co2Projete, gainCo2T, gainEauEstime, perimetreSme, siteMesure } ],
@@ -1522,6 +1522,14 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
                nbSousSites, nbEstimes, nbSansChaleur, nbSitesMesures, nbSitesAbsents },
        facteurs: { table, correspondance, aRenseigner },
        manquants: [ { num, champ, motif } ], colonnes: {…}, colonnesFacultatives: {…} }
+     18.10.2026 (demandes d'Achim) : RP, phase et engagement relèvent des PROJETS, donc de
+     GE-Invest, plus de Plan_PTE. rp = responsable du premier projet qui en a un (GEI_Projets,
+     « Nom responsable suivi ») ; projets[].avancement = « Avancement global » (%) ; engage = le
+     sous-site a au moins un projet « en cours » en phase SIA 3 ou plus, soit un avancement d'au
+     moins 4 % (modèle GPR.6MO.04 corrigé par Achim le 18.10 : 0 à 3 % = phase 21, 4 à 9 % = 31). Les colonnes « Responsable projet » et « Etat
+     du projet (SIA) » de Plan_PTE ne sont plus lues. idcAnnee = année la plus récente de la
+     colonne « Année IDC » (texte « 2024; 2025 » quand plusieurs bâtiments) ; la colonne calculée
+     « Année IDC (dernière) » n'est plus lue.
      gainEauEstime (29.09.2026) : gain d'eau ESTIMÉ par l'audit eau [m3/an], colonne facultative
      « Gain Eau estimé [m3/an] » de Plan_PTE (gain du site ventilé au prorata de la SRE par le
      classeur). null si la colonne manque ou si la cellule est vide ou nulle.
@@ -1551,6 +1559,15 @@ var PTE_CONTRAT = (function () {
       return isFinite(n) ? n : null;
     }
     return null;
+  }
+  /* Avancement GE-Invest à partir duquel un projet est en phase SIA 3 (avant-projet) : 0 à 3 % = phase 21. */
+  var AVANCEMENT_PHASE3 = 4;
+  /* Année la plus récente d'une cellule « Année IDC » : 2025, '2025' ou '2024; 2025'
+     (un millésime par bâtiment du sous-site). null si aucune année à 4 chiffres. (18.10.2026) */
+  function anneeRecente(v) {
+    if (isNum(v)) return Math.round(v);
+    var m = String(v == null ? '' : v).match(/\b(19|20)\d{2}\b/g);
+    return m ? Math.max.apply(null, m.map(Number)) : null;
   }
   /* Texte ou null : "---" et les vides valent null (D8). */
   function txt(v) {
@@ -1717,11 +1734,12 @@ var PTE_CONTRAT = (function () {
   /* ---------- D8 : responsables de projet depuis GE-Invest (Objet (actif), chiffres 7 à 12 = sous-site) ----------
      Feuille GEI_Projets (une ligne par projet) ou, à défaut, GEI_Suivi (plate : le projet y est répété). */
   function lireProjets(rowsG) {
-    var parSousSite = {}, vus = {}, idx, jO, jN, jR, jL, jS, i, r, o, ss, n, rp;
+    var parSousSite = {}, vus = {}, idx, jO, jN, jR, jL, jS, jA, i, r, o, ss, n, rp;
     if (!rowsG || rowsG.length < 2) return parSousSite;
     idx = entetes(rowsG);
     jO = col(idx, ['Objet (actif)']); jN = col(idx, ['Numéro']); jR = col(idx, ['Nom responsable suivi']); jL = col(idx, ['Nom long', 'Libellé']);
     jS = col(idx, ['Statut']);   /* 06.10.2026 : statut GE-Invest du projet, pour la carte de la priorisation */
+    jA = col(idx, ['Avancement global']);   /* 18.10.2026 : phase SIA du projet, engagement du sous-site */
     if (jO == null || jR == null) return parSousSite;
     for (i = 1; i < rowsG.length; i++) {
       r = rowsG[i]; if (!r) continue;
@@ -1732,7 +1750,8 @@ var PTE_CONTRAT = (function () {
       if (vus[n + '|' + ss]) continue;   /* une ligne par projet (GEI_Suivi répète le projet par jalon / risque / livrable) */
       vus[n + '|' + ss] = true;
       rp = txt(cell(r, jR));
-      (parSousSite[ss] = parSousSite[ss] || []).push({ numero: n, nom: txt(cell(r, jL)), rp: rp, statut: txt(cell(r, jS)) });
+      (parSousSite[ss] = parSousSite[ss] || []).push({ numero: n, nom: txt(cell(r, jL)), rp: rp, statut: txt(cell(r, jS)),
+        avancement: num(cell(r, jA)) });
     }
     return parSousSite;
   }
@@ -1746,7 +1765,7 @@ var PTE_CONTRAT = (function () {
     if (!rowsG) { rowsG = feuille(sheets, 'GEI_Suivi'); nomG = 'GEI_Suivi'; }   /* ancien classeur, avant le niveau 4c */
     if (!rowsP || rowsP.length < 2) throw new Error('PTE_CONTRAT : feuille Plan_PTE absente ou vide');
     if (!rowsC || rowsC.length < 2) manquants.push({ num: null, champ: 'Consommation par site', motif: 'feuille absente : aucune chaleur mesurée, tout le parc sera estimé' });
-    if (!rowsG) manquants.push({ num: null, champ: 'GEI_Projets', motif: 'feuilles GEI_Projets et GEI_Suivi absentes : RP lu dans Plan_PTE!Responsable projet seulement' });
+    if (!rowsG) manquants.push({ num: null, champ: 'GEI_Projets', motif: 'feuilles GEI_Projets et GEI_Suivi absentes : ni responsable de projet, ni engagement des sous-sites' });
 
     /* D9 */
     var an = anneeDesMesures(rowsO, rowsC, manquants), annee = an.annee;
@@ -1761,20 +1780,18 @@ var PTE_CONTRAT = (function () {
       nomSite: col(idx, ['Nom du site']),
       sre: col(idx, ['SRE']),                                            /* D1, D10 — jamais « SRE corrigée (temp) » */
       idc: col(idx, ['IDC [kWh]']),                                      /* D2 — OCEN ÷ 3,6, kWh/m2.an */
-      idcAnnee: col(idx, ['Année IDC (dernière)', 'Année IDC']),
+      idcAnnee: col(idx, ['Année IDC']),
       conso: col(idx, ['CONSO [kWh]']),                                  /* D3 — informatif (SITG) */
       agent: col(idx, ['Agent']),                                        /* D7 — SITG */
       pctAgent: col(idx, ['%Agent']),
       principal: col(idx, ['Chauffage Type Energie Prin', 'Chauffage Type Energie']),
       substitution: col(idx, ['Chauffage de subsitution prévu', 'Chauffage de substitution prévu']),
       rpf: col(idx, ['Responsable Portefeuille']),                       /* D8 */
-      rp: col(idx, ['Responsable projet']),
       estimPte: col(idx, ['Estim PTE']),                                 /* D6 */
       investCecb: col(idx, ['Estim CECB+', 'Invest estim. CECB+']),
       co2Proj: col(idx, ['CO2 projeté [kg/m2.an]']),                     /* D5 */
       idcProj: col(idx, ['IDC projeté [kWh]', 'IDC projeté']),
       idcGain: col(idx, ['IDC Gain retenu']),
-      etat: col(idx, ['Etat du projet (SIA)']),
       affectation: col(idx, ['Affectation_AB', 'Affectation'])
     };
     var obligatoires = ['num', 'site', 'sre', 'idc', 'agent', 'rpf', 'estimPte'], k;
@@ -1820,13 +1837,13 @@ var PTE_CONTRAT = (function () {
       ss.site = numSite(cell(r, C.site));
       if (!ss.site) { ss.site = ss.num.slice(0, 4); manquants.push({ num: ss.num, champ: 'N site', motif: 'vide : site déduit des 4 premiers chiffres (' + ss.site + ')' }); }
       ss.nom = txt(cell(r, C.nom)); ss.nomSite = txt(cell(r, C.nomSite));
-      ss.affectation = txt(cell(r, C.affectation)); ss.etat = txt(cell(r, C.etat));
+      ss.affectation = txt(cell(r, C.affectation));
       /* D1/D10 : SRE de Plan_PTE, nombre > 0 ; sinon null */
       v = num(cell(r, C.sre)); ss.sre = (v != null && v > 0) ? v : null;
       if (ss.sre == null) manquants.push({ num: ss.num, champ: 'SRE', motif: 'vide ou non numérique' });
       /* D2 : IDC OCEN (kWh/m2.an) */
       v = num(cell(r, C.idc)); ss.idc = (v != null && v > 0) ? v : null;
-      ss.idcAnnee = num(cell(r, C.idcAnnee)); if (ss.idcAnnee != null) ss.idcAnnee = Math.round(ss.idcAnnee);
+      ss.idcAnnee = anneeRecente(cell(r, C.idcAnnee));
       if (ss.idc == null) manquants.push({ num: ss.num, champ: 'IDC', motif: 'vide ou non numérique' });
       else if (annee != null && ss.idcAnnee != null && ss.idcAnnee !== annee) manquants.push({ num: ss.num, champ: 'IDC', motif: 'millésime OCEN ' + ss.idcAnnee + ' différent de l\'année des mesures ' + annee });
       /* D3 : CONSO [kWh] (SITG) informatif */
@@ -1837,7 +1854,7 @@ var PTE_CONTRAT = (function () {
       ss.relais = jRelais == null ? null : txt(cell(r, jRelais));
       ss.rp = null; ss.rpSource = null;
       for (k = 0; k < ss.projets.length; k++) if (ss.projets[k].rp) { ss.rp = ss.projets[k].rp; ss.rpSource = nomG; break; }
-      if (ss.rp == null) { ss.rp = txt(cell(r, C.rp)); if (ss.rp) ss.rpSource = 'Plan_PTE'; }
+      ss.engage = ss.projets.some(function (p) { return p.avancement != null && p.avancement >= AVANCEMENT_PHASE3 && /cours/i.test(p.statut || ''); });
       /* D7 : agent SITG (premier terme), agent principal ImmOBA informatif, cible Data, facteur */
       var brutAgent = txt(cell(r, C.agent)), sitg = brutAgent ? txt(brutAgent.split('|')[0]) : null;
       var principal = txt(cell(r, C.principal));
@@ -1966,10 +1983,10 @@ var PTE_CONTRAT = (function () {
      d'une colonne clé −10 %, totaux du parc ±10 % (même année de mesures). */
   var LIB_COL = {    /* premier alias de chaque colonne de lire() : à tenir à jour avec C */
     num: 'N° sous site', site: 'N site', nom: 'Nom du site_AB', nomSite: 'Nom du site', sre: 'SRE', idc: 'IDC [kWh]',
-    idcAnnee: 'Année IDC (dernière)', conso: 'CONSO [kWh]', agent: 'Agent', pctAgent: '%Agent', principal: 'Chauffage Type Energie Prin',
-    substitution: 'Chauffage de subsitution prévu', rpf: 'Responsable Portefeuille', rp: 'Responsable projet',
+    idcAnnee: 'Année IDC', conso: 'CONSO [kWh]', agent: 'Agent', pctAgent: '%Agent', principal: 'Chauffage Type Energie Prin',
+    substitution: 'Chauffage de subsitution prévu', rpf: 'Responsable Portefeuille',
     estimPte: 'Estim PTE', investCecb: 'Estim CECB+', co2Proj: 'CO2 projeté [kg/m2.an]', idcProj: 'IDC projeté [kWh]',
-    idcGain: 'IDC Gain retenu', etat: 'Etat du projet (SIA)', affectation: 'Affectation_AB' };
+    idcGain: 'IDC Gain retenu', affectation: 'Affectation_AB' };
   var OBLIGATOIRES = ['num', 'site', 'sre', 'idc', 'agent', 'rpf', 'estimPte'];
   var LIB_REMPL = { sre: 'SRE', idc: 'IDC', agent: 'Agent (SITG)', rpf: 'Responsable Portefeuille', estimPte: 'Estim PTE',
     investCecb: 'Estim CECB+', chaleurMesuree: 'Chaleur mesurée', elec: 'Électricité', eau: 'Eau', co2: 'CO2' };
@@ -2047,7 +2064,7 @@ var PTE_CONTRAT = (function () {
   }
 
   return { lire: lire, norm: norm, cibleAgent: cibleAgent, CORRESPONDANCE_AGENT: CORRESPONDANCE_AGENT, CAD_GENERIQUE: CAD_GENERIQUE,
-           empreinte: empreinte, comparer: comparer, version: '2026-09-29' };
+           empreinte: empreinte, comparer: comparer, version: '2026-10-18' };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = PTE_CONTRAT;
 
@@ -2567,6 +2584,10 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "18.10.2026", "objet": "priorisation", "version": "v2.14", "titre": "Classement allégé, responsables et phases au niveau des projets", "points": ["Classement : la colonne RP devient RPF (responsable de portefeuille) ; les menus « Responsable projet » et « État projet » sont retirés, au Classement comme sur la carte. Le RP de chaque projet GE-Invest s'affiche au survol d'un repère de la carte.", "Menu Chauffage : les deux familles, puis chaque agent du classeur (gaz, mazout, CAD générique, bois, PAC…), avec leur effectif. Patrimoine : un pictogramme pour chaque classement, dans le menu et dans la colonne « Pat. ».", "Arbitrage : un sous-site est « engagé » s'il a un projet GE-Invest en cours en phase SIA 3 ou plus (avancement d'au moins 4 %). Le sous-onglet « Distribution » ne montre plus l'état SIA.", "La colonne « Remarques » du classeur ne remplit plus les notes (elle les écrasait à chaque import) ; millésime IDC lu dans « Année IDC »."]},
+    {"date": "18.10.2026", "objet": "revue", "version": "v0.24", "titre": "Responsable de projet depuis GE-Invest, phase 21", "points": ["Le RP d'un sous-site est celui de ses projets GE-Invest ; la colonne « Responsable projet » de Plan_PTE n'est plus lue.", "Phases SIA : 0 à 3 % d'avancement = phase 21 (étude de faisabilité) ; l'avant-projet (31) commence à 4 %."]},
+    {"date": "18.10.2026", "objet": "commun", "version": null, "titre": "Contrat de données : projets GE-Invest, année IDC", "points": ["Responsable de projet, avancement et engagement d'un sous-site lus dans GEI_Projets ; les colonnes « Responsable projet », « Etat du projet (SIA) » et « Année IDC (dernière) » de Plan_PTE ne sont plus lues.", "Préparation : ces colonnes pourront être supprimées du classeur une fois les outils publiés."]},
+    {"date": "18.10.2026", "objet": "priorisation", "version": "v2.13", "titre": "Vue d'ensemble : graphiques lisibles", "points": ["Les quatre tuiles sous le graphique (enveloppe, prix de la tonne, cible CO₂, développement durable) sont retirées : elles doublaient l'onglet Arbitrage et les tuiles du haut.", "Graphiques de trajectoire : mesuré en bleu, effet du portefeuille en orange, rythme requis en gris pointillé, cible en vert pointillé. Couleurs vérifiées pour les daltoniens, de jour comme de nuit.", "Les séries annuelles restent en mémoire après un rechargement de la page : la courbe du renouvelable, l'historique du CO₂ et les mini-courbes des tuiles ne disparaissent plus.", "Photovoltaïque : la production se lit en GWh face à la cible, au lieu de kWh affichés sur un axe en %."]},
     {"date": "18.10.2026", "objet": "accueil", "version": "v1.12", "titre": "En-tête comme les outils, page allégée", "points": ["En-tête comme dans les trois outils : pastille du classeur (détail au survol), corbeille, « Recharger le classeur », « SharePoint » (adresse saisie au premier clic, changée par le menu ☰) ; la barre du classeur, qui doublait la pastille, est retirée.", "Situation du programme présentée comme la « Synthèse » de la revue : titre repliable, quatre tuiles, la phrase derrière le « i » ; les explications des trois tuiles derrière un « i », lisible au survol.", "Retours et demandes : filtre par statut à choix multiple et export Excel de la liste affichée.", "La « Présentation classique » est retirée : la présentation épurée est la seule."]},
     {"date": "18.10.2026", "objet": "priorisation", "version": "v2.12", "titre": "Retours filtrés et exportés, une seule présentation", "points": ["Retours et demandes : filtre par statut à choix multiple (Nouveau, Question posée, Accepté, En cours, Fait, Écarté) et export Excel de la liste affichée.", "Les « i » s'ouvrent au survol ; un clic garde la bulle ouverte.", "La « Présentation classique » est retirée."]},
     {"date": "18.10.2026", "objet": "simulation", "version": "v3.9", "titre": "Retours filtrés et exportés, une seule présentation", "points": ["Retours et demandes : filtre par statut à choix multiple et export Excel de la liste affichée.", "Les « i » s'ouvrent au survol ; un clic garde la bulle ouverte.", "La « Présentation classique » est retirée."]},
@@ -7215,7 +7236,7 @@ var PTE_COMMUN = (function () {
     wrap.appendChild(tip(item('CO₂', m.co2 && m.co2.val !== null ? Math.round(m.co2.val / 100) / 10 : null, 't/an', 1), (m.co2 && m.co2.origine) ? (m.co2.origine + ' (scope 1+2, kg → t)') : 'CO₂ non renseigné pour cette année.'));
     wrap.appendChild(tip(item('Gain CO₂', m.gainCo2T === null || m.gainCo2T === undefined ? null : m.gainCo2T, 't/an', 1), 'Gain réel (contrat D5) = CO₂ mesuré − CO₂ projeté × SRE ; vide si l’un des deux manque, jamais 0.'));
     if (m.agent && m.agent.aRenseigner) wrap.appendChild(tip(el('span', { class: 'mes-warn' }, ['facteur CO₂ « ' + m.agent.cible + ' » à renseigner dans Data']), 'Agent SITG « ' + (m.agent.sitg || '—') + ' » : aucun facteur dans Data, colonnes FournisseurChaleur / FacteurCO2.'));
-    if (!opts.sansRp) wrap.appendChild(tip(el('span', { class: 'mes-src' }, ['RPF ' + (m.rpf || '—') + ' · RP ' + (m.rp || '—') + (m.rpSource ? ' (' + m.rpSource + ')' : '')]), 'RPF = Plan_PTE!Responsable Portefeuille ; RP = GEI_Projets!Nom responsable suivi (ou GEI_Suivi), sinon Plan_PTE!Responsable projet (contrat D8).'));
+    if (!opts.sansRp) wrap.appendChild(tip(el('span', { class: 'mes-src' }, ['RPF ' + (m.rpf || '—') + ' · RP ' + (m.rp || '—') + (m.rpSource ? ' (' + m.rpSource + ')' : '')]), 'RPF = Plan_PTE!Responsable Portefeuille ; RP = GEI_Projets!Nom responsable suivi (ou GEI_Suivi) du premier projet qui en a un (contrat D8).'));
     return wrap;
   }
 
@@ -7254,7 +7275,7 @@ var PTE_COMMUN = (function () {
     bloc('Sous-site', [
       m && m.site ? kv('Site', m.site + (m.nomSite ? ' — ' + m.nomSite : '')) : null,
       kv('RPF', (m && m.rpf) || (pp && pp.rpf_ou_agent) || null, '', 'RPF = Plan_PTE!Responsable Portefeuille.'),
-      m ? kv('RP', m.rp || null, m.rpSource || '', 'RP = GEI_Projets!Nom responsable suivi (ou GEI_Suivi), sinon Plan_PTE!Responsable projet (contrat D8).') : null,
+      m ? kv('RP', m.rp || null, m.rpSource || '', 'RP = GEI_Projets!Nom responsable suivi (ou GEI_Suivi) du premier projet du sous-site qui en a un (contrat D8). Depuis le 18.10.2026, la colonne « Responsable projet » de Plan_PTE n\'est plus lue.') : null,
       kv('SRE', n(m ? m.sre : (pp && pp.sre_m2), 0, 'm²'), '', 'Surface de référence énergétique (Plan_PTE!SRE) : la surface chauffée, qui ramène les consommations au mètre carré.'),
       opts.nbProjets !== undefined ? kv('Projets GE-Invest', String(opts.nbProjets), opts.nbProjets > 1 ? 'à consolider à terme en un seul' : '') : null,
       DB.priorisation && DB.priorisation.length ? kv('Rang (priorisation)', rang === null ? 'non classé' : '#' + rang + (prioRow.nb_classes ? ' / ' + prioRow.nb_classes : ''), prioSourceLabel()) : null
@@ -7615,7 +7636,9 @@ var PTE_COMMUN = (function () {
      saisi dans GE-Invest, selon la table du modèle GPR.6MO.04 « Suivi des projets dans GE-Invest ».
      53a à 53d (96 à 100 %) sont réunies en « 53 ». Avancement vide = phase non renseignée (jamais 31 par défaut). */
   var PHASES_SIA = [
-    { k: '31', de: 0, a: 9, nom: 'Avant-projet' },
+    /* 18.10.2026 (Achim) : 0 à 3 % = phase 21, l'avant-projet ne commence qu'à 4 %. */
+    { k: '21', de: 0, a: 3, nom: 'Étude de faisabilité' },
+    { k: '31', de: 4, a: 9, nom: 'Avant-projet' },
     { k: '32', de: 10, a: 30, nom: 'Projet de l’ouvrage' },
     { k: '33', de: 31, a: 32, nom: 'Demande d’autorisation' },
     { k: '41', de: 33, a: 50, nom: 'Appel d’offres' },
@@ -8673,7 +8696,7 @@ var PTE_COMMUN = (function () {
     }
     PHASES_SIA.forEach(function (p) { segment(p.k, p.nom, parPhase[p.k] || 0, p.de + ' à ' + p.a + ' %'); });
     segment('nr', 'Non renseigné', nr, '');
-    var note = el('div', { class: 'perim-note' }, [el('b', {}, ['Phase SIA']), ' : déduite de l’« Avancement global » saisi par le responsable de projet dans GE-Invest, selon la table du modèle GPR.6MO.04 (31 : 0 à 9 % · 32 : 10 à 30 % · 33 : 31 à 32 % · 41 : 33 à 50 % · 51 : 51 à 66 % · 52 : 67 à 95 % · 53 : 96 à 100 %).' +
+    var note = el('div', { class: 'perim-note' }, [el('b', {}, ['Phase SIA']), ' : déduite de l’« Avancement global » saisi par le responsable de projet dans GE-Invest, selon la table du modèle GPR.6MO.04 (21 : 0 à 3 % · 31 : 4 à 9 % · 32 : 10 à 30 % · 33 : 31 à 32 % · 41 : 33 à 50 % · 51 : 51 à 66 % · 52 : 67 à 95 % · 53 : 96 à 100 %).' +
       (nPr ? ' Avancement saisi pour ' + nf(nPr - nr) + ' projet' + (nPr - nr > 1 ? 's' : '') + ' sur ' + nf(nPr) + '.' : '')]);
     return el('div', { class: 'card', id: 'perim-card' }, [
       cardTitle('Périmètre d’action du programme', 'Sites, sous-sites et projets sur lesquels le programme travaille, dans le périmètre et avec les filtres affichés. Un site ou un sous-site est compté dès qu’il porte au moins un projet GE-Invest. Totaux gérés par l’OCBA : extraction GE-Invest, à fournir.'),
