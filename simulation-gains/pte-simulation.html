@@ -924,7 +924,7 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Simulation des gains · <a href="#" data-pte-versions="simulation" title="Historique des versions">v3.10 · 21.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Simulation des gains · <a href="#" data-pte-versions="simulation" title="Historique des versions">v3.11 · 21.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 <div id="flash"></div>
@@ -2048,6 +2048,10 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "21.10.2026", "objet": "priorisation", "version": "v2.17", "titre": "Carte filtrée par programme, icônes des programmes", "points": ["La carte suit les programmes et le périmètre : elle n'était redessinée qu'à sa première ouverture ou par ses propres menus.", "Programmes : les trois pastilles à texte deviennent trois icônes rondes (« 300 », compteur pour les COE, soleil de la canicule), grisées hors filtre, en couleur avec un anneau quand le filtre est actif ; le nom des programmes actifs s'écrit à côté."]},
+    {"date": "21.10.2026", "objet": "revue", "version": "v0.28", "titre": "Icônes des programmes, couverture CECB+ rétablie", "points": ["Parc, « Couverture CECB+ » : la carte restait vide (elle cherchait une colonne « État CECB » absente du classeur) ; elle lit désormais « Audit CECB+ », en trois familles comme la carte de la priorisation : réalisé (variantes A/B/C), en cours ou à vérifier, aucun audit.", "Programmes : les trois pastilles à texte deviennent trois icônes rondes (« 300 », compteur pour les COE, soleil de la canicule), grisées hors filtre, en couleur avec un anneau quand le filtre est actif ; le nom des programmes actifs s'écrit à côté."]},
+    {"date": "21.10.2026", "objet": "simulation", "version": "v3.11", "titre": "Icônes des programmes", "points": ["Programmes : les trois pastilles à texte deviennent trois icônes rondes (« 300 », compteur pour les COE, soleil de la canicule), grisées hors filtre, en couleur avec un anneau quand le filtre est actif ; le nom des programmes actifs s'écrit à côté."]},
+    {"date": "21.10.2026", "objet": "accueil", "version": "v1.14", "titre": "Icônes des programmes", "points": ["Programmes : les trois pastilles à texte deviennent trois icônes rondes (« 300 », compteur pour les COE, soleil de la canicule), grisées hors filtre, en couleur avec un anneau quand le filtre est actif ; le nom des programmes actifs s'écrit à côté."]},
     {"date": "21.10.2026", "objet": "revue", "version": "v0.27", "titre": "Programmes, filtres à choix multiple, couleurs des phases SIA", "points": ["Pastilles « Les 300 », « COE » et « Canicule » dans l'en-tête : filtre commun aux outils et à tous les affichages (projets dont le sous-site porte le tag dans Plan_PTE) ; plusieurs pastilles = l'un ou l'autre, aucune = tout le parc.", "Filtres RP, Statut, Type et État SIA du Reporting en listes à cocher (plusieurs choix) ; Statut sur « 2-EN COURS » par défaut, « Tout décocher » = tous les statuts.", "Phases SIA en huit couleurs distinctes (palette commune validée daltonisme et contraste, jour et nuit) au lieu des nuances d'un seul bleu ; pastille de la phase 21 rétablie.", "Couverture CECB+ et finances de la fiche : couleurs catégorielles fixes, le vert, l'orange et le rouge restent aux sémaphores."]},
     {"date": "21.10.2026", "objet": "priorisation", "version": "v2.16", "titre": "Programmes, menus à choix multiple, couleurs distinctes", "points": ["Pastilles « Les 300 », « COE » et « Canicule » dans l'en-tête (colonnes Tag de Plan_PTE) : classements, carte, vue d'ensemble, tuiles, arbitrage, responsables, qualité, DD et anomalies ne montrent que les sous-sites des programmes actifs ; rangs et références restent calculés sur le parc entier.", "Carte (chauffage, patrimoine, CECB+) et arbitrage (politiques publiques, statut) : menus à choix multiple.", "Agents de chauffage en couleurs distinctes (PAC et bois n'ont plus la même) ; politiques publiques : huit couleurs fixes, les suivantes en gris ; légende du coût de la tonne évitée alignée sur les barres."]},
     {"date": "21.10.2026", "objet": "simulation", "version": "v3.10", "titre": "Programmes", "points": ["Pastilles « Les 300 », « COE » et « Canicule » dans l'en-tête : la recherche ne propose que les sites dont un sous-site appartient aux programmes actifs."]},
@@ -4108,6 +4112,28 @@ var PTE_COMMUN = (function () {
       C.ICONES.progCanicule = 'M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4';
     }
   } catch (e) {}
+  /* Icônes des programmes (21.10.2026, Théo et Pauline) : une pastille ronde de couleur, lisible à 20 px,
+     un message par icône — « 300 » écrit, un compteur (eau, gaz, électricité) pour les COE complexes, un soleil qui transpire
+     pour la canicule. Bouton : l'icône grise dans un anneau fin (contour des boutons de l'en-tête) ; en couleur au survol ;
+     active : en couleur, anneau teal, et nom du programme écrit à côté (l'état ne repose pas sur la seule couleur). Le nom complet est dans l'info-bulle et dans aria-label. */
+  var EMOJI = {
+    /* couleurs de la charte PTE : teal #005F73, violet #856EBE, ocre #B58900 / #E3B341, ardoise #2C3E50, turquoise #30E5D9 */
+    p300: '<svg viewBox="0 0 32 32" width="20" height="20" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#005F73"/>' +
+      '<text x="16" y="20.3" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="11.5" fill="#fff" letter-spacing="-.3">300</text></svg>',
+    /* compteur : le disque est le cadran — graduations, aiguille, index à rouleaux */
+    coe: '<svg viewBox="0 0 32 32" width="20" height="20" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#856EBE"/>' +
+      '<path d="M7.6 17.2a8.4 8.4 0 0 1 16.8 0" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>' +
+      '<path d="M9.4 11.2l1.3 1.1M16 8.8v1.7M22.6 11.2l-1.3 1.1" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>' +
+      '<path d="M16 17.2l3.6-4.4" stroke="#30E5D9" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="17.2" r="1.6" fill="#fff"/>' +
+      '<rect x="10" y="20.6" width="12" height="4.6" rx="1" fill="#fff"/>' +
+      '<path d="M14 21.2v3.4M18 21.2v3.4" stroke="#856EBE" stroke-width=".9"/></svg>',
+    canicule: '<svg viewBox="0 0 32 32" width="20" height="20" aria-hidden="true">' +
+      '<g stroke="#B58900" stroke-width="2.4" stroke-linecap="round"><path d="M16 1.8v3.4M16 26.8v3.4M1.8 16h3.4M26.8 16h3.4M5.9 5.9l2.4 2.4M23.7 23.7l2.4 2.4M5.9 26.1l2.4-2.4M23.7 8.3l2.4-2.4"/></g>' +
+      '<circle cx="16" cy="16" r="9.6" fill="#E3B341"/>' +
+      '<path d="M11.6 14.6q1.3-1.4 2.6 0M17.8 14.6q1.3-1.4 2.6 0" stroke="#2C3E50" stroke-width="1.4" fill="none" stroke-linecap="round"/>' +
+      '<path d="M12.6 19.4q3.4 2.9 6.8 0" stroke="#2C3E50" stroke-width="1.5" fill="none" stroke-linecap="round"/>' +
+      '<path d="M23.3 9.6c1.4 1.9 2.1 3.1 2.1 4a2.1 2.1 0 0 1-4.2 0c0-.9.7-2.1 2.1-4z" fill="#30E5D9" stroke="#2C3E50" stroke-width=".8"/></svg>'
+  };
   function cles() { return PROGRAMMES.map(function (p) { return p.k; }); }
   function lireProgrammes() {
     try { var a = JSON.parse(localStorage.getItem(LS_PROG) || '[]'); return Array.isArray(a) ? a.filter(function (k) { return cles().indexOf(k) >= 0; }) : []; }
@@ -4143,12 +4169,19 @@ var PTE_COMMUN = (function () {
     s.textContent =
       '.pte-prog{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}' +
       '.pte-prog .pte-prog-l{font-size:12px;color:var(--ink-muted,#5b6b7b)}' +
-      '.pte-pchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:12.5px;line-height:1.2;padding:3px 10px;border-radius:14px;cursor:pointer;' +
-        'border:1px solid var(--border,#dfe6ec);background:transparent;color:var(--ink-muted,#5b6b7b)}' +
-      '.pte-pchip:hover{border-color:var(--teal,#005F73);color:var(--ink,#1f2d3d)}' +
-      '.pte-pchip .pte-ic{flex:none}.pte-pchip .n{opacity:.8;font-size:11.5px}' +
-      '.pte-pchip[aria-pressed="true"]{background:#005F73;border-color:#005F73;color:#fff}' +
-      'body.night .pte-pchip[aria-pressed="true"]{background:#30E5D9;border-color:#30E5D9;color:#0b1a24}' +
+      '.pte-prog{gap:3px}' +
+      '.pte-prog-etat{font-size:11.5px;font-weight:bold;color:#005F73;margin-left:3px;white-space:nowrap}body.night .pte-prog-etat{color:#30E5D9}' +
+      '.pte-prog-etat:empty{display:none}' +
+      /* bouton = l'icône grise dans un anneau fin, comme le contour des boutons de l'en-tête ;
+         en couleur au survol et quand le filtre est actif (anneau teal) */
+      '.pte-pchip{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;padding:0;border-radius:50%;cursor:pointer;' +
+        'border:1px solid var(--border,#E1E6E9);background:var(--card-bg,#fff);transition:border-color .12s}' +
+      '.pte-pchip svg{display:block;filter:grayscale(1);opacity:.75;transition:filter .12s,opacity .12s}' +
+      '.pte-pchip:hover,.pte-pchip:focus-visible{border-color:var(--border-hover,#C6D2DC)}' +
+      '.pte-pchip:hover svg,.pte-pchip:focus-visible svg{filter:none;opacity:1}' +
+      '.pte-pchip[aria-pressed="true"]{border-color:#005F73}' +
+      '.pte-pchip[aria-pressed="true"] svg{filter:none;opacity:1}' +
+      'body.night .pte-pchip[aria-pressed="true"]{border-color:#30E5D9}' +
       '.pte-mc{position:relative;display:inline-block}' +
       '.pte-mc-b{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:6px;max-width:260px;padding:4px 10px;border-radius:8px;cursor:pointer;' +
         'border:1px solid var(--border,#dfe6ec);background:var(--card-bg,#fff);color:var(--ink,#1f2d3d)}' +
@@ -4174,14 +4207,14 @@ var PTE_COMMUN = (function () {
     var g = document.createElement('span');
     g.className = 'pte-prog'; g.setAttribute('role', 'group'); g.setAttribute('aria-label', 'Programmes');
     g.title = 'Programmes : filtre commun à tous les outils et à tous les affichages. Aucun programme actif = tout le parc ; plusieurs = l’un ou l’autre.';
-    if (opts.libelle !== false) { var l = document.createElement('span'); l.className = 'pte-prog-l'; l.textContent = opts.libelle || 'Programmes'; g.appendChild(l); }
+    if (opts.libelle) { var l = document.createElement('span'); l.className = 'pte-prog-l'; l.textContent = opts.libelle || 'Programmes'; g.appendChild(l); }
     var boutons = {};
     PROGRAMMES.forEach(function (p) {
       var b = document.createElement('button');
       b.type = 'button'; b.className = 'pte-pchip'; b.setAttribute('data-k', p.k);
       b.title = p.titre + ' (colonne « ' + p.col + ' » de Plan_PTE)';
-      b.innerHTML = (C.icone ? C.icone(p.ic, 13) : '') + '<span class="t"></span><span class="n"></span>';
-      b.querySelector('.t').textContent = p.court;
+      b.innerHTML = EMOJI[p.k] + '<span class="n" hidden></span>';
+      b.setAttribute('aria-label', p.lib);
       b.addEventListener('click', function () {
         var a = lireProgrammes(), i = a.indexOf(p.k);
         if (i >= 0) a.splice(i, 1); else a.push(p.k);
@@ -4190,13 +4223,16 @@ var PTE_COMMUN = (function () {
       });
       boutons[p.k] = b; g.appendChild(b);
     });
+    /* Pauline : sans libellé, l'état doit se lire en clair — le nom des programmes actifs s'écrit à côté. */
+    var etat = document.createElement('span'); etat.className = 'pte-prog-etat'; g.appendChild(etat);
     function maj() {
       var a = lireProgrammes();
+      etat.textContent = a.length ? libelleProgrammes(a) : '';
       PROGRAMMES.forEach(function (p) {
         var b = boutons[p.k]; b.setAttribute('aria-pressed', a.indexOf(p.k) >= 0 ? 'true' : 'false');
         var n = null; try { n = opts.compter ? opts.compter(p.k) : null; } catch (e) { n = null; }
         b.querySelector('.n').textContent = '';
-        b.title = p.titre + ((n === null || n === undefined) ? '' : ' : ' + n + ' sous-site' + (n > 1 ? 's' : '') + ' dans le classeur') + ' (colonne « ' + p.col + ' » de Plan_PTE). Un clic active ou retire le programme.';
+        b.title = p.lib + (a.indexOf(p.k) >= 0 ? ' — filtre actif' : '') + '\n' + p.titre + ((n === null || n === undefined) ? '' : ' : ' + n + ' sous-site' + (n > 1 ? 's' : '') + ' dans le classeur') + '.\nUn clic active ou retire le filtre ; aucun programme actif = tout le parc.';
       });
     }
     if (opts.avant && opts.avant.parentNode) opts.avant.parentNode.insertBefore(g, opts.avant);
