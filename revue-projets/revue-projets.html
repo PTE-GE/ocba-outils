@@ -637,11 +637,15 @@ svg.chart .mark:hover, svg.chart .mark.hover{filter:brightness(1.1);}
 .perim-def b{color:var(--ink);}
 .perim-sia-t{font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-muted); font-weight:bold; margin:2px 0 6px;}
 .distbar.sia .seg{color:#fff;}
-.distbar.sia .seg-s21{background:#EAF4F6; color:#12343B;} .distbar.sia .seg-s31{background:#CFE8EC; color:#12343B;} .distbar.sia .seg-s32{background:#A6D3DA; color:#12343B;} .distbar.sia .seg-s33{background:#7BBCC6; color:#12343B;}
-.distbar.sia .seg-s41{background:#4FA3B0;} .distbar.sia .seg-s51{background:#2A8796;} .distbar.sia .seg-s52{background:#0E6C7C;} .distbar.sia .seg-s53{background:#00485A;}
+/* Phases SIA (21.10.2026, demande d'Achim) : huit couleurs distinctes de la palette catégorielle commune
+   (PTE_COMMUN.PALETTE_CAT, validée daltonisme et contraste, jour et nuit) au lieu des nuances d'un seul bleu. */
+.distbar.sia .seg-s21{background:#0A80A8;} .distbar.sia .seg-s31{background:#E06A2C;} .distbar.sia .seg-s32{background:#856EBE;} .distbar.sia .seg-s33{background:#6E9F16;}
+.distbar.sia .seg-s41{background:#3D6FD6;} .distbar.sia .seg-s51{background:#C94F82;} .distbar.sia .seg-s52{background:#2E9BD6;} .distbar.sia .seg-s53{background:#5560C8;}
 .distbar.sia .seg-snr{background:var(--graph-track); color:var(--ink-70);}
+body.night .distbar.sia .seg{color:#fff;} body.night .distbar.sia .seg-snr{color:var(--ink-70);}
 .sia-sw{display:inline-block; width:10px; height:10px; border-radius:2px; flex:none;}
-.sia-sw.s31{background:#CFE8EC;} .sia-sw.s32{background:#A6D3DA;} .sia-sw.s33{background:#7BBCC6;} .sia-sw.s41{background:#4FA3B0;} .sia-sw.s51{background:#2A8796;} .sia-sw.s52{background:#0E6C7C;} .sia-sw.s53{background:#00485A;} .sia-sw.snr{background:var(--graph-track); border:1px solid var(--border);}
+.sia-sw.s21{background:#0A80A8;} .sia-sw.s31{background:#E06A2C;} .sia-sw.s32{background:#856EBE;} .sia-sw.s33{background:#6E9F16;} .sia-sw.s41{background:#3D6FD6;} .sia-sw.s51{background:#C94F82;} .sia-sw.s52{background:#2E9BD6;} .sia-sw.s53{background:#5560C8;} .sia-sw.snr{background:var(--graph-track); border:1px solid var(--border);}
+.filter-item.filter-mc{align-self:flex-end;}
 .perim-note{font-size:12px; line-height:1.45; color:var(--ink-70); margin:8px 0 0;}
 @media (max-width:1050px){ .rep-kpis.rep-kpis-10{grid-template-columns:repeat(2,1fr);} }
 @media (max-width:640px){ .rep-kpis.rep-kpis-10{grid-template-columns:1fr 1fr;} }
@@ -1215,7 +1219,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.26 · 21.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.27 · 21.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -2616,6 +2620,10 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "21.10.2026", "objet": "revue", "version": "v0.27", "titre": "Programmes, filtres à choix multiple, couleurs des phases SIA", "points": ["Pastilles « Les 300 », « COE » et « Canicule » dans l'en-tête : filtre commun aux outils et à tous les affichages (projets dont le sous-site porte le tag dans Plan_PTE) ; plusieurs pastilles = l'un ou l'autre, aucune = tout le parc.", "Filtres RP, Statut, Type et État SIA du Reporting en listes à cocher (plusieurs choix) ; Statut sur « 2-EN COURS » par défaut, « Tout décocher » = tous les statuts.", "Phases SIA en huit couleurs distinctes (palette commune validée daltonisme et contraste, jour et nuit) au lieu des nuances d'un seul bleu ; pastille de la phase 21 rétablie.", "Couverture CECB+ et finances de la fiche : couleurs catégorielles fixes, le vert, l'orange et le rouge restent aux sémaphores."]},
+    {"date": "21.10.2026", "objet": "priorisation", "version": "v2.16", "titre": "Programmes, menus à choix multiple, couleurs distinctes", "points": ["Pastilles « Les 300 », « COE » et « Canicule » dans l'en-tête (colonnes Tag de Plan_PTE) : classements, carte, vue d'ensemble, tuiles, arbitrage, responsables, qualité, DD et anomalies ne montrent que les sous-sites des programmes actifs ; rangs et références restent calculés sur le parc entier.", "Carte (chauffage, patrimoine, CECB+) et arbitrage (politiques publiques, statut) : menus à choix multiple.", "Agents de chauffage en couleurs distinctes (PAC et bois n'ont plus la même) ; politiques publiques : huit couleurs fixes, les suivantes en gris ; légende du coût de la tonne évitée alignée sur les barres."]},
+    {"date": "21.10.2026", "objet": "simulation", "version": "v3.10", "titre": "Programmes", "points": ["Pastilles « Les 300 », « COE » et « Canicule » dans l'en-tête : la recherche ne propose que les sites dont un sous-site appartient aux programmes actifs."]},
+    {"date": "21.10.2026", "objet": "accueil", "version": "v1.13", "titre": "Programmes", "points": ["Pastilles « Les 300 », « COE » et « Canicule » dans l'en-tête : la sélection vaut pour les trois outils."]},
     {"date": "21.10.2026", "objet": "revue", "version": "v0.26", "titre": "Fil rouge de la revue en cinq temps", "points": ["Bouton « Fil rouge » : un bandeau « Ordre du jour » en cinq temps (préparer, constater, analyser, décider, restituer) s'affiche au-dessus des vues ; chaque temps renvoie aux vues existantes, rien n'est bloquant.", "Constater : décisions des revues précédentes avec leur statut, modifiable (ouverte, faite, abandonnée), et sémaphores qui ont changé depuis le mois précédent.", "Analyser : seuls les projets en rouge ou orange, à cocher une fois analysés, avec accès direct à la fiche ; Décider : décisions et escalades du mois, signalées sans porteur ou sans échéance.", "Restituer : synthèse 30 secondes générée (trois messages, situation, décisions, escalades), à copier, et export des décisions du mois ; chronomètre de séance (60 min)."]},
     {"date": "20.10.2026", "objet": "priorisation", "version": "v2.15", "titre": "Coûts par lot, listes complètes, type d'intervention calculé", "points": ["Coûts par objectif lus dans les colonnes de lots de Plan_PTE : CO₂, thermique et IDC = enveloppe + chaufferie + technique ; renouvelable = chaufferie ; électricité et eau = leur lot ; développement durable = coût de végétalisation. Sans lot, le montant du menu « Montants ».", "Les classements montrent tous les sous-sites, y compris ceux qui ne contribuent pas à l'objectif (à la suite, en ordre de constat) ; avec un filtre, la liste est complète.", "Type d'intervention calculé dans l'outil (règle de l'ancienne colonne du classeur) ; « Estim ImmOBA » (ex-« Invest ImmOBA ») reconnue.", "Lit la feuille « Objectifs PTE » restructurée le 21.10 ; l'ancienne disposition reste lisible."]},
     {"date": "20.10.2026", "objet": "revue", "version": "v0.25", "titre": "Estim ImmOBA reconnue, objectif photovoltaïque en %", "points": ["La colonne « Estim ImmOBA » (ex-« Invest ImmOBA ») de Plan_PTE est reconnue ; l'ancien nom reste lu.", "L'objectif photovoltaïque s'exprime en part de la consommation électrique : il n'est plus comparé aux kWc des projets."]},
@@ -4647,6 +4655,198 @@ var PTE_COMMUN = (function () {
   C.libelleAjustement = libAjust; C.codeAjustement = codeAjust; C.idDecision = idDecision;
 })(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
 
+/* ---------- Programmes (filtre global), choix multiple, palette catégorielle — 21.10.2026 ----------
+   Programmes : trois colonnes de Plan_PTE (« Tag 300 », « Tag COE », « Tag Canicule ») marquent les
+   sous-sites des programmes définis. La sélection est commune aux outils (localStorage
+   pte.programmes.v1) ; plusieurs programmes actifs = réunion ; aucun = tout le parc. Chaque outil lit
+   les tags à l'import et appelle dansProgrammes() à son point de passage. installerProgrammes() pose
+   les pastilles à icône dans l'en-tête, sur le modèle des pastilles de la fenêtre « Retours ».
+   multiChoix() : liste à cocher compacte, remplace un <select> de filtre (aucune case = tous).
+   PALETTE_CAT : huit couleurs distinctes, ordre fixe, validées (daltonisme, contraste jour et nuit),
+   tenues à l'écart des couleurs de sémaphore. */
+(function (C) {
+  if (!C) return;
+  var LS_PROG = 'pte.programmes.v1';
+  var PROGRAMMES = [
+    { k: 'p300', court: 'Les 300', lib: 'Les 300', titre: 'Les 300 sous-sites de la liste publiée (02.07.2026)', col: 'Tag 300', ic: 'prog300' },
+    { k: 'coe', court: 'COE', lib: 'COE complexes', titre: 'Sous-sites COE complexes / optimisation par bureau d’ingénieur', col: 'Tag COE', ic: 'progCoe' },
+    { k: 'canicule', court: 'Canicule', lib: 'Plan canicule', titre: 'Sous-sites du plan canicule', col: 'Tag Canicule', ic: 'progCanicule' }
+  ];
+  var PALETTE_CAT = ['#0A80A8', '#E06A2C', '#856EBE', '#6E9F16', '#3D6FD6', '#C94F82', '#2E9BD6', '#5560C8'];
+  try {
+    if (C.ICONES) {
+      C.ICONES.prog300 = 'M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01';
+      C.ICONES.progCoe = 'M4 21V7l8-4 8 4v14M9.5 21v-5h5v5M8 10h.01M12 10h.01M16 10h.01M8 13.5h.01M12 13.5h.01M16 13.5h.01';
+      C.ICONES.progCanicule = 'M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4';
+    }
+  } catch (e) {}
+  function cles() { return PROGRAMMES.map(function (p) { return p.k; }); }
+  function lireProgrammes() {
+    try { var a = JSON.parse(localStorage.getItem(LS_PROG) || '[]'); return Array.isArray(a) ? a.filter(function (k) { return cles().indexOf(k) >= 0; }) : []; }
+    catch (e) { return []; }
+  }
+  function ecrireProgrammes(a) {
+    var v = (a || []).filter(function (k, i, t) { return cles().indexOf(k) >= 0 && t.indexOf(k) === i; });
+    try { localStorage.setItem(LS_PROG, JSON.stringify(v)); } catch (e) { /* stockage indisponible */ }
+    try { window.dispatchEvent(new CustomEvent('pte-programmes', { detail: v.slice() })); } catch (e) {}
+    return v;
+  }
+  /* Valeur d'une cellule Tag : vide, 0 ou « non » = pas dans le programme ; sinon la valeur (1, 2…). */
+  function valeurTag(v) {
+    if (v === null || v === undefined) return null;
+    var s = String(v).trim();
+    if (!s || s === '0' || /^(non|no|false|faux)$/i.test(s)) return null;
+    return s;
+  }
+  function dansProgrammes(tags, actifs) {
+    actifs = actifs || lireProgrammes();
+    if (!actifs.length) return true;
+    if (!tags) return false;
+    for (var i = 0; i < actifs.length; i++) if (tags[actifs[i]]) return true;
+    return false;
+  }
+  function libelleProgrammes(actifs) {
+    actifs = actifs || lireProgrammes();
+    return PROGRAMMES.filter(function (p) { return actifs.indexOf(p.k) >= 0; }).map(function (p) { return p.lib; }).join(' + ');
+  }
+  function styleProg() {
+    if (typeof document === 'undefined' || document.getElementById('pte-prog-css')) return;
+    var s = document.createElement('style'); s.id = 'pte-prog-css';
+    s.textContent =
+      '.pte-prog{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}' +
+      '.pte-prog .pte-prog-l{font-size:12px;color:var(--ink-muted,#5b6b7b)}' +
+      '.pte-pchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:12.5px;line-height:1.2;padding:3px 10px;border-radius:14px;cursor:pointer;' +
+        'border:1px solid var(--border,#dfe6ec);background:transparent;color:var(--ink-muted,#5b6b7b)}' +
+      '.pte-pchip:hover{border-color:var(--teal,#005F73);color:var(--ink,#1f2d3d)}' +
+      '.pte-pchip .pte-ic{flex:none}.pte-pchip .n{opacity:.8;font-size:11.5px}' +
+      '.pte-pchip[aria-pressed="true"]{background:#005F73;border-color:#005F73;color:#fff}' +
+      'body.night .pte-pchip[aria-pressed="true"]{background:#30E5D9;border-color:#30E5D9;color:#0b1a24}' +
+      '.pte-mc{position:relative;display:inline-block}' +
+      '.pte-mc-b{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:6px;max-width:260px;padding:4px 10px;border-radius:8px;cursor:pointer;' +
+        'border:1px solid var(--border,#dfe6ec);background:var(--card-bg,#fff);color:var(--ink,#1f2d3d)}' +
+      '.pte-mc-b .v{font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}' +
+      '.pte-mc-b.on{border-color:#005F73}body.night .pte-mc-b.on{border-color:#30E5D9}' +
+      '.pte-mc-b::after{content:"";border:4px solid transparent;border-top-color:currentColor;margin-top:4px;opacity:.6}' +
+      '.pte-mc-pop{position:absolute;z-index:60;top:calc(100% + 4px);left:0;min-width:220px;max-width:340px;max-height:320px;overflow:auto;padding:6px;border-radius:10px;' +
+        'background:var(--card-bg,#fff);color:var(--ink,#1f2d3d);border:1px solid var(--border,#dfe6ec);box-shadow:0 10px 30px rgba(0,0,0,.18);font-size:13px;text-align:left}' +
+      '.pte-mc-pop label{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;cursor:pointer;font-weight:normal;margin:0}' +
+      '.pte-mc-pop label:hover{background:var(--page-bg,#f4f6f8)}' +
+      '.pte-mc-pop label .n{margin-left:auto;color:var(--ink-muted,#5b6b7b);font-size:11.5px}' +
+      '.pte-mc-pop .pte-mc-f{display:flex;gap:10px;justify-content:space-between;padding:6px 8px 2px;border-top:1px solid var(--border,#dfe6ec);margin-top:4px}' +
+      '.pte-mc-pop .pte-mc-f button{font:inherit;font-size:12px;background:none;border:0;color:#005F73;cursor:pointer;padding:0}' +
+      'body.night .pte-mc-pop .pte-mc-f button{color:#30E5D9}';
+    document.head.appendChild(s);
+  }
+  /* Pastilles de programmes. opts : avant (élément devant lequel les poser) ou dans (conteneur),
+     compter(k) → nombre de sous-sites (ou null), surChangement(actifs). */
+  function installerProgrammes(opts) {
+    opts = opts || {};
+    if (typeof document === 'undefined') return null;
+    styleProg();
+    var g = document.createElement('span');
+    g.className = 'pte-prog'; g.setAttribute('role', 'group'); g.setAttribute('aria-label', 'Programmes');
+    g.title = 'Programmes : filtre commun à tous les outils et à tous les affichages. Aucun programme actif = tout le parc ; plusieurs = l’un ou l’autre.';
+    if (opts.libelle !== false) { var l = document.createElement('span'); l.className = 'pte-prog-l'; l.textContent = opts.libelle || 'Programmes'; g.appendChild(l); }
+    var boutons = {};
+    PROGRAMMES.forEach(function (p) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'pte-pchip'; b.setAttribute('data-k', p.k);
+      b.title = p.titre + ' (colonne « ' + p.col + ' » de Plan_PTE)';
+      b.innerHTML = (C.icone ? C.icone(p.ic, 13) : '') + '<span class="t"></span><span class="n"></span>';
+      b.querySelector('.t').textContent = p.court;
+      b.addEventListener('click', function () {
+        var a = lireProgrammes(), i = a.indexOf(p.k);
+        if (i >= 0) a.splice(i, 1); else a.push(p.k);
+        a = ecrireProgrammes(a); maj();
+        if (opts.surChangement) opts.surChangement(a);
+      });
+      boutons[p.k] = b; g.appendChild(b);
+    });
+    function maj() {
+      var a = lireProgrammes();
+      PROGRAMMES.forEach(function (p) {
+        var b = boutons[p.k]; b.setAttribute('aria-pressed', a.indexOf(p.k) >= 0 ? 'true' : 'false');
+        var n = null; try { n = opts.compter ? opts.compter(p.k) : null; } catch (e) { n = null; }
+        b.querySelector('.n').textContent = '';
+        b.title = p.titre + ((n === null || n === undefined) ? '' : ' : ' + n + ' sous-site' + (n > 1 ? 's' : '') + ' dans le classeur') + ' (colonne « ' + p.col + ' » de Plan_PTE). Un clic active ou retire le programme.';
+      });
+    }
+    if (opts.avant && opts.avant.parentNode) opts.avant.parentNode.insertBefore(g, opts.avant);
+    else if (opts.dans) opts.dans.appendChild(g);
+    maj();
+    var dernier = JSON.stringify(lireProgrammes());
+    function ailleurs() {
+      var v = JSON.stringify(lireProgrammes()); if (v === dernier) return; dernier = v;
+      maj(); if (opts.surChangement) opts.surChangement(lireProgrammes());
+    }
+    try {
+      window.addEventListener('storage', function (e) { if (!e.key || e.key === LS_PROG) ailleurs(); });
+      window.addEventListener('focus', ailleurs);
+      window.addEventListener('pte-programmes', function () { dernier = JSON.stringify(lireProgrammes()); maj(); });
+    } catch (e) {}
+    return { element: g, maj: maj };
+  }
+  /* Liste à cocher. opts : libelle, options [{v, t, n?}], valeurs [], surChangement(valeurs), titre.
+     Aucune case = tous (pas de filtre) ; toutes cochées = tous aussi. */
+  var mcOuvert = null;
+  function multiChoix(opts) {
+    styleProg();
+    var w = document.createElement('span'); w.className = 'pte-mc';
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'pte-mc-b'; b.setAttribute('aria-haspopup', 'true'); b.setAttribute('aria-expanded', 'false');
+    if (opts.titre) b.title = opts.titre;
+    var pop = document.createElement('div'); pop.className = 'pte-mc-pop'; pop.hidden = true;
+    w.appendChild(b); w.appendChild(pop);
+    var vals = (opts.valeurs || []).slice();
+    function resume() {
+      var opt = opts.options || [];
+      var lib = !vals.length || vals.length === opt.length ? (opts.tous || 'Tous')
+        : vals.length === 1 ? ((opt.filter(function (o) { return String(o.v) === String(vals[0]); })[0] || { t: vals[0] }).t)
+        : vals.length + ' choix';
+      b.innerHTML = ''; var s1 = document.createElement('span'); s1.textContent = (opts.libelle ? opts.libelle + ' :' : '');
+      var s2 = document.createElement('span'); s2.className = 'v'; s2.textContent = lib;
+      b.appendChild(s1); b.appendChild(s2);
+      b.classList.toggle('on', !!vals.length && vals.length !== opt.length);
+    }
+    function remplir() {
+      pop.innerHTML = '';
+      (opts.options || []).forEach(function (o) {
+        var lab = document.createElement('label'), c = document.createElement('input');
+        c.type = 'checkbox'; c.value = String(o.v); c.checked = vals.map(String).indexOf(String(o.v)) >= 0;
+        c.addEventListener('change', function () {
+          vals = Array.prototype.slice.call(pop.querySelectorAll('input:checked')).map(function (x) { return x.value; });
+          resume(); if (opts.surChangement) opts.surChangement(vals.slice());
+        });
+        var t = document.createElement('span'); t.textContent = o.t;
+        lab.appendChild(c); lab.appendChild(t);
+        if (o.n !== undefined && o.n !== null) { var n = document.createElement('span'); n.className = 'n'; n.textContent = String(o.n); lab.appendChild(n); }
+        pop.appendChild(lab);
+      });
+      var f = document.createElement('div'); f.className = 'pte-mc-f';
+      var aucun = document.createElement('button'); aucun.type = 'button'; aucun.textContent = 'Tout décocher (= tous)';
+      aucun.addEventListener('click', function () { vals = []; remplir(); resume(); if (opts.surChangement) opts.surChangement([]); });
+      f.appendChild(aucun); pop.appendChild(f);
+    }
+    function ouvrir(v) {
+      if (v && mcOuvert && mcOuvert !== fermer) mcOuvert();
+      pop.hidden = !v; b.setAttribute('aria-expanded', v ? 'true' : 'false');
+      if (v) { remplir(); mcOuvert = fermer; } else if (mcOuvert === fermer) mcOuvert = null;
+    }
+    function fermer() { ouvrir(false); }
+    b.addEventListener('click', function (e) { e.stopPropagation(); ouvrir(pop.hidden); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    try {
+      document.addEventListener('click', function () { if (!pop.hidden) fermer(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) { fermer(); b.focus(); } });
+    } catch (e) {}
+    resume();
+    return { element: w, valeurs: function () { return vals.slice(); }, fixer: function (v) { vals = (v || []).slice(); resume(); if (!pop.hidden) remplir(); } };
+  }
+  C.PROGRAMMES = PROGRAMMES; C.LS_PROG = LS_PROG; C.PALETTE_CAT = PALETTE_CAT;
+  C.lireProgrammes = lireProgrammes; C.ecrireProgrammes = ecrireProgrammes; C.valeurTag = valeurTag;
+  C.dansProgrammes = dansProgrammes; C.libelleProgrammes = libelleProgrammes;
+  C.installerProgrammes = installerProgrammes; C.multiChoix = multiChoix;
+})(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
+
 </script>
 <script>
 /* ============================================================================
@@ -5152,10 +5352,16 @@ var PTE_COMMUN = (function () {
       gainEauEst: _findCol(header, ['gain_eau_estime_m3_an']),   // audit eau, colonne ajoutée le 29.09.2026
       pvKwc: _findCol(header, ['futur_projet_pv_puissance_estimee_kwc']),
       vegetalisation: _findCol(header, ['indicateur_biodiversite_2_surface_vegetalisee_ajoutee_m2', 'indicateur_biodiversite_2_x000d_surface_vegetalisee_ajoutee_m2']),   // en-tête sur une ligne depuis le 23.09.2026
-      etatCecb: _findCol(header, ['etat_cecb'])
+      etatCecb: _findCol(header, ['etat_cecb']),
+      // programmes (21.10.2026) : sous-sites marqués « Tag 300 », « Tag COE », « Tag Canicule »
+      tag300: _findCol(header, ['tag_300']),
+      tagCoe: _findCol(header, ['tag_coe']),
+      tagCanicule: _findCol(header, ['tag_canicule'])
     };
     function get(c, r) { return c ? r[c.index] : undefined; }
     function txt(v) { return (v === null || v === undefined) ? '' : String(v).trim(); }
+    // valeur d'une cellule Tag : vide, 0 ou « non » = hors programme (même règle que PTE_COMMUN.valeurTag)
+    function tag(c, r) { var s = txt(get(c, r)); return (!s || s === '0' || /^(non|no|false|faux)$/i.test(s)) ? null : s; }
     var bySousSite = {}, pte = [], n = 0;
     body.forEach(function (r) {
       var raw = get(cols.numero, r);
@@ -5178,7 +5384,8 @@ var PTE_COMMUN = (function () {
         statut_consolidation: txt(get(cols.statutConsolidation, r)),
         prev_gei_kchf: _toKCHF(get(cols.gei, r)),
         invest_cecb_kchf: _toKCHF(get(cols.cecb, r)),
-        invest_immoba_kchf: _toKCHF(get(cols.immoba, r))
+        invest_immoba_kchf: _toKCHF(get(cols.immoba, r)),
+        tags: { p300: tag(cols.tag300, r), coe: tag(cols.tagCoe, r), canicule: tag(cols.tagCanicule, r) }
       };
       n++;
 
@@ -6040,13 +6247,15 @@ var PTE_COMMUN = (function () {
   var DB = Engine.createDB();
   var PARAMS = Engine.defaultParams();
   var STATE = { mois: null, projetSel: null, perimetre: 'ALL', heatmapSort: { key: 'gravite', dir: -1 },
-    rep: { pf: null, ss: null, projet: null, rp: '', statut: '', type: '', sia: '', q: '', expanded: {} },
+    rep: { pf: null, ss: null, projet: null, rp: [], statut: null, type: [], sia: [], q: '', expanded: {} },   /* filtres à choix multiple (21.10.2026) ; statut null = défaut « 2-EN COURS » */
     questionsOuvertes: false,   // carte « Questions du mois » affichée dans le Reporting
     hashMessage: null,          // message « aucun projet GE-Invest sur ce sous-site » (#ss=)
     communMeta: null };         // fiche du classeur commun si l'import vient de Pilotage PTE (C1)
   // Modules communs du Cabinet, copiés tels quels dans la page (vague 2) ;
   // absents, l'outil fonctionne comme avant (aucun classeur commun, aucun lien croisé).
   var COMMUN = (typeof PTE_COMMUN !== 'undefined') ? PTE_COMMUN : null;
+  /* Palette catégorielle commune (21.10.2026) : huit couleurs distinctes de la charte élargie, ordre fixe. */
+  var PALETTE_CAT = (COMMUN && COMMUN.PALETTE_CAT) || ['#0A80A8', '#E06A2C', '#856EBE', '#6E9F16', '#3D6FD6', '#C94F82', '#2E9BD6', '#5560C8'];
 
   // ------------------------------------------------------------------
   // Jetons de couleur (vague 3) — les graphiques dessinés à la main
@@ -6272,7 +6481,7 @@ var PTE_COMMUN = (function () {
     DB = Engine.createDB();
     try { localStorage.removeItem(LS_DB); } catch (e) { /* ignoré */ }
     STATE.mois = null; STATE.projetSel = null; STATE.perimetre = 'ALL'; STATE.perimetres = [];
-    STATE.rep = { pf: null, ss: null, projet: null, rp: '', statut: '', type: '', sia: '', q: '', expanded: {} };
+    STATE.rep = { pf: null, ss: null, projet: null, rp: [], statut: null, type: [], sia: [], q: '', expanded: {} };
     STATE.questionsOuvertes = false; STATE.hashMessage = null; STATE.communMeta = null;
     ecrireQuestionsStock({ mois: {} }); // les questions du mois sont des données propres de la revue ; le classeur commun et le classement publié restent
     ecrireHashSs(null);
@@ -6308,8 +6517,20 @@ var PTE_COMMUN = (function () {
     if (key === 'MULTI') { var l = STATE.perimetres || []; for (var i = 0; i < l.length; i++) if (projetDansCle(p, l[i])) return true; return !l.length; }
     return true;
   }
+  /* Programmes (21.10.2026) : filtre commun aux outils (pastilles de l'en-tête). Un projet suit les tags
+     de son sous-site dans Plan_PTE ; aucun programme actif = tout le parc. */
+  function tagsSousSite(num) {
+    var m = DB.planpte && DB.planpte.bySousSite ? DB.planpte.bySousSite[String(num || '').trim()] : null;
+    return m ? m.tags : null;
+  }
+  function programmesActifs() { return (COMMUN && COMMUN.lireProgrammes) ? COMMUN.lireProgrammes() : []; }
+  function sousSiteDansProgrammes(num) {
+    var a = programmesActifs(); if (!a.length) return true;
+    return COMMUN.dansProgrammes(tagsSousSite(num), a);
+  }
+  function projetDansProgrammes(p) { return sousSiteDansProgrammes(p && p.numero_sous_site); }
   function projetsByPerimetre(key) {
-    var all = computeAll();
+    var all = computeAll().filter(function (c) { return projetDansProgrammes(c.projet); });
     if (!key || key === 'ALL') return all;
     return all.filter(function (c) { return projetDansCle(c.projet, key); });
   }
@@ -6350,6 +6571,10 @@ var PTE_COMMUN = (function () {
       if (lm.length && lm.every(function (k) { return k === 'HORS' || k.indexOf('RPF:') === 0; })) {
         opts.filterRow = function (r) { return lm.some(function (k) { return k === 'HORS' ? (!r.rpf || !r.rpf.trim()) : r.rpf === k.slice(4); }); };
       }
+    }
+    if (programmesActifs().length) {
+      var fr = opts.filterRow;
+      opts.filterRow = function (r) { return sousSiteDansProgrammes(r.numero_sous_site) && (!fr || fr(r)); };
     }
     return Engine.alignementPerimetre(DB, list, PARAMS, opts);
   }
@@ -7627,8 +7852,9 @@ var PTE_COMMUN = (function () {
   // ---- Données : une ligne par projet, situation consolidée ----------
   function projetsDuPerimetre() {
     var key = STATE.perimetre;
-    if (!key || key === 'ALL') return DB.projets;
-    return DB.projets.filter(function (p) { return projetDansCle(p, key); });
+    var base = DB.projets.filter(projetDansProgrammes);
+    if (!key || key === 'ALL') return base;
+    return base.filter(function (p) { return projetDansCle(p, key); });
   }
   function repRows() {
     var latestSuivi = {};
@@ -7697,15 +7923,29 @@ var PTE_COMMUN = (function () {
     return '53';
   }
 
-  function repFilterRows(rows, ignorePf) {
+  /* Filtres du Reporting à choix multiple (21.10.2026, demande d'Achim) : chaque filtre est une liste de
+     valeurs ; liste vide = tous. Statut : null = valeur par défaut, les projets « 2-EN COURS » s'il y en a. */
+  var RE_EN_COURS = /^\s*2\s*-\s*en\s*cours/i;
+  function listeF(v) { return Array.isArray(v) ? v : ((v === null || v === undefined || v === '') ? [] : [v]); }
+  function statutDe(p) { var g = (DB.gei && DB.gei[p.numero_projet]) || null; return (g && g.statut) || p.statut || '—'; }
+  function statutsDispo() { var s = {}; DB.projets.forEach(function (p) { s[statutDe(p)] = true; }); return Object.keys(s).sort(); }
+  function statutsActifs() {
     var f = STATE.rep;
+    if (f.statut === null || f.statut === undefined) return statutsDispo().filter(function (s) { return RE_EN_COURS.test(s); });
+    return listeF(f.statut);
+  }
+  function statutParDefaut() { return STATE.rep.statut === null || STATE.rep.statut === undefined; }
+  function viderFiltresRep() { var f = STATE.rep; f.rp = []; f.statut = []; f.type = []; f.sia = []; f.q = ''; }
+  function filtresRepModifies() { var f = STATE.rep; return !!(listeF(f.rp).length || !statutParDefaut() || listeF(f.type).length || listeF(f.sia).length || f.q); }
+  function repFilterRows(rows, ignorePf) {
+    var f = STATE.rep, fRp = listeF(f.rp), fSt = statutsActifs(), fTy = listeF(f.type), fSia = listeF(f.sia);
     return rows.filter(function (r) {
       if (!ignorePf && f.pf && r.pf !== f.pf) return false;
-      if (f.rp && (r.p.rp || '') !== f.rp) return false;
-      if (f.statut && r.statut !== f.statut) return false;
-      if (f.type === 'etude' && r.p.projet_etude !== 'oui') return false;
-      if (f.type === 'realisation' && r.p.projet_etude === 'oui') return false;
-      if (f.sia && (phaseSia(r.avancement) || 'nr') !== f.sia) return false;
+      if (fRp.length && fRp.indexOf(r.p.rp || '') === -1) return false;
+      if (fSt.length && fSt.indexOf(r.statut) === -1) return false;
+      if (fTy.length === 1 && fTy[0] === 'etude' && r.p.projet_etude !== 'oui') return false;
+      if (fTy.length === 1 && fTy[0] === 'realisation' && r.p.projet_etude === 'oui') return false;
+      if (fSia.length && fSia.indexOf(phaseSia(r.avancement) || 'nr') === -1) return false;
       if (f.q) {
         var hay = (r.p.numero_projet + ' ' + r.p.nom_projet + ' ' + (r.p.numero_sous_site || '') + ' ' + (r.p.nom_sous_site || '') + ' ' + (r.p.rp || '')).toLowerCase();
         if (hay.indexOf(f.q.toLowerCase()) === -1) return false;
@@ -8437,8 +8677,11 @@ var PTE_COMMUN = (function () {
     if (STATE.perimetre && STATE.perimetre.indexOf('RP:') === 0) lib = 'RP ' + nomP(STATE.perimetre.slice(3));
     lib = lib.charAt(0).toUpperCase() + lib.slice(1);
     if (f.pf && lib.indexOf(f.pf) === -1) lib = (STATE.perimetre && STATE.perimetre !== 'ALL' ? lib + ' · ' : '') + 'Portefeuille ' + f.pf;
-    if (f.rp && lib.indexOf(nomP(f.rp)) === -1) lib += ' · RP ' + nomP(f.rp);
-    if (f.statut || f.type || f.sia || f.q) lib += ' (filtré)';
+    var fRp = listeF(f.rp);
+    if (fRp.length === 1 && lib.indexOf(nomP(fRp[0])) === -1) lib += ' · RP ' + nomP(fRp[0]);
+    if (programmesActifs().length && COMMUN.libelleProgrammes) lib += ' · ' + COMMUN.libelleProgrammes();
+    if (statutParDefaut() && statutsActifs().length) lib += ' · projets en cours';
+    if (fRp.length > 1 || (!statutParDefaut() && statutsActifs().length) || listeF(f.type).length || listeF(f.sia).length || f.q) lib += ' (filtré)';
     return lib;
   }
   function repGanttHote(rows, opts) {
@@ -8607,39 +8850,40 @@ var PTE_COMMUN = (function () {
   function repFilterBar(allRows) {
     var f = STATE.rep;
     var bar = el('div', { class: 'filterbar no-print' });
-    function sel(labelTxt, value, options, onChange) {
-      var s = el('select', {});
-      s.appendChild(el('option', { value: '' }, ['Tous']));
-      options.forEach(function (o) { s.appendChild(el('option', { value: o }, [o])); });
-      s.value = value || '';
-      s.addEventListener('change', function (e) { onChange(e.target.value); renderReportingView(); });
-      return el('span', { class: 'filter-item' }, [el('label', {}, [labelTxt]), s]);
+    function compte(fn) { var n = {}; allRows.forEach(function (r) { var k = fn(r); n[k] = (n[k] || 0) + 1; }); return n; }
+    /* Liste à cocher commune (PTE_COMMUN.multiChoix) ; repli : <select> simple si le module manque. */
+    function multi(libelle, cle, options, titre) {
+      if (!COMMUN || !COMMUN.multiChoix) {
+        var s = el('select', {}); s.appendChild(el('option', { value: '' }, ['Tous']));
+        options.forEach(function (o) { s.appendChild(el('option', { value: o.v }, [o.t])); });
+        var cur = cle === 'statut' ? statutsActifs() : listeF(f[cle]); s.value = cur.length === 1 ? cur[0] : '';
+        s.addEventListener('change', function (e) { f[cle] = e.target.value ? [e.target.value] : []; renderReportingView(); });
+        return el('span', { class: 'filter-item' }, [el('label', {}, [libelle]), s]);
+      }
+      var mc = COMMUN.multiChoix({ libelle: libelle, titre: titre, options: options,
+        valeurs: cle === 'statut' ? statutsActifs() : listeF(f[cle]),
+        surChangement: function (v) { f[cle] = v; renderReportingView(); } });
+      return el('span', { class: 'filter-item filter-mc', 'data-ep': '1' }, [mc.element]);
     }
-    var rps = []; var statuts = {};
-    allRows.forEach(function (r) {
-      if (r.p.rp && rps.indexOf(r.p.rp) === -1) rps.push(r.p.rp);
-      statuts[r.statut] = true;
-    });
-    rps.sort();
-    bar.appendChild(sel('RP', f.rp, rps, function (v) { f.rp = v; }));
-    bar.appendChild(sel('Statut', f.statut, Object.keys(statuts).sort(), function (v) { f.statut = v; }));
-    var typeSel = el('select', {});
-    [['', 'Tous'], ['etude', 'Études'], ['realisation', 'Réalisations']].forEach(function (o) { typeSel.appendChild(el('option', { value: o[0] }, [o[1]])); });
-    typeSel.value = f.type;
-    typeSel.addEventListener('change', function (e) { f.type = e.target.value; renderReportingView(); });
-    bar.appendChild(el('span', { class: 'filter-item' }, [el('label', {}, ['Type']), typeSel]));
+    var nRp = compte(function (r) { return r.p.rp || ''; }), nSt = compte(function (r) { return r.statut; });
+    var nTy = compte(function (r) { return r.p.projet_etude === 'oui' ? 'etude' : 'realisation'; });
+    var nSia = compte(function (r) { return phaseSia(r.avancement) || 'nr'; });
+    var nomP = (COMMUN && COMMUN.nomPropre) ? COMMUN.nomPropre : function (x) { return x; };
+    var rps = Object.keys(nRp).filter(function (k) { return k; }).sort();
+    statutsDispo().forEach(function (s) { if (!(s in nSt)) nSt[s] = 0; });
+    bar.appendChild(multi('RP', 'rp', rps.map(function (k) { return { v: k, t: nomP(k), n: nRp[k] }; }), 'Responsables de projet'));
+    bar.appendChild(multi('Statut', 'statut', Object.keys(nSt).sort().map(function (k) { return { v: k, t: k, n: nSt[k] }; }),
+      'Statut GE-Invest. Par défaut : projets « 2-EN COURS ». Tout décocher = tous les statuts.'));
+    bar.appendChild(multi('Type', 'type', [{ v: 'etude', t: 'Études', n: nTy.etude || 0 }, { v: 'realisation', t: 'Réalisations', n: nTy.realisation || 0 }]));
     /* État SIA (07.10.2026) : phase déduite de l'avancement global, table GPR.6MO.04 */
-    var siaSel = el('select', { title: 'Phase SIA déduite de l’« Avancement global » saisi dans GE-Invest' });
-    [['', 'Tous']].concat(PHASES_SIA.map(function (p) { return [p.k, p.k + ' · ' + p.nom]; }), [['nr', 'Non renseigné']]).forEach(function (o) { siaSel.appendChild(el('option', { value: o[0] }, [o[1]])); });
-    siaSel.value = f.sia || '';
-    siaSel.addEventListener('change', function (e) { f.sia = e.target.value; renderReportingView(); });
-    bar.appendChild(el('span', { class: 'filter-item' }, [el('label', {}, ['État SIA']), siaSel]));
+    bar.appendChild(multi('État SIA', 'sia', PHASES_SIA.map(function (p) { return { v: p.k, t: p.k + ' · ' + p.nom, n: nSia[p.k] || 0 }; }).concat([{ v: 'nr', t: 'Non renseigné', n: nSia.nr || 0 }]),
+      'Phase SIA déduite de l’« Avancement global » saisi dans GE-Invest'));
     var q = el('input', { type: 'text', placeholder: 'N°, nom, sous-site, RP…', value: f.q || '' });
     q.addEventListener('input', function (e) { f.q = e.target.value; renderRepBody(); });
     bar.appendChild(el('span', { class: 'filter-item filter-search' }, [el('label', {}, ['Rechercher']), q]));
-    if (f.rp || f.statut || f.type || f.sia || f.q) {
-      var reset = el('button', { type: 'button', class: 'btn' }, ['Réinitialiser']);
-      reset.addEventListener('click', function () { f.rp = ''; f.statut = ''; f.type = ''; f.sia = ''; f.q = ''; renderReportingView(); });
+    if (filtresRepModifies()) {
+      var reset = el('button', { type: 'button', class: 'btn', title: 'Revenir aux filtres par défaut : projets « 2-EN COURS », tous RP, types et états SIA' }, ['Réinitialiser']);
+      reset.addEventListener('click', function () { f.rp = []; f.statut = null; f.type = []; f.sia = []; f.q = ''; renderReportingView(); });
       bar.appendChild(reset);
     }
     return bar;
@@ -8698,7 +8942,7 @@ var PTE_COMMUN = (function () {
     });
     var nSs = Object.keys(ss).length, nSites = Object.keys(sites).length, nPr = rows.length;
     var T = (COMMUN && COMMUN.TOTAUX_OCBA) || {};
-    var plan = (DB.planpte && DB.planpte.bySousSite) ? Object.keys(DB.planpte.bySousSite) : [];
+    var plan = (DB.planpte && DB.planpte.bySousSite) ? Object.keys(DB.planpte.bySousSite).filter(sousSiteDansProgrammes) : [];
     var planSites = {}; plan.forEach(function (k) { planSites[String(k).slice(0, 4)] = 1; });
     function metrique(cle, lbl, n, total, repli, def) {
       var l1 = [el('span', { class: 'perim-v' }, [nf(n)])], jauge = null;
@@ -8731,9 +8975,9 @@ var PTE_COMMUN = (function () {
     function segment(k, nom, v, plage) {
       legend.appendChild(el('span', {}, [el('span', { class: 'sia-sw s' + k }), (k === 'nr' ? '' : k + ' · ') + nom + ' (' + nf(v) + ')']));
       if (!v) return;
-      var sg = el('div', { class: 'seg seg-s' + k + (STATE.rep.sia === k ? ' active' : ''), style: 'flex:' + v + ';', role: 'button', tabindex: '0' }, [v / (nPr || 1) >= 0.05 ? nf(v) : '']);
+      var sg = el('div', { class: 'seg seg-s' + k + (listeF(STATE.rep.sia).indexOf(k) >= 0 ? ' active' : ''), style: 'flex:' + v + ';', role: 'button', tabindex: '0' }, [v / (nPr || 1) >= 0.05 ? nf(v) : '']);
       tip(sg, nf(v) + ' projet(s) — ' + (k === 'nr' ? 'phase non renseignée : avancement global non saisi dans GE-Invest' : 'phase SIA ' + k + ', ' + nom + ' (avancement global de ' + plage + ')') + '. Un clic filtre le Reporting sur cet état.');
-      function filtrer() { STATE.rep.sia = STATE.rep.sia === k ? '' : k; renderReportingView(); }
+      function filtrer() { var l = listeF(STATE.rep.sia).slice(), i = l.indexOf(k); if (i >= 0) l.splice(i, 1); else l.push(k); STATE.rep.sia = l; renderReportingView(); }
       sg.addEventListener('click', filtrer);
       sg.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); filtrer(); } });
       bar.appendChild(sg);
@@ -9047,7 +9291,7 @@ var PTE_COMMUN = (function () {
       showView('reporting'); return false;
     }
     STATE.rep.pf = null; STATE.rep.projet = null; STATE.rep.ss = num;
-    STATE.rep.rp = ''; STATE.rep.statut = ''; STATE.rep.type = ''; STATE.rep.sia = ''; STATE.rep.q = '';
+    viderFiltresRep();
     showView('reporting'); return true;
   }
 
@@ -9303,7 +9547,7 @@ var PTE_COMMUN = (function () {
         consol.addEventListener('click', function (e) {
           e.preventDefault();
           STATE.rep.pf = null; STATE.rep.projet = null; STATE.rep.ss = ssF;
-          STATE.rep.rp = ''; STATE.rep.statut = ''; STATE.rep.type = ''; STATE.rep.sia = ''; STATE.rep.q = '';
+          viderFiltresRep();
           showView('reporting');
         });
         ligneF.appendChild(document.createTextNode(' · '));
@@ -9365,7 +9609,7 @@ var PTE_COMMUN = (function () {
     finCard.appendChild(cardTitle('Finances, MCHF'));
     var years = Array.from(new Set(DB.finances.filter(function (f) { return f.numero_projet === numeroProjet; }).map(function (f) { return +f.annee; }))).sort();
     var series = ['objectif', 'prevision', 'engage', 'depense'].map(function (nat) {
-      var color = { objectif: JETON.gris, prevision: JETON.teal, engage: JETON.violet, depense: JETON.vert }[nat];
+      var color = { objectif: JETON.gris, prevision: PALETTE_CAT[0], engage: PALETTE_CAT[2], depense: PALETTE_CAT[4] }[nat];   /* catégories : palette commune, le vert reste au sémaphore */
       var name = { objectif: 'Objectif', prevision: 'Prévision', engage: 'Engagé', depense: 'Dépensé' }[nat];
       return { name: name, color: color, values: years.map(function (y) { var r = DB.finances.filter(function (f) { return f.numero_projet === numeroProjet && +f.annee === y && (f.nature || '').toLowerCase() === nat; })[0]; return r ? Engine.parseNum(r.montant_kchf) : 0; }) };
     });
@@ -9614,9 +9858,11 @@ var PTE_COMMUN = (function () {
 
     var c4 = el('div', { class: 'card' });
     c4.appendChild(cardTitle('Couverture CECB+'));
-    var etats = {}; DB.pte.forEach(function (r) { var k = r.etat_cecb || 'Non renseigné'; etats[k] = (etats[k] || 0) + 1; });
-    var palette = [JETON.teal, JETON.violet, JETON.vert, JETON.orange, JETON.slate, JETON.turquoise, JETON.gris, JETON.rouge];
-    var segs = Object.keys(etats).map(function (k, i) { return { label: k, count: etats[k], color: palette[i % palette.length] }; });
+    var etats = {}; DB.pte.forEach(function (r) { if (!sousSiteDansProgrammes(r.numero_sous_site)) return; var k = r.etat_cecb || 'Non renseigné'; etats[k] = (etats[k] || 0) + 1; });
+    /* couleurs catégorielles fixes (21.10.2026) : l'état garde sa couleur, rangé par ordre alphabétique ; « Non renseigné » en gris */
+    var cles = Object.keys(etats).filter(function (k) { return k !== 'Non renseigné'; }).sort(function (x, y) { return x.localeCompare(y, 'fr'); });
+    var segs = cles.map(function (k, i) { return { label: k, count: etats[k], color: i < PALETTE_CAT.length ? PALETTE_CAT[i] : JETON.gris }; });
+    if (etats['Non renseigné']) segs.push({ label: 'Non renseigné', count: etats['Non renseigné'], color: JETON.gris });
     c4.appendChild(stackedSingleBar(segs));
     host.appendChild(c4);
 
@@ -9986,7 +10232,9 @@ var PTE_COMMUN = (function () {
     pop.hidden = !ouvrir; btn.setAttribute('aria-expanded', ouvrir ? 'true' : 'false');
   }
 
+  var PROG_UI = null;
   function renderAll() {
+    if (PROG_UI) PROG_UI.maj();
     ensureMonth();
     syncClassementCommun();
     renderMoisSelect();
@@ -10323,6 +10571,12 @@ var PTE_COMMUN = (function () {
         exporter: exporterMesSaisies, importer: importerMesSaisies,
         apresReception: function () { rechargerSaisiesLocales(); try { renderAll(); } catch (err) { /* rendu partiel */ } } });
       COMMUN.iconesMenus(m);
+    }
+    /* Programmes (21.10.2026) : pastilles 300 / COE / Canicule, filtre commun à tous les affichages et aux outils. */
+    if (COMMUN && COMMUN.installerProgrammes && !$('.pte-prog')) {
+      PROG_UI = COMMUN.installerProgrammes({ avant: $('.hdr-right .data-set'),
+        compter: function (k) { var b = DB.planpte && DB.planpte.bySousSite; if (!b) return null; var n = 0; Object.keys(b).forEach(function (s) { if (b[s].tags && b[s].tags[k]) n++; }); return n; },
+        surChangement: function () { try { renderAll(); } catch (err) { /* rendu partiel */ } } });
     }
     b.addEventListener('click', function (e) { e.stopPropagation(); ouvrirMenu(); });
     m.addEventListener('click', function (e) {

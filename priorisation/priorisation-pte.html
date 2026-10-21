@@ -1855,7 +1855,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.15 · 20.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.16 · 21.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -2951,6 +2951,10 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "21.10.2026", "objet": "revue", "version": "v0.27", "titre": "Programmes, filtres à choix multiple, couleurs des phases SIA", "points": ["Pastilles « Les 300 », « COE » et « Canicule » dans l'en-tête : filtre commun aux outils et à tous les affichages (projets dont le sous-site porte le tag dans Plan_PTE) ; plusieurs pastilles = l'un ou l'autre, aucune = tout le parc.", "Filtres RP, Statut, Type et État SIA du Reporting en listes à cocher (plusieurs choix) ; Statut sur « 2-EN COURS » par défaut, « Tout décocher » = tous les statuts.", "Phases SIA en huit couleurs distinctes (palette commune validée daltonisme et contraste, jour et nuit) au lieu des nuances d'un seul bleu ; pastille de la phase 21 rétablie.", "Couverture CECB+ et finances de la fiche : couleurs catégorielles fixes, le vert, l'orange et le rouge restent aux sémaphores."]},
+    {"date": "21.10.2026", "objet": "priorisation", "version": "v2.16", "titre": "Programmes, menus à choix multiple, couleurs distinctes", "points": ["Pastilles « Les 300 », « COE » et « Canicule » dans l'en-tête (colonnes Tag de Plan_PTE) : classements, carte, vue d'ensemble, tuiles, arbitrage, responsables, qualité, DD et anomalies ne montrent que les sous-sites des programmes actifs ; rangs et références restent calculés sur le parc entier.", "Carte (chauffage, patrimoine, CECB+) et arbitrage (politiques publiques, statut) : menus à choix multiple.", "Agents de chauffage en couleurs distinctes (PAC et bois n'ont plus la même) ; politiques publiques : huit couleurs fixes, les suivantes en gris ; légende du coût de la tonne évitée alignée sur les barres."]},
+    {"date": "21.10.2026", "objet": "simulation", "version": "v3.10", "titre": "Programmes", "points": ["Pastilles « Les 300 », « COE » et « Canicule » dans l'en-tête : la recherche ne propose que les sites dont un sous-site appartient aux programmes actifs."]},
+    {"date": "21.10.2026", "objet": "accueil", "version": "v1.13", "titre": "Programmes", "points": ["Pastilles « Les 300 », « COE » et « Canicule » dans l'en-tête : la sélection vaut pour les trois outils."]},
     {"date": "21.10.2026", "objet": "revue", "version": "v0.26", "titre": "Fil rouge de la revue en cinq temps", "points": ["Bouton « Fil rouge » : un bandeau « Ordre du jour » en cinq temps (préparer, constater, analyser, décider, restituer) s'affiche au-dessus des vues ; chaque temps renvoie aux vues existantes, rien n'est bloquant.", "Constater : décisions des revues précédentes avec leur statut, modifiable (ouverte, faite, abandonnée), et sémaphores qui ont changé depuis le mois précédent.", "Analyser : seuls les projets en rouge ou orange, à cocher une fois analysés, avec accès direct à la fiche ; Décider : décisions et escalades du mois, signalées sans porteur ou sans échéance.", "Restituer : synthèse 30 secondes générée (trois messages, situation, décisions, escalades), à copier, et export des décisions du mois ; chronomètre de séance (60 min)."]},
     {"date": "20.10.2026", "objet": "priorisation", "version": "v2.15", "titre": "Coûts par lot, listes complètes, type d'intervention calculé", "points": ["Coûts par objectif lus dans les colonnes de lots de Plan_PTE : CO₂, thermique et IDC = enveloppe + chaufferie + technique ; renouvelable = chaufferie ; électricité et eau = leur lot ; développement durable = coût de végétalisation. Sans lot, le montant du menu « Montants ».", "Les classements montrent tous les sous-sites, y compris ceux qui ne contribuent pas à l'objectif (à la suite, en ordre de constat) ; avec un filtre, la liste est complète.", "Type d'intervention calculé dans l'outil (règle de l'ancienne colonne du classeur) ; « Estim ImmOBA » (ex-« Invest ImmOBA ») reconnue.", "Lit la feuille « Objectifs PTE » restructurée le 21.10 ; l'ancienne disposition reste lisible."]},
     {"date": "20.10.2026", "objet": "revue", "version": "v0.25", "titre": "Estim ImmOBA reconnue, objectif photovoltaïque en %", "points": ["La colonne « Estim ImmOBA » (ex-« Invest ImmOBA ») de Plan_PTE est reconnue ; l'ancien nom reste lu.", "L'objectif photovoltaïque s'exprime en part de la consommation électrique : il n'est plus comparé aux kWc des projets."]},
@@ -4982,6 +4986,198 @@ var PTE_COMMUN = (function () {
   C.libelleAjustement = libAjust; C.codeAjustement = codeAjust; C.idDecision = idDecision;
 })(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
 
+/* ---------- Programmes (filtre global), choix multiple, palette catégorielle — 21.10.2026 ----------
+   Programmes : trois colonnes de Plan_PTE (« Tag 300 », « Tag COE », « Tag Canicule ») marquent les
+   sous-sites des programmes définis. La sélection est commune aux outils (localStorage
+   pte.programmes.v1) ; plusieurs programmes actifs = réunion ; aucun = tout le parc. Chaque outil lit
+   les tags à l'import et appelle dansProgrammes() à son point de passage. installerProgrammes() pose
+   les pastilles à icône dans l'en-tête, sur le modèle des pastilles de la fenêtre « Retours ».
+   multiChoix() : liste à cocher compacte, remplace un <select> de filtre (aucune case = tous).
+   PALETTE_CAT : huit couleurs distinctes, ordre fixe, validées (daltonisme, contraste jour et nuit),
+   tenues à l'écart des couleurs de sémaphore. */
+(function (C) {
+  if (!C) return;
+  var LS_PROG = 'pte.programmes.v1';
+  var PROGRAMMES = [
+    { k: 'p300', court: 'Les 300', lib: 'Les 300', titre: 'Les 300 sous-sites de la liste publiée (02.07.2026)', col: 'Tag 300', ic: 'prog300' },
+    { k: 'coe', court: 'COE', lib: 'COE complexes', titre: 'Sous-sites COE complexes / optimisation par bureau d’ingénieur', col: 'Tag COE', ic: 'progCoe' },
+    { k: 'canicule', court: 'Canicule', lib: 'Plan canicule', titre: 'Sous-sites du plan canicule', col: 'Tag Canicule', ic: 'progCanicule' }
+  ];
+  var PALETTE_CAT = ['#0A80A8', '#E06A2C', '#856EBE', '#6E9F16', '#3D6FD6', '#C94F82', '#2E9BD6', '#5560C8'];
+  try {
+    if (C.ICONES) {
+      C.ICONES.prog300 = 'M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01';
+      C.ICONES.progCoe = 'M4 21V7l8-4 8 4v14M9.5 21v-5h5v5M8 10h.01M12 10h.01M16 10h.01M8 13.5h.01M12 13.5h.01M16 13.5h.01';
+      C.ICONES.progCanicule = 'M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4';
+    }
+  } catch (e) {}
+  function cles() { return PROGRAMMES.map(function (p) { return p.k; }); }
+  function lireProgrammes() {
+    try { var a = JSON.parse(localStorage.getItem(LS_PROG) || '[]'); return Array.isArray(a) ? a.filter(function (k) { return cles().indexOf(k) >= 0; }) : []; }
+    catch (e) { return []; }
+  }
+  function ecrireProgrammes(a) {
+    var v = (a || []).filter(function (k, i, t) { return cles().indexOf(k) >= 0 && t.indexOf(k) === i; });
+    try { localStorage.setItem(LS_PROG, JSON.stringify(v)); } catch (e) { /* stockage indisponible */ }
+    try { window.dispatchEvent(new CustomEvent('pte-programmes', { detail: v.slice() })); } catch (e) {}
+    return v;
+  }
+  /* Valeur d'une cellule Tag : vide, 0 ou « non » = pas dans le programme ; sinon la valeur (1, 2…). */
+  function valeurTag(v) {
+    if (v === null || v === undefined) return null;
+    var s = String(v).trim();
+    if (!s || s === '0' || /^(non|no|false|faux)$/i.test(s)) return null;
+    return s;
+  }
+  function dansProgrammes(tags, actifs) {
+    actifs = actifs || lireProgrammes();
+    if (!actifs.length) return true;
+    if (!tags) return false;
+    for (var i = 0; i < actifs.length; i++) if (tags[actifs[i]]) return true;
+    return false;
+  }
+  function libelleProgrammes(actifs) {
+    actifs = actifs || lireProgrammes();
+    return PROGRAMMES.filter(function (p) { return actifs.indexOf(p.k) >= 0; }).map(function (p) { return p.lib; }).join(' + ');
+  }
+  function styleProg() {
+    if (typeof document === 'undefined' || document.getElementById('pte-prog-css')) return;
+    var s = document.createElement('style'); s.id = 'pte-prog-css';
+    s.textContent =
+      '.pte-prog{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}' +
+      '.pte-prog .pte-prog-l{font-size:12px;color:var(--ink-muted,#5b6b7b)}' +
+      '.pte-pchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:12.5px;line-height:1.2;padding:3px 10px;border-radius:14px;cursor:pointer;' +
+        'border:1px solid var(--border,#dfe6ec);background:transparent;color:var(--ink-muted,#5b6b7b)}' +
+      '.pte-pchip:hover{border-color:var(--teal,#005F73);color:var(--ink,#1f2d3d)}' +
+      '.pte-pchip .pte-ic{flex:none}.pte-pchip .n{opacity:.8;font-size:11.5px}' +
+      '.pte-pchip[aria-pressed="true"]{background:#005F73;border-color:#005F73;color:#fff}' +
+      'body.night .pte-pchip[aria-pressed="true"]{background:#30E5D9;border-color:#30E5D9;color:#0b1a24}' +
+      '.pte-mc{position:relative;display:inline-block}' +
+      '.pte-mc-b{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:6px;max-width:260px;padding:4px 10px;border-radius:8px;cursor:pointer;' +
+        'border:1px solid var(--border,#dfe6ec);background:var(--card-bg,#fff);color:var(--ink,#1f2d3d)}' +
+      '.pte-mc-b .v{font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}' +
+      '.pte-mc-b.on{border-color:#005F73}body.night .pte-mc-b.on{border-color:#30E5D9}' +
+      '.pte-mc-b::after{content:"";border:4px solid transparent;border-top-color:currentColor;margin-top:4px;opacity:.6}' +
+      '.pte-mc-pop{position:absolute;z-index:60;top:calc(100% + 4px);left:0;min-width:220px;max-width:340px;max-height:320px;overflow:auto;padding:6px;border-radius:10px;' +
+        'background:var(--card-bg,#fff);color:var(--ink,#1f2d3d);border:1px solid var(--border,#dfe6ec);box-shadow:0 10px 30px rgba(0,0,0,.18);font-size:13px;text-align:left}' +
+      '.pte-mc-pop label{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;cursor:pointer;font-weight:normal;margin:0}' +
+      '.pte-mc-pop label:hover{background:var(--page-bg,#f4f6f8)}' +
+      '.pte-mc-pop label .n{margin-left:auto;color:var(--ink-muted,#5b6b7b);font-size:11.5px}' +
+      '.pte-mc-pop .pte-mc-f{display:flex;gap:10px;justify-content:space-between;padding:6px 8px 2px;border-top:1px solid var(--border,#dfe6ec);margin-top:4px}' +
+      '.pte-mc-pop .pte-mc-f button{font:inherit;font-size:12px;background:none;border:0;color:#005F73;cursor:pointer;padding:0}' +
+      'body.night .pte-mc-pop .pte-mc-f button{color:#30E5D9}';
+    document.head.appendChild(s);
+  }
+  /* Pastilles de programmes. opts : avant (élément devant lequel les poser) ou dans (conteneur),
+     compter(k) → nombre de sous-sites (ou null), surChangement(actifs). */
+  function installerProgrammes(opts) {
+    opts = opts || {};
+    if (typeof document === 'undefined') return null;
+    styleProg();
+    var g = document.createElement('span');
+    g.className = 'pte-prog'; g.setAttribute('role', 'group'); g.setAttribute('aria-label', 'Programmes');
+    g.title = 'Programmes : filtre commun à tous les outils et à tous les affichages. Aucun programme actif = tout le parc ; plusieurs = l’un ou l’autre.';
+    if (opts.libelle !== false) { var l = document.createElement('span'); l.className = 'pte-prog-l'; l.textContent = opts.libelle || 'Programmes'; g.appendChild(l); }
+    var boutons = {};
+    PROGRAMMES.forEach(function (p) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'pte-pchip'; b.setAttribute('data-k', p.k);
+      b.title = p.titre + ' (colonne « ' + p.col + ' » de Plan_PTE)';
+      b.innerHTML = (C.icone ? C.icone(p.ic, 13) : '') + '<span class="t"></span><span class="n"></span>';
+      b.querySelector('.t').textContent = p.court;
+      b.addEventListener('click', function () {
+        var a = lireProgrammes(), i = a.indexOf(p.k);
+        if (i >= 0) a.splice(i, 1); else a.push(p.k);
+        a = ecrireProgrammes(a); maj();
+        if (opts.surChangement) opts.surChangement(a);
+      });
+      boutons[p.k] = b; g.appendChild(b);
+    });
+    function maj() {
+      var a = lireProgrammes();
+      PROGRAMMES.forEach(function (p) {
+        var b = boutons[p.k]; b.setAttribute('aria-pressed', a.indexOf(p.k) >= 0 ? 'true' : 'false');
+        var n = null; try { n = opts.compter ? opts.compter(p.k) : null; } catch (e) { n = null; }
+        b.querySelector('.n').textContent = '';
+        b.title = p.titre + ((n === null || n === undefined) ? '' : ' : ' + n + ' sous-site' + (n > 1 ? 's' : '') + ' dans le classeur') + ' (colonne « ' + p.col + ' » de Plan_PTE). Un clic active ou retire le programme.';
+      });
+    }
+    if (opts.avant && opts.avant.parentNode) opts.avant.parentNode.insertBefore(g, opts.avant);
+    else if (opts.dans) opts.dans.appendChild(g);
+    maj();
+    var dernier = JSON.stringify(lireProgrammes());
+    function ailleurs() {
+      var v = JSON.stringify(lireProgrammes()); if (v === dernier) return; dernier = v;
+      maj(); if (opts.surChangement) opts.surChangement(lireProgrammes());
+    }
+    try {
+      window.addEventListener('storage', function (e) { if (!e.key || e.key === LS_PROG) ailleurs(); });
+      window.addEventListener('focus', ailleurs);
+      window.addEventListener('pte-programmes', function () { dernier = JSON.stringify(lireProgrammes()); maj(); });
+    } catch (e) {}
+    return { element: g, maj: maj };
+  }
+  /* Liste à cocher. opts : libelle, options [{v, t, n?}], valeurs [], surChangement(valeurs), titre.
+     Aucune case = tous (pas de filtre) ; toutes cochées = tous aussi. */
+  var mcOuvert = null;
+  function multiChoix(opts) {
+    styleProg();
+    var w = document.createElement('span'); w.className = 'pte-mc';
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'pte-mc-b'; b.setAttribute('aria-haspopup', 'true'); b.setAttribute('aria-expanded', 'false');
+    if (opts.titre) b.title = opts.titre;
+    var pop = document.createElement('div'); pop.className = 'pte-mc-pop'; pop.hidden = true;
+    w.appendChild(b); w.appendChild(pop);
+    var vals = (opts.valeurs || []).slice();
+    function resume() {
+      var opt = opts.options || [];
+      var lib = !vals.length || vals.length === opt.length ? (opts.tous || 'Tous')
+        : vals.length === 1 ? ((opt.filter(function (o) { return String(o.v) === String(vals[0]); })[0] || { t: vals[0] }).t)
+        : vals.length + ' choix';
+      b.innerHTML = ''; var s1 = document.createElement('span'); s1.textContent = (opts.libelle ? opts.libelle + ' :' : '');
+      var s2 = document.createElement('span'); s2.className = 'v'; s2.textContent = lib;
+      b.appendChild(s1); b.appendChild(s2);
+      b.classList.toggle('on', !!vals.length && vals.length !== opt.length);
+    }
+    function remplir() {
+      pop.innerHTML = '';
+      (opts.options || []).forEach(function (o) {
+        var lab = document.createElement('label'), c = document.createElement('input');
+        c.type = 'checkbox'; c.value = String(o.v); c.checked = vals.map(String).indexOf(String(o.v)) >= 0;
+        c.addEventListener('change', function () {
+          vals = Array.prototype.slice.call(pop.querySelectorAll('input:checked')).map(function (x) { return x.value; });
+          resume(); if (opts.surChangement) opts.surChangement(vals.slice());
+        });
+        var t = document.createElement('span'); t.textContent = o.t;
+        lab.appendChild(c); lab.appendChild(t);
+        if (o.n !== undefined && o.n !== null) { var n = document.createElement('span'); n.className = 'n'; n.textContent = String(o.n); lab.appendChild(n); }
+        pop.appendChild(lab);
+      });
+      var f = document.createElement('div'); f.className = 'pte-mc-f';
+      var aucun = document.createElement('button'); aucun.type = 'button'; aucun.textContent = 'Tout décocher (= tous)';
+      aucun.addEventListener('click', function () { vals = []; remplir(); resume(); if (opts.surChangement) opts.surChangement([]); });
+      f.appendChild(aucun); pop.appendChild(f);
+    }
+    function ouvrir(v) {
+      if (v && mcOuvert && mcOuvert !== fermer) mcOuvert();
+      pop.hidden = !v; b.setAttribute('aria-expanded', v ? 'true' : 'false');
+      if (v) { remplir(); mcOuvert = fermer; } else if (mcOuvert === fermer) mcOuvert = null;
+    }
+    function fermer() { ouvrir(false); }
+    b.addEventListener('click', function (e) { e.stopPropagation(); ouvrir(pop.hidden); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    try {
+      document.addEventListener('click', function () { if (!pop.hidden) fermer(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) { fermer(); b.focus(); } });
+    } catch (e) {}
+    resume();
+    return { element: w, valeurs: function () { return vals.slice(); }, fixer: function (v) { vals = (v || []).slice(); resume(); if (!pop.hidden) remplir(); } };
+  }
+  C.PROGRAMMES = PROGRAMMES; C.LS_PROG = LS_PROG; C.PALETTE_CAT = PALETTE_CAT;
+  C.lireProgrammes = lireProgrammes; C.ecrireProgrammes = ecrireProgrammes; C.valeurTag = valeurTag;
+  C.dansProgrammes = dansProgrammes; C.libelleProgrammes = libelleProgrammes;
+  C.installerProgrammes = installerProgrammes; C.multiChoix = multiChoix;
+})(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
+
 /* ==== FIN DES MODULES COMMUNS ==== */
 /* ================================================================
    NOYAU COMMUN — état, persistance, pondérations
@@ -5134,6 +5330,30 @@ function clearAllData(){if(!confirm('Effacer de ce navigateur tout ce que l’ou
    « tout coché ». Tout le filtrage de l'outil passe par rpMatch(). */
 let RP_SEL=[];
 function rpMatch(v){return !RP_SEL.length||RP_SEL.indexOf(v||'')>=0}
+/* Programmes (21.10.2026, demande d'Achim) : pastilles « Les 300 », « COE », « Canicule » de l'en-tête,
+   filtre commun aux outils (PTE_COMMUN, localStorage pte.programmes.v1). Il s'applique à tous les
+   affichages : classements, carte, vue d'ensemble, tuiles, arbitrage, responsables, qualité, DD,
+   anomalies. Les rangs, écarts et références 2005 restent calculés sur le parc entier (comme pour le
+   périmètre) ; les exports et le classement publié pour la revue restent complets. */
+let PROG_ACT=[];
+function tagVal(v){if(typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.valeurTag)return PTE_COMMUN.valeurTag(v);const t=String(v==null?'':v).trim();return(!t||t==='0'||/^non$/i.test(t))?null:t}
+function progLire(){PROG_ACT=(typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.lireProgrammes)?PTE_COMMUN.lireProgrammes():[]}
+function progMatch(s){return !PROG_ACT.length||(typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.dansProgrammes(s&&s.tags,PROG_ACT))}
+function popVis(){const p=(S_ALL&&S_ALL.length)?S_ALL:(S||[]);return PROG_ACT.length?p.filter(progMatch):p}
+try{progLire()}catch(e){}
+/* Menus à choix multiple (21.10.2026) : les <select> de filtre de la carte et de l'arbitrage sont
+   remplacés par une liste à cocher commune (PTE_COMMUN.multiChoix) ; le <select> reste, caché, comme
+   source des options. Aucune case = tous. */
+const MULTI={};
+function optsDuSelect(sel){return [].filter.call(sel.querySelectorAll('option'),function(o){return o.value&&o.value!=='all'}).map(function(o){return{v:o.value,t:(o.parentNode&&o.parentNode.tagName==='OPTGROUP'?o.parentNode.label+' · ':'')+o.textContent}})}
+function valsDe(id){if(MULTI[id])return MULTI[id].vals.slice();const e=$(id);return(e&&e.value&&e.value!=='all')?[e.value]:[]}
+function selVersMulti(id,libelle,surCh){
+  const sel=$(id);if(!sel||typeof PTE_COMMUN==='undefined'||!PTE_COMMUN.multiChoix)return;
+  const opts=optsDuSelect(sel),m=MULTI[id];
+  const vals=(m?m.vals:valsDe(id)).filter(function(v){return opts.some(function(o){return o.v===v})});
+  const mc=PTE_COMMUN.multiChoix({libelle:libelle,options:opts,valeurs:vals,surChangement:function(v){MULTI[id].vals=v;surCh()}});
+  if(m&&m.el&&m.el.parentNode)m.el.parentNode.replaceChild(mc.element,m.el);else sel.parentNode.insertBefore(mc.element,sel);
+  sel.style.display='none';MULTI[id]={el:mc.element,vals:vals}}
 function rpActif(){return RP_SEL.length>0}
 /* Conservé pour l'affichage et les titres : rend le nom quand un seul
    portefeuille est retenu, « all » sinon. Plus aucun filtrage ne s'y appuie. */
@@ -5791,14 +6011,14 @@ function hBg(t){const f=String(t||'').toLowerCase().trim();
   const b=(c,x,ti)=>'<span class="bg" style="background:'+c+'"'+(ti?' title="'+esc(ti)+'"':'')+'>'+x+'</span>';
   if(!f)return b('#bbb','?','Type d’énergie non renseigné');
   if(/inexistant|aucun|sans chauff/.test(f))return b('#5F6A6B','Inexistant','Aucune installation de chauffage');
-  if(f.includes('pac')&&f.includes('gaz'))return b('#A34100','PAC+Gaz','Installation hybride pompe à chaleur + gaz');
+  if(f.includes('pac')&&f.includes('gaz'))return b('#C94F82','PAC+Gaz','Installation hybride pompe à chaleur + gaz');
   if(f.includes('mazout'))return b('#B03A2E','Mazout');
-  if(/cad|distance|cadiom/.test(f))return b('#1F6391','CAD','Chauffage à distance : le sous-site reçoit sa chaleur d\'un réseau, sans chaudière sur place. L\'outil ne le compte plus parmi les agents fossiles.');
-  if(f.includes('gaz'))return b('#B35F10','Gaz');
-  if(f.includes('pac'))return b('#1E8449','PAC','Pompe à chaleur : elle puise la chaleur dans l\'air, le sol ou l\'eau et consomme de l\'électricité pour la relever à la température du chauffage.');
-  if(/bois|pellet|b[uû]che|palette|granul/.test(f))return b('#1E8449','Bois');
-  if(/electr|électr|^el\b|^el\./.test(f))return b('#6B52A8','Élec.','Chauffage électrique direct');
-  if(/rejets/.test(f))return b('#1E8449','Rejets','Rejets de chaleur récupérés');
+  if(/cad|distance|cadiom/.test(f))return b('#3D6FD6','CAD','Chauffage à distance : le sous-site reçoit sa chaleur d\'un réseau, sans chaudière sur place. L\'outil ne le compte plus parmi les agents fossiles.');
+  if(f.includes('gaz'))return b('#E06A2C','Gaz');
+  if(f.includes('pac'))return b('#0A80A8','PAC','Pompe à chaleur : elle puise la chaleur dans l\'air, le sol ou l\'eau et consomme de l\'électricité pour la relever à la température du chauffage.');
+  if(/bois|pellet|b[uû]che|palette|granul/.test(f))return b('#6E9F16','Bois');
+  if(/electr|électr|^el\b|^el\./.test(f))return b('#856EBE','Élec.','Chauffage électrique direct');
+  if(/rejets/.test(f))return b('#5560C8','Rejets','Rejets de chaleur récupérés');
   if(/solaire|thermique solaire/.test(f))return b('#f1c40f','Solaire');
   return b('#bbb','?',t)}
 
@@ -6009,7 +6229,8 @@ function popFiltres(){
     '</optgroup><optgroup label="Agent de chauffage">'+
     fselOpts('fo').filter(function(o){return o.v.indexOf('h:')===0}).map(function(o){return'<option value="'+esc(o.v)+'">'+esc(o.t)+' ('+o.n+')</option>'}).join('')+
     '</optgroup>';
-  m.value=[].some.call(m.options,function(o){return o.value===v})?v:'all'}
+  m.value=[].some.call(m.options,function(o){return o.value===v})?v:'all';
+  try{selVersMulti('mFo','Chauffage',renM)}catch(e){}}
 
 
 /* Sous-onglets du Classement : une vue à la fois ; les graphiques se recalent quand leur vue s'affiche. */
@@ -6108,7 +6329,7 @@ function calcTI(s){
 var TI_LABELS={1:'Suivi énergétique',2:'Entretien / renouvellement',3:'Gros travaux / rénovation partielle',4:'Rénovation complète'};
 function tiBg(v){if(!v&&v!==0)return'<span class="bg" style="background:#bbb">—</span>';v=Math.round(v);var cols={1:'#1E8449',2:'#B8860B',3:'#B35F10',4:'#B03A2E'};return'<span class="bg" title="'+(TI_LABELS[v]||'')+'" style="background:'+(cols[v]||'#bbb')+';color:'+(v===2?'#333':'#fff')+'">T'+v+'</span>'}
 
-function scored(rp,pat){let r=baseScored();if(rpActif())r=r.filter(s=>rpMatch(s.rp));if(pat==='prot')r=r.filter(s=>isProt(s.pat));else if(pat==='nprot')r=r.filter(s=>!isProt(s.pat));else if(pat&&pat!=='all')r=r.filter(s=>(s.pat||'')===pat);return r}
+function scored(rp,pat){let r=baseScored();if(rpActif())r=r.filter(s=>rpMatch(s.rp));if(PROG_ACT.length)r=r.filter(progMatch);if(pat==='prot')r=r.filter(s=>isProt(s.pat));else if(pat==='nprot')r=r.filter(s=>!isProt(s.pat));else if(pat&&pat!=='all')r=r.filter(s=>(s.pat||'')===pat);return r}
 function isProt(p){return p&&(p.includes('Classé')||p.includes('Zone protégée')||p.includes('Inventaire')||p.includes('Objets')||p.includes('Ensembles'))}
 function isFos(t){const f=(t||'').toLowerCase();return(f.includes('gaz')||f.includes('mazout'))&&!f.startsWith('pac')&&!f.startsWith('bois')&&!f.startsWith('cad')}
 function scCol(v){return v>=70?'#1E8449':v>=50?'var(--warn)':v>=30?'var(--red)':'#95a5a6'}
@@ -6374,6 +6595,8 @@ function importFromRows(rows,includeAll){
        colonne voisine */
     pvSitgKw:fcExact(h,'PV SITG - puissance [kWc]'),prodType:fcExact(h,'Producteur d\'Electricité Type'),
     prodPuiss:fcExact(h,'Producteur d\'Elec Puissance'),toitSitg:fcExact(h,'Surface toiture SITG [m2]'),
+    /* programmes (21.10.2026) : sous-sites marqués dans Plan_PTE, lus au nom exact */
+    tag300:fcExact(h,'Tag 300'),tagCoe:fcExact(h,'Tag COE'),tagCan:fcExact(h,'Tag Canicule'),
     vegExist:fcExact(h,'Toiture végétalisée existante SITG [m2]'),
     ddTriOk:fc(h,['DD Tri conforme']),ddMat:fc(h,['DD Exigence matériaux']),ddLci:fc(h,['DD LCI 117-118']),idcpB:fc(h,['IDC projeté VB [kWh]','IDC projeté VB']),idcpC:fc(h,['IDC projeté VC [kWh]','IDC projeté VC']),idcpGen:fc(h,['IDC projeté','IDCprojeté']),invEstim:fc(h,['Estim PTE','EstimPTE']),invCecb:fc(h,['Estim CECB+','Invest estim. CECB+']),invVB:fc(h,['Estim ImmOBA','Invest ImmOBA','InvestImmOBA','Invest VB']),invGE:fc(h,['Prévisionnel PTE GEI','GE-Invest','GEInvest','GE Invest','Invest GE']),invDG:fc(h,['DG 3.31 [CHF]','DG 3.31','DG [CHF]','DG (25%)','DG(25%)','DG 25%','DG25','Invest DG','DG']),lat:fc(h,['Latitude','Lat','GPS_Lat','YCOOR']),lng:fc(h,['Longitude','Long','Lng','GPS_Lng','XCOOR','lon']),gainElec:fc(h,['Gain Electricité (Max) - kWh','Gain Électricité (Max) - kWh']),gainEau:fc(h,['Gain Eau (Max) - m3']),pvKwc:fc(h,['Futur projet PV - puissance estimée [kWc]','Futur projet PV - puissance estimée (kWc)']),pvM2:fc(h,['Futur projet PV - surface toiture PV estimée [m2]','Futur projet PV - surface toiture PV estimée (m2)'])};
   /* Garde-fou anti-collision : si la colonne « RP » détectée contient des nombres
@@ -6429,6 +6652,7 @@ function importFromRows(rows,includeAll){
     ddPerm:pn(gvr(R,c.ddPerm)),ddVeget:pn(gvr(R,c.ddVeget)),ddVegCout:pn(gvr(R,c.ddVegCout)),ddArbres:pn(gvr(R,c.ddArbres)),
     ddCour:gv(R,c.ddCour),ddTri:pn(gvr(R,c.ddTri)),ddTriOk:gv(R,c.ddTriOk),
     ddToitProj:pn(gvr(R,c.ddToitProj)),ddTriProj:pn(gvr(R,c.ddTriProj)),
+    tags:{p300:tagVal(gvr(R,c.tag300)),coe:tagVal(gvr(R,c.tagCoe)),canicule:tagVal(gvr(R,c.tagCan))},
     lotEnv:pn(gvr(R,c.lotEnv)),lotChauf:pn(gvr(R,c.lotChauf)),lotTech:pn(gvr(R,c.lotTech)),lotElec:pn(gvr(R,c.lotElec)),lotEau:pn(gvr(R,c.lotEau)),scop:pn(gvr(R,c.scop)),
     pvSitgKw:pn(gvr(R,c.pvSitgKw)),prodType:String(gv(R,c.prodType)||'').trim(),prodPuiss:String(gv(R,c.prodPuiss)||'').trim(),
     toitSitg:pn(gvr(R,c.toitSitg)),vegExist:pn(gvr(R,c.vegExist)),
@@ -7753,7 +7977,7 @@ function renTop(all){
     el.innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:60px">Aucun sous-site classable pour cet objectif.</p>';return}
   const byId={};(all||[]).forEach(function(s){byId[s.id]=s});
   const items=applyQuali(OBJRANK[key].items,key)
-    .filter(function(it){return !rpActif()||(byId[it.id]&&rpMatch(byId[it.id].rp))})
+    .filter(function(it){return (!rpActif()||(byId[it.id]&&rpMatch(byId[it.id].rp)))&&(!PROG_ACT.length||(byId[it.id]&&progMatch(byId[it.id])))})
     .slice(0,20);
   if(!items.length){el.innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:60px">Aucun sous-site de ce portefeuille dans ce classement.</p>';return}
   const unit=OBJ_UNIT[key]||'';
@@ -8048,6 +8272,7 @@ function fHit(k,s,f){
   return false}
 function passRankFilters(s,f){
   if(!rpMatch(s.rp))return false;
+  if(!progMatch(s))return false;
   if(!fHit('fo',s,f))return false;
   if(!fHit('pa',s,f))return false;
   if(!fHit('ce',s,f))return false;
@@ -9193,7 +9418,7 @@ function exclusHtml(key,bySiteId){
   const host=$('objExclus');
   const ids=exclusIds();
   if(!ids.length)return'';
-  const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
+  const pop=popVis();
   const by=bySiteId||{};(pop||[]).forEach(function(s){if(!by[s.id])by[s.id]=s});
   const tous=(key==='tous');
   const R=(!tous&&OBJRANK&&OBJRANK[key])?OBJRANK[key]:null;
@@ -9734,7 +9959,7 @@ function ddParc(pop){
          couverture:tot?100*den/tot:0,volets:out,somme:tot,n:(pop||[]).length}}
 function renDD(){
   const el=$('ddTbl');if(!el)return;
-  const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
+  const pop=popVis();
   const P=ddParc(pop);
   if(!P.volets.length){
     el.innerHTML='<p class="mini">Aucun volet trouvé dans la feuille <code>Objectifs PTE</code>. '+
@@ -9840,7 +10065,7 @@ function regressions(){
 
 /* ---------- rapport d'anomalies exportable ------------------------------- */
 function anomalies(){
-  const pop=(S_ALL&&S_ALL.length)?S_ALL:S,out=[];
+  const pop=popVis(),out=[];
   (SERIES_WARN||[]).forEach(function(w){out.push(['Série de consommation','',''+w,'Consommation par site'])});
   /* Contrat de données : ce qui manque au classeur, sous-site par sous-site
      (SRE, IDC, agent, facteur CO₂, chaleur estimée…) et au niveau du classeur */
@@ -10084,14 +10309,14 @@ let autreLectureOn=false;
 function indState(k){
   const g=(typeof OBJ_GAPS!=='undefined')?OBJ_GAPS:null;if(!g)return null;
   const t=RES?RES.tot:{th:0,co:0,el:0,ea:0};
-  if(k==='dd'){const P=ddParc((S_ALL&&S_ALL.length)?S_ALL:S);
+  if(k==='dd'){const P=ddParc(popVis());
     return{val:P.score,cible:100,ref:0,part:false,pct:P.score==null?0:P.score,
            /* le segment clair de la barre, c'est ce que les projets repérés
               ajouteraient — même convention que « + portefeuille » ailleurs */
            pctPort:(P.scoreProj!=null&&P.score!=null)?Math.max(0,Math.min(100-P.score,P.scoreProj-P.score)):0,
            lbl:'Développement durable',unit:'/ 100',couv:P.couverture,dd:P}}
   if(k==='idc'){
-    const q=idcParc((S_ALL&&S_ALL.length)?S_ALL:S),c30=pCible30(),c50=pCible50();
+    const q=idcParc(popVis()),c30=pCible30(),c50=pCible50();
     if(q.idc==null)return{val:null,cible:c30,cible50:c50,part:false,niveau:true,
       pct:0,pctPort:0,idcq:q,surface:q.sre};
     const atteint=q.idc<=c30;
@@ -10505,7 +10730,7 @@ function renderDetail(){
    du parc par rapport au seuil. Couleurs prises aux jetons, donc justes en
    mode nuit comme à l'impression. */
 function idcHisto(q,c30,c50){
-  const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
+  const pop=popVis();
   if(!pop||!pop.length)return'';
   /* Les bornes intègrent les deux cibles : sans cela une tranche 80–100
      serait à cheval sur le seuil de 97 et sa couleur ne voudrait rien dire.
@@ -10724,7 +10949,7 @@ function drawIndic(k){
 /* ---------- vue par responsable de portefeuille ---------- */
 function renRPF(){
   const el=$('rpfTbl');if(!el)return;
-  const pop=gsPop();if(!pop.length){el.innerHTML='';return}
+  const pop=gsPop().filter(progMatch);if(!pop.length){el.innerHTML='';return}
   const top=new Set();
   if(typeof OBJRANK!=='undefined'&&OBJRANK){
     ['co2','th','ren','elec','eau'].forEach(function(k){
@@ -10794,7 +11019,7 @@ const QUAL_FIELDS=[
   eff:'le sous-site n\'apparaît pas sur la carte'}];
 function renQual(){
   const el=$('qualTbl');if(!el)return;
-  const pop=gsPop();if(!pop.length){el.innerHTML='';return}
+  const pop=gsPop().filter(progMatch);if(!pop.length){el.innerHTML='';return}
   const n=pop.length;
   const rows=QUAL_FIELDS.map(function(F){
     const miss=pop.filter(function(s){return !F.f(s)});
@@ -10938,7 +11163,8 @@ function renMetAnnee(){
     '<br>Le détail, sous-site par sous-site, est dans l\'onglet <b>Données</b>.'}
 function meKpi(){
   try{renMetAnnee()}catch(e){}
-  const n=S.length,inv=S.reduce(function(t,s){return t+(s.invVB||0)},0);
+  const Sv=PROG_ACT.length?S.filter(progMatch):S;
+  const n=Sv.length,inv=Sv.reduce(function(t,s){return t+(s.invVB||0)},0);
   const a=$('meN');if(a)a.textContent=n||'—';
   const b=$('meInv');if(b)b.textContent=inv>0?Math.round(inv/1e6):'—'}
 
@@ -11053,10 +11279,12 @@ function fixMap(){
 }
 
 function getFilteredForMap(){
-  const rp=getGlobalRP();const fo=$('mFo')?.value||'all';const pa=$('mPa')?.value||'all';const se=($('mSe')?.value||'').toLowerCase();
-  let f=scored(rp,pa);
-  if(fo!=='all')f=f.filter(s=>FDEF.fo.val(s).indexOf(fo)>=0);
-  const ce=$('mCe')?.value||'all';if(ce!=='all')f=f.filter(s=>cecbInfo(s).fam===ce);
+  const rp=getGlobalRP();const se=($('mSe')?.value||'').toLowerCase();
+  const FO=valsDe('mFo'),PA=valsDe('mPa'),CE=valsDe('mCe');
+  let f=scored(rp);
+  if(FO.length)f=f.filter(s=>{const v=FDEF.fo.val(s);return FO.some(x=>v.indexOf(x)>=0)});
+  if(PA.length)f=f.filter(s=>PA.some(p=>p==='prot'?isProt(s.pat):p==='nprot'?!isProt(s.pat):(s.pat||'')===p));
+  if(CE.length)f=f.filter(s=>CE.indexOf(cecbInfo(s).fam)>=0);
   if(se)f=f.filter(s=>(s.id+s.nom+(s.rp||'')+(s.hsub||'')+(s.pat||'')+(s.adr||'')).toLowerCase().includes(se));return f}
 
 function renM(){
@@ -11227,8 +11455,13 @@ const IDC_MIN=15,IDC_MAX=500,REDUC_MAX=0.85,RATIO_MIN=0.3,RATIO_MAX=5;
 
 /* Politiques publiques — palette stable par hachage de nom, pour que
    la même politique garde toujours la même couleur d'une session à l'autre. */
-const PAL=['#b03a2e','#2d6a9f','#e8a838','#1E8449','#7d3c98','#16a085','#f39c12','#6B52A8','#1F6391','#A34100','#1abc9c','#34495e'];
-function polColor(name){let h=0;const s=String(name||'?');for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return PAL[h%PAL.length]}
+/* 21.10.2026 : huit couleurs distinctes de la palette commune (PTE_COMMUN.PALETTE_CAT), attribuées aux
+   politiques les plus représentées, dans l'ordre du nombre de sous-sites ; les suivantes en gris « autres ».
+   Une politique garde sa couleur tant que le classeur ne change pas. */
+const PAL=(typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.PALETTE_CAT)||['#0A80A8','#E06A2C','#856EBE','#6E9F16','#3D6FD6','#C94F82','#2E9BD6','#5560C8'];
+let POL_RANG={};
+function polRangs(src){const n={};(src||[]).forEach(function(s){const k=String(s.pol||'?');n[k]=(n[k]||0)+1});POL_RANG={};Object.keys(n).sort(function(a,b){return n[b]-n[a]||a.localeCompare(b,'fr')}).forEach(function(k,i){POL_RANG[k]=i})}
+function polColor(name){const i=POL_RANG[String(name||'?')];return(i!=null&&i<PAL.length)?PAL[i]:'#8A8F94'}
 
 /* ================================================================
    ÉTAT
@@ -11272,8 +11505,9 @@ function alertsOpt(s){
   return out}
 
 function buildOpt(){
-  const src=(typeof S_ALL!=='undefined'&&S_ALL&&S_ALL.length)?S_ALL:(S||[]);
+  const src=popVis();   /* programmes (21.10.2026) : l'arbitrage porte sur les sous-sites des programmes actifs */
   SITES=[];
+  try{polRangs((S_ALL&&S_ALL.length)?S_ALL:S)}catch(e){}
   src.forEach(function(r,ri){
     const sre=+r.sre||0, idc=+r.idcC||0;
     const idcp=(r.idcVB==null||r.idcVB==='')?null:+r.idcVB;
@@ -11560,14 +11794,13 @@ function renderList(){
   if(!SITES.length)return;
   if($('fPol').options.length<2){
     const pols=Array.from(new Set(SITES.map(function(s){return s.pol}))).filter(Boolean).sort();
-    pols.forEach(function(p){const o=document.createElement('option');o.value=p;o.textContent=p;$('fPol').appendChild(o)})}
-  const q=($('q').value||'').toLowerCase(),fp=$('fPol').value,fs=$('fSt').value;
+    pols.forEach(function(p){const o=document.createElement('option');o.value=p;o.textContent=p;$('fPol').appendChild(o)});
+    try{selVersMulti('fPol','Politiques publiques',renderList)}catch(e){}}
+  const q=($('q').value||'').toLowerCase(),FP=valsDe('fPol'),FS=valsDe('fSt');
   let L=SITES.filter(function(s){
     if(q&&(s.nom+' '+s.id).toLowerCase().indexOf(q)<0)return false;
-    if(fp&&s.pol!==fp)return false;
-    if(fs==='nc'){if(s.c>0)return false}
-    else if(fs==='al'){if(!s.alerts.length)return false}
-    else if(fs&&s.st!==fs)return false;
+    if(FP.length&&FP.indexOf(s.pol)<0)return false;
+    if(FS.length&&!FS.some(function(fs){return fs==='nc'?!(s.c>0):fs==='al'?!!s.alerts.length:s.st===fs}))return false;
     return true});
   L.sort(function(x,y){const A=x[sortK],B=y[sortK];
     if(A==null)return 1;if(B==null)return -1;
@@ -11850,8 +12083,8 @@ function drawMaccSimple(L){
   $('maccChart').innerHTML=svg(W,H,g);
   const cheapT=use.filter(function(o){return o.b[1]<=50e3}).reduce(function(s,o){return s+o.t},0);
   const cheapC=use.filter(function(o){return o.b[1]<=50e3}).reduce(function(s,o){return s+o.c},0);
-  $('maccLeg').innerHTML='<p class="mini"><span class="mc-key" style="background:var(--grn)"></span> jusqu\'à 50 kCHF/t &nbsp; '+
-    '<span class="mc-key" style="background:var(--acc)"></span> 50 à 150 kCHF/t &nbsp; '+
+  $('maccLeg').innerHTML='<p class="mini"><span class="mc-key" style="background:#1A8554"></span> jusqu\'à 50 kCHF/t &nbsp; '+
+    '<span class="mc-key" style="background:#B58900"></span> 50 à 150 kCHF/t &nbsp; '+
     '<span class="mc-key" style="background:#B03A2E"></span> au-delà de 150 kCHF/t<br>'+
     'Lecture : chaque barre regroupe les sous-sites dont la tonne évitée coûte le même ordre de prix. Hauteur = CO₂ évité par an, sous la barre : le nombre de sous-sites et l\'investissement correspondant. '+
     '<b>'+nf(cheapT)+' t/an</b> sont accessibles à moins de 50 kCHF la tonne, pour <b>'+nf(cheapC/1e6,0)+' MCHF</b> — soit '+nf(100*cheapT/totT)+' % du gisement pour '+
@@ -11921,7 +12154,8 @@ function renderPage(){
   step('textes',majTextesDyn);step('parc',renD);step('classement',renR);step('méthode',meKpi);step('arbitrage',runOpt);
   step('responsables',renRPF);step('qualitatif',renQual);step('DD',renDD);
   step('anomalies',renAnomalies);step('verrous',renLock);step('instantanés',snapFill);step('comparateur',cmpRender);
-  step('tuiles',renderTiles);step('alerte tableau de bord',renDashWarn)}
+  step('tuiles',renderTiles);step('alerte tableau de bord',renDashWarn);
+  step('programmes',function(){if(window.PROG_UI)window.PROG_UI.maj()})}
 function renDashWarn(){
   const el=$('dashWarn');if(!el)return;
   const n=(typeof anomalies==='function')?anomalies().length:0;
@@ -12292,6 +12526,15 @@ function onPanelShown(id){
     importer:function(f){saisiesImport({target:{files:[f],value:''}})},
     apresReception:function(){loadState();const gi=$('gInv');if(gi)gi.value=invMode;_prioCache=null;try{applyInvMode();ren()}catch(err){}}});
   PTE_COMMUN.iconesMenus(document.getElementById('mainMenu'));
+})();
+/* Programmes et menus à choix multiple (21.10.2026). */
+(function(){
+  if(typeof PTE_COMMUN==='undefined'||!PTE_COMMUN.installerProgrammes)return;
+  const ds=document.querySelector('.hdr-right .data-set');
+  window.PROG_UI=PTE_COMMUN.installerProgrammes({avant:ds,
+    compter:function(k){const p=(S_ALL&&S_ALL.length)?S_ALL:S;if(!p||!p.length)return null;return p.filter(function(s){return s.tags&&s.tags[k]}).length},
+    surChangement:function(){progLire();_prioCache=null;try{buildOpt()}catch(e){}ren()}});
+  try{selVersMulti('mFo','Chauffage',renM);selVersMulti('mPa','Patrimoine',renM);selVersMulti('mCe','CECB+',renM);selVersMulti('fSt','Statut',renderList)}catch(e){console.error(e)}
 })();
 </script>
 </body>

@@ -519,7 +519,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Pilotage PTE · <a href="#" data-pte-versions="accueil" title="Historique des versions">v1.12 · 18.10.2026</a></span>
+  <span>Pilotage PTE · <a href="#" data-pte-versions="accueil" title="Historique des versions">v1.13 · 21.10.2026</a></span>
 </footer>
 
 <script>
@@ -1920,6 +1920,10 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "21.10.2026", "objet": "revue", "version": "v0.27", "titre": "Programmes, filtres à choix multiple, couleurs des phases SIA", "points": ["Pastilles « Les 300 », « COE » et « Canicule » dans l'en-tête : filtre commun aux outils et à tous les affichages (projets dont le sous-site porte le tag dans Plan_PTE) ; plusieurs pastilles = l'un ou l'autre, aucune = tout le parc.", "Filtres RP, Statut, Type et État SIA du Reporting en listes à cocher (plusieurs choix) ; Statut sur « 2-EN COURS » par défaut, « Tout décocher » = tous les statuts.", "Phases SIA en huit couleurs distinctes (palette commune validée daltonisme et contraste, jour et nuit) au lieu des nuances d'un seul bleu ; pastille de la phase 21 rétablie.", "Couverture CECB+ et finances de la fiche : couleurs catégorielles fixes, le vert, l'orange et le rouge restent aux sémaphores."]},
+    {"date": "21.10.2026", "objet": "priorisation", "version": "v2.16", "titre": "Programmes, menus à choix multiple, couleurs distinctes", "points": ["Pastilles « Les 300 », « COE » et « Canicule » dans l'en-tête (colonnes Tag de Plan_PTE) : classements, carte, vue d'ensemble, tuiles, arbitrage, responsables, qualité, DD et anomalies ne montrent que les sous-sites des programmes actifs ; rangs et références restent calculés sur le parc entier.", "Carte (chauffage, patrimoine, CECB+) et arbitrage (politiques publiques, statut) : menus à choix multiple.", "Agents de chauffage en couleurs distinctes (PAC et bois n'ont plus la même) ; politiques publiques : huit couleurs fixes, les suivantes en gris ; légende du coût de la tonne évitée alignée sur les barres."]},
+    {"date": "21.10.2026", "objet": "simulation", "version": "v3.10", "titre": "Programmes", "points": ["Pastilles « Les 300 », « COE » et « Canicule » dans l'en-tête : la recherche ne propose que les sites dont un sous-site appartient aux programmes actifs."]},
+    {"date": "21.10.2026", "objet": "accueil", "version": "v1.13", "titre": "Programmes", "points": ["Pastilles « Les 300 », « COE » et « Canicule » dans l'en-tête : la sélection vaut pour les trois outils."]},
     {"date": "21.10.2026", "objet": "revue", "version": "v0.26", "titre": "Fil rouge de la revue en cinq temps", "points": ["Bouton « Fil rouge » : un bandeau « Ordre du jour » en cinq temps (préparer, constater, analyser, décider, restituer) s'affiche au-dessus des vues ; chaque temps renvoie aux vues existantes, rien n'est bloquant.", "Constater : décisions des revues précédentes avec leur statut, modifiable (ouverte, faite, abandonnée), et sémaphores qui ont changé depuis le mois précédent.", "Analyser : seuls les projets en rouge ou orange, à cocher une fois analysés, avec accès direct à la fiche ; Décider : décisions et escalades du mois, signalées sans porteur ou sans échéance.", "Restituer : synthèse 30 secondes générée (trois messages, situation, décisions, escalades), à copier, et export des décisions du mois ; chronomètre de séance (60 min)."]},
     {"date": "20.10.2026", "objet": "priorisation", "version": "v2.15", "titre": "Coûts par lot, listes complètes, type d'intervention calculé", "points": ["Coûts par objectif lus dans les colonnes de lots de Plan_PTE : CO₂, thermique et IDC = enveloppe + chaufferie + technique ; renouvelable = chaufferie ; électricité et eau = leur lot ; développement durable = coût de végétalisation. Sans lot, le montant du menu « Montants ».", "Les classements montrent tous les sous-sites, y compris ceux qui ne contribuent pas à l'objectif (à la suite, en ordre de constat) ; avec un filtre, la liste est complète.", "Type d'intervention calculé dans l'outil (règle de l'ancienne colonne du classeur) ; « Estim ImmOBA » (ex-« Invest ImmOBA ») reconnue.", "Lit la feuille « Objectifs PTE » restructurée le 21.10 ; l'ancienne disposition reste lisible."]},
     {"date": "20.10.2026", "objet": "revue", "version": "v0.25", "titre": "Estim ImmOBA reconnue, objectif photovoltaïque en %", "points": ["La colonne « Estim ImmOBA » (ex-« Invest ImmOBA ») de Plan_PTE est reconnue ; l'ancien nom reste lu.", "L'objectif photovoltaïque s'exprime en part de la consommation électrique : il n'est plus comparé aux kWc des projets."]},
@@ -3951,6 +3955,198 @@ var PTE_COMMUN = (function () {
   C.libelleAjustement = libAjust; C.codeAjustement = codeAjust; C.idDecision = idDecision;
 })(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
 
+/* ---------- Programmes (filtre global), choix multiple, palette catégorielle — 21.10.2026 ----------
+   Programmes : trois colonnes de Plan_PTE (« Tag 300 », « Tag COE », « Tag Canicule ») marquent les
+   sous-sites des programmes définis. La sélection est commune aux outils (localStorage
+   pte.programmes.v1) ; plusieurs programmes actifs = réunion ; aucun = tout le parc. Chaque outil lit
+   les tags à l'import et appelle dansProgrammes() à son point de passage. installerProgrammes() pose
+   les pastilles à icône dans l'en-tête, sur le modèle des pastilles de la fenêtre « Retours ».
+   multiChoix() : liste à cocher compacte, remplace un <select> de filtre (aucune case = tous).
+   PALETTE_CAT : huit couleurs distinctes, ordre fixe, validées (daltonisme, contraste jour et nuit),
+   tenues à l'écart des couleurs de sémaphore. */
+(function (C) {
+  if (!C) return;
+  var LS_PROG = 'pte.programmes.v1';
+  var PROGRAMMES = [
+    { k: 'p300', court: 'Les 300', lib: 'Les 300', titre: 'Les 300 sous-sites de la liste publiée (02.07.2026)', col: 'Tag 300', ic: 'prog300' },
+    { k: 'coe', court: 'COE', lib: 'COE complexes', titre: 'Sous-sites COE complexes / optimisation par bureau d’ingénieur', col: 'Tag COE', ic: 'progCoe' },
+    { k: 'canicule', court: 'Canicule', lib: 'Plan canicule', titre: 'Sous-sites du plan canicule', col: 'Tag Canicule', ic: 'progCanicule' }
+  ];
+  var PALETTE_CAT = ['#0A80A8', '#E06A2C', '#856EBE', '#6E9F16', '#3D6FD6', '#C94F82', '#2E9BD6', '#5560C8'];
+  try {
+    if (C.ICONES) {
+      C.ICONES.prog300 = 'M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01';
+      C.ICONES.progCoe = 'M4 21V7l8-4 8 4v14M9.5 21v-5h5v5M8 10h.01M12 10h.01M16 10h.01M8 13.5h.01M12 13.5h.01M16 13.5h.01';
+      C.ICONES.progCanicule = 'M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4';
+    }
+  } catch (e) {}
+  function cles() { return PROGRAMMES.map(function (p) { return p.k; }); }
+  function lireProgrammes() {
+    try { var a = JSON.parse(localStorage.getItem(LS_PROG) || '[]'); return Array.isArray(a) ? a.filter(function (k) { return cles().indexOf(k) >= 0; }) : []; }
+    catch (e) { return []; }
+  }
+  function ecrireProgrammes(a) {
+    var v = (a || []).filter(function (k, i, t) { return cles().indexOf(k) >= 0 && t.indexOf(k) === i; });
+    try { localStorage.setItem(LS_PROG, JSON.stringify(v)); } catch (e) { /* stockage indisponible */ }
+    try { window.dispatchEvent(new CustomEvent('pte-programmes', { detail: v.slice() })); } catch (e) {}
+    return v;
+  }
+  /* Valeur d'une cellule Tag : vide, 0 ou « non » = pas dans le programme ; sinon la valeur (1, 2…). */
+  function valeurTag(v) {
+    if (v === null || v === undefined) return null;
+    var s = String(v).trim();
+    if (!s || s === '0' || /^(non|no|false|faux)$/i.test(s)) return null;
+    return s;
+  }
+  function dansProgrammes(tags, actifs) {
+    actifs = actifs || lireProgrammes();
+    if (!actifs.length) return true;
+    if (!tags) return false;
+    for (var i = 0; i < actifs.length; i++) if (tags[actifs[i]]) return true;
+    return false;
+  }
+  function libelleProgrammes(actifs) {
+    actifs = actifs || lireProgrammes();
+    return PROGRAMMES.filter(function (p) { return actifs.indexOf(p.k) >= 0; }).map(function (p) { return p.lib; }).join(' + ');
+  }
+  function styleProg() {
+    if (typeof document === 'undefined' || document.getElementById('pte-prog-css')) return;
+    var s = document.createElement('style'); s.id = 'pte-prog-css';
+    s.textContent =
+      '.pte-prog{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}' +
+      '.pte-prog .pte-prog-l{font-size:12px;color:var(--ink-muted,#5b6b7b)}' +
+      '.pte-pchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:12.5px;line-height:1.2;padding:3px 10px;border-radius:14px;cursor:pointer;' +
+        'border:1px solid var(--border,#dfe6ec);background:transparent;color:var(--ink-muted,#5b6b7b)}' +
+      '.pte-pchip:hover{border-color:var(--teal,#005F73);color:var(--ink,#1f2d3d)}' +
+      '.pte-pchip .pte-ic{flex:none}.pte-pchip .n{opacity:.8;font-size:11.5px}' +
+      '.pte-pchip[aria-pressed="true"]{background:#005F73;border-color:#005F73;color:#fff}' +
+      'body.night .pte-pchip[aria-pressed="true"]{background:#30E5D9;border-color:#30E5D9;color:#0b1a24}' +
+      '.pte-mc{position:relative;display:inline-block}' +
+      '.pte-mc-b{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:6px;max-width:260px;padding:4px 10px;border-radius:8px;cursor:pointer;' +
+        'border:1px solid var(--border,#dfe6ec);background:var(--card-bg,#fff);color:var(--ink,#1f2d3d)}' +
+      '.pte-mc-b .v{font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}' +
+      '.pte-mc-b.on{border-color:#005F73}body.night .pte-mc-b.on{border-color:#30E5D9}' +
+      '.pte-mc-b::after{content:"";border:4px solid transparent;border-top-color:currentColor;margin-top:4px;opacity:.6}' +
+      '.pte-mc-pop{position:absolute;z-index:60;top:calc(100% + 4px);left:0;min-width:220px;max-width:340px;max-height:320px;overflow:auto;padding:6px;border-radius:10px;' +
+        'background:var(--card-bg,#fff);color:var(--ink,#1f2d3d);border:1px solid var(--border,#dfe6ec);box-shadow:0 10px 30px rgba(0,0,0,.18);font-size:13px;text-align:left}' +
+      '.pte-mc-pop label{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;cursor:pointer;font-weight:normal;margin:0}' +
+      '.pte-mc-pop label:hover{background:var(--page-bg,#f4f6f8)}' +
+      '.pte-mc-pop label .n{margin-left:auto;color:var(--ink-muted,#5b6b7b);font-size:11.5px}' +
+      '.pte-mc-pop .pte-mc-f{display:flex;gap:10px;justify-content:space-between;padding:6px 8px 2px;border-top:1px solid var(--border,#dfe6ec);margin-top:4px}' +
+      '.pte-mc-pop .pte-mc-f button{font:inherit;font-size:12px;background:none;border:0;color:#005F73;cursor:pointer;padding:0}' +
+      'body.night .pte-mc-pop .pte-mc-f button{color:#30E5D9}';
+    document.head.appendChild(s);
+  }
+  /* Pastilles de programmes. opts : avant (élément devant lequel les poser) ou dans (conteneur),
+     compter(k) → nombre de sous-sites (ou null), surChangement(actifs). */
+  function installerProgrammes(opts) {
+    opts = opts || {};
+    if (typeof document === 'undefined') return null;
+    styleProg();
+    var g = document.createElement('span');
+    g.className = 'pte-prog'; g.setAttribute('role', 'group'); g.setAttribute('aria-label', 'Programmes');
+    g.title = 'Programmes : filtre commun à tous les outils et à tous les affichages. Aucun programme actif = tout le parc ; plusieurs = l’un ou l’autre.';
+    if (opts.libelle !== false) { var l = document.createElement('span'); l.className = 'pte-prog-l'; l.textContent = opts.libelle || 'Programmes'; g.appendChild(l); }
+    var boutons = {};
+    PROGRAMMES.forEach(function (p) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'pte-pchip'; b.setAttribute('data-k', p.k);
+      b.title = p.titre + ' (colonne « ' + p.col + ' » de Plan_PTE)';
+      b.innerHTML = (C.icone ? C.icone(p.ic, 13) : '') + '<span class="t"></span><span class="n"></span>';
+      b.querySelector('.t').textContent = p.court;
+      b.addEventListener('click', function () {
+        var a = lireProgrammes(), i = a.indexOf(p.k);
+        if (i >= 0) a.splice(i, 1); else a.push(p.k);
+        a = ecrireProgrammes(a); maj();
+        if (opts.surChangement) opts.surChangement(a);
+      });
+      boutons[p.k] = b; g.appendChild(b);
+    });
+    function maj() {
+      var a = lireProgrammes();
+      PROGRAMMES.forEach(function (p) {
+        var b = boutons[p.k]; b.setAttribute('aria-pressed', a.indexOf(p.k) >= 0 ? 'true' : 'false');
+        var n = null; try { n = opts.compter ? opts.compter(p.k) : null; } catch (e) { n = null; }
+        b.querySelector('.n').textContent = '';
+        b.title = p.titre + ((n === null || n === undefined) ? '' : ' : ' + n + ' sous-site' + (n > 1 ? 's' : '') + ' dans le classeur') + ' (colonne « ' + p.col + ' » de Plan_PTE). Un clic active ou retire le programme.';
+      });
+    }
+    if (opts.avant && opts.avant.parentNode) opts.avant.parentNode.insertBefore(g, opts.avant);
+    else if (opts.dans) opts.dans.appendChild(g);
+    maj();
+    var dernier = JSON.stringify(lireProgrammes());
+    function ailleurs() {
+      var v = JSON.stringify(lireProgrammes()); if (v === dernier) return; dernier = v;
+      maj(); if (opts.surChangement) opts.surChangement(lireProgrammes());
+    }
+    try {
+      window.addEventListener('storage', function (e) { if (!e.key || e.key === LS_PROG) ailleurs(); });
+      window.addEventListener('focus', ailleurs);
+      window.addEventListener('pte-programmes', function () { dernier = JSON.stringify(lireProgrammes()); maj(); });
+    } catch (e) {}
+    return { element: g, maj: maj };
+  }
+  /* Liste à cocher. opts : libelle, options [{v, t, n?}], valeurs [], surChangement(valeurs), titre.
+     Aucune case = tous (pas de filtre) ; toutes cochées = tous aussi. */
+  var mcOuvert = null;
+  function multiChoix(opts) {
+    styleProg();
+    var w = document.createElement('span'); w.className = 'pte-mc';
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'pte-mc-b'; b.setAttribute('aria-haspopup', 'true'); b.setAttribute('aria-expanded', 'false');
+    if (opts.titre) b.title = opts.titre;
+    var pop = document.createElement('div'); pop.className = 'pte-mc-pop'; pop.hidden = true;
+    w.appendChild(b); w.appendChild(pop);
+    var vals = (opts.valeurs || []).slice();
+    function resume() {
+      var opt = opts.options || [];
+      var lib = !vals.length || vals.length === opt.length ? (opts.tous || 'Tous')
+        : vals.length === 1 ? ((opt.filter(function (o) { return String(o.v) === String(vals[0]); })[0] || { t: vals[0] }).t)
+        : vals.length + ' choix';
+      b.innerHTML = ''; var s1 = document.createElement('span'); s1.textContent = (opts.libelle ? opts.libelle + ' :' : '');
+      var s2 = document.createElement('span'); s2.className = 'v'; s2.textContent = lib;
+      b.appendChild(s1); b.appendChild(s2);
+      b.classList.toggle('on', !!vals.length && vals.length !== opt.length);
+    }
+    function remplir() {
+      pop.innerHTML = '';
+      (opts.options || []).forEach(function (o) {
+        var lab = document.createElement('label'), c = document.createElement('input');
+        c.type = 'checkbox'; c.value = String(o.v); c.checked = vals.map(String).indexOf(String(o.v)) >= 0;
+        c.addEventListener('change', function () {
+          vals = Array.prototype.slice.call(pop.querySelectorAll('input:checked')).map(function (x) { return x.value; });
+          resume(); if (opts.surChangement) opts.surChangement(vals.slice());
+        });
+        var t = document.createElement('span'); t.textContent = o.t;
+        lab.appendChild(c); lab.appendChild(t);
+        if (o.n !== undefined && o.n !== null) { var n = document.createElement('span'); n.className = 'n'; n.textContent = String(o.n); lab.appendChild(n); }
+        pop.appendChild(lab);
+      });
+      var f = document.createElement('div'); f.className = 'pte-mc-f';
+      var aucun = document.createElement('button'); aucun.type = 'button'; aucun.textContent = 'Tout décocher (= tous)';
+      aucun.addEventListener('click', function () { vals = []; remplir(); resume(); if (opts.surChangement) opts.surChangement([]); });
+      f.appendChild(aucun); pop.appendChild(f);
+    }
+    function ouvrir(v) {
+      if (v && mcOuvert && mcOuvert !== fermer) mcOuvert();
+      pop.hidden = !v; b.setAttribute('aria-expanded', v ? 'true' : 'false');
+      if (v) { remplir(); mcOuvert = fermer; } else if (mcOuvert === fermer) mcOuvert = null;
+    }
+    function fermer() { ouvrir(false); }
+    b.addEventListener('click', function (e) { e.stopPropagation(); ouvrir(pop.hidden); });
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+    try {
+      document.addEventListener('click', function () { if (!pop.hidden) fermer(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) { fermer(); b.focus(); } });
+    } catch (e) {}
+    resume();
+    return { element: w, valeurs: function () { return vals.slice(); }, fixer: function (v) { vals = (v || []).slice(); resume(); if (!pop.hidden) remplir(); } };
+  }
+  C.PROGRAMMES = PROGRAMMES; C.LS_PROG = LS_PROG; C.PALETTE_CAT = PALETTE_CAT;
+  C.lireProgrammes = lireProgrammes; C.ecrireProgrammes = ecrireProgrammes; C.valeurTag = valeurTag;
+  C.dansProgrammes = dansProgrammes; C.libelleProgrammes = libelleProgrammes;
+  C.installerProgrammes = installerProgrammes; C.multiChoix = multiChoix;
+})(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
+
 /* ===========================================================================
    Pilotage PTE — point d'import commun (C1, 20.09.2026)
    Lecteur xlsx minimal écrit pour cette page (ZIP + XML, décompression par
@@ -4600,6 +4796,8 @@ document.addEventListener('DOMContentLoaded', () => {
   lireHash();
   window.addEventListener('hashchange', lireHash);
   C.installerSaisies({ avant: $i('menuWrap'), outil: 'accueil' });
+  /* Programmes (21.10.2026) : la sélection faite ici vaut pour les trois outils. */
+  if (C.installerProgrammes) C.installerProgrammes({ avant: document.querySelector('.hdr-right .data-set') });
   C.iconesMenus($i('mainMenu'));
   var m = $i('mainMenu'), b = $i('btnMenu');
   function ouvrirMenu(on) {
