@@ -846,6 +846,35 @@ body.night .rep-legend .sw-diamond{border-color:var(--ink);}
   body.night img, body.night svg image{filter:none;}
   .menu-wrap, .tour-mask, .tour-hole, .tour-box{display:none !important;}
 }
+/* Fil rouge de la revue (v0.26, 21.10.2026) */
+#btn-fil-rouge.on{background:var(--teal);color:#fff;border-color:var(--teal);}
+.fr{background:var(--card-bg,#fff);border:1px solid var(--border);border-radius:12px;margin:0 0 16px;padding:10px 14px;}
+.fr-bar{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;}
+.fr-titre{font-size:13px;}
+.fr-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.fr-chip{font:inherit;font-size:12.5px;border:1px solid var(--border);background:var(--card-bg,#fff);color:var(--ink);border-radius:100px;padding:4px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+.fr-chip:hover{background:var(--blue-pale,#E8F4F7);}
+.fr-chip.on{border-color:var(--teal);color:var(--teal);font-weight:bold;background:var(--blue-pale,#E8F4F7);}
+.fr-chip.fait{color:var(--green);}
+.fr-n{font-size:11px;font-weight:bold;background:var(--border);color:var(--ink);border-radius:100px;padding:0 7px;}
+.fr-droite{margin-left:auto;display:inline-flex;align-items:center;gap:6px;}
+.fr-chrono{font-variant-numeric:tabular-nums;font-size:12.5px;color:var(--ink-muted);}
+.fr-chrono.fr-depasse{color:var(--red);font-weight:bold;}
+.btn.fr-mini{padding:2px 9px;font-size:12px;min-height:0;}
+.fr-panel{border-top:1px solid var(--border);margin-top:10px;padding-top:10px;font-size:13px;}
+.fr-panel h4{font-size:13px;margin:12px 0 4px;}
+.fr-desc{margin:0 0 8px;}
+.fr-check,.fr-proj{list-style:none;margin:4px 0;padding:0;}
+.fr-check li,.fr-proj li{margin:4px 0;}
+.fr-ic{display:inline-block;width:1.3em;font-weight:bold;}
+.fr-ok .fr-ic{color:var(--green);} .fr-ko .fr-ic{color:var(--ochre-text,var(--ochre));}
+.fr-cb{display:inline-flex;align-items:center;gap:6px;font-weight:normal;margin:0;}
+.fr-tbl{width:100%;margin:4px 0 8px;} .fr-tbl select{font:inherit;font-size:12px;padding:2px 4px;}
+.fr-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.fr-pied{border-top:1px dashed var(--border);margin-top:10px;padding-top:8px;}
+.fr-msg{width:100%;font:inherit;font-size:13px;margin:4px 0 8px;}
+.fr-synth{white-space:pre-wrap;background:var(--blue-pale,#E8F4F7);color:var(--ink);border-radius:8px;padding:10px 12px;font:12.5px/1.5 ui-monospace,Menlo,monospace;margin:0;}
+@media print{.fr{display:none!important;}}
 </style>
 <!-- PTE-EPURE:tete — module commun 00_Design-System/pte-epure.css, recopié par build/integrer-epure.py -->
 <script>/* présentation épurée, seule présentation depuis le 18.10.2026. Posée avant le premier rendu : pas d'éclair. */
@@ -1138,6 +1167,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
       <select id="sel-filtre" hidden aria-hidden="true" tabindex="-1"></select></span>
     <label class="cx-l" for="sel-mois">Mois de revue <select id="sel-mois" class="cx-in"></select></label>
     <button type="button" class="btn" id="btn-questions" title="Générer les questions du mois par RPF (Reporting)">Questions du mois</button>
+    <button type="button" class="btn" id="btn-fil-rouge" aria-pressed="false" title="Ordre du jour de la revue en cinq temps : préparer, constater, analyser, décider, restituer">Fil rouge</button>
   </div>
   </div>
 </header>
@@ -1145,6 +1175,8 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 <div id="app-shell">
 
 <div class="notice" id="notice-commun" hidden></div>
+
+<div class="fr no-print" id="fil-rouge" hidden></div>
 
 <section class="view" id="view-reporting">
   <div id="reporting-content"></div>
@@ -1183,7 +1215,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.25 · 20.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.26 · 21.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -2584,6 +2616,7 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "21.10.2026", "objet": "revue", "version": "v0.26", "titre": "Fil rouge de la revue en cinq temps", "points": ["Bouton « Fil rouge » : un bandeau « Ordre du jour » en cinq temps (préparer, constater, analyser, décider, restituer) s'affiche au-dessus des vues ; chaque temps renvoie aux vues existantes, rien n'est bloquant.", "Constater : décisions des revues précédentes avec leur statut, modifiable (ouverte, faite, abandonnée), et sémaphores qui ont changé depuis le mois précédent.", "Analyser : seuls les projets en rouge ou orange, à cocher une fois analysés, avec accès direct à la fiche ; Décider : décisions et escalades du mois, signalées sans porteur ou sans échéance.", "Restituer : synthèse 30 secondes générée (trois messages, situation, décisions, escalades), à copier, et export des décisions du mois ; chronomètre de séance (60 min)."]},
     {"date": "20.10.2026", "objet": "priorisation", "version": "v2.15", "titre": "Coûts par lot, listes complètes, type d'intervention calculé", "points": ["Coûts par objectif lus dans les colonnes de lots de Plan_PTE : CO₂, thermique et IDC = enveloppe + chaufferie + technique ; renouvelable = chaufferie ; électricité et eau = leur lot ; développement durable = coût de végétalisation. Sans lot, le montant du menu « Montants ».", "Les classements montrent tous les sous-sites, y compris ceux qui ne contribuent pas à l'objectif (à la suite, en ordre de constat) ; avec un filtre, la liste est complète.", "Type d'intervention calculé dans l'outil (règle de l'ancienne colonne du classeur) ; « Estim ImmOBA » (ex-« Invest ImmOBA ») reconnue.", "Lit la feuille « Objectifs PTE » restructurée le 21.10 ; l'ancienne disposition reste lisible."]},
     {"date": "20.10.2026", "objet": "revue", "version": "v0.25", "titre": "Estim ImmOBA reconnue, objectif photovoltaïque en %", "points": ["La colonne « Estim ImmOBA » (ex-« Invest ImmOBA ») de Plan_PTE est reconnue ; l'ancien nom reste lu.", "L'objectif photovoltaïque s'exprime en part de la consommation électrique : il n'est plus comparé aux kWc des projets."]},
     {"date": "18.10.2026", "objet": "priorisation", "version": "v2.14", "titre": "Classement allégé, responsables et phases au niveau des projets", "points": ["Classement : la colonne RP devient RPF (responsable de portefeuille) ; les menus « Responsable projet » et « État projet » sont retirés, au Classement comme sur la carte. Le RP de chaque projet GE-Invest s'affiche au survol d'un repère de la carte.", "Menu Chauffage : les deux familles, puis chaque agent du classeur (gaz, mazout, CAD générique, bois, PAC…), avec leur effectif. Patrimoine : un pictogramme pour chaque classement, dans le menu et dans la colonne « Pat. ».", "Arbitrage : un sous-site est « engagé » s'il a un projet GE-Invest en cours en phase SIA 3 ou plus (avancement d'au moins 4 %). Le sous-onglet « Distribution » ne montre plus l'état SIA.", "La colonne « Remarques » du classeur ne remplit plus les notes (elle les écrasait à chaque import) ; millésime IDC lu dans « Année IDC »."]},
@@ -9455,6 +9488,7 @@ var PTE_COMMUN = (function () {
       saveState();
       iDec.value = ''; iEch.value = ''; iEsc.value = ''; iNotes.value = '';
       buildFiche(numeroProjet);
+      renderFilRouge();
     });
     decFormWrap.appendChild(form);
 
@@ -9961,6 +9995,7 @@ var PTE_COMMUN = (function () {
     var name = active ? active.dataset.view : 'reporting';
     if (name === 'dashboard') name = 'reporting';
     showView(name);
+    renderFilRouge();
   }
 
   // ------------------------------------------------------------------
@@ -9995,6 +10030,8 @@ var PTE_COMMUN = (function () {
       showView('reporting');
       try { window.scrollTo(0, 0); } catch (e) { /* la carte est le premier bloc du Reporting */ }
     });
+    var btnFR = $('#btn-fil-rouge');
+    if (btnFR) btnFR.addEventListener('click', function () { frSetOuvert(!frOuvert()); renderFilRouge(); });
     if (COMMUN) window.addEventListener('hashchange', function () { if (DB.projets.length) ouvrirDepuisAdresse(); });
     var btnReload = $('#btn-reload');
     var fClasseur = $('#fClasseur');
@@ -10312,6 +10349,243 @@ var PTE_COMMUN = (function () {
   // ------------------------------------------------------------------
   // API publique (interface + tests automatisés)
   // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+  // Fil rouge de la revue (v0.26, 21.10.2026 — option B choisie par Achim
+  // après la proposition d'Hélène). Bandeau en cinq temps au-dessus des
+  // vues : chaque temps renvoie aux vues existantes, rien n'est bloquant.
+  // État de séance par mois dans localStorage (best-effort) ; les
+  // décisions restent dans DB.decisions (fichier des saisies).
+  // ------------------------------------------------------------------
+  var LS_FR = 'ocba_revue_filrouge_v1';
+  var FR_ETAPES = [
+    { k: 'preparer', t: 'Préparer', min: 0, d: 'Avant la séance : données du mois, périmètre, questions du mois.' },
+    { k: 'constater', t: 'Constater', min: 10, d: 'Suivi des décisions de la revue précédente, sémaphores qui ont changé.' },
+    { k: 'analyser', t: 'Analyser', min: 20, d: 'Seulement les projets en rouge ou orange : écart, cause, options.' },
+    { k: 'decider', t: 'Décider', min: 20, d: 'Décisions et escalades : quoi, qui, quand.' },
+    { k: 'restituer', t: 'Restituer', min: 10, d: 'Synthèse 30 secondes : messages, décisions, escalades.' }
+  ];
+  var FR_DUREE = 60;   // minutes, somme des temps
+  var FR = { etape: 'preparer', timer: null };
+  function frStock() { try { var o = JSON.parse(localStorage.getItem(LS_FR) || '{}'); return (o && typeof o === 'object') ? o : {}; } catch (e) { return {}; } }
+  function frEcrireStock(s) { try { localStorage.setItem(LS_FR, JSON.stringify(s)); } catch (e) { /* stockage indisponible */ } }
+  function frOuvert() { return !!frStock().__ouvert; }
+  function frSetOuvert(v) { var s = frStock(); s.__ouvert = !!v; frEcrireStock(s); }
+  function frSeance() {
+    var x = frStock()[STATE.mois || '—'] || {};
+    x.faits = x.faits || {}; x.analyses = x.analyses || {}; x.messages = x.messages || '';
+    x.aucuneDecision = !!x.aucuneDecision; x.chrono = x.chrono || { cumul: 0, debut: null };
+    return x;
+  }
+  function frEcrire(x) { var s = frStock(); s[STATE.mois || '—'] = x; frEcrireStock(s); }
+  function frGel() { return STATE.mois ? STATE.mois + '-' + String(PARAMS.dateGelJour || 5).padStart(2, '0') : ''; }
+  function frListe() { return STATE.mois ? projetsByPerimetre(STATE.perimetre) : []; }
+  function frNomProjet(np) { var p = DB.projets.filter(function (q) { return q.numero_projet === np; })[0]; return np ? (np + (p && p.nom_projet ? ' — ' + p.nom_projet : '')) : 'Niveau parc / portefeuille'; }
+  /* Décisions du périmètre : projets du périmètre ; les décisions sans projet (niveau parc) seulement sur tout le parc. */
+  function frDecisions() {
+    var set = {}; frListe().forEach(function (c) { set[c.projet.numero_projet] = true; });
+    var tout = !STATE.perimetre || STATE.perimetre === 'ALL';
+    return DB.decisions.filter(function (d) { return d.numero_projet ? !!set[d.numero_projet] : tout; });
+  }
+  function frEnRetard(d) { return d.statut === 'ouverte' && d.echeance && d.echeance < frGel(); }
+  function frEtat() {
+    var list = frListe(), m = STATE.mois || '';
+    var decs = frDecisions();
+    var prec = decs.filter(function (d) { return String(d.date || '').slice(0, 7) < m; });
+    var duMois = decs.filter(function (d) { return String(d.date || '').slice(0, 7) === m; });
+    var alertes = list.filter(function (c) { return c.global === 'rouge' || c.global === 'orange'; })
+      .sort(function (a, b) { return (Engine.SEV[b.global] - Engine.SEV[a.global]) || String(a.projet.numero_projet).localeCompare(String(b.projet.numero_projet)); });
+    var degr = list.filter(function (c) { return c.tendance && c.tendance.symbol === '↓'; });
+    var amel = list.filter(function (c) { return c.tendance && c.tendance.symbol === '↑'; });
+    var cnt = { vert: 0, orange: 0, rouge: 0, gris: 0 }; list.forEach(function (c) { cnt[c.global]++; });
+    return { list: list, prec: prec, precOuvertes: prec.filter(function (d) { return d.statut === 'ouverte'; }),
+      duMois: duMois, alertes: alertes, degr: degr, amel: amel, cnt: cnt };
+  }
+  function frChronoMs(x) { var c = x.chrono; return (c.cumul || 0) + (c.debut ? Date.now() - c.debut : 0); }
+  function frChronoTxt(ms) { var s = Math.floor(ms / 1000), mn = Math.floor(s / 60); return String(mn).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
+  function frTick() {
+    var t = $('#fr-chrono-t'); if (!t) { if (FR.timer) { clearInterval(FR.timer); FR.timer = null; } return; }
+    var x = frSeance(), ms = frChronoMs(x);
+    t.textContent = frChronoTxt(ms) + ' / ' + FR_DUREE + ':00';
+    t.classList.toggle('fr-depasse', ms > FR_DUREE * 60000);
+    if (!x.chrono.debut && FR.timer) { clearInterval(FR.timer); FR.timer = null; }
+  }
+  function frAller(vue, ancre) {
+    showView(vue);
+    if (ancre) { var c = document.getElementById(ancre); if (c && c.scrollIntoView) c.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  }
+  function frOuvrirFiche(np) { STATE.projetSel = np; showView('fiche'); try { window.scrollTo(0, 0); } catch (e) { /* jsdom */ } }
+  function frLigne(ok, texte, extra) {
+    return el('li', { class: ok === null ? '' : (ok ? 'fr-ok' : 'fr-ko') }, [el('span', { class: 'fr-ic', 'aria-hidden': 'true' }, [ok === null ? '•' : (ok ? '✓' : '!')]), texte].concat(extra ? [' ', extra] : []));
+  }
+  function frBtn(txt, fn, cls) { var b = el('button', { type: 'button', class: 'btn' + (cls ? ' ' + cls : '') }, [txt]); b.addEventListener('click', fn); return b; }
+
+  function frPanneau(k, E, x) {
+    var p = el('div', { class: 'fr-panel' });
+    var et = FR_ETAPES.filter(function (e) { return e.k === k; })[0];
+    p.appendChild(el('p', { class: 'fr-desc' }, [el('b', {}, [et.t + (et.min ? ' · ' + et.min + ' min' : ' · avant la séance')]), ' — ' + et.d]));
+
+    if (k === 'preparer') {
+      var pf = planFileInfo();
+      var rens = E.list.filter(function (c) { return c.sems.fraicheur.color === 'vert'; }).length;
+      var q = (lireQuestionsStock().mois || {})[STATE.mois || ''];
+      var nq = q && q.questions ? q.questions.length : 0;
+      var ul = el('ul', { class: 'fr-check' });
+      ul.appendChild(frLigne(!!pf, pf ? 'Classeur chargé : ' + pf.name : 'Aucun classeur chargé'));
+      ul.appendChild(frLigne(!!STATE.mois, 'Mois de revue : ' + moisLibelle(STATE.mois)));
+      ul.appendChild(frLigne(null, 'Périmètre : ' + labelPerimetre(STATE.perimetre) + ' · ' + E.list.length + ' projet' + (E.list.length > 1 ? 's' : '')));
+      ul.appendChild(frLigne(E.list.length ? rens / E.list.length >= 0.8 : false, 'Suivi du mois saisi : ' + rens + ' sur ' + E.list.length + ' projets'));
+      ul.appendChild(frLigne(nq > 0, nq ? nq + ' question' + (nq > 1 ? 's' : '') + ' du mois préparée' + (nq > 1 ? 's' : '') : 'Questions du mois pas encore générées',
+        nq ? null : frBtn('Générer', function () { var b = $('#btn-questions'); if (b) b.click(); renderFilRouge(); })));
+      p.appendChild(ul);
+    }
+
+    if (k === 'constater') {
+      var nFaites = E.prec.filter(function (d) { return d.statut === 'faite'; }).length;
+      var nAband = E.prec.filter(function (d) { return d.statut === 'abandonnée'; }).length;
+      var nRet = E.precOuvertes.filter(frEnRetard).length;
+      p.appendChild(el('h4', {}, ['Décisions des revues précédentes']));
+      p.appendChild(el('p', { class: 'small muted' }, [E.prec.length ? (nFaites + ' faite' + (nFaites > 1 ? 's' : '') + ' · ' + E.precOuvertes.length + ' ouverte' + (E.precOuvertes.length > 1 ? 's' : '') + (nRet ? ' dont ' + nRet + ' en retard' : '') + ' · ' + nAband + ' abandonnée' + (nAband > 1 ? 's' : '') + '. Mettre à jour le statut des décisions ouvertes :') : 'Aucune décision antérieure sur ce périmètre.']));
+      if (E.precOuvertes.length) {
+        var tb = el('tbody');
+        E.precOuvertes.slice().sort(function (a, b) { return String(a.echeance || '9').localeCompare(String(b.echeance || '9')); }).forEach(function (d) {
+          var s = el('select', { 'aria-label': 'Statut de la décision' });
+          ['ouverte', 'faite', 'abandonnée'].forEach(function (v) { var o = el('option', { value: v }, [v]); if (d.statut === v) o.selected = true; s.appendChild(o); });
+          s.addEventListener('change', function () { d.statut = s.value; saveState(); renderFilRouge(); });
+          tb.appendChild(el('tr', {}, [el('td', {}, [frNomProjet(d.numero_projet)]), el('td', {}, [d.decision || '']), el('td', {}, [d.responsable || '']),
+            el('td', { class: frEnRetard(d) ? 'alert-text' : '' }, [(d.echeance || '—') + (frEnRetard(d) ? ' (en retard)' : '')]), el('td', {}, [s])]));
+        });
+        p.appendChild(el('table', { class: 'small fr-tbl' }, [el('thead', {}, [el('tr', {}, ['Projet', 'Décision', 'Resp.', 'Échéance', 'Statut'].map(function (h) { return el('th', { class: 'no-sort' }, [h]); }))]), tb]));
+      }
+      p.appendChild(el('h4', {}, ['Sémaphores qui ont changé depuis le mois précédent']));
+      if (!E.degr.length && !E.amel.length) p.appendChild(el('p', { class: 'small muted' }, ['Aucun changement mesurable (ou pas d’export du mois précédent).']));
+      [[E.degr, 'Dégradations'], [E.amel, 'Améliorations']].forEach(function (g) {
+        if (!g[0].length) return;
+        var u = el('ul', { class: 'fr-proj' });
+        g[0].forEach(function (c) {
+          var a = el('a', { href: '#' }, [frNomProjet(c.projet.numero_projet)]);
+          a.addEventListener('click', function (e) { e.preventDefault(); frOuvrirFiche(c.projet.numero_projet); });
+          u.appendChild(el('li', {}, [semInline(c.tendance.prev ? c.tendance.prev.global : 'gris'), ' → ', semInline(c.global), ' ', a]));
+        });
+        p.appendChild(el('div', { class: 'small' }, [el('b', {}, [g[1] + ' (' + g[0].length + ')']), u]));
+      });
+      p.appendChild(el('div', { class: 'fr-actions' }, [frBtn('Voir les sémaphores', function () { frAller('reporting', 'rep-sec-semaphores'); })]));
+    }
+
+    if (k === 'analyser') {
+      var nA = E.alertes.filter(function (c) { return x.analyses[c.projet.numero_projet]; }).length;
+      p.appendChild(el('p', { class: 'small muted' }, [E.alertes.length ? (nA + ' sur ' + E.alertes.length + ' projets en alerte analysés. Les projets au vert restent consultables dans le Reporting.') : 'Aucun projet en rouge ou orange sur ce périmètre.']));
+      var u2 = el('ul', { class: 'fr-proj' });
+      E.alertes.forEach(function (c) {
+        var np = c.projet.numero_projet;
+        var cb = el('input', { type: 'checkbox', 'aria-label': 'Projet analysé' }); cb.checked = !!x.analyses[np];
+        cb.addEventListener('change', function () { var y = frSeance(); if (cb.checked) y.analyses[np] = true; else delete y.analyses[np]; frEcrire(y); renderFilRouge(); });
+        u2.appendChild(el('li', {}, [el('label', { class: 'fr-cb' }, [cb, semInline(c.global), ' ', frNomProjet(np), c.projet.rp ? el('span', { class: 'muted' }, [' · ' + c.projet.rp]) : null]),
+          ' ', frBtn('Fiche', function () { frOuvrirFiche(np); }, 'fr-mini')]));
+      });
+      p.appendChild(u2);
+    }
+
+    if (k === 'decider') {
+      var nEsc = E.duMois.filter(function (d) { return d.escalade_vers; }).length;
+      p.appendChild(el('p', { class: 'small muted' }, ['Les décisions se saisissent dans la fiche projet (bouton « Fiche » à l’étape Analyser). ' + E.duMois.length + ' décision' + (E.duMois.length > 1 ? 's' : '') + ' ce mois, dont ' + nEsc + ' escalade' + (nEsc > 1 ? 's' : '') + '.']));
+      if (E.duMois.length) {
+        var tb2 = el('tbody');
+        E.duMois.forEach(function (d) { tb2.appendChild(el('tr', {}, [el('td', {}, [frNomProjet(d.numero_projet)]), el('td', {}, [d.decision || '', d.escalade_vers ? el('div', { class: 'muted' }, ['Escalade vers ' + d.escalade_vers]) : null]), el('td', {}, [d.responsable || '—']), el('td', {}, [d.echeance || '—'])])); });
+        p.appendChild(el('table', { class: 'small fr-tbl' }, [el('thead', {}, [el('tr', {}, ['Projet', 'Décision / escalade', 'Porteur', 'Échéance'].map(function (h) { return el('th', { class: 'no-sort' }, [h]); }))]), tb2]));
+        var sansPorteur = E.duMois.filter(function (d) { return !d.responsable || !d.echeance; }).length;
+        if (sansPorteur) p.appendChild(el('p', { class: 'small alert-text' }, [sansPorteur + ' décision' + (sansPorteur > 1 ? 's' : '') + ' sans porteur ou sans échéance.']));
+      } else {
+        var cbA = el('input', { type: 'checkbox' }); cbA.checked = x.aucuneDecision;
+        cbA.addEventListener('change', function () { var y = frSeance(); y.aucuneDecision = cbA.checked; frEcrire(y); renderFilRouge(); });
+        p.appendChild(el('label', { class: 'fr-cb small' }, [cbA, ' Aucune décision à prendre ce mois']));
+      }
+    }
+
+    if (k === 'restituer') {
+      var ta = el('textarea', { rows: '3', class: 'fr-msg', placeholder: 'Trois messages pour la direction, un par ligne.' }); ta.value = x.messages;
+      ta.addEventListener('input', function () { var y = frSeance(); y.messages = ta.value; frEcrire(y); var pre = $('#fr-synth'); if (pre) pre.textContent = frSynthese(frEtat(), y); });
+      p.appendChild(el('label', { class: 'small' }, ['Trois messages']));
+      p.appendChild(ta);
+      p.appendChild(el('pre', { class: 'fr-synth', id: 'fr-synth' }, [frSynthese(E, x)]));
+      p.appendChild(el('div', { class: 'fr-actions' }, [
+        frBtn('Copier la synthèse', function (ev) {
+          var txt = frSynthese(frEtat(), frSeance()), b = ev.currentTarget;
+          var fini = function () { b.textContent = 'Copiée'; setTimeout(function () { b.textContent = 'Copier la synthèse'; }, 1500); };
+          try { navigator.clipboard.writeText(txt).then(fini, function () { /* refus du navigateur */ }); } catch (e) { /* presse-papiers indisponible */ }
+        }),
+        frBtn('Exporter les décisions du mois (CSV)', function () {
+          downloadCSV('decisions_' + (STATE.mois || '') + '.csv', ['date', 'niveau', 'numero_projet', 'portefeuille', 'decision', 'responsable', 'echeance', 'statut', 'escalade_vers', 'notes'], frEtat().duMois);
+        })
+      ]));
+    }
+
+    var fait = !!x.faits[k];
+    var cbF = el('input', { type: 'checkbox' }); cbF.checked = fait;
+    cbF.addEventListener('change', function () { var y = frSeance(); y.faits[k] = cbF.checked; frEcrire(y); if (cbF.checked) { var i = FR_ETAPES.map(function (e) { return e.k; }).indexOf(k); if (i < FR_ETAPES.length - 1) FR.etape = FR_ETAPES[i + 1].k; } renderFilRouge(); });
+    p.appendChild(el('div', { class: 'fr-pied' }, [el('label', { class: 'fr-cb' }, [cbF, ' Temps « ' + et.t + ' » terminé'])]));
+    return p;
+  }
+
+  function frSynthese(E, x) {
+    var sem = Engine.computePortfolioSemaphore(E.list, PARAMS);
+    var L = ['Revue de projets — ' + moisLibelle(STATE.mois) + ' — ' + labelPerimetre(STATE.perimetre), ''];
+    var msgs = String(x.messages || '').split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+    if (msgs.length) { L.push('Messages'); msgs.forEach(function (s, i) { L.push((i + 1) + '. ' + s); }); L.push(''); }
+    L.push('Situation : sémaphore ' + sem.color + ' · ' + E.list.length + ' projets : ' + E.cnt.rouge + ' rouge' + (E.cnt.rouge > 1 ? 's' : '') + ', ' + E.cnt.orange + ' orange, ' + E.cnt.vert + ' vert' + (E.cnt.vert > 1 ? 's' : '') + ', ' + E.cnt.gris + ' non renseigné' + (E.cnt.gris > 1 ? 's' : '') + '.');
+    L.push('Depuis le mois précédent : ' + E.degr.length + ' dégradation' + (E.degr.length > 1 ? 's' : '') + ', ' + E.amel.length + ' amélioration' + (E.amel.length > 1 ? 's' : '') + '.');
+    var nRet = E.precOuvertes.filter(frEnRetard).length;
+    L.push('Décisions précédentes : ' + E.prec.filter(function (d) { return d.statut === 'faite'; }).length + ' faites, ' + E.precOuvertes.length + ' ouvertes' + (nRet ? ' dont ' + nRet + ' en retard' : '') + '.');
+    var esc = E.duMois.filter(function (d) { return d.escalade_vers; });
+    L.push('Décisions de la séance : ' + E.duMois.length + (esc.length ? ' · escalades : ' + esc.length : '') + (E.duMois.length || !x.aucuneDecision ? '' : ' (aucune décision nécessaire)') + '.');
+    E.duMois.forEach(function (d) { L.push('- ' + frNomProjet(d.numero_projet) + ' : ' + (d.decision || '') + (d.responsable ? ' (' + d.responsable + (d.echeance ? ', ' + d.echeance : '') + ')' : '') + (d.escalade_vers ? ' → escalade vers ' + d.escalade_vers : '')); });
+    return L.join('\n');
+  }
+
+  function renderFilRouge() {
+    var host = $('#fil-rouge'), btn = $('#btn-fil-rouge');
+    var ouvert = frOuvert() && DB.projets.length > 0;
+    if (btn) { btn.setAttribute('aria-pressed', ouvert ? 'true' : 'false'); btn.classList.toggle('on', ouvert); }
+    if (!host) return;
+    host.hidden = !ouvert; host.innerHTML = '';
+    if (!ouvert) { if (FR.timer) { clearInterval(FR.timer); FR.timer = null; } return; }
+    var E = frEtat(), x = frSeance();
+    var bar = el('div', { class: 'fr-bar' }, [el('strong', { class: 'fr-titre' }, ['Ordre du jour'])]);
+    var nav = el('nav', { class: 'fr-chips', 'aria-label': 'Les cinq temps de la revue' });
+    var info = {
+      preparer: '', constater: E.precOuvertes.length ? E.precOuvertes.length + ' ouv.' : '',
+      analyser: E.alertes.length ? E.alertes.filter(function (c) { return x.analyses[c.projet.numero_projet]; }).length + '/' + E.alertes.length : '0',
+      decider: String(E.duMois.length), restituer: ''
+    };
+    FR_ETAPES.forEach(function (et, i) {
+      var b = el('button', { type: 'button', class: 'fr-chip' + (FR.etape === et.k ? ' on' : '') + (x.faits[et.k] ? ' fait' : ''), 'aria-pressed': FR.etape === et.k ? 'true' : 'false', title: et.d },
+        [(x.faits[et.k] ? '✓ ' : (i + 1) + ' · ') + et.t, info[et.k] ? el('span', { class: 'fr-n' }, [info[et.k]]) : null]);
+      b.addEventListener('click', function () {
+        FR.etape = et.k;
+        /* le bandeau reste visible : pas de défilement ici, le bouton « Voir les sémaphores » s'en charge */
+        if (et.k === 'constater' || et.k === 'analyser') { if (!$('#view-reporting') || $('#view-reporting').hidden) { if (et.k === 'constater' || $('#view-fiche').hidden) showView('reporting'); } }
+        renderFilRouge();
+      });
+      nav.appendChild(b);
+    });
+    bar.appendChild(nav);
+    var t = el('span', { class: 'fr-chrono', id: 'fr-chrono-t', title: 'Durée de la séance (cible ' + FR_DUREE + ' min)' }, ['']);
+    var bPlay = frBtn(x.chrono.debut ? '⏸' : '▶', function () {
+      var y = frSeance();
+      if (y.chrono.debut) { y.chrono.cumul = frChronoMs(y); y.chrono.debut = null; } else { y.chrono.debut = Date.now(); }
+      frEcrire(y); renderFilRouge();
+    }, 'fr-mini');
+    bPlay.setAttribute('aria-label', x.chrono.debut ? 'Mettre le chronomètre en pause' : 'Démarrer le chronomètre');
+    var bZero = frBtn('↺', function () { var y = frSeance(); y.chrono = { cumul: 0, debut: null }; frEcrire(y); renderFilRouge(); }, 'fr-mini');
+    bZero.setAttribute('aria-label', 'Remettre le chronomètre à zéro');
+    var bFerme = frBtn('×', function () { frSetOuvert(false); renderFilRouge(); }, 'fr-mini');
+    bFerme.setAttribute('aria-label', 'Masquer le fil rouge'); bFerme.title = 'Masquer le fil rouge (l’état de la séance est gardé)';
+    bar.appendChild(el('span', { class: 'fr-droite' }, [t, bPlay, bZero, bFerme]));
+    host.appendChild(bar);
+    host.appendChild(frPanneau(FR.etape, E, x));
+    frTick();
+    if (x.chrono.debut && !FR.timer) FR.timer = setInterval(frTick, 1000);
+  }
+
   window.App = {
     loadCSVText: loadCSVText,
     loadXLSXBuffer: loadXLSXBuffer,
@@ -10329,6 +10603,7 @@ var PTE_COMMUN = (function () {
     financeTotals: financeTotals,
     pteGainsFor: pteGainsFor,
     buildCSVString: buildCSVString,
+    filRouge: { render: function () { renderFilRouge(); }, ouvrir: function (v) { frSetOuvert(v !== false); renderFilRouge(); }, etape: function (k) { FR.etape = k; renderFilRouge(); }, etat: function () { return frEtat(); }, seance: function () { return frSeance(); }, synthese: function () { return frSynthese(frEtat(), frSeance()); } },
     addDecision: function (d) { if (d && !d.id) d.id = nouvelIdDecision(); DB.decisions.push(d); saveState(); },
     showView: showView,
     renderAll: renderAll,
