@@ -519,7 +519,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Pilotage PTE · <a href="#" data-pte-versions="accueil" title="Historique des versions">v1.14 · 21.10.2026</a></span>
+  <span>Pilotage PTE · <a href="#" data-pte-versions="accueil" title="Historique des versions">v1.15 · 21.10.2026</a></span>
 </footer>
 
 <script>
@@ -1920,6 +1920,13 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "21.10.2026", "objet": "priorisation", "version": "v2.20", "titre": "Tuiles IDC et DD sur le parc", "points": ["Vue d'ensemble : les tuiles IDC et Développement durable reviennent au parc entier, comme les autres ; avec un plan coché, leur ligne « Plan » donne l'IDC moyen du plan (et sa part de la SRE, l'écart couvert) ou l'indice de développement durable du plan."]},
+    {"date": "21.10.2026", "objet": "priorisation", "version": "v2.19", "titre": "Part du Plan dans les tuiles, étiquettes du Plan", "points": ["Vue d'ensemble : avec un plan coché, chaque tuile (CO₂, thermique, renouvelable, électricité, eau, IDC) garde la valeur du parc et dit ce que pèse le plan — sa part de la consommation (de la SRE pour l'IDC) et la part de l'écart à la cible 2030 que couvrent ses sous-sites classés.", "Classement et fiche du sous-site : une petite icône par programme (300, canicule, COE) à côté du nom ; l'appartenance au Plan se voit sans filtrer, le nom est dans l'info-bulle."]},
+    {"date": "21.10.2026", "objet": "revue", "version": "v0.30", "titre": "Étiquettes du Plan", "points": ["Reporting, tableau des sous-sites : une petite icône par programme (300, canicule, COE) à côté du nom du sous-site."]},
+    {"date": "21.10.2026", "objet": "priorisation", "version": "v2.18", "titre": "Plan dans le menu Périmètre", "points": ["Plan : les icônes de l'en-tête sont retirées ; « Les 300 », « Plan canicule » et « COE complexes » se cochent dans le menu Périmètre, section « Plan ». Plusieurs lignes = l'une ou l'autre ; Plan et portefeuille ensemble = les deux à la fois. Choix commun aux outils."]},
+    {"date": "21.10.2026", "objet": "revue", "version": "v0.29", "titre": "Plan dans le menu Périmètre, rangs lisibles", "points": ["Plan : les icônes de l'en-tête sont retirées ; « Les 300 », « Plan canicule » et « COE complexes » se cochent dans le menu Périmètre, section « Plan ». Plusieurs lignes = l'une ou l'autre ; Plan et portefeuille ensemble = les deux à la fois. Choix commun aux outils.", "Portefeuille, « Rang des projets actifs classés » : la bande de points, illisible au-delà de quelques dizaines de projets, devient un histogramme — nombre de projets par tranche de 10 rangs, empilé par sémaphore, zone du top 50 grisée, info-bulle par colonne, légende."]},
+    {"date": "21.10.2026", "objet": "simulation", "version": "v3.12", "titre": "Plan dans un menu Périmètre", "points": ["Les icônes de l'en-tête sont remplacées par un menu « Périmètre » réduit à la section Plan (Les 300, Plan canicule, COE complexes) : la recherche ne propose que les sites des programmes cochés. Choix commun aux outils."]},
+    {"date": "21.10.2026", "objet": "accueil", "version": "v1.15", "titre": "Icônes des programmes retirées", "points": ["Les icônes de l'en-tête sont retirées : le Plan se choisit dans le menu Périmètre de chaque outil."]},
     {"date": "21.10.2026", "objet": "priorisation", "version": "v2.17", "titre": "Carte filtrée par programme, icônes des programmes", "points": ["La carte suit les programmes et le périmètre : elle n'était redessinée qu'à sa première ouverture ou par ses propres menus.", "Programmes : les trois pastilles à texte deviennent trois icônes rondes (« 300 », compteur pour les COE, soleil de la canicule), grisées hors filtre, en couleur avec un anneau quand le filtre est actif ; le nom des programmes actifs s'écrit à côté."]},
     {"date": "21.10.2026", "objet": "revue", "version": "v0.28", "titre": "Icônes des programmes, couverture CECB+ rétablie", "points": ["Parc, « Couverture CECB+ » : la carte restait vide (elle cherchait une colonne « État CECB » absente du classeur) ; elle lit désormais « Audit CECB+ », en trois familles comme la carte de la priorisation : réalisé (variantes A/B/C), en cours ou à vérifier, aucun audit.", "Programmes : les trois pastilles à texte deviennent trois icônes rondes (« 300 », compteur pour les COE, soleil de la canicule), grisées hors filtre, en couleur avec un anneau quand le filtre est actif ; le nom des programmes actifs s'écrit à côté."]},
     {"date": "21.10.2026", "objet": "simulation", "version": "v3.11", "titre": "Icônes des programmes", "points": ["Programmes : les trois pastilles à texte deviennent trois icônes rondes (« 300 », compteur pour les COE, soleil de la canicule), grisées hors filtre, en couleur avec un anneau quand le filtre est actif ; le nom des programmes actifs s'écrit à côté."]},
@@ -3959,12 +3966,12 @@ var PTE_COMMUN = (function () {
   C.libelleAjustement = libAjust; C.codeAjustement = codeAjust; C.idDecision = idDecision;
 })(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
 
-/* ---------- Programmes (filtre global), choix multiple, palette catégorielle — 21.10.2026 ----------
-   Programmes : trois colonnes de Plan_PTE (« Tag 300 », « Tag COE », « Tag Canicule ») marquent les
-   sous-sites des programmes définis. La sélection est commune aux outils (localStorage
-   pte.programmes.v1) ; plusieurs programmes actifs = réunion ; aucun = tout le parc. Chaque outil lit
-   les tags à l'import et appelle dansProgrammes() à son point de passage. installerProgrammes() pose
-   les pastilles à icône dans l'en-tête, sur le modèle des pastilles de la fenêtre « Retours ».
+/* ---------- Plan (filtre global), choix multiple, palette catégorielle — 21.10.2026 ----------
+   Plan : trois colonnes de Plan_PTE (« Tag 300 », « Tag Canicule », « Tag COE ») marquent les sous-sites
+   des programmes définis. Le choix se fait dans le menu « Périmètre » de chaque outil, section « Plan »
+   (décision d'Achim du 21.10 au soir, à la place des icônes de l'en-tête). La sélection est commune aux
+   outils (localStorage pte.programmes.v1) ; plusieurs lignes cochées = réunion ; aucune = tout le parc.
+   Avec des portefeuilles cochés, le périmètre est l'intersection (les 300 du portefeuille X).
    multiChoix() : liste à cocher compacte, remplace un <select> de filtre (aucune case = tous).
    PALETTE_CAT : huit couleurs distinctes, ordre fixe, validées (daltonisme, contraste jour et nuit),
    tenues à l'écart des couleurs de sémaphore. */
@@ -3972,40 +3979,35 @@ var PTE_COMMUN = (function () {
   if (!C) return;
   var LS_PROG = 'pte.programmes.v1';
   var PROGRAMMES = [
-    { k: 'p300', court: 'Les 300', lib: 'Les 300', titre: 'Les 300 sous-sites de la liste publiée (02.07.2026)', col: 'Tag 300', ic: 'prog300' },
-    { k: 'coe', court: 'COE', lib: 'COE complexes', titre: 'Sous-sites COE complexes / optimisation par bureau d’ingénieur', col: 'Tag COE', ic: 'progCoe' },
-    { k: 'canicule', court: 'Canicule', lib: 'Plan canicule', titre: 'Sous-sites du plan canicule', col: 'Tag Canicule', ic: 'progCanicule' }
+    { k: 'p300', lib: 'Les 300', titre: 'Les 300 sous-sites de la liste publiée (02.07.2026)', col: 'Tag 300' },
+    { k: 'canicule', lib: 'Plan canicule', titre: 'Sous-sites du plan canicule', col: 'Tag Canicule' },
+    { k: 'coe', lib: 'COE complexes', titre: 'Sous-sites COE complexes / optimisation par bureau d’ingénieur', col: 'Tag COE' }
   ];
   var PALETTE_CAT = ['#0A80A8', '#E06A2C', '#856EBE', '#6E9F16', '#3D6FD6', '#C94F82', '#2E9BD6', '#5560C8'];
-  try {
-    if (C.ICONES) {
-      C.ICONES.prog300 = 'M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01';
-      C.ICONES.progCoe = 'M4 21V7l8-4 8 4v14M9.5 21v-5h5v5M8 10h.01M12 10h.01M16 10h.01M8 13.5h.01M12 13.5h.01M16 13.5h.01';
-      C.ICONES.progCanicule = 'M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4';
-    }
-  } catch (e) {}
-  /* Icônes des programmes (21.10.2026, Théo et Pauline) : une pastille ronde de couleur, lisible à 20 px,
-     un message par icône — « 300 » écrit, un compteur (eau, gaz, électricité) pour les COE complexes, un soleil qui transpire
-     pour la canicule. Bouton : l'icône grise dans un anneau fin (contour des boutons de l'en-tête) ; en couleur au survol ;
-     active : en couleur, anneau teal, et nom du programme écrit à côté (l'état ne repose pas sur la seule couleur). Le nom complet est dans l'info-bulle et dans aria-label. */
-  var EMOJI = {
-    /* couleurs de la charte PTE : teal #005F73, violet #856EBE, ocre #B58900 / #E3B341, ardoise #2C3E50, turquoise #30E5D9 */
-    p300: '<svg viewBox="0 0 32 32" width="20" height="20" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#005F73"/>' +
-      '<text x="16" y="20.3" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="11.5" fill="#fff" letter-spacing="-.3">300</text></svg>',
-    /* compteur : le disque est le cadran — graduations, aiguille, index à rouleaux */
-    coe: '<svg viewBox="0 0 32 32" width="20" height="20" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#856EBE"/>' +
-      '<path d="M7.6 17.2a8.4 8.4 0 0 1 16.8 0" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>' +
-      '<path d="M9.4 11.2l1.3 1.1M16 8.8v1.7M22.6 11.2l-1.3 1.1" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>' +
-      '<path d="M16 17.2l3.6-4.4" stroke="#30E5D9" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="17.2" r="1.6" fill="#fff"/>' +
-      '<rect x="10" y="20.6" width="12" height="4.6" rx="1" fill="#fff"/>' +
-      '<path d="M14 21.2v3.4M18 21.2v3.4" stroke="#856EBE" stroke-width=".9"/></svg>',
-    canicule: '<svg viewBox="0 0 32 32" width="20" height="20" aria-hidden="true">' +
-      '<g stroke="#B58900" stroke-width="2.4" stroke-linecap="round"><path d="M16 1.8v3.4M16 26.8v3.4M1.8 16h3.4M26.8 16h3.4M5.9 5.9l2.4 2.4M23.7 23.7l2.4 2.4M5.9 26.1l2.4-2.4M23.7 8.3l2.4-2.4"/></g>' +
-      '<circle cx="16" cy="16" r="9.6" fill="#E3B341"/>' +
-      '<path d="M11.6 14.6q1.3-1.4 2.6 0M17.8 14.6q1.3-1.4 2.6 0" stroke="#2C3E50" stroke-width="1.4" fill="none" stroke-linecap="round"/>' +
-      '<path d="M12.6 19.4q3.4 2.9 6.8 0" stroke="#2C3E50" stroke-width="1.5" fill="none" stroke-linecap="round"/>' +
-      '<path d="M23.3 9.6c1.4 1.9 2.1 3.1 2.1 4a2.1 2.1 0 0 1-4.2 0c0-.9.7-2.1 2.1-4z" fill="#30E5D9" stroke="#2C3E50" stroke-width=".8"/></svg>'
+  /* Icônes des programmes, couleurs de la charte PTE (21.10.2026) : servent d'étiquettes dans les listes
+     (classement, sous-sites) pour montrer l'appartenance au Plan sans filtrer. Le nom est dans l'info-bulle. */
+  var ICO_PROG = {
+    p300: '<circle cx="16" cy="16" r="16" fill="#005F73"/><text x="16" y="20.3" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="11.5" fill="#fff" letter-spacing="-.3">300</text>',
+    canicule: '<g stroke="#B58900" stroke-width="2.4" stroke-linecap="round"><path d="M16 1.8v3.4M16 26.8v3.4M1.8 16h3.4M26.8 16h3.4M5.9 5.9l2.4 2.4M23.7 23.7l2.4 2.4M5.9 26.1l2.4-2.4M23.7 8.3l2.4-2.4"/></g>' +
+      '<circle cx="16" cy="16" r="9.6" fill="#E3B341"/><path d="M11.6 14.6q1.3-1.4 2.6 0M17.8 14.6q1.3-1.4 2.6 0" stroke="#2C3E50" stroke-width="1.4" fill="none" stroke-linecap="round"/>' +
+      '<path d="M12.6 19.4q3.4 2.9 6.8 0" stroke="#2C3E50" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M23.3 9.6c1.4 1.9 2.1 3.1 2.1 4a2.1 2.1 0 0 1-4.2 0c0-.9.7-2.1 2.1-4z" fill="#30E5D9" stroke="#2C3E50" stroke-width=".8"/>',
+    coe: '<circle cx="16" cy="16" r="16" fill="#856EBE"/><path d="M7.6 17.2a8.4 8.4 0 0 1 16.8 0" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>' +
+      '<path d="M9.4 11.2l1.3 1.1M16 8.8v1.7M22.6 11.2l-1.3 1.1" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><path d="M16 17.2l3.6-4.4" stroke="#30E5D9" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="17.2" r="1.6" fill="#fff"/>' +
+      '<rect x="10" y="20.6" width="12" height="4.6" rx="1" fill="#fff"/><path d="M14 21.2v3.4M18 21.2v3.4" stroke="#856EBE" stroke-width=".9"/>'
   };
+  function iconeProgramme(k, taille) {
+    var t = taille || 14; if (!ICO_PROG[k]) return '';
+    return '<svg viewBox="0 0 32 32" width="' + t + '" height="' + t + '" aria-hidden="true">' + ICO_PROG[k] + '</svg>';
+  }
+  /* Étiquettes d'un sous-site : une icône par programme dont il fait partie (vide sinon). */
+  function badgesProgrammes(tags, taille) {
+    if (!tags) return '';
+    styleProg();
+    return PROGRAMMES.filter(function (p) { return tags[p.k]; }).map(function (p) {
+      var v = String(tags[p.k]), titre = p.lib + (v !== '1' ? ' (valeur ' + v + ' dans « ' + p.col + ' »)' : '');
+      return '<span class="pte-ptag" title="' + titre.replace(/"/g, '&quot;') + '" role="img" aria-label="' + p.lib + '">' + iconeProgramme(p.k, taille) + '</span>';
+    }).join('');
+  }
   function cles() { return PROGRAMMES.map(function (p) { return p.k; }); }
   function lireProgrammes() {
     try { var a = JSON.parse(localStorage.getItem(LS_PROG) || '[]'); return Array.isArray(a) ? a.filter(function (k) { return cles().indexOf(k) >= 0; }) : []; }
@@ -4039,21 +4041,7 @@ var PTE_COMMUN = (function () {
     if (typeof document === 'undefined' || document.getElementById('pte-prog-css')) return;
     var s = document.createElement('style'); s.id = 'pte-prog-css';
     s.textContent =
-      '.pte-prog{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}' +
-      '.pte-prog .pte-prog-l{font-size:12px;color:var(--ink-muted,#5b6b7b)}' +
-      '.pte-prog{gap:3px}' +
-      '.pte-prog-etat{font-size:11.5px;font-weight:bold;color:#005F73;margin-left:3px;white-space:nowrap}body.night .pte-prog-etat{color:#30E5D9}' +
-      '.pte-prog-etat:empty{display:none}' +
-      /* bouton = l'icône grise dans un anneau fin, comme le contour des boutons de l'en-tête ;
-         en couleur au survol et quand le filtre est actif (anneau teal) */
-      '.pte-pchip{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;padding:0;border-radius:50%;cursor:pointer;' +
-        'border:1px solid var(--border,#E1E6E9);background:var(--card-bg,#fff);transition:border-color .12s}' +
-      '.pte-pchip svg{display:block;filter:grayscale(1);opacity:.75;transition:filter .12s,opacity .12s}' +
-      '.pte-pchip:hover,.pte-pchip:focus-visible{border-color:var(--border-hover,#C6D2DC)}' +
-      '.pte-pchip:hover svg,.pte-pchip:focus-visible svg{filter:none;opacity:1}' +
-      '.pte-pchip[aria-pressed="true"]{border-color:#005F73}' +
-      '.pte-pchip[aria-pressed="true"] svg{filter:none;opacity:1}' +
-      'body.night .pte-pchip[aria-pressed="true"]{border-color:#30E5D9}' +
+      '.pte-ptag{display:inline-flex;vertical-align:-2px;margin-left:3px}.pte-ptag:first-child{margin-left:5px}.pte-ptag svg{display:block}' +
       '.pte-mc{position:relative;display:inline-block}' +
       '.pte-mc-b{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:6px;max-width:260px;padding:4px 10px;border-radius:8px;cursor:pointer;' +
         'border:1px solid var(--border,#dfe6ec);background:var(--card-bg,#fff);color:var(--ink,#1f2d3d)}' +
@@ -4070,57 +4058,15 @@ var PTE_COMMUN = (function () {
       'body.night .pte-mc-pop .pte-mc-f button{color:#30E5D9}';
     document.head.appendChild(s);
   }
-  /* Pastilles de programmes. opts : avant (élément devant lequel les poser) ou dans (conteneur),
-     compter(k) → nombre de sous-sites (ou null), surChangement(actifs). */
-  function installerProgrammes(opts) {
-    opts = opts || {};
-    if (typeof document === 'undefined') return null;
-    styleProg();
-    var g = document.createElement('span');
-    g.className = 'pte-prog'; g.setAttribute('role', 'group'); g.setAttribute('aria-label', 'Programmes');
-    g.title = 'Programmes : filtre commun à tous les outils et à tous les affichages. Aucun programme actif = tout le parc ; plusieurs = l’un ou l’autre.';
-    if (opts.libelle) { var l = document.createElement('span'); l.className = 'pte-prog-l'; l.textContent = opts.libelle || 'Programmes'; g.appendChild(l); }
-    var boutons = {};
-    PROGRAMMES.forEach(function (p) {
-      var b = document.createElement('button');
-      b.type = 'button'; b.className = 'pte-pchip'; b.setAttribute('data-k', p.k);
-      b.title = p.titre + ' (colonne « ' + p.col + ' » de Plan_PTE)';
-      b.innerHTML = EMOJI[p.k] + '<span class="n" hidden></span>';
-      b.setAttribute('aria-label', p.lib);
-      b.addEventListener('click', function () {
-        var a = lireProgrammes(), i = a.indexOf(p.k);
-        if (i >= 0) a.splice(i, 1); else a.push(p.k);
-        a = ecrireProgrammes(a); maj();
-        if (opts.surChangement) opts.surChangement(a);
-      });
-      boutons[p.k] = b; g.appendChild(b);
-    });
-    /* Pauline : sans libellé, l'état doit se lire en clair — le nom des programmes actifs s'écrit à côté. */
-    var etat = document.createElement('span'); etat.className = 'pte-prog-etat'; g.appendChild(etat);
-    function maj() {
-      var a = lireProgrammes();
-      etat.textContent = a.length ? libelleProgrammes(a) : '';
-      PROGRAMMES.forEach(function (p) {
-        var b = boutons[p.k]; b.setAttribute('aria-pressed', a.indexOf(p.k) >= 0 ? 'true' : 'false');
-        var n = null; try { n = opts.compter ? opts.compter(p.k) : null; } catch (e) { n = null; }
-        b.querySelector('.n').textContent = '';
-        b.title = p.lib + (a.indexOf(p.k) >= 0 ? ' — filtre actif' : '') + '\n' + p.titre + ((n === null || n === undefined) ? '' : ' : ' + n + ' sous-site' + (n > 1 ? 's' : '') + ' dans le classeur') + '.\nUn clic active ou retire le filtre ; aucun programme actif = tout le parc.';
-      });
-    }
-    if (opts.avant && opts.avant.parentNode) opts.avant.parentNode.insertBefore(g, opts.avant);
-    else if (opts.dans) opts.dans.appendChild(g);
-    maj();
+  /* Suit les changements de Plan faits dans un autre outil (autre onglet, retour sur la page) ou ici. */
+  function surProgrammes(fn) {
     var dernier = JSON.stringify(lireProgrammes());
-    function ailleurs() {
-      var v = JSON.stringify(lireProgrammes()); if (v === dernier) return; dernier = v;
-      maj(); if (opts.surChangement) opts.surChangement(lireProgrammes());
-    }
+    function voir() { var v = JSON.stringify(lireProgrammes()); if (v === dernier) return; dernier = v; try { fn(lireProgrammes()); } catch (e) { console.error(e); } }
     try {
-      window.addEventListener('storage', function (e) { if (!e.key || e.key === LS_PROG) ailleurs(); });
-      window.addEventListener('focus', ailleurs);
-      window.addEventListener('pte-programmes', function () { dernier = JSON.stringify(lireProgrammes()); maj(); });
+      window.addEventListener('storage', function (e) { if (!e.key || e.key === LS_PROG) voir(); });
+      window.addEventListener('focus', voir);
+      window.addEventListener('pte-programmes', voir);
     } catch (e) {}
-    return { element: g, maj: maj };
   }
   /* Liste à cocher. opts : libelle, options [{v, t, n?}], valeurs [], surChangement(valeurs), titre.
      Aucune case = tous (pas de filtre) ; toutes cochées = tous aussi. */
@@ -4180,7 +4126,8 @@ var PTE_COMMUN = (function () {
   C.PROGRAMMES = PROGRAMMES; C.LS_PROG = LS_PROG; C.PALETTE_CAT = PALETTE_CAT;
   C.lireProgrammes = lireProgrammes; C.ecrireProgrammes = ecrireProgrammes; C.valeurTag = valeurTag;
   C.dansProgrammes = dansProgrammes; C.libelleProgrammes = libelleProgrammes;
-  C.installerProgrammes = installerProgrammes; C.multiChoix = multiChoix;
+  C.surProgrammes = surProgrammes; C.multiChoix = multiChoix;
+  C.iconeProgramme = iconeProgramme; C.badgesProgrammes = badgesProgrammes;
 })(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
 
 /* ===========================================================================
@@ -4832,8 +4779,6 @@ document.addEventListener('DOMContentLoaded', () => {
   lireHash();
   window.addEventListener('hashchange', lireHash);
   C.installerSaisies({ avant: $i('menuWrap'), outil: 'accueil' });
-  /* Programmes (21.10.2026) : la sélection faite ici vaut pour les trois outils. */
-  if (C.installerProgrammes) C.installerProgrammes({ avant: document.querySelector('.hdr-right .data-set') });
   C.iconesMenus($i('mainMenu'));
   var m = $i('mainMenu'), b = $i('btnMenu');
   function ouvrirMenu(on) {
