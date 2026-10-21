@@ -1183,7 +1183,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.24 · 18.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.25 · 20.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -2584,6 +2584,8 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "20.10.2026", "objet": "priorisation", "version": "v2.15", "titre": "Coûts par lot, listes complètes, type d'intervention calculé", "points": ["Coûts par objectif lus dans les colonnes de lots de Plan_PTE : CO₂, thermique et IDC = enveloppe + chaufferie + technique ; renouvelable = chaufferie ; électricité et eau = leur lot ; développement durable = coût de végétalisation. Sans lot, le montant du menu « Montants ».", "Les classements montrent tous les sous-sites, y compris ceux qui ne contribuent pas à l'objectif (à la suite, en ordre de constat) ; avec un filtre, la liste est complète.", "Type d'intervention calculé dans l'outil (règle de l'ancienne colonne du classeur) ; « Estim ImmOBA » (ex-« Invest ImmOBA ») reconnue.", "Lit la feuille « Objectifs PTE » restructurée le 21.10 ; l'ancienne disposition reste lisible."]},
+    {"date": "20.10.2026", "objet": "revue", "version": "v0.25", "titre": "Estim ImmOBA reconnue, objectif photovoltaïque en %", "points": ["La colonne « Estim ImmOBA » (ex-« Invest ImmOBA ») de Plan_PTE est reconnue ; l'ancien nom reste lu.", "L'objectif photovoltaïque s'exprime en part de la consommation électrique : il n'est plus comparé aux kWc des projets."]},
     {"date": "18.10.2026", "objet": "priorisation", "version": "v2.14", "titre": "Classement allégé, responsables et phases au niveau des projets", "points": ["Classement : la colonne RP devient RPF (responsable de portefeuille) ; les menus « Responsable projet » et « État projet » sont retirés, au Classement comme sur la carte. Le RP de chaque projet GE-Invest s'affiche au survol d'un repère de la carte.", "Menu Chauffage : les deux familles, puis chaque agent du classeur (gaz, mazout, CAD générique, bois, PAC…), avec leur effectif. Patrimoine : un pictogramme pour chaque classement, dans le menu et dans la colonne « Pat. ».", "Arbitrage : un sous-site est « engagé » s'il a un projet GE-Invest en cours en phase SIA 3 ou plus (avancement d'au moins 4 %). Le sous-onglet « Distribution » ne montre plus l'état SIA.", "La colonne « Remarques » du classeur ne remplit plus les notes (elle les écrasait à chaque import) ; millésime IDC lu dans « Année IDC »."]},
     {"date": "18.10.2026", "objet": "revue", "version": "v0.24", "titre": "Responsable de projet depuis GE-Invest, phase 21", "points": ["Le RP d'un sous-site est celui de ses projets GE-Invest ; la colonne « Responsable projet » de Plan_PTE n'est plus lue.", "Phases SIA : 0 à 3 % d'avancement = phase 21 (étude de faisabilité) ; l'avant-projet (31) commence à 4 %."]},
     {"date": "18.10.2026", "objet": "commun", "version": null, "titre": "Contrat de données : projets GE-Invest, année IDC", "points": ["Responsable de projet, avancement et engagement d'un sous-site lus dans GEI_Projets ; les colonnes « Responsable projet », « Etat du projet (SIA) » et « Année IDC (dernière) » de Plan_PTE ne sont plus lues.", "Préparation : ces colonnes pourront être supprimées du classeur une fois les outils publiés."]},
@@ -5108,7 +5110,7 @@ var PTE_COMMUN = (function () {
       statutConsolidation: _findCol(header, ['statut_consolidation']),
       gei: _findCol(header, ['previsionnel_pte_gei', 'ge_invest', 'geinvest', 'invest_ge']),
       cecb: _findCol(header, ['estim_cecb', 'invest_estim_cecb', 'invest_estim_cecb_chf']),   // « Estim CECB+ » depuis le 23.09.2026
-      immoba: _findCol(header, ['invest_immoba']),
+      immoba: _findCol(header, ['estim_immoba', 'invest_immoba']),
       // gains PTE par sous-site (db.pte) — cf. commentaire ci-dessus
       idcGainRetenu: _findCol(header, ['idc_gain_retenu']),
       co2ProjeteKgM2An: _findCol(header, ['co2_projete_kg_m2_an']),
@@ -5227,6 +5229,12 @@ var PTE_COMMUN = (function () {
       var objRaw = get(cols.objectif, row);
       var objLabel = (objRaw === null || objRaw === undefined) ? '' : String(objRaw).trim();
       if (!objLabel) break; // fin de tableau
+      /* 21.10.2026 : les lignes vides ne sont pas transmises par le lecteur ; un titre
+         de bloc (ni unité, ni référence, ni cible) marque donc aussi la fin du tableau.
+         Sans ce garde-fou, la feuille restructurée faisait lire les séries annuelles
+         du bloc suivant comme des objectifs. */
+      if (!String(get(cols.unite, row) == null ? '' : get(cols.unite, row)).trim() &&
+          parseNum(get(cols.reference_2005, row)) === null && parseNum(get(cols.cible_2030, row)) === null) break;
       var cible = parseNum(get(cols.cible_2030, row));
       if (cible === null) continue; // ligne sans cible : ignorée
       var uniteRaw = get(cols.unite, row);
@@ -5939,6 +5947,9 @@ var PTE_COMMUN = (function () {
     var gains = pteGainsTousPortefeuilles(db);
     return db.objectifs.map(function (o) {
       var field = pteFieldForObjectif(o.objectif);
+      /* 21.10.2026 : l'objectif photovoltaïque s'exprime en part de la consommation
+         électrique (%), pas en kWc : les kWc des projets ne s'y comparent pas. */
+      if (field === 'pv_kwc' && !/kwc/i.test(String(o.unite || ''))) field = null;
       var ref = parseNum(o.reference_2005);
       var cible = parseNum(o.cible_2030);
       // écart à combler : réduction (référence > cible) ou création (cible > référence, p. ex. PV, végétalisation)
