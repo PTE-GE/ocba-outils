@@ -521,7 +521,7 @@ body.night .f-bt.on{background:var(--soft);border-color:var(--acc)}
 .tbar i{display:block;height:100%;flex:0 0 auto}
 .tbar i.pp{opacity:.34}
 .tile .s .add{color:var(--ink3)}
-.plan-c{width:56px;white-space:nowrap;padding-left:4px!important;padding-right:4px!important}.plan-th{cursor:pointer;user-select:none}.plan-th:hover,.plan-th.on{color:var(--acc)}
+.plan-c{width:56px;white-space:nowrap;padding-left:4px!important;padding-right:4px!important}
 .tile .tplan{font-size:11px;line-height:1.35;color:var(--acc);margin-top:5px}.tile .tplan svg{vertical-align:-2px;margin-right:2px}
 .nospark{height:26px;margin-top:8px;color:var(--ink3);font-size:.7rem;display:flex;align-items:center}
 .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
@@ -1858,7 +1858,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.21 · 22.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.22 · 22.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -2954,6 +2954,9 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "22.10.2026", "objet": "priorisation", "version": "v2.22", "titre": "Sites emblématiques ; colonne « Plan » sans tri", "points": ["Périmètre, section Plan : quatrième ligne « Sites emblématiques » (colonne « Tag Emblématique » de Plan_PTE), sans icône : elle filtre, elle n'étiquette pas.", "Classement : le clic sur l'en-tête « Plan » ne trie plus.", "Export du classement : « emblématique » s'ajoute à la colonne plan."]},
+    {"date": "22.10.2026", "objet": "revue", "version": "v0.32", "titre": "N° en colonne, « hors plan », sites emblématiques", "points": ["Tableau des sous-sites : le n° a sa propre colonne, puis « Plan », puis le nom ; les projets dépliés montrent leur numéro dans la colonne N°.", "Un sous-site qui n'est dans aucun périmètre du Plan est marqué « hors plan » ; leur nombre s'affiche sous le titre.", "Périmètre, section Plan : quatrième ligne « Sites emblématiques ». Le tri par plan est retiré."]},
+    {"date": "22.10.2026", "objet": "simulation", "version": "v3.13", "titre": "Sites emblématiques", "points": ["Périmètre, section Plan : quatrième ligne « Sites emblématiques » (colonne « Tag Emblématique » de Plan_PTE)."]},
     {"date": "22.10.2026", "objet": "priorisation", "version": "v2.21", "titre": "Colonne « Plan » au classement", "points": ["Classement : une colonne « Plan » entre le n° et le nom ; chaque programme a sa place fixe (300, canicule, COE), vide si le sous-site n'en fait pas partie — les icônes d'un même programme s'alignent. Un clic sur l'en-tête regroupe les sous-sites du plan en tête, dans l'ordre du classement, sans rien masquer.", "Export du classement : nouvelle colonne « plan » (« 300 ; canicule ; COE »)."]},
     {"date": "22.10.2026", "objet": "revue", "version": "v0.31", "titre": "Colonne « Plan » au tableau des sous-sites", "points": ["Reporting, tableau des sous-sites : une colonne « Plan » à côté du sous-site, une place fixe par programme ; un clic sur l'en-tête regroupe les sous-sites du plan en tête."]},
     {"date": "21.10.2026", "objet": "priorisation", "version": "v2.20", "titre": "Tuiles IDC et DD sur le parc", "points": ["Vue d'ensemble : les tuiles IDC et Développement durable reviennent au parc entier, comme les autres ; avec un plan coché, leur ligne « Plan » donne l'IDC moyen du plan (et sa part de la SRE, l'écart couvert) ou l'indice de développement durable du plan."]},
@@ -5003,8 +5006,8 @@ var PTE_COMMUN = (function () {
 })(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
 
 /* ---------- Plan (filtre global), choix multiple, palette catégorielle — 21.10.2026 ----------
-   Plan : trois colonnes de Plan_PTE (« Tag 300 », « Tag Canicule », « Tag COE ») marquent les sous-sites
-   des programmes définis. Le choix se fait dans le menu « Périmètre » de chaque outil, section « Plan »
+   Plan : quatre colonnes de Plan_PTE (« Tag 300 », « Tag Canicule », « Tag COE », « Tag Emblématique »,
+   ce dernier sans icône depuis le 22.10.2026) marquent les sous-sites des programmes définis. Le choix se fait dans le menu « Périmètre » de chaque outil, section « Plan »
    (décision d'Achim du 21.10 au soir, à la place des icônes de l'en-tête). La sélection est commune aux
    outils (localStorage pte.programmes.v1) ; plusieurs lignes cochées = réunion ; aucune = tout le parc.
    Avec des portefeuilles cochés, le périmètre est l'intersection (les 300 du portefeuille X).
@@ -5017,8 +5020,12 @@ var PTE_COMMUN = (function () {
   var PROGRAMMES = [
     { k: 'p300', lib: 'Les 300', titre: 'Les 300 sous-sites de la liste publiée (02.07.2026)', col: 'Tag 300' },
     { k: 'canicule', lib: 'Plan canicule', titre: 'Sous-sites du plan canicule', col: 'Tag Canicule' },
-    { k: 'coe', lib: 'COE complexes', titre: 'Sous-sites COE complexes / optimisation par bureau d’ingénieur', col: 'Tag COE' }
+    { k: 'coe', lib: 'COE complexes', titre: 'Sous-sites COE complexes / optimisation par bureau d’ingénieur', col: 'Tag COE' },
+    /* 22.10.2026 (demande d'Achim) : périmètre sans icône — il filtre, il n'étiquette pas les listes */
+    { k: 'emb', lib: 'Sites emblématiques', titre: 'Sites emblématiques', col: 'Tag Emblématique', sansIcone: true }
   ];
+  /* Programmes qui ont une icône (les étiquettes et la colonne « Plan » ne montrent qu'eux) */
+  function avecIcone() { return PROGRAMMES.filter(function (p) { return !p.sansIcone; }); }
   var PALETTE_CAT = ['#0A80A8', '#E06A2C', '#856EBE', '#6E9F16', '#3D6FD6', '#C94F82', '#2E9BD6', '#5560C8'];
   /* Icônes des programmes, couleurs de la charte PTE (21.10.2026) : servent d'étiquettes dans les listes
      (classement, sous-sites) pour montrer l'appartenance au Plan sans filtrer. Le nom est dans l'info-bulle. */
@@ -5039,7 +5046,7 @@ var PTE_COMMUN = (function () {
   function badgesProgrammes(tags, taille) {
     if (!tags) return '';
     styleProg();
-    return PROGRAMMES.filter(function (p) { return tags[p.k]; }).map(function (p) {
+    return avecIcone().filter(function (p) { return tags[p.k]; }).map(function (p) {
       var v = String(tags[p.k]), titre = p.lib + (v !== '1' ? ' (valeur ' + v + ' dans « ' + p.col + ' »)' : '');
       return '<span class="pte-ptag" title="' + titre.replace(/"/g, '&quot;') + '" role="img" aria-label="' + p.lib + '">' + iconeProgramme(p.k, taille) + '</span>';
     }).join('');
@@ -5048,16 +5055,18 @@ var PTE_COMMUN = (function () {
      fait pas partie — les icônes d'un même programme s'alignent verticalement dans la liste. */
   function casesProgrammes(tags, taille) {
     styleProg(); var t = taille || 14;
-    return '<span class="pte-pcases">' + PROGRAMMES.map(function (p) {
+    return '<span class="pte-pcases">' + avecIcone().map(function (p) {
       var v = tags && tags[p.k]; if (!v) return '<span class="pte-pcase" style="width:' + t + 'px;height:' + t + 'px"></span>';
       v = String(v); var titre = p.lib + (v !== '1' ? ' (valeur ' + v + ' dans « ' + p.col + ' »)' : '');
       return '<span class="pte-pcase" title="' + titre.replace(/"/g, '&quot;') + '" role="img" aria-label="' + p.lib + '">' + iconeProgramme(p.k, t) + '</span>';
     }).join('') + '</span>';
   }
-  /* Texte du Plan pour un export (« 300 ; canicule ; COE ») */
+  /* Texte du Plan pour un export (« 300 ; canicule ; COE ; emblématique ») */
   function texteProgrammes(tags) {
-    return tags ? PROGRAMMES.filter(function (p) { return tags[p.k]; }).map(function (p) { return { p300: '300', canicule: 'canicule', coe: 'COE' }[p.k]; }).join(' ; ') : '';
+    return tags ? PROGRAMMES.filter(function (p) { return tags[p.k]; }).map(function (p) { return { p300: '300', canicule: 'canicule', coe: 'COE', emb: 'emblématique' }[p.k]; }).join(' ; ') : '';
   }
+  /* Le sous-site fait-il partie d'au moins un périmètre du Plan (les quatre, emblématiques compris) ? */
+  function dansUnProgramme(tags) { return !!tags && PROGRAMMES.some(function (p) { return tags[p.k]; }); }
   function cles() { return PROGRAMMES.map(function (p) { return p.k; }); }
   function lireProgrammes() {
     try { var a = JSON.parse(localStorage.getItem(LS_PROG) || '[]'); return Array.isArray(a) ? a.filter(function (k) { return cles().indexOf(k) >= 0; }) : []; }
@@ -5178,7 +5187,7 @@ var PTE_COMMUN = (function () {
   C.lireProgrammes = lireProgrammes; C.ecrireProgrammes = ecrireProgrammes; C.valeurTag = valeurTag;
   C.dansProgrammes = dansProgrammes; C.libelleProgrammes = libelleProgrammes;
   C.surProgrammes = surProgrammes; C.multiChoix = multiChoix;
-  C.iconeProgramme = iconeProgramme; C.badgesProgrammes = badgesProgrammes; C.casesProgrammes = casesProgrammes; C.texteProgrammes = texteProgrammes;
+  C.iconeProgramme = iconeProgramme; C.badgesProgrammes = badgesProgrammes; C.casesProgrammes = casesProgrammes; C.texteProgrammes = texteProgrammes; C.dansUnProgramme = dansUnProgramme;
 })(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
 
 /* ==== FIN DES MODULES COMMUNS ==== */
@@ -5345,20 +5354,12 @@ function progMatch(s){return !PROG_ACT.length||(typeof PTE_COMMUN!=='undefined'&
 /* Étiquettes du Plan (21.10.2026, demande d'Achim) : icônes 300 / canicule / COE à côté du nom d'un sous-site,
    qu'un plan soit coché ou non — on voit l'appartenance sans filtrer. */
 let _planIdx=null,_planIdxV=-1;
-/* Colonne « Plan » (22.10.2026, idée d'Achim) : entre le n° et le nom, une place fixe par programme ;
-   un clic sur l'en-tête regroupe les sous-sites du plan en tête, sans rien masquer. */
-let PLAN_TRI=false;
+/* Colonne « Plan » (22.10.2026, idée d'Achim) : entre le n° et le nom, une place fixe par programme à icône
+   (les sites emblématiques n'ont pas d'icône : ils ne se voient qu'au Périmètre). Pas de tri (retiré le 22.10). */
 function planCell(id){
   if(typeof PTE_COMMUN==='undefined'||!PTE_COMMUN.casesProgrammes)return'<td class="plan-c"></td>';
   planIc(id);return'<td class="plan-c">'+PTE_COMMUN.casesProgrammes(_planIdx[String(id)],14)+'</td>'}
-function planTh(){return'<th class="plan-c plan-th'+(PLAN_TRI?' on':'')+'" onclick="planTri()" title="Plan : Les 300, Plan canicule, COE complexes (colonnes Tag de Plan_PTE). Un clic '+(PLAN_TRI?'rétablit l’ordre du classement':'regroupe en tête les sous-sites du plan, dans l’ordre du classement')+'.">Plan'+(PLAN_TRI?' ▾':'')+'</th>'}
-function planTri(){PLAN_TRI=!PLAN_TRI;try{renR()}catch(e){console.error(e)}}
-/* tri stable : sous-sites du plan d'abord (les programmes cochés au Périmètre, sinon les trois) */
-function planTrier(arr,idOf){
-  if(!PLAN_TRI)return arr;planIc('');
-  const k=PROG_ACT.length?PROG_ACT:['p300','canicule','coe'];
-  const dans=function(x){const t=_planIdx[String(idOf(x))];return !!t&&k.some(function(p){return t[p]})};
-  return arr.filter(dans).concat(arr.filter(function(x){return !dans(x)}))}
+function planTh(){return'<th class="plan-c" title="Plan : Les 300, Plan canicule, COE complexes (colonnes Tag de Plan_PTE).">Plan</th>'}
 function planIc(id){
   if(typeof PTE_COMMUN==='undefined'||!PTE_COMMUN.badgesProgrammes)return'';
   if(_planIdxV!==dataVersion||!_planIdx){_planIdx={};((S_ALL&&S_ALL.length)?S_ALL:(S||[])).forEach(function(s){_planIdx[String(s.id)]=s.tags});_planIdxV=dataVersion}
@@ -6653,7 +6654,7 @@ function importFromRows(rows,includeAll){
     pvSitgKw:fcExact(h,'PV SITG - puissance [kWc]'),prodType:fcExact(h,'Producteur d\'Electricité Type'),
     prodPuiss:fcExact(h,'Producteur d\'Elec Puissance'),toitSitg:fcExact(h,'Surface toiture SITG [m2]'),
     /* programmes (21.10.2026) : sous-sites marqués dans Plan_PTE, lus au nom exact */
-    tag300:fcExact(h,'Tag 300'),tagCoe:fcExact(h,'Tag COE'),tagCan:fcExact(h,'Tag Canicule'),
+    tag300:fcExact(h,'Tag 300'),tagCoe:fcExact(h,'Tag COE'),tagCan:fcExact(h,'Tag Canicule'),tagEmb:fcExact(h,'Tag Emblématique'),
     vegExist:fcExact(h,'Toiture végétalisée existante SITG [m2]'),
     ddTriOk:fc(h,['DD Tri conforme']),ddMat:fc(h,['DD Exigence matériaux']),ddLci:fc(h,['DD LCI 117-118']),idcpB:fc(h,['IDC projeté VB [kWh]','IDC projeté VB']),idcpC:fc(h,['IDC projeté VC [kWh]','IDC projeté VC']),idcpGen:fc(h,['IDC projeté','IDCprojeté']),invEstim:fc(h,['Estim PTE','EstimPTE']),invCecb:fc(h,['Estim CECB+','Invest estim. CECB+']),invVB:fc(h,['Estim ImmOBA','Invest ImmOBA','InvestImmOBA','Invest VB']),invGE:fc(h,['Prévisionnel PTE GEI','GE-Invest','GEInvest','GE Invest','Invest GE']),invDG:fc(h,['DG 3.31 [CHF]','DG 3.31','DG [CHF]','DG (25%)','DG(25%)','DG 25%','DG25','Invest DG','DG']),lat:fc(h,['Latitude','Lat','GPS_Lat','YCOOR']),lng:fc(h,['Longitude','Long','Lng','GPS_Lng','XCOOR','lon']),gainElec:fc(h,['Gain Electricité (Max) - kWh','Gain Électricité (Max) - kWh']),gainEau:fc(h,['Gain Eau (Max) - m3']),pvKwc:fc(h,['Futur projet PV - puissance estimée [kWc]','Futur projet PV - puissance estimée (kWc)']),pvM2:fc(h,['Futur projet PV - surface toiture PV estimée [m2]','Futur projet PV - surface toiture PV estimée (m2)'])};
   /* Garde-fou anti-collision : si la colonne « RP » détectée contient des nombres
@@ -6709,7 +6710,7 @@ function importFromRows(rows,includeAll){
     ddPerm:pn(gvr(R,c.ddPerm)),ddVeget:pn(gvr(R,c.ddVeget)),ddVegCout:pn(gvr(R,c.ddVegCout)),ddArbres:pn(gvr(R,c.ddArbres)),
     ddCour:gv(R,c.ddCour),ddTri:pn(gvr(R,c.ddTri)),ddTriOk:gv(R,c.ddTriOk),
     ddToitProj:pn(gvr(R,c.ddToitProj)),ddTriProj:pn(gvr(R,c.ddTriProj)),
-    tags:{p300:tagVal(gvr(R,c.tag300)),coe:tagVal(gvr(R,c.tagCoe)),canicule:tagVal(gvr(R,c.tagCan))},
+    tags:{p300:tagVal(gvr(R,c.tag300)),coe:tagVal(gvr(R,c.tagCoe)),canicule:tagVal(gvr(R,c.tagCan)),emb:tagVal(gvr(R,c.tagEmb))},
     lotEnv:pn(gvr(R,c.lotEnv)),lotChauf:pn(gvr(R,c.lotChauf)),lotTech:pn(gvr(R,c.lotTech)),lotElec:pn(gvr(R,c.lotElec)),lotEau:pn(gvr(R,c.lotEau)),scop:pn(gvr(R,c.scop)),
     pvSitgKw:pn(gvr(R,c.pvSitgKw)),prodType:String(gv(R,c.prodType)||'').trim(),prodPuiss:String(gv(R,c.prodPuiss)||'').trim(),
     toitSitg:pn(gvr(R,c.toitSitg)),vegExist:pn(gvr(R,c.vegExist)),
@@ -8974,11 +8975,11 @@ function objTable(key,R,meta,bySiteId,f){
   const restAll=(pop||[]).filter(s=>!rankedIds.has(s.id));
   const adj=applyQuali(R.items,key);
   const rangObj={};R.items.forEach(function(it){rangObj[it.id]=it.rang});
-  const rankedRows=planTrier(adj.filter(it=>{const s=bySiteId[it.id];return s&&passRankFilters(s,f)}),function(it){return it.id});
+  const rankedRows=adj.filter(it=>{const s=bySiteId[it.id];return s&&passRankFilters(s,f)});
   /* un exclu sort de PARTOUT : le repli le laissait passer, ce qui rendait
      l'exclusion visible ici et invisible là-haut. Il est dans le bloc « Exclus ». */
-  const restRows=planTrier(repliSorted(restAll,key).filter(function(x){
-    const q=qualiOf(x.s.id);return passRankFilters(x.s,f)&&!(q&&q.p==='ex')}),function(x){return x.s.id});
+  const restRows=repliSorted(restAll,key).filter(function(x){
+    const q=qualiOf(x.s.id);return passRankFilters(x.s,f)&&!(q&&q.p==='ex')});
   const K=colsObj(key);
   let html='<table><thead><tr>'+
     '<th>Rang</th><th'+srcTip(SRC_COMMUN.id)+'>N°</th>'+planTh()+'<th'+srcTip(SRC_COMMUN.nom)+'>Sous-site</th>'+
@@ -9123,7 +9124,7 @@ function objTousRows(bySiteId){
 function objTousTable(bySiteId,f){
   if(!OBJRANK)return'<p style="color:var(--ink3);font-style:italic">Le classement par objectif se calcule une fois Plan_PTE.xlsx importé.</p>';
   const keys=['co2','th','ren','elec','eau'];
-  const rows=planTrier(objTousRows(bySiteId).filter(function(r){return passRankFilters(r.s,f)}),function(r){return r.id});
+  const rows=objTousRows(bySiteId).filter(function(r){return passRankFilters(r.s,f)});
   let html='<table><thead><tr><th>#</th><th>N°</th>'+planTh()+'<th>Sous-site</th>'+
     '<th title="RPF — responsable de portefeuille, qui suit le sous-site dans la durée. Source : colonne « Responsable Portefeuille » de Plan_PTE. Le responsable de projet relève des projets GE-Invest : il figure dans la Revue de projets.">RPF</th><th>CECB+</th>';
   for(const k of keys)html+='<th style="text-align:right">'+OBJ_META[k].lblCourt+'</th>';
@@ -9144,8 +9145,8 @@ function objTousTable(bySiteId,f){
      dans leur bloc. */
   const vus=new Set(rows.map(function(r){return r.id}));
   const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
-  const reste=planTrier(repliSorted((pop||[]).filter(function(x){return !vus.has(x.id)}),'th')
-    .filter(function(x){return passRankFilters(x.s,f)}),function(x){return x.s.id});
+  const reste=repliSorted((pop||[]).filter(function(x){return !vus.has(x.id)}),'th')
+    .filter(function(x){return passRankFilters(x.s,f)});
   if(reste.length){
     html+='<tr><td colspan="'+(9+keys.length)+'" style="background:var(--soft);color:var(--ink3);font-size:.68rem;font-style:italic;padding:5px 8px">'+
       reste.length+' sous-site(s) sans contribution chiffrée à ces objectifs (pas d\'audit CECB+, pas de gain renseigné ou pas de montant). Ordre de constat, pas une priorité : du plus gros consommateur de chaleur au plus petit.</td></tr>';
