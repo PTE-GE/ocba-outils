@@ -543,6 +543,13 @@ body.night .f-bt.on{background:var(--soft);border-color:var(--acc)}
     padding:14px 18px;margin-bottom:12px}
 .cd h3,.wt h3{font-size:14px;font-weight:600;color:var(--ink);letter-spacing:-.1px}
 .wt{cursor:pointer}
+.ob-wt{flex-wrap:wrap;row-gap:8px;margin-bottom:6px}.ob-wt h3{order:0}.ob-wt .objs{order:1;display:flex;gap:6px;flex-wrap:wrap;margin:0 auto 0 16px;cursor:default}.ob-wt .ch{order:2;margin-left:auto}
+.ob{font:inherit;font-size:12.5px;padding:4px 11px;border-radius:980px;border:1px solid var(--line,#cbd5e0);background:var(--card,#fff);color:var(--ink);display:inline-flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap}
+.ob:hover{border-color:var(--acc);color:var(--acc)}.ob.on{background:var(--sec);border-color:var(--sec);color:var(--on-acc,#fff);font-weight:600}
+.ob .dot{width:7px;height:7px;border-radius:50%;flex:none;display:inline-block;margin:0}.ob.on .dot{box-shadow:0 0 0 1.5px #fff}
+html.epure .ob.on{background:var(--ep-accent-bg)!important;border-color:var(--ep-accent-bg)!important;color:var(--ep-on-accent,#fff)!important}
+.ob-sp{margin-left:auto;display:flex}.ob-cmd{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+@media(max-width:1320px){.ob-wt .objs{order:3;flex-basis:100%;margin:0}}
 table.tblx,table{color:var(--ink)}
 .tblx th,table th{background:var(--soft);color:var(--ink2);font-weight:600}
 .tblx td,table td{border-color:var(--line)}
@@ -1458,18 +1465,11 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 <div class="rank-vue on" data-vue="liste">
 <details class="howto tab-howto"><summary>Comment lire cet onglet</summary><div>Chaque sous-site classé par coût de l'unité gagnée, objectif par objectif — sauf le photovoltaïque, la végétalisation et l'IDC, qui ont chacun leur propre clé de tri, annoncée au-dessus du tableau. Un clic sur une ligne ouvre sa fiche.</div></details>
 <div class="cd" id="objRankCard">
-<div class="wt op" onclick="tglS('objRankBody','objRankCh')" title="Cliquer pour déplier ou replier le classement"><h3 style="margin:0;border:none;padding:0">Classement par objectif</h3><span class="ch op" id="objRankCh">▼</span></div>
+<div class="wt op ob-wt" onclick="tglS('objRankBody','objRankCh')" title="Cliquer pour déplier ou replier le classement"><h3 style="margin:0;border:none;padding:0">Classement par objectif</h3><div class="objs" id="objBtns" role="radiogroup" aria-label="Objectif classé" onclick="event.stopPropagation()"><button type="button" class="ob" data-k="tous" role="radio" onclick="objChoisir('tous')" title="Tous les objectifs : une ligne par sous-site, ses rangs dans chaque classement">Tous</button><button type="button" class="ob" data-k="co2" role="radio" onclick="objChoisir('co2')" title="CO₂"><span class="dot"></span>CO₂</button><button type="button" class="ob" data-k="th" role="radio" onclick="objChoisir('th')" title="Thermique"><span class="dot"></span>Thermique</button><button type="button" class="ob" data-k="idc" role="radio" onclick="objChoisir('idc')" title="IDC"><span class="dot"></span>IDC</button><button type="button" class="ob" data-k="ren" role="radio" onclick="objChoisir('ren')" title="Renouvelable"><span class="dot"></span>Renouvelable</button><button type="button" class="ob" data-k="elec" role="radio" onclick="objChoisir('elec')" title="Électricité"><span class="dot"></span>Électricité</button><button type="button" class="ob" data-k="eau" role="radio" onclick="objChoisir('eau')" title="Eau"><span class="dot"></span>Eau</button><button type="button" class="ob" data-k="pv" role="radio" onclick="objChoisir('pv')" title="Photovoltaïque"><span class="dot"></span>PV</button><button type="button" class="ob" data-k="veg" role="radio" onclick="objChoisir('veg')" title="Développement durable"><span class="dot"></span>Dév. durable</button></div><span class="ch op" id="objRankCh">▼</span></div>
 <div class="wb op" id="objRankBody">
 <details class="howto"><summary>Comment lire les rangs et les couleurs</summary><div>Coût par unité gagnée sur la durée de vie retenue — au <b>m² créé</b> pour la végétalisation, à la puissance pour le photovoltaïque. Le rang de franchissement de la cible est mis en évidence — <b style="color:var(--ok)">vert</b> pour 2030, et <b style="color:var(--acc)">bleu</b> pour la cible 2050 du thermique. Cliquer une ligne ouvre le détail du sous-site, ses notes et son ajustement qualitatif.</div></details>
-<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:2px 0 6px">
-<button class="bt bt-i bt-s" onclick="snapSave()" title="Enregistrer l'état des classements du jour, pour pouvoir comparer plus tard">Instantané</button>
-<select id="snapSel" onchange="renR()" style="padding:5px 8px;border:1px solid #cbd5e0;border-radius:6px;font-size:.76rem" title="Comparer les rangs actuels à ceux d'un instantané précédent"><option value="">Comparer avec…</option></select>
-<button class="bt bt-s bt-x" onclick="snapDel()" title="Supprimer l'instantané sélectionné">Supprimer</button>
-<span class="mini" id="snapInfo"></span>
-<button class="bt bt-p bt-s" onclick="exportClassement()" title="Export pour l'outil de revue de projets">Exporter le classement (CSV)</button>
-</div>
-<div class="fb" id="objFilters" title="Le menu de gauche choisit l'objectif classé ; les suivants filtrent l'affichage sans changer les rangs">
-<select id="objSel" onchange="renR();topSync();try{renTop(scored(getGlobalRP()))}catch(e){}">
+<div class="fb" id="objFilters" title="Ces menus filtrent l'affichage sans changer les rangs ; l'objectif classé se choisit sur la ligne du titre">
+<select id="objSel" hidden aria-hidden="true" tabindex="-1" onchange="renR();topSync();try{renTop(scored(getGlobalRP()))}catch(e){}">
 <option value="co2">CO₂</option>
 <option value="th">Thermique</option>
 <option value="idc">IDC</option>
@@ -1485,6 +1485,13 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 <span class="f-sel"><button type="button" class="f-bt" id="fCeTxt" onclick="tglF('ce',event)">Tout CECB+</button><div class="rp-pop" id="fCePop" onclick="event.stopPropagation()"><div class="rp-h">État de l’audit CECB+ — cochez un ou plusieurs choix. Aucune case cochée = pas de filtre.</div><div class="rp-list" id="fCeList"></div><div class="rp-f"><button class="bt bt-s" onclick="fselAll('ce',false)">Tout décocher</button><button class="bt bt-p bt-s" style="flex:1" onclick="fselApply('ce')">Appliquer</button></div></div></span>
 <input type="hidden" id="fSe"><span class="f-chip" id="fSeChip" hidden title="Filtre de texte posé depuis la recherche de l'en-tête">Filtre : <b id="fSeTxt"></b><button type="button" onclick="fSeEffacer()" aria-label="Retirer le filtre de texte">×</button></span>
 <button type="button" class="f-rz" id="fRz" onclick="resetFiltres()" disabled>× Effacer les filtres <b id="fRzN"></b></button>
+<span class="ob-sp"><span class="ob-cmd">
+<button class="bt bt-i bt-s" onclick="snapSave()" title="Enregistrer l'état des classements du jour, pour pouvoir comparer plus tard">Instantané</button>
+<select id="snapSel" onchange="renR()" style="padding:5px 8px;border:1px solid #cbd5e0;border-radius:6px;font-size:.76rem" title="Comparer les rangs actuels à ceux d'un instantané précédent"><option value="">Comparer avec…</option></select>
+<button class="bt bt-s bt-x" onclick="snapDel()" title="Supprimer l'instantané sélectionné">Supprimer</button>
+<span class="mini" id="snapInfo"></span>
+<button class="bt bt-p bt-s" onclick="exportClassement()" title="Export pour l'outil de revue de projets">Exporter le classement (CSV)</button>
+</span></span>
 </div>
 <div class="flat-warn" id="rankFlatWarn"></div>
 <div id="objAttrib"></div>
@@ -1510,9 +1517,9 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 </div><!-- /vue matrice -->
 <div class="rank-vue" data-vue="top">
 <div class="cd">
-<div class="wt" onclick="tglS('topB','topCh')"><h3 style="margin:0;border:none;padding:0">Top 20 — <span id="topTitle" style="color:var(--sec);font-weight:400">Global</span></h3><span class="ch op" id="topCh">▼</span></div>
+<div class="wt ob-wt" onclick="tglS('topB','topCh')"><h3 style="margin:0;border:none;padding:0">Top 20<span id="topTitle" style="color:var(--sec);font-weight:400"></span></h3><div class="objs" id="topBtns" role="radiogroup" aria-label="Objectif du Top 20" onclick="event.stopPropagation()"><button type="button" class="ob" data-k="co2" role="radio" onclick="topChoisir('co2')" title="CO₂"><span class="dot"></span>CO₂</button><button type="button" class="ob" data-k="th" role="radio" onclick="topChoisir('th')" title="Thermique"><span class="dot"></span>Thermique</button><button type="button" class="ob" data-k="idc" role="radio" onclick="topChoisir('idc')" title="IDC"><span class="dot"></span>IDC</button><button type="button" class="ob" data-k="ren" role="radio" onclick="topChoisir('ren')" title="Renouvelable"><span class="dot"></span>Renouvelable</button><button type="button" class="ob" data-k="elec" role="radio" onclick="topChoisir('elec')" title="Électricité"><span class="dot"></span>Électricité</button><button type="button" class="ob" data-k="eau" role="radio" onclick="topChoisir('eau')" title="Eau"><span class="dot"></span>Eau</button><button type="button" class="ob" data-k="pv" role="radio" onclick="topChoisir('pv')" title="Photovoltaïque"><span class="dot"></span>PV</button><button type="button" class="ob" data-k="veg" role="radio" onclick="topChoisir('veg')" title="Développement durable"><span class="dot"></span>Dév. durable</button></div><span class="ch op" id="topCh">▼</span></div>
 <div class="wb op" id="topB"><div style="padding-top:8px">
-<div class="fb"><label for="topObj" style="font-size:.76rem;color:var(--ink3)">Objectif</label>
+<div class="fb" style="display:none"><label for="topObj" style="font-size:.76rem;color:var(--ink3)">Objectif</label>
 <select id="topObj" onchange="try{renTop(scored(getGlobalRP()))}catch(e){}" title="Objectif dont le Top 20 est affiché. Il suit le menu de la Liste quand un objectif précis y est choisi.">
 <option value="co2">CO₂</option><option value="th">Thermique</option><option value="idc">IDC</option><option value="ren">Renouvelable</option>
 <option value="elec">Électricité</option><option value="eau">Eau</option><option value="pv">Photovoltaïque</option><option value="veg">Développement durable</option>
@@ -1858,7 +1865,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.22 · 22.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.23 · 22.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -2954,6 +2961,7 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "22.10.2026", "objet": "priorisation", "version": "v2.23", "titre": "Objectifs en boutons", "points": ["Classement, Liste : le menu des objectifs devient neuf boutons sur la ligne du titre (Tous, CO₂, Thermique, IDC, Renouvelable, Électricité, Eau, PV, Dév. durable), dans l'ordre des tuiles ; un seul actif. Sur écran étroit, ils passent sous le titre.", "Chaque bouton porte la pastille de sa tuile (vert, ocre, rouge : avancement vers la cible 2030, portefeuille compris).", "Instantanés et Export passent à droite de la ligne des filtres.", "Top 20 : mêmes boutons à la place de son menu ; le titre ne garde que le portefeuille."]},
     {"date": "22.10.2026", "objet": "priorisation", "version": "v2.22", "titre": "Sites emblématiques ; colonne « Plan » sans tri", "points": ["Périmètre, section Plan : quatrième ligne « Sites emblématiques » (colonne « Tag Emblématique » de Plan_PTE), sans icône : elle filtre, elle n'étiquette pas.", "Classement : le clic sur l'en-tête « Plan » ne trie plus.", "Export du classement : « emblématique » s'ajoute à la colonne plan."]},
     {"date": "22.10.2026", "objet": "revue", "version": "v0.32", "titre": "N° en colonne, « hors plan », sites emblématiques", "points": ["Tableau des sous-sites : le n° a sa propre colonne, puis « Plan », puis le nom ; les projets dépliés montrent leur numéro dans la colonne N°.", "Un sous-site qui n'est dans aucun périmètre du Plan est marqué « hors plan » ; leur nombre s'affiche sous le titre.", "Périmètre, section Plan : quatrième ligne « Sites emblématiques ». Le tri par plan est retiré."]},
     {"date": "22.10.2026", "objet": "simulation", "version": "v3.13", "titre": "Sites emblématiques", "points": ["Périmètre, section Plan : quatrième ligne « Sites emblématiques » (colonne « Tag Emblématique » de Plan_PTE)."]},
@@ -8023,13 +8031,15 @@ try{renCompleteness(all)}catch(e){}
    portefeuille (constaté le 20.08.2026). */
 const OBJ_UNIT={co2:'kg CO₂/an',th:'kWh/an',idc:'kWh/an',ren:'kWh/an',elec:'kWh/an',eau:'m³/an',pv:'kWc',veg:'m²'};
 function renTop(all){
+  objBtnsSync();
   const el=$('gTop');if(!el)return;
   /* Le Top 20 a son propre menu (02.10.2026) : la Liste s'ouvre sur « Tous les objectifs », qui n'a pas de top 20. */
   const key=($('topObj')&&$('topObj').value)||'co2';
   const lbl=(typeof OBJ_META!=='undefined'&&OBJ_META[key])?OBJ_META[key].lbl:key;
   const tt=$('topTitle');
   const rp=getGlobalRP();
-  if(tt)tt.textContent=lbl+(rpActif()?' · '+rpLabel():'');
+  /* l'objectif se lit sur son bouton (22.10.2026) : le titre ne garde que le portefeuille, sans faire bouger les boutons */
+  if(tt)tt.textContent=rpActif()?' — '+rpLabel():'';
   try{if(window.Plotly)Plotly.purge(el)}catch(e){}
   if(!OBJRANK||!OBJRANK[key]||!OBJRANK[key].items.length){
     el.innerHTML='<p style="color:var(--ink3);font-size:.75rem;text-align:center;padding-top:60px">Aucun sous-site classable pour cet objectif.</p>';return}
@@ -9160,6 +9170,7 @@ function objTousTable(bySiteId,f){
   return html}
 
 function renR(){
+  objBtnsSync();
   const box=$('objBody'),note=$('objNote');if(!box)return;
   if(expandedRow!=null){const fb=$('objFiche');if(fb){fb.classList.remove('on');fb.innerHTML=''}}
   expandedRow=null;
@@ -9602,7 +9613,7 @@ const TOUR=[
   d:"Tous les coûts affichés proviennent de la colonne choisie ici — <b>Estim CECB+</b> (par défaut), <b>Estim PTE</b>, <b>DG 3.31</b> ou <b>GE-Invest</b>. En changer <b>recalcule tous les classements</b> : le nombre de sous-sites chiffrés n'est pas le même d'une colonne à l'autre, donc l'ordre non plus. Le nombre de montants disponibles est indiqué à côté de chaque choix.<br><br><b>Hors chiffrage</b>, en bas de la liste, n'est pas une colonne de plus : il déclare le coût unitaire <b>identique pour tous</b>. Le coût ne départage alors plus rien et le classement se fait sur la <b>seule contribution</b>, du plus gros contributeur au plus petit — y compris pour les sous-sites qu'aucun montant ne rend classables aujourd'hui. À lire comme « où est la matière », le référentiel financier disant « où est le meilleur franc »."},
  {sel:'#gRPTxt',t:'Se limiter à un ou plusieurs portefeuilles',
   d:"Ce filtre restreint <b>tout l'outil</b> — classement, arbitrage, carte, indicateurs — au périmètre choisi. On peut cocher <b>plusieurs portefeuilles</b> : trois responsables sans les autres, par exemple, pour préparer une séance commune. Les rangs affichés restent ceux du classement global : on voit la place de ces sous-sites dans l'ensemble du parc, pas un classement interne. Aucune case cochée rétablit le parc entier."},
- {sel:'#objSel',t:'Un objectif à la fois',open:'objRankBody',panel:'rank',
+ {sel:'#objBtns',t:'Un objectif à la fois',open:'objRankBody',panel:'rank',
   d:"Le classement se fait objectif par objectif : CO₂, thermique, renouvelable, électricité, eau, photovoltaïque, végétalisation. Chaque sous-site est classé par <b>coût de l'unité gagnée</b> sur la durée de vie retenue — pas par un score composite. La végétalisation fait exception : elle se classe au <b>coût du m² créé</b>, car une cour d'école n'a pas de durée de vie au sens énergétique."},
  {sel:'#objBody tr.franchi-row, #objNote',t:'Le rang de franchissement',open:'objRankBody',panel:'rank',
   act:tourToFranchi,d:tourFranchiTxt},
@@ -9773,7 +9784,7 @@ const TITLES=[
  ['#gRPTxt','Filtre par responsable de portefeuille, un ou plusieurs à la fois : restreint l\'affichage, jamais les rangs, qui sont calculés sur tout le parc'],
  ['#gInv',"Colonne d'où proviennent les montants affichés — en changer recalcule tous les coûts unitaires"],
  ['#gCo2','Base de comptabilité CO₂ : valeurs mesurées du parc, ou facteurs de la convention légale'],
- ['#objSel','Objectif servi par le classement — un objectif, un classement par coût unitaire croissant'],
+ ['#objBtns','Objectif servi par le classement — un objectif, un classement par coût unitaire croissant ; la pastille reprend la couleur de la tuile'],
  ['#objNote','Méthode appliquée : source de la cible, écart restant à combler, population retenue'],
  ['#objBody','Rang, contribution annuelle, cumul, part de l\'objectif atteinte (0 % = référence 2005, 100 % = cible), coût unitaire. Ligne verte = rang de franchissement de la cible 2030'],
  ['#objRankCard h3','Cliquer pour replier ou déplier le classement'],
@@ -10492,6 +10503,22 @@ function fmtSurfPanel(v){
   if(!v)return'—';
   if(v>=1e6)return'<span title="'+nf(v,0)+' m²">'+nf(v/1e6,2)+' Mm²</span>';
   return nf(v,0)+' m²'}
+/* Boutons des objectifs (22.10.2026, demande d'Achim) : remplacent les menus de la Liste et du Top 20.
+   Les <select> restent, masqués, comme porteurs de l'état (le reste du code les lit et les règle).
+   Pastille = couleur de la tuile de la Vue d'ensemble (avancement vers la cible 2030, portefeuille compris). */
+function objChoisir(k){const s=$('objSel');if(!s||s.value===k)return;s.value=k;s.dispatchEvent(new Event('change'))}
+function topChoisir(k){const s=$('topObj');if(!s||s.value===k)return;s.value=k;s.dispatchEvent(new Event('change'))}
+function objBtnsSync(){
+  [['objBtns','objSel'],['topBtns','topObj']].forEach(function(p){
+    const box=$(p[0]),sel=$(p[1]);if(!box||!sel)return;
+    box.querySelectorAll('.ob').forEach(function(b){
+      const k=b.getAttribute('data-k'),on=sel.value===k;
+      b.classList.toggle('on',on);b.setAttribute('aria-checked',on?'true':'false');
+      const d=b.querySelector('.dot');if(!d)return;
+      let col='',st=null;try{st=(typeof indState==='function')?indState(k==='veg'?'dd':k):null;if(st)col=indColor(st)}catch(e){}
+      d.style.background=col||'transparent';d.style.visibility=col?'':'hidden';
+      const base=b.getAttribute('data-t')||b.title;b.setAttribute('data-t',base);
+      b.title=base+(st?(' — cible 2030 : '+(col==='var(--ok)'?'atteinte ou presque (vert)':col==='var(--warn)'?'à mi-chemin ou plus (ocre)':col==='var(--red)'?'moins de la moitié du chemin (rouge)':'voir la tuile')):'')})})}
 function renderTiles(){
   const el=$('objTiles');if(!el)return;
   const g=(typeof OBJ_GAPS!=='undefined')?OBJ_GAPS:null;
