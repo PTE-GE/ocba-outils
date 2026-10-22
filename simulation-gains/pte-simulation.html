@@ -2048,6 +2048,8 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "22.10.2026", "objet": "priorisation", "version": "v2.21", "titre": "Colonne « Plan » au classement", "points": ["Classement : une colonne « Plan » entre le n° et le nom ; chaque programme a sa place fixe (300, canicule, COE), vide si le sous-site n'en fait pas partie — les icônes d'un même programme s'alignent. Un clic sur l'en-tête regroupe les sous-sites du plan en tête, dans l'ordre du classement, sans rien masquer.", "Export du classement : nouvelle colonne « plan » (« 300 ; canicule ; COE »)."]},
+    {"date": "22.10.2026", "objet": "revue", "version": "v0.31", "titre": "Colonne « Plan » au tableau des sous-sites", "points": ["Reporting, tableau des sous-sites : une colonne « Plan » à côté du sous-site, une place fixe par programme ; un clic sur l'en-tête regroupe les sous-sites du plan en tête."]},
     {"date": "21.10.2026", "objet": "priorisation", "version": "v2.20", "titre": "Tuiles IDC et DD sur le parc", "points": ["Vue d'ensemble : les tuiles IDC et Développement durable reviennent au parc entier, comme les autres ; avec un plan coché, leur ligne « Plan » donne l'IDC moyen du plan (et sa part de la SRE, l'écart couvert) ou l'indice de développement durable du plan."]},
     {"date": "21.10.2026", "objet": "priorisation", "version": "v2.19", "titre": "Part du Plan dans les tuiles, étiquettes du Plan", "points": ["Vue d'ensemble : avec un plan coché, chaque tuile (CO₂, thermique, renouvelable, électricité, eau, IDC) garde la valeur du parc et dit ce que pèse le plan — sa part de la consommation (de la SRE pour l'IDC) et la part de l'écart à la cible 2030 que couvrent ses sous-sites classés.", "Classement et fiche du sous-site : une petite icône par programme (300, canicule, COE) à côté du nom ; l'appartenance au Plan se voit sans filtrer, le nom est dans l'info-bulle."]},
     {"date": "21.10.2026", "objet": "revue", "version": "v0.30", "titre": "Étiquettes du Plan", "points": ["Reporting, tableau des sous-sites : une petite icône par programme (300, canicule, COE) à côté du nom du sous-site."]},
@@ -4136,6 +4138,20 @@ var PTE_COMMUN = (function () {
       return '<span class="pte-ptag" title="' + titre.replace(/"/g, '&quot;') + '" role="img" aria-label="' + p.lib + '">' + iconeProgramme(p.k, taille) + '</span>';
     }).join('');
   }
+  /* Colonne « Plan » (22.10.2026) : une place fixe par programme (300, canicule, COE), vide si le sous-site n'en
+     fait pas partie — les icônes d'un même programme s'alignent verticalement dans la liste. */
+  function casesProgrammes(tags, taille) {
+    styleProg(); var t = taille || 14;
+    return '<span class="pte-pcases">' + PROGRAMMES.map(function (p) {
+      var v = tags && tags[p.k]; if (!v) return '<span class="pte-pcase" style="width:' + t + 'px;height:' + t + 'px"></span>';
+      v = String(v); var titre = p.lib + (v !== '1' ? ' (valeur ' + v + ' dans « ' + p.col + ' »)' : '');
+      return '<span class="pte-pcase" title="' + titre.replace(/"/g, '&quot;') + '" role="img" aria-label="' + p.lib + '">' + iconeProgramme(p.k, t) + '</span>';
+    }).join('') + '</span>';
+  }
+  /* Texte du Plan pour un export (« 300 ; canicule ; COE ») */
+  function texteProgrammes(tags) {
+    return tags ? PROGRAMMES.filter(function (p) { return tags[p.k]; }).map(function (p) { return { p300: '300', canicule: 'canicule', coe: 'COE' }[p.k]; }).join(' ; ') : '';
+  }
   function cles() { return PROGRAMMES.map(function (p) { return p.k; }); }
   function lireProgrammes() {
     try { var a = JSON.parse(localStorage.getItem(LS_PROG) || '[]'); return Array.isArray(a) ? a.filter(function (k) { return cles().indexOf(k) >= 0; }) : []; }
@@ -4169,6 +4185,7 @@ var PTE_COMMUN = (function () {
     if (typeof document === 'undefined' || document.getElementById('pte-prog-css')) return;
     var s = document.createElement('style'); s.id = 'pte-prog-css';
     s.textContent =
+      '.pte-pcases{display:inline-flex;gap:3px;vertical-align:middle}.pte-pcase{display:inline-flex;flex:none}.pte-pcase svg{display:block}' +
       '.pte-ptag{display:inline-flex;vertical-align:-2px;margin-left:3px}.pte-ptag:first-child{margin-left:5px}.pte-ptag svg{display:block}' +
       '.pte-mc{position:relative;display:inline-block}' +
       '.pte-mc-b{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:6px;max-width:260px;padding:4px 10px;border-radius:8px;cursor:pointer;' +
@@ -4255,7 +4272,7 @@ var PTE_COMMUN = (function () {
   C.lireProgrammes = lireProgrammes; C.ecrireProgrammes = ecrireProgrammes; C.valeurTag = valeurTag;
   C.dansProgrammes = dansProgrammes; C.libelleProgrammes = libelleProgrammes;
   C.surProgrammes = surProgrammes; C.multiChoix = multiChoix;
-  C.iconeProgramme = iconeProgramme; C.badgesProgrammes = badgesProgrammes;
+  C.iconeProgramme = iconeProgramme; C.badgesProgrammes = badgesProgrammes; C.casesProgrammes = casesProgrammes; C.texteProgrammes = texteProgrammes;
 })(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
 
 /* ===========================================================================

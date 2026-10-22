@@ -521,6 +521,7 @@ body.night .f-bt.on{background:var(--soft);border-color:var(--acc)}
 .tbar i{display:block;height:100%;flex:0 0 auto}
 .tbar i.pp{opacity:.34}
 .tile .s .add{color:var(--ink3)}
+.plan-c{width:56px;white-space:nowrap;padding-left:4px!important;padding-right:4px!important}.plan-th{cursor:pointer;user-select:none}.plan-th:hover,.plan-th.on{color:var(--acc)}
 .tile .tplan{font-size:11px;line-height:1.35;color:var(--acc);margin-top:5px}.tile .tplan svg{vertical-align:-2px;margin-right:2px}
 .nospark{height:26px;margin-top:8px;color:var(--ink3);font-size:.7rem;display:flex;align-items:center}
 .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
@@ -1857,7 +1858,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.20 · 21.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.21 · 22.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -2953,6 +2954,8 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "22.10.2026", "objet": "priorisation", "version": "v2.21", "titre": "Colonne « Plan » au classement", "points": ["Classement : une colonne « Plan » entre le n° et le nom ; chaque programme a sa place fixe (300, canicule, COE), vide si le sous-site n'en fait pas partie — les icônes d'un même programme s'alignent. Un clic sur l'en-tête regroupe les sous-sites du plan en tête, dans l'ordre du classement, sans rien masquer.", "Export du classement : nouvelle colonne « plan » (« 300 ; canicule ; COE »)."]},
+    {"date": "22.10.2026", "objet": "revue", "version": "v0.31", "titre": "Colonne « Plan » au tableau des sous-sites", "points": ["Reporting, tableau des sous-sites : une colonne « Plan » à côté du sous-site, une place fixe par programme ; un clic sur l'en-tête regroupe les sous-sites du plan en tête."]},
     {"date": "21.10.2026", "objet": "priorisation", "version": "v2.20", "titre": "Tuiles IDC et DD sur le parc", "points": ["Vue d'ensemble : les tuiles IDC et Développement durable reviennent au parc entier, comme les autres ; avec un plan coché, leur ligne « Plan » donne l'IDC moyen du plan (et sa part de la SRE, l'écart couvert) ou l'indice de développement durable du plan."]},
     {"date": "21.10.2026", "objet": "priorisation", "version": "v2.19", "titre": "Part du Plan dans les tuiles, étiquettes du Plan", "points": ["Vue d'ensemble : avec un plan coché, chaque tuile (CO₂, thermique, renouvelable, électricité, eau, IDC) garde la valeur du parc et dit ce que pèse le plan — sa part de la consommation (de la SRE pour l'IDC) et la part de l'écart à la cible 2030 que couvrent ses sous-sites classés.", "Classement et fiche du sous-site : une petite icône par programme (300, canicule, COE) à côté du nom ; l'appartenance au Plan se voit sans filtrer, le nom est dans l'info-bulle."]},
     {"date": "21.10.2026", "objet": "revue", "version": "v0.30", "titre": "Étiquettes du Plan", "points": ["Reporting, tableau des sous-sites : une petite icône par programme (300, canicule, COE) à côté du nom du sous-site."]},
@@ -5041,6 +5044,20 @@ var PTE_COMMUN = (function () {
       return '<span class="pte-ptag" title="' + titre.replace(/"/g, '&quot;') + '" role="img" aria-label="' + p.lib + '">' + iconeProgramme(p.k, taille) + '</span>';
     }).join('');
   }
+  /* Colonne « Plan » (22.10.2026) : une place fixe par programme (300, canicule, COE), vide si le sous-site n'en
+     fait pas partie — les icônes d'un même programme s'alignent verticalement dans la liste. */
+  function casesProgrammes(tags, taille) {
+    styleProg(); var t = taille || 14;
+    return '<span class="pte-pcases">' + PROGRAMMES.map(function (p) {
+      var v = tags && tags[p.k]; if (!v) return '<span class="pte-pcase" style="width:' + t + 'px;height:' + t + 'px"></span>';
+      v = String(v); var titre = p.lib + (v !== '1' ? ' (valeur ' + v + ' dans « ' + p.col + ' »)' : '');
+      return '<span class="pte-pcase" title="' + titre.replace(/"/g, '&quot;') + '" role="img" aria-label="' + p.lib + '">' + iconeProgramme(p.k, t) + '</span>';
+    }).join('') + '</span>';
+  }
+  /* Texte du Plan pour un export (« 300 ; canicule ; COE ») */
+  function texteProgrammes(tags) {
+    return tags ? PROGRAMMES.filter(function (p) { return tags[p.k]; }).map(function (p) { return { p300: '300', canicule: 'canicule', coe: 'COE' }[p.k]; }).join(' ; ') : '';
+  }
   function cles() { return PROGRAMMES.map(function (p) { return p.k; }); }
   function lireProgrammes() {
     try { var a = JSON.parse(localStorage.getItem(LS_PROG) || '[]'); return Array.isArray(a) ? a.filter(function (k) { return cles().indexOf(k) >= 0; }) : []; }
@@ -5074,6 +5091,7 @@ var PTE_COMMUN = (function () {
     if (typeof document === 'undefined' || document.getElementById('pte-prog-css')) return;
     var s = document.createElement('style'); s.id = 'pte-prog-css';
     s.textContent =
+      '.pte-pcases{display:inline-flex;gap:3px;vertical-align:middle}.pte-pcase{display:inline-flex;flex:none}.pte-pcase svg{display:block}' +
       '.pte-ptag{display:inline-flex;vertical-align:-2px;margin-left:3px}.pte-ptag:first-child{margin-left:5px}.pte-ptag svg{display:block}' +
       '.pte-mc{position:relative;display:inline-block}' +
       '.pte-mc-b{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:6px;max-width:260px;padding:4px 10px;border-radius:8px;cursor:pointer;' +
@@ -5160,7 +5178,7 @@ var PTE_COMMUN = (function () {
   C.lireProgrammes = lireProgrammes; C.ecrireProgrammes = ecrireProgrammes; C.valeurTag = valeurTag;
   C.dansProgrammes = dansProgrammes; C.libelleProgrammes = libelleProgrammes;
   C.surProgrammes = surProgrammes; C.multiChoix = multiChoix;
-  C.iconeProgramme = iconeProgramme; C.badgesProgrammes = badgesProgrammes;
+  C.iconeProgramme = iconeProgramme; C.badgesProgrammes = badgesProgrammes; C.casesProgrammes = casesProgrammes; C.texteProgrammes = texteProgrammes;
 })(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
 
 /* ==== FIN DES MODULES COMMUNS ==== */
@@ -5327,6 +5345,20 @@ function progMatch(s){return !PROG_ACT.length||(typeof PTE_COMMUN!=='undefined'&
 /* Étiquettes du Plan (21.10.2026, demande d'Achim) : icônes 300 / canicule / COE à côté du nom d'un sous-site,
    qu'un plan soit coché ou non — on voit l'appartenance sans filtrer. */
 let _planIdx=null,_planIdxV=-1;
+/* Colonne « Plan » (22.10.2026, idée d'Achim) : entre le n° et le nom, une place fixe par programme ;
+   un clic sur l'en-tête regroupe les sous-sites du plan en tête, sans rien masquer. */
+let PLAN_TRI=false;
+function planCell(id){
+  if(typeof PTE_COMMUN==='undefined'||!PTE_COMMUN.casesProgrammes)return'<td class="plan-c"></td>';
+  planIc(id);return'<td class="plan-c">'+PTE_COMMUN.casesProgrammes(_planIdx[String(id)],14)+'</td>'}
+function planTh(){return'<th class="plan-c plan-th'+(PLAN_TRI?' on':'')+'" onclick="planTri()" title="Plan : Les 300, Plan canicule, COE complexes (colonnes Tag de Plan_PTE). Un clic '+(PLAN_TRI?'rétablit l’ordre du classement':'regroupe en tête les sous-sites du plan, dans l’ordre du classement')+'.">Plan'+(PLAN_TRI?' ▾':'')+'</th>'}
+function planTri(){PLAN_TRI=!PLAN_TRI;try{renR()}catch(e){console.error(e)}}
+/* tri stable : sous-sites du plan d'abord (les programmes cochés au Périmètre, sinon les trois) */
+function planTrier(arr,idOf){
+  if(!PLAN_TRI)return arr;planIc('');
+  const k=PROG_ACT.length?PROG_ACT:['p300','canicule','coe'];
+  const dans=function(x){const t=_planIdx[String(idOf(x))];return !!t&&k.some(function(p){return t[p]})};
+  return arr.filter(dans).concat(arr.filter(function(x){return !dans(x)}))}
 function planIc(id){
   if(typeof PTE_COMMUN==='undefined'||!PTE_COMMUN.badgesProgrammes)return'';
   if(_planIdxV!==dataVersion||!_planIdx){_planIdx={};((S_ALL&&S_ALL.length)?S_ALL:(S||[])).forEach(function(s){_planIdx[String(s.id)]=s.tags});_planIdxV=dataVersion}
@@ -6145,7 +6177,7 @@ const CLASSEMENT_HEAD=['numero_sous_site','nom_sous_site','rpf','rang_global','n
     'gain_co2_t','gain_th_kwh','gain_ren_kwh','gain_elec_kwh','gain_eau_m3','gain_pv_kwc','gain_veg_m2',
     'cout_kwh_chf','cout_co2_chf_t','referentiel_invest','estim_kchf',
     'etat_cecb','alerte_coherence','ajustement','motif_ajustement','portefeuille_valide',
-    'date_export','version_outil'];
+    'date_export','version_outil','plan'];
 /* Une ligne par sous-site de la population entière, valeurs DÉJÀ formatées
    comme dans le CSV (nombres à point décimal, vide = absent, jamais 0),
    sous forme d'objets {colonne: valeur} — les mêmes 45 colonnes, dans le même
@@ -6222,12 +6254,13 @@ function lignesClassement(){
     row.push(lockHas(id)?'oui':'non');
     row.push(d);
     row.push(versionOutil);
+    row.push((typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.texteProgrammes)?PTE_COMMUN.texteProgrammes(s.tags):'');   /* Plan (22.10.2026) */
     const o={};CLASSEMENT_HEAD.forEach(function(k,i){o[k]=row[i]});
     out.push(o)});
   return out}
 /* Colonnes de texte libre du CSV : protégées contre l'injection de formule
    (csvTxt) ; les codes et nombres passent par csvEsc. */
-const CLASSEMENT_TXT={numero_sous_site:1,nom_sous_site:1,rpf:1,referentiel_invest:1,etat_cecb:1,alerte_coherence:1,motif_ajustement:1,version_outil:1};
+const CLASSEMENT_TXT={plan:1,numero_sous_site:1,nom_sous_site:1,rpf:1,referentiel_invest:1,etat_cecb:1,alerte_coherence:1,motif_ajustement:1,version_outil:1};
 function exportClassement(){
   const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
   if(!pop||!pop.length){toast('Aucune donnée à exporter','wr');return}
@@ -8552,7 +8585,7 @@ const COLS_EXTRA={
 function colsObj(key){
   const pv=key==='pv',veg=key==='veg';
   const K={pat:true,cecb:!(pv||veg),ch:!(pv||veg),sub:!(pv||veg),montant:!pv,extra:COLS_EXTRA[key]||[]};
-  K.nCols=function(k){return 4+(K.pat?1:0)+(K.cecb?1:0)+(K.ch?1:0)+(K.sub?1:0)+K.extra.length+2+(k==='th'?2:1)+((K.montant||k==='idc')?2:0)+1};
+  K.nCols=function(k){return 5+(K.pat?1:0)+(K.cecb?1:0)+(K.ch?1:0)+(K.sub?1:0)+K.extra.length+2+(k==='th'?2:1)+((K.montant||k==='idc')?2:0)+1};
   return K}
 
 /* Le bandeau du mode hors chiffrage, écrit avec les chiffres du classement
@@ -8941,14 +8974,14 @@ function objTable(key,R,meta,bySiteId,f){
   const restAll=(pop||[]).filter(s=>!rankedIds.has(s.id));
   const adj=applyQuali(R.items,key);
   const rangObj={};R.items.forEach(function(it){rangObj[it.id]=it.rang});
-  const rankedRows=adj.filter(it=>{const s=bySiteId[it.id];return s&&passRankFilters(s,f)});
+  const rankedRows=planTrier(adj.filter(it=>{const s=bySiteId[it.id];return s&&passRankFilters(s,f)}),function(it){return it.id});
   /* un exclu sort de PARTOUT : le repli le laissait passer, ce qui rendait
      l'exclusion visible ici et invisible là-haut. Il est dans le bloc « Exclus ». */
-  const restRows=repliSorted(restAll,key).filter(function(x){
-    const q=qualiOf(x.s.id);return passRankFilters(x.s,f)&&!(q&&q.p==='ex')});
+  const restRows=planTrier(repliSorted(restAll,key).filter(function(x){
+    const q=qualiOf(x.s.id);return passRankFilters(x.s,f)&&!(q&&q.p==='ex')}),function(x){return x.s.id});
   const K=colsObj(key);
   let html='<table><thead><tr>'+
-    '<th>Rang</th><th'+srcTip(SRC_COMMUN.id)+'>N°</th><th'+srcTip(SRC_COMMUN.nom)+'>Sous-site</th>'+
+    '<th>Rang</th><th'+srcTip(SRC_COMMUN.id)+'>N°</th>'+planTh()+'<th'+srcTip(SRC_COMMUN.nom)+'>Sous-site</th>'+
     '<th title="RPF — responsable de portefeuille, qui suit le sous-site dans la durée. Source : colonne « Responsable Portefeuille » de Plan_PTE. Le responsable de projet relève des projets GE-Invest : il figure dans la Revue de projets.">RPF</th>'+
     (K.pat?'<th'+srcTip(SRC_COMMUN.pat)+'>Pat.</th>':'')+(K.cecb?'<th'+srcTip(SRC_COMMUN.cecb)+'>CECB+</th>':'')+
     (K.ch?'<th title="Agent de chauffage actuel. Source : premier terme de la colonne « Agent » (SITG) de Plan_PTE, rapporté au libellé de la feuille Data (contrat de données, D7).">Chauffage</th>':'')+
@@ -9019,7 +9052,7 @@ function objTable(key,R,meta,bySiteId,f){
     const _r=(it.rangAdj||it.rang);
     html+='<tr class="row-click'+(_r===adj.franchiRang?' franchi-row':'')+(_r===adj.franchiRang2?' franchi-row-50':'')+'" data-id="'+esc(it.id)+'" onclick="toggleDetail('+jsArg(it.id)+')" style="'+objRowStyle(Object.assign({},it,{rang:_r}),adj.franchiRang,adj.franchiRang2)+'">'+
       '<td>'+(it.rangAdj||it.rang)+((it.rangAdj&&rangObj[it.id]&&it.rangAdj!==rangObj[it.id])?'<br><span style="font-size:.6rem;color:var(--ink3)" title="rang du classement arithmétique, avant ajustement">obj. '+rangObj[it.id]+'</span>':'')+
-      (snapCur()?('<br>'+snapDelta(key,it.id,(it.rangAdj||it.rang))):'')+'</td><td><b>'+esc(it.id)+'</b></td><td>'+esc(it.nom||'')+planIc(it.id)+'</td>'+
+      (snapCur()?('<br>'+snapDelta(key,it.id,(it.rangAdj||it.rang))):'')+'</td><td><b>'+esc(it.id)+'</b></td>'+planCell(it.id)+'<td>'+esc(it.nom||'')+'</td>'+
       '<td style="font-size:.63rem"'+(s.rp?' title="'+esc(s.rp)+'"':'')+'>'+(estHorsPerimetre(s)?hpChip(s):esc(s.rp?rpNom(s.rp):'—'))+'</td>'+(K.pat?'<td>'+patBg(s.pat)+'</td>':'')+(K.cecb?'<td>'+cecbBg(s)+'</td>':'')+(K.ch?'<td>'+hBg(s.ht)+'</td>':'')+(K.sub?'<td>'+subBg(s.hsub,s.ht)+(key==='ren'?pacChip(s,it.gain):'')+'</td>':'')+
       K.extra.map(function(x){return '<td style="text-align:right">'+x.v(s,it)+'</td>'}).join('')+
       '<td style="text-align:right">'+gainDisp+'</td><td style="text-align:right">'+objFmtNum(it.cumulGain,0)+'</td>'+
@@ -9038,7 +9071,7 @@ function objTable(key,R,meta,bySiteId,f){
        :'Hors classement — non mesurable pour cet objectif (pas d\'audit CECB+ ou pas de montant). Ordre de constat, pas une priorité : du plus gros consommateur de chaleur au plus petit.')+'</td></tr>';
     for(const{s,sc}of restRows)
       html+='<tr class="row-click" data-id="'+esc(s.id)+'" onclick="toggleDetail('+jsArg(s.id)+')" style="color:var(--ink3)">'+
-        '<td>'+(sc.t!=null?'repli':'—')+'</td><td><b>'+esc(s.id)+'</b></td><td>'+esc(s.nom||'')+planIc(s.id)+'</td>'+
+        '<td>'+(sc.t!=null?'repli':'—')+'</td><td><b>'+esc(s.id)+'</b></td>'+planCell(s.id)+'<td>'+esc(s.nom||'')+'</td>'+
         '<td style="font-size:.63rem"'+(s.rp?' title="'+esc(s.rp)+'"':'')+'>'+(estHorsPerimetre(s)?hpChip(s):esc(s.rp?rpNom(s.rp):'—'))+'</td>'+(K.pat?'<td>'+patBg(s.pat)+'</td>':'')+(K.cecb?'<td>'+cecbBg(s)+'</td>':'')+(K.ch?'<td>'+hBg(s.ht)+'</td>':'')+(K.sub?'<td>'+subBg(s.hsub,s.ht)+'</td>':'')+
         K.extra.map(function(x){return '<td style="text-align:right">'+x.v(s,null)+'</td>'}).join('')+
         '<td colspan="'+((key==='th'?5:4)-(K.montant||key==='idc'?0:1))+'" style="text-align:center;font-size:.66rem">'+(key==='veg'?'surface végétalisée non renseignée':repliTexte(s,key))+'</td>'+
@@ -9090,13 +9123,13 @@ function objTousRows(bySiteId){
 function objTousTable(bySiteId,f){
   if(!OBJRANK)return'<p style="color:var(--ink3);font-style:italic">Le classement par objectif se calcule une fois Plan_PTE.xlsx importé.</p>';
   const keys=['co2','th','ren','elec','eau'];
-  const rows=objTousRows(bySiteId).filter(function(r){return passRankFilters(r.s,f)});
-  let html='<table><thead><tr><th>#</th><th>N°</th><th>Sous-site</th>'+
+  const rows=planTrier(objTousRows(bySiteId).filter(function(r){return passRankFilters(r.s,f)}),function(r){return r.id});
+  let html='<table><thead><tr><th>#</th><th>N°</th>'+planTh()+'<th>Sous-site</th>'+
     '<th title="RPF — responsable de portefeuille, qui suit le sous-site dans la durée. Source : colonne « Responsable Portefeuille » de Plan_PTE. Le responsable de projet relève des projets GE-Invest : il figure dans la Revue de projets.">RPF</th><th>CECB+</th>';
   for(const k of keys)html+='<th style="text-align:right">'+OBJ_META[k].lblCourt+'</th>';
   html+='<th style="text-align:right">Objectifs<br>servis</th><th style="text-align:right">'+esc(invDef().short)+'</th><th>Alerte</th></tr></thead><tbody>';
   rows.forEach((row,i)=>{
-    html+='<tr class="row-click" data-id="'+esc(row.id)+'" onclick="toggleDetail('+jsArg(row.id)+')"><td>'+(i+1)+'</td><td><b>'+esc(row.id)+'</b></td><td>'+esc(row.nom||'')+planIc(row.id)+'</td>'+
+    html+='<tr class="row-click" data-id="'+esc(row.id)+'" onclick="toggleDetail('+jsArg(row.id)+')"><td>'+(i+1)+'</td><td><b>'+esc(row.id)+'</b></td>'+planCell(row.id)+'<td>'+esc(row.nom||'')+'</td>'+
       '<td style="font-size:.63rem"'+(row.s.rp?' title="'+esc(row.s.rp)+'"':'')+'>'+(estHorsPerimetre(row.s)?hpChip(row.s):esc(row.s.rp?rpNom(row.s.rp):'—'))+'</td><td>'+cecbBg(row.s)+'</td>';
     for(const k of keys){
       const g=row.gains[k];
@@ -9111,13 +9144,13 @@ function objTousTable(bySiteId,f){
      dans leur bloc. */
   const vus=new Set(rows.map(function(r){return r.id}));
   const pop=(S_ALL&&S_ALL.length)?S_ALL:S;
-  const reste=repliSorted((pop||[]).filter(function(x){return !vus.has(x.id)}),'th')
-    .filter(function(x){return passRankFilters(x.s,f)});
+  const reste=planTrier(repliSorted((pop||[]).filter(function(x){return !vus.has(x.id)}),'th')
+    .filter(function(x){return passRankFilters(x.s,f)}),function(x){return x.s.id});
   if(reste.length){
-    html+='<tr><td colspan="'+(8+keys.length)+'" style="background:var(--soft);color:var(--ink3);font-size:.68rem;font-style:italic;padding:5px 8px">'+
+    html+='<tr><td colspan="'+(9+keys.length)+'" style="background:var(--soft);color:var(--ink3);font-size:.68rem;font-style:italic;padding:5px 8px">'+
       reste.length+' sous-site(s) sans contribution chiffrée à ces objectifs (pas d\'audit CECB+, pas de gain renseigné ou pas de montant). Ordre de constat, pas une priorité : du plus gros consommateur de chaleur au plus petit.</td></tr>';
     reste.forEach(function(x){const r=x.s;
-      html+='<tr class="row-click" data-id="'+esc(r.id)+'" onclick="toggleDetail('+jsArg(r.id)+')" style="color:var(--ink3)"><td>—</td><td><b>'+esc(r.id)+'</b></td><td>'+esc(r.nom||'')+planIc(r.id)+'</td>'+
+      html+='<tr class="row-click" data-id="'+esc(r.id)+'" onclick="toggleDetail('+jsArg(r.id)+')" style="color:var(--ink3)"><td>—</td><td><b>'+esc(r.id)+'</b></td>'+planCell(r.id)+'<td>'+esc(r.nom||'')+'</td>'+
         '<td style="font-size:.63rem"'+(r.rp?' title="'+esc(r.rp)+'"':'')+'>'+(estHorsPerimetre(r)?hpChip(r):esc(r.rp?rpNom(r.rp):'—'))+'</td><td>'+cecbBg(r)+'</td>';
       for(const k of keys)html+='<td style="color:#ddd;text-align:right">—</td>';
       html+='<td style="text-align:right">0</td><td style="text-align:right">'+objFmtNum(r.invVB,0)+'</td>'+

@@ -646,6 +646,7 @@ body.night .distbar.sia .seg{color:#fff;} body.night .distbar.sia .seg-snr{color
 .sia-sw{display:inline-block; width:10px; height:10px; border-radius:2px; flex:none;}
 .sia-sw.s21{background:#0A80A8;} .sia-sw.s31{background:#E06A2C;} .sia-sw.s32{background:#856EBE;} .sia-sw.s33{background:#6E9F16;} .sia-sw.s41{background:#3D6FD6;} .sia-sw.s51{background:#C94F82;} .sia-sw.s52{background:#2E9BD6;} .sia-sw.s53{background:#5560C8;} .sia-sw.snr{background:var(--graph-track); border:1px solid var(--border);}
 .filter-item.filter-mc{align-self:flex-end;}
+.plan-c{width:56px; white-space:nowrap;} .plan-th{cursor:pointer; user-select:none;} .plan-th:hover, .plan-th.on{color:var(--teal);}
 .perim-note{font-size:12px; line-height:1.45; color:var(--ink-70); margin:8px 0 0;}
 @media (max-width:1050px){ .rep-kpis.rep-kpis-10{grid-template-columns:repeat(2,1fr);} }
 @media (max-width:640px){ .rep-kpis.rep-kpis-10{grid-template-columns:1fr 1fr;} }
@@ -1219,7 +1220,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.30 · 21.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.31 · 22.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -2620,6 +2621,8 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "22.10.2026", "objet": "priorisation", "version": "v2.21", "titre": "Colonne « Plan » au classement", "points": ["Classement : une colonne « Plan » entre le n° et le nom ; chaque programme a sa place fixe (300, canicule, COE), vide si le sous-site n'en fait pas partie — les icônes d'un même programme s'alignent. Un clic sur l'en-tête regroupe les sous-sites du plan en tête, dans l'ordre du classement, sans rien masquer.", "Export du classement : nouvelle colonne « plan » (« 300 ; canicule ; COE »)."]},
+    {"date": "22.10.2026", "objet": "revue", "version": "v0.31", "titre": "Colonne « Plan » au tableau des sous-sites", "points": ["Reporting, tableau des sous-sites : une colonne « Plan » à côté du sous-site, une place fixe par programme ; un clic sur l'en-tête regroupe les sous-sites du plan en tête."]},
     {"date": "21.10.2026", "objet": "priorisation", "version": "v2.20", "titre": "Tuiles IDC et DD sur le parc", "points": ["Vue d'ensemble : les tuiles IDC et Développement durable reviennent au parc entier, comme les autres ; avec un plan coché, leur ligne « Plan » donne l'IDC moyen du plan (et sa part de la SRE, l'écart couvert) ou l'indice de développement durable du plan."]},
     {"date": "21.10.2026", "objet": "priorisation", "version": "v2.19", "titre": "Part du Plan dans les tuiles, étiquettes du Plan", "points": ["Vue d'ensemble : avec un plan coché, chaque tuile (CO₂, thermique, renouvelable, électricité, eau, IDC) garde la valeur du parc et dit ce que pèse le plan — sa part de la consommation (de la SRE pour l'IDC) et la part de l'écart à la cible 2030 que couvrent ses sous-sites classés.", "Classement et fiche du sous-site : une petite icône par programme (300, canicule, COE) à côté du nom ; l'appartenance au Plan se voit sans filtrer, le nom est dans l'info-bulle."]},
     {"date": "21.10.2026", "objet": "revue", "version": "v0.30", "titre": "Étiquettes du Plan", "points": ["Reporting, tableau des sous-sites : une petite icône par programme (300, canicule, COE) à côté du nom du sous-site."]},
@@ -4708,6 +4711,20 @@ var PTE_COMMUN = (function () {
       return '<span class="pte-ptag" title="' + titre.replace(/"/g, '&quot;') + '" role="img" aria-label="' + p.lib + '">' + iconeProgramme(p.k, taille) + '</span>';
     }).join('');
   }
+  /* Colonne « Plan » (22.10.2026) : une place fixe par programme (300, canicule, COE), vide si le sous-site n'en
+     fait pas partie — les icônes d'un même programme s'alignent verticalement dans la liste. */
+  function casesProgrammes(tags, taille) {
+    styleProg(); var t = taille || 14;
+    return '<span class="pte-pcases">' + PROGRAMMES.map(function (p) {
+      var v = tags && tags[p.k]; if (!v) return '<span class="pte-pcase" style="width:' + t + 'px;height:' + t + 'px"></span>';
+      v = String(v); var titre = p.lib + (v !== '1' ? ' (valeur ' + v + ' dans « ' + p.col + ' »)' : '');
+      return '<span class="pte-pcase" title="' + titre.replace(/"/g, '&quot;') + '" role="img" aria-label="' + p.lib + '">' + iconeProgramme(p.k, t) + '</span>';
+    }).join('') + '</span>';
+  }
+  /* Texte du Plan pour un export (« 300 ; canicule ; COE ») */
+  function texteProgrammes(tags) {
+    return tags ? PROGRAMMES.filter(function (p) { return tags[p.k]; }).map(function (p) { return { p300: '300', canicule: 'canicule', coe: 'COE' }[p.k]; }).join(' ; ') : '';
+  }
   function cles() { return PROGRAMMES.map(function (p) { return p.k; }); }
   function lireProgrammes() {
     try { var a = JSON.parse(localStorage.getItem(LS_PROG) || '[]'); return Array.isArray(a) ? a.filter(function (k) { return cles().indexOf(k) >= 0; }) : []; }
@@ -4741,6 +4758,7 @@ var PTE_COMMUN = (function () {
     if (typeof document === 'undefined' || document.getElementById('pte-prog-css')) return;
     var s = document.createElement('style'); s.id = 'pte-prog-css';
     s.textContent =
+      '.pte-pcases{display:inline-flex;gap:3px;vertical-align:middle}.pte-pcase{display:inline-flex;flex:none}.pte-pcase svg{display:block}' +
       '.pte-ptag{display:inline-flex;vertical-align:-2px;margin-left:3px}.pte-ptag:first-child{margin-left:5px}.pte-ptag svg{display:block}' +
       '.pte-mc{position:relative;display:inline-block}' +
       '.pte-mc-b{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:6px;max-width:260px;padding:4px 10px;border-radius:8px;cursor:pointer;' +
@@ -4827,7 +4845,7 @@ var PTE_COMMUN = (function () {
   C.lireProgrammes = lireProgrammes; C.ecrireProgrammes = ecrireProgrammes; C.valeurTag = valeurTag;
   C.dansProgrammes = dansProgrammes; C.libelleProgrammes = libelleProgrammes;
   C.surProgrammes = surProgrammes; C.multiChoix = multiChoix;
-  C.iconeProgramme = iconeProgramme; C.badgesProgrammes = badgesProgrammes;
+  C.iconeProgramme = iconeProgramme; C.badgesProgrammes = badgesProgrammes; C.casesProgrammes = casesProgrammes; C.texteProgrammes = texteProgrammes;
 })(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
 
 </script>
@@ -4969,7 +4987,7 @@ var PTE_COMMUN = (function () {
         'franchi_co2','franchi_th','franchi_ren','franchi_elec','franchi_eau','franchi_pv','franchi_veg',
         'gain_co2_t','gain_th_kwh','gain_ren_kwh','gain_elec_kwh','gain_eau_m3','gain_pv_kwc','gain_veg_m2',
         'cout_kwh_chf','cout_co2_chf_t','referentiel_invest','estim_kchf','etat_cecb','alerte_coherence',
-        'ajustement','motif_ajustement','portefeuille_valide','date_export','version_outil'] }
+        'ajustement','motif_ajustement','portefeuille_valide','date_export','version_outil','plan'] }
   };
 
   var OBJ_PTE = ['co2', 'th', 'ren', 'elec', 'eau', 'pv', 'veg'];
@@ -8262,10 +8280,21 @@ var PTE_COMMUN = (function () {
   // ---- Tableau des sous-sites, dépliable vers les projets ------------
   function repSousSitesTable(rows, N) {
     var groups = repSousSiteGroups(rows).sort(function (a, b) { return (b.agg.credit || 0) - (a.agg.credit || 0); });
+    /* Colonne « Plan » (22.10.2026) : un clic sur l'en-tête regroupe en tête les sous-sites du plan (ordre conservé) */
+    var progK = programmesActifs().length ? programmesActifs() : ['p300', 'canicule', 'coe'];
+    function dansPlan(g) { var t = g.num ? tagsSousSite(g.num) : null; return !!t && progK.some(function (k) { return t[k]; }); }
+    if (STATE.rep.planTri) groups = groups.filter(dansPlan).concat(groups.filter(function (g) { return !dansPlan(g); }));
+    var avecPlan = !!(COMMUN && COMMUN.casesProgrammes);
     var nConsolider = groups.filter(function (g) { return g.rows.length > 1; }).length;
     var hasPP = !!(DB.planpte && DB.planpte.bySousSite);
     var headCells = [
       el('th', { class: 'no-sort' }, ['Sous-site']),
+      avecPlan ? (function () {
+        var th = el('th', { class: 'plan-c plan-th' + (STATE.rep.planTri ? ' on' : '') }, ['Plan' + (STATE.rep.planTri ? ' ▾' : '')]);
+        tip(th, 'Plan : Les 300, Plan canicule, COE complexes (colonnes Tag de Plan_PTE). Un clic ' + (STATE.rep.planTri ? 'rétablit l’ordre par crédit.' : 'regroupe en tête les sous-sites du plan.'));
+        th.addEventListener('click', function (e) { e.stopPropagation(); STATE.rep.planTri = !STATE.rep.planTri; renderRepBody(); });
+        return th;
+      })() : null,
       el('th', { class: 'no-sort num' }, ['Projets']),
       el('th', { class: 'no-sort' }, ['RP']),
       el('th', { class: 'no-sort' }, ['Avanc.']),
@@ -8290,6 +8319,7 @@ var PTE_COMMUN = (function () {
       var dep = (r.cumulN1 || 0) + (r.comptaN || 0);
       var cells = [
         tip(el('td', { class: 'rep-projname ss-child-name' }, [nom.length > 54 ? nom.slice(0, 53) + '…' : nom]), nom + '. Cliquer pour ouvrir le détail du projet.'),
+        avecPlan ? el('td', { class: 'plan-c' }) : null,
         el('td', { class: 'num' }, [r.p.projet_etude === 'oui' ? 'étude' : '']),
         el('td', { class: 'nowrap' }, [r.p.rp || '—']),
         el('td', {}, [avancementCell(r.avancement === null ? null : r.avancement / 100)]),
@@ -8313,15 +8343,15 @@ var PTE_COMMUN = (function () {
       var label = el('td', { class: 'rep-group-name ss-name' }, [
         caret,
         numLink, numLink ? ' — ' : null,
-        el('span', {}, [(g.nom.length > 46 ? g.nom.slice(0, 45) + '…' : g.nom)]),
-        /* étiquettes du Plan (21.10.2026) : appartenance du sous-site aux programmes, sans filtrer */
-        (g.num && COMMUN && COMMUN.badgesProgrammes) ? el('span', { html: COMMUN.badgesProgrammes(tagsSousSite(g.num), 13) }) : null
+        el('span', {}, [(g.nom.length > 46 ? g.nom.slice(0, 45) + '…' : g.nom)])
       ]);
       tip(label, (g.num ? 'Sous-site ' + g.num + ' — ' : '') + g.nom + '. Cliquer pour ' + (isOpen ? 'replier' : 'déplier') + ' les projets rattachés' + (g.num ? ' ; cliquer le numéro pour ouvrir la fiche du sous-site.' : '.'));
       var nCell = el('td', { class: 'num' }, [multi ? el('span', { class: 'ss-multi' }, [String(g.rows.length)]) : String(g.rows.length)]);
       if (multi) tip(nCell, g.rows.length + ' projets sur ce sous-site — à consolider à terme en un seul projet par sous-site.');
       var cells = [
-        label, nCell,
+        label,
+        avecPlan ? el('td', { class: 'plan-c', html: g.num ? COMMUN.casesProgrammes(tagsSousSite(g.num), 14) : '' }) : null,
+        nCell,
         el('td', { class: 'nowrap' }, [rpListLabel(g.rows)]),
         el('td', {}, [avancementCell(a.avancement === null ? null : a.avancement / 100)]),
         el('td', {}, [perfDistMini(a.perfCounts, a.n)]),
