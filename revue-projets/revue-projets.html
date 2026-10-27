@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-XmEqjCSgzKccTcESlBMORs7t+75LLFIT+RT9Ms4TAR4=' 'sha256-GX//T64UnKQ8Gg3rxLGPDYVONbTpAO+xWWvVh1aMG7s=' 'sha256-treEgKAakAquogT8nG0gBz4n+hWx4ateEPfyyL/RdKI=' 'sha256-8VFu9Z6ctgDRqKMNvZZgtOFOG79ZTaZfLER6oZBJYEc=' 'sha256-/G52J7Y6Nbr/od7RkCwBG7Moy+E0Yf/QoDeEmiyc7CA=' 'sha256-peyn1aPwKo3S+eT+L1dQUfgpcqxtVFreAUqk04LNET8='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-7ytlshlBfTzV0wA35SPT3injW9CXMbq8Y2qHVOHhWmA=' 'sha256-rAcIh4TNeoEDmSDM23ZTWqq2De0JwSuDczq7VLPZU5U=' 'sha256-fREBkuleUXSq40E8I+4j5DTdBiNxSgoRDshScAfTN64=' 'sha256-n5ww80pymD5TQiuR4Zy2WHeaElOGMtOjt9bhe0mQqXQ=' 'sha256-G897zXtSs5cPVMV2ZE6dcKkr5+/kKjWDABVJ7Cu2o2U=' 'sha256-peyn1aPwKo3S+eT+L1dQUfgpcqxtVFreAUqk04LNET8='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Revue de projets</title>
 <style>
@@ -186,6 +186,12 @@ label{display:block; font-size:11px; color:var(--ink-muted); margin-bottom:.2em;
 .rv-fiche-grid .fk-s{font-size:11px;color:var(--ink-muted);font-weight:normal;margin-top:1px}
 .rv-fiche-grid .fk-v .mes-warn{color:var(--ochre-text,#8A5A00)}
 .dec-notes{white-space:pre-wrap;margin-top:2px}
+.texte-gei{white-space:pre-line;overflow-wrap:anywhere;color:var(--ink-70)}
+.texte-gei.plie{max-height:7.6em;overflow:hidden;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.jal-comm{white-space:pre-line;overflow-wrap:anywhere;margin-top:2px}
+.btn-lien{background:none;border:0;padding:4px 0 0;color:var(--teal,#0A80A8);cursor:pointer;font:inherit}
+.btn-lien:hover{text-decoration:underline}
+@media print{.texte-gei.plie{max-height:none;-webkit-mask-image:none;mask-image:none}}
 html.epure .rv-fiche-grid .fs{background:var(--ep-bg)!important;border-radius:12px!important}
 html.epure .rv-fiche-grid .fk{border-top-color:var(--ep-line)}
 html.epure .rv-fiche-grid .fk-l,html.epure .rv-fiche-grid .fs h5{color:var(--ep-ink2)}
@@ -1172,7 +1178,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.35 · 27.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.36 · 27.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -1206,6 +1212,9 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
      rows.erreurs (propriété non énumérable) : nombre de cellules en erreur par indice de
      colonne, première ligne exclue — un classeur non recalculé se distingue ainsi d'un
      classeur vide (diagnostic de la simulation).
+     ligne.erreurs (propriété non énumérable, posée sur la seule ligne qui en a, 27.10.2026) :
+     indices des colonnes en erreur de cette ligne — une cellule en erreur, lue vide, se
+     distingue ainsi d'une cellule vide (montants GE-Invest de l'accueil).
    Variante SAISIES (XLSXReader.SAISIES : positions, booleensTexte, echappementsExcel,
    sansPhonetique, finsDeLigneBrutes) : la ligne n garde l'indice n-1 (lignes vides comprises),
    booléens « VRAI » / « FAUX », « _xHHHH_ » décodés, texte phonétique (rPh) ignoré, fins de
@@ -1428,7 +1437,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
   function _lignes(xml, sst, o) {
     var out = [], auto = 0, err = Object.create(null), nCel = 0;
     _elements(xml, 'row', function (atR, corps) {
-      var arr = [], filled = false, pos = 0;
+      var arr = [], filled = false, pos = 0, enErreur = null;
       _elements(corps, 'c', function (at, inner) {
         var t = _a(RE_A_T, at), ref = _a(RE_A_R, at);
         var ci = ref ? _colIdx(ref) : -1;
@@ -1443,7 +1452,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
           if (raw === '') v = '';
           else if (t === 's') v = sst[+raw] !== undefined ? sst[+raw] : '';
           else if (t === 'b') v = o && o.booleensTexte ? (raw === '1' ? 'VRAI' : 'FAUX') : raw === '1';
-          else if (t === 'e') { v = ''; if (out.length) err[ci] = (err[ci] || 0) + 1; }
+          else if (t === 'e') { v = ''; if (out.length) err[ci] = (err[ci] || 0) + 1; (enErreur || (enErreur = [])).push(ci); }
           else if (t === 'str') v = raw;
           else { var num = +raw; v = !isNaN(num) ? num : raw; }
         }
@@ -1453,6 +1462,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
         arr[ci] = v; pos = ci + 1;
         if (v !== '' && v !== null) filled = true;
       });
+      if (enErreur) Object.defineProperty(arr, 'erreurs', { value: enErreur });
       if (o && o.positions) {
         var r = +(_a(RE_A_R, atR) || (auto + 1)); auto = r;
         if (!(r >= 1 && r <= 1048576)) throw new Error('ligne hors des limites d’Excel');
@@ -1813,7 +1823,11 @@ var PTE_CONTRAT = (function () {
 
   /* ---------- D8 : responsables de projet depuis GE-Invest (Objet (actif), chiffres 7 à 12 = sous-site) ----------
      Feuille GEI_Projets (une ligne par projet) ou, à défaut, GEI_Suivi (plate : le projet y est répété). */
-  function lireProjets(rowsG, manquants, nomG) {
+  /* stats (27.10.2026) : { nom, projets (numéros distincts), relies (projets reliés à un sous-site), objet (colonne
+     « Objet (actif) » : 'absente', 'vide' ou 'remplie') } — une extraction
+     dont aucun projet n'est relié (colonne « Objet (actif) » vide) laissait sous-sites engagés, responsables de projet et
+     carte vides, sans rien dire (classeur d'Achim : GEI_Projets avec 3 colonnes renseignées sur 45) */
+  function lireProjets(rowsG, manquants, nomG, stats) {
     var parSousSite = {}, vus = {}, idx, jO, jN, jR, jL, jS, jA, i, r, o, ss, n, rp;
     if (!rowsG || rowsG.length < 2) return parSousSite;
     idx = entetes(rowsG);
@@ -1825,11 +1839,30 @@ var PTE_CONTRAT = (function () {
      [jS, 'Statut', 'engagement non calculable'], [jA, 'Avancement global', 'engagement non calculable']].forEach(function (c) {
       if (c[0] == null) manquants.push({ num: null, champ: nomG, motif: 'colonne « ' + c[1] + ' » introuvable : ' + c[2] });
     });
+    /* projets (numéros distincts) et colonnes vides pour tous les projets */
+    var nums = {}, nProj = 0, plein = { O: false, R: false, S: false, A: false }, numsRelies = {};
+    var rempli = function (rr, j) { return j != null && String(cell(rr, j) == null ? '' : cell(rr, j)).trim() !== ''; };
+    for (i = 1; i < rowsG.length; i++) {
+      r = rowsG[i]; if (!r) continue;
+      n = jN == null ? '' : txt(cell(r, jN));
+      if (n && !nums[n]) { nums[n] = true; nProj++; }
+      if (rempli(r, jO)) plein.O = true;
+      if (rempli(r, jR)) plein.R = true;
+      if (rempli(r, jS)) plein.S = true;
+      if (rempli(r, jA)) plein.A = true;
+    }
+    if (nProj) [[jO, plein.O, 'Objet (actif)', 'aucun projet rattaché aux sous-sites (extraction GE-Invest incomplète ?)'],
+      [jR, plein.R, 'Nom responsable suivi', 'responsables de projet vides'], [jS, plein.S, 'Statut', 'engagement non calculable'],
+      [jA, plein.A, 'Avancement global', 'engagement non calculable']].forEach(function (c) {
+      if (c[0] != null && !c[1]) manquants.push({ num: null, champ: nomG, motif: 'colonne « ' + c[2] + ' » vide pour ' + (nProj > 1 ? 'les ' + nProj + ' projets' : 'le seul projet') + ' : ' + c[3] });
+    });
+    if (stats) { stats.nom = nomG; stats.projets = nProj; stats.relies = 0; stats.objet = jO == null ? 'absente' : plein.O ? 'remplie' : 'vide'; }
     if (jO == null) return parSousSite;
     for (i = 1; i < rowsG.length; i++) {
       r = rowsG[i]; if (!r) continue;
       o = String(cell(r, jO) == null ? '' : cell(r, jO)).trim();
       if (!/^\d{15}$/.test(o)) continue;
+      if (stats) { var nr = txt(cell(r, jN)) || o; if (!numsRelies[nr]) { numsRelies[nr] = true; stats.relies++; } }
       ss = o.slice(6, 12);
       n = txt(cell(r, jN)) || o;
       if (vus[n + '|' + ss]) continue;   /* une ligne par projet (GEI_Suivi répète le projet par jalon / risque / livrable) */
@@ -1913,7 +1946,8 @@ var PTE_CONTRAT = (function () {
     if (A && rowsC && jTh == null) manquants.push({ num: null, champ: 'Consommation par site', motif: 'colonne ThTOT' + A + ' absente : aucune chaleur mesurée pour ' + A });
 
     var facteurs = lireFacteurs(rowsD, manquants);
-    var projets = lireProjets(rowsG, manquants, nomG);
+    var statsGei = { nom: nomG, projets: 0, relies: 0 };
+    var projets = lireProjets(rowsG, manquants, nomG, statsGei);
 
     /* ---- passe 1 : sous-sites ---- */
     var sousSites = [], sites = new Map(), ss, site, v;
@@ -2063,7 +2097,8 @@ var PTE_CONTRAT = (function () {
       annee: annee, anneeSource: an.source, anneesDisponibles: rowsC ? anneesDeConso(rowsC) : [], series: an.series,
       sousSites: sousSites, sites: sites, parc: parc,
       facteurs: { table: table, correspondance: corr, aRenseigner: aRenseigner, cadGenerique: CAD_GENERIQUE },
-      manquants: manquants, colonnes: C, colonnesFacultatives: { gainEauEstime: jGainEauEst, coeffStratus: jCoeff }
+      manquants: manquants, colonnes: C, colonnesFacultatives: { gainEauEstime: jGainEauEst, coeffStratus: jCoeff },
+      gei: rowsG ? statsGei : null
     };
   }
 
@@ -2103,6 +2138,7 @@ var PTE_CONTRAT = (function () {
     var absentes = [];
     for (k in C) if (C[k] == null) absentes.push(k);
     return { v: 1, date: new Date().toISOString(), annee: R ? R.annee : null, nbSousSites: ss.length,
+             gei: R && R.gei ? { projets: R.gei.projets, relies: R.gei.relies, objet: R.gei.objet || null } : null,
              nbSites: R && R.sites ? R.sites.size : null, colonnesAbsentes: absentes, remplissage: rempl,
              parc: { sre: p.sre || 0, chaleur: p.chaleur || 0, elec: p.elec || 0, eau: p.eau || 0, co2: p.co2 || 0 } };
   }
@@ -2126,6 +2162,15 @@ var PTE_CONTRAT = (function () {
       else if (!p || absP.indexOf(c) < 0)
         al.push({ niveau: 'attention', texte: 'Colonne « ' + libCol(c, e.annee) + ' » introuvable dans Plan_PTE' + (p ? ' ; elle était là à l\'import de référence. Renommée ?' : '.') });
     });
+    /* projets GE-Invest reliés aux sous-sites (27.10.2026) : contrôle absolu, même sans import de référence */
+    var g = e && e.gei, gp = p && p.gei, nbP = function (n, s) { return n + ' projet' + (n > 1 ? 's' : '') + (s ? ' ' + s + (n > 1 ? 's' : '') : ''); };
+    if (g && g.projets > 0 && g.relies === 0)
+      al.push({ niveau: 'attention', texte: 'GE-Invest : ' + (g.projets > 1 ? 'aucun des ' + g.projets + ' projets n\'est relié' : 'le seul projet n\'est pas relié') + ' à un sous-site (' +
+        ({ absente: 'colonne « Objet (actif) » absente', vide: 'colonne « Objet (actif) » vide',
+           remplie: '« Objet (actif) » rempli, mais sans numéro d\'objet de 15 chiffres : format modifié ?' }[g.objet] || 'colonne « Objet (actif) » vide ou absente') +
+        '). Extraction GE-Invest incomplète ? Sous-sites engagés, responsables de projet et carte des projets restent vides.' });
+    else if (g && gp && gp.relies > 0 && (gp.relies - g.relies) / gp.relies > SEUILS.remplissage)
+      al.push({ niveau: 'attention', texte: 'GE-Invest : ' + nbP(g.relies, 'relié') + ' à un sous-site, contre ' + gp.relies + ' à l\'import de référence (' + ecart(g.relies, gp.relies) + ').' });
     if (p) {
       if (e.nbSousSites !== p.nbSousSites) {
         var d = e.nbSousSites - p.nbSousSites, r = p.nbSousSites ? Math.abs(d) / p.nbSousSites : 1;
@@ -2149,7 +2194,9 @@ var PTE_CONTRAT = (function () {
     }
     var n = { erreur: 0, attention: 0, info: 0 };
     al.forEach(function (z) { n[z.niveau]++; });
-    var cle = function (o) { return o ? JSON.stringify([o.annee, o.nbSousSites, o.nbSites, o.colonnesAbsentes, o.remplissage, o.parc]) : ''; };
+    /* gei compris (contre-vérification D, 27.10.2026) : une nouvelle extraction GE-Invest collée dans un Plan_PTE inchangé
+       n'est plus « identique », son alerte s'affiche */
+    var cle = function (o) { return o ? JSON.stringify([o.annee, o.nbSousSites, o.nbSites, o.colonnesAbsentes, o.remplissage, o.parc, o.gei || null]) : ''; };
     return { niveau: n.erreur ? 'erreur' : n.attention ? 'attention' : n.info ? 'info' : 'ok', alertes: al,
              identique: !!p && cle(e) === cle(p), reference: p ? p.date : null, seuils: SEUILS };
   }
@@ -2157,7 +2204,7 @@ var PTE_CONTRAT = (function () {
   return { lire: lire, norm: norm, cibleAgent: cibleAgent, CORRESPONDANCE_AGENT: CORRESPONDANCE_AGENT, CAD_GENERIQUE: CAD_GENERIQUE,
            empreinte: empreinte, comparer: comparer,
            calcTI: calcTI, classeIDC: classeIDC, classeVetuste: classeVetuste, TI_SEUILS: TI_SEUILS, TI_LABELS: TI_LABELS,
-           version: '2026-10-26' };
+           version: '2026-10-27' };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = PTE_CONTRAT;
 
@@ -2676,7 +2723,15 @@ var PTE_COMMUN = (function () {
        Dépensé : Σ « Cumul comptabilisé dépense N-1 » + « Comptabilisé N dépense » (GE-Invest).
        Estimé  : Σ « Estim PTE » des sous-sites de la feuille Plan_PTE (jamais Estim CECB+).
      Montants rendus en CHF ; l'affichage les divise par 1e6. GE-Invest : feuille GEI_Projets
-     (une ligne par projet), à défaut l'ancienne GEI_Suivi (projet répété : dédoublonné par Numéro). */
+     (une ligne par projet), à défaut l'ancienne GEI_Suivi (projet répété : dédoublonné par Numéro).
+     Montants GE-Invest (27.10.2026, décisions d'Achim) : une cellule vide vaut 0 ; une valeur illisible
+     (texte qui n'est pas un nombre, erreur Excel comme #N/A) n'est jamais comptée pour 0. Une colonne
+     présente mais entièrement vide est traitée comme absente (vides.<montant>). nSans compte, par montant,
+     les projets dont la valeur est illisible ou dont la colonne manque ou est vide (engagé, cumul N-1,
+     année N ; depense : les deux ; depenseIncomplete : l'un des deux) ; un total sans aucune valeur
+     lisible vaut null (« non renseigné » à l'écran) ; colonnes dit si la colonne existe. Feuille lue sans
+     aucun numéro de projet : geiFeuille « sansNumero ». Forme v3 (v1 : manquant = 0 ; v2 : cellule vide =
+     manquant). */
   /* Totaux gérés par l'OCBA (07.10.2026, demande de la direction) : dénominateurs des tuiles « sites »,
      « sous-sites » et « projets » de la Revue. Ils viendront d'une extraction GE-Invest ; tant qu'une valeur
      est null, l'outil le dit (« total OCBA à fournir ») et n'affiche aucun pourcentage sur l'OCBA.
@@ -2693,37 +2748,69 @@ var PTE_COMMUN = (function () {
     if (!t || !/^-?\d+(\.\d+)?$/.test(t)) return null;
     return Number(t);
   }
+  /* Montant GE-Invest d'une cellule (Achim, 27.10.2026) : vide, ou seulement des espaces, = 0 ; cellule en erreur
+     (#N/A…, lue vide par le lecteur, qui la note dans ligne.erreurs) ou texte qui n'est pas un nombre = null. */
+  function montantGei(r, jj) {
+    if (jj == null) return null;
+    if (r.erreurs && r.erreurs.indexOf(jj) >= 0) return null;
+    var v = r[jj];
+    return (v == null || String(v).trim() === '') ? 0 : nombreChf(v);
+  }
   function normEntete(x) {
     return String(x == null ? '' : x).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
   }
-  function situationProgramme(R, rowsG) {
+  /* nomFeuille : « GEI_Projets » (défaut) ou « GEI_Suivi », la feuille lue, rendue dans geiNom pour l'affichage */
+  function situationProgramme(R, rowsG, nomFeuille) {
     var vote = 0, i;
     for (i = 0; i < ENVELOPPE_VOTEE.length; i++) vote += ENVELOPPE_VOTEE[i].chf;
     var ss = (R && R.sousSites) ? R.sousSites : [], est = 0, nEst = 0;
     for (i = 0; i < ss.length; i++) { var e = nombreChf(ss[i].estimPte); if (e != null && e > 0) { est += e; nEst++; } }
-    var g = null;
+    var g = null, feuille = !rowsG ? 'absente' : (rowsG.length > 1 ? 'ok' : 'vide');
     if (rowsG && rowsG.length > 1) {
       var h = rowsG[0].map(normEntete), j = function (n) { var k = h.indexOf(normEntete(n)); return k < 0 ? null : k; };
       var jN = j('Numéro'), jC = j('Crédit total dépense'), jA = j('Cumul comptabilisé dépense N-1'),
           jB = j('Comptabilisé N dépense'), jE = j('Solde engagé dépense'), jY = j('Année référence prévision financière');
-      if (jE != null || jA != null || jB != null) {
-        g = { projets: 0, credit: 0, cumulN1: 0, comptaN: 0, engage: 0, annee: null };
-        var vus = {};
+      /* colonne « Numéro » absente : les projets ne se comptent pas (GEI_Suivi répète un projet par jalon, risque et
+         livrable : ses montants seraient multipliés) — dit comme une colonne vide (contre-vérification D) */
+      if (jN == null) feuille = 'sansNumero';
+      else if (jE != null || jA != null || jB != null) {
+        /* 1. une ligne par projet (la première d'un numéro répété : GEI_Suivi, doublons) ; cellules remplies par colonne */
+        var lignes = [], vus = Object.create(null), pres = { E: 0, A: 0, B: 0 };
+        var rempli = function (r, jj) { return jj != null && ((r.erreurs && r.erreurs.indexOf(jj) >= 0) || String(r[jj] == null ? '' : r[jj]).trim() !== ''); };
         for (i = 1; i < rowsG.length; i++) {
           var r = rowsG[i]; if (!r) continue;
-          var n = jN == null ? String(i) : String(r[jN] == null ? '' : r[jN]).trim();
+          var n = String(r[jN] == null ? '' : r[jN]).trim();
           if (!n || vus[n]) continue;
-          vus[n] = true; g.projets++;
-          g.credit += nombreChf(jC == null ? null : r[jC]) || 0;
-          g.cumulN1 += nombreChf(jA == null ? null : r[jA]) || 0;
-          g.comptaN += nombreChf(jB == null ? null : r[jB]) || 0;
-          g.engage += nombreChf(jE == null ? null : r[jE]) || 0;
-          var y = nombreChf(jY == null ? null : r[jY]); if (y && !g.annee) g.annee = y;
+          vus[n] = true; lignes.push(r);
+          if (rempli(r, jE)) pres.E++;
+          if (rempli(r, jA)) pres.A++;
+          if (rempli(r, jB)) pres.B++;
         }
-        g.depense = g.cumulN1 + g.comptaN;
+        if (lignes.length) {
+          /* 2. colonne présente mais entièrement vide : extraction sans ce montant, pas un programme à 0 — traitée comme
+                absente (« non renseigné », dite « vide ») */
+          var kE = pres.E ? jE : null, kA = pres.A ? jA : null, kB = pres.B ? jB : null;
+          g = { projets: lignes.length, credit: null, cumulN1: null, comptaN: null, engage: null, annee: null,
+                nSans: { engage: 0, depense: 0, cumulN1: 0, comptaN: 0, depenseIncomplete: 0 },
+                colonnes: { engage: jE != null, cumulN1: jA != null, comptaN: jB != null },
+                vides: { engage: jE != null && !pres.E, cumulN1: jA != null && !pres.A, comptaN: jB != null && !pres.B } };
+          var ajoute = function (k, v) { if (v != null) g[k] = (g[k] || 0) + v; return v; };
+          lignes.forEach(function (r) {
+            ajoute('credit', nombreChf(jC == null ? null : r[jC]));
+            var a = ajoute('cumulN1', montantGei(r, kA)), b = ajoute('comptaN', montantGei(r, kB));
+            if (a == null) g.nSans.cumulN1++;
+            if (b == null) g.nSans.comptaN++;
+            if (a == null && b == null) g.nSans.depense++;
+            if (a == null || b == null) g.nSans.depenseIncomplete++;
+            if (ajoute('engage', montantGei(r, kE)) == null) g.nSans.engage++;
+            var y = nombreChf(jY == null ? null : r[jY]); if (y && !g.annee) g.annee = y;
+          });
+          g.depense = (g.cumulN1 == null && g.comptaN == null) ? null : (g.cumulN1 || 0) + (g.comptaN || 0);
+        } else feuille = 'sansNumero';
       }
     }
-    return { v: 1, date: new Date().toISOString(), vote: vote, lois: ENVELOPPE_VOTEE,
+    return { v: 3, date: new Date().toISOString(), vote: vote, lois: ENVELOPPE_VOTEE,
+             geiFeuille: feuille, geiNom: nomFeuille === 'GEI_Suivi' ? 'GEI_Suivi' : 'GEI_Projets',
              estime: est, nbEstimes: nEst, nbSousSites: ss.length, gei: g };
   }
   /* « 964,3 » : CHF -> MCHF, une décimale, séparateur suisse */
@@ -2743,6 +2830,11 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "27.10.2026", "objet": "simulation", "version": "v3.15", "titre": "Textes sans impératif", "points": ["Messages et explications de la page : ils informent sans s'adresser à la personne (règle des outils de l'État) ; onze textes reformulés, sens inchangé.", "Module commun recopié : session du serveur des saisies vérifiée au chargement et au début de chaque action."]},
+    {"date": "27.10.2026", "objet": "priorisation", "version": "v2.28", "titre": "Arbitrage aligné entièrement sur le Classement", "points": ["Arbitrage et Classement comptent les mêmes gains par sous-site : thermique et CO₂ seulement avec une variante CECB+ A, B ou C ; facteur CO₂ de la feuille Data seule ; CO₂ après travaux = IDC projeté × facteur du chauffage prévu (la colonne « CO2 projeté » n'entre plus dans l'Arbitrage).", "Coût d'un sous-site : le seul montant du menu « Montants » (avant : un montant manquant était remplacé, sans le dire, par Estim PTE) ; alertes de cohérence du Classement.", "Classeur de référence, réglages par défaut : 160 sous-sites retenus au lieu de 168 ; CO₂ évité 6 622 t/an au lieu de 9 884 ; coût de la tonne 188 749 CHF au lieu de 126 459 (chiffres validés par Achim).", "Vue d'ensemble : l'effet du portefeuille suit (CO₂ fin 2030 : 16 034 t au lieu de 14 601). Un portefeuille figé avant le 27.10 diffère du nouvel arbitrage par la seule méthode (classeur de référence : 15 sous-sites sortis, 7 entrés)."]},
+    {"date": "27.10.2026", "objet": "revue", "version": "v0.36", "titre": "Extraction GE-Invest : projets absents retirés ; descriptions affichées", "points": ["Import : un projet absent de la nouvelle extraction GE-Invest est retiré, avec ses jalons, risques, livrables et finances. La liste s'affiche à l'import (en orange au-delà de 20 % des projets) et dans Données ; ses décisions sont gardées et reviennent avec lui.", "Année de référence financière manquante : celle des autres lignes (avant : l'année en cours, sans le dire), signalée à l'import, dans Données et au contrôle de complétude.", "Fiche et Reporting d'un projet : description GE-Invest (repliée au-delà de quelques lignes) et commentaire de chaque jalon.", "Extraction défaillante : vide, sans numéro de projet, sans aucun projet relié à un sous-site (« Objet (actif) » vide), ou classeur sans GEI_Projets — dit à l'import et par la pastille, l'import précédent est gardé. Feuille des jalons, risques ou livrables absente ou vide : signalée, ses données ne sont plus affichées. Numéros présents dans ces feuilles sans ligne dans GEI_Projets : écartés et signalés ; numéros en double : signalés. Projets rattachés à aucun sous-site : comptés (avis et pastille en orange au-delà de 20 %)."]},
+    {"date": "27.10.2026", "objet": "accueil", "version": "v1.17", "titre": "Montants GE-Invest : cellule vide = 0, valeur illisible dite", "points": ["Situation du programme : une cellule vide de GE-Invest vaut 0 (confirmé par Achim le 27.10). Une valeur illisible (texte, erreur Excel) n'est jamais comptée pour 0 : « ≥ » devant la somme, « au moins » dans la phrase et nombre de projets dont le montant est lisible.", "Colonne de montant entièrement vide, absente, ou feuille GE-Invest sans projet : dit sous la tuile, jamais 0. Contrôle à l'import : une extraction GE-Invest dont aucun projet n'est relié à un sous-site est signalée."]},
+    {"date": "27.10.2026", "objet": "commun", "version": null, "titre": "Serveur des saisies : une connexion par onglet hors ligne", "points": ["Outils ouverts depuis le disque : le jeton du serveur des saisies reste dans l'onglet (une connexion par onglet, perdue à sa fermeture) ; une page ouverte depuis le disque dans un autre onglet ne peut plus le lire. En ligne, rien ne change.", "Côté serveur, un jeton de 12 heures non renouvelable pour les consolidateurs est prêt et essayé (serveur de test, 27.10) ; il sera activé sur le serveur des saisies.", "Session échue ou refusée par le serveur (jeton arrivé à son terme, mot de passe changé) : vérifiée au chargement et au début de chaque action, fermée et redemandée avec « Session expirée » ; avant, une réception rendait « aucune version de référence publiée ».", "Contrôle à l'import (accueil et priorisation) : une extraction GE-Invest dont aucun projet n'est relié à un sous-site est signalée, comme une forte baisse des projets reliés (sous-sites engagés, responsables de projet et carte des projets resteraient vides)."]},
     {"date": "27.10.2026", "objet": "priorisation", "version": "v2.27", "titre": "Plus rapide et plus sûre ; Arbitrage aligné sur le Classement", "points": ["Arbitrage (chiffres modifiés) : le CO₂ se compte en convention légale et la substitution renouvelable suit la règle du Classement ; « Calé sur les écarts 2030 » lit les écarts du classeur. Classeur de référence : 168 sous-sites retenus au lieu de 164, 9 884 t de CO₂ évitées par an au lieu de 10 013.", "Plus rapide : ouverture 1,6 → 0,5 s, import 2,5 → 0,6 s ; seul l'onglet affiché est redessiné (changement d'onglet en 10 à 330 ms au lieu de 140 à 520). Page allégée : 16 000 éléments au lieu de 30 000.", "Stockage du navigateur divisé par deux (1,2 M caractères au lieu de 2,25 M) : les quatre outils y tiennent ensemble.", "Audit CECB+ réalisé sans variante connue : « variante à confirmer », plus de variante supposée. Textes du classeur et des saisies neutralisés partout ; export CSV protégé contre les formules."]},
     {"date": "27.10.2026", "objet": "revue", "version": "v0.35", "titre": "Décisions gardées avec les quatre outils ouverts ; plus rapide", "points": ["Données de la revue gardées dans la base du navigateur (IndexedDB) ; seules les décisions restent dans le stockage partagé, où les quatre outils tiennent désormais ensemble. S'il est plein quand même, la revue dit que la décision n'est pas enregistrée (avant : perdue sans message). Deux onglets de la revue ouverts ensemble ne s'écrasent plus ; « Effacer » vaut aussi pour l'autre onglet. La revue se rouvre sans redemander le classeur.", "Plus rapide : Reporting 251 → 77 ms, Portefeuille 292 → 38 ms, import 1,3 → 0,8 s ; la recherche attend la fin de la frappe.", "Décisions selon le périmètre : celles de ses projets, celles de ses portefeuilles, celles du parc sur « tout le parc » seulement. Un lien vers un projet hors du périmètre ouvre la bonne fiche.", "Fiche : phase SIA déduite de l'avancement global ; décision échue jugée à la date de gel. Règle Délais corrigée, réglage « Glissement → orange » (sans effet) retiré. Export CSV protégé contre les formules."]},
     {"date": "27.10.2026", "objet": "simulation", "version": "v3.14", "titre": "Plus légère et plus rapide", "points": ["Page allégée de 1,3 à 0,5 Mo, import 1,5 → 0,4 s : lecture et export Excel passent par le lecteur commun des outils (plus de bibliothèque SheetJS). Mémoire après import : 20 → 5 Mo.", "Un agent absent de la feuille Data (« CAD tarifé ») n'empêche plus l'affichage du site : facteur CO₂ « à renseigner ».", "Le classeur lu est gardé dans la base du navigateur (IndexedDB), écrit une fois par import : un million de caractères de moins dans le stockage partagé des quatre pages.", "Valeurs du classeur et des saisies neutralisées dans les cartes ; seuls les scripts de la page peuvent s'exécuter."]},
@@ -4168,8 +4260,26 @@ var PTE_COMMUN = (function () {
     if (!a) deconnecter();
     return a;
   }
-  function session() { var s = lireJ(LS_SES); return s && s.token && s.user ? s : null; }
-  function deconnecter() { try { localStorage.removeItem(LS_SES); } catch (e) {} }
+  /* Jeton du serveur (27.10.2026, décision d'Achim). Outils ouverts depuis le disque (file://) : Chrome et Edge
+     partagent alors le stockage local avec toute autre page ouverte de la même façon (une pièce jointe, par exemple),
+     qui pourrait y lire le jeton. En file://, il reste donc dans l'onglet (sessionStorage) : une connexion par onglet,
+     perdue à sa fermeture. En ligne (https, GitHub Pages), le stockage est propre au site : localStorage, comme avant.
+     Un jeton laissé dans le stockage partagé par une version antérieure passe dans l'onglet qui l'y trouve. */
+  var SES_ONGLET = (function () { try { return typeof location !== 'undefined' && location.protocol === 'file:' && typeof sessionStorage !== 'undefined'; } catch (e) { return false; } })();
+  function stockSession() { try { return SES_ONGLET ? sessionStorage : localStorage; } catch (e) { return null; } }
+  function session() {
+    var st = stockSession(), s = null;
+    try { s = st ? JSON.parse(st.getItem(LS_SES) || 'null') : null; } catch (e) { s = null; }
+    return s && typeof s === 'object' && typeof s.token === 'string' && s.token && s.user && typeof s.user === 'object' ? s : null;
+  }
+  function ecrireSession(s) { var st = stockSession(); try { if (st) st.setItem(LS_SES, JSON.stringify(s)); } catch (e) {} }
+  function deconnecter() {
+    var st = stockSession(); try { if (st) st.removeItem(LS_SES); } catch (e) {}
+    try { localStorage.removeItem(LS_SES); } catch (e) {}   /* jeton d'une version antérieure, en file:// */
+  }
+  if (SES_ONGLET) {
+    try { var ancienJeton = localStorage.getItem(LS_SES); if (ancienJeton) { if (!sessionStorage.getItem(LS_SES)) sessionStorage.setItem(LS_SES, ancienJeton); localStorage.removeItem(LS_SES); } } catch (e) {}
+  }
   function estConsolidateur() { var s = session(); return !!(s && s.user.role === 'consolidateur'); }
   function messageErreur(st, j) {
     var m = j && j.message ? j.message : ('erreur ' + st);
@@ -4177,11 +4287,50 @@ var PTE_COMMUN = (function () {
       var d = Object.keys(j.data).map(function (k) { return j.data[k] && j.data[k].message ? k + ' : ' + j.data[k].message : ''; }).filter(Boolean);
       if (d.length) m += ' (' + d.join(' ; ') + ')';
     }
+    if (/^Batch transaction failed/i.test(m)) m = m.replace(/^Batch transaction failed\.?/i, 'lot refusé par le serveur');
     if (st === 401) m = 'session expirée : nouvelle connexion nécessaire';
     if (st === 403 && !/Administration/.test(m)) m = 'action non autorisée pour ce compte (' + m + ')';
     return m;
   }
+  /* Session échue ou refusée (27.10.2026, essai du jeton de 12 h des consolidateurs). PocketBase ne refuse pas un jeton
+     échu ou révoqué (mot de passe changé) : il le traite comme une absence de connexion, et une lecture rend une liste
+     vide, sans erreur (« aucune version de référence publiée »). Donc :
+     - au chargement d'un outil et au début de chaque action, la session est vérifiée par le serveur (auth-refresh) ;
+     - avant chaque appel, l'échéance du jeton (champ exp) est lue ; échue selon l'horloge du poste, le serveur tranche
+       (une horloge en avance ne ferme pas une session valable : la session est alors marquée « horloge ») ;
+     - une session refusée par le serveur (401) est fermée et marquée : la fenêtre de connexion dit « Session expirée »
+       et reprend le courriel. */
+  var LS_ECHUE = 'pte.serveur.echue.v1';
+  function lireEchue() { var st = stockSession(), o = null; try { o = st ? JSON.parse(st.getItem(LS_ECHUE) || 'null') : null; } catch (e) { o = null; } return o && typeof o === 'object' ? o : null; }
+  function effacerEchue() { var st = stockSession(); try { if (st) st.removeItem(LS_ECHUE); } catch (e) {} }
+  function fermerSessionEchue(motif) {
+    var s = session(), st = stockSession();
+    try { if (s && st) st.setItem(LS_ECHUE, JSON.stringify({ email: txt(s.user.email), name: txt(s.user.name), motif: motif === 'bientot' ? 'bientot' : 'echue' })); } catch (e) {}
+    deconnecter();
+    try { majBoutons(); } catch (e) {}   /* pastille du bouton Saisies : « non connecté » (contre-vérification D) */
+  }
+  /* échéance du jeton (secondes) ; null si illisible */
+  function echeanceJeton(tok) {
+    try {
+      var p = String(tok || '').split('.')[1]; if (!p) return null;
+      p = p.replace(/-/g, '+').replace(/_/g, '/'); while (p.length % 4) p += '=';
+      var c = JSON.parse(atob(p));
+      return typeof c.exp === 'number' ? c.exp : null;
+    } catch (e) { return null; }
+  }
+  /* échu selon l'horloge du poste, 5 s d'avance comprises */
+  function jetonEchu(tok) { var x = echeanceJeton(tok); return x != null && x * 1000 <= Date.now() + 5000; }
+  /* accepté par le serveur alors qu'il est échu depuis plus d'une minute selon le poste : horloge du poste en avance */
+  function horlogeEnAvance(tok) { var x = echeanceJeton(tok); return x != null && x * 1000 < Date.now() - 60000; }
+  function erreurEchue() { var e = new Error(messageErreur(401, null)); e.status = 401; return e; }
   function api(methode, chemin, corps) {
+    var s0 = session();
+    if (s0 && !s0.horloge && jetonEchu(s0.token) && chemin !== '/api/collections/users/auth-with-password' && chemin !== '/api/collections/users/auth-refresh') {
+      return rafraichirSession().then(function (s1) { if (!s1) throw erreurEchue(); return appel(methode, chemin, corps); });
+    }
+    return appel(methode, chemin, corps);
+  }
+  function appel(methode, chemin, corps) {
     var a = adresseServeur();
     if (!a) return Promise.reject(new Error('adresse du serveur non renseignée (page Pilotage PTE)'));
     /* adresse gardée avant le 27.10, hors de la CSP : le navigateur la bloquerait (« serveur injoignable ») */
@@ -4194,7 +4343,7 @@ var PTE_COMMUN = (function () {
         return r.text().then(function (t) {
           if (to) clearTimeout(to);
           var j = null; try { j = t ? JSON.parse(t) : null; } catch (e) {}
-          if (!r.ok) { if (r.status === 401) deconnecter(); var err = new Error(messageErreur(r.status, j)); err.status = r.status; throw err; }
+          if (!r.ok) { if (r.status === 401 && chemin !== '/api/collections/users/auth-with-password') fermerSessionEchue(); var err = new Error(messageErreur(r.status, j)); err.status = r.status; throw err; }
           return j;
         });
       }, function (e) {
@@ -4206,17 +4355,24 @@ var PTE_COMMUN = (function () {
     return api('POST', '/api/collections/users/auth-with-password', { identity: txt(courriel).trim(), password: txt(mdp) }).then(function (j) {
       var u = j.record || {};
       var s = { token: j.token, user: { id: u.id, name: u.name || u.email || '', email: u.email || '', role: u.role || 'contributeur' } };
-      ecrireJ(LS_SES, s);
+      if (horlogeEnAvance(s.token)) s.horloge = true;   /* jeton neuf déjà échu selon le poste : horloge du poste en avance */
+      ecrireSession(s); effacerEchue();
       if (s.user.name && !utilisateur()) definirUtilisateur(s.user.name);
+      try { majBoutons(); } catch (e) {}   /* pastille du bouton Saisies, quel que soit le chemin de la connexion */
       return s;
     });
   }
-  function rafraichirSession() {
-    if (!session()) return Promise.resolve(null);
-    return api('POST', '/api/collections/users/auth-refresh').then(function (j) {
+  /* session vérifiée par le serveur : la session (renouvelée) ; null si le serveur la refuse (fermée, marquée) ; la
+     session telle quelle si le serveur ne répond pas (l'action dira l'erreur) */
+  function rafraichirSession() { return verifierSession().then(function (r) { return r.session; }); }
+  /* même vérification ; joint : le serveur a répondu (false : injoignable, la session est rendue telle quelle) */
+  function verifierSession() {
+    if (!session()) return Promise.resolve({ session: null, joint: false });
+    return appel('POST', '/api/collections/users/auth-refresh').then(function (j) {
       var u = j.record || {}, s = { token: j.token, user: { id: u.id, name: u.name || u.email || '', email: u.email || '', role: u.role || 'contributeur' } };
-      ecrireJ(LS_SES, s); return s;
-    }).catch(function (e) { if (e.status === 401) deconnecter(); return session(); });
+      if (horlogeEnAvance(s.token)) s.horloge = true;
+      ecrireSession(s); effacerEchue(); return { session: s, joint: true };
+    }, function (e) { return e.status === 401 ? { session: null, joint: true } : { session: session(), joint: false }; });
   }
   /* identifiant d'enregistrement stable (15 caractères [0-9a-f]) : rend l'envoi idempotent (PUT = créer ou remplacer) */
   function idStable(s) { return (hash(s) + hash(s + '#1') + hash(s + '#2')).slice(0, 15); }
@@ -4233,9 +4389,9 @@ var PTE_COMMUN = (function () {
     return page(1);
   }
   function parLots(requetes, taille) {
-    var lots = []; for (var i = 0; i < requetes.length; i += taille) lots.push(requetes.slice(i, i + taille));
-    return lots.reduce(function (p, lot) { return p.then(function () { return api('POST', '/api/batch', { requests: lot }); }); }, Promise.resolve())
-      .then(function () { return requetes.length; });
+    var lots = [], faites = 0; for (var i = 0; i < requetes.length; i += taille) lots.push(requetes.slice(i, i + taille));
+    return lots.reduce(function (p, lot) { return p.then(function () { return api('POST', '/api/batch', { requests: lot }).then(function () { faites += lot.length; }); }); }, Promise.resolve())
+      .then(function () { return requetes.length; }, function (e) { e.ecrites = faites; e.total = requetes.length; throw e; });
   }
   function isoServeur(d) { return d ? txt(d).replace(' ', 'T') : ''; }
   function ficheVersServeur(f) {
@@ -4301,8 +4457,29 @@ var PTE_COMMUN = (function () {
                info: { auteur: par, date: le, consolide: { par: par || 'consolidateur', le: le || maintenant(), sources: (der && Array.isArray(der.sources)) ? der.sources : [], vues: vues } } };
     });
   }
+  /* Publication (contre-vérification D, 27.10.2026). La fenêtre de consolidation peut rester ouverte longtemps : la session
+     est vérifiée par le serveur avant le premier lot. Refusée, ou à moins de 5 minutes de son échéance (le jeton des
+     consolidateurs n'est pas prolongé par le renouvellement : il échoirait entre deux lots), une nouvelle connexion est
+     demandée par-dessus la fenêtre, qui garde les choix. */
+  var MARGE_PUBLICATION = 5 * 60 * 1000;
+  function sessionPourPublier() {
+    return verifierSession().then(function (r) {
+      var s = r.session, x = s ? echeanceJeton(s.token) : null;
+      if (s && r.joint && !s.horloge && x != null && x * 1000 - Date.now() < MARGE_PUBLICATION) { fermerSessionEchue('bientot'); s = null; }
+      if (s) return s;
+      return new Promise(function (ok, ko) {
+        if (typeof document === 'undefined' || !document.createElement) { ko(erreurEchue()); return; }   /* hors navigateur (tests) */
+        demanderConnexion(function (s2) { if (s2) ok(s2); else ko(new Error('publication annulée : connexion nécessaire')); });
+      });
+    }).then(function (s) {
+      if (s.user.role !== 'consolidateur') throw new Error('publication réservée aux consolidateurs (compte connecté : ' + (s.user.name || s.user.email || 'sans nom') + ')');
+      return s;
+    });
+  }
   function publierReference(p) {
-    var s = session(); if (!s || s.user.role !== 'consolidateur') return Promise.reject(new Error('publication réservée aux consolidateurs'));
+    return sessionPourPublier().then(function (s) { return publierLots(p, s); });
+  }
+  function publierLots(p, s) {
     var req = p.fiches.map(function (f) {
       return { method: 'PUT', url: '/api/collections/reference/records', body: { id: idStable('ref|' + f.cle), cle: f.cle, rubrique: f.rubrique, site: txt(f.site),
         projet: txt(f.numero_projet), fiche: ficheVersServeur(f), empreinte: hash(contenu(f)), supprime: !!f.supprimer, modifie: f.modifie || '',
@@ -4311,20 +4488,36 @@ var PTE_COMMUN = (function () {
     return parLots(req, 50).then(function (n) {
       return api('POST', '/api/collections/consolidations/records', { par: s.user.id, par_nom: s.user.name, nombre: n,
         sources: (p.info.consolide.sources || []).map(function (x) { return { fichier: x.fichier, auteur: x.auteur, date: x.date }; }) }).then(function () { return n; });
+    }, function (e) {
+      /* lot refusé en cours de route : ce qui est écrit est dit ; la publication suivante réécrit tout (identifiants stables).
+         La session est revérifiée : PocketBase traite un jeton échu ou révoqué comme un visiteur (lot refusé, sans 401). */
+      if (!e.ecrites) throw e;
+      return (e.status === 401 ? Promise.resolve({ session: null, joint: true }) : verifierSession()).then(function (r) {
+        var echue = (r.joint && !r.session) || (!s.horloge && jetonEchu(s.token));
+        var e2 = new Error((echue ? 'session expirée pendant la publication' : e.message) + ' — publication interrompue après ' + e.ecrites + ' fiches sur ' + e.total +
+          ' : la référence du serveur est incomplète, à publier de nouveau');
+        e2.status = echue ? 401 : e.status; throw e2;
+      });
     });
   }
 
   /* ---------- fenêtres : connexion, échange, retours ---------- */
+  /* cb(session, neuve) : neuve = ouverte à l'instant par cette fenêtre */
   function demanderConnexion(cb) {
-    if (session() && adresseServeur()) { cb(session()); return; }
+    var s0 = session();
+    if (s0 && adresseServeur()) { cb(s0, false); return; }
+    var echue = lireEchue();   /* session fermée par le serveur (échue ou refusée) : dit, courriel repris */
     var W = fenetre('pte-connexion', 'Connexion au serveur partagé', 520), c = W.c, fini = false;
     var champ = function (id, lib, type, val, auto) {
       return '<label style="display:block;font-size:12.5px;color:' + c.doux + ';margin:8px 0 4px" for="' + id + '">' + lib + '</label>' +
         '<input id="' + id + '" type="' + type + '" value="' + esc(val || '') + '" autocomplete="' + auto + '" spellcheck="false" style="font:inherit;width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid ' + c.trait + ';border-radius:6px;background:' + c.fond + ';color:' + c.encre + '">';
     };
-    W.corps.innerHTML = '<p style="margin:0 0 6px">Compte créé par l’administrateur du serveur. L’adresse et la session restent dans ce navigateur.</p>' +
+    W.corps.innerHTML = (echue ? '<p style="margin:0 0 6px;color:' + c.rouge + '">' + (echue.motif === 'bientot' ? 'Session proche de son échéance, fermée : nouvelle connexion nécessaire.' : 'Session expirée : nouvelle connexion nécessaire.') + '</p>' : '') +
+      '<p style="margin:0 0 6px">Compte créé par l’administrateur du serveur. ' + (SES_ONGLET
+        ? 'L’adresse reste dans ce navigateur ; la session, dans cet onglet seulement (outils ouverts depuis le disque).'
+        : 'L’adresse et la session restent dans ce navigateur.') + '</p>' +
       champ('pte-srv-a', 'Adresse du serveur (https://…)', 'url', adresseServeur(), 'off') +
-      champ('pte-srv-c', 'Courriel', 'email', (session() && session().user.email) || '', 'username') +
+      champ('pte-srv-c', 'Courriel', 'email', (s0 && s0.user.email) || (echue && echue.email) || '', 'username') +
       champ('pte-srv-m', 'Mot de passe', 'password', '', 'current-password') +
       '<p data-x="err" style="margin:10px 0 0;color:' + c.rouge + '"></p>';
     var err = W.corps.querySelector('[data-x="err"]');
@@ -4335,13 +4528,23 @@ var PTE_COMMUN = (function () {
       try { definirAdresseServeur(W.corps.querySelector('#pte-srv-a').value); } catch (e) { err.textContent = e.message; return; }
       bC.disabled = true; bC.textContent = 'Connexion…';
       connecter(W.corps.querySelector('#pte-srv-c').value, W.corps.querySelector('#pte-srv-m').value)
-        .then(function (s) { fini = true; W.fermer(); cb(s); })
+        .then(function (s) { fini = true; W.fermer(); cb(s, true); })
         .catch(function (e) { bC.disabled = false; bC.textContent = 'Se connecter'; err.textContent = e.message.charAt(0).toUpperCase() + e.message.slice(1) + '.'; });
     });
     W.corps.addEventListener('keydown', function (e) { if (e.key === 'Enter') bC.click(); });
     try { W.corps.querySelector(adresseServeur() ? '#pte-srv-c' : '#pte-srv-a').focus(); } catch (e) {}
   }
-  function avecSession(cb, fin) { demanderConnexion(function (s) { if (!s) { if (fin) fin(null); return; } cb(s); }); }
+  /* action sur le serveur : session vérifiée d'abord (sauf ouverte à l'instant) ; refusée, la connexion est redemandée */
+  function avecSession(cb, fin) {
+    demanderConnexion(function (s, neuve) {
+      if (!s) { if (fin) fin(null); return; }
+      if (neuve) { cb(s); return; }
+      rafraichirSession().then(function (s2) {
+        if (s2) { cb(s2); return; }
+        demanderConnexion(function (s3) { if (!s3) { if (fin) fin(null); return; } cb(s3); });
+      });
+    });
+  }
   function envoyerSaisiesUI(fin) {
     avecSession(function () {
       envoyerSaisies().then(function (n) { if (fin) fin(n); })
@@ -4372,6 +4575,26 @@ var PTE_COMMUN = (function () {
   function ouvrirRetours(outil) {
     avecSession(function (s) {
       var W = fenetre('pte-retours', 'Retours et demandes d’évolution', 900), c = W.c, cons = s.user.role === 'consolidateur';
+      /* session vérifiée par le serveur à chaque chargement et à chaque action, sauf juste après avecSession
+         (contre-vérification D : une fenêtre restée ouverte affichait « Aucune demande » après un changement de mot de passe) */
+      var verifiee = true;
+      function verifier() {
+        if (verifiee) { verifiee = false; return Promise.resolve(s); }
+        return rafraichirSession().then(function (s2) { if (!s2) throw erreurEchue(); s = s2; return s2; });
+      }
+      /* session refusée : dit au-dessus du contenu, qui reste (texte en cours de saisie compris) ; l'action refusée (f) est
+         faite après la reconnexion (contre-vérification E) */
+      function refusee(f) {
+        etat.enAttente = f || null;
+        var ancien = W.corps.querySelector('[data-x="refus"]'); if (ancien && ancien.parentNode) ancien.parentNode.removeChild(ancien);
+        var d = document.createElement('div');
+        d.setAttribute('data-x', 'refus'); d.setAttribute('role', 'alert');
+        d.style.cssText = 'margin:0 0 12px;padding:8px 12px;border-left:3px solid ' + c.rouge + ';background:' + c.ligne;
+        d.innerHTML = '<p style="margin:0 0 6px;color:' + c.rouge + '">Session expirée : nouvelle connexion nécessaire' + (f ? ' ; l’action demandée sera faite ensuite' : '') + '.</p>' +
+          '<button type="button" data-x="reconnecter" style="font:inherit;padding:6px 14px;border-radius:7px;border:1px solid ' + c.acc + ';background:' + c.acc + ';color:' + c.accTexte + ';cursor:pointer">Se reconnecter</button>';
+        W.corps.insertBefore(d, W.corps.firstChild);
+        var x = W.pied.querySelector('[data-x="connecte"]'); if (x) x.textContent = 'Non connecté (session expirée)';
+      }
       /* filtre par statut, à choix multiple (18.10.2026) : gardé dans ce navigateur ; par défaut, les demandes ouvertes */
       var LS_RF = 'pte.retours.statuts.v1', parDefaut = ['nouveau', 'a_clarifier', 'accepte', 'en_cours'];
       var choisis = lireJ(LS_RF); if (!Array.isArray(choisis)) choisis = parDefaut.slice();
@@ -4380,8 +4603,9 @@ var PTE_COMMUN = (function () {
       function opt(o, sel) { return Object.keys(o).map(function (k) { return '<option value="' + k + '"' + (k === sel ? ' selected' : '') + '>' + esc(o[k]) + '</option>'; }).join(''); }
       function charger() {
         W.corps.innerHTML = '<p style="color:' + c.doux + '">Chargement…</p>';
-        return Promise.all([toutLire('retours', '', '-created'), toutLire('votes')]).then(function (r) { etat.retours = r[0]; etat.votes = r[1]; rendre(); })
-          .catch(function (e) { W.corps.innerHTML = '<p style="color:' + c.rouge + '">' + esc(e.message) + '</p>'; });
+        return verifier().then(function () { return Promise.all([toutLire('retours', '', '-created'), toutLire('votes')]); })
+          .then(function (r) { etat.retours = r[0]; etat.votes = r[1]; rendre(); })
+          .catch(function (e) { if (e && e.status === 401) { W.corps.innerHTML = ''; refusee(); } else W.corps.innerHTML = '<p style="color:' + c.rouge + '">' + esc(e.message) + '</p>'; });
       }
       function rendre() {
         var nb = {}, miens = {};
@@ -4440,7 +4664,14 @@ var PTE_COMMUN = (function () {
         });
         W.corps.innerHTML = h;
       }
-      function agir(p) { return p.then(charger).catch(function (e) { montrerErreur('Action impossible', e.message); }); }
+      function agir(f) {
+        return verifier().then(function () { return f(); }).then(function () { verifiee = true; return charger(); })
+          .catch(function (e) { if (e && e.status === 401) refusee(f); else montrerErreur('Action impossible', e.message); });
+      }
+      function majPied() {
+        var x = W.pied.querySelector('[data-x="connecte"]');
+        if (x) x.textContent = 'Connecté : ' + s.user.name + (cons ? ' · consolidateur' : '');
+      }
       function exporter() {
         var L = etat.liste || [], nb = etat.nb || {};
         var lignes = L.map(function (r) { return [r.titre, OUTILS[r.outil] || r.outil || '', STATUTS[r.statut] || r.statut, nb[r.id] || 0, r.auteur_nom || '', dateFichier(isoServeur(r.created)), dateFichier(isoServeur(r.updated)), r.description || '', r.reponse || '']; });
@@ -4462,14 +4693,23 @@ var PTE_COMMUN = (function () {
           else etat.statuts = tous.filter(function (x) { return x === k || etat.statuts.indexOf(x) >= 0; });
           ecrireJ(LS_RF, etat.statuts); rendre(); return;
         }
+        if (g('data-x') === 'reconnecter') {
+          demanderConnexion(function (s3) {
+            if (!s3) return;
+            s = s3; cons = s.user.role === 'consolidateur'; verifiee = true; majPied();
+            var f = etat.enAttente; etat.enAttente = null;
+            if (f) agir(f); else charger();
+          });
+          return;
+        }
         if (g('data-x') === 'deposer') {
           var ti = W.corps.querySelector('[data-x="titre"]').value.trim();
           if (!ti) { W.corps.querySelector('[data-x="titre"]').focus(); return; }
-          agir(api('POST', '/api/collections/retours/records', { titre: ti, outil: W.corps.querySelector('[data-x="outil"]').value,
-            description: W.corps.querySelector('[data-x="desc"]').value.trim(), statut: 'nouveau', auteur: s.user.id, auteur_nom: s.user.name }));
+          var ou = W.corps.querySelector('[data-x="outil"]').value, de = W.corps.querySelector('[data-x="desc"]').value.trim();
+          agir(function () { return api('POST', '/api/collections/retours/records', { titre: ti, outil: ou, description: de, statut: 'nouveau', auteur: s.user.id, auteur_nom: s.user.name }); });
         } else if (g('data-vote')) {
           var id = g('data-vote'), v = etat.votes.filter(function (x) { return x.retour === id && x.votant === s.user.id; })[0];
-          agir(v ? api('DELETE', '/api/collections/votes/records/' + v.id) : api('POST', '/api/collections/votes/records', { retour: id, votant: s.user.id }));
+          agir(function () { return v ? api('DELETE', '/api/collections/votes/records/' + v.id) : api('POST', '/api/collections/votes/records', { retour: id, votant: s.user.id }); });
         } else if (g('data-edit')) {
           etat.edition = g('data-edit'); rendre();
           try { W.corps.querySelector('[data-e="titre"]').focus(); } catch (er) {}
@@ -4478,27 +4718,26 @@ var PTE_COMMUN = (function () {
         } else if (g('data-enreg')) {
           var ti2 = W.corps.querySelector('[data-e="titre"]').value.trim();
           if (!ti2) { W.corps.querySelector('[data-e="titre"]').focus(); return; }
-          var id3 = g('data-enreg'); etat.edition = null;
-          agir(api('PATCH', '/api/collections/retours/records/' + id3, { titre: ti2, outil: W.corps.querySelector('[data-e="outil"]').value,
-            description: W.corps.querySelector('[data-e="desc"]').value.trim() }));
+          var id3 = g('data-enreg'), ou3 = W.corps.querySelector('[data-e="outil"]').value, de3 = W.corps.querySelector('[data-e="desc"]').value.trim(); etat.edition = null;
+          agir(function () { return api('PATCH', '/api/collections/retours/records/' + id3, { titre: ti2, outil: ou3, description: de3 }); });
         } else if (g('data-suppr')) {
           var r4 = etat.retours.filter(function (x) { return x.id === g('data-suppr'); })[0];
           if (r4 && (typeof confirm !== 'function' || confirm('Supprimer définitivement la demande « ' + r4.titre + ' » et ses votes ?')))
-            agir(api('DELETE', '/api/collections/retours/records/' + r4.id));
+            agir(function () { return api('DELETE', '/api/collections/retours/records/' + r4.id); });
         } else if (g('data-maj')) {
           var id2 = g('data-maj');
-          agir(api('PATCH', '/api/collections/retours/records/' + id2, { statut: W.corps.querySelector('[data-statut="' + id2 + '"]').value,
-            reponse: W.corps.querySelector('[data-reponse="' + id2 + '"]').value.trim() }));
+          var st2 = W.corps.querySelector('[data-statut="' + id2 + '"]').value, re2 = W.corps.querySelector('[data-reponse="' + id2 + '"]').value.trim();
+          agir(function () { return api('PATCH', '/api/collections/retours/records/' + id2, { statut: st2, reponse: re2 }); });
         }
       });
-      W.pied.innerHTML = '<span style="margin-right:auto;color:' + c.doux + ';font-size:12px">Connecté : ' + esc(s.user.name) + (cons ? ' · consolidateur' : '') + '</span>';
+      W.pied.innerHTML = '<span data-x="connecte" style="margin-right:auto;color:' + c.doux + ';font-size:12px">Connecté : ' + esc(s.user.name) + (cons ? ' · consolidateur' : '') + '</span>';
       bouton(W, 'Exporter (Excel)', false, exporter);
       bouton(W, 'Actualiser', false, charger);
       bouton(W, 'Fermer', true, function () { W.fermer(); });
       charger();
     });
   }
-  try { if (typeof document !== 'undefined' && document.body !== undefined && session()) rafraichirSession(); } catch (e) {}
+  try { if (typeof document !== 'undefined' && document.body !== undefined && session()) rafraichirSession().then(function () { try { majBoutons(); } catch (e) {} }); } catch (e) {}
 
   C.origineAutorisee = origineAutorisee;
   C.serveur = { adresse: adresseServeur, definirAdresse: definirAdresseServeur, session: session, connecter: connecter, deconnecter: deconnecter,
@@ -4760,7 +4999,7 @@ var PTE_COMMUN = (function () {
         if (typeof confirm === 'function' && !confirm('Rétablir les saisies d’avant le dernier import ?')) return;
         if (annulerDernierImport()) { apres({ retabli: true }); signaler('Dernier import annulé : saisies rétablies.'); }
       }
-      else if (act === 'deconnexion') { deconnecter(); majBoutons(); signaler('Déconnecté du serveur partagé.'); }
+      else if (act === 'deconnexion') { deconnecter(); effacerEchue(); majBoutons(); signaler(SES_ONGLET ? 'Déconnecté du serveur partagé dans cet onglet ; les autres onglets gardent leur propre connexion.' : 'Déconnecté du serveur partagé.'); }
       else if (act === 'nom') demanderNom(function () { majBoutons(); }, true);
       else if (act === 'quitterConso') { modeConsolidateur(false); signaler('Mode consolidateur retiré de ce poste.'); }
     }
@@ -5204,25 +5443,61 @@ var PTE_COMMUN = (function () {
   // date de mise à jour de la fiche — des extractions successives
   // s'accumulent donc (upsert par projet+mois) sans écraser l'historique.
   function loadGEI(db, parsed) {
-    var byProj = {};
+    var byProj = Object.create(null);   /* clé = n° de projet lu dans le fichier : jamais de prototype */
     var order = [];
-    parsed.rows.forEach(function (r) {
+    /* Quatre feuilles (niveau 4c) : les projets sont ceux de GEI_Projets (parsed.nProjets premières lignes). Un numéro
+       qui n'apparaît que dans les jalons, risques ou livrables est écarté et signalé (extraction incomplète), au lieu
+       de devenir un projet vide ; un numéro répété dans GEI_Projets garde sa première ligne et est signalé. */
+    var quatre = typeof parsed.nProjets === 'number', nP = quatre ? parsed.nProjets : parsed.rows.length;
+    var orphelins = Object.create(null), doublons = Object.create(null);
+    parsed.rows.forEach(function (r, i) {
       var num = (r.numero || '').trim();
       if (!num) return;
-      if (!byProj[num]) { byProj[num] = []; order.push(num); }
+      if (!byProj[num]) {
+        if (i >= nP) { orphelins[num] = true; return; }
+        byProj[num] = []; order.push(num);
+      } else if (quatre && i < nP) doublons[num] = true;
       byProj[num].push(r);
     });
 
-    // purge des données GE-Invest précédentes pour les projets ré-importés
-    var inSet = {};
-    order.forEach(function (n) { inSet[n] = true; });
-    ['jalons', 'finances', 'risques', 'livrables'].forEach(function (k) {
-      db[k] = (db[k] || []).filter(function (row) { return !inSet[row.numero_projet]; });
-    });
-    if (!db.livrables) db.livrables = [];
-    if (!db.gei) db.gei = {};
+    var counts = { projets: 0, jalons: 0, risques: 0, livrables: 0, finances: 0, suivi: 0, retires: 0, anneeRefReprises: 0,
+      orphelins: Object.keys(orphelins), doublons: Object.keys(doublons) };
+    /* aucun n° de projet lu (colonne « Numéro » renommée ou vide) : ce n'est pas une extraction ; les projets de
+       l'import précédent restent, l'avis le dit */
+    if (!order.length) { counts.erreur = 'aucun numéro de projet lu (colonne « Numéro » absente ou vide)'; counts.conserve = true; return counts; }
 
-    var counts = { projets: 0, jalons: 0, risques: 0, livrables: 0, finances: 0, suivi: 0 };
+    /* L'extraction est l'état complet de GE-Invest (décision d'Achim du 27.10.2026) : un projet absent de la nouvelle
+       extraction est retiré, avec ses jalons, risques, livrables et finances. La liste est gardée (db.meta.gei.retires)
+       et montrée : une extraction incomplète se voit aussitôt. Restent l'historique du suivi mensuel et les décisions,
+       qui reviennent avec le projet quand une extraction suivante le contient. */
+    var inSet = Object.create(null);
+    order.forEach(function (n) { inSet[n] = true; });
+    var avant = db.projets.length, ancien = db.meta && db.meta.gei;
+    /* premier import selon cette règle : les projets gardés jusqu'ici d'extractions anciennes partent d'un coup */
+    counts.premiereRegle = !!(avant && !(ancien && ancien.retires));
+    var retires = db.projets.filter(function (p) { return !inSet[p.numero_projet]; }).map(function (p) {
+      return { numero_projet: p.numero_projet, nom_projet: p.nom_projet || '', numero_sous_site: p.numero_sous_site || '', rpf: p.rpf || '' };
+    });
+    db.projets = db.projets.filter(function (p) { return inSet[p.numero_projet]; });
+    ['jalons', 'finances', 'risques', 'livrables'].forEach(function (k) { db[k] = []; });   /* relus en entier ci-dessous */
+    db.gei = Object.create(null);
+    counts.retires = retires.length; counts.avant = avant; counts.listeRetires = retires;
+
+    /* Année de référence financière d'un projet qui n'en porte pas : celle des autres lignes (décision d'Achim du
+       27.10.2026 ; avant : l'année en cours, sans le dire). La plus fréquente de l'extraction, la plus récente en cas
+       d'égalité ; aucune dans l'extraction : l'année en cours. Les deux cas sont signalés (Données, complétude). */
+    var nbAn = Object.create(null), anExtr = null;
+    order.forEach(function (num) {
+      var y = parseNum(byProj[num][0].annee_reference_prevision_financiere);
+      if (y !== null) { y = Math.round(y); nbAn[y] = (nbAn[y] || 0) + 1; }
+    });
+    Object.keys(nbAn).forEach(function (k) {
+      var y = +k;
+      if (anExtr === null || nbAn[y] > nbAn[anExtr] || (nbAn[y] === nbAn[anExtr] && y > anExtr)) anExtr = y;
+    });
+    var anSource = anExtr === null ? 'annee_en_cours' : 'extraction';
+    if (anExtr === null) anExtr = (new Date()).getUTCFullYear();
+    var anReprises = [];
 
     order.forEach(function (num) {
       var rows = byProj[num];
@@ -5345,7 +5620,8 @@ var PTE_COMMUN = (function () {
 
       // --- finances (kCHF) ---------------------------------------------
       var anneeRef = parseNum(r0.annee_reference_prevision_financiere);
-      var N = anneeRef !== null ? Math.round(anneeRef) : (new Date()).getUTCFullYear();
+      var N = anneeRef !== null ? Math.round(anneeRef) : anExtr;
+      if (anneeRef === null) anReprises.push(num);
       function pushFin(annee, nature, montant) {
         if (montant === null) return;
         db.finances.push({ numero_projet: num, annee: String(annee), nature: nature, montant_kchf: String(montant) });
@@ -5383,10 +5659,13 @@ var PTE_COMMUN = (function () {
       };
     });
 
-    db.meta.gei = { anneeRef: db.meta.gei && db.meta.gei.anneeRef || null };
-    // année de référence : celle du dernier import
-    var anyNum = order[0];
-    if (anyNum && db.gei[anyNum]) db.meta.gei.anneeRef = db.gei[anyNum].anneeRef;
+    var maintenant = new Date().toISOString();
+    db.meta.gei = { anneeRef: anExtr, anneeRefSource: anSource, anneeRefReprises: anReprises,
+      retires: { date: maintenant, avant: avant, liste: retires, premiereRegle: counts.premiereRegle },
+      /* derniers retraits gardés quand un import suivant ne retire rien (la liste reste consultable) */
+      derniersRetraits: retires.length ? null : ((ancien && (ancien.retires && ancien.retires.liste && ancien.retires.liste.length ? ancien.retires : ancien.derniersRetraits)) || null),
+      orphelins: counts.orphelins, doublons: counts.doublons, lu: maintenant };
+    counts.anneeRefReprises = anReprises.length; counts.anneeRef = anExtr; counts.anneeRefSource = anSource;
     return counts;
   }
 
@@ -5664,6 +5943,39 @@ var PTE_COMMUN = (function () {
     return { headers: headers, rows: out };
   }
 
+  /* Complétude de la feuille des projets GE-Invest (27.10.2026, classeur d'Achim : GEI_Projets avec 3 colonnes
+     renseignées sur 45, « Objet (actif) » vide pour les 467 projets — la revue lisait des projets reliés à aucun
+     sous-site, sans rien dire). projets : lignes avec un numéro (une par numéro) ; relies : projets dont « Objet
+     (actif) » donne un sous-site ; vides : en-têtes vides pour tous les projets. */
+  var GEI_COLONNES_CLES = ['Nom long', 'Statut', 'Objet (actif)', 'Date de début initiale', 'Date de fin initiale', 'Crédit total dépense', 'Année référence prévision financière'];
+  function completudeGEI(rows) {
+    var h = (rows && rows[0]) || [], kN = -1, kO = -1, i, j, vus = Object.create(null), remplie = h.map(function () { return false; });
+    h.forEach(function (x, k) { var n = normKey(x); if (n === 'numero') kN = k; if (n === 'objet_actif') kO = k; });
+    var c = { projets: 0, relies: 0, vides: [], objetAbsent: kO < 0, colonnes: h.filter(function (x) { return String(x || '').trim(); }).length };
+    for (i = 1; i < (rows || []).length; i++) {
+      var r = rows[i]; if (!r) continue;
+      var num = kN < 0 ? '' : String(r[kN] == null ? '' : r[kN]).trim();
+      if (!num || vus[num]) continue;
+      vus[num] = true; c.projets++;
+      if (kO >= 0 && sousSiteFromObjet(r[kO])) c.relies++;
+      for (j = 0; j < h.length; j++) if (!remplie[j] && r[j] != null && String(r[j]).trim() !== '') remplie[j] = true;
+    }
+    if (c.projets) h.forEach(function (x, k) { if (String(x || '').trim() && !remplie[k]) c.vides.push(String(x).trim()); });
+    return c;
+  }
+  /* extraction refusée quand aucun projet n'est relié à un sous-site : la revue (programme → portefeuille → sous-site →
+     projet) n'en tirerait rien, et l'import précédent serait perdu ; message pour l'avis, Données et la pastille */
+  function motifIncompleteGEI(c) {
+    if (!c || !c.projets || c.relies) return null;
+    var cles = GEI_COLONNES_CLES.filter(function (x) { return x !== 'Objet (actif)' && c.vides.indexOf(x) >= 0; });
+    /* colonne remplie, mais sans numéro d'objet de 15 chiffres (zéro de tête perdu par « Convertir en nombre », par
+       exemple) : dit comme tel, pas « vide » (contre-vérification D) */
+    var objVide = c.vides.some(function (x) { return normKey(x) === 'objet_actif'; });
+    return 'incomplète : ' + (c.projets > 1 ? 'aucun des ' + c.projets + ' projets n’est relié' : 'le seul projet n’est pas relié') + ' à un sous-site (' +
+      (c.objetAbsent ? 'colonne « Objet (actif) » absente' : objVide ? 'colonne « Objet (actif) » vide' : '« Objet (actif) » rempli, mais sans numéro d’objet de 15 chiffres : format modifié ?') + ')' +
+      (c.vides.length > 1 ? ' ; ' + c.vides.length + ' colonnes sur ' + c.colonnes + ' vides pour tous les projets' + (cles.length ? ', dont ' + cles.join(', ') : '') : '');
+  }
+
   // Niveau 4c (24.09.2026) : les 4 feuilles GE-Invest normalisées (GEI_Projets
   // puis GEI_Jalons, GEI_Risques, GEI_Livrables, reliées par « Numéro ») remises
   // bout à bout au format de xlsxSheetToParsed(). Les lignes projet viennent
@@ -5671,6 +5983,7 @@ var PTE_COMMUN = (function () {
   // chaque projet et prend jalons, risques et livrables sur toutes les lignes.
   function geiFeuillesVersParsed(rowsProjets, autres) {
     var parsed = xlsxSheetToParsed(rowsProjets);
+    parsed.nProjets = parsed.rows.length;   /* lignes de GEI_Projets : elles seules définissent les projets (loadGEI) */
     (autres || []).forEach(function (rowsN) {
       if (rowsN && rowsN.length > 1) parsed.rows = parsed.rows.concat(xlsxSheetToParsed(rowsN).rows);
     });
@@ -5793,27 +6106,44 @@ var PTE_COMMUN = (function () {
     // pour réutiliser loadGEI() telle quelle. Repli : ancienne feuille plate
     // GEI_Suivi (produit croisé jalons × risques × livrables).
     var geiRes = null, geiRows = null, geiNom = null;
+    /* Extraction vide, feuille absente : dit à l'import, jamais en silence (27.10.2026) ; les projets de l'import
+       précédent restent alors en place (conserve). */
+    var sansGEI = function (motif) { return { erreur: motif, conserve: true, projets: 0 }; };
     var geiProjetsName = findSheet('GEI_Projets');
     if (geiProjetsName) {
       geiRows = XR.sheetRows(bufOuU8, geiProjetsName);
       geiNom = 'GEI_Projets';
-      if (geiRows && geiRows.length > 1) {
-        var autresGEI = ['GEI_Jalons', 'GEI_Risques', 'GEI_Livrables'].map(function (n) {
-          var nm = findSheet(n);
-          return nm ? XR.sheetRows(bufOuU8, nm) : null;
+      var complP = geiRows && geiRows.length > 1 ? completudeGEI(geiRows) : null, motifP = motifIncompleteGEI(complP);
+      if (motifP) geiRes = sansGEI(motifP);
+      else if (geiRows && geiRows.length > 1) {
+        var nomsAutres = ['GEI_Jalons', 'GEI_Risques', 'GEI_Livrables'], manque = [];
+        var autresGEI = nomsAutres.map(function (n) {
+          var nm = findSheet(n), rr = nm ? XR.sheetRows(bufOuU8, nm) : null;
+          if (!nm) manque.push(n + ' absente'); else if (!rr || rr.length <= 1) manque.push(n + ' vide');
+          return rr;
         });
         geiRes = loadGEI(db, geiFeuillesVersParsed(geiRows, autresGEI));
-      }
+        geiRes.feuillesManquantes = manque;
+        /* colonnes clés vides pour tous les projets (extraction lue) : dites */
+        geiRes.colonnesVides = complP ? complP.vides.filter(function (x) { return GEI_COLONNES_CLES.indexOf(x) >= 0; }) : [];
+        /* projets reliés à un sous-site : une extraction en partie reliée est dite (contre-vérification D, 27.10.2026) */
+        if (complP) { geiRes.projetsLus = complP.projets; geiRes.relies = complP.relies; }
+        if (db.meta.gei && !geiRes.erreur) { db.meta.gei.feuillesManquantes = manque; db.meta.gei.colonnesVides = geiRes.colonnesVides; }
+      } else geiRes = sansGEI('feuille GEI_Projets sans ligne de projet');
     } else {
       var geiSheetName = findSheet('GEI_Suivi');
       if (geiSheetName) {
         geiRows = XR.sheetRows(bufOuU8, geiSheetName);
         geiNom = 'GEI_Suivi';
-        if (geiRows && geiRows.length > 1) {
+        var complS = geiRows && geiRows.length > 1 ? completudeGEI(geiRows) : null, motifS = motifIncompleteGEI(complS);
+        if (motifS) geiRes = sansGEI(motifS);
+        else if (geiRows && geiRows.length > 1) {
           geiRes = loadGEI(db, xlsxSheetToParsed(geiRows));
-        }
-      }
+          if (complS) { geiRes.projetsLus = complS.projets; geiRes.relies = complS.relies; }
+        } else geiRes = sansGEI('feuille GEI_Suivi sans ligne de projet');
+      } else geiRes = sansGEI('aucune feuille GE-Invest (GEI_Projets) dans le classeur');
     }
+    db.meta.geiImport = { date: new Date().toISOString(), erreur: (geiRes && geiRes.erreur) || null };
 
     var objRes = null, objRows = null;
     var objSheetName = findSheet('Objectifs PTE');
@@ -6225,6 +6555,8 @@ var PTE_COMMUN = (function () {
   function computeCompleteness(db, mois) {
     var out = [], libPhases = controleLibellesPhases(db), hasPrio = db.priorisation && db.priorisation.length > 0;
     var idx = indexParProjet(db), ssPte = Object.create(null), annee = +mois.slice(0, 4);   /* index : une passe par tableau (26.10.2026) */
+    var reprises = Object.create(null);
+    ((db.meta && db.meta.gei && db.meta.gei.anneeRefReprises) || []).forEach(function (np) { reprises[np] = true; });
     (db.pte || []).forEach(function (r) { ssPte[r.numero_sous_site] = true; });
     db.projets.forEach(function (p) {
       var np = p.numero_projet, J = idx.jalons[np] || [], F = idx.finances[np] || [], R = idx.risques[np] || [], pb = [];
@@ -6246,6 +6578,7 @@ var PTE_COMMUN = (function () {
       if (J.some(function (j) { return !j.date_prevue; })) pb.push('jalon sans date prévue');
       var ecartsLib = libPhases.parProjet[np];
       if (ecartsLib && ecartsLib.length) pb.push('libellé de phase à harmoniser (' + ecartsLib.length + ')');
+      if (reprises[np]) pb.push('année de référence financière absente (' + db.meta.gei.anneeRef + ' reprise)');
       if (pb.length) out.push({ projet: p, problemes: pb });
     });
     return out;
@@ -6417,6 +6750,7 @@ var PTE_COMMUN = (function () {
     normKey: normKey, parseNum: parseNum, parseDate: parseDate, parseDateFR: parseDateFR, dayDiff: dayDiff, monthKey: monthKey, addMonths: addMonths,
     parseCSV: parseCSV, SCHEMAS: SCHEMAS, identify: identify,
     createDB: createDB, loadCSVText: loadCSVText, loadGEI: loadGEI, geiFeuillesVersParsed: geiFeuillesVersParsed,
+    completudeGEI: completudeGEI, motifIncompleteGEI: motifIncompleteGEI,
     loadXLSX: loadXLSX, loadPlanPTE: loadPlanPTE, loadObjectifsPTE: loadObjectifsPTE, appliquerContrat: appliquerContrat,
     xlsxSheetToParsed: xlsxSheetToParsed, excelSerialToFR: excelSerialToFR,
     mapPerfGlobale: mapPerfGlobale, cleanRPF: cleanRPF, sousSiteFromObjet: sousSiteFromObjet, kchf: kchf, pct01: pct01,
@@ -6827,6 +7161,8 @@ var PTE_COMMUN = (function () {
   // Info-bulles — une seule fonction pour tout l'outil
   // ------------------------------------------------------------------
   function tip(el2, text) { if (el2 && text) el2.setAttribute('data-tip', text); return el2; }
+  /* début d'un texte libre, coupé à un espace, pour un survol (texte entier dans la fiche) */
+  function extraitTexte(s, n) { s = String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); if (s.length <= n) return s; var c = s.slice(0, n), i = c.lastIndexOf(' '); return (i > n * 0.6 ? c.slice(0, i) : c) + '…'; }
   function infoIcon(text) { var s = el('span', { class: 'info-icon', tabindex: '0', 'aria-label': text }, ['i']); tip(s, text); return s; }
   /* Cartes repliables (02.10.2026, demande d'Achim) : toutes dépliées par défaut. Le chevron du titre
      replie la carte ; l'état est gardé par titre dans ce navigateur. Le repli est porté par le titre
@@ -7456,6 +7792,21 @@ var PTE_COMMUN = (function () {
 
 
 
+  /* Texte libre de GE-Invest (description, commentaire) : texte brut, retours à la ligne gardés ; au-delà de 400
+     caractères, replié sur quelques lignes avec « Lire la suite » (27.10.2026, décision d'Achim : afficher ce qui
+     était chargé sans être montré). */
+  function carteTexteGEI(titre, texte, info) {
+    var corps = el('div', { class: 'texte-gei small' }, [texte]);
+    var card = el('div', { class: 'card' }, [cardTitle(titre, info), corps]);
+    if (String(texte).length > 400) {
+      corps.classList.add('plie');
+      var b = el('button', { type: 'button', class: 'btn-lien small no-print' }, ['Lire la suite']);
+      b.addEventListener('click', function () { var p = corps.classList.toggle('plie'); b.textContent = p ? 'Lire la suite' : 'Replier'; });
+      card.appendChild(b);
+    }
+    return card;
+  }
+
   // Frise des jalons d'un projet (SVG minimaliste + tableau détaillé imprimable)
   function chartFrise(container, jalonsList, gel) {
     container.innerHTML = '';
@@ -7484,7 +7835,7 @@ var PTE_COMMUN = (function () {
     items.forEach(function (it, i) {
       var x = padL + (W - padL - padR) * (Engine.dayDiff(it.dp, minD) / span);
       var c = sv('circle', { class: 'mark', cx: x, cy: 45, r: 6, fill: semHex(it.color) });
-      tip(c, it.j.libelle + ' — ' + it.status + (it.j.date_prevue ? (' (' + it.j.date_prevue + ')') : ''));
+      tip(c, it.j.libelle + ' — ' + it.status + (it.j.date_prevue ? (' (' + it.j.date_prevue + ')') : '') + (it.j.commentaire ? ' — ' + extraitTexte(it.j.commentaire, 160) : ''));
       s.appendChild(c);
       if (i % labelEvery === 0 && x - lastLabelX > 55) {
         var lab = sv('text', { x: x, y: (i % (2 * labelEvery) === 0) ? 30 : 70, 'font-size': 9, 'text-anchor': 'middle' });
@@ -7518,7 +7869,7 @@ var PTE_COMMUN = (function () {
       var extra = !keepSet.has(it.j);
       tbody.appendChild(el('tr', { class: 'row-' + it.color + (extra ? ' print-extra' : '') }, [
         el('td', {}, [it.j.type || '']),
-        el('td', {}, [it.j.libelle]),
+        el('td', {}, [it.j.libelle, it.j.commentaire ? el('div', { class: 'muted small jal-comm' }, [it.j.commentaire]) : null]),
         el('td', {}, [it.j.date_prevue || '—']),
         el('td', {}, [it.j.date_realisee || '—']),
         el('td', {}, [semInline(it.color, it.status)])
@@ -7636,9 +7987,9 @@ var PTE_COMMUN = (function () {
     var showSpark = monthsAvail.length > 1, idx = showSpark ? Engine.indexParProjet(DB) : null;
     var sorted = heatmapSortedList(list);
     var headDefs = [
-      ['Délais', 'Pastille = sémaphore Délais ; survolez pour la règle appliquée.'],
-      ['Livrables', 'Pastille = sémaphore Livrables déclaré.'], ['Dépenses', 'Pastille = sémaphore Dépenses ; survolez pour le détail chiffré.'],
-      ['Risques', 'Pastille = sémaphore Risques ; survolez pour le risque dominant.'],
+      ['Délais', 'Pastille = sémaphore Délais ; règle appliquée au survol.'],
+      ['Livrables', 'Pastille = sémaphore Livrables déclaré.'], ['Dépenses', 'Pastille = sémaphore Dépenses ; détail chiffré au survol.'],
+      ['Risques', 'Pastille = sémaphore Risques ; risque dominant au survol.'],
       ['Global', 'Pire des quatre sémaphores. Tableau trié du plus grave au plus favorable.'],
       ['Tendance', 'Comparaison avec le mois précédent.']
     ];
@@ -9171,7 +9522,7 @@ var PTE_COMMUN = (function () {
       cardTitle('Planning par famille d’intervention',
         'Lecture du planning général intentionnel PTE, sur les plannings GE-Invest. Famille = type d’intervention T1 à T4 du sous-site (classe IDC × classe de vétusté Stratus, règle commune aux trois outils) ; un projet prend la famille de son sous-site. Bande fine = études (projets d’étude GE-Invest), bande épaisse = travaux. Contour = enveloppe (premier début → dernière fin) ; remplissage = nombre de projets en cours par trimestre ; trait noir = date à laquelle ' + pct + ' % des projets de travaux sont terminés ; à droite, part des travaux datés finis au plus tard le 31.12.' + ech + '. Dates : début réel sinon initial, fin ré-estimée sinon initiale. Repère et échéance réglables dans l’onglet Données.'),
       resume,
-      mesuresAnciennes ? el('div', { class: 'notice warn' }, ['Familles non calculées : rechargez le classeur Plan_PTE pour les obtenir.']) : null,
+      mesuresAnciennes ? el('div', { class: 'notice warn' }, ['Familles non calculées : elles le seront au prochain chargement du classeur Plan_PTE.']) : null,
       el('div', { class: 'plan-fam-scroll' }, [svg]),
       legende
     ].filter(Boolean));
@@ -9692,6 +10043,7 @@ var PTE_COMMUN = (function () {
     headCard.appendChild(left); headCard.appendChild(right);
     if (ssNum) headCard.appendChild(blocsSousSite(ssNum, { creditSS: creditSS, nbProjets: nbSS }));
     host.appendChild(headCard);
+    if (r.p.description) host.appendChild(carteTexteGEI('Description du projet', r.p.description, 'Texte saisi dans GE-Invest (champ Description).'));
     ecrireHashSs(ssNum || null);
 
     host.appendChild(repKPIStrip(agg, { projet: true }));
@@ -9714,7 +10066,7 @@ var PTE_COMMUN = (function () {
         var dp = Engine.parseDate(j.date_prevue);
         var late = dp && !j.date_realisee && Engine.dayDiff(today, dp) > 0;
         jtb.appendChild(el('tr', { class: late ? 'row-rouge' : '' }, [
-          el('td', {}, [j.libelle]), el('td', {}, [j.type || '—']),
+          el('td', {}, [j.libelle, j.commentaire ? el('div', { class: 'muted small jal-comm' }, [j.commentaire]) : null]), el('td', {}, [j.type || '—']),
           el('td', { class: 'nowrap' }, [j.date_prevue || '—']), el('td', { class: 'nowrap' }, [j.date_realisee || (late ? 'en retard' : '—')])
         ]));
       });
@@ -9988,7 +10340,7 @@ var PTE_COMMUN = (function () {
   // ------------------------------------------------------------------
   function renderPortefeuilleView() {
     var host = $('#portefeuille-content'); host.innerHTML = '';
-    if (!STATE.mois) { host.appendChild(emptyCard('Le classeur Plan_PTE.xlsx (onglet Données) est à charger pour afficher la revue de portefeuille.')); return; }
+    if (!STATE.mois) { host.appendChild(emptyCard(sansMoisTexte('portefeuille'))); return; }
     var list = projetsByPerimetre(STATE.perimetre);
     var gel = Engine.gelDate(STATE.mois, PARAMS);
     var annee = currentYear();
@@ -10041,7 +10393,8 @@ var PTE_COMMUN = (function () {
 
   function buildFiche(numeroProjet) {
     var host = $('#fiche-content'); host.innerHTML = '';
-    if (!numeroProjet) { host.appendChild(emptyCard('Aucun projet dans ce périmètre. Le classeur Plan_PTE.xlsx est à charger (onglet Données), ou le périmètre à changer.')); return; }
+    if (!numeroProjet) { host.appendChild(emptyCard(!planFileInfo() ? 'Aucun projet dans ce périmètre. Le classeur Plan_PTE.xlsx est à charger (onglet Données), ou le périmètre à changer.'
+      : !DB.projets.length ? 'Aucun projet GE-Invest chargé : la cause est dans la pastille, en haut, et dans l’onglet Données.' : 'Aucun projet dans ce périmètre : périmètre à élargir.')); return; }
     var projet = DB.projets.filter(function (p) { return p.numero_projet === numeroProjet; })[0];
     if (!projet) return;
     var comp = Engine.computeProjectMonth(DB, projet, STATE.mois, PARAMS);
@@ -10125,6 +10478,7 @@ var PTE_COMMUN = (function () {
       }
     }
     host.appendChild(head);
+    if (projet.description) host.appendChild(carteTexteGEI('Description du projet', projet.description, 'Texte saisi dans GE-Invest (champ Description).'));
 
     var cols = el('div', { class: 'fiche-cols' });
     var left = el('div'); var right = el('div');
@@ -10336,7 +10690,7 @@ var PTE_COMMUN = (function () {
   // ------------------------------------------------------------------
   function renderParcView() {
     var host = $('#parc-content'); host.innerHTML = '';
-    if (!STATE.mois) { host.appendChild(emptyCard('Le classeur Plan_PTE.xlsx (onglet Données) est à charger pour afficher la revue de parc.')); return; }
+    if (!STATE.mois) { host.appendChild(emptyCard(sansMoisTexte('parc'))); return; }
     var baseList = projetsByPerimetre(STATE.perimetre);
     var annee = currentYear();
     var rpfGroups = Array.from(new Set(baseList.map(function (c) { return c.projet.rpf; }).filter(function (v) { return v && v.trim(); }))).sort();
@@ -10464,7 +10818,7 @@ var PTE_COMMUN = (function () {
   function renderManquants() {
     var host = $('#manquants-host'); if (!host) return; host.innerHTML = '';
     var mq = (DB.contrat && DB.contrat.manquants) || [];
-    if (!DB.contrat) { host.appendChild(el('p', { class: 'muted small' }, ['Classeur non chargé, ou chargé avant la vague 2 : rechargez-le pour lire les mesures du contrat.'])); return; }
+    if (!DB.contrat) { host.appendChild(el('p', { class: 'muted small' }, ['Classeur non chargé, ou chargé avant la vague 2 : les mesures du contrat seront lues au prochain chargement.'])); return; }
     if (!mq.length) { host.appendChild(el('p', { class: 'small' }, ['Aucune donnée manquante selon le contrat.'])); return; }
     var parChamp = {}; mq.forEach(function (m) { parChamp[m.champ] = (parChamp[m.champ] || 0) + 1; });
     var tbl = el('table', { class: 'qtable manquants-table' }, [el('thead', {}, [el('tr', {}, [el('th', { class: 'no-sort' }, ['Champ']), el('th', { class: 'no-sort num' }, ['Sous-sites']), el('th', { class: 'no-sort' }, ['Exemple'])])])]);
@@ -10575,6 +10929,70 @@ var PTE_COMMUN = (function () {
     body2.appendChild(el('table', { id: 'tbl-completude' }, [el('thead', {}, [el('tr', {}, [el('th', { class: 'no-sort' }, ['N° projet']), el('th', { class: 'no-sort' }, ['Projet']), el('th', { class: 'no-sort' }, ['RPF']), el('th', { class: 'no-sort' }, ['RP']), el('th', { class: 'no-sort' }, ['Anomalies'])])]), el('tbody')]));
     accComp.appendChild(body2);
     host.appendChild(accComp);
+
+    /* Extraction GE-Invest (27.10.2026, décisions d'Achim) : projets retirés au dernier import, année de référence */
+    var mg = DB.meta && DB.meta.gei, retG = mg && mg.retires, listeR = (retG && retG.liste) || [], imp = DB.meta && DB.meta.geiImport;
+    var montres = listeR.length ? retG : (mg && mg.derniersRetraits) || null, presents = Object.create(null);
+    DB.projets.forEach(function (p) { presents[p.numero_projet] = true; });
+    /* un projet revenu dans une extraction suivante n'est plus « retiré » */
+    var listeM = ((montres && montres.liste) || []).filter(function (p) { return !presents[p.numero_projet]; }), nRevenus = ((montres && montres.liste) || []).length - listeM.length;
+    var accGei = el('details', { class: 'accordion' });
+    accGei.appendChild(el('summary', {}, ['Extraction GE-Invest' + (listeR.length ? ' (' + listeR.length + ' projet' + (listeR.length > 1 ? 's' : '') + ' retiré' + (listeR.length > 1 ? 's' : '') + ')' : ''),
+      infoIcon('Chaque import remplace les projets par ceux de l’extraction : un projet absent est retiré, avec ses jalons, risques, livrables et finances. Son suivi mensuel et ses décisions sont gardés et reviennent avec lui. Année de référence financière manquante : celle des autres lignes.')]));
+    var bodyGei = el('div', { class: 'accordion-body' });
+    if (imp && imp.erreur) bodyGei.appendChild(el('p', { class: 'small alert-text' }, ['Dernier classeur (' + fmtDateCH(imp.date, true) + ') : extraction GE-Invest non lue — ' + imp.erreur + '. ' + (DB.projets.length ? 'Les projets affichés viennent de l’import précédent.' : 'Aucun projet GE-Invest n’est chargé.')]));
+    if (!mg || !mg.anneeRefSource) bodyGei.appendChild(el('p', { class: 'small muted' }, ['Aucune extraction GE-Invest lue depuis le 27.10.2026 : projets retirés et année de référence seront détaillés au prochain import du classeur.']));
+    else {
+      var nRep = (mg.anneeRefReprises || []).length;
+      bodyGei.appendChild(el('p', { class: 'small' }, ['Année de référence financière : ' + mg.anneeRef + (mg.anneeRefSource === 'annee_en_cours' ? ' — aucune dans l’extraction, année en cours retenue.' : ' (la plus fréquente de l’extraction)') +
+        (nRep ? ' · ' + nRep + ' projet' + (nRep > 1 ? 's' : '') + ' sans année : ' + mg.anneeRef + ' reprise (voir le contrôle de complétude).' : '.')]));
+      if (retG) bodyGei.appendChild(el('p', { class: 'small' }, ['Lecture GE-Invest du ' + fmtDateCH(retG.date, true) + ' : ' + (retG.avant
+        ? retG.avant + ' projets avant, ' + DB.projets.length + ' après ; ' + (listeR.length ? listeR.length + ' retiré' + (listeR.length > 1 ? 's' : '') + (retG.premiereRegle ? ' (premier import selon la règle du 27.10.2026)' : '') + '.' : 'aucun retiré.')
+        : DB.projets.length + ' projets lus (premier import).')]));
+      var anomalies = [];
+      if ((mg.orphelins || []).length) anomalies.push(mg.orphelins.length + ' numéro(s) dans les jalons, risques ou livrables sans ligne dans GEI_Projets, écartés : ' + mg.orphelins.slice(0, 10).join(', ') + (mg.orphelins.length > 10 ? '…' : ''));
+      if ((mg.doublons || []).length) anomalies.push(mg.doublons.length + ' numéro(s) en double dans GEI_Projets, première ligne retenue : ' + mg.doublons.slice(0, 10).join(', ') + (mg.doublons.length > 10 ? '…' : ''));
+      if ((mg.feuillesManquantes || []).length) anomalies.push('Feuilles : ' + mg.feuillesManquantes.join(', ') + '.');
+      if ((mg.colonnesVides || []).length) anomalies.push('Colonne' + (mg.colonnesVides.length > 1 ? 's' : '') + ' de GEI_Projets vide' + (mg.colonnesVides.length > 1 ? 's' : '') + ' pour tous les projets : ' + mg.colonnesVides.join(', ') + ' (extraction incomplète ?).');
+      anomalies.forEach(function (a) { bodyGei.appendChild(el('p', { class: 'small alert-text' }, [a])); });
+      /* projets rattachés à aucun sous-site (contre-vérification D) : comptés sur les projets affichés */
+      var nSansSS = DB.projets.filter(function (p) { return !String(p.numero_sous_site || '').trim(); }).length;
+      if (nSansSS) bodyGei.appendChild(el('p', { class: 'small' + (nSansSS / DB.projets.length > 0.2 ? ' alert-text' : '') }, [nSansSS + ' projet' + (nSansSS > 1 ? 's' : '') + ' sur ' + DB.projets.length +
+        (nSansSS > 1 ? ' rattachés' : ' rattaché') + ' à aucun sous-site (« Objet (actif) » vide ou sans numéro d’objet de 15 chiffres).']));
+      if (listeM.length) {
+        if (!listeR.length) bodyGei.appendChild(el('p', { class: 'small' }, ['Derniers projets retirés, lecture du ' + fmtDateCH(montres.date, true) + (nRevenus ? ' (' + nRevenus + ' revenu' + (nRevenus > 1 ? 's' : '') + ' depuis, non listé' + (nRevenus > 1 ? 's' : '') + ')' : '') + ' :']));
+        var surM = Object.create(null); listeM.forEach(function (p) { surM[p.numero_projet] = true; });
+        var decM = DB.decisions.filter(function (d) { return d.numero_projet && surM[d.numero_projet]; });
+        var nDec = Object.create(null), nOuv = Object.create(null);
+        decM.forEach(function (d) { nDec[d.numero_projet] = (nDec[d.numero_projet] || 0) + 1; if (d.statut === 'ouverte') nOuv[d.numero_projet] = (nOuv[d.numero_projet] || 0) + 1; });
+        var tR = el('table', { class: 'qtable' }, [el('thead', {}, [el('tr', {}, [el('th', { class: 'no-sort' }, ['N° projet']), el('th', { class: 'no-sort' }, ['Projet']),
+          el('th', { class: 'no-sort' }, ['Sous-site']), el('th', { class: 'no-sort' }, ['RPF']), el('th', { class: 'no-sort num' }, ['Décisions gardées (ouvertes)'])])])]);
+        var tbR = el('tbody');
+        listeM.forEach(function (p) {
+          tbR.appendChild(el('tr', {}, [el('td', {}, [p.numero_projet]), el('td', {}, [p.nom_projet || '—']), el('td', {}, [p.numero_sous_site || '—']),
+            el('td', {}, [p.rpf || '—']), el('td', { class: 'num' }, [String(nDec[p.numero_projet] || 0) + (nOuv[p.numero_projet] ? ' (' + nOuv[p.numero_projet] + ')' : '')])]));
+        });
+        tR.appendChild(tbR); bodyGei.appendChild(el('div', { class: 'table-scroll table-scroll-v' }, [tR]));
+        /* décisions des projets retirés : absentes des vues (leur projet n'y est plus), montrées ici */
+        if (decM.length) {
+          var nOuvM = decM.filter(function (d) { return d.statut === 'ouverte'; }).length;
+          var detD = el('details', {}, [el('summary', { class: 'small', style: 'cursor:pointer; margin-top:.6em;' }, ['Décisions de ces projets (' + decM.length + ', dont ' + nOuvM + ' ouverte' + (nOuvM > 1 ? 's' : '') + ')'])]);
+          var ulD = el('ul', { class: 'small', style: 'margin:.4em 0 0; padding-left:1.2em; max-height:280px; overflow:auto;' });
+          decM.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; }).forEach(function (d) {
+            ulD.appendChild(el('li', {}, [(d.date || '—') + ' · ' + d.numero_projet + ' · ' + (d.statut || '—') + ' — ' + (d.decision || '') + (d.responsable ? ' (' + d.responsable + ')' : '')]));
+          });
+          detD.appendChild(ulD); bodyGei.appendChild(detD);
+        }
+        var btnR = el('button', { type: 'button', class: 'btn', style: 'margin-top:.6em;' }, ['Exporter les projets retirés (CSV)']);
+        btnR.addEventListener('click', function () {
+          downloadCSV('projets_retires_gei.csv', ['numero_projet', 'nom_projet', 'numero_sous_site', 'rpf', 'decisions_gardees', 'decisions_ouvertes'],
+            listeM.map(function (p) { return { numero_projet: p.numero_projet, nom_projet: p.nom_projet, numero_sous_site: p.numero_sous_site, rpf: p.rpf, decisions_gardees: String(nDec[p.numero_projet] || 0), decisions_ouvertes: String(nOuv[p.numero_projet] || 0) }; }));
+        });
+        bodyGei.appendChild(btnR);
+      }
+    }
+    accGei.appendChild(bodyGei);
+    host.appendChild(accGei);
 
     /* Libellés de phase à harmoniser (26.10.2026, demande d'Achim) */
     var lp = Engine.controleLibellesPhases(DB);
@@ -10738,6 +11156,12 @@ var PTE_COMMUN = (function () {
     var s = p2(d.getDate()) + '.' + p2(d.getMonth() + 1) + '.' + d.getFullYear();
     return withTime ? (s + ' ' + p2(d.getHours()) + ':' + p2(d.getMinutes())) : s;
   }
+  /* vue sans mois de revue (27.10.2026) : « classeur à charger » seulement s'il ne l'est pas ; chargé, la cause est dite */
+  function sansMoisTexte(vue) {
+    if (!planFileInfo()) return 'Le classeur Plan_PTE.xlsx (onglet Données) est à charger pour afficher la revue de ' + vue + '.';
+    if (!DB.projets.length) return 'Aucun projet GE-Invest chargé : la cause est dans la pastille, en haut, et dans l’onglet Données.';
+    return 'Aucun mois de suivi dans l’extraction GE-Invest (dates de mise à jour des fiches de suivi vides) : revue de ' + vue + ' impossible.';
+  }
   function renderChrome() {
     var badge = $('#badge'), btnHdr = $('#btn-reload');
     if (document.body) document.body.classList.toggle('no-data', !DB.projets.length);
@@ -10753,14 +11177,37 @@ var PTE_COMMUN = (function () {
     // Pastille (vague 2, B3) : 52 = sous-sites reliés à un projet ; « n % renseignés » =
     // part des projets dont le sémaphore (fraîcheur) n'est pas « non renseigné » ; ocre sous 50 %.
     var st = badgeStats();
-    badge.className = 'badge ' + ((st.pct !== null && st.pct < 50) || remarques ? 'warn' : 'ok');
-    badge.textContent = st.nSS + ' sous-site' + (st.nSS > 1 ? 's' : '') + ' · ' + st.nP + ' projet' + (st.nP > 1 ? 's' : '') + ' · ' + pf.name + ' · ' + fmtDateCH(pf.info.importedAt, false) +
+    /* aucun projet GE-Invest (27.10.2026, signalement d'Achim : « aucun sous-site ni aucun projet ») : la pastille comptait
+       les sous-sites reliés à un projet, donc 0 ; elle dit maintenant les sous-sites lus dans Plan_PTE et la cause */
+    if (!st.nP) {
+      var imp = DB.meta && DB.meta.geiImport, nPlan = +(pf.info && pf.info.count) || 0;
+      badge.className = 'badge warn';
+      badge.textContent = nPlan + ' sous-site' + (nPlan > 1 ? 's' : '') + ' (Plan_PTE) · aucun projet GE-Invest · ' + pf.name + ' · ' + fmtDateCH(pf.info.importedAt, false);
+      badge.title = 'Lu le ' + fmtDateCH(pf.info.importedAt, true) + ' · ' + (imp && imp.erreur ? 'extraction GE-Invest non lue : ' + imp.erreur
+        : imp ? 'aucun projet dans l’extraction GE-Invest du classeur' : 'aucun projet GE-Invest chargé ; la cause sera dite au prochain import du classeur') + ' (détail : onglet Données, « Extraction GE-Invest »).';
+      return;
+    }
+    /* extraction du dernier classeur non lue, projets de l'import précédent gardés (relecture D, 27.10.2026) : dit, jamais
+       attribué au nouveau classeur en silence */
+    var impG = DB.meta && DB.meta.geiImport, luG = DB.meta && DB.meta.gei && DB.meta.gei.lu;
+    if (impG && impG.erreur) {
+      badge.className = 'badge warn';
+      badge.textContent = st.nSS + ' sous-site' + (st.nSS > 1 ? 's' : '') + ' · ' + st.nP + ' projet' + (st.nP > 1 ? 's' : '') + ' (extraction GE-Invest précédente) · ' + pf.name + ' · ' + fmtDateCH(pf.info.importedAt, false);
+      badge.title = 'Lu le ' + fmtDateCH(pf.info.importedAt, true) + ' · extraction GE-Invest de ce classeur non lue : ' + impG.erreur + ' · projets gardés de l’extraction précédente' +
+        (luG ? ', lue le ' + fmtDateCH(luG, true) : '') + ' (détail : onglet Données, « Extraction GE-Invest »).';
+      return;
+    }
+    /* plus de 20 % des projets sans sous-site (contre-vérification D) : la pastille le dit */
+    var sansSSfort = st.nSansSS / st.nP > 0.2;
+    badge.className = 'badge ' + ((st.pct !== null && st.pct < 50) || remarques || sansSSfort ? 'warn' : 'ok');
+    badge.textContent = st.nSS + ' sous-site' + (st.nSS > 1 ? 's' : '') + ' · ' + st.nP + ' projet' + (st.nP > 1 ? 's' : '') + (sansSSfort ? ' (' + st.nSansSS + ' sans sous-site)' : '') + ' · ' + pf.name + ' · ' + fmtDateCH(pf.info.importedAt, false) +
       (st.pct === null ? '' : ' · ' + st.pct + ' % renseignés') + (remarques ? (' · ' + remarques + ' remarque' + (remarques > 1 ? 's' : '')) : '');
     badge.title = 'Lu le ' + fmtDateCH(pf.info.importedAt, true) + (STATE.communMeta ? ' · chargé depuis Pilotage PTE (' + fmtDateCH(STATE.communMeta.date, true) + ')' : '') +
-      (st.pct === null ? '' : ' · ' + st.renseignes + ' projets sur ' + st.nP + ' avec un sémaphore renseigné pour ' + STATE.mois) + (remarques ? ' · remarques : fichier non reconnu (voir l’onglet Données).' : '');
+      (st.pct === null ? '' : ' · ' + st.renseignes + ' projets sur ' + st.nP + ' avec un sémaphore renseigné pour ' + STATE.mois) + (remarques ? ' · remarques : fichier non reconnu (voir l’onglet Données).' : '') +
+      (sansSSfort ? ' · ' + st.nSansSS + (st.nSansSS > 1 ? ' projets rattachés' : ' projet rattaché') + ' à aucun sous-site : extraction GE-Invest incomplète ? (détail : onglet Données, « Extraction GE-Invest »).' : '');
   }
   function badgeStats() {
-    var set = {}; DB.projets.forEach(function (p) { if (p.numero_sous_site && p.numero_sous_site.trim()) set[p.numero_sous_site.trim()] = true; });
+    var set = {}, nSansSS = 0; DB.projets.forEach(function (p) { if (p.numero_sous_site && p.numero_sous_site.trim()) set[p.numero_sous_site.trim()] = true; else nSansSS++; });
     var nP = DB.projets.length, renseignes = null, pct = null;
     // « renseigné » = sémaphore de fraîcheur pas « non renseigné » (suivi du mois saisi) : même critère que l'anneau Complétude
     /* fraîcheur verte ⇔ suivi du mois présent (Engine.computeFraicheur) : compté sans recalculer tous les sémaphores */
@@ -10769,7 +11216,7 @@ var PTE_COMMUN = (function () {
       DB.suivi.forEach(function (r) { if (r.mois === STATE.mois) avecSuivi[r.numero_projet] = true; });
       renseignes = DB.projets.filter(function (p) { return avecSuivi[p.numero_projet]; }).length; pct = Math.round(100 * renseignes / nP);
     }
-    return { nSS: Object.keys(set).length, nP: nP, renseignes: renseignes, pct: pct };
+    return { nSS: Object.keys(set).length, nP: nP, nSansSS: nSansSS, renseignes: renseignes, pct: pct };
   }
 
   function showView(name) {
@@ -11002,9 +11449,50 @@ var PTE_COMMUN = (function () {
         });
       } catch (e) { /* ignoré */ }
     }
-    renderAll(res.detail && res.detail.gei ? 'reporting' : null);   /* un seul rendu (il y en avait deux) */
+    renderAll(res.detail && res.detail.gei && !res.detail.gei.erreur ? 'reporting' : null);   /* un seul rendu (il y en avait deux) */
     ouvrirDepuisAdresse();
+    avisExtractionGEI(res.detail && res.detail.gei);
     return res;
+  }
+
+  /* Ce que l'import de l'extraction GE-Invest a changé (27.10.2026, décisions d'Achim) : projets absents retirés, année
+     de référence financière reprise des autres lignes. Dit à l'import ; le détail reste dans Données. */
+  function avisExtractionGEI(g) {
+    if (!g || typeof document === 'undefined') return;
+    var lignes = [], fort = false, pl = function (n, s, p) { return n + ' ' + (n > 1 ? (p || s + 's') : s); };
+    if (g.erreur) {
+      noticeSaisies('Extraction GE-Invest non lue — ' + g.erreur + '.', [DB.projets.length ? 'Les projets de l’import précédent restent affichés ; rien n’est retiré.' : 'Aucun projet GE-Invest n’est chargé.'], 'warn');
+      return;
+    }
+    /* tout vient du résultat de l'import (g), jamais de l'état courant : l'avis dit ce que cet import a fait */
+    var ret = { avant: g.avant || 0, liste: g.listeRetires || [] };
+    if (g.retires) {
+      var part = ret.avant ? g.retires / ret.avant : 0;
+      if (g.premiereRegle) lignes.push('Premier import selon la règle du 27.10.2026 : une partie de ces projets peut venir d’extractions anciennes, gardés jusqu’ici.');
+      fort = fort || part >= 0.2;
+      lignes.push(pl(g.retires, 'projet') + ' absent' + (g.retires > 1 ? 's' : '') + ' de cette extraction retiré' + (g.retires > 1 ? 's' : '') +
+        ' (' + (part > 0 && part < 0.01 ? '< 1' : Math.round(part * 100)) + ' % des ' + ret.avant + ' projets d’avant)' + (part >= 0.2 ? ' : l’extraction est peut-être incomplète.' : '.'));
+      ret.liste.slice(0, 5).forEach(function (p) { lignes.push(p.numero_projet + ' — ' + (p.nom_projet || 'sans nom')); });
+      if (ret.liste.length > 5) lignes.push('… et ' + (ret.liste.length - 5) + ' autres.');
+      var surR = Object.create(null); ret.liste.forEach(function (p) { surR[p.numero_projet] = true; });
+      var dR = DB.decisions.filter(function (d) { return d.numero_projet && surR[d.numero_projet]; }), dO = dR.filter(function (d) { return d.statut === 'ouverte'; }).length;
+      if (dR.length) lignes.push(pl(dR.length, 'décision') + ' sur ces projets, dont ' + pl(dO, 'ouverte') + ' : ' + (dR.length > 1 ? 'gardées, listées' : 'gardée, listée') + ' dans Données.');
+    }
+    if (g.orphelins && g.orphelins.length) { fort = true; lignes.push(pl(g.orphelins.length, 'numéro') + ' de projet présent' + (g.orphelins.length > 1 ? 's' : '') + ' dans les jalons, risques ou livrables mais absent' + (g.orphelins.length > 1 ? 's' : '') + ' de GEI_Projets : lignes écartées, extraction probablement incomplète.'); }
+    if (g.doublons && g.doublons.length) lignes.push(pl(g.doublons.length, 'numéro') + ' en double dans GEI_Projets : la première ligne est retenue.');
+    if (g.feuillesManquantes && g.feuillesManquantes.length) { fort = true; lignes.push('Feuille' + (g.feuillesManquantes.length > 1 ? 's' : '') + ' de l’extraction : ' + g.feuillesManquantes.join(', ') + ' — leurs données ne sont plus affichées.'); }
+    if (g.colonnesVides && g.colonnesVides.length) { fort = true; lignes.push('Colonne' + (g.colonnesVides.length > 1 ? 's' : '') + ' de GEI_Projets vide' + (g.colonnesVides.length > 1 ? 's' : '') + ' pour tous les projets : ' + g.colonnesVides.join(', ') + ' — extraction incomplète ?'); }
+    /* projets sans sous-site (contre-vérification D) : dits ; au-delà de 20 % des projets, l'avis passe en orange */
+    if (g.projetsLus && g.relies != null && g.relies < g.projetsLus) {
+      var nNR = g.projetsLus - g.relies, fortNR = nNR / g.projetsLus > 0.2;
+      fort = fort || fortNR;
+      lignes.push(pl(nNR, 'projet') + ' sur ' + g.projetsLus + (nNR > 1 ? ' ne sont reliés' : ' n’est relié') + ' à aucun sous-site (« Objet (actif) » vide ou sans numéro d’objet de 15 chiffres)' + (fortNR ? ' : extraction incomplète ?' : '.'));
+    }
+    if (g.anneeRefSource === 'annee_en_cours') { fort = true; lignes.push('Aucune année de référence financière dans l’extraction : année en cours (' + g.anneeRef + ') retenue.'); }
+    else if (g.anneeRefReprises) lignes.push('Année de référence financière absente pour ' + pl(g.anneeRefReprises, 'projet') + ' : ' + g.anneeRef + ' reprise des autres lignes.');
+    if (!lignes.length) return;
+    lignes.push('Détail : onglet Données, « Extraction GE-Invest ».');
+    noticeSaisies('Extraction GE-Invest importée', lignes, fort ? 'warn' : '');
   }
 
   // C1 — classeur commun (Pilotage PTE) : import automatique si l'outil n'a
@@ -11478,6 +11966,7 @@ var PTE_COMMUN = (function () {
   window.App = {
     loadCSVText: loadCSVText,
     loadXLSXBuffer: loadXLSXBuffer,
+    avisExtractionGEI: avisExtractionGEI,
     clearData: clearData,
     getDB: function () { return DB; },
     getParams: function () { return PARAMS; },

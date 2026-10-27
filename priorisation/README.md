@@ -120,7 +120,10 @@ parc de test : 0,658 contre 0,402 CHF/kWh thermique, dix-sept rangs d'écart. Un
 **Les montants ne s'additionnent pas d'un objectif à l'autre.** 278 + 508 + 502 = 1 288 MCHF
 affichés pour 649 MCHF réellement engagés — un facteur 1,99. Un bandeau permanent le dit sous
 les filtres, avec les deux chiffres et le facteur, recalculés sur le fichier chargé. Pour
-raisonner à budget, l'onglet **Arbitrage** compte chaque bâtiment une seule fois.
+raisonner à budget, l'onglet **Arbitrage** compte chaque bâtiment une seule fois. Depuis le
+27.10.2026 (v2.28), il compte pour chaque bâtiment les mêmes gains que le Classement — thermique
+et CO₂ seulement avec une variante CECB+ A, B ou C, facteur CO₂ de la feuille Data, CO₂ après
+travaux calculé — et le seul montant du menu « Montants ».
 
 La **végétalisation** échappe à tout cela : elle a sa propre colonne de coût dans le classeur,
 donc son CHF/m² est un vrai coût par m². Le **photovoltaïque** aussi, dans l'autre sens : son
