@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-j4FcfUYeFGsuykbWgDSECw2/s0Vz29oixguZG3/uHyc=' 'sha256-/8adZdTbFW3U5VmeuWEXTUMvaDsmV5lKF2qrer/nSl8=' 'sha256-+drE9VJ7M6JHKKYj9QF9UGYg2xIeD0WSy5W6SC3x6Lk=' 'sha256-peyn1aPwKo3S+eT+L1dQUfgpcqxtVFreAUqk04LNET8=' 'sha256-4FZggAzcsHOtXVPgf2f2ZxVLcNqppLWqroxFruh4gwM='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090 https://ecd.ge.ch; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pilotage PTE</title>
 <style>
@@ -18,7 +19,7 @@
   --red:#B03A2E; --gray:#8A8F94; --blue-pale:#E8F4F7;
   --page-bg:#F4F6F8; --card-bg:#FFFFFF; --border:#E1E6E9;
   --ink:var(--slate); --ink-70:#5A6B78; --ink-muted:#5F6B75;
-  --tint-gris:#EDEFF1; --tint-orange:#FBF1D6; --tint-orange-strong:#F5E1A6;
+  --tint-gris:#EDEFF1; --tint-orange:#FBF1D6; --tint-orange-strong:#F5E1A6; --tint-vert:#E6F2EC; --tint-rouge:#F8E3E0;
   --r:10px; --r-in:8px; --pill:100px;
   --shadow:0 1px 2px rgba(44,62,80,.05), 0 8px 24px rgba(44,62,80,.06);
   --wrap:1440px;
@@ -89,8 +90,6 @@ a.card .go::after{content:'';display:inline-block;width:6px;height:6px;margin-le
 .btn:hover{background:var(--page-bg);border-color:#CFD8E0}
 .btn-p{background:var(--teal);border-color:var(--teal);color:#fff}
 .btn-p:hover{background:#00758C;border-color:#00758C}
-.btn-danger{color:var(--red);border-color:#F0D6D2}
-.btn-danger:hover{background:var(--tint-rouge)}
 .hidden{display:none !important}
 .drop{border:2px dashed #C6D2DC;border-radius:16px;background:var(--card-bg);padding:40px 30px;text-align:center;
   position:relative;transition:.2s;max-width:820px;margin:8px auto 24px}
@@ -100,11 +99,6 @@ a.card .go::after{content:'';display:inline-block;width:6px;height:6px;margin-le
 .drop h2{margin:0 0 6px;font-size:20px}
 .drop p{margin:0;color:var(--ink-muted);font-size:14px}
 .drop .opt{margin-top:14px;font-size:12.5px;color:var(--ink-muted)}
-.srcbar{max-width:var(--wrap);margin:0 auto 20px}
-.srcbar-in{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-70);
-  background:var(--card-bg);border:1px solid var(--border);border-radius:var(--pill);padding:8px 8px 8px 18px}
-.srcbar b{color:var(--ink)}
-.srcbar .actions{display:flex;gap:8px;flex-wrap:wrap}
 .notice.warn{background:var(--tint-orange);border-color:var(--tint-orange-strong);color:var(--ochre-text)}
 .notice a{color:var(--teal);font-weight:bold}
 .shp{max-width:var(--wrap);margin:-6px auto 18px;display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-muted)}
@@ -127,11 +121,10 @@ a.card .go::after{content:'';display:inline-block;width:6px;height:6px;margin-le
 .shp-form label{flex:1 1 100%;font-size:12.5px;color:var(--ink-70)}
 .shp-form input{flex:1 1 380px;min-width:0;font:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--border);border-radius:var(--r-in);background:var(--card-bg);color:var(--ink)}
 .shp-note{flex:1 1 100%;margin:0;font-size:12px;color:var(--ink-muted)}
-.shp.occupe #btnShp{opacity:.6;pointer-events:none}
 @media print{.shp{display:none !important}}
 a.card .etat{font-size:12px;color:var(--green);margin-top:2px}
 a.card .etat.none{color:var(--ink-muted)}
-@media print{.drop,.srcbar,.hdr-right{display:none !important}}
+@media print{.drop,.hdr-right{display:none !important}}
 
 /* ---- Situation du programme (30.09.2026) : quatre montants, une phrase, leurs sources ---- */
 .situ{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 20px 16px;margin:0 0 20px}
@@ -165,7 +158,7 @@ html.epure .situ .situ-k .n{font-size:30px!important}
 .situ-attente{font-size:13px;color:var(--ink-muted);margin:0}
 @media print{.situ{box-shadow:none;border-color:#ccc}}
 </style>
-<!-- PTE-EPURE:tete — module commun 00_Design-System/pte-epure.css, recopié par build/integrer-epure.py -->
+<!-- PTE-EPURE:tete — module commun 00_Design-System/pte-epure.css, recopié par build/integrer-modules.py -->
 <script>/* présentation épurée, seule présentation depuis le 18.10.2026. Posée avant le premier rendu : pas d'éclair. */
 document.documentElement.classList.add('epure');</script>
 <style id="pte-epure-css">
@@ -173,7 +166,7 @@ document.documentElement.classList.add('epure');</script>
    PTE — présentation épurée (proposée le 13.10.2026 par Victor, Théo, Pauline
    et Hélène ; présentation par défaut depuis le 14.10.2026, décision d'Achim)
    Module commun, recopié tel quel dans les quatre pages par
-   00_Design-System/build/integrer-epure.py. Aucun calcul, aucune fonction ni
+   00_Design-System/build/integrer-modules.py. Aucun calcul, aucune fonction ni
    aucun contenu retiré : elle ne change que la manière de montrer.
      1. Calme : fond gris clair, cartes blanches sans bordure, une seule couleur
         d'accent (le teal OCBA) ; la couleur reste réservée aux états.
@@ -281,7 +274,7 @@ html.epure a.card{border-top:0!important}
 html.epure a.card:hover{box-shadow:var(--ep-shadow-hover)!important;transform:translateY(-1px)}
 
 /* ---------- titres : casse de phrase, plus grands, plus calmes ---------- */
-html.epure .card-title,html.epure .sec-h,html.epure .situ-h h2,html.epure .perim-lbl,html.epure .perim-sia-t,html.epure .kpi-label,html.epure .kpi .l,
+html.epure .card-title,html.epure .sec-h,html.epure .perim-lbl,html.epure .perim-sia-t,html.epure .kpi-label,html.epure .kpi .l,
 html.epure .card h2,html.epure .cd h3,html.epure .tr-h,html.epure th,html.epure .qtable th,html.epure label.cx-l,html.epure .filter-item label,html.epure .situ-k .l,
 html.epure .rep-toprow label{text-transform:none!important;letter-spacing:-.005em!important}
 html.epure .card-title{font-size:17px!important;font-weight:600!important;color:var(--ep-ink)!important}
@@ -323,7 +316,6 @@ html.epure .ep-pop{position:fixed;z-index:4000;width:min(440px,calc(100vw - 32px
   border-radius:14px;box-shadow:var(--ep-shadow-pop);padding:16px 18px;
   font-size:13px;line-height:1.55;color:var(--ep-ink);text-align:left;font-family:var(--ep-font)}
 html.epure .ep-pop[hidden]{display:none}
-html.epure .ep-pop-t{font-size:13px;font-weight:600;margin:0 0 6px;color:var(--ep-ink)}
 html.epure .ep-pop > *:not(.ep-pop-t){display:block!important;margin:0!important;max-width:none!important;color:var(--ep-ink)!important;font-size:13px!important;
   background:transparent!important;border:0!important;padding:0!important}
 html.epure .ep-pop details,html.epure .ep-pop summary{display:block}
@@ -343,7 +335,6 @@ html.epure .situ-k{border-left:0!important;padding-left:0!important}
 html.epure .situ-k .n{font-size:34px!important}
 html.epure .situ-phrase{font-size:15px!important;color:var(--ep-ink2)!important;line-height:1.5}
 html.epure .situ-phrase b{color:var(--ep-ink)}
-html.epure a.card .kick,html.epure a.card .eyebrow{text-transform:none!important;letter-spacing:0!important}
 html.epure .shp{color:var(--ep-ink3)}
 
 /* ---------- revue : ligne des filtres et sauts ---------- */
@@ -356,7 +347,7 @@ html.epure .perim-prov{border-color:rgba(181,137,0,.4)!important}
 html.epure .perim-jauge{height:4px!important;background:var(--ep-fill)!important}
 
 /* ---------- priorisation : tuiles du tableau de bord, chips ---------- */
-html.epure .tile,html.epure .obj-tile,html.epure .eng-tile{border:0!important;border-radius:14px!important;box-shadow:var(--ep-shadow)!important}
+html.epure .tile{border:0!important;border-radius:14px!important;box-shadow:var(--ep-shadow)!important}
 html.epure .chip,html.epure .so{border-radius:980px!important}
 html.epure .sous-onglets{background:var(--ep-fill);border-radius:10px;padding:2px;display:inline-flex!important;gap:0!important}
 html.epure .sous-onglets .so{border:0!important;background:transparent!important;color:var(--ep-ink)!important;font-weight:500!important;border-radius:8px!important}
@@ -367,9 +358,7 @@ html.epure .fiche-grid .fs,html.epure .fiche-act .q-box,html.epure .fiche-notes{
 html.epure .fk{border-top-color:var(--ep-line)}
 
 /* ---------- pied de page ---------- */
-html.epure footer,html.epure .ft{color:var(--ep-ink3)!important;font-size:12px!important;border-top:1px solid var(--ep-line)!important;background:transparent!important}
-html.epure .ep-bascule{color:var(--ep-ink3);text-decoration:none;border-bottom:1px dotted currentColor}
-html.epure .ep-bascule:hover{color:var(--ep-accent)}
+html.epure footer{color:var(--ep-ink3)!important;font-size:12px!important;border-top:1px solid var(--ep-line)!important;background:transparent!important}
 
 /* ---------- détails de finition ---------- */
 html.epure .card .kpi,html.epure .card .kpi-tiles .kpi{box-shadow:none!important;background:var(--ep-bg)!important;border-radius:12px!important}
@@ -519,311 +508,370 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Pilotage PTE · <a href="#" data-pte-versions="accueil" title="Historique des versions">v1.15 · 21.10.2026</a></span>
+  <span>Pilotage PTE · <a href="#" data-pte-versions="accueil" title="Historique des versions">v1.16 · 27.10.2026</a></span>
 </footer>
 
 <script>
-/* Lecteur .xlsx autonome — copie à l'identique de 09_Revues-projets/build/xlsx-reader.js
-   (30.09.2026 : l'accueil lit le classeur pour le contrôle à l'import et la situation du programme). */
+/* <PTE-MODULE pte-xlsx.js> — source : 00_Design-System/pte-xlsx.js, recopiée par 00_Design-System/build/integrer-modules.py ; ne pas modifier ici */
 /* ============================================================================
-   Lecteur .xlsx autonome — repris tel quel du lecteur maison de
-   02_Outil-PTE/priorisation-pte.html (bloc « LECTEUR .XLSX AUTONOME »), sans aucune
-   dépendance externe : décompression DEFLATE, lecture d'archive ZIP,
-   analyse du XML du classeur, tout est fait à la main.
+   PTE_XLSX — lecteur .xlsx commun aux quatre pages (26.10.2026)
+   Source unique : 00_Design-System/pte-xlsx.js, recopiée telle quelle dans les pages par
+   build/integrer-modules.py (la revue la reçoit par build-html.js). Remplace les anciens
+   lecteurs de la revue, de l'accueil, de la priorisation et du fichier des saisies, et SheetJS.
 
-   Utilisable dans le navigateur (script inline, comme engine.js) et dans
-   Node (tests, scripts de vérification) : `module.exports = XLSXReader` en
-   Node, `root.XLSXReader` sinon.
+   Sans dépendance ni DOMParser : décompression DEFLATE, archive ZIP et XML du classeur
+   sont lus à la main. L'analyse par expressions régulières est dix fois plus rapide que
+   le DOMParser qu'utilisaient les anciens lecteurs, et fonctionne aussi dans Node (tests).
 
-   API : XLSXReader.sheetNames(bufOuU8) -> [nom, ...]
-         XLSXReader.sheetRows(bufOuU8, sheetName) -> [[cellule, ...], ...]
-   Seule la feuille demandée est décompressée et analysée (le classeur
-   Plan_PTE_optimise.xlsx pèse ~5 Mo pour 23 feuilles) ; le résultat de
-   l'ouverture (table des feuilles, chaînes partagées) est mis en cache par
-   classeur pour que plusieurs feuilles lues à la suite ne réanalysent pas
-   deux fois xl/workbook.xml.
+   API (objet global XLSXReader, nom conservé pour les appels existants) :
+     XLSXReader.sheetNames(u8)            -> [nom, …] dans l'ordre du classeur
+     XLSXReader.sheetRows(u8, nom)        -> [[cellule, …], …] ; null si la feuille manque
+     XLSXReader.sheetRows(u8, nom, SAISIES)  variante du fichier des saisies (voir plus bas)
+   u8 : Uint8Array ou ArrayBuffer. Le résultat de l'ouverture (table des feuilles, chaînes
+   partagées) est gardé par classeur : lire plusieurs feuilles ne relit pas le reste.
+
+   Cellules (lecture du classeur, comportement des anciens lecteurs, inchangé) :
+     nombre -> Number ; chaîne partagée, chaîne en ligne, formule texte -> String ;
+     booléen -> true / false ; erreur (#N/A…) -> '' ; vide -> ''.
+     Les lignes entièrement vides sont omises ; une ligne est complétée de '' jusqu'à
+     sa dernière cellule. Les échappements Excel « _x000D_ » restent tels quels.
+     rows.erreurs (propriété non énumérable) : nombre de cellules en erreur par indice de
+     colonne, première ligne exclue — un classeur non recalculé se distingue ainsi d'un
+     classeur vide (diagnostic de la simulation).
+   Variante SAISIES (XLSXReader.SAISIES : positions, booleensTexte, echappementsExcel,
+   sansPhonetique, finsDeLigneBrutes) : la ligne n garde l'indice n-1 (lignes vides comprises),
+   booléens « VRAI » / « FAUX », « _xHHHH_ » décodés, texte phonétique (rPh) ignoré, fins de
+   ligne laissées telles quelles — le comportement de l'ancien lecteur du fichier des saisies.
    ========================================================================= */
 (function (root) {
   'use strict';
 
-  /* ---------- 1. DEFLATE (RFC 1951) — verbatim depuis index.html ---------- */
-  function inflateRaw(src){
-    let out=new Uint8Array(Math.max(4096,src.length*5)),olen=0;
-    let pos=0,bitbuf=0,bitcnt=0;
-    function grow(n){if(olen+n<=out.length)return;let s=out.length;while(s<olen+n)s*=2;const o=new Uint8Array(s);o.set(out);out=o}
-    function bits(n){if(!n)return 0;while(bitcnt<n){if(pos>=src.length)throw new Error('flux compressé tronqué');bitbuf|=src[pos++]<<bitcnt;bitcnt+=8}
-      const v=bitbuf&((1<<n)-1);bitbuf>>>=n;bitcnt-=n;return v}
-    function tree(lens,from,to){
-      const counts=new Int32Array(16);
-      for(let i=from;i<to;i++)counts[lens[i]]++;
-      counts[0]=0;
-      const offs=new Int32Array(16);let sum=0;
-      for(let i=1;i<16;i++){offs[i]=sum;sum+=counts[i]}
-      const symbols=new Int32Array(sum);
-      for(let i=from;i<to;i++)if(lens[i])symbols[offs[lens[i]]++]=i-from;
-      return{counts:counts,symbols:symbols}}
-    function decode(t){
-      let code=0,first=0,index=0;
-      for(let len=1;len<16;len++){
-        code|=bits(1);
-        const count=t.counts[len];
-        if(code-first<count)return t.symbols[index+(code-first)];
-        index+=count;first+=count;first<<=1;code<<=1}
-      throw new Error('code Huffman invalide')}
-    const LB=[3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258];
-    const LE=[0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0];
-    const DB=[1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577];
-    const DE=[0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13];
-    const ORD=[16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15];
-    let fixL=null,fixD=null;
-    for(;;){
-      const last=bits(1),type=bits(2);
-      if(type===0){
-        bitbuf=0;bitcnt=0;
-        const len=src[pos]|(src[pos+1]<<8);pos+=4;
-        grow(len);out.set(src.subarray(pos,pos+len),olen);olen+=len;pos+=len;
-      }else{
-        let lt,dt;
-        if(type===1){
-          if(!fixL){
-            const l=new Uint8Array(288);let i=0;
-            for(;i<144;i++)l[i]=8;for(;i<256;i++)l[i]=9;for(;i<280;i++)l[i]=7;for(;i<288;i++)l[i]=8;
-            fixL=tree(l,0,288);
-            const d=new Uint8Array(30);for(i=0;i<30;i++)d[i]=5;fixD=tree(d,0,30)}
-          lt=fixL;dt=fixD;
-        }else if(type===2){
-          const hlit=bits(5)+257,hdist=bits(5)+1,hclen=bits(4)+4;
-          const cl=new Uint8Array(19);
-          for(let i=0;i<hclen;i++)cl[ORD[i]]=bits(3);
-          const clt=tree(cl,0,19);
-          const lens=new Uint8Array(hlit+hdist);let n=0;
-          while(n<lens.length){
-            const sym=decode(clt);
-            if(sym<16)lens[n++]=sym;
-            else if(sym===16){const p=lens[n-1];let r=3+bits(2);while(r--)lens[n++]=p}
-            else if(sym===17){let r=3+bits(3);while(r--)lens[n++]=0}
-            else{let r=11+bits(7);while(r--)lens[n++]=0}}
-          lt=tree(lens,0,hlit);dt=tree(lens,hlit,hlit+hdist);
-        }else throw new Error('bloc compressé de type inconnu');
-        for(;;){
-          let sym=decode(lt);
-          if(sym<256){grow(1);out[olen++]=sym}
-          else if(sym===256)break;
-          else{
-            sym-=257;
-            const length=LB[sym]+bits(LE[sym]);
-            const ds=decode(dt);
-            const dist=DB[ds]+bits(DE[ds]);
-            if(dist>olen)throw new Error('référence arrière invalide');
-            grow(length);
-            for(let k=0;k<length;k++){out[olen]=out[olen-dist];olen++}}}
-      }
-      if(last)break}
-    return out.subarray(0,olen)}
+  var MAX_DECOMPRESSE = 64 * 1024 * 1024;   /* par partie ; au-delà : fichier piégé ou abîmé (la plus grosse feuille du classeur : 9 Mo) */
 
-  /* ---------- 2. Archive ZIP — verbatim depuis index.html ---------- */
-  const _td=new TextDecoder('utf-8');
-  function unzip(buf){
-    const u=buf instanceof Uint8Array?buf:new Uint8Array(buf);
-    const dv=new DataView(u.buffer,u.byteOffset,u.byteLength);
-    let i=u.length-22;const min=Math.max(0,u.length-22-65535);
-    for(;i>=min;i--)if(dv.getUint32(i,true)===0x06054b50)break;
-    if(i<min)throw new Error('ce fichier n’est pas une archive .xlsx valide');
-    const n=dv.getUint16(i+10,true);let p=dv.getUint32(i+16,true);
-    const files={};
-    for(let k=0;k<n;k++){
-      if(dv.getUint32(p,true)!==0x02014b50)throw new Error('archive .xlsx corrompue');
-      const method=dv.getUint16(p+10,true);
-      const csize=dv.getUint32(p+20,true);
-      const nlen=dv.getUint16(p+28,true),elen=dv.getUint16(p+30,true),clen=dv.getUint16(p+32,true);
-      const lho=dv.getUint32(p+42,true);
-      const name=_td.decode(u.subarray(p+46,p+46+nlen));
-      if(csize===0xFFFFFFFF||lho===0xFFFFFFFF)throw new Error('archive ZIP64 non prise en charge');
-      const lnlen=dv.getUint16(lho+26,true),lelen=dv.getUint16(lho+28,true);
-      files[name]={method:method,start:lho+30+lnlen+lelen,csize:csize};
-      p+=46+nlen+elen+clen}
-    return{u:u,files:files}}
-  function zipText(z,name){
-    const f=z.files[name];if(!f)return null;
-    const raw=z.u.subarray(f.start,f.start+f.csize);
-    if(f.method===0)return _td.decode(raw);
-    if(f.method!==8)throw new Error('méthode de compression non prise en charge ('+f.method+')');
-    return _td.decode(inflateRaw(raw))}
-
-  /* ---------- 3. XML du classeur ----------
-     Le navigateur a un DOMParser natif ; Node 22 n'en a pas. Plutôt que
-     d'ajouter une dépendance (jsdom, xmldom…), un mini-analyseur XML de
-     secours reproduisant le sous-ensemble d'API utilisé ci-dessous
-     (getElementsByTagName, getAttribute, getAttributeNS, textContent) est
-     fourni et n'est utilisé qu'en l'absence de DOMParser natif. */
-  function _miniXML(s){
-    const ENT={amp:'&',lt:'<',gt:'>',quot:'"',apos:'\''};
-    function decode(str){
-      return str.replace(/&(#x?[0-9a-fA-F]+|[a-zA-Z]+);/g,function(m,e){
-        if(e.charAt(0)==='#'){
-          const hex=(e.charAt(1)==='x'||e.charAt(1)==='X');
-          const cp=hex?parseInt(e.slice(2),16):parseInt(e.slice(1),10);
-          return isNaN(cp)?m:String.fromCodePoint(cp)}
-        return ENT[e]!==undefined?ENT[e]:m})}
-    function mkNode(tag){
-      return{
-        tagName:tag,attrs:{},children:[],_text:'',
-        getAttribute:function(name){return Object.prototype.hasOwnProperty.call(this.attrs,name)?this.attrs[name]:null},
-        getAttributeNS:function(ns,local){
-          if(Object.prototype.hasOwnProperty.call(this.attrs,local))return this.attrs[local];
-          for(const k in this.attrs)if(k===local||k.slice(k.indexOf(':')+1)===local)return this.attrs[k];
-          return null},
-        getElementsByTagName:function(name){
-          const out=[];
-          (function walk(node){
-            for(let i=0;i<node.children.length;i++){
-              const ch=node.children[i];
-              if(ch.tagName===name)out.push(ch);
-              walk(ch)}
-          })(this);
-          return out},
-        get textContent(){
-          let out=this._text;
-          for(let i=0;i<this.children.length;i++)out+=this.children[i].textContent;
-          return out}
-      }}
-    const root2=mkNode('#document');
-    const stack=[root2];
-    // balises ouvrantes/auto-fermantes, fermantes, commentaires et directives
-    const re=/<([^!?/][^\s/>]*)((?:\s+[^=\s/>]+(?:\s*=\s*(?:"[^"]*"|'[^']*'))?)*)\s*(\/)?>|<\/([^\s>]+)>|<!--[\s\S]*?-->|<\?[\s\S]*?\?>/g;
-    let last=0,m;
-    while((m=re.exec(s))){
-      if(m.index>last){
-        const txt=s.slice(last,m.index);
-        if(txt)stack[stack.length-1]._text+=decode(txt)}
-      last=re.lastIndex;
-      if(m[4]){
-        if(stack.length>1)stack.pop();
-      }else if(m[1]){
-        const node=mkNode(m[1]);
-        const attrRe=/([^\s=/>]+)\s*=\s*("([^"]*)"|'([^']*)')/g;let am;
-        while((am=attrRe.exec(m[2])))node.attrs[am[1]]=decode(am[3]!==undefined?am[3]:am[4]);
-        stack[stack.length-1].children.push(node);
-        if(!m[3])stack.push(node)}
+  /* ---------- 1. DEFLATE (RFC 1951) ---------- */
+  /* taille : taille annoncée par l'archive (indicative : une archive peut mentir, grow() garde le plafond) */
+  function inflateRaw(src, taille) {
+    var out = new Uint8Array(taille > 0 && taille <= MAX_DECOMPRESSE ? taille : Math.min(MAX_DECOMPRESSE, Math.max(4096, src.length * 5))), olen = 0;
+    var pos = 0, bitbuf = 0, bitcnt = 0;
+    function grow(n) {
+      if (olen + n <= out.length) return;
+      if (olen + n > MAX_DECOMPRESSE) throw new Error('fichier Excel trop volumineux une fois décompressé');
+      var s = out.length; while (s < olen + n) s *= 2;
+      var o = new Uint8Array(Math.min(s, MAX_DECOMPRESSE)); o.set(out.subarray(0, olen)); out = o;
     }
-    return root2}
-  function _xml(s){
-    if(!s)return null;
-    const DP=(typeof root!=='undefined'&&root.DOMParser)||(typeof DOMParser!=='undefined'?DOMParser:null);
-    if(DP){
-      const d=new DP().parseFromString(s,'application/xml');
-      if(d.getElementsByTagName('parsererror').length)throw new Error('XML du classeur illisible');
-      return d}
-    return _miniXML(s)}
-  function _colIdx(ref){
-    let n=0,i=0;
-    for(;i<ref.length;i++){const c=ref.charCodeAt(i);if(c<65||c>90)break;n=n*26+(c-64)}
-    return i?n-1:-1}
-  function _txt(el,tag){
-    const ts=el.getElementsByTagName(tag);let s='';
-    for(let i=0;i<ts.length;i++)s+=ts[i].textContent;
-    return s}
-  function _sheetRows(doc,sst){
-    const out=[],rs=doc.getElementsByTagName('row');
-    for(let i=0;i<rs.length;i++){
-      const cs=rs[i].getElementsByTagName('c'),arr=[];
-      let filled=false;
-      for(let j=0;j<cs.length;j++){
-        const c=cs[j],t=c.getAttribute('t');
-        let ci=_colIdx(c.getAttribute('r')||'');
-        if(ci<0)ci=arr.length;
-        let v='';
-        if(t==='inlineStr')v=_txt(c,'t');
-        else{
-          const vn=c.getElementsByTagName('v')[0];
-          const raw=vn?vn.textContent:'';
-          if(raw===''&&t!=='s')v='';
-          else if(t==='s')v=sst[+raw]!==undefined?sst[+raw]:'';
-          else if(t==='b')v=raw==='1';
-          else if(t==='e')v='';
-          else if(t==='str')v=raw;
-          else{const num=+raw;v=(raw!==''&&!isNaN(num))?num:raw}}
-        while(arr.length<ci)arr.push('');
-        arr[ci]=v;
-        if(v!==''&&v!==null)filled=true}
-      if(filled)out.push(arr)}
-    return out}
+    function bits(n) {
+      if (!n) return 0;
+      while (bitcnt < n) { if (pos >= src.length) throw new Error('flux compressé tronqué'); bitbuf |= src[pos++] << bitcnt; bitcnt += 8; }
+      var v = bitbuf & ((1 << n) - 1); bitbuf >>>= n; bitcnt -= n; return v;
+    }
+    function tree(lens, from, to) {
+      var counts = new Int32Array(16), i;
+      for (i = from; i < to; i++) counts[lens[i]]++;
+      counts[0] = 0;
+      var offs = new Int32Array(16), sum = 0;
+      for (i = 1; i < 16; i++) { offs[i] = sum; sum += counts[i]; }
+      var symbols = new Int32Array(sum);
+      for (i = from; i < to; i++) if (lens[i]) symbols[offs[lens[i]]++] = i - from;
+      return { counts: counts, symbols: symbols };
+    }
+    function decode(t) {
+      var code = 0, first = 0, index = 0;
+      for (var len = 1; len < 16; len++) {
+        code |= bits(1);
+        var count = t.counts[len];
+        if (code - first < count) return t.symbols[index + (code - first)];
+        index += count; first += count; first <<= 1; code <<= 1;
+      }
+      throw new Error('code Huffman invalide');
+    }
+    var LB = [3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31, 35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258];
+    var LE = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0];
+    var DB = [1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193, 257, 385, 513, 769, 1025, 1537, 2049, 3073, 4097, 6145, 8193, 12289, 16385, 24577];
+    var DE = [0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13];
+    var ORD = [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15];
+    var fixL = null, fixD = null;
+    for (;;) {
+      var last = bits(1), type = bits(2), lt, dt, i;
+      if (type === 0) {
+        bitbuf = 0; bitcnt = 0;
+        var len = src[pos] | (src[pos + 1] << 8), nlen = src[pos + 2] | (src[pos + 3] << 8); pos += 4;
+        if (len !== (~nlen & 0xffff) || pos + len > src.length) throw new Error('flux compressé abîmé');
+        grow(len); out.set(src.subarray(pos, pos + len), olen); olen += len; pos += len;
+      } else {
+        if (type === 3) throw new Error('flux compressé abîmé');
+        if (type === 1) {
+          if (!fixL) {
+            var l = new Uint8Array(288);
+            for (i = 0; i < 144; i++) l[i] = 8; for (; i < 256; i++) l[i] = 9; for (; i < 280; i++) l[i] = 7; for (; i < 288; i++) l[i] = 8;
+            fixL = tree(l, 0, 288);
+            var d = new Uint8Array(30); for (i = 0; i < 30; i++) d[i] = 5; fixD = tree(d, 0, 30);
+          }
+          lt = fixL; dt = fixD;
+        } else if (type === 2) {
+          var hlit = bits(5) + 257, hdist = bits(5) + 1, hclen = bits(4) + 4;
+          var cl = new Uint8Array(19);
+          for (i = 0; i < hclen; i++) cl[ORD[i]] = bits(3);
+          var clt = tree(cl, 0, 19);
+          var lens = new Uint8Array(hlit + hdist), n = 0, r;
+          while (n < lens.length) {
+            var sym0 = decode(clt);
+            if (sym0 < 16) lens[n++] = sym0;
+            else if (sym0 === 16) { if (!n) throw new Error('code Huffman invalide'); var p = lens[n - 1]; r = 3 + bits(2); while (r-- && n < lens.length) lens[n++] = p; }
+            else if (sym0 === 17) { r = 3 + bits(3); while (r-- && n < lens.length) lens[n++] = 0; }
+            else { r = 11 + bits(7); while (r-- && n < lens.length) lens[n++] = 0; }
+          }
+          lt = tree(lens, 0, hlit); dt = tree(lens, hlit, hlit + hdist);
+        } else throw new Error('bloc compressé de type inconnu');
+        for (;;) {
+          var sym = decode(lt);
+          if (sym < 256) { grow(1); out[olen++] = sym; }
+          else if (sym === 256) break;
+          else {
+            sym -= 257;
+            if (sym >= 29) throw new Error('code Huffman invalide');
+            var length = LB[sym] + bits(LE[sym]);
+            var ds = decode(dt);
+            if (ds >= 30) throw new Error('code Huffman invalide');
+            var dist = DB[ds] + bits(DE[ds]);
+            if (dist > olen) throw new Error('référence arrière invalide');
+            grow(length);
+            for (var k = 0; k < length; k++) { out[olen] = out[olen - dist]; olen++; }
+          }
+        }
+      }
+      if (last) break;
+    }
+    return out.subarray(0, olen);
+  }
 
-  /* ---------- 4. API du module : ouverture paresseuse + cache par classeur ---------- */
-  const _cache=(typeof WeakMap!=='undefined')?new WeakMap():null;
+  /* ---------- 2. Archive ZIP ---------- */
+  var _td = new TextDecoder('utf-8');
+  function unzip(buf) {
+    var u = buf instanceof Uint8Array ? buf : new Uint8Array(buf);
+    if (u.length < 22) throw new Error('ce fichier n’est pas une archive .xlsx valide');
+    var dv = new DataView(u.buffer, u.byteOffset, u.byteLength);
+    var i = u.length - 22, min = Math.max(0, u.length - 22 - 65535);
+    for (; i >= min; i--) if (dv.getUint32(i, true) === 0x06054b50) break;
+    if (i < min) throw new Error('ce fichier n’est pas une archive .xlsx valide');
+    var n = dv.getUint16(i + 10, true), p = dv.getUint32(i + 16, true);
+    var files = Object.create(null);
+    for (var k = 0; k < n; k++) {
+      if (p + 46 > u.length || dv.getUint32(p, true) !== 0x02014b50) throw new Error('archive .xlsx corrompue');
+      var method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true), usize = dv.getUint32(p + 24, true);
+      var nlen = dv.getUint16(p + 28, true), elen = dv.getUint16(p + 30, true), clen = dv.getUint16(p + 32, true);
+      var lho = dv.getUint32(p + 42, true);
+      var name = _td.decode(u.subarray(p + 46, p + 46 + nlen));
+      if (csize === 0xFFFFFFFF || lho === 0xFFFFFFFF) throw new Error('archive ZIP64 non prise en charge');
+      if (lho + 30 > u.length) throw new Error('archive .xlsx corrompue');
+      var start = lho + 30 + dv.getUint16(lho + 26, true) + dv.getUint16(lho + 28, true);
+      files[name] = { method: method, start: start, csize: csize, usize: usize };
+      p += 46 + nlen + elen + clen;
+    }
+    return { u: u, files: files };
+  }
+  function zipText(z, name) {
+    var f = z.files[name]; if (!f) return null;
+    var raw = z.u.subarray(f.start, f.start + f.csize);
+    if (f.method === 0) return _td.decode(raw);
+    if (f.method !== 8) throw new Error('méthode de compression non prise en charge (' + f.method + ')');
+    if (f.usize > MAX_DECOMPRESSE) throw new Error('fichier Excel trop volumineux une fois décompressé');
+    return _td.decode(inflateRaw(raw, f.usize));
+  }
 
-  function _open(bufOuU8){
-    const u=bufOuU8 instanceof Uint8Array?bufOuU8:new Uint8Array(bufOuU8);
-    const key=u.buffer;
-    if(_cache&&_cache.has(key))return _cache.get(key);
-    const z=unzip(u);
-    const wb=_xml(zipText(z,'xl/workbook.xml'));
-    const relDoc=_xml(zipText(z,'xl/_rels/workbook.xml.rels'));
-    const rels={};
-    if(relDoc){const rl=relDoc.getElementsByTagName('Relationship');
-      for(let i=0;i<rl.length;i++)rels[rl[i].getAttribute('Id')]=rl[i].getAttribute('Target')}
-    const paths=[];
-    if(wb){
-      const sh=wb.getElementsByTagName('sheet');
-      for(let j=0;j<sh.length;j++){
-        const rid=sh[j].getAttribute('r:id')||sh[j].getAttribute('id')||
-                  sh[j].getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships','id');
-        let t=rels[rid];
-        if(!t)t='worksheets/sheet'+(j+1)+'.xml';
-        const nm=sh[j].getAttribute('name')||('Feuille'+(j+1));
-        paths.push({name:nm,path:(t.charAt(0)==='/'?t.slice(1):'xl/'+t.replace(/^\.\//,''))})}}
-    if(!paths.length)paths.push({name:'Feuille1',path:'xl/worksheets/sheet1.xml'});
-    const handle={z:z,paths:paths,sst:null};
-    if(_cache)_cache.set(key,handle);
-    return handle}
+  /* ---------- 3. XML du classeur (sous-ensemble utile, sans DOMParser) ---------- */
+  var ENT = { amp: '&', lt: '<', gt: '>', quot: '"', apos: '\'' };
+  var RE_ENT = /&(#[xX][0-9a-fA-F]+|#[0-9]+|[a-zA-Z]+);/g;
+  function _ent(m, e) {
+    if (e.charCodeAt(0) === 35) {
+      var cp = (e.charAt(1) === 'x' || e.charAt(1) === 'X') ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10);
+      return (cp >= 0 && cp <= 0x10FFFF) ? String.fromCodePoint(cp) : m;
+    }
+    return ENT[e] !== undefined ? ENT[e] : m;
+  }
+  /* Texte XML -> chaîne : fins de ligne normalisées comme le fait un analyseur XML
+     (CR LF et CR seuls -> LF ; un CR écrit &#13; reste un CR), puis entités.
+     brut : fins de ligne laissées telles quelles (fichier des saisies, comme son ancien lecteur). */
+  function _dec(s, brut) {
+    if (!brut && s.indexOf('\r') >= 0) s = s.replace(/\r\n?/g, '\n');
+    return s.indexOf('&') < 0 ? s : s.replace(RE_ENT, _ent);
+  }
+  function _texte(s, brut) {
+    if (s.indexOf('<![CDATA[') < 0) return _dec(s, brut);
+    var out = '', i = 0;
+    for (;;) {
+      var a = s.indexOf('<![CDATA[', i);
+      if (a < 0) { out += _dec(s.slice(i), brut); break; }
+      out += _dec(s.slice(i, a), brut);
+      var b = s.indexOf(']]>', a + 9);
+      if (b < 0) { out += s.slice(a + 9); break; }
+      var cdata = s.slice(a + 9, b);
+      out += brut ? cdata : cdata.replace(/\r\n?/g, '\n'); i = b + 3;
+    }
+    return out;
+  }
+  function _attrs(s) {
+    var o = Object.create(null), re = /([^\s=\/>]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g, m;
+    while ((m = re.exec(s))) o[m[1]] = _dec(m[2] !== undefined ? m[2] : m[3]);
+    return o;
+  }
+  var RE_A_R = /(?:^|\s)r\s*=\s*(?:"([^"]*)"|'([^']*)')/, RE_A_T = /(?:^|\s)t\s*=\s*(?:"([^"]*)"|'([^']*)')/;
+  function _a(re, s) { var m = re.exec(s); return m ? (m[1] !== undefined ? m[1] : m[2]) : null; }
+  /* concaténation du texte de toutes les balises <t> (texte riche compris) */
+  var RE_T = /<t(?:\s[^>]*)?(?:\/>|>([\s\S]*?)<\/t>)/g;
+  function _toutT(s, o) {
+    if (o && o.sansPhonetique && s.indexOf('<rPh') >= 0) s = s.replace(/<rPh\b[\s\S]*?<\/rPh>/g, '');
+    var out = '', m, brut = !!(o && o.finsDeLigneBrutes); RE_T.lastIndex = 0;
+    while ((m = RE_T.exec(s))) if (m[1]) out += _texte(m[1], brut);
+    return out;
+  }
+  var RE_V = /<v(?:\s[^>]*)?(?:\/>|>([\s\S]*?)<\/v>)/;
+  function _colIdx(ref) {
+    var n = 0, i = 0;
+    for (; i < ref.length; i++) { var c = ref.charCodeAt(i); if (c < 65 || c > 90) break; n = n * 26 + (c - 64); }
+    return i ? n - 1 : -1;
+  }
+  /* Copie d'un texte lu (27.10.2026). Dans V8, une sous-chaîne d'au moins 13 caractères n'est qu'un renvoi dans
+     sa chaîne mère, qu'elle garde en mémoire : sans copie, une seule cellule vivante retenait tout le XML
+     décompressé (8,7 Mo pour la feuille Plan_PTE). Mémoire après import (tas et chaînes externes) : simulation
+     20,2 → 5,3 Mo, priorisation 13,7 → 12,9 Mo. Les chaînes partagées sont copiées une fois, dans _sst. */
+  function _copie(s) { return s.length > 12 ? (' ' + s).slice(1) : s; }
+  function _excel(s) { return s.indexOf('_x') < 0 ? s : s.replace(/_x([0-9A-Fa-f]{4})_/g, function (m, h) { return String.fromCharCode(parseInt(h, 16)); }); }
 
-  function _sst(handle){
-    if(handle.sst)return handle.sst;
-    const sst=[];
-    const ssDoc=_xml(zipText(handle.z,'xl/sharedStrings.xml'));
-    if(ssDoc){const si=ssDoc.getElementsByTagName('si');for(let i=0;i<si.length;i++)sst.push(_txt(si[i],'t'))}
-    handle.sst=sst;
-    return sst}
+  /* Éléments <nom …>…</nom> et <nom …/> de s, dans l'ordre, par indexOf (27.10.2026) : une expression régulière
+     paresseuse relisait tout le reste du fichier à chaque élément non fermé (temps quadratique sur un fichier
+     piégé). Un élément non fermé arrête la lecture. f(attributs, contenu). */
+  function _elements(s, nom, f) {
+    var ouv = '<' + nom, ferm = '</' + nom + '>', n = ouv.length, i = 0, c, gt, fin;
+    for (;;) {
+      i = s.indexOf(ouv, i); if (i < 0) return;
+      c = s.charCodeAt(i + n);
+      if (c !== 32 && c !== 62 && c !== 47 && c !== 9 && c !== 10 && c !== 13) { i += n; continue; }   /* <rows, <col… */
+      gt = s.indexOf('>', i + n); if (gt < 0) throw new Error('XML incomplet (balise <' + nom + '> ouverte)');
+      if (s.charCodeAt(gt - 1) === 47) { f(s.slice(i + n, gt - 1), ''); i = gt + 1; continue; }   /* <nom …/> */
+      fin = s.indexOf(ferm, gt + 1); if (fin < 0) throw new Error('XML incomplet (élément <' + nom + '> non fermé)');
+      f(s.slice(i + n, gt), s.slice(gt + 1, fin)); i = fin + ferm.length;
+    }
+  }
+  /* Plafonds (27.10.2026) : le plafond de 64 Mo ne porte que sur la décompression ; quelques Ko de XML peuvent
+     annoncer des millions de cellules vides (colonne XFD, ligne 1 048 576). Plan_PTE en compte ≈ 0,3 million. */
+  var MAX_CELLULES = 5000000, MAX_LIGNES = 200000;
+  function _tropGrand() { return new Error('feuille trop volumineuse pour les outils (plus de ' + MAX_CELLULES.toLocaleString('fr-CH') + ' cellules ou ' + MAX_LIGNES.toLocaleString('fr-CH') + ' lignes)'); }
 
-  function _findPath(h,name){
-    const norm=String(name==null?'':name).replace(/\s+/g,'').toLowerCase();
-    for(let i=0;i<h.paths.length;i++)
-      if(String(h.paths[i].name).replace(/\s+/g,'').toLowerCase()===norm)return h.paths[i];
-    return null}
+  function _lignes(xml, sst, o) {
+    var out = [], auto = 0, err = Object.create(null), nCel = 0;
+    _elements(xml, 'row', function (atR, corps) {
+      var arr = [], filled = false, pos = 0;
+      _elements(corps, 'c', function (at, inner) {
+        var t = _a(RE_A_T, at), ref = _a(RE_A_R, at);
+        var ci = ref ? _colIdx(ref) : -1;
+        if (ci < 0) ci = o ? pos : arr.length;
+        if (ci > 16383) throw new Error('cellule hors des limites d’Excel');
+        nCel += ci >= arr.length ? ci - arr.length + 1 : 1;
+        if (nCel > MAX_CELLULES) throw _tropGrand();
+        var v = '';
+        if (t === 'inlineStr') v = _toutT(inner, o);
+        else {
+          var vm = RE_V.exec(inner), raw = (vm && vm[1]) ? _texte(vm[1], o && o.finsDeLigneBrutes) : '';
+          if (raw === '') v = '';
+          else if (t === 's') v = sst[+raw] !== undefined ? sst[+raw] : '';
+          else if (t === 'b') v = o && o.booleensTexte ? (raw === '1' ? 'VRAI' : 'FAUX') : raw === '1';
+          else if (t === 'e') { v = ''; if (out.length) err[ci] = (err[ci] || 0) + 1; }
+          else if (t === 'str') v = raw;
+          else { var num = +raw; v = !isNaN(num) ? num : raw; }
+        }
+        if (o && o.echappementsExcel && typeof v === 'string') v = _excel(v);
+        if (t !== 's' && typeof v === 'string') v = _copie(v);   /* chaîne partagée : déjà copiée, une fois, par _sst */
+        while (arr.length < ci) arr.push('');
+        arr[ci] = v; pos = ci + 1;
+        if (v !== '' && v !== null) filled = true;
+      });
+      if (o && o.positions) {
+        var r = +(_a(RE_A_R, atR) || (auto + 1)); auto = r;
+        if (!(r >= 1 && r <= 1048576)) throw new Error('ligne hors des limites d’Excel');
+        if (r > MAX_LIGNES) throw _tropGrand();
+        out[r - 1] = arr;
+      } else if (filled) { out.push(arr); if (out.length > MAX_LIGNES) throw _tropGrand(); }
+    });
+    if (o && o.positions) for (var i = 0; i < out.length; i++) if (!out[i]) out[i] = [];
+    Object.defineProperty(out, 'erreurs', { value: err });
+    return out;
+  }
 
-  // Liste des noms de feuilles du classeur (ne décompresse que workbook.xml
-  // et ses relations, pas les feuilles elles-mêmes).
-  function sheetNames(bufOuU8){
-    const h=_open(bufOuU8);
-    return h.paths.map(function(p){return p.name})}
+  /* ---------- 4. Ouverture paresseuse, mise en cache par classeur ---------- */
+  var _cache = (typeof WeakMap !== 'undefined') ? new WeakMap() : null;
 
-  // Lignes (tableau de tableaux) d'UNE feuille nommée. Ne décompresse et
-  // n'analyse que sharedStrings.xml (une fois, mis en cache) et le XML de
-  // cette seule feuille. Retourne null si la feuille n'existe pas.
-  function sheetRows(bufOuU8,sheetName){
-    const h=_open(bufOuU8);
-    const p=_findPath(h,sheetName);
-    if(!p)return null;
-    const xml=zipText(h.z,p.path);
-    if(!xml)return[];
-    const sst=_sst(h);
-    return _sheetRows(_xml(xml),sst)}
+  function _open(bufOuU8) {
+    var u = bufOuU8 instanceof Uint8Array ? bufOuU8 : new Uint8Array(bufOuU8);
+    var cle = u.buffer;
+    if (_cache && _cache.has(cle)) {
+      var h0 = _cache.get(cle);
+      if (h0.z.u.byteOffset === u.byteOffset && h0.z.u.byteLength === u.byteLength) return h0;
+    }
+    var z = unzip(u);
+    var rels = Object.create(null), m, re;
+    var relXml = zipText(z, 'xl/_rels/workbook.xml.rels');
+    if (relXml) { re = /<Relationship\b([^>]*?)\/?>/g; while ((m = re.exec(relXml))) { var a = _attrs(m[1]); if (a.Id) rels[a.Id] = a.Target; } }
+    var paths = [], wb = zipText(z, 'xl/workbook.xml');
+    if (wb) {
+      re = /<sheet\b([^>]*?)\/?>/g; var j = 0;
+      while ((m = re.exec(wb))) {
+        var at = _attrs(m[1]), rid = at['r:id'] || at.id || null;
+        if (!rid) for (var k in at) if (k.slice(k.indexOf(':') + 1) === 'id') { rid = at[k]; break; }
+        var t = (rid && rels[rid]) || ('worksheets/sheet' + (j + 1) + '.xml');
+        paths.push({ name: at.name || ('Feuille' + (j + 1)), path: (t.charAt(0) === '/' ? t.slice(1) : 'xl/' + t.replace(/^\.\//, '')) });
+        j++;
+      }
+    }
+    if (!paths.length) paths.push({ name: 'Feuille1', path: 'xl/worksheets/sheet1.xml' });
+    var h = { z: z, paths: paths, sst: Object.create(null) };
+    if (_cache) _cache.set(cle, h);
+    return h;
+  }
 
-  const XLSXReader={
-    sheetNames:sheetNames,
-    sheetRows:sheetRows,
-    // exposés pour tests/diagnostics
-    inflateRaw:inflateRaw,unzip:unzip,zipText:zipText
+  /* chaînes partagées, lues une fois par classeur et par variante de lecture */
+  function _sst(h, o) {
+    var k = o ? JSON.stringify([!!o.sansPhonetique, !!o.finsDeLigneBrutes]) : '-';
+    if (h.sst[k]) return h.sst[k];
+    var sst = [], xml = zipText(h.z, 'xl/sharedStrings.xml');
+    if (xml) _elements(xml, 'si', function (at, corps) {
+      if (sst.length >= MAX_CELLULES) throw _tropGrand();
+      sst.push(corps ? _copie(_toutT(corps, o)) : '');
+    });
+    return (h.sst[k] = sst);
+  }
+
+  function _findPath(h, name) {
+    var norm = String(name == null ? '' : name).replace(/\s+/g, '').toLowerCase();
+    for (var i = 0; i < h.paths.length; i++)
+      if (String(h.paths[i].name).replace(/\s+/g, '').toLowerCase() === norm) return h.paths[i];
+    return null;
+  }
+
+  function sheetNames(bufOuU8) { return _open(bufOuU8).paths.map(function (p) { return p.name; }); }
+
+  function sheetRows(bufOuU8, sheetName, options) {
+    var h = _open(bufOuU8), p = _findPath(h, sheetName);
+    if (!p) return null;
+    var xml = zipText(h.z, p.path);
+    if (!xml) return [];
+    return _lignes(xml, _sst(h, options || null), options || null);
+  }
+
+  var XLSXReader = {
+    sheetNames: sheetNames,
+    sheetRows: sheetRows,
+    SAISIES: { positions: true, booleensTexte: true, echappementsExcel: true, sansPhonetique: true, finsDeLigneBrutes: true },
+    unzip: unzip   /* contrôle « est-ce un classeur ? » du fichier des saisies */
   };
 
-  if(typeof module!=='undefined'&&module.exports)module.exports=XLSXReader;
-  else root.XLSXReader=XLSXReader;
-
-})(typeof window!=='undefined'?window:this);
+  if (typeof module !== 'undefined' && module.exports) module.exports = XLSXReader;
+  else root.XLSXReader = XLSXReader;
+})(typeof window !== 'undefined' ? window : this);
+/* </PTE-MODULE pte-xlsx.js> */
 
 </script>
 <script>
-/* Contrat de données — copie à l'identique de 00_Design-System/pte-contrat.js */
+/* <PTE-MODULE pte-contrat.js> — source : 00_Design-System/pte-contrat.js, recopiée par 00_Design-System/build/integrer-modules.py ; ne pas modifier ici */
 /* ============================================================================
    PTE_CONTRAT — lecture commune du classeur Plan_PTE.xlsx
    Cellule OCBA, Yann Wattier — 19.09.2026
@@ -881,7 +929,8 @@ var PTE_CONTRAT = (function () {
     return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .toLowerCase().replace(/%/g, 'pct').replace(/[^a-z0-9]/g, '');
   }
-  var ERREURS = { '#name?': 1, '#nom?': 1, '#ref!': 1, '#n/a': 1, '#valeur!': 1, '#value!': 1, '#div/0!': 1, '#nombre!': 1, '#num!': 1 };
+  /* table sans prototype : une cellule « constructor » ou « __proto__ » n'est pas une erreur Excel (27.10.2026) */
+  var ERREURS = Object.assign(Object.create(null), { '#name?': 1, '#nom?': 1, '#ref!': 1, '#n/a': 1, '#valeur!': 1, '#value!': 1, '#div/0!': 1, '#nombre!': 1, '#num!': 1 });
   function isNum(v) { return typeof v === 'number' && isFinite(v); }
   /* Nombre ou null : une chaîne "---", vide, ou une erreur Excel vaut null. Une chaîne numérique est convertie. */
   function num(v) {
@@ -896,6 +945,37 @@ var PTE_CONTRAT = (function () {
   }
   /* Avancement GE-Invest à partir duquel un projet est en phase SIA 3 (avant-projet) : 0 à 3 % = phase 21. */
   var AVANCEMENT_PHASE3 = 4;
+
+  /* ---------- Type d'intervention T1 à T4 (règle unique des trois outils, 26.10.2026) ----------
+     Règle de l'ancienne colonne « Type d'intervention » de Plan_PTE (retirée du classeur le
+     20.10.2026, décision d'Achim), reprise à l'identique : d'abord dans la priorisation (calcTI,
+     20.10), puis ici pour que priorisation, revue et simulation partagent la même règle.
+     Classe IDC     : IDC [kWh/m²·an] ≤ 83 → 1 · ≤ 125 → 2 · ≤ 180 → 3 · au-delà → 4
+     Classe vétusté : Coeff Stratus ≤ 0,6 → 4 · ≤ 0,7 → 3 · < 0,8 → 2 · sinon → 1
+     Matrice (classe IDC, classe vétusté) : 11 12 21 → T1 ; 34 43 44 → T4 ; 41 42 33 24 → T3 ;
+     toute autre combinaison → T2. IDC ou coefficient inconnu → null (jamais de valeur par défaut).
+     La famille est celle du SOUS-SITE : un projet hérite de celle de son sous-site. */
+  var TI_SEUILS = { idc: [83, 125, 180], stratus: [0.6, 0.7, 0.8] };
+  var TI_LABELS = { 1: 'Suivi énergétique', 2: 'Entretien / renouvellement', 3: 'Gros travaux / rénovation partielle', 4: 'Rénovation complète' };
+  function classeIDC(idc) {
+    if (idc == null || idc === '' || isNaN(+idc) || !(+idc > 0)) return null;
+    idc = +idc; var s = TI_SEUILS.idc;
+    return idc <= s[0] ? 1 : idc <= s[1] ? 2 : idc <= s[2] ? 3 : 4;
+  }
+  function classeVetuste(co) {
+    if (co == null || co === '' || isNaN(+co)) return null;
+    co = +co; var s = TI_SEUILS.stratus;
+    return co <= s[0] ? 4 : co <= s[1] ? 3 : co < s[2] ? 2 : 1;
+  }
+  function calcTI(idc, coeff) {
+    var a = classeIDC(idc), b = classeVetuste(coeff);
+    if (a == null || b == null) return null;
+    var k = '' + a + b;
+    if (k === '11' || k === '12' || k === '21') return 1;
+    if (k === '34' || k === '43' || k === '44') return 4;
+    if (k === '41' || k === '42' || k === '33' || k === '24') return 3;
+    return 2;
+  }
   /* Année la plus récente d'une cellule « Année IDC » : 2025, '2025' ou '2024; 2025'
      (un millésime par bâtiment du sous-site). null si aucune année à 4 chiffres. (18.10.2026) */
   function anneeRecente(v) {
@@ -926,7 +1006,7 @@ var PTE_CONTRAT = (function () {
   }
   /* Index des colonnes par en-tête normalisé (première occurrence). */
   function entetes(rows) {
-    var idx = {}, i, h;
+    var idx = Object.create(null), i, h;   /* sans prototype : un en-tête « constructor » est une colonne comme une autre */
     if (!rows || !rows[0]) return idx;
     for (i = 0; i < rows[0].length; i++) { h = norm(rows[0][i]); if (h && !(h in idx)) idx[h] = i; }
     return idx;
@@ -947,7 +1027,7 @@ var PTE_CONTRAT = (function () {
   /* ---------- D7 : table Agent SITG (premier terme avant « | ») -> libellé Data V/W ---------- */
   /* Les 13 libellés présents dans le classeur du 17.09.2026 sont tous couverts. Un libellé SITG
      absent de cette table est renvoyé tel quel (cible = libellé) et signalé dans `manquants`. */
-  var CORRESPONDANCE_AGENT = {
+  var CORRESPONDANCE_AGENT = Object.assign(Object.create(null), {   /* sans prototype : un agent « Constructor » reste inconnu */
     'gaz': 'Gaz',
     'mazout': 'Mazout',
     'mazoutsouscomptagedechaleur': 'Mazout',
@@ -960,7 +1040,7 @@ var PTE_CONTRAT = (function () {
     'pacelectriciteconsommee': 'PAC',        /* kWh électriques d'entrée, pas de chaleur : facteur à renseigner sous « PAC » avec cette réserve */
     'rejetsdechaleur': 'Rejets de chaleur',  /* à créer dans Data */
     'electricitedirecte': 'El. SIG'          /* ligne existante de Data, facteur à renseigner */
-  };
+  });
   var CAD_GENERIQUE = 'CAD générique';       /* à créer dans Data (D7) */
 
   function cibleAgent(sitg, principal) {
@@ -976,7 +1056,7 @@ var PTE_CONTRAT = (function () {
 
   /* ---------- D4 : facteurs CO2 depuis Data, colonnes « FournisseurChaleur » / « FacteurCO2 » (g/kWh -> kg/kWh) ---------- */
   function lireFacteurs(rowsData, manquants) {
-    var table = {}, i, r, jA, jF, a, f;
+    var table = Object.create(null), i, r, jA, jF, a, f;   /* libellés de Data : sans prototype */
     if (!rowsData || rowsData.length < 2) { manquants.push({ num: null, champ: 'Data', motif: 'feuille Data absente ou vide : aucun facteur CO2' }); return table; }
     /* Les deux colonnes sont repérées par leur en-tête (V/W dans le classeur du 17.09.2026), jamais par position. */
     var idx = entetes(rowsData);
@@ -1067,14 +1147,19 @@ var PTE_CONTRAT = (function () {
 
   /* ---------- D8 : responsables de projet depuis GE-Invest (Objet (actif), chiffres 7 à 12 = sous-site) ----------
      Feuille GEI_Projets (une ligne par projet) ou, à défaut, GEI_Suivi (plate : le projet y est répété). */
-  function lireProjets(rowsG) {
+  function lireProjets(rowsG, manquants, nomG) {
     var parSousSite = {}, vus = {}, idx, jO, jN, jR, jL, jS, jA, i, r, o, ss, n, rp;
     if (!rowsG || rowsG.length < 2) return parSousSite;
     idx = entetes(rowsG);
     jO = col(idx, ['Objet (actif)']); jN = col(idx, ['Numéro']); jR = col(idx, ['Nom responsable suivi']); jL = col(idx, ['Nom long', 'Libellé']);
     jS = col(idx, ['Statut']);   /* 06.10.2026 : statut GE-Invest du projet, pour la carte de la priorisation */
     jA = col(idx, ['Avancement global']);   /* 18.10.2026 : phase SIA du projet, engagement du sous-site */
-    if (jO == null || jR == null) return parSousSite;
+    /* colonne absente : signalée (26.10.2026) ; sans « Objet (actif) », aucun projet n'est rattachable */
+    [[jO, 'Objet (actif)', 'aucun projet rattaché aux sous-sites'], [jR, 'Nom responsable suivi', 'responsables de projet vides'],
+     [jS, 'Statut', 'engagement non calculable'], [jA, 'Avancement global', 'engagement non calculable']].forEach(function (c) {
+      if (c[0] == null) manquants.push({ num: null, champ: nomG, motif: 'colonne « ' + c[1] + ' » introuvable : ' + c[2] });
+    });
+    if (jO == null) return parSousSite;
     for (i = 1; i < rowsG.length; i++) {
       r = rowsG[i]; if (!r) continue;
       o = String(cell(r, jO) == null ? '' : cell(r, jO)).trim();
@@ -1142,6 +1227,8 @@ var PTE_CONTRAT = (function () {
        sous-site, réunis par le classeur lui-même (formule sur GEI_Projets et GEI_Jalons). Ils serviront à
        dire le besoin de surfaces de relais pendant les travaux. Un classeur sans cette colonne : null. */
     var jRelais = col(idx, ['Surfaces de relais (GEI)']);
+    /* Colonne facultative (26.10.2026) : coefficient de vétusté Stratus, pour le type d'intervention T1-T4. */
+    var jCoeff = col(idx, ['Coeff Stratus 2025 Décembre', 'Coeff Stratus']);
 
     /* Consommation par site, indexée par SITES NUM */
     var mesures = {}, idxC = entetes(rowsC || []), jNum = col(idxC, ['SITES NUM']), jNomS = col(idxC, ['NOM SITE']),
@@ -1160,7 +1247,7 @@ var PTE_CONTRAT = (function () {
     if (A && rowsC && jTh == null) manquants.push({ num: null, champ: 'Consommation par site', motif: 'colonne ThTOT' + A + ' absente : aucune chaleur mesurée pour ' + A });
 
     var facteurs = lireFacteurs(rowsD, manquants);
-    var projets = lireProjets(rowsG);
+    var projets = lireProjets(rowsG, manquants, nomG);
 
     /* ---- passe 1 : sous-sites ---- */
     var sousSites = [], sites = new Map(), ss, site, v;
@@ -1208,6 +1295,9 @@ var PTE_CONTRAT = (function () {
       ss.co2Projete = num(cell(r, C.co2Proj));
       ss.idcProjete = num(cell(r, C.idcProj));
       ss.idcGainRetenu = num(cell(r, C.idcGain));
+      /* type d'intervention T1-T4 du sous-site (calcTI) : IDC OCEN × Coeff Stratus ; null si l'un manque */
+      ss.coeffStratus = num(cell(r, jCoeff));
+      ss.typeIntervention = calcTI(ss.idc, ss.coeffStratus);
       /* gain d'eau estimé (audit eau) : un zéro n'est pas un gain */
       v = num(cell(r, jGainEauEst)); ss.gainEauEstime = (v != null && v > 0) ? v : null;
       /* électricité, eau, CO2 : ventilés en passe 2 depuis Consommation par site */
@@ -1239,7 +1329,7 @@ var PTE_CONTRAT = (function () {
       var motifEstim = !m ? 'site absent de Consommation par site' : (m.thtot == null ? 'ThTOT' + A + ' vide' : 'ThTOT' + A + ' nul');
       var sreSite = 0;
       for (j = 0; j < site.sousSites.length; j++) if (site.sousSites[j].sre != null) sreSite += site.sousSites[j].sre;
-      var agg = { chaleur: 0, elec: 0, eau: 0, co2: 0, estimPte: 0, investCecb: 0, nEst: 0, nMes: 0, nElec: 0, nEau: 0, nCo2: 0, gainEau: 0, nGainEau: 0 };
+      var agg = { chaleur: 0, elec: 0, eau: 0, co2: 0, estimPte: 0, investCecb: 0, nEstimPte: 0, nInvestCecb: 0, nEst: 0, nMes: 0, nElec: 0, nEau: 0, nCo2: 0, gainEau: 0, nGainEau: 0 };
       for (j = 0; j < site.sousSites.length; j++) {
         x = site.sousSites[j];
         part = (x.sre != null && sreSite > 0) ? x.sre / sreSite : null;
@@ -1264,10 +1354,10 @@ var PTE_CONTRAT = (function () {
             if (g.val != null) { agg[key] += g.val; agg[d[2]]++; }
           });
         if (x.chaleur.val != null) agg.chaleur += x.chaleur.val;
-        if (x.estimPte != null) agg.estimPte += x.estimPte;
-        if (x.investCecb != null) agg.investCecb += x.investCecb;
+        if (x.estimPte != null) { agg.estimPte += x.estimPte; agg.nEstimPte++; }
+        if (x.investCecb != null) { agg.investCecb += x.investCecb; agg.nInvestCecb++; }
         if (x.gainEauEstime != null) { agg.gainEau += x.gainEauEstime; agg.nGainEau++; parc.gainEauEstime += x.gainEauEstime; parc.nbGainEauEstime++; }
-        /* D5 : vrai gain CO2 (t/an) = émissions mesurées − CO2 projeté × SRE ; vide si l'un des deux manque */
+        /* D5 : vrai gain CO2 (t/an) = émissions du sous-site − CO2 projeté × SRE ; vide si l'un des deux manque */
         x.gainCo2T = (x.co2.val != null && x.co2Projete != null && x.sre != null) ? round((x.co2.val - x.co2Projete * x.sre) / 1000, 3) : null;
         x.perimetreSme = site.perimetreSme; x.siteMesure = site.siteMesure;
         /* parc (D1 : Σ SRE de Plan_PTE) */
@@ -1283,7 +1373,8 @@ var PTE_CONTRAT = (function () {
       site.elec = agg.nElec ? { val: agg.elec, source: 'mesuré', origine: 'Σ sous-sites' } : { val: null, source: null, origine: null };
       site.eau = agg.nEau ? { val: agg.eau, source: 'mesuré', origine: 'Σ sous-sites' } : { val: null, source: null, origine: null };
       site.co2 = agg.nCo2 ? { val: agg.co2, source: 'mesuré', origine: 'Σ sous-sites' } : { val: null, source: null, origine: null };
-      site.estimPte = agg.estimPte; site.investCecb = agg.investCecb;
+      /* aucun sous-site chiffré : montant inconnu (null), pas 0 (26.10.2026) */
+      site.estimPte = agg.nEstimPte ? agg.estimPte : null; site.investCecb = agg.nInvestCecb ? agg.investCecb : null;
       site.gainEauEstime = agg.nGainEau ? round(agg.gainEau, 3) : null;
       site.nbSousSitesEstimes = agg.nEst; site.nbSousSitesMesures = agg.nMes;
     });
@@ -1291,7 +1382,7 @@ var PTE_CONTRAT = (function () {
     ['chaleur', 'chaleurMesuree', 'chaleurEstimee', 'elec', 'eau', 'co2', 'gainEauEstime'].forEach(function (k2) { parc[k2] = round(parc[k2], 3); });
 
     /* ---- facteurs : table lisible, correspondance appliquée, libellés à renseigner ---- */
-    var table = {}, key, aRens = {}, corr = {};
+    var table = {}, key, aRens = Object.create(null), corr = Object.create(null);
     for (key in facteurs) table[facteurs[key].libelle] = facteurs[key].facteur;
     sousSites.forEach(function (x) {
       if (!x.agent.sitg) return;
@@ -1306,7 +1397,7 @@ var PTE_CONTRAT = (function () {
       annee: annee, anneeSource: an.source, anneesDisponibles: rowsC ? anneesDeConso(rowsC) : [], series: an.series,
       sousSites: sousSites, sites: sites, parc: parc,
       facteurs: { table: table, correspondance: corr, aRenseigner: aRenseigner, cadGenerique: CAD_GENERIQUE },
-      manquants: manquants, colonnes: C, colonnesFacultatives: { gainEauEstime: jGainEauEst }
+      manquants: manquants, colonnes: C, colonnesFacultatives: { gainEauEstime: jGainEauEst, coeffStratus: jCoeff }
     };
   }
 
@@ -1398,14 +1489,18 @@ var PTE_CONTRAT = (function () {
   }
 
   return { lire: lire, norm: norm, cibleAgent: cibleAgent, CORRESPONDANCE_AGENT: CORRESPONDANCE_AGENT, CAD_GENERIQUE: CAD_GENERIQUE,
-           empreinte: empreinte, comparer: comparer, version: '2026-10-18' };
+           empreinte: empreinte, comparer: comparer,
+           calcTI: calcTI, classeIDC: classeIDC, classeVetuste: classeVetuste, TI_SEUILS: TI_SEUILS, TI_LABELS: TI_LABELS,
+           version: '2026-10-26' };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = PTE_CONTRAT;
+/* </PTE-MODULE pte-contrat.js> */
 
 </script>
 <script>
 'use strict';
 
+/* <PTE-MODULE pte-commun.js> — source : 00_Design-System/pte-commun.js, recopiée par 00_Design-System/build/integrer-modules.py ; ne pas modifier ici */
 /* ============================================================================
    PTE_COMMUN — ce que les trois outils de pilotage partagent (20.09.2026)
    Décisions d'Achim du 19.09.2026 (idées 1 et 2 de Zoé, version ambitieuse) :
@@ -1503,8 +1598,16 @@ var PTE_COMMUN = (function () {
       return new Promise(function (res, rej) {
         var tx = db.transaction(STORE, 'readwrite');
         tx.objectStore(STORE).put(buf, KEY);
-        tx.oncomplete = function () { try { localStorage.setItem(LS_META, JSON.stringify(meta)); } catch (e) {} res(meta); };
-        tx.onerror = function () { rej(tx.error); };
+        tx.oncomplete = function () {
+          try { localStorage.setItem(LS_META, JSON.stringify(meta)); }
+          catch (e) {   /* fiche non écrite (stockage plein) : aucune fiche plutôt qu'une fiche d'un autre classeur (27.10.2026) */
+            try { localStorage.removeItem(LS_META); } catch (e2) {}
+            rej(new Error('stockage du navigateur plein : le classeur commun n’a pas pu être enregistré, les autres outils ne le verront pas'));
+            return;
+          }
+          res(meta);
+        };
+        tx.onerror = tx.onabort = function () { rej(tx.error || new Error('classeur commun non enregistré (IndexedDB)')); };
       });
     });
   }
@@ -1526,6 +1629,47 @@ var PTE_COMMUN = (function () {
       return new Promise(function (res) { var tx = db.transaction(STORE, 'readwrite'); tx.objectStore(STORE).delete(KEY); tx.oncomplete = res; tx.onerror = res; });
     }).catch(function () {});
   }
+
+  /* ---------- états volumineux des outils (IndexedDB), 26.10.2026 ----------
+     Le localStorage (≈ 5 M caractères par origine) est partagé par les quatre pages ; la revue y dépassait le
+     quota (2,6 M, plus ≈ 0,27 M par mois de suivi) et perdait ses enregistrements sans le dire. Les données
+     volumineuses et dérivées du classeur vont dans IndexedDB (base « pte-etats », sans limite pratique) ; les
+     saisies, petites, restent dans le localStorage, où les lisent le fichier des saisies et les autres onglets.
+       etats.lire(cle)           → Promise(valeur | null)        (null aussi si IndexedDB est indisponible)
+       etats.ecrire(cle, valeur) → Promise(true), rejetée si l'écriture échoue
+       etats.effacer(cle)        → Promise
+     IndexedDB absent ou refusé (tests sous jsdom, certaines navigations privées) : l'outil garde le localStorage. */
+  var ETATS_DB = 'pte-etats', ETATS_STORE = 'etats', etatsBase = null;
+  function ouvrirEtats() {
+    if (etatsBase) return etatsBase;
+    etatsBase = new Promise(function (res, rej) {
+      if (typeof indexedDB === 'undefined' || !indexedDB) return rej(new Error('IndexedDB indisponible'));
+      var q; try { q = indexedDB.open(ETATS_DB, 1); } catch (e) { return rej(e); }
+      q.onupgradeneeded = function () { q.result.createObjectStore(ETATS_STORE); };
+      q.onsuccess = function () { var b = q.result; b.onversionchange = function () { b.close(); etatsBase = null; }; res(b); };
+      q.onerror = function () { rej(q.error || new Error('IndexedDB refusée')); };
+      q.onblocked = function () { rej(new Error('IndexedDB bloquée par un autre onglet')); };
+    });
+    etatsBase.catch(function () { etatsBase = null; });
+    return etatsBase;
+  }
+  function transactionEtats(mode, action) {
+    return ouvrirEtats().then(function (b) {
+      return new Promise(function (res, rej) {
+        var tx = b.transaction(ETATS_STORE, mode), q = action(tx.objectStore(ETATS_STORE));
+        tx.oncomplete = function () { res(q && mode === 'readonly' ? q.result : true); };
+        tx.onerror = tx.onabort = function () { rej(tx.error || new Error('IndexedDB : transaction refusée')); };
+      });
+    });
+  }
+  var etats = {
+    lire: function (cle) {
+      return transactionEtats('readonly', function (st) { return st.get(cle); })
+        .then(function (v) { return v === undefined ? null : v; }, function () { return null; });
+    },
+    ecrire: function (cle, valeur) { return transactionEtats('readwrite', function (st) { st.put(valeur, cle); }); },
+    effacer: function (cle) { return transactionEtats('readwrite', function (st) { st.delete(cle); }).catch(function () {}); }
+  };
 
   /* Deuxième temps de l'effacement : le classeur commun.
      Il vit dans IndexedDB, partagé par les trois outils de Pilotage PTE. Vider les
@@ -1657,7 +1801,6 @@ var PTE_COMMUN = (function () {
     creer(); masque.classList.add('on'); i = 0; rendre();
     return { fin: fin };
   }
-  function tourVue(cle) { try { return localStorage.getItem(cle) === '1'; } catch (e) { return false; } }
 
   /* ---------- mes saisies : ce que l'utilisateur a tapé, les trois outils ---
      Les trois outils vivent sur la même origine : une page peut donc lire et
@@ -1671,7 +1814,7 @@ var PTE_COMMUN = (function () {
       resume: function (o) { var n = o && o.siteNotes ? Object.keys(o.siteNotes).length : 0,
                                  a = o && o.siteQuali ? Object.keys(o.siteQuali).length : 0;
         return n + ' note(s), ' + a + ' ajustement(s)'; } },
-    { outil: 'priorisation', cle: 'pte_snapshots_v1', tout: true,
+    { outil: 'priorisation', cle: 'pte_snapshots_v1', tout: true, liste: true,
       resume: function (o) { return (o && o.length ? o.length : 0) + ' instantané(s)'; } },
     { outil: 'revue', cle: 'ocba_revue_db_v1', champs: ['decisions'],
       resume: function (o) { return (o && o.decisions ? o.decisions.length : 0) + ' décision(s)'; } },
@@ -1685,6 +1828,19 @@ var PTE_COMMUN = (function () {
       resume: function (o) { var m = o && o.mois ? Object.keys(o.mois).length : 0; return m + ' mois de questions'; } }
   ];
   function lireJSON(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
+  /* Réglage qu'un fichier de saisies peut faire reprendre (26.10.2026) : les clés et champs de l'export,
+     sans les saisies en lignes (notes, ajustements, décisions), qui ne passent que par l'aperçu.
+     Rend le contenu admis, ou null. */
+  var EN_LIGNES = { siteNotes: 1, siteQuali: 1, decisions: 1 };
+  function reglageAdmis(cle, contenu) {
+    var d = null, i, o = {};
+    for (i = 0; i < SAISIES.length; i++) if (SAISIES[i].cle === cle) { d = SAISIES[i]; break; }
+    if (!d || !contenu || typeof contenu !== 'object') return null;
+    if (d.tout) return Array.isArray(contenu) === !!d.liste ? contenu : null;
+    if (Array.isArray(contenu)) return null;
+    d.champs.forEach(function (c) { if (!EN_LIGNES[c] && Object.prototype.hasOwnProperty.call(contenu, c)) o[c] = contenu[c]; });
+    return Object.keys(o).length ? o : null;
+  }
   function exporterSaisies() {
     var out = { format: 'pte-saisies', version: 1, date: new Date().toISOString(), blocs: [] };
     SAISIES.forEach(function (d) {
@@ -1698,14 +1854,20 @@ var PTE_COMMUN = (function () {
   }
   function resumeSaisies() { return exporterSaisies().blocs.map(function (b) { return b.outil + ' : ' + b.resume; }); }
   /* Fusionne : ce qui existe déjà et n'est pas dans le fichier est conservé ;
-     les listes (décisions, instantanés) sont ajoutées sans doublon. */
+     les listes (décisions, instantanés) sont ajoutées sans doublon. Sous un champ (variantes I, II, III de la
+     simulation, mois des questions), la valeur du fichier remplace celle d'ici, sauf si elle est vide
+     (27.10.2026 : une variante vide du fichier effaçait les mesures d'ici). */
+  function vide(v) { return v == null || (Array.isArray(v) ? !v.length : (typeof v === 'object' && !Object.keys(v).length)); }
   function importerSaisies(obj) {
     if (!obj || obj.format !== 'pte-saisies' || !obj.blocs) throw new Error('Ce fichier n’est pas un export de saisies PTE.');
     var faits = [];
     obj.blocs.forEach(function (b) {
       var def = null, i;
       for (i = 0; i < SAISIES.length; i++) if (SAISIES[i].cle === b.cle) { def = SAISIES[i]; break; }
-      if (!def) return;
+      if (!def || !b.contenu || typeof b.contenu !== 'object') return;
+      /* forme de l'export seulement (26.10.2026) : liste pour une liste ; pour un objet, les champs exportés */
+      if (def.tout ? Array.isArray(b.contenu) !== !!def.liste : Array.isArray(b.contenu)) return;
+      if (!def.tout) { var pris = {}; def.champs.forEach(function (c) { if (Object.prototype.hasOwnProperty.call(b.contenu, c)) pris[c] = b.contenu[c]; }); b = { cle: b.cle, outil: b.outil, contenu: pris, resume: b.resume }; }
       var actuel = lireJSON(b.cle), fusion;
       if (Array.isArray(b.contenu)) {
         var base = Array.isArray(actuel) ? actuel.slice() : [];
@@ -1721,23 +1883,15 @@ var PTE_COMMUN = (function () {
             b.contenu[c].forEach(function (x) { var s2 = JSON.stringify(x); if (!vus2[s2]) { av.push(x); vus2[s2] = 1; } });
             fusion[c] = av;
           } else if (b.contenu[c] && typeof b.contenu[c] === 'object') {
-            fusion[c] = Object.assign({}, fusion[c] || {}, b.contenu[c]);
+            var src = b.contenu[c], dst = Object.assign({}, fusion[c] && typeof fusion[c] === 'object' ? fusion[c] : {});
+            Object.keys(src).forEach(function (k) { if (!(vide(src[k]) && !vide(dst[k]))) dst[k] = src[k]; });
+            fusion[c] = dst;
           } else { fusion[c] = b.contenu[c]; }
         }
       }
       try { localStorage.setItem(b.cle, JSON.stringify(fusion)); faits.push(b.outil + ' : ' + b.resume); } catch (e) {}
     });
     return faits;
-  }
-  /* Télécharge l'export sous pte-saisies-AAAA-MM-JJ.json */
-  function telechargerSaisies() {
-    var o = exporterSaisies(), d = new Date();
-    var nom = 'pte-saisies-' + d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) + '.json';
-    var blob = new Blob([JSON.stringify(o, null, 1)], { type: 'application/json' });
-    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nom;
-    document.body.appendChild(a); a.click();
-    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 0);
-    return { nom: nom, blocs: o.blocs.length };
   }
 
   /* Les liens « Pilotage PTE » de l'en-tête et du pied sont écrits en dur pour
@@ -1758,6 +1912,13 @@ var PTE_COMMUN = (function () {
     var d = new Date(iso); if (isNaN(d)) return String(iso);
     var p = function (n) { return (n < 10 ? '0' : '') + n; };
     return p(d.getDate()) + '.' + p(d.getMonth() + 1) + '.' + d.getFullYear();
+  }
+  /* JJ.MM.AAAA HH:MM, heure locale (pastilles du classeur de l'accueil et de la simulation) */
+  function dateHeure(iso) {
+    if (!iso) return '';
+    var d = new Date(iso); if (isNaN(d)) return String(iso);
+    var p = function (n) { return (n < 10 ? '0' : '') + n; };
+    return dateCourte(iso) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
   }
   /* Nom de personne ou de portefeuille écrit en capitales dans le classeur (« REIS MENINO TIAGO ») :
      affiché en casse de nom propre (« Reis Menino Tiago »). Affichage seulement : les filtres
@@ -1866,7 +2027,7 @@ var PTE_COMMUN = (function () {
   function nombreChf(v) {
     if (typeof v === 'number') return isFinite(v) ? v : null;
     if (v == null) return null;
-    var t = String(v).replace(/[\s  ']/g, '').replace(',', '.');
+    var t = String(v).replace(/[\s'’]/g, '').replace(',', '.');
     if (!t || !/^-?\d+(\.\d+)?$/.test(t)) return null;
     return Number(t);
   }
@@ -1920,6 +2081,13 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "27.10.2026", "objet": "priorisation", "version": "v2.27", "titre": "Plus rapide et plus sûre ; Arbitrage aligné sur le Classement", "points": ["Arbitrage (chiffres modifiés) : le CO₂ se compte en convention légale et la substitution renouvelable suit la règle du Classement ; « Calé sur les écarts 2030 » lit les écarts du classeur. Classeur de référence : 168 sous-sites retenus au lieu de 164, 9 884 t de CO₂ évitées par an au lieu de 10 013.", "Plus rapide : ouverture 1,6 → 0,5 s, import 2,5 → 0,6 s ; seul l'onglet affiché est redessiné (changement d'onglet en 10 à 330 ms au lieu de 140 à 520). Page allégée : 16 000 éléments au lieu de 30 000.", "Stockage du navigateur divisé par deux (1,2 M caractères au lieu de 2,25 M) : les quatre outils y tiennent ensemble.", "Audit CECB+ réalisé sans variante connue : « variante à confirmer », plus de variante supposée. Textes du classeur et des saisies neutralisés partout ; export CSV protégé contre les formules."]},
+    {"date": "27.10.2026", "objet": "revue", "version": "v0.35", "titre": "Décisions gardées avec les quatre outils ouverts ; plus rapide", "points": ["Données de la revue gardées dans la base du navigateur (IndexedDB) ; seules les décisions restent dans le stockage partagé, où les quatre outils tiennent désormais ensemble. S'il est plein quand même, la revue dit que la décision n'est pas enregistrée (avant : perdue sans message). Deux onglets de la revue ouverts ensemble ne s'écrasent plus ; « Effacer » vaut aussi pour l'autre onglet. La revue se rouvre sans redemander le classeur.", "Plus rapide : Reporting 251 → 77 ms, Portefeuille 292 → 38 ms, import 1,3 → 0,8 s ; la recherche attend la fin de la frappe.", "Décisions selon le périmètre : celles de ses projets, celles de ses portefeuilles, celles du parc sur « tout le parc » seulement. Un lien vers un projet hors du périmètre ouvre la bonne fiche.", "Fiche : phase SIA déduite de l'avancement global ; décision échue jugée à la date de gel. Règle Délais corrigée, réglage « Glissement → orange » (sans effet) retiré. Export CSV protégé contre les formules."]},
+    {"date": "27.10.2026", "objet": "simulation", "version": "v3.14", "titre": "Plus légère et plus rapide", "points": ["Page allégée de 1,3 à 0,5 Mo, import 1,5 → 0,4 s : lecture et export Excel passent par le lecteur commun des outils (plus de bibliothèque SheetJS). Mémoire après import : 20 → 5 Mo.", "Un agent absent de la feuille Data (« CAD tarifé ») n'empêche plus l'affichage du site : facteur CO₂ « à renseigner ».", "Le classeur lu est gardé dans la base du navigateur (IndexedDB), écrit une fois par import : un million de caractères de moins dans le stockage partagé des quatre pages.", "Valeurs du classeur et des saisies neutralisées dans les cartes ; seuls les scripts de la page peuvent s'exécuter."]},
+    {"date": "27.10.2026", "objet": "accueil", "version": "v1.16", "titre": "Import plus rapide et plus sûr", "points": ["Import du classeur 2,3 → 0,5 s (lecteur commun des outils).", "Un fichier qui n'est pas un classeur Plan_PTE lisible n'est plus gardé comme classeur commun des outils.", "SharePoint : une adresse mal encodée ou hors de l'intranet est refusée avec un message clair ; la page ne peut joindre que le SharePoint de l'intranet (ecd.ge.ch) et le serveur des saisies.", "Seuls les scripts de la page peuvent s'exécuter (politique de sécurité à empreintes)."]},
+    {"date": "27.10.2026", "objet": "commun", "version": null, "titre": "Nettoyage et sécurité avant publication", "points": ["Un seul lecteur Excel pour les quatre pages, écrit pour les outils : imports 2 à 6 fois plus rapides, mémoire libérée après lecture. Un fichier piégé (plus de 64 Mo une fois décompressé, XML non fermé, millions de cellules vides annoncées) est refusé en quelques millisecondes.", "Fichier des saisies et serveur : seuls les feuilles, champs et réglages connus sont repris ; une consolidation datée dans le futur est refusée ; seul le serveur des saisies prévu peut être joint.", "États volumineux des outils gardés dans la base du navigateur (IndexedDB), hors du stockage partagé de 5 M caractères.", "Contrat de données : une colonne GE-Invest absente (Statut, Avancement global) est signalée ; le montant d'un site sans sous-site chiffré reste inconnu au lieu de 0."]},
+    {"date": "26.10.2026", "objet": "revue", "version": "v0.34", "titre": "Planning par famille d'intervention ; libellés de phase à harmoniser", "points": ["Reporting, partie Planning : carte « Planning par famille d'intervention », lecture du planning général intentionnel sur les plannings GE-Invest. Parc : une ligne par portefeuille, puis par famille T1 à T4 ; portefeuille : une ligne par famille, qui se déplie sur ses projets (fin initiale GE-Invest marquée).", "Famille = type d'intervention du sous-site (classe IDC × vétusté Stratus), héritée par ses projets. Bande fine = études, bande épaisse = travaux.", "Trois couches par ligne : enveloppe (contour), densité (projets en cours par trimestre : 1 · 2 à 4 · 5 et plus), repère « 80 % des travaux terminés » ; en bout de ligne, part des travaux finis au plus tard le 31.12.2030. Repère et échéance réglables dans Données.", "Données : « Libellés de phase à harmoniser » (le libellé le plus fréquent de chaque phase SIA sert de référence), aussi au contrôle de complétude. La phase d'un projet reste celle de son avancement global (table GPR.6MO.04), affichée au survol de ses lignes du planning."]},
+    {"date": "26.10.2026", "objet": "priorisation", "version": "v2.26", "titre": "Type d'intervention : règle commune aux trois outils", "points": ["La règle T1 à T4 (classe IDC × classe de vétusté Stratus) passe dans le module commun PTE_CONTRAT : priorisation, revue et simulation appliquent la même. Résultats inchangés (classeur du 26.10 : T1 87, T2 125, T3 100, T4 64, sans type 206)."]},
     {"date": "23.10.2026", "objet": "priorisation", "version": "v2.25", "titre": "Actions de la direction : intensité, IDC 450, engagés, types T1-T4, effort PV", "points": ["Méthode : décision du 23.10 — objectifs suivis sur l'indicateur d'intensité, jamais sur les chiffres absolus ; références 2005 en consolidation.", "Vue d'ensemble : sous-sites au-delà de 450 MJ/m²·an sur la tuile IDC ; ligne « Engagés » sous les tuiles — part de l'écart 2030 couverte par les sous-sites déjà engagés (projet GE-Invest en cours, avancement ≥ 4 %).", "Type d'intervention T1 à T4 (classe IDC × vétusté) : filtre du Classement, ligne de la fiche, colonne de l'export ; sans effet sur les rangs. Classements Électricité et Eau sans colonnes Chauffage ni Substitution.", "Photovoltaïque : effort en MCHF (kWc à installer × coût unitaire réglable) et part supplémentaire de cible réglable ; PV en place lu dans « PV existant - puissance [kWc] » quand elle est remplie."]},
     {"date": "23.10.2026", "objet": "priorisation", "version": "v2.24", "titre": "CO₂ en convention légale ; boutons sans pastille", "points": ["En-tête : le menu « CO₂ » est retiré. Classements, gains, coût de la tonne et Arbitrage se comptent toujours en convention légale (réseaux de chaleur, bois, pompes à chaleur et solaire à zéro émission).", "La notion de « CO₂ mesuré » disparaît des libellés : on parle des émissions du parc ou du sous-site. La tuile CO₂, sa référence 2005, sa cible et sa trajectoire restent sur les émissions du parc (décision d'Achim).", "Classement CO₂ : un bandeau rappelle les deux effets de la convention (sous-sites déjà raccordés hors classement, raccordement à venir imbattable au coût de la tonne).", "Boutons des objectifs : pastilles de couleur retirées."]},
     {"date": "23.10.2026", "objet": "revue", "version": "v0.33", "titre": "Émissions au lieu de « CO₂ mesuré »", "points": ["Fiche et données : le gain CO₂ réel se décrit comme « émissions du sous-site (Plan_PTE, scope 1+2) − CO₂ projeté × SRE » ; le calcul ne change pas."]},
@@ -2043,18 +2211,21 @@ var PTE_COMMUN = (function () {
       return tous || !outil || outil === 'accueil' || v.objet === outil || v.objet === 'commun';
     });
   }
-  function echapperV(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-    });
+  /* échappement HTML, texte comme attribut (seul du module, 26.10.2026 : la seconde partie le reprend) */
+  var ENT_HTML = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+  function echapperHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ENT_HTML[c]; }); }
+  /* couleurs des fenêtres du module (versions, saisies, retours), jour et nuit : une seule palette (27.10.2026) */
+  function couleursFenetres() {
+    var nuit = !!(typeof document !== 'undefined' && document.body && document.body.classList && document.body.classList.contains && document.body.classList.contains('night'));
+    if (!nuit && themeCourant() === 'nuit') nuit = true;
+    return nuit ? { fond: '#1b2631', encre: '#e6edf3', doux: '#9fb0c0', trait: '#34495e', acc: '#30E5D9', accTexte: '#0b1a24', puce: '#26394a', vert: '#7fd4a8', orange: '#f2b866', rouge: '#ff8a80', ligne: '#22303d' }
+                : { fond: '#ffffff', encre: '#1f2d3d', doux: '#5b6b7b', trait: '#dfe6ec', acc: '#005F73', accTexte: '#ffffff', puce: '#e9f1f4', vert: '#1A8554', orange: '#8A5A00', rouge: '#B3261E', ligne: '#f5f8fa' };
   }
   function afficherVersions(outil) {
     if (typeof document === 'undefined' || !document.body || !document.createElement) return null;
     var ancien = document.getElementById('pte-versions');
     if (ancien && ancien.parentNode) ancien.parentNode.removeChild(ancien);
-    var nuit = !!(document.body.classList && document.body.classList.contains && document.body.classList.contains('night'));
-    var c = nuit ? { fond: '#1b2631', encre: '#e6edf3', doux: '#9fb0c0', trait: '#34495e', acc: '#30E5D9', puce: '#26394a' }
-                 : { fond: '#ffffff', encre: '#1f2d3d', doux: '#5b6b7b', trait: '#dfe6ec', acc: '#005F73', puce: '#e9f1f4' };
+    var c = couleursFenetres();
     var tous = !outil || outil === 'accueil' || !OBJETS_VER[outil];
     var voile = document.createElement('div');
     voile.id = 'pte-versions';
@@ -2073,7 +2244,7 @@ var PTE_COMMUN = (function () {
     boite.innerHTML =
       '<div style="display:flex;align-items:center;gap:10px;padding:14px 18px 10px;border-bottom:1px solid ' + c.trait + '">' +
         '<h2 id="pte-versions-titre" style="margin:0;font-size:17px;flex:1;color:' + c.encre + '">Historique des versions' +
-          (tous ? '' : ' — ' + echapperV(OBJETS_VER[outil])) + '</h2>' +
+          (tous ? '' : ' — ' + echapperHtml(OBJETS_VER[outil])) + '</h2>' +
         '<button type="button" data-fermer="1" aria-label="Fermer" title="Fermer (Échap)" style="font:inherit;font-size:20px;line-height:1;' +
           'background:transparent;border:0;color:' + c.doux + ';cursor:pointer;padding:2px 6px">×</button></div>' +
       '<div data-filtres="1" style="display:' + (outil && outil !== 'accueil' && OBJETS_VER[outil] ? 'flex' : 'none') + ';gap:8px;padding:10px 18px 0"></div>' +
@@ -2089,12 +2260,12 @@ var PTE_COMMUN = (function () {
       liste.innerHTML = L.length ? L.map(function (v) {
         return '<div style="padding:10px 0;border-bottom:1px solid ' + c.trait + '">' +
           '<div style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap">' +
-            '<span style="color:' + c.doux + ';font-size:12.5px;min-width:74px">' + echapperV(v.date) + '</span>' +
+            '<span style="color:' + c.doux + ';font-size:12.5px;min-width:74px">' + echapperHtml(v.date) + '</span>' +
             '<span style="background:' + c.puce + ';border-radius:10px;padding:1px 8px;font-size:12px;white-space:nowrap">' +
-              echapperV(OBJETS_VER[v.objet] || v.objet) + (v.version ? ' · <b>' + echapperV(v.version) + '</b>' : '') + '</span>' +
-            '<b>' + echapperV(v.titre) + '</b></div>' +
+              echapperHtml(OBJETS_VER[v.objet] || v.objet) + (v.version ? ' · <b>' + echapperHtml(v.version) + '</b>' : '') + '</span>' +
+            '<b>' + echapperHtml(v.titre) + '</b></div>' +
           '<ul style="margin:5px 0 0;padding:0 0 0 20px">' + (v.points || []).map(function (p) {
-            return '<li style="margin:2px 0">' + echapperV(p) + '</li>';
+            return '<li style="margin:2px 0">' + echapperHtml(p) + '</li>';
           }).join('') + '</ul></div>';
       }).join('') : '<p style="color:' + c.doux + '">Aucune entrée.</p>';
     }
@@ -2131,18 +2302,19 @@ var PTE_COMMUN = (function () {
   }
 
   return { LS_META: LS_META, LS_CLASSEMENT: LS_CLASSEMENT, LS_QUESTIONS: LS_QUESTIONS, LS_THEME: LS_THEME, LS_CONTROLE: LS_CONTROLE,
+           echapperHtml: echapperHtml, normEntete: normEntete, couleursFenetres: couleursFenetres,
            controleImport: controleImport,
            themeCourant: themeCourant, appliquerTheme: appliquerTheme, basculerTheme: basculerTheme,
-           tour: tour, tourVue: tourVue, relierAccueil: relierAccueil,
-           exporterSaisies: exporterSaisies, importerSaisies: importerSaisies,
-           resumeSaisies: resumeSaisies, telechargerSaisies: telechargerSaisies,
+           tour: tour, relierAccueil: relierAccueil,
+           exporterSaisies: exporterSaisies, importerSaisies: importerSaisies, reglageAdmis: reglageAdmis,
+           resumeSaisies: resumeSaisies,
            layout: layout, lien: lien, ssDepuisHash: ssDepuisHash, projetDepuisHash: projetDepuisHash, ecrireHash: ecrireHash,
-           publierClasseur: publierClasseur, lireClasseur: lireClasseur, effacerClasseur: effacerClasseur,
+           publierClasseur: publierClasseur, lireClasseur: lireClasseur, effacerClasseur: effacerClasseur, etats: etats,
            demanderEffacerClasseur: demanderEffacerClasseur,
            lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,
            publierClassement: publierClassement, lireClassement: lireClassement,
            lireQuestions: lireQuestions, ecrireQuestions: ecrireQuestions,
-           dateCourte: dateCourte, texteBadge: texteBadge, nomPropre: nomPropre,
+           dateCourte: dateCourte, dateHeure: dateHeure, texteBadge: texteBadge, nomPropre: nomPropre,
            ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, TOTAUX_OCBA: TOTAUX_OCBA, situationProgramme: situationProgramme, mchf: mchf,
            VERSIONS: VERSIONS, OBJETS_VER: OBJETS_VER, versionsDe: versionsDe, afficherVersions: afficherVersions };
 })();
@@ -2160,14 +2332,15 @@ var PTE_COMMUN = (function () {
    - la consolidation (accueil, mode consolidateur) fusionne plusieurs
      fichiers, montre les versions concurrentes côte à côte et produit un
      fichier de référence « consolidé par … le … ».
-   Aucune bibliothèque externe : écriture ZIP « stockée » + CRC32, lecture par
-   DecompressionStream du navigateur (repli sur XLSXReader s'il est présent).
+   Aucune bibliothèque externe : écriture ZIP « stockée » + CRC32, lecture par le module
+   commun XLSXReader (pte-xlsx.js), présent dans les quatre pages.
    Les réglages (paramètres de calcul, variantes simulées, instantanés, seuils,
    questions du mois) voyagent dans la feuille masquée _technique.
    ========================================================================== */
 (function (C) {
   'use strict';
   if (!C) return;
+  var esc = C.echapperHtml, normEnt = C.normEntete, couleurs = C.couleursFenetres;   /* partagés avec la première partie du module */
 
   var LS_UTIL = 'pte.utilisateur.v1';           /* nom qui signe les saisies de ce navigateur */
   var LS_FICHES = 'pte.saisies.fiches.v1';      /* {v, init, f:{cle:{h, auteur, modifie}}} */
@@ -2176,7 +2349,7 @@ var PTE_COMMUN = (function () {
   var K_PRIO = 'pte_state_v2', K_REVUE = 'ocba_revue_db_v1', K_DATA = 'pte_data_v2';
   var FORMAT = 'pte-saisies-xlsx', VERSION_FORMAT = 1;
   var SEP = '␟';
-  var PIEGES = { '__proto__': 1, 'constructor': 1, 'prototype': 1 };
+  var PIEGES = Object.create(null); PIEGES['__proto__'] = PIEGES.constructor = PIEGES.prototype = 1;
 
   /* ---------- petits outils ---------- */
   function lire(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -2223,9 +2396,6 @@ var PTE_COMMUN = (function () {
     var s = txt(v).trim(), m;
     if ((m = /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/.exec(s))) return m[3] + '-' + deux(+m[2]) + '-' + deux(+m[1]);
     return s;
-  }
-  function normEnt(s) {
-    return txt(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
   }
   function oui(v) { return /^(oui|o|x|yes|y|1|vrai|true|supprimer)$/i.test(txt(v).trim()); }
 
@@ -2297,8 +2467,8 @@ var PTE_COMMUN = (function () {
     if (L && L.length) L.forEach(function (s) { if (s && s.id != null) m[txt(s.id)] = txt(s.nom); });
     return m;
   }
-  function lireFichesBrutes() {
-    var out = [], vus = {}, st = lireJ(K_PRIO) || {}, noms = nomsSites();
+  function lireFichesBrutes(sansNoms) {
+    var out = [], vus = {}, st = lireJ(K_PRIO) || {}, noms = sansNoms ? {} : nomsSites();   /* le nom ne sert qu'à l'affichage */
     var N = st.siteNotes || {};
     Object.keys(N).forEach(function (id) {
       var t = txt(N[id]); if (!t.trim() || PIEGES[id]) return;
@@ -2327,13 +2497,17 @@ var PTE_COMMUN = (function () {
     var m = lireJ(LS_FICHES), premiere = !(m && m.f);
     if (premiere) m = { v: 1, init: maintenant(), f: {} };
     var vus = {}, now = maintenant(), u = utilisateur(), change = premiere;
-    lireFichesBrutes().forEach(function (f) {
+    lireFichesBrutes(true).forEach(function (f) {
       var h = hash(contenu(f)), x = m.f[f.cle]; vus[f.cle] = 1;
       if (!x) { m.f[f.cle] = { h: h, auteur: premiere ? '' : u, modifie: premiere ? '' : now }; change = true; }
       else if (x.h !== h) { x.h = h; x.auteur = u; x.modifie = now; change = true; }
     });
     Object.keys(m.f).forEach(function (k) { if (!vus[k]) { delete m.f[k]; change = true; } });
-    if (change && !premiere) m.dm = now;   /* dernière modification, suppressions comprises (pastille du bouton Saisies) */
+    if (change && !premiere) {
+      m.dm = now;   /* dernière modification, suppressions comprises (pastille du bouton Saisies) */
+      /* une saisie faite après un import : l'annuler effacerait aussi cette saisie, sans le dire */
+      try { localStorage.removeItem(LS_SAUVE); } catch (e) {}
+    }
     if (change) { ecrireJ(LS_FICHES, m); planifierMaj(); }
     return m;
   }
@@ -2347,9 +2521,21 @@ var PTE_COMMUN = (function () {
     return { projets: [], suivi: [], jalons: [], finances: [], risques: [], pte: [], decisions: [], objectifs: [],
              priorisation: [], livrables: [], gei: {}, planpte: null, contrat: null, meta: { files: {} } };
   }
+  /* Retraits de décisions, datés (27.10.2026) : la revue garde une décision absente du registre tant qu'aucun
+     retrait ne la vise (un autre écrivain a pu partir d'une vue en retard). Toute décision retirée du registre y
+     reçoit donc sa date de retrait ; une décision réécrite perd la sienne ; purgés au bout de 90 jours. */
+  function noterRetraits(db, avant) {
+    var r = Object.create(null), t = Date.now(), garde = t - 90 * 864e5, apres = Object.create(null), src = db.retirees;
+    if (src && typeof src === 'object' && !Array.isArray(src)) Object.keys(src).forEach(function (k) { if (+src[k] > garde) r[k] = +src[k]; });
+    (db.decisions || []).forEach(function (d) { apres[idDecision(d)] = 1; });
+    (avant || []).forEach(function (d) { var k = idDecision(d); if (!(k in apres)) r[k] = t; });
+    Object.keys(apres).forEach(function (k) { delete r[k]; });
+    if (Object.keys(r).length) db.retirees = r; else delete db.retirees;
+  }
   /* Écrit et supprime des saisies dans le stockage des outils, puis leur fiche (auteur, date). */
   function ecrireFiches(aEcrire, aSupprimer) {
     var st = lireJ(K_PRIO), stC = false, db = lireJ(K_REVUE), dbC = false;
+    var decAvant = (db && Array.isArray(db.decisions)) ? db.decisions.slice() : [];
     if (!st || typeof st !== 'object') st = {};
     if (!st.siteNotes || typeof st.siteNotes !== 'object') st.siteNotes = {};
     if (!st.siteQuali || typeof st.siteQuali !== 'object') st.siteQuali = {};
@@ -2384,7 +2570,9 @@ var PTE_COMMUN = (function () {
     });
     var ok = true;
     if (stC) ok = ecrireJ(K_PRIO, st) && ok;
-    if (dbC) ok = ecrireJ(K_REVUE, db) && ok;
+    /* registre de la revue : seules ses décisions changent, retraits datés ; la date d'un effacement antérieur y
+       reste (la revue écarte les données plus anciennes) */
+    if (dbC) { noterRetraits(db, decAvant); ok = ecrireJ(K_REVUE, db) && ok; }
     var m = lireJ(LS_FICHES); if (!(m && m.f)) m = { v: 1, init: maintenant(), f: {} };
     (aEcrire || []).forEach(function (f) { m.f[f.cle] = { h: hash(contenu(f)), auteur: f.auteur || '', modifie: f.modifie || '' }; });
     (aSupprimer || []).forEach(function (f) { delete m.f[f.cle]; });
@@ -2397,9 +2585,7 @@ var PTE_COMMUN = (function () {
   function blocsReglages() {
     var o = C.exporterSaisies(), out = [];
     o.blocs.forEach(function (b) {
-      var c = b.contenu;
-      if (b.cle === K_PRIO) { c = Object.assign({}, c); delete c.siteNotes; delete c.siteQuali; if (!Object.keys(c).length) return; }
-      if (b.cle === K_REVUE) { c = Object.assign({}, c); delete c.decisions; if (!Object.keys(c).length) return; }
+      var c = C.reglageAdmis(b.cle, b.contenu); if (c == null) return;
       out.push({ outil: b.outil, cle: b.cle, contenu: c, resume: resumeBloc(b.cle, c) });
     });
     return out;
@@ -2477,7 +2663,9 @@ var PTE_COMMUN = (function () {
     '<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>' +
     '<dxfs count="0"/><tableStyles count="0" defaultTableStyle="TableStyleMedium2" defaultPivotStyle="PivotStyleLight16"/></styleSheet>';
 
-  /* feuilles : [{nom, entetes?, lignes:[[...]], largeurs:[...], gris:{col:1}, listes:{col:[...]}, cachee, titre}] */
+  /* feuilles : [{nom, entetes?, lignes:[[...]], largeurs:[...], gris:{col:1}, listes:{col:[...]}, cachee, titre, nombres}]
+     Cellules en texte (format « @ ») : ce que l'on retape dans Excel n'est pas converti (saisies). nombres:true
+     (rapport, export de la simulation) : un nombre fini s'écrit en cellule numérique, NaN et Infinity sont omis. */
   function classeurXlsx(feuilles, proprietes) {
     var sst = [], idx = Object.create(null);
     function s(v) { v = txt(v); if (!(v in idx)) { idx[v] = sst.length; sst.push(v); } return idx[v]; }
@@ -2500,6 +2688,7 @@ var PTE_COMMUN = (function () {
         xml += '<row r="' + (r + 1) + '">';
         l.forEach(function (v, c2) {
           if (v == null || v === '') return;
+          if (F.nombres && typeof v === 'number') { if (isFinite(v)) xml += '<c r="' + lettre(c2) + (r + 1) + '"><v>' + v + '</v></c>'; return; }
           var style = (F.entetes && r === 0) ? 1 : (F.titre && r === 0) ? 4 : ((F.gris && F.gris[c2]) ? 3 : 2);
           xml += '<c r="' + lettre(c2) + (r + 1) + '" s="' + style + '" t="s"><v>' + s(v) + '</v></c>';
         });
@@ -2574,7 +2763,7 @@ var PTE_COMMUN = (function () {
   var MAX_CELLULE = 32767;
   function construireClasseur(paquet) {
     var info = paquet.info || {}, F = paquet.fiches || [], u = info.auteur || '';
-    var trop = F.filter(function (f) { return [f.texte, f.motif, f.decision].some(function (v) { return txt(v).length > MAX_CELLULE; }); });
+    var trop = F.filter(function (f) { return [f.texte, f.motif, f.decision, f.notes, f.responsable, f.escalade_vers, f.portefeuille, f.nom].some(function (v) { return txt(v).length > MAX_CELLULE; }); });
     if (trop.length) throw new Error(trop.length + ' saisie(s) trop longue(s) pour une cellule Excel (32 767 caractères au plus) : ' +
       trop.slice(0, 5).map(function (f) { return RUBRIQUES[f.rubrique] + ' ' + (f.site || f.numero_projet || f.id); }).join(', ') + ' — à raccourcir avant l’export');
     var notes = F.filter(function (f) { return f.rubrique === 'note'; }).sort(tri);
@@ -2658,97 +2847,22 @@ var PTE_COMMUN = (function () {
     return true;
   }
 
-  /* ---------- lecture .xlsx ---------- */
-  function inflate(u8) {
-    if (typeof DecompressionStream === 'function' && typeof Response === 'function' && typeof Blob === 'function') {
-      return new Response(new Blob([u8]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer()
-        .then(function (b) { return new Uint8Array(b); });
-    }
-    var X = (typeof XLSXReader !== 'undefined') ? XLSXReader : null;
-    if (X && X.inflateRaw) { try { return Promise.resolve(X.inflateRaw(u8)); } catch (e) { return Promise.reject(e); } }
-    return Promise.reject(new Error('ce navigateur ne sait pas décompresser un fichier Excel (navigateur à mettre à jour)'));
-  }
-  function entreesZip(u8) {
-    var v = new DataView(u8.buffer, u8.byteOffset, u8.byteLength), fin = -1;
-    for (var i = u8.length - 22; i >= Math.max(0, u8.length - 65557); i--) if (v.getUint32(i, true) === 0x06054b50) { fin = i; break; }
-    if (fin < 0) throw new Error('fichier Excel abîmé (archive incomplète)');
-    var n = v.getUint16(fin + 10, true), p = v.getUint32(fin + 16, true), out = {};
-    var dec = new TextDecoder('utf-8');
-    for (var k = 0; k < n; k++) {
-      if (v.getUint32(p, true) !== 0x02014b50) throw new Error('fichier Excel abîmé (répertoire)');
-      var meth = v.getUint16(p + 10, true), csize = v.getUint32(p + 20, true);
-      var ln = v.getUint16(p + 28, true), le = v.getUint16(p + 30, true), lc = v.getUint16(p + 32, true), off = v.getUint32(p + 42, true);
-      var nom = dec.decode(u8.subarray(p + 46, p + 46 + ln));
-      var d0 = off + 30 + v.getUint16(off + 26, true) + v.getUint16(off + 28, true);
-      out[nom] = { meth: meth, data: u8.subarray(d0, d0 + csize) };
-      p += 46 + ln + le + lc;
-    }
-    return out;
-  }
-  function texteEntree(E, nom) {
-    var e = E[nom]; if (!e) return Promise.resolve(null);
-    var p = e.meth === 0 ? Promise.resolve(e.data) : e.meth === 8 ? inflate(e.data) : Promise.reject(new Error('compression inconnue'));
-    return p.then(function (b) { return new TextDecoder('utf-8').decode(b); });
-  }
-  function ent(s) {
-    return txt(s).replace(/&(lt|gt|amp|quot|apos|#\d+|#x[0-9a-fA-F]+);/g, function (m, c) {
-      if (c === 'lt') return '<'; if (c === 'gt') return '>'; if (c === 'amp') return '&'; if (c === 'quot') return '"'; if (c === 'apos') return "'";
-      return String.fromCodePoint(c.charAt(1) === 'x' ? parseInt(c.slice(2), 16) : parseInt(c.slice(1), 10));
-    }).replace(/_x([0-9A-Fa-f]{4})_/g, function (m, h) { return String.fromCharCode(parseInt(h, 16)); });
-  }
-  function attr(tag, nom) { var m = new RegExp('\\s' + nom + '="([^"]*)"').exec(tag); return m ? ent(m[1]) : null; }
-  function colIdx(ref) { var n = 0, i = 0; for (; i < ref.length; i++) { var c = ref.charCodeAt(i); if (c < 65 || c > 90) break; n = n * 26 + (c - 64); } return i ? n - 1 : -1; }
-  function textesT(x) {
-    var s = '', re = /<t(?:\s[^>]*)?>([\s\S]*?)<\/t>/g, m;
-    x = x.replace(/<rPh\b[\s\S]*?<\/rPh>/g, '');
-    while ((m = re.exec(x))) s += ent(m[1]);
-    return s;
-  }
-  function lignesFeuille(xml, sst) {
-    var out = [], reR = /<row\b([^>]*?)(?:\/>|>([\s\S]*?)<\/row>)/g, m, auto = 0;
-    while ((m = reR.exec(xml))) {
-      var r = +(attr(m[1], 'r') || (auto + 1)); auto = r;
-      var L = [], reC = /<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g, c, pos = 0, corps = m[2] || '';
-      while ((c = reC.exec(corps))) {
-        var ref = attr(c[1], 'r'), t = attr(c[1], 't'), in2 = c[2] || '', ci = ref ? colIdx(ref) : pos, v = '';
-        if (t === 'inlineStr') v = textesT(in2);
-        else {
-          var vm = /<v>([\s\S]*?)<\/v>/.exec(in2), raw = vm ? ent(vm[1]) : '';
-          if (t === 's') v = raw === '' ? '' : (sst[+raw] != null ? sst[+raw] : '');
-          else if (t === 'str' || t === 'e') v = t === 'e' ? '' : raw;
-          else if (t === 'b') v = raw === '1' ? 'VRAI' : 'FAUX';
-          else v = (raw !== '' && !isNaN(+raw)) ? +raw : raw;
-        }
-        while (L.length < ci) L.push('');
-        L[ci] = v; pos = ci + 1;
-      }
-      out[r - 1] = L;
-    }
-    for (var i = 0; i < out.length; i++) if (!out[i]) out[i] = [];
-    return out;
-  }
+  /* ---------- lecture .xlsx ----------
+     Module commun XLSXReader (00_Design-System/pte-xlsx.js), présent dans les quatre pages, en
+     variante « saisies » : lignes à leur place, booléens VRAI / FAUX, échappements Excel décodés.
+     Le lecteur propre à ce module (ZIP, DecompressionStream, expressions régulières) a été retiré
+     le 26.10.2026 ; il ignorait les valeurs écrites <v xml:space="preserve">. */
   function lireXlsx(u8) {
-    var E;
-    try { E = entreesZip(u8); } catch (e) { return Promise.reject(e); }
-    return Promise.all([texteEntree(E, 'xl/workbook.xml'), texteEntree(E, 'xl/_rels/workbook.xml.rels'), texteEntree(E, 'xl/sharedStrings.xml')])
-      .then(function (r) {
-        if (!r[0]) throw new Error('ce fichier n’est pas un classeur Excel');
-        var rels = {}, m, re = /<Relationship\b[^>]*>/g;
-        while (r[1] && (m = re.exec(r[1]))) rels[attr(m[0], 'Id')] = attr(m[0], 'Target');
-        var sst = [], reS = /<si>([\s\S]*?)<\/si>|<si\/>/g;
-        while (r[2] && (m = reS.exec(r[2]))) sst.push(m[1] ? textesT(m[1]) : '');
-        var feuilles = [], reF = /<sheet\b[^>]*>/g;
-        while ((m = reF.exec(r[0]))) {
-          var id = attr(m[0], 'r:id'), cible = rels[id] || '';
-          cible = cible.charAt(0) === '/' ? cible.slice(1) : 'xl/' + cible.replace(/^\.\//, '');
-          feuilles.push({ nom: attr(m[0], 'name'), chemin: cible });
-        }
-        return Promise.all(feuilles.map(function (f) { return texteEntree(E, f.chemin); })).then(function (xs) {
-          var out = {};
-          feuilles.forEach(function (f, i) { out[f.nom] = xs[i] ? lignesFeuille(xs[i], sst) : []; });
-          return out;
-        });
-      });
+    return new Promise(function (ok) {
+      var X = (typeof XLSXReader !== 'undefined') ? XLSXReader : null;
+      if (!X) throw new Error('lecteur Excel absent de la page (module pte-xlsx.js)');
+      if (!X.unzip(u8).files['xl/workbook.xml']) throw new Error('ce fichier n’est pas un classeur Excel');
+      var out = Object.create(null);   /* noms de feuilles venus du fichier : « __proto__ » reste une feuille */
+      /* seules les feuilles du format sont lues (27.10.2026) : un fichier piégé peut en déclarer beaucoup d'autres */
+      var voulues = ['_technique', 'Notes', 'Ajustements', 'Décisions'].map(normEnt);
+      X.sheetNames(u8).forEach(function (nom) { if (voulues.indexOf(normEnt(nom)) >= 0) out[nom] = X.sheetRows(u8, nom, X.SAISIES) || []; });
+      ok(out);
+    });
   }
 
   /* ---------- d'un fichier (xlsx, ancien json, ancien csv de notes) à un « paquet » ---------- */
@@ -2771,15 +2885,17 @@ var PTE_COMMUN = (function () {
       if (k === 'format' || k === 'version' || k === 'auteur' || k === 'date') info[k] = txt(l[1]);
       else if (k === 'consolide' && l[1]) {
         try { var cs = JSON.parse(txt(l[1]));    /* fichier venu d'ailleurs : forme vérifiée avant usage */
-          if (cs && typeof cs.par === 'string' && typeof cs.le === 'string' && Array.isArray(cs.sources)) info.consolide = cs; } catch (e) {}
+          if (cs && typeof cs.par === 'string' && typeof cs.le === 'string' && Array.isArray(cs.sources) &&
+              !(cs.le > new Date(Date.now() + 864e5).toISOString())) info.consolide = cs; } catch (e) {}   /* datée du futur : refusée */
       }
       else if (k === 'empreintes') emp += txt(l[1]);
       else if (k === 'vues') vues += txt(l[1]);
-      else if (k === 'bloc') { var c = txt(l[3]); (blocs[c] = blocs[c] || { cle: c, outil: txt(l[4]), parts: [] }).parts[+l[2] || 0] = txt(l[1]); }
+      else if (k === 'bloc') { var c = txt(l[3]), ip = +l[2] || 0; if (ip >= 0 && ip < 1000) (blocs[c] = blocs[c] || { cle: c, outil: txt(l[4]), parts: [] }).parts[ip] = txt(l[1]); }
     });
     var notesF = feuille(F, 'Notes'), ajF = feuille(F, 'Ajustements'), decF = feuille(F, 'Décisions');
     if (info.format !== FORMAT && !(notesF || ajF || decF)) throw new Error('ce classeur n’est pas un fichier de saisies PTE');
     var empreintes = {}; try { empreintes = emp ? JSON.parse(emp) : {}; } catch (e) {}
+    if (!empreintes || typeof empreintes !== 'object') empreintes = {};   /* « null » ou un nombre : fichier retouché */
     if (info.consolide && vues) { try { var vv = JSON.parse(vues); if (vv && typeof vv === 'object') info.consolide.vues = vv; } catch (e) {} }
     var fiches = [], avert = [], dateFichierIso = info.date || '', deja = Object.create(null);
     function marquer(f, ligneAuteur, ligneDate) {
@@ -2845,6 +2961,8 @@ var PTE_COMMUN = (function () {
     }
     var B = Object.keys(blocs).map(function (k) {
       var b = blocs[k], c; try { c = JSON.parse(b.parts.join('')); } catch (e) { avert.push('réglages « ' + k + ' » illisibles, ignorés'); return null; }
+      c = C.reglageAdmis(k, c);
+      if (c == null) { avert.push('réglages « ' + k + ' » non reconnus, ignorés'); return null; }
       return { cle: k, outil: b.outil, contenu: c, resume: resumeBloc(k, c) };
     }).filter(Boolean);
     return { fiches: fiches, blocs: B, info: { auteur: info.auteur || '', date: info.date || '', consolide: info.consolide || null }, avertissements: avert };
@@ -2870,7 +2988,8 @@ var PTE_COMMUN = (function () {
         c = Object.assign({}, c); delete c.decisions;
         if (!Object.keys(c).length) return;
       }
-      blocs.push({ cle: b.cle, outil: b.outil, contenu: c, resume: resumeBloc(b.cle, c) });
+      c = C.reglageAdmis(b.cle, c);
+      if (c != null) blocs.push({ cle: b.cle, outil: b.outil, contenu: c, resume: resumeBloc(b.cle, c) });
     });
     return { fiches: fiches, blocs: blocs, info: { auteur: '', date: o.date || '', ancien: 'json' }, avertissements: [] };
   }
@@ -2949,7 +3068,7 @@ var PTE_COMMUN = (function () {
     /* la version d'ici a-t-elle été vue ? Référence : par les empreintes des versions consolidées ;
        sinon : modifiée ici après l'export du fichier = modifiée des deux côtés. */
     function vueParLaReference(l) {
-      if (ref.vues) { var v = ref.vues[l.cle]; return !!(v && v.indexOf(hash(contenu(l))) >= 0); }
+      if (ref.vues) { var v = ref.vues[l.cle]; return !!(Array.isArray(v) && v.indexOf(hash(contenu(l))) >= 0); }
       return !(l.modifie && ref.le && l.modifie > ref.le);
     }
     function apresExport(l) { return !!(l && l.modifie && dateExport && l.modifie > dateExport); }
@@ -3008,7 +3127,10 @@ var PTE_COMMUN = (function () {
     if (s.prio) { st = st && typeof st === 'object' ? st : {}; st.siteNotes = s.prio.siteNotes; st.siteQuali = s.prio.siteQuali; ecrireJ(K_PRIO, st); }
     else if (st && typeof st === 'object') { st.siteNotes = {}; st.siteQuali = {}; ecrireJ(K_PRIO, st); }
     var db = lireJ(K_REVUE);
-    if (db && typeof db === 'object') { db.decisions = s.decisions || []; ecrireJ(K_REVUE, db); }
+    if (db && typeof db === 'object') {
+      var decAvant = Array.isArray(db.decisions) ? db.decisions : [];
+      db.decisions = s.decisions || []; noterRetraits(db, decAvant); ecrireJ(K_REVUE, db);
+    }
     try { if (s.fiches == null) localStorage.removeItem(LS_FICHES); else localStorage.setItem(LS_FICHES, s.fiches); } catch (e) {}
     Object.keys(s.blocs || {}).forEach(function (k) {
       var b = s.blocs[k];
@@ -3033,23 +3155,21 @@ var PTE_COMMUN = (function () {
     if (n.nouvelle) faits.push(n.nouvelle + ' saisie(s) ajoutée(s)');
     if (n.modifiee) faits.push(n.modifiee + ' remplacée(s)');
     if (n.suppression) faits.push(n.suppression + ' supprimée(s)');
-    if (blocs && blocs.length) { C.importerSaisies({ format: 'pte-saisies', blocs: blocs }); faits.push('réglages repris (' + blocs.map(function (b) { return b.resume; }).join(', ') + ')'); }
+    if (blocs && blocs.length) {
+      var repris = C.importerSaisies({ format: 'pte-saisies', blocs: blocs });
+      if (repris.length) faits.push('réglages repris (' + blocs.map(function (b) { return b.resume; }).join(', ') + ')');
+      if (repris.length < blocs.length) ok = false;
+    }
     return { faits: faits, sauvegarde: sauve, ok: ok };
   }
 
   /* ---------- fenêtres ---------- */
-  function couleurs() {
-    var nuit = !!(document.body && document.body.classList && document.body.classList.contains('night'));
-    try { if (!nuit && C.themeCourant && C.themeCourant() === 'nuit') nuit = true; } catch (e) {}
-    return nuit ? { fond: '#1b2631', encre: '#e6edf3', doux: '#9fb0c0', trait: '#34495e', acc: '#30E5D9', accTexte: '#0b1a24', puce: '#26394a', vert: '#7fd4a8', orange: '#f2b866', rouge: '#ff8a80', ligne: '#22303d' }
-                : { fond: '#ffffff', encre: '#1f2d3d', doux: '#5b6b7b', trait: '#dfe6ec', acc: '#005F73', accTexte: '#ffffff', puce: '#e9f1f4', vert: '#1A8554', orange: '#8A5A00', rouge: '#B3261E', ligne: '#f5f8fa' };
-  }
-  function esc(s) { return txt(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function court(s, n) { s = txt(s).replace(/\s+/g, ' ').trim(); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
   function fenetre(id, titre, largeur) {
-    var ancien = document.getElementById(id); if (ancien && ancien.parentNode) ancien.parentNode.removeChild(ancien);
+    var ancien = document.getElementById(id);
+    if (ancien && ancien.parentNode) { if (ancien.__detacher) ancien.__detacher(); ancien.parentNode.removeChild(ancien); }   /* fenêtre remplacée : son écouteur part avec elle */
     var c = couleurs(), voile = document.createElement('div');
-    voile.id = id;
+    voile.id = id; voile.className = 'pte-fenetre';
     voile.style.cssText = 'position:fixed;left:0;top:0;right:0;bottom:0;z-index:10001;background:rgba(15,23,32,.55);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box';
     var b = document.createElement('div');
     b.setAttribute('role', 'dialog'); b.setAttribute('aria-modal', 'true'); b.setAttribute('aria-labelledby', id + '-t');
@@ -3061,7 +3181,14 @@ var PTE_COMMUN = (function () {
       '<div data-pied="1" style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;align-items:center;padding:10px 18px 14px;border-top:1px solid ' + c.trait + '"></div>';
     voile.appendChild(b);
     var W = { voile: voile, boite: b, corps: b.querySelector('[data-corps]'), pied: b.querySelector('[data-pied]'), c: c, surFermer: null };
-    function clavier(e) { if (e.key === 'Escape' || e.key === 'Esc') { e.stopPropagation(); W.fermer(); } }
+    function clavier(e) {
+      if (e.key !== 'Escape' && e.key !== 'Esc') return;
+      if (!voile.parentNode) { document.removeEventListener('keydown', clavier, true); return; }   /* fenêtre remplacée */
+      var L = document.querySelectorAll('body > .pte-fenetre');
+      if (L[L.length - 1] !== voile) return;                                                         /* seule celle du dessus */
+      e.stopPropagation(); W.fermer();
+    }
+    voile.__detacher = function () { document.removeEventListener('keydown', clavier, true); };
     W.fermer = function () { document.removeEventListener('keydown', clavier, true); if (voile.parentNode) voile.parentNode.removeChild(voile); if (W.surFermer) { var f = W.surFermer; W.surFermer = null; f(); } };
     voile.addEventListener('click', function (e) { var t = e.target; if (t === voile || (t.getAttribute && t.getAttribute('data-x') === 'fermer')) W.fermer(); });
     document.addEventListener('keydown', clavier, true);
@@ -3129,7 +3256,7 @@ var PTE_COMMUN = (function () {
     return '<p style="margin:0 0 8px;color:' + c.doux + '">' + esc(fichier || '') + ' — ' + qui + '.</p>';
   }
   function montrerApercu(paquet, fin) {
-    var A = analyser(paquet), u = utilisateur();
+    var A = analyser(paquet);
     if (typeof document === 'undefined' || !document.body) {
       var r = appliquer(A.lignes.filter(function (l) { return l.defaut; }), [], paquet.fichier);
       fin({ faits: r.faits, annule: false }); return;
@@ -3137,7 +3264,7 @@ var PTE_COMMUN = (function () {
     var W = fenetre('pte-saisies-import', 'Importer des saisies'), c = W.c;
     var nb = { nouvelle: 0, modifiee: 0, suppression: 0 };
     A.lignes.forEach(function (l) { nb[l.sorte]++; });
-    var blocs = paquet.blocs || [], memeAuteur = !!(paquet.info && paquet.info.auteur && u && paquet.info.auteur === u);
+    var blocs = paquet.blocs || [];
     var h = enTeteSource(c, paquet.info, paquet.fichier) +
       '<div style="margin:4px 0 10px">' + puce(c, nb.nouvelle + ' nouvelle(s)', c.vert) + puce(c, nb.modifiee + ' différente(s)', c.orange) +
       puce(c, nb.suppression + ' à supprimer', c.rouge) + puce(c, A.identiques + ' identique(s), ignorée(s)', c.doux) + '</div>';
@@ -3160,8 +3287,8 @@ var PTE_COMMUN = (function () {
         }).join('') + '</tbody></table>';
     } else h += '<p style="margin:6px 0">Aucune différence avec ce navigateur pour les notes, ajustements et décisions.</p>';
     if (blocs.length) h += '<label style="display:flex;gap:8px;align-items:flex-start;margin:12px 0 0;padding:8px 10px;background:' + c.ligne + ';border-radius:6px">' +
-      '<input type="checkbox" data-x="reglages"' + (memeAuteur ? ' checked' : '') + '><span><b>Reprendre aussi les réglages</b> : ' + esc(blocs.map(function (b) { return b.resume; }).join(', ')) +
-      '.<br><span style="color:' + c.doux + ';font-size:12px">Utile pour passer ses propres saisies d’un poste à l’autre ; à laisser décoché pour le fichier d’un collègue, dont les réglages remplaceraient ceux de ce poste.</span></span></label>';
+      '<input type="checkbox" data-x="reglages"><span><b>Reprendre aussi les réglages</b> : ' + esc(blocs.map(function (b) { return b.resume; }).join(', ')) +
+      '.<br><span style="color:' + c.doux + ';font-size:12px">Utile pour passer ses propres saisies d’un poste à l’autre ; à laisser décoché pour le fichier d’un collègue, dont les réglages remplaceraient ceux de ce poste (une valeur vide du fichier, variante vidée par exemple, ne remplace rien).</span></span></label>';
     h += '<p style="margin:12px 0 0;color:' + c.doux + ';font-size:12px">Avant d’appliquer, l’état actuel est sauvegardé dans ce navigateur : l’import pourra être annulé. Les autres outils ouverts dans d’autres onglets reprennent aussitôt les saisies importées.</p>';
     W.corps.innerHTML = h;
     var cases = W.corps.querySelectorAll('input[data-i]'), reg = W.corps.querySelector('input[data-x="reglages"]'), bImp;
@@ -3356,9 +3483,25 @@ var PTE_COMMUN = (function () {
   var LS_SRV = 'pte.serveur.v1';              /* {adresse} */
   var LS_SES = 'pte.serveur.session.v1';      /* {token, user:{id, name, email, role}} */
   function adresseServeur() { var o = lireJ(LS_SRV); return o && o.adresse ? o.adresse : ''; }
+  /* Adresses que la CSP de la page laisse joindre (27.10.2026) : une autre serait bloquée par le navigateur, avec un
+     « serveur injoignable » trompeur. Sans CSP (tests), tout est permis. */
+  function origineAutorisee(adr) {
+    var m = (typeof document !== 'undefined' && document.querySelector) ? document.querySelector('meta[http-equiv="Content-Security-Policy"]') : null;
+    var c = m && /(?:^|;)\s*connect-src\s+([^;]*)/.exec(m.getAttribute('content') || '');
+    if (!c) return true;
+    var u; try { u = new URL(adr); } catch (e) { return false; }
+    var port = u.port || (u.protocol === 'https:' ? '443' : '80'), hote = u.hostname.toLowerCase();
+    return c[1].trim().split(/\s+/).some(function (src) {
+      var x = /^(https?:)\/\/(\*\.)?([^:\/]+)(?::(\d+|\*))?$/i.exec(src); if (!x || x[1].toLowerCase() !== u.protocol) return false;
+      var h = x[3].toLowerCase();
+      if (x[2] ? !(hote.length > h.length && hote.slice(-h.length - 1) === '.' + h) : hote !== h) return false;
+      return x[4] === '*' || port === (x[4] || (x[1].toLowerCase() === 'https:' ? '443' : '80'));
+    });
+  }
   function definirAdresseServeur(a) {
     a = txt(a).trim().replace(/\/+$/, '');
-    if (a && !/^https:\/\/[^\s/]+$/i.test(a) && !/^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i.test(a)) throw new Error('adresse attendue : https://nom-du-serveur (sans chemin)');
+    if (a && !/^https:\/\/[a-z0-9.-]+(:\d+)?$/i.test(a) && !/^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i.test(a)) throw new Error('adresse attendue : https://nom-du-serveur (sans chemin)');
+    if (a && !origineAutorisee(a)) throw new Error('adresse refusée : la politique de sécurité des outils ne laisse joindre que le serveur des saisies prévu (une nouvelle adresse s’ajoute dans 00_Design-System/build/csp.js et dans la CSP de la priorisation)');
     try { if (a) localStorage.setItem(LS_SRV, JSON.stringify({ adresse: a })); else localStorage.removeItem(LS_SRV); } catch (e) {}
     if (!a) deconnecter();
     return a;
@@ -3379,6 +3522,8 @@ var PTE_COMMUN = (function () {
   function api(methode, chemin, corps) {
     var a = adresseServeur();
     if (!a) return Promise.reject(new Error('adresse du serveur non renseignée (page Pilotage PTE)'));
+    /* adresse gardée avant le 27.10, hors de la CSP : le navigateur la bloquerait (« serveur injoignable ») */
+    if (!origineAutorisee(a)) return Promise.reject(new Error('adresse du serveur « ' + a + ' » non autorisée par la politique de sécurité des outils : la remplacer par celle du serveur des saisies prévu (page Pilotage PTE)'));
     var s = session(), h = { 'Content-Type': 'application/json' };
     if (s) h.Authorization = s.token;
     var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null, to = ctl ? setTimeout(function () { ctl.abort(); }, 25000) : null;
@@ -3417,7 +3562,11 @@ var PTE_COMMUN = (function () {
     var out = [];
     function page(n) {
       return api('GET', '/api/collections/' + collection + '/records?perPage=500&page=' + n + (filtre ? '&filter=' + encodeURIComponent(filtre) : '') + (tri ? '&sort=' + encodeURIComponent(tri) : ''))
-        .then(function (j) { out = out.concat(j.items || []); return n < (j.totalPages || 1) ? page(n + 1) : out; });
+        .then(function (j) {
+          out = out.concat(Array.isArray(j.items) ? j.items : []);
+          /* 200 pages de 500 au plus : un serveur défaillant n'entraîne pas de boucle sans fin (27.10.2026) */
+          return n < Math.min(+j.totalPages || 1, 200) && (j.items || []).length ? page(n + 1) : out;
+        });
     }
     return page(1);
   }
@@ -3431,8 +3580,16 @@ var PTE_COMMUN = (function () {
     var o = {}; Object.keys(f).forEach(function (k) { if (k !== 'auteur' && k !== 'modifie' && k !== 'excel' && k !== 'sansId') o[k] = f[k]; });
     return o;
   }
+  /* Saisie lue sur le serveur (26.10.2026) : seuls les champs de sa rubrique sont repris, et « cle » doit
+     désigner ce sous-site ou cet identifiant ; sinon l'aperçu comparerait une saisie et l'import en écrirait une autre. */
+  var CHAMPS_RUB = { note: ['site', 'nom', 'texte'], ajustement: ['site', 'nom', 'niveau', 'motif'], decision: ['id'].concat(CH_DEC_TOUS) };
   function ficheDepuisServeur(r) {
-    return Object.assign({}, r.fiche || {}, { cle: r.cle, rubrique: r.rubrique, auteur: r.auteur_nom || '', modifie: r.modifie || isoServeur(r.updated), supprimer: !!r.supprime });
+    var champs = r && Object.prototype.hasOwnProperty.call(CHAMPS_RUB, r.rubrique) ? CHAMPS_RUB[r.rubrique] : null, src = (r && r.fiche) || {};
+    if (!champs) return null;
+    var f = { cle: txt(r.cle), rubrique: r.rubrique, auteur: txt(r.auteur_nom), modifie: txt(r.modifie) || isoServeur(r.updated), supprimer: !!r.supprime };
+    champs.forEach(function (c) { f[c] = txt(src[c]); });
+    if (f.cle !== (f.rubrique === 'decision' ? 'decision|' + f.id : f.rubrique + '|' + f.site) || PIEGES[f.site]) return null;
+    return f;
   }
 
   /* Envoie les saisies de ce navigateur comme « ma version » ; une saisie retirée ici est marquée supprimée. */
@@ -3464,8 +3621,9 @@ var PTE_COMMUN = (function () {
     return toutLire('saisies').then(function (L) {
       var parAuteur = {};
       L.forEach(function (r) {
+        var f = ficheDepuisServeur(r); if (!f) return;
         var k = r.auteur, p = parAuteur[k] || (parAuteur[k] = { fichier: 'serveur', fiches: [], info: { auteur: r.auteur_nom || '', date: '' } });
-        p.fiches.push(ficheDepuisServeur(r));
+        p.fiches.push(f);
         var d = isoServeur(r.updated); if (d > p.info.date) p.info.date = d;
       });
       return Object.keys(parAuteur).map(function (k) { var p = parAuteur[k]; p.fichier = 'serveur · ' + (p.info.auteur || 'auteur inconnu'); return p; });
@@ -3477,7 +3635,7 @@ var PTE_COMMUN = (function () {
       if (!refs.length) throw new Error('aucune version de référence publiée sur le serveur pour l’instant');
       var vues = {}; refs.forEach(function (x) { if (Array.isArray(x.vues)) vues[x.cle] = x.vues; });
       var le = der ? isoServeur(der.created) : '', par = der ? der.par_nom : '';
-      return { fichier: 'référence du serveur', fiches: refs.map(ficheDepuisServeur), blocs: [],
+      return { fichier: 'référence du serveur', fiches: refs.map(ficheDepuisServeur).filter(Boolean), blocs: [],
                info: { auteur: par, date: le, consolide: { par: par || 'consolidateur', le: le || maintenant(), sources: (der && Array.isArray(der.sources)) ? der.sources : [], vues: vues } } };
     });
   }
@@ -3627,7 +3785,7 @@ var PTE_COMMUN = (function () {
         var oct;
         try {
           oct = classeurXlsx([{ nom: 'Retours', entetes: ['Titre', 'Outil', 'Statut', 'Votes', 'Auteur', 'Déposée le', 'Modifiée le', 'Description', 'Réponse'],
-            largeurs: [44, 16, 15, 8, 22, 19, 19, 70, 50], lignes: lignes }], { auteur: s.user.name, titre: 'Retours et demandes PTE' });
+            largeurs: [44, 16, 15, 8, 22, 19, 19, 70, 50], lignes: lignes, nombres: true }], { auteur: s.user.name, titre: 'Retours et demandes PTE' });   /* votes en nombres : tri numérique dans Excel */
         } catch (e) { montrerErreur('Export impossible', (e && e.message) || String(e)); return; }
         var nom = 'Retours_PTE_' + jourFichier() + '.xlsx';
         telecharger(oct, nom);
@@ -3680,10 +3838,11 @@ var PTE_COMMUN = (function () {
   }
   try { if (typeof document !== 'undefined' && document.body !== undefined && session()) rafraichirSession(); } catch (e) {}
 
+  C.origineAutorisee = origineAutorisee;
   C.serveur = { adresse: adresseServeur, definirAdresse: definirAdresseServeur, session: session, connecter: connecter, deconnecter: deconnecter,
     estConsolidateur: estConsolidateur, envoyerSaisies: envoyerSaisies, paquetsDuServeur: paquetsDuServeur, paquetReference: paquetReference,
     publierReference: publierReference, demanderConnexion: demanderConnexion, envoyerSaisiesUI: envoyerSaisiesUI,
-    recevoirReferenceUI: recevoirReferenceUI, consoliderDepuisServeur: consoliderDepuisServeur, idStable: idStable };
+    recevoirReferenceUI: recevoirReferenceUI, consoliderDepuisServeur: consoliderDepuisServeur };
   C.ouvrirRetours = ouvrirRetours;
 
   /* ==========================================================================
@@ -3791,8 +3950,8 @@ var PTE_COMMUN = (function () {
   }
   /* saisies d'ici modifiées depuis le dernier envoi (toutes, si rien n'a jamais été envoyé) */
   function nonEnvoyees() {
-    var e = lireSynchro().envoi || '', n = 0, m;
-    try { lireFiches().forEach(function (f) { if (!e || (f.modifie && f.modifie > e)) n++; }); m = lireJ(LS_FICHES); } catch (err) {}
+    var e = lireSynchro().envoi || '', n = 0, m = null;
+    try { m = synchroniserFiches(); Object.keys(m.f).forEach(function (k) { var x = m.f[k]; if (!e || (x.modifie && x.modifie > e)) n++; }); } catch (err) {}
     if (!n && e && m && m.dm && m.dm > e) n = 1;   /* une suppression depuis le dernier envoi */
     return n;
   }
@@ -3817,8 +3976,9 @@ var PTE_COMMUN = (function () {
     });
   }
   /* opts : { avant: élément devant lequel placer le bouton, outil, classe (classe CSS du bouton),
-              exporter(), importer(fichier), apresReception(r) } — sans exporter/importer, le panneau
-     fait lui-même l'export et l'import et l'annonce ; apresReception relit l'état de la page. */
+              exporter(), importer(fichier), apresReception(r), avantEchange(act) } — sans exporter/importer, le
+     panneau fait lui-même l'export et l'import et l'annonce ; apresReception relit l'état de la page ; avantEchange
+     est appelé avant d'envoyer, de recevoir ou de consolider (la page y enregistre ce qui attend). */
   function installerSaisies(opts) {
     opts = opts || {};
     if (typeof document === 'undefined' || !opts.avant || !opts.avant.parentNode) return null;
@@ -3846,7 +4006,7 @@ var PTE_COMMUN = (function () {
     }
     function rendre() {
       var s = session(), a = adresseServeur(), sy = lireSynchro(), cons = !!(s && s.user.role === 'consolidateur');
-      var nb = 0; try { nb = lireFiches().length; } catch (e) {}
+      var nb = 0; try { nb = Object.keys(synchroniserFiches().f).length; } catch (e) {}
       var h = '';
       if (s) {
         var ne = nonEnvoyees(), etat = [];
@@ -3901,6 +4061,10 @@ var PTE_COMMUN = (function () {
     function agir(e) {
       var t = e.target && e.target.closest ? e.target.closest('[data-act]') : null; if (!t) return;
       var act = t.getAttribute('data-act');
+      /* la page enregistre d'abord ce qui attend (revue, stockage plein), pour que l'échange le porte */
+      if (opts.avantEchange && (act === 'envoyer' || act === 'recevoir' || act === 'consolider')) {
+        try { opts.avantEchange(act); } catch (er) { if (typeof console !== 'undefined') console.error(er); }
+      }
       if (act === 'envoyer') {
         msg = 'Envoi en cours…'; rendre();
         envoyerSaisiesUI(function (n) {
@@ -3956,8 +4120,8 @@ var PTE_COMMUN = (function () {
       window.addEventListener('focus', majBoutons);
     }
   } catch (e) {}
-  C.icone = icone; C.ICONES = ICONES; C.iconesMenus = iconesMenus; C.signaler = signaler;
-  C.installerSaisies = installerSaisies; C.majBoutonsSaisies = majBoutons; C.lireSynchro = lireSynchro;
+  C.iconesMenus = iconesMenus; C.signaler = signaler;
+  C.installerSaisies = installerSaisies;
 
   /* Référence posée dès le chargement de la page : une saisie faite ensuite reçoit sa date et son auteur. */
   try { if (typeof localStorage !== 'undefined' && typeof document !== 'undefined') synchroniserFiches(); } catch (e) {}
@@ -3968,7 +4132,8 @@ var PTE_COMMUN = (function () {
   C.modeConsolidateur = modeConsolidateur;
   C.synchroniserFiches = synchroniserFiches; C.lireFiches = lireFiches; C.ecrireFiches = ecrireFiches;
   C.construireClasseurSaisies = construireClasseur; C.paquetLocal = paquetLocal; C.resumePaquet = resumePaquet;
-  C.lireFichierSaisies = lireFichierSaisies; C.lireXlsx = lireXlsx; C.analyserSaisies = analyser; C.appliquerSaisies = appliquer;
+  C.classeurXlsx = classeurXlsx; C.telechargerXlsx = telecharger;
+  C.lireFichierSaisies = lireFichierSaisies; C.analyserSaisies = analyser; C.appliquerSaisies = appliquer;
   C.exporterSaisiesFichier = exporterSaisiesFichier; C.importerSaisiesFichier = importerSaisiesFichier;
   C.consoliderSaisies = consolider; C.paquetConsolide = paquetConsolide; C.ouvrirConsolidation = ouvrirConsolidation;
   C.annulerDernierImport = annulerDernierImport; C.derniereSauvegarde = derniereSauvegarde;
@@ -4100,7 +4265,14 @@ var PTE_COMMUN = (function () {
   }
   /* Liste à cocher. opts : libelle, options [{v, t, n?}], valeurs [], surChangement(valeurs), titre.
      Aucune case = tous (pas de filtre) ; toutes cochées = tous aussi. */
-  var mcOuvert = null;
+  /* Un seul menu ouvert à la fois (mcOuvert = sa fonction de fermeture). Les deux écouteurs du document sont
+     posés une fois par page, pas un par menu : un menu recréé à chaque rendu ne les accumule plus (26.10.2026). */
+  var mcOuvert = null, mcEcoute = false;
+  function mcEcouter() {
+    if (mcEcoute) return; mcEcoute = true;
+    document.addEventListener('click', function () { if (mcOuvert) mcOuvert(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && mcOuvert) mcOuvert(true); });
+  }
   function multiChoix(opts) {
     styleProg();
     var w = document.createElement('span'); w.className = 'pte-mc';
@@ -4143,13 +4315,10 @@ var PTE_COMMUN = (function () {
       pop.hidden = !v; b.setAttribute('aria-expanded', v ? 'true' : 'false');
       if (v) { remplir(); mcOuvert = fermer; } else if (mcOuvert === fermer) mcOuvert = null;
     }
-    function fermer() { ouvrir(false); }
+    function fermer(rendreFocus) { ouvrir(false); if (rendreFocus === true) b.focus(); }
     b.addEventListener('click', function (e) { e.stopPropagation(); ouvrir(pop.hidden); });
     pop.addEventListener('click', function (e) { e.stopPropagation(); });
-    try {
-      document.addEventListener('click', function () { if (!pop.hidden) fermer(); });
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) { fermer(); b.focus(); } });
-    } catch (e) {}
+    mcEcouter();
     resume();
     return { element: w, valeurs: function () { return vals.slice(); }, fixer: function (v) { vals = (v || []).slice(); resume(); if (!pop.hidden) remplir(); } };
   }
@@ -4159,57 +4328,14 @@ var PTE_COMMUN = (function () {
   C.surProgrammes = surProgrammes; C.multiChoix = multiChoix;
   C.iconeProgramme = iconeProgramme; C.badgesProgrammes = badgesProgrammes; C.casesProgrammes = casesProgrammes; C.texteProgrammes = texteProgrammes; C.dansUnProgramme = dansUnProgramme;
 })(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
+/* </PTE-MODULE pte-commun.js> */
 
 /* ===========================================================================
-   Pilotage PTE — point d'import commun (C1, 20.09.2026)
-   Lecteur xlsx minimal écrit pour cette page (ZIP + XML, décompression par
-   DecompressionStream du navigateur) : il ne sert qu'à compter les lignes de
-   Plan_PTE pour la pastille. Les outils lisent le classeur avec leur propre lecteur.
+   Pilotage PTE — point d'import commun (C1, 20.09.2026). Le classeur est lu par le lecteur
+   commun XLSXReader et le contrat (comptage, contrôle à l'import, situation du programme)
+   AVANT d'être gardé pour les trois outils.
    =========================================================================== */
 const LS_COMPTE = 'pte.classeur.accueil.v1';   /* {empreinte, n} : nombre de sous-sites du classeur commun */
-
-async function compterPlanPTE(buf) {
-  const u = new Uint8Array(buf), dv = new DataView(u.buffer, u.byteOffset, u.byteLength), td = new TextDecoder();
-  let i = u.length - 22; const min = Math.max(0, u.length - 22 - 65535);
-  for (; i >= min; i--) if (dv.getUint32(i, true) === 0x06054b50) break;
-  if (i < min) throw new Error('ce fichier n’est pas un classeur .xlsx');
-  const n = dv.getUint16(i + 10, true); let p = dv.getUint32(i + 16, true);
-  const files = {};
-  for (let k = 0; k < n; k++) {
-    if (dv.getUint32(p, true) !== 0x02014b50) throw new Error('archive .xlsx corrompue');
-    const method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true);
-    const nlen = dv.getUint16(p + 28, true), elen = dv.getUint16(p + 30, true), clen = dv.getUint16(p + 32, true);
-    const lho = dv.getUint32(p + 42, true);
-    const name = td.decode(u.subarray(p + 46, p + 46 + nlen));
-    const lnlen = dv.getUint16(lho + 26, true), lelen = dv.getUint16(lho + 28, true);
-    files[name] = { method, start: lho + 30 + lnlen + lelen, csize };
-    p += 46 + nlen + elen + clen;
-  }
-  async function texte(name) {
-    const f = files[name]; if (!f) return null;
-    const raw = u.subarray(f.start, f.start + f.csize);
-    if (f.method === 0) return td.decode(raw);
-    if (f.method !== 8) throw new Error('méthode de compression non prise en charge');
-    const ds = new DecompressionStream('deflate-raw');
-    const w = ds.writable.getWriter(); w.write(raw); w.close();
-    return await new Response(ds.readable).text();
-  }
-  const xml = s => { const d = new DOMParser().parseFromString(s || '', 'application/xml'); if (d.getElementsByTagName('parsererror').length) throw new Error('XML du classeur illisible'); return d; };
-  const wb = xml(await texte('xl/workbook.xml')), rels = xml(await texte('xl/_rels/workbook.xml.rels'));
-  const relMap = {}; for (const r of rels.getElementsByTagName('Relationship')) relMap[r.getAttribute('Id')] = r.getAttribute('Target');
-  let target = null;
-  for (const sh of wb.getElementsByTagName('sheet')) {
-    if (String(sh.getAttribute('name') || '').replace(/\s+/g, '').toLowerCase() !== 'plan_pte') continue;
-    target = relMap[sh.getAttribute('r:id') || sh.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships', 'id')];
-    break;
-  }
-  if (!target) throw new Error('feuille Plan_PTE absente du classeur');
-  const feuille = await texte(target.charAt(0) === '/' ? target.slice(1) : 'xl/' + target.replace(/^\.\//, ''));
-  /* lignes portant au moins une valeur, moins la ligne d'en-tête */
-  let nb = 0, m; const re = /<row\b[^>]*>([\s\S]*?)<\/row>/g;
-  while ((m = re.exec(feuille))) if (/<v>|<is>/.test(m[1])) nb++;
-  return Math.max(0, nb - 1);
-}
 
 function $(s) { return document.querySelector(s); }
 function lireCompte() { try { return JSON.parse(localStorage.getItem(LS_COMPTE) || 'null'); } catch (e) { return null; } }
@@ -4307,21 +4433,24 @@ function feuillesDuClasseur(buf) {
   if (sheets['GEI_Projets']) delete sheets['GEI_Suivi'];
   return sheets;
 }
-async function analyserClasseur(buf, emp) {
-  await new Promise(r => setTimeout(r, 30));                 /* laisse s'afficher « Lecture du classeur… » */
+function lireClasseurBuf(buf) {
   const sheets = feuillesDuClasseur(buf);
   if (!sheets['Plan_PTE']) throw new Error('feuille Plan_PTE absente du classeur');
-  const R = PTE_CONTRAT.lire(sheets);
-  const sit = PTE_COMMUN.situationProgramme(R, sheets['GEI_Projets'] || sheets['GEI_Suivi'] || null);
+  return { sheets, R: PTE_CONTRAT.lire(sheets) };
+}
+function noterSituation(lu, emp) {
+  const sit = PTE_COMMUN.situationProgramme(lu.R, lu.sheets['GEI_Projets'] || lu.sheets['GEI_Suivi'] || null);
   sit.empreinte = emp;
   delete sit.lois;                                            /* la constante reste dans le module */
   try { localStorage.setItem(LS_SITUATION, JSON.stringify(sit)); } catch (e) {}
-  try { localStorage.setItem(LS_COMPTE, JSON.stringify({ empreinte: emp, n: R.sousSites.length })); } catch (e) {}
-  try { PTE_COMMUN.controleImport(PTE_CONTRAT.empreinte(R), 'accueil'); } catch (e) { /* contrôle facultatif */ }
-  return sit;
+  try { localStorage.setItem(LS_COMPTE, JSON.stringify({ empreinte: emp, n: lu.R.sousSites.length })); } catch (e) {}
+  try { PTE_COMMUN.controleImport(PTE_CONTRAT.empreinte(lu.R), 'accueil'); } catch (e) { /* contrôle facultatif */ }
 }
-function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-function dateHeure(iso) { const d = new Date(iso); if (isNaN(d)) return String(iso || ''); const p = x => (x < 10 ? '0' : '') + x; return PTE_COMMUN.dateCourte(iso) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()); }
+async function analyserClasseur(buf, emp) {
+  await new Promise(r => setTimeout(r, 30));                 /* laisse s'afficher « Lecture du classeur… » */
+  noterSituation(lireClasseurBuf(buf), emp);
+}
+const dateHeure = PTE_COMMUN.dateHeure;   /* JJ.MM.AAAA HH:MM, module commun */
 function message(t, cl) { const z = $('#msg'); z.className = 'notice ' + (cl || ''); z.textContent = t; z.classList.remove('hidden'); }
 function cacherMessage() { const z = $('#msg'); z.className = 'hidden'; z.textContent = ''; }
 
@@ -4336,7 +4465,7 @@ function shpValide(v) {
   const local = u.hostname === 'localhost' || u.hostname === '127.0.0.1';
   if (u.protocol !== 'https:' && !(local && u.protocol === 'http:')) return null;       /* https seulement */
   if (u.username || u.password) return null;                                             /* jamais d'identifiants dans l'adresse */
-  if (!/\.xls[xm]$/i.test(decodeURIComponent(u.pathname))) return null;
+  if (!/\.xls[xm]$/i.test(u.pathname)) return null;
   return u.href;
 }
 function shpNom(url) { try { const u = new URL(url); return decodeURIComponent(u.pathname.split('/').pop()) || 'Plan_PTE.xlsx'; } catch (e) { return 'Plan_PTE.xlsx'; } }
@@ -4359,9 +4488,11 @@ function shpEchec(url, motif) {
   z.appendChild(a);
   z.appendChild(document.createTextNode(' depuis l’intranet, puis le déposer dans cette page.'));
 }
+const MSG_SHP_CSP = 'Adresse non retenue : la page ne peut lire un classeur que sur le SharePoint de l’intranet de l’État (https://ecd.ge.ch). Télécharger le classeur, puis le déposer ici.';
 async function shpImporter() {
   const url = shpAdresse();
   if (!url) { shpFormulaire(true); return; }
+  if (!PTE_COMMUN.origineAutorisee(url)) { message(MSG_SHP_CSP, 'warn'); shpFormulaire(true); return; }   /* adresse gardée avant le 27.10 */
   const btn = $('#btnShp'); btn.disabled = true; message('Lecture du classeur à son adresse…');
   const ctl = new AbortController(), minuterie = setTimeout(() => ctl.abort(), 30000);
   try {
@@ -4382,20 +4513,19 @@ function deposer(file) {
   if (!file) return;
   const fr = new FileReader();
   fr.onload = e => deposerBuf(e.target.result, file.name);
+  fr.onerror = () => message('Lecture du fichier impossible.', 'warn');
   fr.readAsArrayBuffer(file);
 }
+/* Le classeur est lu AVANT d'être gardé : un fichier illisible ou sans feuille Plan_PTE ne remplace jamais
+   le classeur commun des trois outils (26.10.2026). */
 async function deposerBuf(buf, nomFichier) {
-  let n = null, avert = '';
-  try { n = await compterPlanPTE(buf); }
-  catch (err) { avert = 'Le nombre de sous-sites n’a pas pu être lu (' + (err && err.message ? err.message : err) + ') ; le classeur est gardé tel quel.'; }
+  let lu;
+  message('Lecture du classeur…');
+  try { await new Promise(r => setTimeout(r, 30)); lu = lireClasseurBuf(buf); }
+  catch (err) { message('Classeur non retenu (' + (err && err.message ? err.message : err) + ') : le classeur commun déjà gardé reste en place.', 'warn'); return; }
   try {
     const meta = await PTE_COMMUN.publierClasseur(buf, nomFichier, 'accueil');
-    try { localStorage.setItem(LS_COMPTE, JSON.stringify({ empreinte: meta.empreinte, n: n })); } catch (e2) {}
-    rendre();
-    /* La barre de source dit déjà le nom, la date et le nombre de sous-sites :
-       on ne répète pas. Le message ne sert qu'à ce qu'elle ne peut pas dire. */
-    if (avert) message(avert, 'warn'); else cacherMessage();
-    try { await analyserClasseur(buf, meta.empreinte); }
+    try { noterSituation(lu, meta.empreinte); cacherMessage(); }
     catch (err2) { message('La situation du programme n’a pas pu être calculée (' + (err2 && err2.message ? err2.message : err2) + ') ; les trois outils restent utilisables.', 'warn'); }
     rendre();
   } catch (err) {
@@ -4422,6 +4552,8 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     const v = shpValide($('#shpUrl').value);
     if (!v) { message('Adresse non retenue : elle doit commencer par https:// et désigner un classeur .xlsx ou .xlsm.', 'warn'); return; }
+    /* la CSP de la page ne laisse lire que le SharePoint de l'intranet : une autre adresse échouerait ensuite sans raison claire */
+    if (!PTE_COMMUN.origineAutorisee(v)) { message(MSG_SHP_CSP, 'warn'); return; }
     try { localStorage.setItem(LS_URL, v); } catch (err) { message('L’adresse n’a pas pu être gardée dans ce navigateur.', 'warn'); return; }
     cacherMessage(); shpFormulaire(false); shpRendre();
   });
@@ -4453,13 +4585,13 @@ document.addEventListener('DOMContentLoaded', () => {
   rendre();
 });
 </script>
-<!-- PTE-EPURE:corps — module commun 00_Design-System/pte-epure.js, recopié par build/integrer-epure.py -->
+<!-- PTE-EPURE:corps — module commun 00_Design-System/pte-epure.js, recopié par build/integrer-modules.py -->
 <script id="pte-epure-js">
 /* ==========================================================================
    PTE — présentation épurée : comportement (proposée le 13.10.2026,
    présentation par défaut depuis le 14.10.2026, décision d'Achim)
    Module commun, recopié tel quel dans les quatre pages par
-   00_Design-System/build/integrer-epure.py. Il ne calcule rien et ne retire
+   00_Design-System/build/integrer-modules.py. Il ne calcule rien et ne retire
    rien : il déplace les textes d'explication derrière un bouton « i » (le texte
    reste dans la page, masqué, et s'ouvre dans une bulle) et réduit les
    bandeaux d'alerte à leur première phrase. La classe « epure » est posée sur
@@ -4474,12 +4606,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.__PTE_EPURE) return;
   window.__PTE_EPURE = true;
   var LS_PRES = 'pte.presentation.v1';
-  var EPURE = document.documentElement.classList.contains('epure');
 
   /* ---------- 1. Une seule présentation (18.10.2026) ---------- */
   document.documentElement.classList.add('epure');
   try { if (localStorage.getItem(LS_PRES) === 'classique') localStorage.removeItem(LS_PRES); } catch (e) { /* stockage indisponible */ }
-  EPURE = true;
 
   /* Le mode nuit est commun aux outils (clé « pte.theme.v1 ») : l'accueil, qui
      ne l'appliquait pas, le suit désormais dans la présentation épurée. */
@@ -4560,13 +4690,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ---------- 3. Où poser le « i » : sur le titre le plus proche ---------- */
-  var TITRES = 'h1,h2,h3,h4,h5,.card-title,.sec-h,.perim-lbl,.perim-sia-t,.situ-h h2,.etape h2,.tr-h,.m-hdr h2';
+  var TITRES = 'h1,h2,h3,h4,h5,.card-title,.sec-h,.perim-lbl,.perim-sia-t,.etape h2,.tr-h,.m-hdr h2';
   function titreProche(el) {
     var p = el.previousElementSibling, n = 0;
     while (p && n < 3) {
       if (p.matches && p.matches(TITRES)) return p;
       var q = p.querySelector && p.querySelector(':scope > ' + TITRES.split(',').join(', :scope > '));
-      if (q && p.matches('.etape, .situ-h, .card-title, .perim-l1')) return q;
+      if (q && p.matches('.etape, .card-title, .perim-l1')) return q;
       p = p.previousElementSibling; n++;
     }
     var par = el.parentElement;
@@ -4616,7 +4746,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (iw && iw.__garde) { ranger(iw.__garde, el, titre, sig); el.setAttribute('data-ep', '1'); return; }
     var x = bouton(GENERIQUES.test(titre || '') ? 'En savoir plus' : titre);
     x.iw.__garde = x.garde;
-    var droite = cible.querySelector(':scope > .card-title-right, :scope > .ch, :scope > .tgl');
+    var droite = cible.querySelector(':scope > .card-title-right, :scope > .ch');
     if (droite) cible.insertBefore(x.iw, droite); else cible.appendChild(x.iw);
     ranger(x.garde, el, titre, sig);
     el.setAttribute('data-ep', '1');
@@ -4677,7 +4807,7 @@ document.addEventListener('DOMContentLoaded', () => {
     commandes(racine);
     sommaire(); appliquerPartie();
     /* le panneau Méthode est la documentation : il reste lu en entier, rien n'y passe derrière un « i » */
-    var dans = function (el) { return el.closest('.ep-garde, .ep-pop, .ep-ligne, .tour-box, #tour, .modal, dialog, #manual, #view-methode, .meth'); };
+    var dans = function (el) { return el.closest('.ep-garde, .ep-pop, .ep-ligne, .tour-box, #manual, #view-methode, .meth'); };
 
     /* a. « Comment lire… » et autres <details class="howto"> : deviennent un « i » */
     racine.querySelectorAll('details.howto:not([data-ep])').forEach(function (d) {
@@ -4694,7 +4824,7 @@ document.addEventListener('DOMContentLoaded', () => {
     racine.querySelectorAll('p.lead:not([data-ep]), .tab-lead:not([data-ep]), .perim-def:not([data-ep]), .perim-note:not([data-ep]), .cpi-note:not([data-ep]), ' +
       '.dash-foot:not([data-ep]), p.aide:not([data-ep]), .drop .opt:not([data-ep]), .wrap > p.lead:not([data-ep]), p.mini:not([data-ep]), ' +
       '#reporting-content .card > p.small.muted:not([data-ep]), .situ-phrase:not([data-ep]), .cards > a.card > p:not([data-ep])').forEach(function (p) {
-      if (dans(p) || p.closest('.m-hdr, .hdr, .tile, .obj-tile, td, th, label, .perim-l1')) return;
+      if (dans(p) || p.closest('.m-hdr, .hdr, .tile, td, th, label, .perim-l1')) return;
       if (texte(p).length < 40 && !p.matches('.situ-phrase')) return;
       if (p.matches('p.mini') && estLegende(p)) return;
       var titre = p.matches('.perim-def') ? 'Définition' : (p.matches('.perim-note') ? 'Phase SIA' : 'En savoir plus');
@@ -4780,7 +4910,7 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(function () { attente = false; try { traiter(document); } catch (e) { if (window.console) console.warn('épuré :', e); } });
   }
   function demarrer() {
-    traiter(document);
+    try { traiter(document); } catch (e) { if (window.console) console.warn('épuré :', e); }
     new MutationObserver(function (muts) {
       for (var i = 0; i < muts.length; i++) {
         var t = muts[i].target;

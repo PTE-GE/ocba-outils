@@ -14,27 +14,24 @@ sous-sites du programme de la transition écologique (OCBA). Remplace la
 4. Trois variantes **I / II / III** (numérotées ainsi pour ne pas les confondre avec les
    variantes A / B / C d'un CECB+) et un bouton **Comparer**.
 5. Trois sorties : **Copier pour Plan_PTE**, **Exporter en Excel**, **Imprimer / PDF**.
-6. Avant de partager ou de committer ce fichier (dépôt Git, envoi par mail) : bouton
-   **« Purger les données »**, qui efface l'import conservé localement et remet l'outil à
-   l'état vierge.
+6. La **corbeille**, à côté de l'état des données, efface les données de l'outil dans ce
+   navigateur (le classeur commun de Pilotage PTE fait l'objet d'une seconde question).
 
 ## Fonctionnement
 
-Tout le calcul se fait **dans le navigateur** (JavaScript, SheetJS **intégré** au fichier —
-pas de CDN). Aucune donnée n'est envoyée à un serveur, aucune donnée métier n'est intégrée au
-fichier HTML lui-même. Le fichier peut donc être stocké publiquement (GitHub) sans exposer de
-données de bâtiments.
+Tout le calcul se fait **dans le navigateur**. Le classeur est lu par le lecteur Excel commun
+aux outils PTE, intégré à la page : aucune bibliothèque externe, aucun CDN. Aucune donnée n'est
+envoyée à un serveur, aucune donnée métier n'est intégrée au fichier HTML lui-même. Le fichier
+peut donc être stocké publiquement (GitHub) sans exposer de données de bâtiments.
 
-Une copie locale de la dernière donnée importée est conservée dans le stockage du navigateur
-(`localStorage`) pour éviter de réimporter le fichier à chaque ouverture — elle reste sur la
-machine de l'utilisateur et n'est jamais transmise.
+Le classeur importé est gardé dans le stockage du navigateur (IndexedDB, à défaut
+`localStorage`) pour éviter de le réimporter à chaque ouverture — il reste sur la machine de
+l'utilisateur et n'est jamais transmis. Un classeur déposé sur la page Pilotage PTE s'ouvre ici
+tout seul.
 
-La page lit les colonnes de `Plan_PTE` **par leur nom**, jamais par leur position, et accepte
-indifféremment l'ancien classeur (colonnes « corrigée (temp) ») et le classeur optimisé (où
-elles ont été supprimées). Si les colonnes calculées (SRE, IDC, consommation) ne sont pas à
-jour dans le fichier ouvert (classeur non réenregistré depuis sa dernière modification), la
-page reconstruit les valeurs depuis les onglets sources (`Requete_OCEN_ETAT_IDC`,
-`Consommation_SITG`) et l'annonce à l'écran.
+La page lit les colonnes de `Plan_PTE` **par leur nom**, jamais par leur position. Les
+cellules en erreur sont comptées : un classeur enregistré sans recalcul est signalé, au lieu de
+passer pour un classeur vide.
 
 ## Le référentiel
 
