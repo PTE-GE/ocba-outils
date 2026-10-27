@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-7ytlshlBfTzV0wA35SPT3injW9CXMbq8Y2qHVOHhWmA=' 'sha256-rAcIh4TNeoEDmSDM23ZTWqq2De0JwSuDczq7VLPZU5U=' 'sha256-fREBkuleUXSq40E8I+4j5DTdBiNxSgoRDshScAfTN64=' 'sha256-n5ww80pymD5TQiuR4Zy2WHeaElOGMtOjt9bhe0mQqXQ=' 'sha256-G897zXtSs5cPVMV2ZE6dcKkr5+/kKjWDABVJ7Cu2o2U=' 'sha256-peyn1aPwKo3S+eT+L1dQUfgpcqxtVFreAUqk04LNET8='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-7ytlshlBfTzV0wA35SPT3injW9CXMbq8Y2qHVOHhWmA=' 'sha256-rAcIh4TNeoEDmSDM23ZTWqq2De0JwSuDczq7VLPZU5U=' 'sha256-0jYLppHSq155wU7uoVD/P5D3rRxXm8ExO+//2l7v1nQ=' 'sha256-n5ww80pymD5TQiuR4Zy2WHeaElOGMtOjt9bhe0mQqXQ=' 'sha256-6M8T8G5DLO4GMqRf84O9anL5LNL8e8O+fdvpMwcaytI=' 'sha256-peyn1aPwKo3S+eT+L1dQUfgpcqxtVFreAUqk04LNET8='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Revue de projets</title>
 <style>
@@ -192,6 +192,11 @@ label{display:block; font-size:11px; color:var(--ink-muted); margin-bottom:.2em;
 .btn-lien{background:none;border:0;padding:4px 0 0;color:var(--teal,#0A80A8);cursor:pointer;font:inherit}
 .btn-lien:hover{text-decoration:underline}
 @media print{.texte-gei.plie{max-height:none;-webkit-mask-image:none;mask-image:none}}
+/* lien vers la fiche GE-Invest du projet (27.10.2026) */
+.lien-gei{color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
+.lien-gei:hover{color:var(--teal,#0A80A8)}
+.lien-gei-ic{font-size:.85em;opacity:.75}
+@media print{.lien-gei{text-decoration:none}.lien-gei-ic{display:none}}
 html.epure .rv-fiche-grid .fs{background:var(--ep-bg)!important;border-radius:12px!important}
 html.epure .rv-fiche-grid .fk{border-top-color:var(--ep-line)}
 html.epure .rv-fiche-grid .fk-l,html.epure .rv-fiche-grid .fs h5{color:var(--ep-ink2)}
@@ -1178,7 +1183,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.36 · 27.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.37 · 27.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -2264,6 +2269,15 @@ var PTE_COMMUN = (function () {
     return racine() + L[outil] + (ss ? '#ss=' + encodeURIComponent(String(ss)) : '') +
       (projet ? (ss ? '&' : '#') + 'projet=' + encodeURIComponent(String(projet)) : '');
   }
+  /* Fiche d'un projet dans GE-Invest (27.10.2026, demande d'Achim) : recherche par numéro de projet, sur l'intranet
+     de l'État (adresse fournie par Achim). Numéro de 6 à 20 chiffres, sinon null : rien de lu dans le classeur ne
+     passe tel quel dans l'adresse. */
+  var GEI_RECHERCHE = ['https://investgeneve.prod.etat-ge.ch/prj_invest/find.php?flag_creation=0&no_loi=&lb_loi=&no_projet_like=',
+    '&lb_projet=&cr_impute=&cr_final=&dossier=&code_statut=-1&id_groupe_tache=-1&flag_existant_GEI=-1&statut_boucle=on&find=Lancer+la+recherche'];
+  function lienGEInvest(numero) {
+    var n = String(numero == null ? '' : numero).trim();
+    return /^\d{6,20}$/.test(n) ? GEI_RECHERCHE[0] + n + GEI_RECHERCHE[1] : null;
+  }
   function projetDepuisHash() {
     var h = (typeof location !== 'undefined' && location.hash) || '';
     var m = /[#&]projet=([0-9]{6,20})\b/.exec(h);
@@ -2726,11 +2740,12 @@ var PTE_COMMUN = (function () {
      (une ligne par projet), à défaut l'ancienne GEI_Suivi (projet répété : dédoublonné par Numéro).
      Montants GE-Invest (27.10.2026, décisions d'Achim) : une cellule vide vaut 0 ; une valeur illisible
      (texte qui n'est pas un nombre, erreur Excel comme #N/A) n'est jamais comptée pour 0. Une colonne
-     présente mais entièrement vide est traitée comme absente (vides.<montant>). nSans compte, par montant,
-     les projets dont la valeur est illisible ou dont la colonne manque ou est vide (engagé, cumul N-1,
-     année N ; depense : les deux ; depenseIncomplete : l'un des deux) ; un total sans aucune valeur
-     lisible vaut null (« non renseigné » à l'écran) ; colonnes dit si la colonne existe. Feuille lue sans
-     aucun numéro de projet : geiFeuille « sansNumero ». Forme v3 (v1 : manquant = 0 ; v2 : cellule vide =
+     présente mais vide pour tous les projets vaut 0 aussi (Achim, 27.10.2026 au soir : « Comptabilisé N
+     dépense » en janvier, par exemple) ; vides.<montant> le note pour le survol. nSans compte, par montant,
+     les projets dont la valeur est illisible ou dont la colonne manque (engagé, cumul N-1, année N ; depense :
+     les deux ; depenseIncomplete : l'un des deux) ; un total sans aucune valeur lisible vaut null (« non
+     renseigné » à l'écran) ; colonnes dit si la colonne existe. Feuille lue sans aucun numéro de projet :
+     geiFeuille « sansNumero ». Forme v4 (v1 : manquant = 0 ; v2 : cellule vide = manquant ; v3 : colonne vide =
      manquant). */
   /* Totaux gérés par l'OCBA (07.10.2026, demande de la direction) : dénominateurs des tuiles « sites »,
      « sous-sites » et « projets » de la Revue. Ils viendront d'une extraction GE-Invest ; tant qu'une valeur
@@ -2787,9 +2802,9 @@ var PTE_COMMUN = (function () {
           if (rempli(r, jB)) pres.B++;
         }
         if (lignes.length) {
-          /* 2. colonne présente mais entièrement vide : extraction sans ce montant, pas un programme à 0 — traitée comme
-                absente (« non renseigné », dite « vide ») */
-          var kE = pres.E ? jE : null, kA = pres.A ? jA : null, kB = pres.B ? jB : null;
+          /* 2. colonne présente mais vide pour tous les projets : 0, comme une cellule vide (Achim, 27.10.2026 au soir) ;
+                notée dans vides pour le survol */
+          var kE = jE, kA = jA, kB = jB;
           g = { projets: lignes.length, credit: null, cumulN1: null, comptaN: null, engage: null, annee: null,
                 nSans: { engage: 0, depense: 0, cumulN1: 0, comptaN: 0, depenseIncomplete: 0 },
                 colonnes: { engage: jE != null, cumulN1: jA != null, comptaN: jB != null },
@@ -2809,7 +2824,7 @@ var PTE_COMMUN = (function () {
         } else feuille = 'sansNumero';
       }
     }
-    return { v: 3, date: new Date().toISOString(), vote: vote, lois: ENVELOPPE_VOTEE,
+    return { v: 4, date: new Date().toISOString(), vote: vote, lois: ENVELOPPE_VOTEE,
              geiFeuille: feuille, geiNom: nomFeuille === 'GEI_Suivi' ? 'GEI_Suivi' : 'GEI_Projets',
              estime: est, nbEstimes: nEst, nbSousSites: ss.length, gei: g };
   }
@@ -2830,6 +2845,8 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "27.10.2026", "objet": "revue", "version": "v0.37", "titre": "Lien vers la fiche GE-Invest du projet", "points": ["Fiche projet : le N° GE-Invest est un lien vers la fiche du projet dans GE-Invest (intranet de l'État), dans un nouvel onglet ; même lien dans l'en-tête du Reporting d'un projet."]},
+    {"date": "27.10.2026", "objet": "accueil", "version": "v1.18", "titre": "Colonne de montant vide = 0", "points": ["Situation du programme : une colonne de montant GE-Invest vide pour tous les projets compte 0, comme une cellule vide (décision d'Achim du 27.10 au soir ; « Comptabilisé N dépense » en janvier, par exemple). Le survol de la tuile le signale. Une colonne absente ou une valeur illisible reste dite, jamais comptée pour 0.", "Les situations enregistrées avant cette version sont recalculées à l'ouverture."]},
     {"date": "27.10.2026", "objet": "simulation", "version": "v3.15", "titre": "Textes sans impératif", "points": ["Messages et explications de la page : ils informent sans s'adresser à la personne (règle des outils de l'État) ; onze textes reformulés, sens inchangé.", "Module commun recopié : session du serveur des saisies vérifiée au chargement et au début de chaque action."]},
     {"date": "27.10.2026", "objet": "priorisation", "version": "v2.28", "titre": "Arbitrage aligné entièrement sur le Classement", "points": ["Arbitrage et Classement comptent les mêmes gains par sous-site : thermique et CO₂ seulement avec une variante CECB+ A, B ou C ; facteur CO₂ de la feuille Data seule ; CO₂ après travaux = IDC projeté × facteur du chauffage prévu (la colonne « CO2 projeté » n'entre plus dans l'Arbitrage).", "Coût d'un sous-site : le seul montant du menu « Montants » (avant : un montant manquant était remplacé, sans le dire, par Estim PTE) ; alertes de cohérence du Classement.", "Classeur de référence, réglages par défaut : 160 sous-sites retenus au lieu de 168 ; CO₂ évité 6 622 t/an au lieu de 9 884 ; coût de la tonne 188 749 CHF au lieu de 126 459 (chiffres validés par Achim).", "Vue d'ensemble : l'effet du portefeuille suit (CO₂ fin 2030 : 16 034 t au lieu de 14 601). Un portefeuille figé avant le 27.10 diffère du nouvel arbitrage par la seule méthode (classeur de référence : 15 sous-sites sortis, 7 entrés)."]},
     {"date": "27.10.2026", "objet": "revue", "version": "v0.36", "titre": "Extraction GE-Invest : projets absents retirés ; descriptions affichées", "points": ["Import : un projet absent de la nouvelle extraction GE-Invest est retiré, avec ses jalons, risques, livrables et finances. La liste s'affiche à l'import (en orange au-delà de 20 % des projets) et dans Données ; ses décisions sont gardées et reviennent avec lui.", "Année de référence financière manquante : celle des autres lignes (avant : l'année en cours, sans le dire), signalée à l'import, dans Données et au contrôle de complétude.", "Fiche et Reporting d'un projet : description GE-Invest (repliée au-delà de quelques lignes) et commentaire de chaque jalon.", "Extraction défaillante : vide, sans numéro de projet, sans aucun projet relié à un sous-site (« Objet (actif) » vide), ou classeur sans GEI_Projets — dit à l'import et par la pastille, l'import précédent est gardé. Feuille des jalons, risques ou livrables absente ou vide : signalée, ses données ne sont plus affichées. Numéros présents dans ces feuilles sans ligne dans GEI_Projets : écartés et signalés ; numéros en double : signalés. Projets rattachés à aucun sous-site : comptés (avis et pastille en orange au-delà de 20 %)."]},
@@ -3062,7 +3079,7 @@ var PTE_COMMUN = (function () {
            tour: tour, relierAccueil: relierAccueil,
            exporterSaisies: exporterSaisies, importerSaisies: importerSaisies, reglageAdmis: reglageAdmis,
            resumeSaisies: resumeSaisies,
-           layout: layout, lien: lien, ssDepuisHash: ssDepuisHash, projetDepuisHash: projetDepuisHash, ecrireHash: ecrireHash,
+           layout: layout, lien: lien, lienGEInvest: lienGEInvest, ssDepuisHash: ssDepuisHash, projetDepuisHash: projetDepuisHash, ecrireHash: ecrireHash,
            publierClasseur: publierClasseur, lireClasseur: lireClasseur, effacerClasseur: effacerClasseur, etats: etats,
            demanderEffacerClasseur: demanderEffacerClasseur,
            lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,
@@ -7161,6 +7178,14 @@ var PTE_COMMUN = (function () {
   // Info-bulles — une seule fonction pour tout l'outil
   // ------------------------------------------------------------------
   function tip(el2, text) { if (el2 && text) el2.setAttribute('data-tip', text); return el2; }
+  /* Fiche du projet dans GE-Invest (27.10.2026, demande d'Achim) : adresse construite par le module commun (numéro de
+     6 à 20 chiffres, sinon pas de lien) ; nouvel onglet, sans référent. Rend null si le numéro n'est pas valable. */
+  function lienGEI(numero, texte) {
+    var u = COMMUN && COMMUN.lienGEInvest ? COMMUN.lienGEInvest(numero) : null;
+    if (!u) return null;
+    return tip(el('a', { href: u, target: '_blank', rel: 'noopener noreferrer', class: 'lien-gei' }, [texte, el('span', { class: 'lien-gei-ic', 'aria-hidden': 'true' }, [' ↗'])]),
+      'Fiche du projet dans GE-Invest (intranet de l’État), dans un nouvel onglet.');
+  }
   /* début d'un texte libre, coupé à un espace, pour un survol (texte entier dans la fiche) */
   function extraitTexte(s, n) { s = String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); if (s.length <= n) return s; var c = s.slice(0, n), i = c.lastIndexOf(' '); return (i > n * 0.6 ? c.slice(0, i) : c) + '…'; }
   function infoIcon(text) { var s = el('span', { class: 'info-icon', tabindex: '0', 'aria-label': text }, ['i']); tip(s, text); return s; }
@@ -9998,11 +10023,13 @@ var PTE_COMMUN = (function () {
       h2.appendChild(tip(el('span', { class: 'tag' }, ['nom hors nomenclature (existant : ne pas renommer)']),
         'Règle pour les NOUVEAUX projets : LTE - <Nom du sous-site> - <N° sous-site> - <Adresse>. Les noms GE-Invest existants ne changent pas.'));
     }
+    var lienG = lienGEI(r.p.numero_projet, 'fiche GE-Invest');
     var left = el('div', { class: 'rep-proj-id' }, [
       h2,
       el('p', { class: 'muted small' }, [
         (r.p.numero_sous_site ? ('Sous-site ' + r.p.numero_sous_site + (r.p.nom_sous_site ? ' — ' + r.p.nom_sous_site : '')) : 'Sans sous-site'),
-        ' · RP : ' + (r.p.rp || '—') + ' · ' + (r.p.projet_etude === 'oui' ? 'Étude' : 'Réalisation') + ' · Statut ' + r.statut
+        ' · RP : ' + (r.p.rp || '—') + ' · ' + (r.p.projet_etude === 'oui' ? 'Étude' : 'Réalisation') + ' · Statut ' + r.statut,
+        lienG ? ' · ' : null, lienG
       ])
     ]);
     // Chaîne financière du sous-site (Estim PTE → DG → Crédit GE-Invest)
@@ -10421,7 +10448,7 @@ var PTE_COMMUN = (function () {
     var avF = comp.suiviRow ? Engine.parseNum(comp.suiviRow.avancement_pct) : null;
     var creditF = Engine.parseNum(projet.credit_total_kchf);
     grilleF.appendChild(ficheBloc('Projet', [
-      ficheKV('N° GE-Invest', projet.numero_projet),
+      ficheKV('N° GE-Invest', lienGEI(projet.numero_projet, projet.numero_projet) || projet.numero_projet),
       ficheKV('Type', projet.projet_etude === 'oui' ? 'Étude' : 'Réalisation'),
       ficheKV('Phase SIA', (function () {
         /* déduite de l'« Avancement global » GE-Invest, comme dans le Reporting (26.10.2026 : projet.phase_sia n'est plus rempli) */

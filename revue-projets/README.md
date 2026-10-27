@@ -39,7 +39,8 @@ d'œil, du programme jusqu'au sous-site ?**
 - Situation financière pluriannuelle (réalisé, prévisions, crédit voté), chaîne
   **Estim PTE → Devis général → Crédit GE-Invest** avec écarts, performance déclarée,
   jalons par sous-site et par projet, planning par famille d'intervention.
-- Fiche projet imprimable (description GE-Invest et commentaires des jalons compris),
+- Fiche projet imprimable (description GE-Invest et commentaires des jalons compris ; le
+  N° GE-Invest ouvre la fiche du projet dans GE-Invest, sur l'intranet de l'État),
   portefeuille, parc, complétude des données.
 
 ## Fonctionnement
@@ -51,5 +52,5 @@ personne choisit d'envoyer au serveur des saisies. Les données importées reste
 navigateur (IndexedDB ; décisions dans le stockage local) ; la corbeille, à côté de l'état
 des données, les efface.
 
-Version : v0.36 — 27.10.2026 (historique : lien de version en pied de page). Testée par une
-suite de 664 contrôles automatisés (dépôt de travail interne).
+Version : v0.37 — 27.10.2026 (historique : lien de version en pied de page). Testée par une
+suite de 667 contrôles automatisés (dépôt de travail interne).
