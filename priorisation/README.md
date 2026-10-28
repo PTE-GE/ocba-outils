@@ -41,7 +41,11 @@ de collaborateur réels ne figurent dans le fichier.
   renouvelable, photovoltaïque, développement durable. Chaque tuile porte la
   valeur mesurée du parc, la cible 2030 et le chemin parcouru depuis la référence 2005 ; le
   segment clair de la barre est ce que le portefeuille arrêté ajouterait. Cliquer une tuile
-  ouvre sa trajectoire.
+  ouvre sa trajectoire jusqu'en 2030 : mesuré, rythme requis, effet du portefeuille, cible, et
+  le **potentiel du classement** — le niveau de 2030 si tous les sous-sites classés pour
+  l'objectif étaient réalisés, quel que soit leur coût (v2.29, 28.10.2026). Le photovoltaïque
+  et le renouvelable sont projetés comme les autres ; l'Arbitrage ne choisissant pas
+  d'installation photovoltaïque, le PV n'a pas de courbe du portefeuille.
 - **Classement** — objectif par objectif, du **coût de l'unité gagnée** le plus faible au plus
   élevé (CHF par kg de CO₂, par kWh, par m³…), sur la durée de vie retenue. Chaque ligne montre
   l'agent de chauffage actuel **et la substitution prévue** — c'est cette bascule qui produit le

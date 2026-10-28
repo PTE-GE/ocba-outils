@@ -178,6 +178,9 @@ a.tab{text-decoration:none;display:inline-flex;align-items:center;line-height:1}
      rythme requis en gris pointillé, cible en vert pointillé et nommée. Paire
      bleu/orange validée daltonisme et contraste, jour et nuit (validate_palette.js). */
   --viz-mes:#2a78d6; --viz-port:#eb6834;
+  /* potentiel de tous les projets classés (28.10.2026) : violet, en pointillé fin avec un losange en 2030 —
+     le style du trait le distingue du mesuré, pas la couleur seule */
+  --viz-pot:#7B4FC9;
   --ink2:var(--ink-70); --ink3:var(--ink-muted);
   --line:var(--border); --card:var(--card-bg); --soft:#EFF1F4;
   --brand:var(--turquoise);
@@ -199,7 +202,7 @@ a.tab{text-decoration:none;display:inline-flex;align-items:center;line-height:1}
 }
 body.night{
   /* jetons de la charte, valeur nuit — le filet dégradé (--grad) ne change pas */
-  --viz-mes:#3987e5; --viz-port:#d95926;
+  --viz-mes:#3987e5; --viz-port:#d95926; --viz-pot:#A98BF0;
   --page-bg:#12171D; --card-bg:#1A2026; --border:#2A323C;
   --ink:#E8ECF1; --ink-70:#A7B0BB; --ink-muted:#949EAC;
   --teal:#3FB6C6; --green:#3DBF84; --ochre:#D8AE3A; --ochre-text:#E8CB72; --red:#D25B4E; --gray:#9AA3AB;
@@ -1552,7 +1555,7 @@ bâtiment par bâtiment depuis 2017 : c'est lui qui mesure l'écart restant, par
 se décide un investissement. Les deux ne coïncident pas exactement — périmètres et méthodes de relevé
 diffèrent. Sur les graphiques de trajectoire, la courbe pleine est le suivi officiel, le cercle isolé est le
 total recalculé, et le trait pointillé qui les relie signale un changement de source, pas une évolution
-mesurée. Aucune des deux n'est corrigée par l'autre.</p>
+mesurée. Aucune des deux n'est corrigée par l'autre. Chaque graphique porte aussi, en pointillé violet terminé par un losange, le <b>potentiel du classement</b> : le niveau de 2030 si tous les sous-sites classés pour l'objectif étaient réalisés, quel que soit leur coût. Photovoltaïque et renouvelable sont projetés jusqu'en 2030 comme les autres objectifs ; l'Arbitrage ne choisissant pas d'installation photovoltaïque, le graphique du PV n'a pas de courbe du portefeuille.</p>
 <p>Tout provient de l'onglet <code>Plan_PTE</code> du classeur, complété par quatre autres onglets du même fichier. Aucune donnée n'est stockée ailleurs, aucune n'est inventée : une colonne vide reste vide, et le bâtiment concerné sort des classements qui en dépendent.</p>
 <table class="m-feas-tbl"><thead><tr><th>Ce que l'outil affiche</th><th>Colonne ou onglet source</th></tr></thead><tbody>
 <tr><td>Surface de référence</td><td><code>SRE</code> de <code>Plan_PTE</code>, nombre &gt; 0 tel quel ; la SRE du parc est la somme de cette colonne (contrat de données, D1) — plus la « Surface de calcul »</td></tr>
@@ -1693,7 +1696,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.28 · 27.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.29 · 28.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -3350,6 +3353,8 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "28.10.2026", "objet": "priorisation", "version": "v2.29", "titre": "Trajectoires : PV et renouvelable jusqu'en 2030, potentiel du classement", "points": ["Vue d'ensemble : les graphiques Photovoltaïque et Renouvelable sont projetés jusqu'en 2030, comme les autres objectifs — rythme requis, effet du portefeuille (renouvelable ; l'Arbitrage ne choisit pas d'installation photovoltaïque), cible.", "Chaque graphique de trajectoire montre aussi le potentiel du classement : le niveau de 2030 si tous les sous-sites classés pour l'objectif étaient réalisés, quel que soit leur coût (pointillé violet, losange en 2030, valeur et écart à la cible dans la légende)."]},
+    {"date": "28.10.2026", "objet": "revue", "version": "v0.38", "titre": "Bouton « Mode revue »", "points": ["Le bouton « Fil rouge » s'appelle désormais « Mode revue » (demande d'Achim) ; le bandeau en cinq temps ne change pas."]},
     {"date": "27.10.2026", "objet": "revue", "version": "v0.37", "titre": "Lien vers la fiche GE-Invest du projet", "points": ["Fiche projet : le N° GE-Invest est un lien vers la fiche du projet dans GE-Invest (intranet de l'État), dans un nouvel onglet ; même lien dans l'en-tête du Reporting d'un projet."]},
     {"date": "27.10.2026", "objet": "accueil", "version": "v1.18", "titre": "Colonne de montant vide = 0", "points": ["Situation du programme : une colonne de montant GE-Invest vide pour tous les projets compte 0, comme une cellule vide (décision d'Achim du 27.10 au soir ; « Comptabilisé N dépense » en janvier, par exemple). Le survol de la tuile le signale. Une colonne absente ou une valeur illisible reste dite, jamais comptée pour 0.", "Les situations enregistrées avant cette version sont recalculées à l'ouverture."]},
     {"date": "27.10.2026", "objet": "simulation", "version": "v3.15", "titre": "Textes sans impératif", "points": ["Messages et explications de la page : ils informent sans s'adresser à la personne (règle des outils de l'État) ; onze textes reformulés, sens inchangé.", "Module commun recopié : session du serveur des saisies vérifiée au chargement et au début de chaque action."]},
@@ -10428,7 +10433,7 @@ function lireThemeCols(){
          fait:g('--surf-fait','#17754A'),onFait:g('--on-surf-fait','#FFFFFF'),
          couv:g('--surf-acc','#005F73'),onCouv:g('--on-surf-acc','#FFFFFF'),
          soft:g('--soft','#F2F5F7'),
-         mes:g('--viz-mes','#2a78d6'),port:g('--viz-port','#eb6834')}}
+         mes:g('--viz-mes','#2a78d6'),port:g('--viz-port','#eb6834'),pot:g('--viz-pot','#7B4FC9')}}
 
 /* ── L'IDC du parc ────────────────────────────────────────────────────
    Moyenne des IDC pondérée par la SRE : somme des SRE × IDC divisée par la
@@ -10924,7 +10929,7 @@ function renderDetail(){
   const moitie=Math.ceil(rows.length/2);
   el.innerHTML='<h3>'+esc(o.lbl)+' — trajectoire jusqu\'en 2030</h3>'+
     '<p class="lead">'+(s.atteint?'<span class="tag ok">cible atteinte</span> ':'')+
-    'Rythme requis, effet du portefeuille arrêté dans l\'onglet Arbitrage, et cible 2030.</p>'+
+    'Rythme requis, effet du portefeuille arrêté dans l\'onglet Arbitrage, potentiel de tous les projets classés pour cet objectif, et cible 2030.</p>'+
     '<div id="indChart"></div>'+
     '<div class="dgrid"><div>'+rows.slice(0,moitie).map(drow).join('')+
     '</div><div>'+rows.slice(moitie).map(drow).join('')+'</div></div>'+
@@ -11001,7 +11006,22 @@ function pontLegende(k){
     +item('<i style="background:var(--surf-fait)"></i>',Z.acquis.t,Z.acquis.d)
     +item('<i style="background:var(--surf-acc)"></i>',Z.couvert.t,Z.couvert.d)
     +item('<i class="h"></i>',Z.reste.t,Z.reste.d)+'</p>'}
-/* graphique d'un indicateur : mesuré, rythme requis, effet du portefeuille */
+/* Potentiel du classement (28.10.2026, demande d'Achim) : ce que donneraient TOUS les sous-sites
+   classés pour cet objectif s'ils étaient réalisés d'ici 2030, quel que soit leur coût. Somme nette :
+   une contribution négative (l'électricité d'une PAC) est déduite ; un sous-site exclu ne compte pas.
+   Unité du classement : kg CO₂, kWh, m³, kWh renouvelables ; kWc pour le photovoltaïque. */
+function potentielClasse(k){
+  const R=rangAj(k);if(!R||!R.items||!R.items.length)return null;
+  let g=0,n=0;
+  R.items.forEach(function(it){const q=qualiOf(it.id);if(q&&q.p==='ex')return;
+    const v=+it.gain;if(isFinite(v)){g+=v;n++}});
+  return n?{n:n,gain:g}:null}
+/* marque du potentiel : trait pointillé fin du point d'aujourd'hui à 2030, losange au bout */
+function tracePotentiel(x0,y0,x1,y1,C,titre){
+  return '<path d="M'+x0+','+y0+'L'+x1+','+y1+'" fill="none" stroke="'+C.pot+'" stroke-width="1.8" stroke-dasharray="2,3"/>'+
+    '<path d="M'+x1+','+(y1-5)+'L'+(x1+5)+','+y1+'L'+x1+','+(y1+5)+'L'+(x1-5)+','+y1+'Z" fill="'+C.pot+'"><title>'+esc(titre)+'</title></path>'}
+const LEG_POT=function(C){return '<span class="dash" style="border-top:2px dotted '+C.pot+'"></span> '};
+/* graphique d'un indicateur : mesuré, rythme requis, effet du portefeuille, potentiel du classement */
 function drawIndic(k){
   const host=$('indChart');if(!host)return;
   const s=indState(k),P=(typeof PARC_LIVE!=='undefined')?PARC_LIVE:null;
@@ -11063,21 +11083,59 @@ function drawIndic(k){
     const u=enGWh?' GWh':' %',dv=enGWh?1e6:1;
     const pts=enGWh?vals.map(function(v){return v/dv}):vals;
     const vCib=enGWh?s.cibleKwh/dv:s.cible,vAuj=enGWh?(s.prod||0)/dv:s.val;
-    const W=920,H=220,L=62,R=150,T=14,B=30;
-    const max=Math.max(vCib,vAuj||0,Math.max.apply(null,pts))*1.1;
-    const x=function(i){return L+(W-L-R)*i/Math.max(1,pts.length-1)},y=function(v){return T+(H-T-B)*(1-v/max)};
+    /* Projection jusqu'en 2030 (28.10.2026, demande d'Achim) : comme les objectifs en valeur absolue,
+       la part se lit avec le rythme requis, l'effet du portefeuille et le potentiel du classement.
+       Les gains se rapportent au même dénominateur que le classement : chaleur du parc de l'année de
+       mesure pour le renouvelable (cible = part × cette chaleur), productible des paramètres pour le PV. */
+    const yM=serie[serie.length-1].y,y1=2030,yA=Math.max(yM,(k==='ren'&&s.annee)?s.annee:yM);
+    const G0=(typeof OBJ_GAPS!=='undefined'&&OBJ_GAPS)?OBJ_GAPS[k]:null;
+    const renTh=(k==='ren'&&G0&&G0.ciblePart>0&&G0.cible>0)?G0.cible/G0.ciblePart:null;
+    /* kWh renouvelables ou kWc → unité du graphique */
+    const versU=function(q){if(enGWh)return q*pPvProd()/dv;if(renTh)return 100*q/renTh;return null};
+    const fut=[];for(let yy=yA;yy<=y1;yy++)fut.push(yy);
+    const req=fut.map(function(yy,i){return (vAuj||0)+(vCib-(vAuj||0))*i/Math.max(1,fut.length-1)});
+    /* portefeuille : l'Arbitrage compte des kWh renouvelables, pas de photovoltaïque */
+    let port=null;
+    if(k==='ren'&&renTh&&RES&&RES.sel){const parAn={};
+      RES.sel.forEach(function(z){const yy=Math.max(yA,z.yr||y1);parAn[yy]=(parAn[yy]||0)+((z.g&&z.g.ren)||0)});
+      let cum=0;port=fut.map(function(yy){cum+=(parAn[yy]||0);return (vAuj||0)+100*cum/renTh})}
+    const pot=potentielClasse(k),potU=pot?versU(pot.gain):null,potFin=(potU!=null)?(vAuj||0)+potU:null;
+    const W=920,H=230,L=62,R=150,T=14,B=30;
+    const x0=serie[0].y;
+    const max=Math.max.apply(null,[vCib,vAuj||0].concat(pts,req,port||[],potFin!=null?[potFin]:[]))*1.1||1;
+    const x=function(yr){return L+(W-L-R)*(yr-x0)/Math.max(1,y1-x0)},y=function(v){return T+(H-T-B)*(1-v/max)};
     let g='';
     for(let i=0;i<=3;i++){const py=T+(H-T-B)*i/3;g+='<line x1="'+L+'" y1="'+py+'" x2="'+(W-R)+'" y2="'+py+'" stroke="'+C.line+'"/>'+txt(L-8,py+3,nf(max*(1-i/3),enGWh?1:0)+u,{a:'end',s:9,c:C.ink3})}
-    serie.forEach(function(q,i){g+=txt(x(i),H-B+15,String(q.y),{a:'middle',s:9,c:C.ink3})});
-    let p='';pts.forEach(function(v,i){p+=(i?'L':'M')+x(i)+','+y(v)});
+    const step=Math.max(1,Math.ceil((y1-x0)/9));
+    for(let yr=x0;yr<=y1;yr+=step)g+=txt(x(yr),H-B+15,String(yr),{a:'middle',s:9,c:C.ink3});
+    if((y1-x0)%step)g+=txt(x(y1),H-B+15,String(y1),{a:'middle',s:9,c:C.ink3});
+    g+='<line x1="'+x(yA)+'" y1="'+T+'" x2="'+x(yA)+'" y2="'+(H-B)+'" stroke="'+C.line+'" stroke-dasharray="3,3"/>'+
+       txt(x(yA)+4,T+10,'projection',{s:9,c:C.ink3});
+    let p='';serie.forEach(function(q,i){p+=(i?'L':'M')+x(q.y)+','+y(pts[i])});
     g+='<path d="'+p+'" fill="none" stroke="'+C.mes+'" stroke-width="2.4"/>';
-    serie.forEach(function(q,i){g+='<circle cx="'+x(i)+'" cy="'+y(pts[i])+'" r="3" fill="'+C.mes+'"><title>'+q.y+' : '+nf(pts[i],1)+u+'</title></circle>'});
+    const chemin=function(vs,col,dash){let q='';fut.forEach(function(yy,i){q+=(i?'L':'M')+x(yy)+','+y(vs[i])});
+      return '<path d="'+q+'" fill="none" stroke="'+col+'" stroke-width="2.4"'+(dash?' stroke-dasharray="6,4"':'')+'/>'};
+    g+=chemin(req,C.ink3,true);
+    if(port)g+=chemin(port,C.port,false);
     g+='<line x1="'+L+'" y1="'+y(vCib)+'" x2="'+(W-R)+'" y2="'+y(vCib)+'" stroke="'+C.ok+'" stroke-width="1.6" stroke-dasharray="5,4"/>'+
-       txt(W-R-2,y(vCib)-5,'cible '+nf(vCib,1)+u+(enGWh?' ('+nf(s.cible,0)+' % de l\'électricité)':''),{a:'end',s:9,c:C.ok,w:700});
+       txt(L+4,y(vCib)-5,'cible 2030 : '+nf(vCib,1)+u+(enGWh?' ('+nf(s.cible,0)+' % de l\'électricité)':''),{s:9,c:C.ok,w:700});
+    if(potFin!=null)g+=tracePotentiel(x(yA),y(vAuj||0),x(y1),y(potFin),C,
+      'Tous les projets classés réalisés d\'ici 2030 ('+pot.n+' sous-sites) : '+nf(potFin,1)+u);
     /* Ici le ruban part de zéro : une part n'a pas de référence 2005, donc
        pas de chemin parcouru — seulement un niveau atteint. */
     if(vCib>0)g+=rubanV(k,W-R+34,y(0),y(vAuj),y(vCib),C,enGWh?'0 GWh':'0 %','aujourd\'hui','cible');
-    host.innerHTML=svg(W,H,g);return}
+    serie.forEach(function(q,i){g+='<circle cx="'+x(q.y)+'" cy="'+y(pts[i])+'" r="3" fill="'+C.mes+'"><title>'+q.y+' : '+nf(pts[i],1)+u+'</title></circle>'});
+    if(port)port.forEach(function(v,i){g+='<circle cx="'+x(fut[i])+'" cy="'+y(v)+'" r="3.2" fill="'+C.port+'"><title>'+fut[i]+' : '+nf(v,1)+u+'</title></circle>'});
+    const tag=function(v){return v>=vCib-1e-9?'<span class="tag ok">cible atteinte</span>':'<span class="tag bad">écart '+nf(v-vCib,1)+u+'</span>'};
+    const fin=port?port[port.length-1]:null;
+    host.innerHTML=svg(W,H,g)+
+      '<p class="mini" style="margin-top:6px"><span class="dot" style="background:'+C.mes+'"></span> '+(enGWh?'production mesurée':'part mesurée')+' &nbsp; '+
+      '<span class="dash" style="border-top-color:'+C.ink3+'"></span> rythme requis &nbsp; '+
+      (port?'<span class="dot" style="background:'+C.port+'"></span> effet du portefeuille — fin 2030 : <b>'+nf(fin,1)+u+'</b> '+tag(fin)+' &nbsp; '
+           :(enGWh?'<span style="color:var(--ink3)">pas d\'effet du portefeuille : l\'Arbitrage ne choisit pas d\'installation photovoltaïque</span> &nbsp; ':''))+
+      (potFin!=null?LEG_POT(C)+'tous les projets classés ('+pot.n+') — fin 2030 : <b>'+nf(potFin,1)+u+'</b> '+tag(potFin)
+                   :'<span style="color:var(--ink3)">aucun projet classé pour cet objectif</span>')+'</p>';
+    return}
   /* indicateurs absolus : historique mesuré, puis projection jusqu'en 2030 */
   const o=IND.find(function(z){return z.k===k}),d=o.div||1;
   const yM=s.annee||2024,y1=2030;
@@ -11105,10 +11163,12 @@ function drawIndic(k){
   const parAn={},champ={co2:'co',th:'th',elec:'el',eau:'ea'}[k];
   if(RES&&RES.sel)RES.sel.forEach(function(x){const yy=x.yr||y1;parAn[yy]=(parAn[yy]||0)+G(x)[champ]});
   let cum=0;const port=fut.map(function(yy){cum+=(parAn[yy]||0);return Math.max(0,s.mesure-cum)});
+  /* potentiel : tous les sous-sites classés pour cet objectif, réalisés d'ici 2030 (28.10.2026) */
+  const pot=potentielClasse(k),potFin=pot?Math.max(0,s.mesure-pot.gain):null;
   /* R élargi : le ruban « où en est le chemin » se loge à droite, calé sur
      la même échelle verticale que la courbe — c'est ce calage qui explique. */
   const W=920,H=250,L=64,R=150,T=14,B=34;
-  const allV=hist.map(function(p){return p.v}).concat(req,port,[s.cible],(s.refEquiv!=null?[s.refEquiv]:[]));
+  const allV=hist.map(function(p){return p.v}).concat(req,port,[s.cible],(s.refEquiv!=null?[s.refEquiv]:[]),(potFin!=null?[potFin]:[]));
   const max=Math.max.apply(null,allV)*1.08||1;
   const x=function(yr){return L+(W-L-R)*(yr-y0)/Math.max(1,y1-y0)},
         y=function(v){return T+(H-T-B)*(1-v/max)};
@@ -11144,13 +11204,19 @@ function drawIndic(k){
   g+='<circle cx="'+x(yM)+'" cy="'+y(s.mesure)+'" r="4.6" fill="'+C.card+'" stroke="'+C.mes+'" stroke-width="1.8">'+
      '<title>'+yM+' : '+nf(s.mesure/d,o.dec)+' '+esc(o.unit.split('/')[0])+(s.contrat?' — '+(k==='co2'?'émissions':'mesuré')+', parc complet du contrat de données (Σ des sous-sites de Plan_PTE), base de l\'écart à combler':' — total recalculé sous-site par sous-site, base de l\'écart à combler')+'</title></circle>';
   port.forEach(function(v,i){g+='<circle cx="'+x(fut[i])+'" cy="'+y(v)+'" r="3.2" fill="'+C.port+'"><title>'+fut[i]+' : '+nf(v/d,o.dec)+'</title></circle>'});
+  const uC=o.unit.split('/')[0];
+  if(potFin!=null)g+=tracePotentiel(x(yM),y(s.mesure),x(y1),y(potFin),C,
+    'Tous les projets classés réalisés d\'ici 2030 ('+pot.n+' sous-sites) : '+nf(potFin/d,o.dec)+' '+uC);
   const fin=port[port.length-1],ok=fin<=s.cible;
+  const tagE=function(v){return v<=s.cible?'<span class="tag ok">cible atteinte</span>':'<span class="tag bad">écart '+nf((v-s.cible)/d,o.dec)+'</span>'};
   host.innerHTML=svg(W,H,g)+
     '<p class="mini" style="margin-top:6px"><span class="dot" style="background:'+C.mes+'"></span> '+esc(srcHist)+' &nbsp; '+
     '<span class="dot" style="background:var(--card);box-shadow:0 0 0 2px '+C.mes+'"></span> '+(s.contrat?(k==='co2'?'émissions ':'mesuré ')+yM+' (parc du contrat)':'total recalculé '+yM)+' &nbsp; '+
     '<span class="dash" style="border-top-color:'+C.ink3+'"></span> rythme requis &nbsp; '+
     '<span class="dot" style="background:'+C.port+'"></span> effet du portefeuille — fin 2030 : <b>'+nf(fin/d,o.dec)+' '+esc(o.unit.split('/')[0])+'</b> '+
-    (ok?'<span class="tag ok">cible atteinte</span>':'<span class="tag bad">écart '+nf((fin-s.cible)/d,o.dec)+'</span>')+'</p>'}
+    (ok?'<span class="tag ok">cible atteinte</span>':'<span class="tag bad">écart '+nf((fin-s.cible)/d,o.dec)+'</span>')+' &nbsp; '+
+    (potFin!=null?LEG_POT(C)+'tous les projets classés ('+pot.n+') — fin 2030 : <b>'+nf(potFin/d,o.dec)+' '+esc(uC)+'</b> '+tagE(potFin)
+                 :'<span style="color:var(--ink3)">aucun projet classé pour cet objectif</span>')+'</p>'}
 
 /* Bandeau « portefeuille en cours » (4 tuiles sous le détail) retiré le 18.10.2026,
    décision d'Achim : enveloppe et prix de la tonne sont dans l'onglet Arbitrage,

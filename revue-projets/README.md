@@ -52,5 +52,5 @@ personne choisit d'envoyer au serveur des saisies. Les données importées reste
 navigateur (IndexedDB ; décisions dans le stockage local) ; la corbeille, à côté de l'état
 des données, les efface.
 
-Version : v0.37 — 27.10.2026 (historique : lien de version en pied de page). Testée par une
+Version : v0.38 — 28.10.2026 (historique : lien de version en pied de page). Testée par une
 suite de 667 contrôles automatisés (dépôt de travail interne).

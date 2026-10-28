@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-7ytlshlBfTzV0wA35SPT3injW9CXMbq8Y2qHVOHhWmA=' 'sha256-rAcIh4TNeoEDmSDM23ZTWqq2De0JwSuDczq7VLPZU5U=' 'sha256-0jYLppHSq155wU7uoVD/P5D3rRxXm8ExO+//2l7v1nQ=' 'sha256-n5ww80pymD5TQiuR4Zy2WHeaElOGMtOjt9bhe0mQqXQ=' 'sha256-6M8T8G5DLO4GMqRf84O9anL5LNL8e8O+fdvpMwcaytI=' 'sha256-peyn1aPwKo3S+eT+L1dQUfgpcqxtVFreAUqk04LNET8='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-7ytlshlBfTzV0wA35SPT3injW9CXMbq8Y2qHVOHhWmA=' 'sha256-rAcIh4TNeoEDmSDM23ZTWqq2De0JwSuDczq7VLPZU5U=' 'sha256-gkUzOSENpXez39jpEWxX9t2N3RYylMQsBqcJd2EHoL4=' 'sha256-n5ww80pymD5TQiuR4Zy2WHeaElOGMtOjt9bhe0mQqXQ=' 'sha256-Jc1I6uStMKYMlhAK7RVktQBFY6hnkEoCZnqsELaHl8Q=' 'sha256-peyn1aPwKo3S+eT+L1dQUfgpcqxtVFreAUqk04LNET8='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Revue de projets</title>
 <style>
@@ -1135,7 +1135,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
       <select id="sel-filtre" hidden aria-hidden="true" tabindex="-1"></select></span>
     <label class="cx-l" for="sel-mois">Mois de revue <select id="sel-mois" class="cx-in"></select></label>
     <button type="button" class="btn" id="btn-questions" title="Générer les questions du mois par RPF (Reporting)">Questions du mois</button>
-    <button type="button" class="btn" id="btn-fil-rouge" aria-pressed="false" title="Ordre du jour de la revue en cinq temps : préparer, constater, analyser, décider, restituer">Fil rouge</button>
+    <button type="button" class="btn" id="btn-fil-rouge" aria-pressed="false" title="Ordre du jour de la revue en cinq temps : préparer, constater, analyser, décider, restituer">Mode revue</button>
   </div>
   </div>
 </header>
@@ -1183,7 +1183,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.37 · 27.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.38 · 28.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -2845,6 +2845,8 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "28.10.2026", "objet": "priorisation", "version": "v2.29", "titre": "Trajectoires : PV et renouvelable jusqu'en 2030, potentiel du classement", "points": ["Vue d'ensemble : les graphiques Photovoltaïque et Renouvelable sont projetés jusqu'en 2030, comme les autres objectifs — rythme requis, effet du portefeuille (renouvelable ; l'Arbitrage ne choisit pas d'installation photovoltaïque), cible.", "Chaque graphique de trajectoire montre aussi le potentiel du classement : le niveau de 2030 si tous les sous-sites classés pour l'objectif étaient réalisés, quel que soit leur coût (pointillé violet, losange en 2030, valeur et écart à la cible dans la légende)."]},
+    {"date": "28.10.2026", "objet": "revue", "version": "v0.38", "titre": "Bouton « Mode revue »", "points": ["Le bouton « Fil rouge » s'appelle désormais « Mode revue » (demande d'Achim) ; le bandeau en cinq temps ne change pas."]},
     {"date": "27.10.2026", "objet": "revue", "version": "v0.37", "titre": "Lien vers la fiche GE-Invest du projet", "points": ["Fiche projet : le N° GE-Invest est un lien vers la fiche du projet dans GE-Invest (intranet de l'État), dans un nouvel onglet ; même lien dans l'en-tête du Reporting d'un projet."]},
     {"date": "27.10.2026", "objet": "accueil", "version": "v1.18", "titre": "Colonne de montant vide = 0", "points": ["Situation du programme : une colonne de montant GE-Invest vide pour tous les projets compte 0, comme une cellule vide (décision d'Achim du 27.10 au soir ; « Comptabilisé N dépense » en janvier, par exemple). Le survol de la tuile le signale. Une colonne absente ou une valeur illisible reste dite, jamais comptée pour 0.", "Les situations enregistrées avant cette version sont recalculées à l'ouverture."]},
     {"date": "27.10.2026", "objet": "simulation", "version": "v3.15", "titre": "Textes sans impératif", "points": ["Messages et explications de la page : ils informent sans s'adresser à la personne (règle des outils de l'État) ; onze textes reformulés, sens inchangé.", "Module commun recopié : session du serveur des saisies vérifiée au chargement et au début de chaque action."]},
@@ -11982,7 +11984,7 @@ var PTE_COMMUN = (function () {
     var bZero = frBtn('↺', function () { var y = frSeance(); y.chrono = { cumul: 0, debut: null }; frEcrire(y); renderFilRouge(); }, 'fr-mini');
     bZero.setAttribute('aria-label', 'Remettre le chronomètre à zéro');
     var bFerme = frBtn('×', function () { frSetOuvert(false); renderFilRouge(); }, 'fr-mini');
-    bFerme.setAttribute('aria-label', 'Masquer le fil rouge'); bFerme.title = 'Masquer le fil rouge (l’état de la séance est gardé)';
+    bFerme.setAttribute('aria-label', 'Masquer le mode revue'); bFerme.title = 'Masquer le mode revue (l’état de la séance est gardé)';
     bar.appendChild(el('span', { class: 'fr-droite' }, [t, bPlay, bZero, bFerme]));
     host.appendChild(bar);
     host.appendChild(frPanneau(FR.etape, E, x));
