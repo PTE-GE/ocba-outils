@@ -41,7 +41,9 @@ de collaborateur réels ne figurent dans le fichier.
   renouvelable, photovoltaïque, développement durable. Chaque tuile porte la
   valeur mesurée du parc, la cible 2030 et le chemin parcouru depuis la référence 2005 ; le
   segment clair de la barre est ce que le portefeuille arrêté ajouterait. Cliquer une tuile
-  ouvre sa trajectoire jusqu'en 2030 : mesuré, rythme requis, effet du portefeuille, cible, et
+  ouvre sa trajectoire jusqu'en 2030 — au m² pour le CO₂, le thermique, l'électricité et l'eau
+  (v2.30 : consommation de chaque année ÷ surface de la même année) : mesuré, rythme requis,
+  effet du portefeuille, cible, et
   le **potentiel du classement** — le niveau de 2030 si tous les sous-sites classés pour
   l'objectif étaient réalisés, quel que soit leur coût (v2.29, 28.10.2026). Le photovoltaïque
   et le renouvelable sont projetés comme les autres ; l'Arbitrage ne choisissant pas
@@ -52,6 +54,11 @@ de collaborateur réels ne figurent dans le fichier.
   gain CO₂. La ligne encadrée
   de vert est le **rang de franchissement** : celui où le cumul des gains atteint la cible 2030
   si l'on finance dans cet ordre. Cliquer une ligne déplie la fiche du bâtiment.
+  Sa vue **Matrice urgence × faisabilité** croise la priorité et la faisabilité (v2.31) :
+  maturité (phase SIA du projet GE-Invest, /50) + préparation (variante CECB+, chauffage défini,
+  montant chiffré, montant prévu, /25) + contraintes (patrimoine, risques GE-Invest, santé du
+  projet, /25). Trois curseurs règlent les poids, non mémorisés ; un clic sur une case liste
+  ses sous-sites.
   La colonne « **% de l'écart comblé** » dit, à chaque rang, quelle part de l'écart **restant**
   le cumul a couverte. Ce n'est pas le pourcentage de la tuile, qui mesure le chemin parcouru
   **depuis 2005** — voir « Deux pourcentages, deux dénominateurs » ci-dessous.

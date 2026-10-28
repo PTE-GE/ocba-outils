@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-7ytlshlBfTzV0wA35SPT3injW9CXMbq8Y2qHVOHhWmA=' 'sha256-rAcIh4TNeoEDmSDM23ZTWqq2De0JwSuDczq7VLPZU5U=' 'sha256-gkUzOSENpXez39jpEWxX9t2N3RYylMQsBqcJd2EHoL4=' 'sha256-n5ww80pymD5TQiuR4Zy2WHeaElOGMtOjt9bhe0mQqXQ=' 'sha256-Jc1I6uStMKYMlhAK7RVktQBFY6hnkEoCZnqsELaHl8Q=' 'sha256-peyn1aPwKo3S+eT+L1dQUfgpcqxtVFreAUqk04LNET8='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-7ytlshlBfTzV0wA35SPT3injW9CXMbq8Y2qHVOHhWmA=' 'sha256-rAcIh4TNeoEDmSDM23ZTWqq2De0JwSuDczq7VLPZU5U=' 'sha256-pm3E2oVoBUzwD7NgvyA++4j+8FBfbWZnld4tG00v7A0=' 'sha256-n5ww80pymD5TQiuR4Zy2WHeaElOGMtOjt9bhe0mQqXQ=' 'sha256-Jc1I6uStMKYMlhAK7RVktQBFY6hnkEoCZnqsELaHl8Q=' 'sha256-H2k5JqJdhjSvy9aTSUDEgqZGxWnlG5Tim1R1TglX3k4='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Revue de projets</title>
 <style>
@@ -2845,6 +2845,9 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "28.10.2026", "objet": "commun", "version": null, "titre": "Fenêtres « i » sans « Details »", "points": ["Dans les fenêtres « i » tirées d'un « Comment lire… », le navigateur n'affiche plus son libellé « Details » en anglais (quatre pages)."]},
+    {"date": "28.10.2026", "objet": "priorisation", "version": "v2.31", "titre": "Matrice urgence × faisabilité : nouvelle faisabilité, liste au clic", "points": ["Méthode (chiffres modifiés) : faisabilité = maturité (phase SIA du projet GE-Invest en cours le plus avancé, sur 50) + préparation (variante CECB+, chauffage défini — « == » compris —, montant chiffré, montant prévu, sur 25) + contraintes (25 moins patrimoine, risque ouvert le plus sévère de GEI_Risques ou évaluation des risques, santé du projet). Une donnée absente ne compte ni pour ni contre : elle baisse la fiabilité (0 à 5). La feuille GEI_Risques est lue à l'import.", "Trois curseurs, avec saisie au clavier, règlent le poids des blocs (50 / 25 / 25) ; « Réinitialiser » revient au réglage de référence ; les poids ne sont pas mémorisés.", "Case à cocher : masquer les sous-sites en travaux (phase 51 et plus).", "Un clic sur une case liste ses sous-sites sous la matrice : priorité, faisabilité et ses trois blocs, phase, risque, patrimoine, responsable de projet, fiabilité, lien vers la revue ; tri par colonne."]},
+    {"date": "28.10.2026", "objet": "priorisation", "version": "v2.30", "titre": "Trajectoires en intensité", "points": ["Vue d'ensemble : les graphiques du CO₂, du thermique, de l'électricité et de l'eau se lisent au m² — chaque année, consommation ÷ surface de la même année (bloc « référence 2005 » d'Objectifs PTE, thermique corrigé du climat) ; aujourd'hui, cible, portefeuille et potentiel ÷ surface de Plan_PTE. Le suivi officiel et le parc complet se raccordent ; valeurs absolues au survol des points.", "Un projet retenu l'année de la mesure ne compte qu'à partir de l'année suivante : la marche de 2025 disparaît, les valeurs de fin 2030 ne changent pas.", "Électricité : cible déjà atteinte, plus de rythme requis tracé vers le haut.", "Bloc « référence 2005 » : une colonne 2025 (ou suivante) ajoutée à la suite de 2024 est lue sans changer l'outil."]},
     {"date": "28.10.2026", "objet": "priorisation", "version": "v2.29", "titre": "Trajectoires : PV et renouvelable jusqu'en 2030, potentiel du classement", "points": ["Vue d'ensemble : les graphiques Photovoltaïque et Renouvelable sont projetés jusqu'en 2030, comme les autres objectifs — rythme requis, effet du portefeuille (renouvelable ; l'Arbitrage ne choisit pas d'installation photovoltaïque), cible.", "Chaque graphique de trajectoire montre aussi le potentiel du classement : le niveau de 2030 si tous les sous-sites classés pour l'objectif étaient réalisés, quel que soit leur coût (pointillé violet, losange en 2030, valeur et écart à la cible dans la légende)."]},
     {"date": "28.10.2026", "objet": "revue", "version": "v0.38", "titre": "Bouton « Mode revue »", "points": ["Le bouton « Fil rouge » s'appelle désormais « Mode revue » (demande d'Achim) ; le bandeau en cinq temps ne change pas."]},
     {"date": "27.10.2026", "objet": "revue", "version": "v0.37", "titre": "Lien vers la fiche GE-Invest du projet", "points": ["Fiche projet : le N° GE-Invest est un lien vers la fiche du projet dans GE-Invest (intranet de l'État), dans un nouvel onglet ; même lien dans l'en-tête du Reporting d'un projet."]},
@@ -12306,7 +12309,9 @@ var PTE_COMMUN = (function () {
       if (s) s.remove();
       var corps = document.createElement('div');
       while (d.firstChild) corps.appendChild(d.firstChild);
-      d.appendChild(corps); d.open = true;
+      /* sans <summary>, le navigateur en dessine un, « Details » en anglais : un résumé vide et masqué le remplace (28.10.2026) */
+      var sv = document.createElement('summary'); sv.setAttribute('aria-hidden', 'true'); sv.style.setProperty('display', 'none', 'important');
+      d.appendChild(sv); d.appendChild(corps); d.open = true;
       deposerIcone(d, titre, d.classList.contains('tab-howto') ? 'onglet' : null);
     });
 

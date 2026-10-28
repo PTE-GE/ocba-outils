@@ -483,6 +483,14 @@ body.night .errbox,body.night .warnbox{background:rgba(229,105,92,.10)}
 .chip{display:inline-block;font-size:.63rem;padding:2px 7px;border-radius:9px;background:var(--bg-info);color:var(--pri);font-weight:700;margin-right:4px}
 .fam-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
 .tblx{width:100%;border-collapse:collapse;font-size:.74rem}
+/* matrice urgence × faisabilité : poids et liste au clic (28.10.2026) */
+.uf-ctl{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:6px 0 8px;font-size:.74rem;color:var(--ink2)}
+.uf-w{display:inline-flex;align-items:center;gap:6px}.uf-w label{font-weight:600;min-width:74px}
+.uf-w input[type=range]{width:110px}.uf-w input[type=number]{width:52px;padding:2px 4px;border:1px solid var(--line);border-radius:4px;background:var(--card);color:var(--ink)}
+.uf-tr{display:inline-flex;align-items:center;gap:5px}
+#gUF .uf-c{cursor:pointer}#gUF .uf-c:focus{outline:none}#gUF .uf-c:focus-visible rect{stroke:var(--acc);stroke-width:2.5}
+#ufListe{margin-top:6px}#ufListe h4{margin:4px 0 6px;font-size:.82rem}#ufListe .num{text-align:right}
+#ufListe td.dt{color:var(--ink3);font-size:.68rem}
 .tblx th{background:var(--surf-dark);color:var(--on-surf-dark);padding:6px 7px;text-align:left;font-weight:600;position:sticky;top:0;cursor:pointer;white-space:nowrap}
 .tblx td{padding:5px 7px;border-bottom:1px solid #eef2f6}
 .tblx tr.sel{background:var(--bg-ok)}.tblx tr.out{background:var(--bg-err);color:var(--ink3)}
@@ -1338,8 +1346,17 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 <div class="cd">
 <div class="wt op" onclick="tglS('ufB','ufCh')"><h3 style="margin:0;border:none;padding:0">Matrice Urgence × Faisabilité</h3><span class="ch op" id="ufCh">▼</span></div>
 <div class="wb op" id="ufB"><div style="padding-top:8px">
-<p style="font-size:.72rem;color:var(--ink3);margin-bottom:4px">Quadrant <b>haut-droite</b> = urgent ET faisable → priorité maximale. Faisabilité = CECB+ (33) + Substitution (33) + Budget (34) − Protection patrimoniale (0 à −50).</p>
+<p style="font-size:.72rem;color:var(--ink3);margin-bottom:4px">Quadrant <b>haut-droite</b> = urgent ET faisable → à engager en premier. Faisabilité = <b>maturité</b> (phase SIA du projet GE-Invest) + <b>préparation</b> (variante CECB+, chauffage défini, montant chiffré, montant prévu) + <b>contraintes</b> (patrimoine, risques et santé des projets, en retrait). Une donnée absente ne compte ni pour ni contre : elle baisse la fiabilité. Un clic sur une case liste ses sous-sites.</p>
+<details class="howto"><summary>Comment lire la matrice</summary><div><p><b>Les deux axes.</b> En hauteur, la <b>priorité</b> : la meilleure place du sous-site dans les classements par objectif (100 = tête de classement). En largeur, la <b>faisabilité</b> : la capacité à réaliser les travaux d'ici 2030. Chaque case compte les sous-sites qui tombent à ce croisement ; la case encadrée de vert, en haut à droite, réunit ceux qui sont à la fois prioritaires et faisables (80 ou plus sur les deux axes).</p><p><b>La faisabilité</b> additionne trois blocs, chacun ramené à sa part puis pondéré par les curseurs :</p><table class="m-feas-tbl"><thead><tr><th>Bloc</th><th>Ce qui compte</th><th>Points</th></tr></thead><tbody><tr><td><b>Maturité</b> (sur 50)</td><td>Phase SIA du projet GE-Invest « en cours » le plus avancé du sous-site, déduite de l'« Avancement global » (table GPR.6MO.04, comme la revue de projets)</td><td>aucun projet 0 · 21 : 10 · 31 : 20 · 32 : 28 · 33 : 34 · 41 : 40 · 51 : 46 · 52 et 53 : 50</td></tr><tr><td><b>Préparation</b> (sur 25)</td><td>Variante CECB+ retenue (A, B ou C) ; audit sans variante précisée ou en cours</td><td>10 ; 5</td></tr><tr><td></td><td>Chauffage de substitution défini — « == » (maintien) compris, pas « ??? », « --- » ni vide</td><td>5</td></tr><tr><td></td><td>Montant chiffré dans le référentiel du menu « Montants »</td><td>5</td></tr><tr><td></td><td>Montant prévu dans « Prévisionnel PTE GEI »</td><td>5</td></tr><tr><td><b>Contraintes</b> (25, en retrait)</td><td>Patrimoine : classé · zone ou périmètre protégé · inventaire · ensembles 19e-20e · objets d'intérêt</td><td>−12 · −8 · −6 · −4 · −2</td></tr><tr><td></td><td>Risque ouvert le plus sévère des projets (feuille <code>GEI_Risques</code>, sévérité sur 16) ou, à défaut, « Évaluation des risques » de GE-Invest — le plus fort des deux</td><td>12 et plus : −10 · 8-9 : −7 · 4-6 : −4 · 1-3 : −1 · Majeur : −10 · Moyen : −5</td></tr><tr><td></td><td>Santé du projet : performance « Critique » ou délais « En retard » ; « À surveiller »</td><td>−5 ; −2</td></tr></tbody></table><p><b>Les poids.</b> Par défaut maturité 50, préparation 25, contraintes 25. Les curseurs (ou les cases de saisie) les modifient pour voir comment la matrice réagit ; « Réinitialiser » revient au réglage de référence. Les poids ne sont pas mémorisés : chaque ouverture de la page repart du même réglage, pour que tous lisent la même matrice.</p><p><b>Une donnée absente</b> ne compte ni pour ni contre : un projet sans risque saisi n'est pas un projet sans risque. Elle baisse en revanche la <b>fiabilité</b>, de 0 à 5 : nombre de données connues parmi le projet GE-Invest, l'audit CECB+, le chauffage de substitution, le patrimoine et les risques saisis. « Ce que la matrice compte » dit combien de sous-sites ont une fiabilité faible (2 sur 5 ou moins).</p><p><b>Les sous-sites en travaux</b> (phase 51 et plus) ont la faisabilité la plus haute, mais la décision est déjà prise. La case à cocher les masque pour ne lire que ce qui reste à engager.</p><p><b>La liste.</b> Un clic sur une case (ou Entrée) affiche ses sous-sites sous la matrice, avec le détail de leur faisabilité ; un second clic la referme. Chaque en-tête de colonne trie la liste ; « Revue » ouvre la revue de projets sur le sous-site.</p><p><b>Ce qui n'est pas compté.</b> Les sous-sites qu'aucun objectif ne classe et ceux exclus du programme ne sont pas dans la matrice ; leur nombre est indiqué à droite.</p></div></details>
+<div class="uf-ctl" id="ufCtl">
+<span class="uf-w"><label for="ufWm">Maturité</label><input type="range" id="ufWm" min="0" max="100" step="5" value="50"><input type="number" id="ufWmN" min="0" max="100" step="5" value="50" aria-label="Poids de la maturité"></span>
+<span class="uf-w"><label for="ufWp">Préparation</label><input type="range" id="ufWp" min="0" max="100" step="5" value="25"><input type="number" id="ufWpN" min="0" max="100" step="5" value="25" aria-label="Poids de la préparation"></span>
+<span class="uf-w"><label for="ufWc">Contraintes</label><input type="range" id="ufWc" min="0" max="100" step="5" value="25"><input type="number" id="ufWcN" min="0" max="100" step="5" value="25" aria-label="Poids des contraintes"></span>
+<button type="button" class="btn" id="ufReset" title="Revenir aux poids de référence : maturité 50, préparation 25, contraintes 25">Réinitialiser</button>
+<label class="mini uf-tr"><input type="checkbox" id="ufTravaux"> Masquer les sous-sites en travaux (phase 51 et plus)</label>
+</div>
 <div id="gUF"></div>
+<div id="ufListe"></div>
 </div></div>
 </div>
 </div><!-- /vue matrice -->
@@ -1553,9 +1570,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 fixe la référence et donc la cible. L'onglet <code>Consommation par site</code> donne le total recalculé
 bâtiment par bâtiment depuis 2017 : c'est lui qui mesure l'écart restant, parce que c'est au bâtiment que
 se décide un investissement. Les deux ne coïncident pas exactement — périmètres et méthodes de relevé
-diffèrent. Sur les graphiques de trajectoire, la courbe pleine est le suivi officiel, le cercle isolé est le
-total recalculé, et le trait pointillé qui les relie signale un changement de source, pas une évolution
-mesurée. Aucune des deux n'est corrigée par l'autre. Chaque graphique porte aussi, en pointillé violet terminé par un losange, le <b>potentiel du classement</b> : le niveau de 2030 si tous les sous-sites classés pour l'objectif étaient réalisés, quel que soit leur coût. Photovoltaïque et renouvelable sont projetés jusqu'en 2030 comme les autres objectifs ; l'Arbitrage ne choisissant pas d'installation photovoltaïque, le graphique du PV n'a pas de courbe du portefeuille.</p>
+diffèrent. Les graphiques de trajectoire du CO₂, du thermique, de l'électricité et de l'eau se lisent donc <b>en intensité</b> (28.10.2026) : chaque année, la consommation est divisée par la surface de référence de la même année (bloc « référence 2005 » d'<code>Objectifs PTE</code>, thermique corrigé du climat) ; le cercle d'aujourd'hui est le parc complet de <code>Plan_PTE</code>, divisé par sa propre surface. Rapportées au m², les deux sources se raccordent, alors qu'en valeur absolue elles portent sur des parcs de tailles différentes. Les valeurs absolues restent au survol des points. Sans ce bloc, le graphique reste en valeurs absolues. Un projet retenu par l'Arbitrage l'année de la mesure ne compte qu'à partir de l'année suivante. Chaque graphique porte aussi, en pointillé violet terminé par un losange, le <b>potentiel du classement</b> : le niveau de 2030 si tous les sous-sites classés pour l'objectif étaient réalisés, quel que soit leur coût. Photovoltaïque et renouvelable sont projetés jusqu'en 2030 comme les autres objectifs ; l'Arbitrage ne choisissant pas d'installation photovoltaïque, le graphique du PV n'a pas de courbe du portefeuille.</p>
 <p>Tout provient de l'onglet <code>Plan_PTE</code> du classeur, complété par quatre autres onglets du même fichier. Aucune donnée n'est stockée ailleurs, aucune n'est inventée : une colonne vide reste vide, et le bâtiment concerné sort des classements qui en dépendent.</p>
 <table class="m-feas-tbl"><thead><tr><th>Ce que l'outil affiche</th><th>Colonne ou onglet source</th></tr></thead><tbody>
 <tr><td>Surface de référence</td><td><code>SRE</code> de <code>Plan_PTE</code>, nombre &gt; 0 tel quel ; la SRE du parc est la somme de cette colonne (contrat de données, D1) — plus la « Surface de calcul »</td></tr>
@@ -1696,7 +1711,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.29 · 28.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.31 · 28.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -3353,6 +3368,9 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "28.10.2026", "objet": "commun", "version": null, "titre": "Fenêtres « i » sans « Details »", "points": ["Dans les fenêtres « i » tirées d'un « Comment lire… », le navigateur n'affiche plus son libellé « Details » en anglais (quatre pages)."]},
+    {"date": "28.10.2026", "objet": "priorisation", "version": "v2.31", "titre": "Matrice urgence × faisabilité : nouvelle faisabilité, liste au clic", "points": ["Méthode (chiffres modifiés) : faisabilité = maturité (phase SIA du projet GE-Invest en cours le plus avancé, sur 50) + préparation (variante CECB+, chauffage défini — « == » compris —, montant chiffré, montant prévu, sur 25) + contraintes (25 moins patrimoine, risque ouvert le plus sévère de GEI_Risques ou évaluation des risques, santé du projet). Une donnée absente ne compte ni pour ni contre : elle baisse la fiabilité (0 à 5). La feuille GEI_Risques est lue à l'import.", "Trois curseurs, avec saisie au clavier, règlent le poids des blocs (50 / 25 / 25) ; « Réinitialiser » revient au réglage de référence ; les poids ne sont pas mémorisés.", "Case à cocher : masquer les sous-sites en travaux (phase 51 et plus).", "Un clic sur une case liste ses sous-sites sous la matrice : priorité, faisabilité et ses trois blocs, phase, risque, patrimoine, responsable de projet, fiabilité, lien vers la revue ; tri par colonne."]},
+    {"date": "28.10.2026", "objet": "priorisation", "version": "v2.30", "titre": "Trajectoires en intensité", "points": ["Vue d'ensemble : les graphiques du CO₂, du thermique, de l'électricité et de l'eau se lisent au m² — chaque année, consommation ÷ surface de la même année (bloc « référence 2005 » d'Objectifs PTE, thermique corrigé du climat) ; aujourd'hui, cible, portefeuille et potentiel ÷ surface de Plan_PTE. Le suivi officiel et le parc complet se raccordent ; valeurs absolues au survol des points.", "Un projet retenu l'année de la mesure ne compte qu'à partir de l'année suivante : la marche de 2025 disparaît, les valeurs de fin 2030 ne changent pas.", "Électricité : cible déjà atteinte, plus de rythme requis tracé vers le haut.", "Bloc « référence 2005 » : une colonne 2025 (ou suivante) ajoutée à la suite de 2024 est lue sans changer l'outil."]},
     {"date": "28.10.2026", "objet": "priorisation", "version": "v2.29", "titre": "Trajectoires : PV et renouvelable jusqu'en 2030, potentiel du classement", "points": ["Vue d'ensemble : les graphiques Photovoltaïque et Renouvelable sont projetés jusqu'en 2030, comme les autres objectifs — rythme requis, effet du portefeuille (renouvelable ; l'Arbitrage ne choisit pas d'installation photovoltaïque), cible.", "Chaque graphique de trajectoire montre aussi le potentiel du classement : le niveau de 2030 si tous les sous-sites classés pour l'objectif étaient réalisés, quel que soit leur coût (pointillé violet, losange en 2030, valeur et écart à la cible dans la légende)."]},
     {"date": "28.10.2026", "objet": "revue", "version": "v0.38", "titre": "Bouton « Mode revue »", "points": ["Le bouton « Fil rouge » s'appelle désormais « Mode revue » (demande d'Achim) ; le bandeau en cinq temps ne change pas."]},
     {"date": "27.10.2026", "objet": "revue", "version": "v0.37", "titre": "Lien vers la fiche GE-Invest du projet", "points": ["Fiche projet : le N° GE-Invest est un lien vers la fiche du projet dans GE-Invest (intranet de l'État), dans un nouvel onglet ; même lien dans l'en-tête du Reporting d'un projet."]},
@@ -6098,7 +6116,7 @@ function xlsxToRows(buf){
      Objectifs PTE, Data, GEI_Projets ou GEI_Suivi) ; les feuilles techniques des
      requêtes ne sont pas analysées. Sans « Plan_PTE » (ancien export, CSV converti),
      toutes les feuilles sont lues comme avant. */
-  const _FEUILLES_LUES={plan_pte:1,consommationparsite:1,objectifspte:1,data:1,gei_projets:1,gei_suivi:1};
+  const _FEUILLES_LUES={plan_pte:1,consommationparsite:1,objectifspte:1,data:1,gei_projets:1,gei_suivi:1,gei_risques:1};
   const _cle=n=>String(n==null?'':n).replace(/\s+/g,'').toLowerCase();
   const _aPlan=noms.some(_isPlanPTE);
   for(const name of noms){
@@ -6676,7 +6694,84 @@ function fmtInv(v){if(!v||v<=0)return'—';if(v>=1e6)return(v/1e6).toFixed(1)+'M
 
 function compl(s){let t=9,f=0;if(s.sre)f++;if(s.idcC)f++;if(s.ht&&s.ht.length>1)f++;if(s.coeff!=null)f++;if(s.invVB&&s.invVB>0)f++;if(s.hsub&&s.hsub.length>2&&!/rien|maintien/i.test(s.hsub))f++;if(s.pat&&s.pat.length>1)f++;if(s.elec)f++;if(s.eau)f++;return Math.round(f/t*100)}
 function patMalus(pat){if(!pat)return 0;if(pat.includes('Classé'))return -50;if(pat.includes('Zone protégée')||pat.includes('Zone prot'))return -40;if(pat.includes('Inventaire'))return -30;if(pat.includes('Ensembles'))return -20;if(pat.includes('Objets')||pat.includes("intérêt"))return -10;return 0}
-function feasib(s){let f=cecbInfo(s).pts;if(s.hsub&&s.hsub.length>3&&!/rien|maintien/i.test(s.hsub))f+=33;if(s.invVB&&s.invVB>0)f+=34;f+=patMalus(s.pat);return Math.max(0,Math.min(100,f))}
+/* ================================================================
+   FAISABILITÉ (28.10.2026, demande d'Achim) — « peut-on réaliser d'ici 2030 ? »
+   Trois blocs, chacun ramené à sa part (0 à 1) puis pondéré (curseurs de la
+   matrice, 50 / 25 / 25 par défaut, jamais mémorisés : tous les utilisateurs
+   repartent du même réglage) :
+   · MATURITÉ (/50) — phase SIA du projet GE-Invest « en cours » le plus avancé,
+     déduite de l'« Avancement global » (table GPR.6MO.04, la même que la revue) ;
+   · PRÉPARATION (/25) — variante CECB+ retenue (10, audit sans variante ou en
+     cours 5), solution de chauffage définie, « == » compris (5), montant chiffré dans le
+     référentiel actif (5), montant prévu dans « Prévisionnel PTE GEI » (5) ;
+   · CONTRAINTES (/25, on retire) — patrimoine (−12 à −2), risque ouvert le plus
+     sévère des projets (GEI_Risques, sur 16) ou, à défaut, « Évaluation des
+     risques » (Majeur −10, Moyen −5), santé du projet (Critique ou En retard −5,
+     À surveiller −2).
+   Une donnée absente ne donne ni bonus ni malus : elle baisse la FIABILITÉ
+   (0 à 5 données connues : projet, CECB+, chauffage, patrimoine, risques).
+   Ancienne règle (03.09.2026) : CECB+ 33 + substitution 33 + montant 34 −
+   patrimoine — dix-huit valeurs possibles, l'avancement réel ignoré.
+   ================================================================ */
+const PHASES_FEAS=[{k:'21',a:3,p:10},{k:'31',a:9,p:20},{k:'32',a:30,p:28},{k:'33',a:32,p:34},{k:'41',a:50,p:40},{k:'51',a:66,p:46},{k:'52',a:95,p:50},{k:'53',a:100,p:50}];
+function phaseFeas(av){if(av==null||av===''||isNaN(av))return null;av=+av;
+  for(const q of PHASES_FEAS)if(av<q.a+1)return q;return PHASES_FEAS[PHASES_FEAS.length-1]}
+const FW_DEF={m:50,p:25,c:25};let FW=Object.assign({},FW_DEF);
+/* « == » (maintien du chauffage actuel) est une solution définie (Achim, 28.10.2026) ; « ??? », « --- » et le vide ne le sont pas */
+function chauffageDefini(h){const v=String(h==null?'':h).trim();return !!v&&!/^[?\-\s.]*$/.test(v)}
+function patPoints(pat){const p=String(pat||'');
+  if(/Classé/i.test(p))return 12;if(/Zone prot|Périmètre naturel/i.test(p))return 8;if(/Inventaire/i.test(p))return 6;
+  if(/Ensembles/i.test(p))return 4;if(/Objets|intérêt/i.test(p))return 2;return 0}
+function feasDetail(s){
+  const pr=(s.projets||[]).filter(function(x){return /cours/i.test(x.statut||'')});
+  let mat=0,ph=null;
+  pr.forEach(function(x){const q=phaseFeas(x.avancement);if(q&&(ph==null||q.p>mat)){mat=q.p;ph=q.k}});
+  const st=s.cecbSt||'none';
+  const cecbPts=(st==='varA'||st==='varB'||st==='varC')?10:((st==='fait'||st==='pending')?5:0);
+  const chOk=chauffageDefini(s.hsub);
+  const prep=cecbPts+(chOk?5:0)+(s.invVB>0?5:0)+(s.invGE>0?5:0);
+  const patP=patPoints(s.pat);
+  let sev=null,nR=0,evalP=0,evalTxt=null,sante=0,santeTxt=null,risqueConnu=false;
+  pr.forEach(function(x){
+    if(x.risque&&x.risque.n>0){risqueConnu=true;nR+=x.risque.n;if(x.risque.sev!=null&&(sev==null||x.risque.sev>sev))sev=x.risque.sev}
+    if(/majeur/i.test(x.evalR||'')){if(evalP<10){evalP=10;evalTxt='Majeur'}}
+    else if(/moyen/i.test(x.evalR||'')){if(evalP<5){evalP=5;evalTxt='Moyen'}}
+    if(/critique/i.test(x.perf||'')||/retard/i.test(x.delais||'')){if(sante<5){sante=5;santeTxt=/critique/i.test(x.perf||'')?'performance critique':'en retard'}}
+    else if(/surveiller/i.test(x.perf||'')||/surveiller/i.test(x.delais||'')){if(sante<2){sante=2;santeTxt='à surveiller'}}});
+  const sevP=sev==null?0:(sev>=12?10:(sev>=8?7:(sev>=4?4:1)));
+  const riskP=Math.max(sevP,evalP);
+  const cont=Math.max(0,25-patP-riskP-sante);
+  const tw=(FW.m+FW.p+FW.c)||1;
+  const f=100*(FW.m*mat/50+FW.p*prep/25+FW.c*cont/25)/tw;
+  const connus=[pr.length>0,st!=='none',chOk,String(s.pat||'').trim().length>1,risqueConnu];
+  return{f:Math.max(0,Math.min(100,f)),mat:mat,prep:prep,cont:cont,phase:ph,nProjets:pr.length,
+    sev:sev,nRisques:nR,evalTxt:evalTxt,santeTxt:santeTxt,patP:patP,riskP:riskP,sante:sante,
+    fiab:connus.filter(Boolean).length,travaux:ph==='51'||ph==='52'||ph==='53',
+    rp:(pr.find(function(x){return x.rp})||{}).rp||''}}
+function feasib(s){return feasDetail(s).f}
+/* Risques GE-Invest rattachés aux projets des sous-sites, à l'import (les feuilles brutes ne sont pas gardées :
+   le résultat voyage avec les sous-sites). p.risque absent = feuille GEI_Risques absente ; {n:0} = aucun risque
+   ouvert saisi pour ce projet — ce qui ne veut pas dire « aucun risque ». */
+function enrichirRisquesGEI(list,sheets){
+  if(!sheets)return;
+  const tab=function(nom){const k=Object.keys(sheets).find(function(n){return n.replace(/\s+/g,'').toLowerCase()===nom});
+    const rows=k?sheets[k]:null;if(!rows)return null;
+    for(let i=0;i<Math.min(rows.length,15);i++){const r=rows[i]||[];if(r.some(function(v){return String(v||'').trim()==='Numéro'}))
+      return{h:r.map(function(v){return String(v==null?'':v).trim()}),rows:rows.slice(i+1)}}
+    return null};
+  const R=tab('gei_risques'),P=tab('gei_projets');
+  const parProjet={},evalP={};
+  if(R){const iN=R.h.indexOf('Numéro'),iS=R.h.indexOf('Statut du risque'),iV=R.h.indexOf('Sévérité du risque');
+    R.rows.forEach(function(r){const n=String(r[iN]==null?'':r[iN]).trim();if(!n)return;
+      if(/ferm/i.test(String(r[iS]||'')))return;
+      const m=String(r[iV]==null?'':r[iV]).match(/(\d+)/),v=m?+m[1]:null;
+      const o=parProjet[n]=parProjet[n]||{n:0,sev:null};o.n++;if(v!=null&&(o.sev==null||v>o.sev))o.sev=v})}
+  if(P){const iN=P.h.indexOf('Numéro'),iE=P.h.indexOf('Évaluation des risques'),iP=P.h.indexOf('Performance globale'),iD=P.h.indexOf('Respect des délais');
+    P.rows.forEach(function(r){const n=String(r[iN]==null?'':r[iN]).trim();if(!n)return;
+      evalP[n]={e:iE>=0?String(r[iE]||''):'',p:iP>=0?String(r[iP]||''):'',d:iD>=0?String(r[iD]||''):''}})}
+  list.forEach(function(s){(s.projets||[]).forEach(function(x){const n=String(x.numero||'').trim();
+    if(R)x.risque=parProjet[n]||{n:0,sev:null};
+    const e=evalP[n];if(e){x.evalR=e.e;x.perf=e.p;x.delais=e.d}})})}
 
 /* ================================================================
    NOTATION — aucune donnée inventée, aucun classement préexistant
@@ -7239,16 +7334,21 @@ function ref2005FromObjectifs(rows,num,lbl){
      repère la colonne 2005 (comme ci-dessus) et celle de 2018, pour ne
      prendre que B (2005) et O..U (2018→2024), tel que décrit dans le titre
      du bloc — sans supposer un écart de colonnes fixe. */
-  let c2005=-1,c2018=-1;
+  let c2005=-1,c2018=-1,h2018=null;
   for(const r of rows){
     if(c2005<0){const j=r.findIndex(function(v){return v===2005||v==='2005'});if(j>0)c2005=j}
-    if(c2018<0){const j=r.findIndex(function(v){return v===2018||v==='2018'});if(j>0)c2018=j}
+    if(c2018<0){const j=r.findIndex(function(v){return v===2018||v==='2018'});if(j>0){c2018=j;h2018=r}}
     if(c2005>=0&&c2018>=0)break}
   if(c2005<0||c2018<0)return null;
+  /* 2018 à 2024 au moins (sept colonnes, disposition du 17.09.2026) ; au-delà, chaque année que l'en-tête
+     porte à la suite est lue aussi — une colonne 2025 ajoutée au bloc est prise sans changer le code
+     (28.10.2026). Une cellule vide reste vide (null), jamais 0. */
+  let nAns=7;
+  while(nAns<40&&h2018&&(h2018[c2018+nAns]===2018+nAns||h2018[c2018+nAns]===String(2018+nAns)))nAns++;
   const find=function(name){return rows.find(function(r){return lbl(r)===name})};
   const serie=function(r){if(!r)return null;
     const out=[num(r[c2005])];
-    for(let k=0;k<7;k++)out.push(num(r[c2018+k]));
+    for(let k=0;k<nAns;k++)out.push(num(r[c2018+k]));
     return out};
   const rSreTh   =find('sre chauffée [m2]');
   const rSreElec =find('sre électrique [m2]');
@@ -7274,7 +7374,7 @@ function ref2005FromObjectifs(rows,num,lbl){
      cElec[0]==null||cEau[0]==null||cCo2[0]==null||
      oTh==null||oElec==null||oEau==null||oCo2==null)return null;
   return{
-    annees:[2005,2018,2019,2020,2021,2022,2023,2024],
+    annees:[2005].concat(Array.from({length:nAns},function(_,k){return 2018+k})),
     sre:{th:sTh,elec:sElec,eau:sEau},
     conso:{th:cTh,thCorr:cThC,elec:cElec,eau:cEau,co2:cCo2},
     obj2030:{th:oTh,elec:oElec,eau:oEau,co2:oCo2}}}
@@ -7914,6 +8014,7 @@ function finishImport(rows,source){
     /* Contrôle à l'import (25.09.2026) : comparé au dernier import de référence de cet outil */
     if(CONTRAT&&typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.controleImport){try{PTE_COMMUN.controleImport(PTE_CONTRAT.empreinte(CONTRAT),'prio')}catch(e){}}}
   if(CONTRAT)appliquerContrat(si);
+  try{enrichirRisquesGEI(si,_lastXlsxSheets)}catch(e){}
   importIso=new Date().toISOString();
   if(!lastFileName&&source)lastFileName=String(source);
   /* Les notes et les phases ajustées manuellement sont conservées : le fichier
@@ -11021,6 +11122,90 @@ function tracePotentiel(x0,y0,x1,y1,C,titre){
   return '<path d="M'+x0+','+y0+'L'+x1+','+y1+'" fill="none" stroke="'+C.pot+'" stroke-width="1.8" stroke-dasharray="2,3"/>'+
     '<path d="M'+x1+','+(y1-5)+'L'+(x1+5)+','+y1+'L'+x1+','+(y1+5)+'L'+(x1-5)+','+y1+'Z" fill="'+C.pot+'"><title>'+esc(titre)+'</title></path>'}
 const LEG_POT=function(C){return '<span class="dash" style="border-top:2px dotted '+C.pot+'"></span> '};
+/* Trajectoire EN INTENSITÉ (28.10.2026, décision d'Achim) — CO₂, thermique, électricité, eau.
+   En valeur absolue, la courbe officielle (sites mesurés, ou série « Objectifs PTE ») et le point
+   d'aujourd'hui (parc complet, Σ des sous-sites de Plan_PTE) ne portent pas sur le même parc : le
+   graphique sautait en 2025 (thermique : 129 → 177 GWh). Rapportée à la surface de son propre parc,
+   chaque valeur devient comparable : historique = conso ÷ SRE de la MÊME année, lues dans le bloc
+   « référence 2005 » d'Objectifs PTE (thermique corrigé du climat, définition de l'indicateur) ;
+   aujourd'hui, cible, portefeuille et potentiel = valeur ÷ SRE de Plan_PTE. Les valeurs absolues
+   restent au survol de chaque point. Sans bloc (classeur antérieur au 17.09.2026) : false, et le
+   graphique reste en valeurs absolues. */
+function trajIntensite(k,s,o,C,host){
+  const I=(typeof OBJ_REFS!=='undefined'&&OBJ_REFS)?OBJ_REFS.ref2005:null;
+  const us=REF2005_USAGE[k],ck=REF2005_CONSO[k];
+  if(!I||!I.annees||!us||!ck||!I.sre[us]||!I.conso[ck]||!(s.surface>0)||!o.unitInt||s.mesure==null||s.cible==null)return false;
+  const S0=s.surface,m=o.mul||1,ui=o.unitInt,d=o.div||1,ua=o.unit;
+  const hist=[];
+  I.annees.forEach(function(yr,i){const a=I.sre[us][i],c=I.conso[ck][i];
+    if(a>0&&c!=null&&isFinite(c))hist.push({y:yr,v:c/a*m,abs:c,sre:a})});
+  if(hist.length<2)return false;
+  const y1=2030,yM=s.annee||hist[hist.length-1].y;
+  const vAuj=s.mesure/S0*m,vCib=s.cible/S0*m,atteinte=vAuj<=vCib;
+  const fut=[];for(let yy=yM;yy<=y1;yy++)fut.push(yy);
+  const req=fut.map(function(yy,i){return vAuj+(vCib-vAuj)*i/Math.max(1,fut.length-1)});
+  /* portefeuille : chaque sous-site à son année de réalisation, jamais sur l'année mesurée */
+  const champ={co2:'co',th:'th',elec:'el',eau:'ea'}[k],parAn={};
+  if(RES&&RES.sel)RES.sel.forEach(function(x){const yy=Math.max(yM+1,x.yr||y1);parAn[yy]=(parAn[yy]||0)+G(x)[champ]});
+  let cum=0;const portA=fut.map(function(yy){cum+=(parAn[yy]||0);return Math.max(0,s.mesure-cum)});
+  const port=portA.map(function(v){return v/S0*m});
+  const pot=potentielClasse(k),potA=pot?Math.max(0,s.mesure-pot.gain):null,potFin=potA!=null?potA/S0*m:null;
+  /* le ruban se cale sur le même chemin que la tuile : référence 2005 (ramenée au m² quand la cible classe en intensité) */
+  const refA=(s.refEquiv!=null)?s.refEquiv:s.ref2005,refR=(refA!=null)?refA/S0*m:null;
+  const W=920,H=250,L=64,R=150,T=14,B=34;
+  const allV=hist.map(function(q){return q.v}).concat(atteinte?[]:req,port,[vCib,vAuj],potFin!=null?[potFin]:[],refR!=null?[refR]:[]);
+  const max=Math.max.apply(null,allV)*1.08||1,dec=intDec(ui,max/3);
+  const y0=hist[0].y;
+  const x=function(yr){return L+(W-L-R)*(yr-y0)/Math.max(1,y1-y0)},y=function(v){return T+(H-T-B)*(1-v/max)};
+  const fI=function(v){return nf(v,intDec(ui,v))+' '+ui},fA=function(v){return nf(v/d,o.dec)+' '+ua.split('/')[0]};
+  let g='';
+  for(let i=0;i<=3;i++){const py=T+(H-T-B)*i/3;
+    g+='<line x1="'+L+'" y1="'+py+'" x2="'+(W-R)+'" y2="'+py+'" stroke="'+C.line+'"/>'+
+       txt(L-8,py+3,nf(max*(1-i/3),dec),{a:'end',s:9,c:C.ink3})}
+  g+=txt(L+4,T-4,ui,{a:'start',s:9,c:C.ink2,w:700});
+  const step=Math.max(1,Math.ceil((y1-y0)/9));
+  for(let yr=y0;yr<=y1;yr+=step)g+=txt(x(yr),H-B+15,String(yr),{a:'middle',s:9,c:C.ink3});
+  if((y1-y0)%step)g+=txt(x(y1),H-B+15,String(y1),{a:'middle',s:9,c:C.ink3});
+  g+='<line x1="'+x(yM)+'" y1="'+T+'" x2="'+x(yM)+'" y2="'+(H-B)+'" stroke="'+C.line+'" stroke-dasharray="3,3"/>'+
+     txt(x(yM)+4,T+10,'projection',{s:9,c:C.ink3});
+  const seg=function(a,b,col,dash,w){return '<path d="M'+x(a.y)+','+y(a.v)+'L'+x(b.y)+','+y(b.v)+'" fill="none" stroke="'+col+'" stroke-width="'+(w||2.4)+'"'+(dash?' stroke-dasharray="'+dash+'"':'')+'/>'};
+  /* années sans surface dans le classeur (2006 à 2017) : un pointillé, pas une évolution mesurée */
+  let trou=false;
+  for(let i=1;i<hist.length;i++){const lacune=hist[i].y-hist[i-1].y>1;if(lacune)trou=true;
+    g+=seg(hist[i-1],hist[i],C.mes,lacune?'2,3':null,lacune?1.4:2.4)}
+  const der=hist[hist.length-1];
+  /* raccord du suivi au parc complet : changement de source, en pointillé fin */
+  if(der.y<yM)g+=seg(der,{y:yM,v:vAuj},C.mes,'6,4',1.4);
+  if(!atteinte){let q='';fut.forEach(function(yy,i){q+=(i?'L':'M')+x(yy)+','+y(req[i])});
+    g+='<path d="'+q+'" fill="none" stroke="'+C.ink3+'" stroke-width="2.4" stroke-dasharray="6,4"/>'}
+  {let q='';fut.forEach(function(yy,i){q+=(i?'L':'M')+x(yy)+','+y(port[i])});
+    g+='<path d="'+q+'" fill="none" stroke="'+C.port+'" stroke-width="2.4"/>'}
+  g+='<line x1="'+L+'" y1="'+y(vCib)+'" x2="'+(W-R)+'" y2="'+y(vCib)+'" stroke="'+C.ok+'" stroke-width="1.6" stroke-dasharray="5,4"/>'+
+     txt(L+4,y(vCib)-6,'cible 2030 : '+fI(vCib),{s:9,c:C.ok,w:700});
+  if(potFin!=null)g+=tracePotentiel(x(yM),y(vAuj),x(y1),y(potFin),C,
+    'Tous les projets classés réalisés d\'ici 2030 ('+pot.n+' sous-sites) : '+fI(potFin)+' ('+fA(potA)+')');
+  if(refR!=null&&refR>vCib)
+    g+=rubanV(k,W-R+34,y(refR),y(vAuj),y(vCib),C,'réf. 2005','aujourd\'hui','cible 2030');
+  hist.forEach(function(q){g+='<circle cx="'+x(q.y)+'" cy="'+y(q.v)+'" r="2.8" fill="'+C.mes+'"><title>'+q.y+' : '+esc(fI(q.v))+' — '+
+    esc(fA(q.abs))+' sur '+nf(q.sre,0)+' m² (bloc « référence 2005 » d\'Objectifs PTE'+(k==='th'?', corrigé du climat':'')+')</title></circle>'});
+  g+='<circle cx="'+x(yM)+'" cy="'+y(vAuj)+'" r="4.6" fill="'+C.card+'" stroke="'+C.mes+'" stroke-width="1.8"><title>'+yM+' : '+esc(fI(vAuj))+' — '+
+    esc(fA(s.mesure))+' sur '+nf(S0,0)+' m² : parc complet (Σ des sous-sites de Plan_PTE), base de l\'écart à combler'+
+    (k==='th'?' ; chaleur mesurée (non corrigée du climat) et, sans mesure, estimée par SRE × IDC':'')+'</title></circle>';
+  port.forEach(function(v,i){if(i)g+='<circle cx="'+x(fut[i])+'" cy="'+y(v)+'" r="3.2" fill="'+C.port+'"><title>'+fut[i]+' : '+esc(fI(v))+' ('+esc(fA(portA[i]))+')</title></circle>'});
+  const tag=function(v){return v<=vCib+1e-9?'<span class="tag ok">cible atteinte</span>':'<span class="tag bad">écart '+nf(v-vCib,intDec(ui,v-vCib))+'</span>'};
+  const fin=port[port.length-1];
+  host.innerHTML=svg(W,H,g)+
+    '<p class="mini" style="margin-top:6px"><span class="dot" style="background:'+C.mes+'"></span> suivi « référence 2005 »'+(k==='th'?' (corrigé du climat)':'')+' &nbsp; '+
+    '<span class="dot" style="background:var(--card);box-shadow:0 0 0 2px '+C.mes+'"></span> parc complet '+yM+' &nbsp; '+
+    (atteinte?'<span style="color:var(--ink3)">cible déjà atteinte : pas de rythme requis</span> &nbsp; '
+             :'<span class="dash" style="border-top-color:'+C.ink3+'"></span> rythme requis &nbsp; ')+
+    '<span class="dot" style="background:'+C.port+'"></span> effet du portefeuille — fin 2030 : <b>'+esc(fI(fin))+'</b> '+tag(fin)+' &nbsp; '+
+    (potFin!=null?LEG_POT(C)+'tous les projets classés ('+pot.n+') — fin 2030 : <b>'+esc(fI(potFin))+'</b> '+tag(potFin)
+                 :'<span style="color:var(--ink3)">aucun projet classé pour cet objectif</span>')+'</p>'+
+    '<p class="mini" style="color:var(--ink3)">Intensité : consommation de chaque année ÷ surface de référence de la même année ; valeurs absolues au survol des points.'+
+    (trou?' Pointillé '+hist[0].y+' → '+hist[1].y+' : le classeur ne donne pas la surface des années intermédiaires.':'')+
+    (der.y<yM?' Le bloc « référence 2005 » s\'arrête en '+der.y+' : le point '+yM+' est celui du parc complet.':'')+'</p>';
+  return true}
 /* graphique d'un indicateur : mesuré, rythme requis, effet du portefeuille, potentiel du classement */
 function drawIndic(k){
   const host=$('indChart');if(!host)return;
@@ -11097,7 +11282,7 @@ function drawIndic(k){
     /* portefeuille : l'Arbitrage compte des kWh renouvelables, pas de photovoltaïque */
     let port=null;
     if(k==='ren'&&renTh&&RES&&RES.sel){const parAn={};
-      RES.sel.forEach(function(z){const yy=Math.max(yA,z.yr||y1);parAn[yy]=(parAn[yy]||0)+((z.g&&z.g.ren)||0)});
+      RES.sel.forEach(function(z){const yy=Math.max(yA+1,z.yr||y1);parAn[yy]=(parAn[yy]||0)+((z.g&&z.g.ren)||0)});
       let cum=0;port=fut.map(function(yy){cum+=(parAn[yy]||0);return (vAuj||0)+100*cum/renTh})}
     const pot=potentielClasse(k),potU=pot?versU(pot.gain):null,potFin=(potU!=null)?(vAuj||0)+potU:null;
     const W=920,H=230,L=62,R=150,T=14,B=30;
@@ -11138,6 +11323,8 @@ function drawIndic(k){
     return}
   /* indicateurs absolus : historique mesuré, puis projection jusqu'en 2030 */
   const o=IND.find(function(z){return z.k===k}),d=o.div||1;
+  /* en intensité dès que le bloc « référence 2005 » le permet (28.10.2026) ; sinon, valeurs absolues */
+  if(trajIntensite(k,s,o,C,host))return;
   const yM=s.annee||2024,y1=2030;
   /* Historique : les années dont la série a été jugée non fiable sont écartées
      (voir « Santé des données ») — on ne trace pas ce qu'on ne peut pas affirmer. */
@@ -11161,7 +11348,8 @@ function drawIndic(k){
   const fut=[];for(let yy=yM;yy<=y1;yy++)fut.push(yy);
   const req=fut.map(function(yy,i){return s.mesure+(s.cible-s.mesure)*i/Math.max(1,fut.length-1)});
   const parAn={},champ={co2:'co',th:'th',elec:'el',eau:'ea'}[k];
-  if(RES&&RES.sel)RES.sel.forEach(function(x){const yy=x.yr||y1;parAn[yy]=(parAn[yy]||0)+G(x)[champ]});
+  /* aucun projet ne compte sur l'année mesurée : un projet de cette année-là compte l'année suivante (28.10.2026) */
+  if(RES&&RES.sel)RES.sel.forEach(function(x){const yy=Math.max(yM+1,x.yr||y1);parAn[yy]=(parAn[yy]||0)+G(x)[champ]});
   let cum=0;const port=fut.map(function(yy){cum+=(parAn[yy]||0);return Math.max(0,s.mesure-cum)});
   /* potentiel : tous les sous-sites classés pour cet objectif, réalisés d'ici 2030 (28.10.2026) */
   const pot=potentielClasse(k),potFin=pot?Math.max(0,s.mesure-pot.gain):null;
@@ -11999,55 +12187,112 @@ function txt(x,y,s,o){o=o||{};return '<text x="'+x+'" y="'+y+'" font-size="'+(o.
    serait leur promettre un programme dont ils sont sortis — et les
    bâtiments sans classement aussi : ils sont dits à côté, pas dissous.
    ================================================================ */
+let UF_SEL=null,UF_ROWS=null,UF_TRI={k:'f',desc:true},UF_LAST=null;
 function drawUF(all){
   const host=$('gUF');if(!host)return;
+  ufInitCtl();UF_LAST=all;
   const C=themeCols();
   const cls=(all||[]).filter(function(s){const q=qualiOf(s.id);return !(q&&q.p==='ex')});
   const nEx=(all||[]).length-cls.length;
-  const rows=cls.filter(function(s){return s.sc&&s.sc.t!=null&&!isNaN(s.sc.t)});
-  const nSans=cls.length-rows.length;
-  if(!rows.length){host.innerHTML='<p class="mini">Aucun sous-site classé dans un objectif : la matrice n\'a rien à compter.</p>';return}
+  const classes=cls.filter(function(s){return s.sc&&s.sc.t!=null&&!isNaN(s.sc.t)});
+  const nSans=cls.length-classes.length;
+  const masquer=!!($('ufTravaux')&&$('ufTravaux').checked);
+  const det={};classes.forEach(function(s){det[s.id]=feasDetail(s)});
+  const nTrav=classes.filter(function(s){return det[s.id].travaux}).length;
+  const rows=masquer?classes.filter(function(s){return !det[s.id].travaux}):classes;
+  if(!rows.length){host.innerHTML='<p class="mini">Aucun sous-site classé dans un objectif : la matrice n\'a rien à compter.</p>';$('ufListe').innerHTML='';return}
   const B=5,bin=function(v){return Math.max(0,Math.min(B-1,Math.floor(v/20)))};
   const M=[],ID=[];let nIn=0;
   for(let r=0;r<B;r++){M.push([0,0,0,0,0]);ID.push([[],[],[],[],[]])}
-  rows.forEach(function(s){const r=bin(s.sc.t),c=bin(feasib(s));
-    M[r][c]++;if(ID[r][c].length<8)ID[r][c].push(s.id);
+  rows.forEach(function(s){const r=bin(s.sc.t),c=bin(det[s.id].f);
+    M[r][c]++;ID[r][c].push(s);
     const q=qualiOf(s.id);if(q&&q.p==='in')nIn++});
+  UF_ROWS={ID:ID,det:det};
   let mx=0;M.forEach(function(r){r.forEach(function(v){if(v>mx)mx=v})});
   const W=1240,L=170,T=44,CW=118,CH=54,GW=CW*B,GH=CH*B,yB=T+GH;
   const cx=function(c){return L+c*CW},cy=function(r){return T+(B-1-r)*CH};
   let g='';
-  /* colonnes puis lignes : les bornes sont écrites, la case ne se lit pas
-     à l'estime */
   for(let c=0;c<B;c++)g+=txt(cx(c)+CW/2-1.5,T-12,(c*20)+'–'+((c+1)*20),{a:'middle',s:10.5,c:C.ink2});
   for(let r=0;r<B;r++)g+=txt(L-12,cy(r)+CH/2+4,(r*20)+'–'+((r+1)*20),{a:'end',s:10.5,c:C.ink2});
   for(let r=0;r<B;r++)for(let c=0;c<B;c++){
-    const n=M[r][c],x=cx(c),y=cy(r);
-    /* racine carrée : sans elle la case la plus fournie écrase les autres
-       et la rampe redevient un dégradé sans information */
+    const n=M[r][c],x=cx(c),y=cy(r),sel=UF_SEL&&UF_SEL.r===r&&UF_SEL.c===c;
     const f=n?tint(C.acc,C.card,0.10+0.80*Math.sqrt(n/mx)):C.card;
-    g+='<g><rect x="'+(x+1.5)+'" y="'+(y+1.5)+'" width="'+(CW-3)+'" height="'+(CH-3)+'" rx="3" fill="'+f+'" stroke="'+C.line+'"/>'
+    const lib='Priorité '+(r*20)+'–'+((r+1)*20)+' × faisabilité '+(c*20)+'–'+((c+1)*20)+' : '+n+' sous-site(s)';
+    g+='<g'+(n?' class="uf-c" data-r="'+r+'" data-c="'+c+'" tabindex="0" role="button" aria-pressed="'+(sel?'true':'false')+'" aria-label="'+esc(lib+' — afficher la liste')+'"':'')+'>'
+      +'<rect x="'+(x+1.5)+'" y="'+(y+1.5)+'" width="'+(CW-3)+'" height="'+(CH-3)+'" rx="3" fill="'+f+'" stroke="'+(sel?C.ink:C.line)+'" stroke-width="'+(sel?2.5:1)+'"/>'
       +'<text x="'+(x+CW/2)+'" y="'+(y+CH/2+7)+'" text-anchor="middle" font-size="'+(n?18:12)+'" font-weight="700" style="fill:'+(n?onColor(f):C.ink3)+'">'+(n||'·')+'</text>'
-      +'<title>'+esc('Priorité '+(r*20)+'–'+((r+1)*20)+' × faisabilité '+(c*20)+'–'+((c+1)*20)+' : '+n+' sous-site(s)'
-        +(n?(' — '+ID[r][c].join(', ')+(n>8?', …':'')):''))+'</title></g>'}
-  /* le carré à engager en premier : un contour, pas une couleur de plus */
-  g+='<rect x="'+(cx(4)+1.5)+'" y="'+(cy(4)+1.5)+'" width="'+(CW-3)+'" height="'+(CH-3)+'" rx="3" fill="none" stroke="'+C.ok+'" stroke-width="2.5"/>';
+      +'<title>'+esc(lib+(n?' — cliquer pour la liste':''))+'</title></g>'}
+  g+='<rect x="'+(cx(4)+1.5)+'" y="'+(cy(4)+1.5)+'" width="'+(CW-3)+'" height="'+(CH-3)+'" rx="3" fill="none" stroke="'+C.ok+'" stroke-width="2.5" pointer-events="none"/>';
   g+='<text transform="rotate(-90 20 '+(T+GH/2)+')" x="20" y="'+(T+GH/2)+'" text-anchor="middle" font-size="10.5" style="fill:'+C.ink2+'">Priorité — 100 = tête de classement</text>';
-  g+=txt(L+GW/2,yB+30,'Faisabilité (0–100)',{a:'middle',s:10.5,c:C.ink2});
-  /* ce que la matrice ne compte pas doit être lisible sur le même dessin :
-     sinon 5 × 5 cases laissent croire qu'elles couvrent tout le parc */
+  g+=txt(L+GW/2,yB+30,'Faisabilité (0–100) — maturité '+FW.m+' · préparation '+FW.p+' · contraintes '+FW.c,{a:'middle',s:10.5,c:C.ink2});
   const X=L+GW+36;let y=T+2;
   const li=function(t,o){o=o||{};y+=o.gap||18;g+=txt(X,y,esc(t),{s:o.s||10.5,c:o.c||C.ink2,w:o.w,fix:o.fix})};
   y=T-16;li('Ce que la matrice compte',{s:11.5,c:C.ink,w:700,fix:1});
   li(nf(rows.length)+' sous-sites classés dans au moins un objectif',{gap:22});
+  li(masquer?(nf(nTrav)+' en travaux (phase 51 et plus), masqués'):(nf(nTrav)+' dont en travaux (phase 51 et plus)'));
   li(nf(nSans)+' sans classement — aucun objectif ne les retient');
   li(nf(nEx)+' exclus du programme, comptés nulle part ici');
   if(nIn)li(nf(nIn)+' imposés — comptés à leur place réelle');
+  const faible=rows.filter(function(s){return det[s.id].fiab<=2}).length;
+  li(nf(faible)+' à fiabilité faible (2 données sur 5 ou moins)');
   y+=26;
   g+='<rect x="'+X+'" y="'+(y-9)+'" width="12" height="12" rx="2" fill="none" stroke="'+C.ok+'" stroke-width="2"/>'
     +txt(X+19,y,'priorité et faisabilité ≥ 80',{s:10.5,c:C.ink,w:700,fix:1});
   li(nf(M[4][4])+' sous-site(s) — à engager en premier',{gap:16});
-  host.innerHTML=svg(W,yB+50,g)}
+  host.innerHTML=svg(W,yB+50,g);
+  if(UF_SEL&&!(ID[UF_SEL.r]&&ID[UF_SEL.r][UF_SEL.c]&&ID[UF_SEL.r][UF_SEL.c].length))UF_SEL=null;
+  ufListe()}
+/* curseurs : poids des trois blocs, saisis au curseur ou au clavier, jamais mémorisés */
+function ufInitCtl(){
+  const box=$('ufCtl');if(!box||box.dataset.ok)return;box.dataset.ok='1';
+  [['m','ufWm'],['p','ufWp'],['c','ufWc']].forEach(function(a){
+    const r=$(a[1]),n=$(a[1]+'N');if(!r||!n)return;
+    const maj=function(v){v=Math.max(0,Math.min(100,Math.round(+v||0)));FW[a[0]]=v;r.value=v;n.value=v;if(UF_LAST)drawUF(UF_LAST)};
+    r.addEventListener('input',function(){maj(r.value)});
+    n.addEventListener('change',function(){maj(n.value)})});
+  $('ufReset').addEventListener('click',function(){FW=Object.assign({},FW_DEF);
+    [['m','ufWm'],['p','ufWp'],['c','ufWc']].forEach(function(a){$(a[1]).value=FW[a[0]];$(a[1]+'N').value=FW[a[0]]});
+    if(UF_LAST)drawUF(UF_LAST)});
+  $('ufTravaux').addEventListener('change',function(){if(UF_LAST)drawUF(UF_LAST)});
+  const host=$('gUF');
+  const choisir=function(gEl){if(!gEl)return;const r=+gEl.getAttribute('data-r'),c=+gEl.getAttribute('data-c');
+    UF_SEL=(UF_SEL&&UF_SEL.r===r&&UF_SEL.c===c)?null:{r:r,c:c};drawUF(UF_LAST);
+    if(UF_SEL){const l=$('ufListe');if(l&&l.scrollIntoView)try{l.scrollIntoView({block:'nearest',behavior:'smooth'})}catch(e){}}};
+  host.addEventListener('click',function(e){choisir(e.target.closest&&e.target.closest('.uf-c'))});
+  host.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){const gEl=e.target.closest&&e.target.closest('.uf-c');if(gEl){e.preventDefault();choisir(gEl)}}});
+  $('ufListe').addEventListener('click',function(e){const th=e.target.closest&&e.target.closest('th[data-k]');if(!th)return;
+    const k=th.getAttribute('data-k');UF_TRI=(UF_TRI.k===k)?{k:k,desc:!UF_TRI.desc}:{k:k,desc:k!=='id'&&k!=='nom'};ufListe()})}
+/* liste des sous-sites de la case choisie */
+function ufListe(){
+  const host=$('ufListe');if(!host)return;
+  if(!UF_SEL||!UF_ROWS){host.innerHTML='';return}
+  const r=UF_SEL.r,c=UF_SEL.c,L=UF_ROWS.ID[r][c]||[],D=UF_ROWS.det;
+  const val=function(s,k){const d=D[s.id];switch(k){
+    case 'id':return String(s.id);case 'nom':return String(s.nom||'');case 'pr':return s.sc.t;case 'f':return d.f;
+    case 'm':return d.mat;case 'p':return d.prep;case 'c':return d.cont;case 'ph':return d.phase?+d.phase:-1;
+    case 'sev':return d.sev==null?-1:d.sev;case 'fiab':return d.fiab;default:return 0}};
+  const tri=L.slice().sort(function(a,b){const x=val(a,UF_TRI.k),y=val(b,UF_TRI.k);
+    const o=(typeof x==='string')?x.localeCompare(y,'fr',{numeric:true}):(x-y);return UF_TRI.desc?-o:o});
+  const th=function(k,l,num,ti){const on=UF_TRI.k===k;return'<th data-k="'+k+'"'+(num?' class="num"':'')+' title="'+esc((ti||'')+' — cliquer pour trier')+'"'+(on?' aria-sort="'+(UF_TRI.desc?'descending':'ascending')+'"':'')+'>'+l+(on?(UF_TRI.desc?' ▼':' ▲'):'')+'</th>'};
+  let h='<h4>Priorité '+(r*20)+'–'+((r+1)*20)+' × faisabilité '+(c*20)+'–'+((c+1)*20)+' : '+L.length+' sous-site'+(L.length>1?'s':'')+'</h4>'+
+    '<div style="max-height:460px;overflow:auto"><table class="tblx"><thead><tr>'+
+    th('id','N°')+th('nom','Sous-site')+th('pr','Priorité',1,'Meilleure place dans les classements par objectif, 100 = tête')+
+    th('f','Faisabilité',1,'Score pondéré par les curseurs')+th('m','Maturité',1,'Phase SIA du projet GE-Invest le plus avancé, sur 50')+
+    th('p','Préparation',1,'CECB+, chauffage, montant chiffré, montant prévu, sur 25')+th('c','Contraintes',1,'25 moins patrimoine, risques et santé des projets')+
+    th('ph','Phase',0,'Phase SIA déduite de l\'avancement GE-Invest')+th('sev','Risque max.',1,'Risque ouvert le plus sévère, sur 16 (GEI_Risques)')+
+    '<th>Patrimoine</th><th>Resp. de projet</th>'+th('fiab','Fiabilité',1,'Données connues sur 5 : projet, CECB+, chauffage, patrimoine, risques')+'<th></th></tr></thead><tbody>';
+  tri.forEach(function(s){const d=D[s.id];
+    const rq=d.sev!=null?(d.sev+' / 16'+(d.nRisques>1?' ('+d.nRisques+')':'')):(d.evalTxt?d.evalTxt:(d.nProjets?'non saisi':'—'));
+    const det='CECB+ '+(cecbInfo(s).txt||cecbInfo(s).ico)+' · chauffage '+(chauffageDefini(s.hsub)?esc(s.hsub):'non défini')+(d.santeTxt?' · projet '+d.santeTxt:'');
+    let lien=null;try{lien=PTE_COMMUN.lien('revue',String(s.id))}catch(e){lien=null}
+    h+='<tr><td>'+esc(s.id)+'</td><td>'+esc(s.nom||'—')+'<div class="dt">'+det+'</div></td>'+
+      '<td class="num">'+nf(s.sc.t,0)+'</td><td class="num"><b>'+nf(d.f,0)+'</b></td>'+
+      '<td class="num">'+d.mat+'</td><td class="num">'+d.prep+'</td><td class="num">'+d.cont+'</td>'+
+      '<td>'+(d.phase||(d.nProjets?'non renseignée':'aucun projet'))+'</td><td class="num">'+esc(rq)+'</td>'+
+      '<td>'+esc(s.pat||'non renseigné')+'</td><td>'+esc(d.rp||'—')+'</td><td class="num">'+d.fiab+' / 5</td>'+
+      '<td>'+(lien?'<a href="'+esc(lien)+'" title="Ouvrir la revue de projets sur ce sous-site">Revue</a>':'')+'</td></tr>'});
+  h+='</tbody></table></div>';
+  host.innerHTML=h}
 
 function drawFam(){
   if(!RES)return;
@@ -12428,7 +12673,9 @@ function onPanelShown(id){
       if (s) s.remove();
       var corps = document.createElement('div');
       while (d.firstChild) corps.appendChild(d.firstChild);
-      d.appendChild(corps); d.open = true;
+      /* sans <summary>, le navigateur en dessine un, « Details » en anglais : un résumé vide et masqué le remplace (28.10.2026) */
+      var sv = document.createElement('summary'); sv.setAttribute('aria-hidden', 'true'); sv.style.setProperty('display', 'none', 'important');
+      d.appendChild(sv); d.appendChild(corps); d.open = true;
       deposerIcone(d, titre, d.classList.contains('tab-howto') ? 'onglet' : null);
     });
 
