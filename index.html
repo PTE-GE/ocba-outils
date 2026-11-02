@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-ClsjLDM17RzUpUqfliSSwqUN3WN2c3hnxn3NjYFP1vo=' 'sha256-xWwy1XSeiopQZ7fATs259yNo0iLs2frOv6tXHcaHmhM=' 'sha256-K90EH3SU4U/pdsJhheJs7yNfiQAA34NyBfxoTMHfeAU=' 'sha256-H2k5JqJdhjSvy9aTSUDEgqZGxWnlG5Tim1R1TglX3k4=' 'sha256-4FZggAzcsHOtXVPgf2f2ZxVLcNqppLWqroxFruh4gwM='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090 https://ecd.ge.ch; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-ClsjLDM17RzUpUqfliSSwqUN3WN2c3hnxn3NjYFP1vo=' 'sha256-xWwy1XSeiopQZ7fATs259yNo0iLs2frOv6tXHcaHmhM=' 'sha256-0p3Vd9OX3MzDF+85Q4gOiwVRKld2ssDl1KGkRKBZT9o=' 'sha256-H2k5JqJdhjSvy9aTSUDEgqZGxWnlG5Tim1R1TglX3k4=' 'sha256-4FZggAzcsHOtXVPgf2f2ZxVLcNqppLWqroxFruh4gwM='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090 https://ecd.ge.ch; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pilotage PTE</title>
 <style>
@@ -2174,6 +2174,7 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "02.11.2026", "objet": "revue", "version": "v0.39", "titre": "Organigramme des projets d'un portefeuille", "points": ["Nouvel onglet « Organigramme » : pour un responsable de portefeuille, les sites rangés par type d'intervention, chaque projet GE-Invest avec sa nature (selon son numéro) et sa phase SIA en couleur, et les interventions identifiées par l'audit CECB+ (coûts par lot, futur projet PV) sans projet de même nature.", "Reconstruit à chaque import du classeur ; un clic sur la nature ouvre la fiche projet, le numéro ouvre GE-Invest.", "Mode « Modifier » : libellé et AMO du portefeuille, note de site, nature corrigée, délégation « RP (service) », ligne masquée — rubrique « organigramme » des saisies : fichier Excel (feuille « Organigramme ») et serveur partagé (migration 1792200000 à appliquer).", "Impression en A3 paysage."]},
     {"date": "28.10.2026", "objet": "commun", "version": null, "titre": "Fenêtres « i » sans « Details »", "points": ["Dans les fenêtres « i » tirées d'un « Comment lire… », le navigateur n'affiche plus son libellé « Details » en anglais (quatre pages)."]},
     {"date": "28.10.2026", "objet": "priorisation", "version": "v2.31", "titre": "Matrice urgence × faisabilité : nouvelle faisabilité, liste au clic", "points": ["Méthode (chiffres modifiés) : faisabilité = maturité (phase SIA du projet GE-Invest en cours le plus avancé, sur 50) + préparation (variante CECB+, chauffage défini — « == » compris —, montant chiffré, montant prévu, sur 25) + contraintes (25 moins patrimoine, risque ouvert le plus sévère de GEI_Risques ou évaluation des risques, santé du projet). Une donnée absente ne compte ni pour ni contre : elle baisse la fiabilité (0 à 5). La feuille GEI_Risques est lue à l'import.", "Trois curseurs, avec saisie au clavier, règlent le poids des blocs (50 / 25 / 25) ; « Réinitialiser » revient au réglage de référence ; les poids ne sont pas mémorisés.", "Case à cocher : masquer les sous-sites en travaux (phase 51 et plus).", "Un clic sur une case liste ses sous-sites sous la matrice : priorité, faisabilité et ses trois blocs, phase, risque, patrimoine, responsable de projet, fiabilité, lien vers la revue ; tri par colonne."]},
     {"date": "28.10.2026", "objet": "priorisation", "version": "v2.30", "titre": "Trajectoires en intensité", "points": ["Vue d'ensemble : les graphiques du CO₂, du thermique, de l'électricité et de l'eau se lisent au m² — chaque année, consommation ÷ surface de la même année (bloc « référence 2005 » d'Objectifs PTE, thermique corrigé du climat) ; aujourd'hui, cible, portefeuille et potentiel ÷ surface de Plan_PTE. Le suivi officiel et le parc complet se raccordent ; valeurs absolues au survol des points.", "Un projet retenu l'année de la mesure ne compte qu'à partir de l'année suivante : la marche de 2025 disparaît, les valeurs de fin 2030 ne changent pas.", "Électricité : cible déjà atteinte, plus de rythme requis tracé vers le haut.", "Bloc « référence 2005 » : une colonne 2025 (ou suivante) ajoutée à la suite de 2024 est lue sans changer l'outil."]},
@@ -2452,6 +2453,22 @@ var PTE_COMMUN = (function () {
   var LS_SAUVE = 'pte.saisies.sauvegarde.v1';   /* {date, fichier, cles:{cle: texte brut | null}} */
   var LS_CONSO = 'pte.consolidateur.v1';        /* '1' = mode consolidateur sur ce poste */
   var K_PRIO = 'pte_state_v2', K_REVUE = 'ocba_revue_db_v1', K_DATA = 'pte_data_v2';
+  /* organigramme de la revue (02.11.2026) : une saisie par portefeuille, ligne ou site, rubrique « organigramme »,
+     site = « zone:clé » (pf:RPF, item:N° projet ou sous-site|lot, site:N site) */
+  var K_ORG = 'ocba_revue_organigramme_v1';
+  var ORG_ZONES = { pf: ['titre', 'amo'], item: ['nature', 'rp', 'service', 'masque'], site: ['note'] };
+  var ORG_STOCK = { pf: 'pf', item: 'items', site: 'sites' };
+  var CH_ORG = ['titre', 'amo', 'note', 'nature', 'rp', 'service', 'masque'];
+  var ORG_LIB = { pf: 'Portefeuille', item: 'Ligne', site: 'Site' };
+  function orgPartie(site) {
+    var s = txt(site), i = s.indexOf(':'), z = i > 0 ? s.slice(0, i) : '', k = i > 0 ? s.slice(i + 1) : '';
+    return (Object.prototype.hasOwnProperty.call(ORG_ZONES, z) && k.trim() && !PIEGES[k]) ? { zone: z, cle: k } : null;
+  }
+  function lireOrg() {
+    var o = lireJ(K_ORG); if (!o || typeof o !== 'object' || Array.isArray(o)) o = {};
+    Object.keys(ORG_STOCK).forEach(function (z) { var k = ORG_STOCK[z]; if (!o[k] || typeof o[k] !== 'object' || Array.isArray(o[k])) o[k] = {}; });
+    return o;
+  }
   var FORMAT = 'pte-saisies-xlsx', VERSION_FORMAT = 1;
   var SEP = '␟';
   var PIEGES = Object.create(null); PIEGES['__proto__'] = PIEGES.constructor = PIEGES.prototype = 1;
@@ -2565,6 +2582,7 @@ var PTE_COMMUN = (function () {
     if (f.rubrique === 'note') return txt(f.texte).replace(/\r\n?/g, '\n').trim();
     if (f.rubrique === 'ajustement') return txt(f.niveau) + SEP + txt(f.motif).trim();
     if (f.rubrique === 'decision') return contenuDecision(normDecision(f));
+    if (f.rubrique === 'organigramme') return txt(f.site) + SEP + CH_ORG.map(function (c) { return c === 'masque' ? (oui(f.masque) ? 'oui' : '') : txt(f[c]).replace(/\r\n?/g, '\n').trim(); }).join(SEP);
     return '';
   }
   function nomsSites() {
@@ -2583,6 +2601,19 @@ var PTE_COMMUN = (function () {
     Object.keys(Q).forEach(function (id) {
       var q = Q[id] || {}, p = txt(q.p); if (!p || p === '0' || PIEGES[id]) return;
       out.push({ cle: 'ajustement|' + id, rubrique: 'ajustement', site: id, nom: noms[id] || '', niveau: p, motif: txt(q.m) });
+    });
+    var org = lireOrg();
+    Object.keys(ORG_ZONES).forEach(function (z) {
+      var S = org[ORG_STOCK[z]];
+      Object.keys(S).forEach(function (k) {
+        var o = S[k]; if (!o || typeof o !== 'object' || !k.trim() || PIEGES[k]) return;
+        var f = { cle: 'organigramme|' + z + ':' + k, rubrique: 'organigramme', site: z + ':' + k, nom: '' }, plein = false;
+        CH_ORG.forEach(function (c) {
+          var v = ORG_ZONES[z].indexOf(c) < 0 ? '' : (c === 'masque' ? (o.masque === true ? 'oui' : '') : ((typeof o[c] === 'string' || typeof o[c] === 'number') ? txt(o[c]) : ''));
+          f[c] = v; if (v.trim()) plein = true;
+        });
+        if (plein) out.push(f);
+      });
     });
     var db = lireJ(K_REVUE) || {};
     (db.decisions || []).forEach(function (d) {
@@ -2639,7 +2670,8 @@ var PTE_COMMUN = (function () {
   }
   /* Écrit et supprime des saisies dans le stockage des outils, puis leur fiche (auteur, date). */
   function ecrireFiches(aEcrire, aSupprimer) {
-    var st = lireJ(K_PRIO), stC = false, db = lireJ(K_REVUE), dbC = false;
+    var st = lireJ(K_PRIO), stC = false, db = lireJ(K_REVUE), dbC = false, org = null, orgC = false;
+    function orgS() { if (!org) org = lireOrg(); return org; }
     var decAvant = (db && Array.isArray(db.decisions)) ? db.decisions.slice() : [];
     if (!st || typeof st !== 'object') st = {};
     if (!st.siteNotes || typeof st.siteNotes !== 'object') st.siteNotes = {};
@@ -2654,6 +2686,13 @@ var PTE_COMMUN = (function () {
     (aEcrire || []).forEach(function (f) {
       if (f.rubrique === 'note' && !PIEGES[f.site]) { st.siteNotes[f.site] = txt(f.texte); stC = true; }
       else if (f.rubrique === 'ajustement' && !PIEGES[f.site]) { st.siteQuali[f.site] = { p: txt(f.niveau), m: txt(f.motif) }; stC = true; }
+      else if (f.rubrique === 'organigramme') {
+        var pz = orgPartie(f.site); if (!pz) return;
+        var oo = {}; ORG_ZONES[pz.zone].forEach(function (c) { if (c === 'masque') { if (oui(f.masque)) oo.masque = true; } else { var v = txt(f[c]).trim(); if (v) oo[c] = v; } });
+        var So = orgS()[ORG_STOCK[pz.zone]];
+        if (Object.keys(oo).length) So[pz.cle] = oo; else delete So[pz.cle];
+        orgC = true;
+      }
       else if (f.rubrique === 'decision') {
         var L = decisions(), i = rang(L, f.id), o = { id: f.id };
         CH_DEC_TOUS.forEach(function (c) { o[c] = txt(f[c]); });
@@ -2667,6 +2706,10 @@ var PTE_COMMUN = (function () {
     (aSupprimer || []).forEach(function (f) {
       if (f.rubrique === 'note') { if (f.site in st.siteNotes) { delete st.siteNotes[f.site]; stC = true; } }
       else if (f.rubrique === 'ajustement') { if (f.site in st.siteQuali) { delete st.siteQuali[f.site]; stC = true; } }
+      else if (f.rubrique === 'organigramme') {
+        var pz2 = orgPartie(f.site); if (!pz2) return;
+        var S2 = orgS()[ORG_STOCK[pz2.zone]]; if (Object.prototype.hasOwnProperty.call(S2, pz2.cle)) { delete S2[pz2.cle]; orgC = true; }
+      }
       else if (f.rubrique === 'decision') {
         var L2 = decisions(), avant = L2.length;
         db.decisions = L2.filter(function (d) { return idDecision(d) !== f.id; });
@@ -2675,6 +2718,7 @@ var PTE_COMMUN = (function () {
     });
     var ok = true;
     if (stC) ok = ecrireJ(K_PRIO, st) && ok;
+    if (orgC) ok = ecrireJ(K_ORG, org) && ok;
     /* registre de la revue : seules ses décisions changent, retraits datés ; la date d'un effacement antérieur y
        reste (la revue écarte les données plus anciennes) */
     if (dbC) { noterRetraits(db, decAvant); ok = ecrireJ(K_REVUE, db) && ok; }
@@ -2853,6 +2897,7 @@ var PTE_COMMUN = (function () {
   /* ---------- le classeur des saisies ---------- */
   var ENT_NOTES = ['N° sous-site', 'Sous-site', 'Note', 'Auteur', 'Modifiée le', 'Supprimer (oui)'];
   var ENT_AJUST = ['N° sous-site', 'Sous-site', 'Ajustement', 'Motif', 'Auteur', 'Modifié le', 'Supprimer (oui)'];
+  var ENT_ORG = ['Élément', 'Clé', 'Libellé du portefeuille', 'AMO', 'Note', 'Nature', 'Délégation : RP', 'Service', 'Masquée (oui)', 'Auteur', 'Modifiée le', 'Supprimer (oui)'];
   var ENT_DEC = ['Identifiant', 'Date de revue', 'Niveau', 'N° projet', 'Portefeuille', 'Décision', 'Responsable', 'Échéance', 'Statut', 'Escalade vers', 'Notes', 'Auteur', 'Modifiée le', 'Supprimer (oui)'];
   function tri(a, b) { return a.site < b.site ? -1 : a.site > b.site ? 1 : 0; }
   function morceaux(s, n) {
@@ -2868,11 +2913,12 @@ var PTE_COMMUN = (function () {
   var MAX_CELLULE = 32767;
   function construireClasseur(paquet) {
     var info = paquet.info || {}, F = paquet.fiches || [], u = info.auteur || '';
-    var trop = F.filter(function (f) { return [f.texte, f.motif, f.decision, f.notes, f.responsable, f.escalade_vers, f.portefeuille, f.nom].some(function (v) { return txt(v).length > MAX_CELLULE; }); });
+    var trop = F.filter(function (f) { return [f.texte, f.motif, f.decision, f.notes, f.responsable, f.escalade_vers, f.portefeuille, f.nom, f.titre, f.amo, f.note, f.rp, f.service, f.site].some(function (v) { return txt(v).length > MAX_CELLULE; }); });
     if (trop.length) throw new Error(trop.length + ' saisie(s) trop longue(s) pour une cellule Excel (32 767 caractères au plus) : ' +
       trop.slice(0, 5).map(function (f) { return RUBRIQUES[f.rubrique] + ' ' + (f.site || f.numero_projet || f.id); }).join(', ') + ' — à raccourcir avant l’export');
     var notes = F.filter(function (f) { return f.rubrique === 'note'; }).sort(tri);
     var ajust = F.filter(function (f) { return f.rubrique === 'ajustement'; }).sort(tri);
+    var orgF = F.filter(function (f) { return f.rubrique === 'organigramme'; }).sort(tri);
     var dec = F.filter(function (f) { return f.rubrique === 'decision'; })
       .sort(function (a, b) { return (txt(b.date) > txt(a.date) ? 1 : txt(b.date) < txt(a.date) ? -1 : 0) || (a.numero_projet < b.numero_projet ? -1 : 1); });
     var sup = function (f) { return f.supprimer ? 'oui' : ''; };
@@ -2880,16 +2926,17 @@ var PTE_COMMUN = (function () {
     var lisez = [['Saisies PTE'],
       [conso ? 'Version consolidée par ' + conso.par + ', le ' + dateLisible(conso.le) + ', à partir de ' + (conso.sources || []).length + ' fichier(s).'
              : 'Exporté par ' + (u || '(nom non renseigné)') + ', le ' + dateLisible(info.date) + '.'],
-      [notes.length + ' note(s) · ' + ajust.length + ' ajustement(s) · ' + dec.length + ' décision(s) et escalade(s)' + ((paquet.blocs || []).length ? ' · réglages des outils (feuille masquée)' : '') + '.'],
+      [notes.length + ' note(s) · ' + ajust.length + ' ajustement(s) · ' + dec.length + ' décision(s) et escalade(s)' + (orgF.length ? ' · ' + orgF.length + ' saisie(s) de l’organigramme' : '') + ((paquet.blocs || []).length ? ' · réglages des outils (feuille masquée)' : '') + '.'],
       [''],
       ['À quoi sert ce fichier'],
-      ['Ce fichier réunit les saisies faites dans les outils de pilotage PTE : notes et facteurs non mesurables (ajustements) de la priorisation, décisions et escalades de la revue de projets. Il se relit dans les outils par le bouton Saisies, en haut à droite de chaque page → « Importer un fichier… ».'],
+      ['Ce fichier réunit les saisies faites dans les outils de pilotage PTE : notes et facteurs non mesurables (ajustements) de la priorisation, décisions, escalades et organigramme de la revue de projets. Il se relit dans les outils par le bouton Saisies, en haut à droite de chaque page → « Importer un fichier… ».'],
       [''],
       ['Modification dans Excel'],
       ['• Une ligne = une saisie. Le texte se corrige directement : à la réimportation, l’outil montre chaque changement avant de l’appliquer.'],
       ['• Suppression : « oui » dans la colonne « Supprimer (oui) ». Effacer la ligne ne supprime rien dans les outils.'],
       ['• Ajustement : valeur choisie dans la liste, motif obligatoire (règle de la priorisation). « Aucun ajustement » le retire.'],
       ['• Décisions : la colonne « Identifiant » relie la ligne à sa décision et ne se modifie pas. Une nouvelle ligne sans identifiant crée une nouvelle décision.'],
+      ['• Organigramme : « Élément » et « Clé » désignent le portefeuille (responsable), la ligne (N° de projet, ou sous-site|lot) ou le site (N site) et ne se modifient pas. Seules les colonnes de cet élément comptent : portefeuille → libellé et AMO ; ligne → nature (code 01 à 09, ou emb), délégation, service, masquée ; site → note.'],
       ['• Les colonnes « Auteur » et « … le » sont tenues par les outils : une ligne modifiée dans Excel est reconnue comme telle et signée par la personne qui a exporté le fichier.'],
       ['• Noms des feuilles et titres des colonnes à garder tels quels ; feuille masquée « _technique » à laisser intacte.'],
       [''],
@@ -2918,6 +2965,9 @@ var PTE_COMMUN = (function () {
       { nom: 'Décisions', entetes: ENT_DEC, largeurs: [13, 12, 13, 15, 18, 60, 20, 12, 11, 20, 50, 20, 17, 11], gris: { 0: 1, 12: 1 },
         lignes: dec.map(function (f) { return [f.id, f.date, NIVEAUX[f.niveau] || f.niveau, f.numero_projet, f.portefeuille, f.decision, f.responsable, f.echeance, f.statut, f.escalade_vers, f.notes || '', f.auteur, dateFichier(f.modifie), sup(f)]; }),
         listes: { 2: ['Projet', 'Portefeuille', 'Parc'], 13: ['oui'] } },
+      { nom: 'Organigramme', entetes: ENT_ORG, largeurs: [13, 26, 26, 26, 40, 9, 22, 14, 11, 20, 17, 11], gris: { 0: 1, 1: 1, 10: 1 },
+        lignes: orgF.map(function (f) { var p = orgPartie(f.site) || { zone: '', cle: f.site }; return [ORG_LIB[p.zone] || p.zone, p.cle, f.titre, f.amo, f.note, f.nature, f.rp, f.service, oui(f.masque) ? 'oui' : '', f.auteur, dateFichier(f.modifie), sup(f)]; }),
+        listes: { 0: ['Portefeuille', 'Ligne', 'Site'], 5: ['01', '02', '03', '04', '05', '06', '07', '08', '09', 'emb', 'autre'], 8: ['oui'], 11: ['oui'] } },
       { nom: '_technique', cachee: true, lignes: tech, largeurs: [14, 60, 8, 22, 14] }
     ];
     return classeurXlsx(feuilles, { auteur: u, titre: conso ? 'Saisies PTE consolidées' : 'Saisies PTE' });
@@ -2932,12 +2982,13 @@ var PTE_COMMUN = (function () {
     return { fiches: fiches, blocs: blocsReglages(), info: { auteur: u, date: maintenant() } };
   }
   function resumePaquet(p) {
-    var n = { note: 0, ajustement: 0, decision: 0 };
-    (p.fiches || []).forEach(function (f) { if (!f.supprimer) n[f.rubrique]++; });
+    var n = { note: 0, ajustement: 0, decision: 0, organigramme: 0 };
+    (p.fiches || []).forEach(function (f) { if (!f.supprimer && Object.prototype.hasOwnProperty.call(n, f.rubrique)) n[f.rubrique]++; });
     var out = [];
     if (n.note) out.push(n.note + ' note(s)');
     if (n.ajustement) out.push(n.ajustement + ' ajustement(s)');
     if (n.decision) out.push(n.decision + ' décision(s)');
+    if (n.organigramme) out.push(n.organigramme + ' saisie(s) de l’organigramme');
     (p.blocs || []).forEach(function (b) { out.push(b.resume || resumeBloc(b.cle, b.contenu)); });
     return out;
   }
@@ -2964,7 +3015,7 @@ var PTE_COMMUN = (function () {
       if (!X.unzip(u8).files['xl/workbook.xml']) throw new Error('ce fichier n’est pas un classeur Excel');
       var out = Object.create(null);   /* noms de feuilles venus du fichier : « __proto__ » reste une feuille */
       /* seules les feuilles du format sont lues (27.10.2026) : un fichier piégé peut en déclarer beaucoup d'autres */
-      var voulues = ['_technique', 'Notes', 'Ajustements', 'Décisions'].map(normEnt);
+      var voulues = ['_technique', 'Notes', 'Ajustements', 'Décisions', 'Organigramme'].map(normEnt);
       X.sheetNames(u8).forEach(function (nom) { if (voulues.indexOf(normEnt(nom)) >= 0) out[nom] = X.sheetRows(u8, nom, X.SAISIES) || []; });
       ok(out);
     });
@@ -2997,8 +3048,8 @@ var PTE_COMMUN = (function () {
       else if (k === 'vues') vues += txt(l[1]);
       else if (k === 'bloc') { var c = txt(l[3]), ip = +l[2] || 0; if (ip >= 0 && ip < 1000) (blocs[c] = blocs[c] || { cle: c, outil: txt(l[4]), parts: [] }).parts[ip] = txt(l[1]); }
     });
-    var notesF = feuille(F, 'Notes'), ajF = feuille(F, 'Ajustements'), decF = feuille(F, 'Décisions');
-    if (info.format !== FORMAT && !(notesF || ajF || decF)) throw new Error('ce classeur n’est pas un fichier de saisies PTE');
+    var notesF = feuille(F, 'Notes'), ajF = feuille(F, 'Ajustements'), decF = feuille(F, 'Décisions'), orgFe = feuille(F, 'Organigramme');
+    if (info.format !== FORMAT && !(notesF || ajF || decF || orgFe)) throw new Error('ce classeur n’est pas un fichier de saisies PTE');
     var empreintes = {}; try { empreintes = emp ? JSON.parse(emp) : {}; } catch (e) {}
     if (!empreintes || typeof empreintes !== 'object') empreintes = {};   /* « null » ou un nombre : fichier retouché */
     if (info.consolide && vues) { try { var vv = JSON.parse(vues); if (vv && typeof vv === 'object') info.consolide.vues = vv; } catch (e) {} }
@@ -3018,6 +3069,7 @@ var PTE_COMMUN = (function () {
           return;
         }
         if (f.rubrique === 'ajustement') { avert.push('Ajustements : deux lignes pour le sous-site ' + f.site + ', seule la première est retenue'); return; }
+        if (f.rubrique === 'organigramme') { avert.push('Organigramme : deux lignes pour « ' + f.site + ' », seule la première est retenue'); return; }
         f.id = 'D-' + hash(contenuDecision(f)); f.cle = 'decision|' + f.id; f.sansId = true;
         if (deja[f.cle]) return;
         avert.push('Décisions : identifiant ' + d.id + ' présent sur deux lignes différentes, la seconde est reprise comme une nouvelle décision');
@@ -3062,6 +3114,29 @@ var PTE_COMMUN = (function () {
         if (!f.id) f.id = 'D-' + hash(contenuDecision(f));
         f.cle = 'decision|' + f.id; f.supprimer = oui(cel(L, cd.sup));
         marquer(f, cel(L, cd.auteur), cel(L, cd.modifie));
+      });
+    }
+    if (orgFe && orgFe.length) {
+      var co = colonnes(orgFe[0], { zone: ['Élément'], cle: ['Clé'], titre: ['Libellé du portefeuille'], amo: ['AMO'], note: ['Note'], nature: ['Nature'],
+        rp: ['Délégation : RP', 'Délégation'], service: ['Service'], masque: ['Masquée'], auteur: ['Auteur'], modifie: ['Modifiée le', 'Modifie'], sup: ['Supprimer'] });
+      var ZLIB = { portefeuille: 'pf', ligne: 'item', site: 'site' };
+      if (co.zone < 0 || co.cle < 0) avert.push('feuille Organigramme : colonnes « Élément » ou « Clé » introuvables, feuille ignorée');
+      else orgFe.slice(1).forEach(function (L, i) {
+        var z = ZLIB[normEnt(cel(L, co.zone))], k = txt(cel(L, co.cle)).trim();
+        if (!k && !txt(cel(L, co.zone)).trim()) return;
+        if (!z || !orgPartie(z + ':' + k)) { avert.push('Organigramme, ligne ' + (i + 2) + ' : élément « ' + txt(cel(L, co.zone)) + ' » ou clé « ' + k + ' » non reconnus, ligne ignorée'); return; }
+        var f = { cle: 'organigramme|' + z + ':' + k, rubrique: 'organigramme', site: z + ':' + k, nom: '' }, plein = false;
+        CH_ORG.forEach(function (c) {
+          var v = ORG_ZONES[z].indexOf(c) < 0 || co[c] < 0 ? '' : (c === 'masque' ? (oui(cel(L, co.masque)) ? 'oui' : '') : txt(cel(L, co[c])).trim());
+          f[c] = v; if (v) plein = true;
+        });
+        if (f.nature) {   /* code de nature : « 6 » devient « 06 » ; hors table, la ligne garde ses autres champs */
+          var na = f.nature.toLowerCase(); if (/^\d$/.test(na)) na = '0' + na;
+          if (/^0[1-9]$/.test(na) || na === 'emb' || na === 'autre') f.nature = na;
+          else { avert.push('Organigramme, ligne ' + (i + 2) + ' : nature « ' + f.nature + ' » hors de la matrice (01 à 09, emb, autre), ignorée'); f.nature = ''; plein = CH_ORG.some(function (c) { return !!f[c]; }); }
+        }
+        f.supprimer = oui(cel(L, co.sup)) || !plein;
+        marquer(f, cel(L, co.auteur), cel(L, co.modifie));
       });
     }
     var B = Object.keys(blocs).map(function (k) {
@@ -3154,6 +3229,7 @@ var PTE_COMMUN = (function () {
   /* ---------- comparer un paquet à ce navigateur ---------- */
   function etiquette(f) {
     if (f.rubrique === 'decision') return 'Projet ' + (f.numero_projet || '—') + (f.date ? ' · revue du ' + f.date : '');
+    if (f.rubrique === 'organigramme') { var po = orgPartie(f.site); return 'Organigramme · ' + (po ? ORG_LIB[po.zone] + ' ' + po.cle : txt(f.site)); }
     var noms = etiquette.noms || (etiquette.noms = nomsSites());
     return 'Sous-site ' + f.site + (f.nom || noms[f.site] ? ' · ' + (f.nom || noms[f.site]) : '');
   }
@@ -3162,9 +3238,11 @@ var PTE_COMMUN = (function () {
     if (f.supprimer) return '(à supprimer)';
     if (f.rubrique === 'note') return txt(f.texte);
     if (f.rubrique === 'ajustement') return libAjust(f.niveau) + ' — ' + txt(f.motif);
+    if (f.rubrique === 'organigramme') return [['titre', 'libellé'], ['amo', 'AMO'], ['note', 'note'], ['nature', 'nature'], ['rp', 'délégation'], ['service', 'service']]
+      .filter(function (x) { return txt(f[x[0]]).trim(); }).map(function (x) { return x[1] + ' : ' + txt(f[x[0]]).trim(); }).concat(oui(f.masque) ? ['ligne masquée'] : []).join(' · ');
     return txt(f.decision) + (f.responsable ? ' · resp. ' + f.responsable : '') + (f.echeance ? ' · échéance ' + f.echeance : '') + (f.statut ? ' · ' + f.statut : '') + (f.escalade_vers ? ' · escalade vers ' + f.escalade_vers : '') + (txt(f.notes).trim() ? ' · notes : ' + txt(f.notes).trim() : '');
   }
-  var RUBRIQUES = { note: 'Note', ajustement: 'Ajustement', decision: 'Décision' };
+  var RUBRIQUES = { note: 'Note', ajustement: 'Ajustement', decision: 'Décision', organigramme: 'Organigramme' };
   function analyser(paquet) {
     etiquette.noms = null;
     var locales = Object.create(null), ref = paquet.info && paquet.info.consolide, out = { lignes: [], identiques: 0, ignorees: 0 };
@@ -3217,7 +3295,7 @@ var PTE_COMMUN = (function () {
     var st = lireJ(K_PRIO), db = lireJ(K_REVUE);
     var s = { v: 2, date: maintenant(), fichier: fichier || '',
       prio: st && typeof st === 'object' ? { siteNotes: st.siteNotes || {}, siteQuali: st.siteQuali || {} } : null,
-      decisions: db && Array.isArray(db.decisions) ? db.decisions : null, fiches: lire(LS_FICHES), blocs: {} };
+      decisions: db && Array.isArray(db.decisions) ? db.decisions : null, fiches: lire(LS_FICHES), org: lire(K_ORG), blocs: {} };
     (blocs || []).forEach(function (b) {
       var cur = lireJ(b.cle);
       if (Array.isArray(b.contenu) || !cur || typeof cur !== 'object' || Array.isArray(cur)) s.blocs[b.cle] = { brut: lire(b.cle) };
@@ -3237,6 +3315,7 @@ var PTE_COMMUN = (function () {
       db.decisions = s.decisions || []; noterRetraits(db, decAvant); ecrireJ(K_REVUE, db);
     }
     try { if (s.fiches == null) localStorage.removeItem(LS_FICHES); else localStorage.setItem(LS_FICHES, s.fiches); } catch (e) {}
+    if ('org' in s) { try { if (s.org == null) localStorage.removeItem(K_ORG); else localStorage.setItem(K_ORG, s.org); } catch (e) {} }
     Object.keys(s.blocs || {}).forEach(function (k) {
       var b = s.blocs[k];
       if ('brut' in b) { try { if (b.brut == null) localStorage.removeItem(k); else localStorage.setItem(k, b.brut); } catch (e) {} return; }
@@ -3559,6 +3638,7 @@ var PTE_COMMUN = (function () {
         opts.publier(p, K).then(function (n) {
           var resultat = { publie: n, resume: resumePaquet(p) };
           W.surFermer = null; W.fermer();
+          if (publierLots.avert) montrerErreur('Référence publiée sans l’organigramme', publierLots.avert);
           if (app && app.checked) { p.fichier = 'référence du serveur'; montrerApercu(p, function (r) { resultat.import = r; fin(resultat); }); }
           else fin(resultat);
         }).catch(function (e) { bPub.disabled = false; bPub.textContent = 'Publier la référence sur le serveur'; montrerErreur('Publication impossible', (e && e.message) || String(e)); });
@@ -3694,7 +3774,7 @@ var PTE_COMMUN = (function () {
         return r.text().then(function (t) {
           if (to) clearTimeout(to);
           var j = null; try { j = t ? JSON.parse(t) : null; } catch (e) {}
-          if (!r.ok) { if (r.status === 401 && chemin !== '/api/collections/users/auth-with-password') fermerSessionEchue(); var err = new Error(messageErreur(r.status, j)); err.status = r.status; throw err; }
+          if (!r.ok) { if (r.status === 401 && chemin !== '/api/collections/users/auth-with-password') fermerSessionEchue(); var err = new Error(messageErreur(r.status, j)); err.status = r.status; err.data = j; throw err; }
           return j;
         });
       }, function (e) {
@@ -3751,16 +3831,42 @@ var PTE_COMMUN = (function () {
   }
   /* Saisie lue sur le serveur (26.10.2026) : seuls les champs de sa rubrique sont repris, et « cle » doit
      désigner ce sous-site ou cet identifiant ; sinon l'aperçu comparerait une saisie et l'import en écrirait une autre. */
-  var CHAMPS_RUB = { note: ['site', 'nom', 'texte'], ajustement: ['site', 'nom', 'niveau', 'motif'], decision: ['id'].concat(CH_DEC_TOUS) };
+  var CHAMPS_RUB = { note: ['site', 'nom', 'texte'], ajustement: ['site', 'nom', 'niveau', 'motif'], decision: ['id'].concat(CH_DEC_TOUS),
+    organigramme: ['site', 'nom'].concat(CH_ORG) };
   function ficheDepuisServeur(r) {
     var champs = r && Object.prototype.hasOwnProperty.call(CHAMPS_RUB, r.rubrique) ? CHAMPS_RUB[r.rubrique] : null, src = (r && r.fiche) || {};
     if (!champs) return null;
     var f = { cle: txt(r.cle), rubrique: r.rubrique, auteur: txt(r.auteur_nom), modifie: txt(r.modifie) || isoServeur(r.updated), supprimer: !!r.supprime };
     champs.forEach(function (c) { f[c] = txt(src[c]); });
     if (f.cle !== (f.rubrique === 'decision' ? 'decision|' + f.id : f.rubrique + '|' + f.site) || PIEGES[f.site]) return null;
+    if (f.rubrique === 'organigramme') {
+      var pz = orgPartie(f.site); if (!pz) return null;
+      CH_ORG.forEach(function (c) { if (ORG_ZONES[pz.zone].indexOf(c) < 0) f[c] = ''; else if (c === 'masque') f[c] = oui(f[c]) ? 'oui' : ''; });
+    }
     return f;
   }
 
+  /* Rubrique « organigramme » (02.11.2026) : un serveur qui n'a pas encore la migration 1792200000 la refuse (400).
+     Ses lignes partent donc dans un lot à part, après les autres : un refus n'empêche ni les notes, ni les
+     ajustements, ni les décisions, et il est dit. */
+  var AVERT_ORG = 'Saisies de l’organigramme non transmises : le serveur n’a pas encore la rubrique « organigramme » (mise à jour à faire sur le Mac mini : migration 1792200000_pte_organigramme.js, puis relancer le serveur).';
+  /* refus du seul champ « rubrique » (valeur inconnue du serveur) : c'est la migration qui manque ; tout autre 400 est une vraie erreur */
+  function sansRubriqueOrg(e) {
+    var R = e && e.data && e.data.data && e.data.data.requests;
+    if (!R || typeof R !== 'object') return false;
+    return Object.keys(R).some(function (k) { var d = R[k] && R[k].response && R[k].response.data; return !!(d && d.rubrique && d.rubrique.code === 'validation_invalid_value'); });
+  }
+  function lotsAvecOrg(req, taille) {
+    var org = req.filter(function (r) { return r.body && r.body.rubrique === 'organigramme'; }), autres = req.filter(function (r) { return !(r.body && r.body.rubrique === 'organigramme'); });
+    return parLots(autres, taille).then(function (na) {
+      if (!org.length) return { n: na, refus: 0 };
+      return parLots(org, taille).then(function (no) { return { n: na + no, refus: 0 }; }, function (e) {
+        if (e && e.status === 400 && !e.ecrites && sansRubriqueOrg(e)) return { n: na, refus: org.length };
+        if (e && typeof e.ecrites === 'number') { e.ecrites += na; e.total = req.length; }
+        throw e;
+      });
+    });
+  }
   /* Envoie les saisies de ce navigateur comme « ma version » ; une saisie retirée ici est marquée supprimée. */
   function envoyerSaisies() {
     var s = session(); if (!s) return Promise.reject(new Error('connexion nécessaire'));
@@ -3774,15 +3880,15 @@ var PTE_COMMUN = (function () {
         if (r && r.empreinte === emp && !r.supprime) return;
         n.envoyees++;
         req.push({ method: 'PUT', url: '/api/collections/saisies/records', body: { id: r ? r.id : idStable(u.id + '|' + f.cle), cle: f.cle, rubrique: f.rubrique,
-          site: txt(f.site), projet: txt(f.numero_projet), fiche: ficheVersServeur(f), empreinte: emp, supprime: false,
+          site: f.rubrique === 'organigramme' ? '' : txt(f.site), projet: txt(f.numero_projet), fiche: ficheVersServeur(f), empreinte: emp, supprime: false,
           modifie: f.modifie || maintenant(), auteur: u.id, auteur_nom: f.auteur || u.name } });
       });
       miennes.forEach(function (r) {
         if (ici[r.cle] || r.supprime) return;
         n.retirees++;
-        req.push({ method: 'PATCH', url: '/api/collections/saisies/records/' + r.id, body: { supprime: true, modifie: maintenant() } });
+        req.push({ method: 'PATCH', url: '/api/collections/saisies/records/' + r.id, body: { supprime: true, modifie: maintenant(), rubrique: r.rubrique } });
       });
-      return parLots(req, 50).then(function () { return n; });
+      return lotsAvecOrg(req, 50).then(function (x) { if (x.refus) { n.envoyees -= x.refus; n.avert = AVERT_ORG; } return n; });
     });
   }
   /* Toutes les versions du serveur, un « paquet » par auteur (pour la consolidation existante). */
@@ -3832,11 +3938,13 @@ var PTE_COMMUN = (function () {
   }
   function publierLots(p, s) {
     var req = p.fiches.map(function (f) {
-      return { method: 'PUT', url: '/api/collections/reference/records', body: { id: idStable('ref|' + f.cle), cle: f.cle, rubrique: f.rubrique, site: txt(f.site),
+      return { method: 'PUT', url: '/api/collections/reference/records', body: { id: idStable('ref|' + f.cle), cle: f.cle, rubrique: f.rubrique, site: f.rubrique === 'organigramme' ? '' : txt(f.site),
         projet: txt(f.numero_projet), fiche: ficheVersServeur(f), empreinte: hash(contenu(f)), supprime: !!f.supprimer, modifie: f.modifie || '',
         auteur_nom: f.auteur || '', vues: (p.vues && p.vues[f.cle]) || [], consolide_par: s.user.id } };
     });
-    return parLots(req, 50).then(function (n) {
+    publierLots.avert = '';
+    return lotsAvecOrg(req, 50).then(function (x) {
+      var n = x.n; if (x.refus) publierLots.avert = AVERT_ORG;
       return api('POST', '/api/collections/consolidations/records', { par: s.user.id, par_nom: s.user.name, nombre: n,
         sources: (p.info.consolide.sources || []).map(function (x) { return { fichier: x.fichier, auteur: x.auteur, date: x.date }; }) }).then(function () { return n; });
     }, function (e) {
@@ -4320,8 +4428,8 @@ var PTE_COMMUN = (function () {
       if (act === 'envoyer') {
         msg = 'Envoi en cours…'; rendre();
         envoyerSaisiesUI(function (n) {
-          if (n) noterSynchro('envoi');
-          majBoutons(); msg = n ? 'Envoyé : ' + n.envoyees + ' saisie' + (n.envoyees > 1 ? 's' : '') + (n.retirees ? ', ' + n.retirees + ' retirée' + (n.retirees > 1 ? 's' : '') : '') + '.' : '';
+          if (n && !n.avert) noterSynchro('envoi');
+          majBoutons(); msg = n ? 'Envoyé : ' + n.envoyees + ' saisie' + (n.envoyees > 1 ? 's' : '') + (n.retirees ? ', ' + n.retirees + ' retirée' + (n.retirees > 1 ? 's' : '') : '') + '.' + (n.avert ? ' ' + n.avert : '') : '';
           if (pop) rendre(); else if (n) signaler(msg);
         });
         return;

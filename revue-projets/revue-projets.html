@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-7ytlshlBfTzV0wA35SPT3injW9CXMbq8Y2qHVOHhWmA=' 'sha256-rAcIh4TNeoEDmSDM23ZTWqq2De0JwSuDczq7VLPZU5U=' 'sha256-pm3E2oVoBUzwD7NgvyA++4j+8FBfbWZnld4tG00v7A0=' 'sha256-n5ww80pymD5TQiuR4Zy2WHeaElOGMtOjt9bhe0mQqXQ=' 'sha256-Jc1I6uStMKYMlhAK7RVktQBFY6hnkEoCZnqsELaHl8Q=' 'sha256-H2k5JqJdhjSvy9aTSUDEgqZGxWnlG5Tim1R1TglX3k4='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-7ytlshlBfTzV0wA35SPT3injW9CXMbq8Y2qHVOHhWmA=' 'sha256-rAcIh4TNeoEDmSDM23ZTWqq2De0JwSuDczq7VLPZU5U=' 'sha256-5wU9GdW0KnBCmEaUnjp1nLfOEBDM/P9TFVRuZi5EjY0=' 'sha256-vIf5UbUBAjI2SbXKjKKcSeVHF5fXZjbIF9dXjY/Qarc=' 'sha256-ZVEdil1BLxx1bQhNMSCMcy4c5IWqRs1HVXi42h5lqDQ=' 'sha256-H2k5JqJdhjSvy9aTSUDEgqZGxWnlG5Tim1R1TglX3k4='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Revue de projets</title>
 <style>
@@ -847,6 +847,51 @@ body.night{--fam1:#3FC9BC; --fam2:#6FA7E0; --fam3:#A995DD; --fam4:#D07BBE;}
 .rep-legend .sw-repere{width:3px; height:14px; border-radius:0; background:var(--ink);}
 .rep-legend .sw-finit{width:2px; height:12px; border-radius:0; background:var(--ink-muted);}
 @media print{ .plan-fam-card{break-inside:avoid;} }
+/* ---- Organigramme des projets d'un portefeuille (02.11.2026) ---- */
+:root{--oph2:#9A86C9; --oph31:#A9D6EE; --oph32:#1C9BD8; --oph33:#2A8E9C; --oph4:#1E8456; --oph51:#86A83A; --oph52:#E8B10A; --oph53:#E2762B; --oph6:#C9342A; --oph-nr:#B8C1C8;}
+body.night{--oph2:#B3A3E0; --oph31:#9CCBE6; --oph32:#4DB2E6; --oph33:#47B2C0; --oph4:#3CB57E; --oph51:#A3C556; --oph52:#F0C13A; --oph53:#EE9150; --oph6:#E5645A; --oph-nr:#6E7C88;}
+@media print{ body.night{--oph2:#9A86C9; --oph31:#A9D6EE; --oph32:#1C9BD8; --oph33:#2A8E9C; --oph4:#1E8456; --oph51:#86A83A; --oph52:#E8B10A; --oph53:#E2762B; --oph6:#C9342A; --oph-nr:#B8C1C8;} }
+.org-outils{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 18px;margin:0 0 12px}
+.org-outils .org-champ select{min-width:260px}
+.org-champ{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--ink-70)}
+.org-champ input{font-size:12.5px}
+.org-cb{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:var(--ink-70);cursor:pointer}
+.org-h1{font-size:15px!important;text-transform:none!important;letter-spacing:0!important;color:var(--ink)!important;margin:0 0 8px!important}
+.org-entete{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 20px;background:var(--blue-pale,#EAF3F8);border-left:4px solid var(--teal);border-radius:var(--r-in);padding:10px 14px;margin-bottom:6px}
+.org-titre{font-size:17px;font-weight:700;color:var(--ink)}
+.org-resp{font-size:12.5px;color:var(--ink-70);text-align:right}
+.org-chiffres{margin:2px 0 12px}
+.org-grille{display:grid;gap:14px;align-items:start}
+.org-col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.org-col-h{border:1.5px solid var(--border);border-left-width:5px;border-radius:var(--r-in);padding:7px 10px;display:flex;flex-direction:column;gap:1px;font-size:12.5px;color:var(--ink)}
+.org-col-k{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-muted)}
+.org-col-n{font-size:11px;color:var(--ink-muted)}
+.org-t1{border-left-color:var(--fam1)}.org-t2{border-left-color:var(--fam2)}.org-t3{border-left-color:var(--fam3)}.org-t4{border-left-color:var(--fam4)}.org-t0{border-left-color:var(--gray)}
+.org-site{border:1px solid var(--border);border-radius:var(--r-in);padding:8px 10px;background:var(--card-bg);break-inside:avoid}
+.org-site-h{display:flex;justify-content:space-between;gap:8px;align-items:baseline;font-size:13px;color:var(--ink)}
+.org-nums{font-size:10.5px;color:var(--ink-muted);white-space:nowrap}
+.org-sub{font-size:11px;color:var(--ink-muted);display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin:1px 0 4px}
+.org-cecb{font-size:10px;font-weight:600;color:var(--green);border:1px solid var(--green);border-radius:4px;padding:0 5px}
+.org-ss{font-size:10.5px;font-style:italic;color:var(--ink-muted);margin:6px 0 2px;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.org-note{font-size:11px;font-style:italic;color:var(--ink-70);margin:2px 0 4px}
+.org-vide{font-size:11px;color:var(--ink-muted);margin:2px 0}
+.org-l{display:flex;flex-wrap:wrap;align-items:center;gap:3px 7px;font-size:12px;padding:2px 0;color:var(--ink)}
+.org-l.org-masque{opacity:.45}
+.org-pt{display:inline-block;width:10px;height:10px;border-radius:50%;flex:none;border:1.5px solid transparent}
+.oph-2{background:var(--oph2)}.oph-31{background:var(--oph31)}.oph-32{background:var(--oph32)}.oph-33{background:var(--oph33)}.oph-4{background:var(--oph4)}
+.oph-51{background:var(--oph51)}.oph-52{background:var(--oph52)}.oph-53{background:var(--oph53)}.oph-6{background:var(--oph6)}
+.oph-nr{background:var(--oph-nr)}.oph-id{background:var(--card-bg);border-color:var(--ink-muted)}
+.org-num{font-weight:700;font-variant-numeric:tabular-nums;min-width:3.4em}
+.org-x{color:var(--ink-muted);font-weight:600}
+.org-lien{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.org-lien:hover,.org-lien:focus-visible{color:var(--teal);text-decoration:underline}
+.org-deleg{font-size:10px;font-weight:700;color:var(--red);border:1px solid currentColor;border-radius:4px;padding:0 5px}
+.org-badge{font-size:10px;color:var(--ink-muted);border:1px dashed var(--ink-muted);border-radius:4px;padding:0 4px}
+.org-crayon{margin-left:auto;font-size:12px;border:1px solid var(--border);background:var(--card-bg);color:var(--ink-70);border-radius:4px;cursor:pointer;padding:0 6px}
+.org-edit{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:flex-end;background:var(--page-bg);border-radius:6px;padding:8px;margin:2px 0 6px}
+.org-edit .org-champ{min-width:140px}
+.org-legende{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:11px;color:var(--ink-70);border-top:1px solid var(--border);margin-top:14px;padding-top:8px}
+@media print{ #view-organigramme .org-card{box-shadow:none;border:0;padding:0} .org-site{break-inside:avoid} .org-grille{gap:8px} .org-l{font-size:10px} .org-site-h{font-size:11px} }
 </style>
 <!-- PTE-EPURE:tete — module commun 00_Design-System/pte-epure.css, inséré par build-html.js -->
 <script>/* présentation épurée, seule présentation depuis le 18.10.2026. Posée avant le premier rendu : pas d'éclair. */
@@ -1119,6 +1164,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
   <nav class="tabs" id="nav-tabs">
     <button type="button" class="tab" data-view="reporting" title="Questions du mois, sémaphores, situation financière et planning des projets GE-Invest ; un clic sur une ligne descend d’un niveau.">Reporting</button>
     <button type="button" class="tab" data-view="portefeuille" title="Heatmap des quatre indicateurs par projet, jalons à 60 jours, risques et décisions ouvertes ; une ligne ouvre la fiche.">Portefeuille</button>
+    <button type="button" class="tab" data-view="organigramme" title="Organigramme des projets d’un portefeuille : sites par type d’intervention, projets GE-Invest et leur phase SIA, interventions identifiées par l’audit CECB+ ; imprimable en A3.">Organigramme</button>
     <button type="button" class="tab" data-view="fiche" title="Un projet en détail : sémaphores, jalons, finances, risques et registre des décisions, imprimable en A4.">Fiche projet</button>
     <button type="button" class="tab" data-view="parc" title="Vue direction : portefeuilles, contribution 2030 (seul emplacement), projets rouges, capacité et couverture CECB+.">Parc</button>
     <button type="button" class="tab" data-view="donnees" title="Chargement du classeur, complétude du mois et seuils des sémaphores.">Données</button>
@@ -1158,6 +1204,10 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
   <div id="portefeuille-content"></div>
 </section>
 
+<section class="view" id="view-organigramme" hidden>
+  <div id="organigramme-content"></div>
+</section>
+
 <section class="view" id="view-fiche" hidden>
   <div class="toolbar-row no-print">
     <div class="field searchbox" style="margin:0; flex:1; min-width:180px;">
@@ -1183,7 +1233,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.38 · 28.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.39 · 02.11.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -2845,6 +2895,7 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "02.11.2026", "objet": "revue", "version": "v0.39", "titre": "Organigramme des projets d'un portefeuille", "points": ["Nouvel onglet « Organigramme » : pour un responsable de portefeuille, les sites rangés par type d'intervention, chaque projet GE-Invest avec sa nature (selon son numéro) et sa phase SIA en couleur, et les interventions identifiées par l'audit CECB+ (coûts par lot, futur projet PV) sans projet de même nature.", "Reconstruit à chaque import du classeur ; un clic sur la nature ouvre la fiche projet, le numéro ouvre GE-Invest.", "Mode « Modifier » : libellé et AMO du portefeuille, note de site, nature corrigée, délégation « RP (service) », ligne masquée — rubrique « organigramme » des saisies : fichier Excel (feuille « Organigramme ») et serveur partagé (migration 1792200000 à appliquer).", "Impression en A3 paysage."]},
     {"date": "28.10.2026", "objet": "commun", "version": null, "titre": "Fenêtres « i » sans « Details »", "points": ["Dans les fenêtres « i » tirées d'un « Comment lire… », le navigateur n'affiche plus son libellé « Details » en anglais (quatre pages)."]},
     {"date": "28.10.2026", "objet": "priorisation", "version": "v2.31", "titre": "Matrice urgence × faisabilité : nouvelle faisabilité, liste au clic", "points": ["Méthode (chiffres modifiés) : faisabilité = maturité (phase SIA du projet GE-Invest en cours le plus avancé, sur 50) + préparation (variante CECB+, chauffage défini — « == » compris —, montant chiffré, montant prévu, sur 25) + contraintes (25 moins patrimoine, risque ouvert le plus sévère de GEI_Risques ou évaluation des risques, santé du projet). Une donnée absente ne compte ni pour ni contre : elle baisse la fiabilité (0 à 5). La feuille GEI_Risques est lue à l'import.", "Trois curseurs, avec saisie au clavier, règlent le poids des blocs (50 / 25 / 25) ; « Réinitialiser » revient au réglage de référence ; les poids ne sont pas mémorisés.", "Case à cocher : masquer les sous-sites en travaux (phase 51 et plus).", "Un clic sur une case liste ses sous-sites sous la matrice : priorité, faisabilité et ses trois blocs, phase, risque, patrimoine, responsable de projet, fiabilité, lien vers la revue ; tri par colonne."]},
     {"date": "28.10.2026", "objet": "priorisation", "version": "v2.30", "titre": "Trajectoires en intensité", "points": ["Vue d'ensemble : les graphiques du CO₂, du thermique, de l'électricité et de l'eau se lisent au m² — chaque année, consommation ÷ surface de la même année (bloc « référence 2005 » d'Objectifs PTE, thermique corrigé du climat) ; aujourd'hui, cible, portefeuille et potentiel ÷ surface de Plan_PTE. Le suivi officiel et le parc complet se raccordent ; valeurs absolues au survol des points.", "Un projet retenu l'année de la mesure ne compte qu'à partir de l'année suivante : la marche de 2025 disparaît, les valeurs de fin 2030 ne changent pas.", "Électricité : cible déjà atteinte, plus de rythme requis tracé vers le haut.", "Bloc « référence 2005 » : une colonne 2025 (ou suivante) ajoutée à la suite de 2024 est lue sans changer l'outil."]},
@@ -3123,6 +3174,22 @@ var PTE_COMMUN = (function () {
   var LS_SAUVE = 'pte.saisies.sauvegarde.v1';   /* {date, fichier, cles:{cle: texte brut | null}} */
   var LS_CONSO = 'pte.consolidateur.v1';        /* '1' = mode consolidateur sur ce poste */
   var K_PRIO = 'pte_state_v2', K_REVUE = 'ocba_revue_db_v1', K_DATA = 'pte_data_v2';
+  /* organigramme de la revue (02.11.2026) : une saisie par portefeuille, ligne ou site, rubrique « organigramme »,
+     site = « zone:clé » (pf:RPF, item:N° projet ou sous-site|lot, site:N site) */
+  var K_ORG = 'ocba_revue_organigramme_v1';
+  var ORG_ZONES = { pf: ['titre', 'amo'], item: ['nature', 'rp', 'service', 'masque'], site: ['note'] };
+  var ORG_STOCK = { pf: 'pf', item: 'items', site: 'sites' };
+  var CH_ORG = ['titre', 'amo', 'note', 'nature', 'rp', 'service', 'masque'];
+  var ORG_LIB = { pf: 'Portefeuille', item: 'Ligne', site: 'Site' };
+  function orgPartie(site) {
+    var s = txt(site), i = s.indexOf(':'), z = i > 0 ? s.slice(0, i) : '', k = i > 0 ? s.slice(i + 1) : '';
+    return (Object.prototype.hasOwnProperty.call(ORG_ZONES, z) && k.trim() && !PIEGES[k]) ? { zone: z, cle: k } : null;
+  }
+  function lireOrg() {
+    var o = lireJ(K_ORG); if (!o || typeof o !== 'object' || Array.isArray(o)) o = {};
+    Object.keys(ORG_STOCK).forEach(function (z) { var k = ORG_STOCK[z]; if (!o[k] || typeof o[k] !== 'object' || Array.isArray(o[k])) o[k] = {}; });
+    return o;
+  }
   var FORMAT = 'pte-saisies-xlsx', VERSION_FORMAT = 1;
   var SEP = '␟';
   var PIEGES = Object.create(null); PIEGES['__proto__'] = PIEGES.constructor = PIEGES.prototype = 1;
@@ -3236,6 +3303,7 @@ var PTE_COMMUN = (function () {
     if (f.rubrique === 'note') return txt(f.texte).replace(/\r\n?/g, '\n').trim();
     if (f.rubrique === 'ajustement') return txt(f.niveau) + SEP + txt(f.motif).trim();
     if (f.rubrique === 'decision') return contenuDecision(normDecision(f));
+    if (f.rubrique === 'organigramme') return txt(f.site) + SEP + CH_ORG.map(function (c) { return c === 'masque' ? (oui(f.masque) ? 'oui' : '') : txt(f[c]).replace(/\r\n?/g, '\n').trim(); }).join(SEP);
     return '';
   }
   function nomsSites() {
@@ -3254,6 +3322,19 @@ var PTE_COMMUN = (function () {
     Object.keys(Q).forEach(function (id) {
       var q = Q[id] || {}, p = txt(q.p); if (!p || p === '0' || PIEGES[id]) return;
       out.push({ cle: 'ajustement|' + id, rubrique: 'ajustement', site: id, nom: noms[id] || '', niveau: p, motif: txt(q.m) });
+    });
+    var org = lireOrg();
+    Object.keys(ORG_ZONES).forEach(function (z) {
+      var S = org[ORG_STOCK[z]];
+      Object.keys(S).forEach(function (k) {
+        var o = S[k]; if (!o || typeof o !== 'object' || !k.trim() || PIEGES[k]) return;
+        var f = { cle: 'organigramme|' + z + ':' + k, rubrique: 'organigramme', site: z + ':' + k, nom: '' }, plein = false;
+        CH_ORG.forEach(function (c) {
+          var v = ORG_ZONES[z].indexOf(c) < 0 ? '' : (c === 'masque' ? (o.masque === true ? 'oui' : '') : ((typeof o[c] === 'string' || typeof o[c] === 'number') ? txt(o[c]) : ''));
+          f[c] = v; if (v.trim()) plein = true;
+        });
+        if (plein) out.push(f);
+      });
     });
     var db = lireJ(K_REVUE) || {};
     (db.decisions || []).forEach(function (d) {
@@ -3310,7 +3391,8 @@ var PTE_COMMUN = (function () {
   }
   /* Écrit et supprime des saisies dans le stockage des outils, puis leur fiche (auteur, date). */
   function ecrireFiches(aEcrire, aSupprimer) {
-    var st = lireJ(K_PRIO), stC = false, db = lireJ(K_REVUE), dbC = false;
+    var st = lireJ(K_PRIO), stC = false, db = lireJ(K_REVUE), dbC = false, org = null, orgC = false;
+    function orgS() { if (!org) org = lireOrg(); return org; }
     var decAvant = (db && Array.isArray(db.decisions)) ? db.decisions.slice() : [];
     if (!st || typeof st !== 'object') st = {};
     if (!st.siteNotes || typeof st.siteNotes !== 'object') st.siteNotes = {};
@@ -3325,6 +3407,13 @@ var PTE_COMMUN = (function () {
     (aEcrire || []).forEach(function (f) {
       if (f.rubrique === 'note' && !PIEGES[f.site]) { st.siteNotes[f.site] = txt(f.texte); stC = true; }
       else if (f.rubrique === 'ajustement' && !PIEGES[f.site]) { st.siteQuali[f.site] = { p: txt(f.niveau), m: txt(f.motif) }; stC = true; }
+      else if (f.rubrique === 'organigramme') {
+        var pz = orgPartie(f.site); if (!pz) return;
+        var oo = {}; ORG_ZONES[pz.zone].forEach(function (c) { if (c === 'masque') { if (oui(f.masque)) oo.masque = true; } else { var v = txt(f[c]).trim(); if (v) oo[c] = v; } });
+        var So = orgS()[ORG_STOCK[pz.zone]];
+        if (Object.keys(oo).length) So[pz.cle] = oo; else delete So[pz.cle];
+        orgC = true;
+      }
       else if (f.rubrique === 'decision') {
         var L = decisions(), i = rang(L, f.id), o = { id: f.id };
         CH_DEC_TOUS.forEach(function (c) { o[c] = txt(f[c]); });
@@ -3338,6 +3427,10 @@ var PTE_COMMUN = (function () {
     (aSupprimer || []).forEach(function (f) {
       if (f.rubrique === 'note') { if (f.site in st.siteNotes) { delete st.siteNotes[f.site]; stC = true; } }
       else if (f.rubrique === 'ajustement') { if (f.site in st.siteQuali) { delete st.siteQuali[f.site]; stC = true; } }
+      else if (f.rubrique === 'organigramme') {
+        var pz2 = orgPartie(f.site); if (!pz2) return;
+        var S2 = orgS()[ORG_STOCK[pz2.zone]]; if (Object.prototype.hasOwnProperty.call(S2, pz2.cle)) { delete S2[pz2.cle]; orgC = true; }
+      }
       else if (f.rubrique === 'decision') {
         var L2 = decisions(), avant = L2.length;
         db.decisions = L2.filter(function (d) { return idDecision(d) !== f.id; });
@@ -3346,6 +3439,7 @@ var PTE_COMMUN = (function () {
     });
     var ok = true;
     if (stC) ok = ecrireJ(K_PRIO, st) && ok;
+    if (orgC) ok = ecrireJ(K_ORG, org) && ok;
     /* registre de la revue : seules ses décisions changent, retraits datés ; la date d'un effacement antérieur y
        reste (la revue écarte les données plus anciennes) */
     if (dbC) { noterRetraits(db, decAvant); ok = ecrireJ(K_REVUE, db) && ok; }
@@ -3524,6 +3618,7 @@ var PTE_COMMUN = (function () {
   /* ---------- le classeur des saisies ---------- */
   var ENT_NOTES = ['N° sous-site', 'Sous-site', 'Note', 'Auteur', 'Modifiée le', 'Supprimer (oui)'];
   var ENT_AJUST = ['N° sous-site', 'Sous-site', 'Ajustement', 'Motif', 'Auteur', 'Modifié le', 'Supprimer (oui)'];
+  var ENT_ORG = ['Élément', 'Clé', 'Libellé du portefeuille', 'AMO', 'Note', 'Nature', 'Délégation : RP', 'Service', 'Masquée (oui)', 'Auteur', 'Modifiée le', 'Supprimer (oui)'];
   var ENT_DEC = ['Identifiant', 'Date de revue', 'Niveau', 'N° projet', 'Portefeuille', 'Décision', 'Responsable', 'Échéance', 'Statut', 'Escalade vers', 'Notes', 'Auteur', 'Modifiée le', 'Supprimer (oui)'];
   function tri(a, b) { return a.site < b.site ? -1 : a.site > b.site ? 1 : 0; }
   function morceaux(s, n) {
@@ -3539,11 +3634,12 @@ var PTE_COMMUN = (function () {
   var MAX_CELLULE = 32767;
   function construireClasseur(paquet) {
     var info = paquet.info || {}, F = paquet.fiches || [], u = info.auteur || '';
-    var trop = F.filter(function (f) { return [f.texte, f.motif, f.decision, f.notes, f.responsable, f.escalade_vers, f.portefeuille, f.nom].some(function (v) { return txt(v).length > MAX_CELLULE; }); });
+    var trop = F.filter(function (f) { return [f.texte, f.motif, f.decision, f.notes, f.responsable, f.escalade_vers, f.portefeuille, f.nom, f.titre, f.amo, f.note, f.rp, f.service, f.site].some(function (v) { return txt(v).length > MAX_CELLULE; }); });
     if (trop.length) throw new Error(trop.length + ' saisie(s) trop longue(s) pour une cellule Excel (32 767 caractères au plus) : ' +
       trop.slice(0, 5).map(function (f) { return RUBRIQUES[f.rubrique] + ' ' + (f.site || f.numero_projet || f.id); }).join(', ') + ' — à raccourcir avant l’export');
     var notes = F.filter(function (f) { return f.rubrique === 'note'; }).sort(tri);
     var ajust = F.filter(function (f) { return f.rubrique === 'ajustement'; }).sort(tri);
+    var orgF = F.filter(function (f) { return f.rubrique === 'organigramme'; }).sort(tri);
     var dec = F.filter(function (f) { return f.rubrique === 'decision'; })
       .sort(function (a, b) { return (txt(b.date) > txt(a.date) ? 1 : txt(b.date) < txt(a.date) ? -1 : 0) || (a.numero_projet < b.numero_projet ? -1 : 1); });
     var sup = function (f) { return f.supprimer ? 'oui' : ''; };
@@ -3551,16 +3647,17 @@ var PTE_COMMUN = (function () {
     var lisez = [['Saisies PTE'],
       [conso ? 'Version consolidée par ' + conso.par + ', le ' + dateLisible(conso.le) + ', à partir de ' + (conso.sources || []).length + ' fichier(s).'
              : 'Exporté par ' + (u || '(nom non renseigné)') + ', le ' + dateLisible(info.date) + '.'],
-      [notes.length + ' note(s) · ' + ajust.length + ' ajustement(s) · ' + dec.length + ' décision(s) et escalade(s)' + ((paquet.blocs || []).length ? ' · réglages des outils (feuille masquée)' : '') + '.'],
+      [notes.length + ' note(s) · ' + ajust.length + ' ajustement(s) · ' + dec.length + ' décision(s) et escalade(s)' + (orgF.length ? ' · ' + orgF.length + ' saisie(s) de l’organigramme' : '') + ((paquet.blocs || []).length ? ' · réglages des outils (feuille masquée)' : '') + '.'],
       [''],
       ['À quoi sert ce fichier'],
-      ['Ce fichier réunit les saisies faites dans les outils de pilotage PTE : notes et facteurs non mesurables (ajustements) de la priorisation, décisions et escalades de la revue de projets. Il se relit dans les outils par le bouton Saisies, en haut à droite de chaque page → « Importer un fichier… ».'],
+      ['Ce fichier réunit les saisies faites dans les outils de pilotage PTE : notes et facteurs non mesurables (ajustements) de la priorisation, décisions, escalades et organigramme de la revue de projets. Il se relit dans les outils par le bouton Saisies, en haut à droite de chaque page → « Importer un fichier… ».'],
       [''],
       ['Modification dans Excel'],
       ['• Une ligne = une saisie. Le texte se corrige directement : à la réimportation, l’outil montre chaque changement avant de l’appliquer.'],
       ['• Suppression : « oui » dans la colonne « Supprimer (oui) ». Effacer la ligne ne supprime rien dans les outils.'],
       ['• Ajustement : valeur choisie dans la liste, motif obligatoire (règle de la priorisation). « Aucun ajustement » le retire.'],
       ['• Décisions : la colonne « Identifiant » relie la ligne à sa décision et ne se modifie pas. Une nouvelle ligne sans identifiant crée une nouvelle décision.'],
+      ['• Organigramme : « Élément » et « Clé » désignent le portefeuille (responsable), la ligne (N° de projet, ou sous-site|lot) ou le site (N site) et ne se modifient pas. Seules les colonnes de cet élément comptent : portefeuille → libellé et AMO ; ligne → nature (code 01 à 09, ou emb), délégation, service, masquée ; site → note.'],
       ['• Les colonnes « Auteur » et « … le » sont tenues par les outils : une ligne modifiée dans Excel est reconnue comme telle et signée par la personne qui a exporté le fichier.'],
       ['• Noms des feuilles et titres des colonnes à garder tels quels ; feuille masquée « _technique » à laisser intacte.'],
       [''],
@@ -3589,6 +3686,9 @@ var PTE_COMMUN = (function () {
       { nom: 'Décisions', entetes: ENT_DEC, largeurs: [13, 12, 13, 15, 18, 60, 20, 12, 11, 20, 50, 20, 17, 11], gris: { 0: 1, 12: 1 },
         lignes: dec.map(function (f) { return [f.id, f.date, NIVEAUX[f.niveau] || f.niveau, f.numero_projet, f.portefeuille, f.decision, f.responsable, f.echeance, f.statut, f.escalade_vers, f.notes || '', f.auteur, dateFichier(f.modifie), sup(f)]; }),
         listes: { 2: ['Projet', 'Portefeuille', 'Parc'], 13: ['oui'] } },
+      { nom: 'Organigramme', entetes: ENT_ORG, largeurs: [13, 26, 26, 26, 40, 9, 22, 14, 11, 20, 17, 11], gris: { 0: 1, 1: 1, 10: 1 },
+        lignes: orgF.map(function (f) { var p = orgPartie(f.site) || { zone: '', cle: f.site }; return [ORG_LIB[p.zone] || p.zone, p.cle, f.titre, f.amo, f.note, f.nature, f.rp, f.service, oui(f.masque) ? 'oui' : '', f.auteur, dateFichier(f.modifie), sup(f)]; }),
+        listes: { 0: ['Portefeuille', 'Ligne', 'Site'], 5: ['01', '02', '03', '04', '05', '06', '07', '08', '09', 'emb', 'autre'], 8: ['oui'], 11: ['oui'] } },
       { nom: '_technique', cachee: true, lignes: tech, largeurs: [14, 60, 8, 22, 14] }
     ];
     return classeurXlsx(feuilles, { auteur: u, titre: conso ? 'Saisies PTE consolidées' : 'Saisies PTE' });
@@ -3603,12 +3703,13 @@ var PTE_COMMUN = (function () {
     return { fiches: fiches, blocs: blocsReglages(), info: { auteur: u, date: maintenant() } };
   }
   function resumePaquet(p) {
-    var n = { note: 0, ajustement: 0, decision: 0 };
-    (p.fiches || []).forEach(function (f) { if (!f.supprimer) n[f.rubrique]++; });
+    var n = { note: 0, ajustement: 0, decision: 0, organigramme: 0 };
+    (p.fiches || []).forEach(function (f) { if (!f.supprimer && Object.prototype.hasOwnProperty.call(n, f.rubrique)) n[f.rubrique]++; });
     var out = [];
     if (n.note) out.push(n.note + ' note(s)');
     if (n.ajustement) out.push(n.ajustement + ' ajustement(s)');
     if (n.decision) out.push(n.decision + ' décision(s)');
+    if (n.organigramme) out.push(n.organigramme + ' saisie(s) de l’organigramme');
     (p.blocs || []).forEach(function (b) { out.push(b.resume || resumeBloc(b.cle, b.contenu)); });
     return out;
   }
@@ -3635,7 +3736,7 @@ var PTE_COMMUN = (function () {
       if (!X.unzip(u8).files['xl/workbook.xml']) throw new Error('ce fichier n’est pas un classeur Excel');
       var out = Object.create(null);   /* noms de feuilles venus du fichier : « __proto__ » reste une feuille */
       /* seules les feuilles du format sont lues (27.10.2026) : un fichier piégé peut en déclarer beaucoup d'autres */
-      var voulues = ['_technique', 'Notes', 'Ajustements', 'Décisions'].map(normEnt);
+      var voulues = ['_technique', 'Notes', 'Ajustements', 'Décisions', 'Organigramme'].map(normEnt);
       X.sheetNames(u8).forEach(function (nom) { if (voulues.indexOf(normEnt(nom)) >= 0) out[nom] = X.sheetRows(u8, nom, X.SAISIES) || []; });
       ok(out);
     });
@@ -3668,8 +3769,8 @@ var PTE_COMMUN = (function () {
       else if (k === 'vues') vues += txt(l[1]);
       else if (k === 'bloc') { var c = txt(l[3]), ip = +l[2] || 0; if (ip >= 0 && ip < 1000) (blocs[c] = blocs[c] || { cle: c, outil: txt(l[4]), parts: [] }).parts[ip] = txt(l[1]); }
     });
-    var notesF = feuille(F, 'Notes'), ajF = feuille(F, 'Ajustements'), decF = feuille(F, 'Décisions');
-    if (info.format !== FORMAT && !(notesF || ajF || decF)) throw new Error('ce classeur n’est pas un fichier de saisies PTE');
+    var notesF = feuille(F, 'Notes'), ajF = feuille(F, 'Ajustements'), decF = feuille(F, 'Décisions'), orgFe = feuille(F, 'Organigramme');
+    if (info.format !== FORMAT && !(notesF || ajF || decF || orgFe)) throw new Error('ce classeur n’est pas un fichier de saisies PTE');
     var empreintes = {}; try { empreintes = emp ? JSON.parse(emp) : {}; } catch (e) {}
     if (!empreintes || typeof empreintes !== 'object') empreintes = {};   /* « null » ou un nombre : fichier retouché */
     if (info.consolide && vues) { try { var vv = JSON.parse(vues); if (vv && typeof vv === 'object') info.consolide.vues = vv; } catch (e) {} }
@@ -3689,6 +3790,7 @@ var PTE_COMMUN = (function () {
           return;
         }
         if (f.rubrique === 'ajustement') { avert.push('Ajustements : deux lignes pour le sous-site ' + f.site + ', seule la première est retenue'); return; }
+        if (f.rubrique === 'organigramme') { avert.push('Organigramme : deux lignes pour « ' + f.site + ' », seule la première est retenue'); return; }
         f.id = 'D-' + hash(contenuDecision(f)); f.cle = 'decision|' + f.id; f.sansId = true;
         if (deja[f.cle]) return;
         avert.push('Décisions : identifiant ' + d.id + ' présent sur deux lignes différentes, la seconde est reprise comme une nouvelle décision');
@@ -3733,6 +3835,29 @@ var PTE_COMMUN = (function () {
         if (!f.id) f.id = 'D-' + hash(contenuDecision(f));
         f.cle = 'decision|' + f.id; f.supprimer = oui(cel(L, cd.sup));
         marquer(f, cel(L, cd.auteur), cel(L, cd.modifie));
+      });
+    }
+    if (orgFe && orgFe.length) {
+      var co = colonnes(orgFe[0], { zone: ['Élément'], cle: ['Clé'], titre: ['Libellé du portefeuille'], amo: ['AMO'], note: ['Note'], nature: ['Nature'],
+        rp: ['Délégation : RP', 'Délégation'], service: ['Service'], masque: ['Masquée'], auteur: ['Auteur'], modifie: ['Modifiée le', 'Modifie'], sup: ['Supprimer'] });
+      var ZLIB = { portefeuille: 'pf', ligne: 'item', site: 'site' };
+      if (co.zone < 0 || co.cle < 0) avert.push('feuille Organigramme : colonnes « Élément » ou « Clé » introuvables, feuille ignorée');
+      else orgFe.slice(1).forEach(function (L, i) {
+        var z = ZLIB[normEnt(cel(L, co.zone))], k = txt(cel(L, co.cle)).trim();
+        if (!k && !txt(cel(L, co.zone)).trim()) return;
+        if (!z || !orgPartie(z + ':' + k)) { avert.push('Organigramme, ligne ' + (i + 2) + ' : élément « ' + txt(cel(L, co.zone)) + ' » ou clé « ' + k + ' » non reconnus, ligne ignorée'); return; }
+        var f = { cle: 'organigramme|' + z + ':' + k, rubrique: 'organigramme', site: z + ':' + k, nom: '' }, plein = false;
+        CH_ORG.forEach(function (c) {
+          var v = ORG_ZONES[z].indexOf(c) < 0 || co[c] < 0 ? '' : (c === 'masque' ? (oui(cel(L, co.masque)) ? 'oui' : '') : txt(cel(L, co[c])).trim());
+          f[c] = v; if (v) plein = true;
+        });
+        if (f.nature) {   /* code de nature : « 6 » devient « 06 » ; hors table, la ligne garde ses autres champs */
+          var na = f.nature.toLowerCase(); if (/^\d$/.test(na)) na = '0' + na;
+          if (/^0[1-9]$/.test(na) || na === 'emb' || na === 'autre') f.nature = na;
+          else { avert.push('Organigramme, ligne ' + (i + 2) + ' : nature « ' + f.nature + ' » hors de la matrice (01 à 09, emb, autre), ignorée'); f.nature = ''; plein = CH_ORG.some(function (c) { return !!f[c]; }); }
+        }
+        f.supprimer = oui(cel(L, co.sup)) || !plein;
+        marquer(f, cel(L, co.auteur), cel(L, co.modifie));
       });
     }
     var B = Object.keys(blocs).map(function (k) {
@@ -3825,6 +3950,7 @@ var PTE_COMMUN = (function () {
   /* ---------- comparer un paquet à ce navigateur ---------- */
   function etiquette(f) {
     if (f.rubrique === 'decision') return 'Projet ' + (f.numero_projet || '—') + (f.date ? ' · revue du ' + f.date : '');
+    if (f.rubrique === 'organigramme') { var po = orgPartie(f.site); return 'Organigramme · ' + (po ? ORG_LIB[po.zone] + ' ' + po.cle : txt(f.site)); }
     var noms = etiquette.noms || (etiquette.noms = nomsSites());
     return 'Sous-site ' + f.site + (f.nom || noms[f.site] ? ' · ' + (f.nom || noms[f.site]) : '');
   }
@@ -3833,9 +3959,11 @@ var PTE_COMMUN = (function () {
     if (f.supprimer) return '(à supprimer)';
     if (f.rubrique === 'note') return txt(f.texte);
     if (f.rubrique === 'ajustement') return libAjust(f.niveau) + ' — ' + txt(f.motif);
+    if (f.rubrique === 'organigramme') return [['titre', 'libellé'], ['amo', 'AMO'], ['note', 'note'], ['nature', 'nature'], ['rp', 'délégation'], ['service', 'service']]
+      .filter(function (x) { return txt(f[x[0]]).trim(); }).map(function (x) { return x[1] + ' : ' + txt(f[x[0]]).trim(); }).concat(oui(f.masque) ? ['ligne masquée'] : []).join(' · ');
     return txt(f.decision) + (f.responsable ? ' · resp. ' + f.responsable : '') + (f.echeance ? ' · échéance ' + f.echeance : '') + (f.statut ? ' · ' + f.statut : '') + (f.escalade_vers ? ' · escalade vers ' + f.escalade_vers : '') + (txt(f.notes).trim() ? ' · notes : ' + txt(f.notes).trim() : '');
   }
-  var RUBRIQUES = { note: 'Note', ajustement: 'Ajustement', decision: 'Décision' };
+  var RUBRIQUES = { note: 'Note', ajustement: 'Ajustement', decision: 'Décision', organigramme: 'Organigramme' };
   function analyser(paquet) {
     etiquette.noms = null;
     var locales = Object.create(null), ref = paquet.info && paquet.info.consolide, out = { lignes: [], identiques: 0, ignorees: 0 };
@@ -3888,7 +4016,7 @@ var PTE_COMMUN = (function () {
     var st = lireJ(K_PRIO), db = lireJ(K_REVUE);
     var s = { v: 2, date: maintenant(), fichier: fichier || '',
       prio: st && typeof st === 'object' ? { siteNotes: st.siteNotes || {}, siteQuali: st.siteQuali || {} } : null,
-      decisions: db && Array.isArray(db.decisions) ? db.decisions : null, fiches: lire(LS_FICHES), blocs: {} };
+      decisions: db && Array.isArray(db.decisions) ? db.decisions : null, fiches: lire(LS_FICHES), org: lire(K_ORG), blocs: {} };
     (blocs || []).forEach(function (b) {
       var cur = lireJ(b.cle);
       if (Array.isArray(b.contenu) || !cur || typeof cur !== 'object' || Array.isArray(cur)) s.blocs[b.cle] = { brut: lire(b.cle) };
@@ -3908,6 +4036,7 @@ var PTE_COMMUN = (function () {
       db.decisions = s.decisions || []; noterRetraits(db, decAvant); ecrireJ(K_REVUE, db);
     }
     try { if (s.fiches == null) localStorage.removeItem(LS_FICHES); else localStorage.setItem(LS_FICHES, s.fiches); } catch (e) {}
+    if ('org' in s) { try { if (s.org == null) localStorage.removeItem(K_ORG); else localStorage.setItem(K_ORG, s.org); } catch (e) {} }
     Object.keys(s.blocs || {}).forEach(function (k) {
       var b = s.blocs[k];
       if ('brut' in b) { try { if (b.brut == null) localStorage.removeItem(k); else localStorage.setItem(k, b.brut); } catch (e) {} return; }
@@ -4230,6 +4359,7 @@ var PTE_COMMUN = (function () {
         opts.publier(p, K).then(function (n) {
           var resultat = { publie: n, resume: resumePaquet(p) };
           W.surFermer = null; W.fermer();
+          if (publierLots.avert) montrerErreur('Référence publiée sans l’organigramme', publierLots.avert);
           if (app && app.checked) { p.fichier = 'référence du serveur'; montrerApercu(p, function (r) { resultat.import = r; fin(resultat); }); }
           else fin(resultat);
         }).catch(function (e) { bPub.disabled = false; bPub.textContent = 'Publier la référence sur le serveur'; montrerErreur('Publication impossible', (e && e.message) || String(e)); });
@@ -4365,7 +4495,7 @@ var PTE_COMMUN = (function () {
         return r.text().then(function (t) {
           if (to) clearTimeout(to);
           var j = null; try { j = t ? JSON.parse(t) : null; } catch (e) {}
-          if (!r.ok) { if (r.status === 401 && chemin !== '/api/collections/users/auth-with-password') fermerSessionEchue(); var err = new Error(messageErreur(r.status, j)); err.status = r.status; throw err; }
+          if (!r.ok) { if (r.status === 401 && chemin !== '/api/collections/users/auth-with-password') fermerSessionEchue(); var err = new Error(messageErreur(r.status, j)); err.status = r.status; err.data = j; throw err; }
           return j;
         });
       }, function (e) {
@@ -4422,16 +4552,42 @@ var PTE_COMMUN = (function () {
   }
   /* Saisie lue sur le serveur (26.10.2026) : seuls les champs de sa rubrique sont repris, et « cle » doit
      désigner ce sous-site ou cet identifiant ; sinon l'aperçu comparerait une saisie et l'import en écrirait une autre. */
-  var CHAMPS_RUB = { note: ['site', 'nom', 'texte'], ajustement: ['site', 'nom', 'niveau', 'motif'], decision: ['id'].concat(CH_DEC_TOUS) };
+  var CHAMPS_RUB = { note: ['site', 'nom', 'texte'], ajustement: ['site', 'nom', 'niveau', 'motif'], decision: ['id'].concat(CH_DEC_TOUS),
+    organigramme: ['site', 'nom'].concat(CH_ORG) };
   function ficheDepuisServeur(r) {
     var champs = r && Object.prototype.hasOwnProperty.call(CHAMPS_RUB, r.rubrique) ? CHAMPS_RUB[r.rubrique] : null, src = (r && r.fiche) || {};
     if (!champs) return null;
     var f = { cle: txt(r.cle), rubrique: r.rubrique, auteur: txt(r.auteur_nom), modifie: txt(r.modifie) || isoServeur(r.updated), supprimer: !!r.supprime };
     champs.forEach(function (c) { f[c] = txt(src[c]); });
     if (f.cle !== (f.rubrique === 'decision' ? 'decision|' + f.id : f.rubrique + '|' + f.site) || PIEGES[f.site]) return null;
+    if (f.rubrique === 'organigramme') {
+      var pz = orgPartie(f.site); if (!pz) return null;
+      CH_ORG.forEach(function (c) { if (ORG_ZONES[pz.zone].indexOf(c) < 0) f[c] = ''; else if (c === 'masque') f[c] = oui(f[c]) ? 'oui' : ''; });
+    }
     return f;
   }
 
+  /* Rubrique « organigramme » (02.11.2026) : un serveur qui n'a pas encore la migration 1792200000 la refuse (400).
+     Ses lignes partent donc dans un lot à part, après les autres : un refus n'empêche ni les notes, ni les
+     ajustements, ni les décisions, et il est dit. */
+  var AVERT_ORG = 'Saisies de l’organigramme non transmises : le serveur n’a pas encore la rubrique « organigramme » (mise à jour à faire sur le Mac mini : migration 1792200000_pte_organigramme.js, puis relancer le serveur).';
+  /* refus du seul champ « rubrique » (valeur inconnue du serveur) : c'est la migration qui manque ; tout autre 400 est une vraie erreur */
+  function sansRubriqueOrg(e) {
+    var R = e && e.data && e.data.data && e.data.data.requests;
+    if (!R || typeof R !== 'object') return false;
+    return Object.keys(R).some(function (k) { var d = R[k] && R[k].response && R[k].response.data; return !!(d && d.rubrique && d.rubrique.code === 'validation_invalid_value'); });
+  }
+  function lotsAvecOrg(req, taille) {
+    var org = req.filter(function (r) { return r.body && r.body.rubrique === 'organigramme'; }), autres = req.filter(function (r) { return !(r.body && r.body.rubrique === 'organigramme'); });
+    return parLots(autres, taille).then(function (na) {
+      if (!org.length) return { n: na, refus: 0 };
+      return parLots(org, taille).then(function (no) { return { n: na + no, refus: 0 }; }, function (e) {
+        if (e && e.status === 400 && !e.ecrites && sansRubriqueOrg(e)) return { n: na, refus: org.length };
+        if (e && typeof e.ecrites === 'number') { e.ecrites += na; e.total = req.length; }
+        throw e;
+      });
+    });
+  }
   /* Envoie les saisies de ce navigateur comme « ma version » ; une saisie retirée ici est marquée supprimée. */
   function envoyerSaisies() {
     var s = session(); if (!s) return Promise.reject(new Error('connexion nécessaire'));
@@ -4445,15 +4601,15 @@ var PTE_COMMUN = (function () {
         if (r && r.empreinte === emp && !r.supprime) return;
         n.envoyees++;
         req.push({ method: 'PUT', url: '/api/collections/saisies/records', body: { id: r ? r.id : idStable(u.id + '|' + f.cle), cle: f.cle, rubrique: f.rubrique,
-          site: txt(f.site), projet: txt(f.numero_projet), fiche: ficheVersServeur(f), empreinte: emp, supprime: false,
+          site: f.rubrique === 'organigramme' ? '' : txt(f.site), projet: txt(f.numero_projet), fiche: ficheVersServeur(f), empreinte: emp, supprime: false,
           modifie: f.modifie || maintenant(), auteur: u.id, auteur_nom: f.auteur || u.name } });
       });
       miennes.forEach(function (r) {
         if (ici[r.cle] || r.supprime) return;
         n.retirees++;
-        req.push({ method: 'PATCH', url: '/api/collections/saisies/records/' + r.id, body: { supprime: true, modifie: maintenant() } });
+        req.push({ method: 'PATCH', url: '/api/collections/saisies/records/' + r.id, body: { supprime: true, modifie: maintenant(), rubrique: r.rubrique } });
       });
-      return parLots(req, 50).then(function () { return n; });
+      return lotsAvecOrg(req, 50).then(function (x) { if (x.refus) { n.envoyees -= x.refus; n.avert = AVERT_ORG; } return n; });
     });
   }
   /* Toutes les versions du serveur, un « paquet » par auteur (pour la consolidation existante). */
@@ -4503,11 +4659,13 @@ var PTE_COMMUN = (function () {
   }
   function publierLots(p, s) {
     var req = p.fiches.map(function (f) {
-      return { method: 'PUT', url: '/api/collections/reference/records', body: { id: idStable('ref|' + f.cle), cle: f.cle, rubrique: f.rubrique, site: txt(f.site),
+      return { method: 'PUT', url: '/api/collections/reference/records', body: { id: idStable('ref|' + f.cle), cle: f.cle, rubrique: f.rubrique, site: f.rubrique === 'organigramme' ? '' : txt(f.site),
         projet: txt(f.numero_projet), fiche: ficheVersServeur(f), empreinte: hash(contenu(f)), supprime: !!f.supprimer, modifie: f.modifie || '',
         auteur_nom: f.auteur || '', vues: (p.vues && p.vues[f.cle]) || [], consolide_par: s.user.id } };
     });
-    return parLots(req, 50).then(function (n) {
+    publierLots.avert = '';
+    return lotsAvecOrg(req, 50).then(function (x) {
+      var n = x.n; if (x.refus) publierLots.avert = AVERT_ORG;
       return api('POST', '/api/collections/consolidations/records', { par: s.user.id, par_nom: s.user.name, nombre: n,
         sources: (p.info.consolide.sources || []).map(function (x) { return { fichier: x.fichier, auteur: x.auteur, date: x.date }; }) }).then(function () { return n; });
     }, function (e) {
@@ -4991,8 +5149,8 @@ var PTE_COMMUN = (function () {
       if (act === 'envoyer') {
         msg = 'Envoi en cours…'; rendre();
         envoyerSaisiesUI(function (n) {
-          if (n) noterSynchro('envoi');
-          majBoutons(); msg = n ? 'Envoyé : ' + n.envoyees + ' saisie' + (n.envoyees > 1 ? 's' : '') + (n.retirees ? ', ' + n.retirees + ' retirée' + (n.retirees > 1 ? 's' : '') : '') + '.' : '';
+          if (n && !n.avert) noterSynchro('envoi');
+          majBoutons(); msg = n ? 'Envoyé : ' + n.envoyees + ' saisie' + (n.envoyees > 1 ? 's' : '') + (n.retirees ? ', ' + n.retirees + ' retirée' + (n.retirees > 1 ? 's' : '') : '') + '.' + (n.avert ? ' ' + n.avert : '') : '';
           if (pop) rendre(); else if (n) signaler(msg);
         });
         return;
@@ -5799,7 +5957,13 @@ var PTE_COMMUN = (function () {
       tag300: _findCol(header, ['tag_300']),
       tagCoe: _findCol(header, ['tag_coe']),
       tagCanicule: _findCol(header, ['tag_canicule']),
-      tagEmb: _findCol(header, ['tag_emblematique'])   // 22.10.2026 : sites emblématiques (sans icône)
+      tagEmb: _findCol(header, ['tag_emblematique']),   // 22.10.2026 : sites emblématiques (sans icône)
+      // organigramme (02.11.2026) : coûts par lot de l'audit CECB+, qui disent les interventions identifiées
+      lotEnv: _findCol(header, ['cout_lot_enveloppe_chf']),
+      lotChauf: _findCol(header, ['cout_lot_chaufferie_chf']),
+      lotTech: _findCol(header, ['cout_lot_technique_chf']),
+      lotElec: _findCol(header, ['cout_lot_electricite_chf']),
+      lotEau: _findCol(header, ['cout_lot_eau_chf'])
     };
     function txt(v) { return (v === null || v === undefined) ? '' : String(v).trim(); }
     /* Couverture CECB+ (21.10.2026) : mêmes familles que la carte de la priorisation */
@@ -5811,6 +5975,7 @@ var PTE_COMMUN = (function () {
     }
     // valeur d'une cellule Tag : vide, 0 ou « non » = hors programme (même règle que PTE_COMMUN.valeurTag)
     function tag(c, r) { var s = txt(get(c, r)); return (!s || s === '0' || /^(non|no|false|faux)$/i.test(s)) ? null : s; }
+    function lot(c, r) { return c ? parseNum(get(c, r)) : null; }
     var bySousSite = {}, pte = [], n = 0;
     body.forEach(function (r) {
       var raw = get(cols.numero, r);
@@ -5834,7 +5999,11 @@ var PTE_COMMUN = (function () {
         prev_gei_kchf: _toKCHF(get(cols.gei, r)),
         invest_cecb_kchf: _toKCHF(get(cols.cecb, r)),
         invest_immoba_kchf: _toKCHF(get(cols.immoba, r)),
-        tags: { p300: tag(cols.tag300, r), coe: tag(cols.tagCoe, r), canicule: tag(cols.tagCanicule, r), emb: tag(cols.tagEmb, r) }
+        tags: { p300: tag(cols.tag300, r), coe: tag(cols.tagCoe, r), canicule: tag(cols.tagCanicule, r), emb: tag(cols.tagEmb, r) },
+        /* organigramme (02.11.2026) : null = colonne absente ou cellule vide, jamais 0 */
+        lots: { idc: lot(cols.lotEnv, r), chaufferie: lot(cols.lotChauf, r), technique: lot(cols.lotTech, r), lumiere: lot(cols.lotElec, r), eau: lot(cols.lotEau, r) },
+        pv_kwc: cols.pvKwc ? parseNum(get(cols.pvKwc, r)) : null,
+        audit_cecb: cols.auditCecb ? txt(get(cols.auditCecb, r)) : ''
       };
       n++;
 
@@ -5876,7 +6045,8 @@ var PTE_COMMUN = (function () {
         statut_consolidation: cols.statutConsolidation ? cols.statutConsolidation.header : null,
         prev_gei: cols.gei ? cols.gei.header : null,
         invest_cecb: cols.cecb ? cols.cecb.header : null,
-        invest_immoba: cols.immoba ? cols.immoba.header : null
+        invest_immoba: cols.immoba ? cols.immoba.header : null,
+        lot_enveloppe: cols.lotEnv ? cols.lotEnv.header : null
       }
     };
     db.pte = pte;
@@ -10404,6 +10574,298 @@ var PTE_COMMUN = (function () {
   }
 
   // ------------------------------------------------------------------
+  // VUE : Organigramme des projets d'un portefeuille (02.11.2026, demande d'Achim d'après l'organigramme
+  // « IP1 » de N. Jaccard). Construit à chaque import : colonnes = type d'intervention du site (T1 à T4,
+  // PTE_CONTRAT.calcTI), une carte par site (N site de Plan_PTE), une ligne par projet GE-Invest du sous-site
+  // (couleur = phase SIA déduite de l'avancement) et, en blanc, les interventions identifiées par l'audit CECB+
+  // (coûts par lot de Plan_PTE, futur projet PV) sans projet de même nature. Ce qui ne vient pas des données —
+  // libellé et AMO du portefeuille, nature corrigée, délégation « RP (service) », note de site, lignes
+  // masquées — est saisi ici et part avec les autres saisies : rubrique « organigramme » du bouton Saisies (fichier Excel, feuille
+  // « Organigramme » ; serveur partagé une fois la migration 1792200000 appliquée).
+  // ------------------------------------------------------------------
+  var LS_ORG = 'ocba_revue_organigramme_v1';
+  /* Nature d'un projet (matrice des correspondances d'Achim, 02.11.2026) : le numéro GE-Invest se lit
+     10 / loi / code / rang (101321007049 = 10/13210/07/049) ; le code, en positions 8-9, est l'objectif du
+     PL 13210 que sert le projet. Plusieurs types de travaux CVSE dans un projet : 04 ; rénovation globale ou
+     partielle : 05. Les projets de la loi Embrasures (10/12552/…) sont des embrasures quel que soit leur code.
+     Enveloppes financières 2030 : OF1 optimisation CVSE (01, 02, 03, 09) 170 MCHF, OF2 renouvelable (04, 06,
+     07) 200 MCHF, OF3 développement durable (08) 30 MCHF, OF4 architecture (05) 600 MCHF. */
+  var ORG_NATURES = {
+    '01': 'Électricité (lumière, moteurs)', '02': 'Thermique (pompes, circulation)', '03': 'Eau',
+    '04': 'CO₂ (chaufferie)', '05': 'IDC (rénovation)', '06': 'Électricité renouvelable (PV)',
+    '07': 'Chaleur renouvelable (CàD, PAC, pellets)', '08': 'Développement durable', '09': 'Projet générique',
+    emb: 'Embrasures (loi 12552)', autre: 'Autre'
+  };
+  var ORG_OBJ = {
+    '01': ['Réduction conso électrique, −20 % en 2030', 'lumière, moteurs', 'OF1'],
+    '02': ['Réduction conso thermique, −60 %', 'pompes et circulateurs, plage de fonctionnement', 'OF1'],
+    '03': ['Réduction conso eau, −60 %', 'eau perdue, aérateurs et mousseurs', 'OF1'],
+    '04': ['Réduction des émissions de CO₂, −60 % (indice CO₂ 20 kg/m²·an)', 'chaufferie, qualité de l’énergie ; plusieurs types de travaux CVSE', 'OF2'],
+    '05': ['Réduction de l’IDC, 350 MJ/m²·an', 'rénovation partielle ou globale du bâtiment', 'OF4'],
+    '06': ['Électricité renouvelable, 20 %', 'photovoltaïque, solaire et thermodynamique', 'OF2'],
+    '07': ['Chaleur renouvelable, 50 %', 'production CàD, PAC et pellets', 'OF2'],
+    '08': ['Développement durable', 'végétalisation, tri des déchets', 'OF3'],
+    '09': ['Projet générique', 'installation complète < 20 kCHF, composants > 20 kCHF', 'OF1']
+  };
+  var ORG_OF = { OF1: 'OF1 · optimisation CVSE, 170 MCHF', OF2: 'OF2 · renouvelable, 200 MCHF', OF3: 'OF3 · développement durable, 30 MCHF', OF4: 'OF4 · architecture, 600 MCHF' };
+  function orgNatureOk(k) { return typeof k === 'string' && Object.prototype.hasOwnProperty.call(ORG_NATURES, k); }
+  function orgNatureTip(k) { var o = ORG_OBJ[k]; return o ? o[0] + ' — ' + o[1] + ' (' + ORG_OF[o[2]] + ')' : (k === 'emb' ? 'Loi Embrasures 12552 : remplacement des fenêtres.' : 'Code hors de la matrice des correspondances.'); }
+  /* une ligne identifiée disparaît dès qu'un projet d'un de ces codes existe sur le sous-site */
+  var ORG_EQUIV = { '05': ['05', 'emb'], '04': ['04', '07'], '02': ['02', '04', '09'], '01': ['01', '09'], '03': ['03'], '06': ['06'] };
+  function orgCouvert(natures, k) { return (ORG_EQUIV[k] || [k]).some(function (n) { return natures[n]; }); }
+  /* interventions identifiées : lot de Plan_PTE → code ; une ligne n'apparaît que sans projet couvrant ce code */
+  var ORG_LOTS = [
+    { k: 'idc', code: '05', lib: 'Enveloppe (IDC)', col: 'Coût lot enveloppe [CHF]' }, { k: 'chaufferie', code: '04', lib: 'Chaufferie', col: 'Coût lot chaufferie [CHF]' },
+    { k: 'technique', code: '02', lib: 'Technique (ventilation, circulation)', col: 'Coût lot technique [CHF]' }, { k: 'lumiere', code: '01', lib: 'Lumière', col: 'Coût lot électricité [CHF]' },
+    { k: 'eau', code: '03', lib: 'Eau', col: 'Coût lot eau [CHF]' }
+  ];
+  /* phases : légende de l'organigramme d'origine (SIA 2, 31, 32, 33, 4, 51, 52, 53, 6) */
+  var ORG_PHASES = [
+    { k: '2', lib: 'Phase SIA 2', cls: 'oph-2' }, { k: '31', lib: 'Phase SIA 31', cls: 'oph-31' }, { k: '32', lib: 'Phase SIA 32', cls: 'oph-32' },
+    { k: '33', lib: 'Phase SIA 33', cls: 'oph-33' }, { k: '4', lib: 'Phase SIA 4', cls: 'oph-4' }, { k: '51', lib: 'Phase SIA 51', cls: 'oph-51' },
+    { k: '52', lib: 'Phase SIA 52', cls: 'oph-52' }, { k: '53', lib: 'Phase SIA 53', cls: 'oph-53' }, { k: '6', lib: 'Phase SIA 6 (mis en service, terminé)', cls: 'oph-6' },
+    { k: 'nr', lib: 'Phase non renseignée', cls: 'oph-nr' }, { k: 'id', lib: 'Identifié (audit CECB+), sans projet', cls: 'oph-id' }
+  ];
+  var ORG = { pf: null, edition: false, termines: true, masques: false, edite: null };
+  var LS_ORG_PF = 'ocba_revue_organigramme_pf';   /* portefeuille affiché : commodité de ce navigateur, pas une saisie */
+  try { ORG.pf = localStorage.getItem(LS_ORG_PF) || null; } catch (e) { ORG.pf = null; }
+  function orgStock() {
+    var o = null; try { o = JSON.parse(localStorage.getItem(LS_ORG) || 'null'); } catch (e) { o = null; }
+    if (!o || typeof o !== 'object' || Array.isArray(o)) o = {};
+    ['pf', 'items', 'sites'].forEach(function (k) { if (!o[k] || typeof o[k] !== 'object' || Array.isArray(o[k])) o[k] = {}; });
+    return o;
+  }
+  function orgEcrire(o) { try { localStorage.setItem(LS_ORG, JSON.stringify(o)); return true; } catch (e) { return false; } }
+  function orgSaisie(zone, cle, champs) {
+    var o = orgStock(), cur = Object.assign({}, o[zone][cle] || {});
+    Object.keys(champs).forEach(function (k) { var v = champs[k]; if (v === '' || v === null || v === false || v === undefined) delete cur[k]; else cur[k] = v; });
+    if (Object.keys(cur).length) o[zone][cle] = cur; else delete o[zone][cle];
+    if (!orgEcrire(o)) signalerStockage('aucun');
+    try { if (COMMUN && COMMUN.synchroniserFiches) COMMUN.synchroniserFiches(); } catch (e) { /* fiches indisponibles */ }
+  }
+  function orgTxt(v) { return (typeof v === 'string' || typeof v === 'number') ? String(v) : ''; }
+  function orgNatureCode(np) {
+    var n = String(np || '').replace(/\D/g, '');
+    if (/^1012552/.test(n)) return 'emb';
+    var c = n.length === 12 ? n.slice(7, 9) : n.slice(-5, -3);
+    return orgNatureOk(c) && c !== 'emb' && c !== 'autre' ? c : 'autre';
+  }
+  function orgPhase(np) {
+    var g = (DB.gei && DB.gei[np]) || {}, st = String(g.statut || '');
+    if (/^\s*[34]\s*-/.test(st)) return '6';
+    var ph = phaseSia(g.avancement);
+    if (!ph) return 'nr';
+    if (ph === '21') return '2';
+    if (ph === '41') return '4';
+    return ph;
+  }
+  function orgPhaseInfo(k) { for (var i = 0; i < ORG_PHASES.length; i++) if (ORG_PHASES[i].k === k) return ORG_PHASES[i]; return ORG_PHASES[9]; }
+  function orgCecbTexte(a) {
+    var t = String(a || '').trim(), m = /^var[_ ]?([abc])$/i.exec(t);
+    if (m) return 'CECB+, variante ' + m[1].toUpperCase();
+    if (/en cours/i.test(t)) return 'CECB+, en cours';
+    if (/v[ée]rifier/i.test(t)) return 'CECB+, à vérifier';
+    return '';
+  }
+  function orgPortefeuilles() {
+    var bs = (DB.planpte && DB.planpte.bySousSite) || {}, c = {};
+    Object.keys(bs).forEach(function (k) {
+      var m = bs[k].mesures, r = String((m && m.rpf) || bs[k].rpf_ou_agent || '').trim();
+      if (!r || /^-+$/.test(r) || /hors p[ée]rim/i.test(r)) return;
+      c[r] = (c[r] || 0) + 1;
+    });
+    return Object.keys(c).sort(function (a, b) { return a.localeCompare(b, 'fr'); }).map(function (r) { return { rpf: r, n: c[r] }; });
+  }
+  /* modèle du portefeuille : colonnes → sites → sous-sites → lignes */
+  function orgModele(rpf) {
+    var bs = (DB.planpte && DB.planpte.bySousSite) || {}, S = orgStock(), sites = {}, sansLots = 0;
+    var parSs = {};
+    DB.projets.forEach(function (p) { if (p.numero_sous_site) (parSs[p.numero_sous_site] = parSs[p.numero_sous_site] || []).push(p); });
+    Object.keys(bs).forEach(function (num) {
+      var pp = bs[num], m = pp.mesures || {}, r = String(m.rpf || pp.rpf_ou_agent || '').trim();
+      if (r !== rpf) return;
+      var cleSite = String(m.site || num.slice(0, 4)), s = sites[cleSite];
+      if (!s) s = sites[cleSite] = { cle: cleSite, nom: m.nomSite || pp.nom || cleSite, sousSites: [], t: 0 };
+      var t = (m.typeIntervention >= 1 && m.typeIntervention <= 4) ? m.typeIntervention : 0;
+      if (t > s.t) s.t = t;
+      var lignes = [], natures = {};
+      (parSs[num] || []).forEach(function (p) {
+        var np = p.numero_projet, sx = S.items[np] || {}, ph = orgPhase(np);
+        var nat = orgNatureOk(sx.nature) ? sx.nature : orgNatureCode(np);
+        natures[nat] = 1;
+        lignes.push({ id: np, projet: p, court: String(np).replace(/\D/g, '').slice(-5), nature: nat, natureCorrigee: orgNatureOk(sx.nature),
+          phase: ph, rp: orgTxt(sx.rp), service: orgTxt(sx.service), masque: sx.masque === true, termine: ph === '6' });
+      });
+      if (!pp.lots || pp.audit_cecb === undefined) sansLots++;
+      /* identifiées : seulement après un audit CECB+ avec variante retenue (les coûts par lot existent aussi,
+         ventilés depuis l'estimation ImmOBA, pour des sous-sites sans audit : ce ne sont pas des interventions identifiées) */
+      var audite = /^var[_ ]?[abc]$/i.test(String(pp.audit_cecb || '').trim());
+      var lots = audite ? (pp.lots || {}) : {};
+      ORG_LOTS.forEach(function (L) {
+        if (!(lots[L.k] > 0) || orgCouvert(natures, L.code)) return;
+        var id = num + '|' + L.k, sx = S.items[id] || {};
+        lignes.push({ id: id, identifie: true, nature: L.code, libelle: L.lib, montant: lots[L.k], source: L.col, phase: 'id',
+          rp: orgTxt(sx.rp), service: orgTxt(sx.service), masque: sx.masque === true });
+      });
+      if (audite && pp.pv_kwc > 0 && !orgCouvert(natures, '06')) {
+        var idp = num + '|pv', sp = S.items[idp] || {};
+        lignes.push({ id: idp, identifie: true, nature: '06', libelle: 'Photovoltaïque', kwc: pp.pv_kwc, source: 'Futur projet PV - puissance estimée [kWc]', phase: 'id',
+          rp: orgTxt(sp.rp), service: orgTxt(sp.service), masque: sp.masque === true });
+      }
+      s.sousSites.push({ num: num, nom: m.nom || pp.nom || '', sre: m.sre !== undefined && m.sre !== null ? m.sre : pp.sre_m2, t: t,
+        cecb: orgCecbTexte(pp.audit_cecb), lignes: lignes, nbProjets: (parSs[num] || []).length });
+    });
+    var L = Object.keys(sites).map(function (k) {
+      var s = sites[k];
+      s.sousSites.sort(function (a, b) { return a.num.localeCompare(b.num); });
+      s.nbProjets = s.sousSites.reduce(function (a, x) { return a + x.nbProjets; }, 0);
+      /* projets affichés : sans les lignes masquées ni, case décochée, les terminés */
+      s.nbVisibles = s.sousSites.reduce(function (a, x) { return a + x.lignes.filter(function (l) { return !l.identifie && (ORG.masques || !l.masque) && (ORG.termines || !l.termine); }).length; }, 0);
+      s.sre = s.sousSites.reduce(function (a, x) { return a + (x.sre > 0 ? x.sre : 0); }, 0);
+      s.note = orgTxt(S.sites[k] && S.sites[k].note);
+      return s;
+    }).sort(function (a, b) { return a.cle.localeCompare(b.cle, 'fr', { numeric: true }); });
+    var cols = [4, 3, 2, 1, 0].map(function (t) { return { t: t, sites: L.filter(function (s) { return s.t === t; }) }; })
+      .filter(function (c) { return c.sites.length; }).sort(function (a, b) { return (a.t || 9) - (b.t || 9); });
+    return { rpf: rpf, cols: cols, nSites: L.length, nSs: L.reduce(function (a, s) { return a + s.sousSites.length; }, 0),
+      nProjets: L.reduce(function (a, s) { return a + s.nbProjets; }, 0), sansLots: sansLots, pf: { titre: orgTxt(S.pf[rpf] && S.pf[rpf].titre), amo: orgTxt(S.pf[rpf] && S.pf[rpf].amo) } };
+  }
+  function orgChampTexte(lbl, val, onSave, ph) {
+    var id = 'org-in-' + Math.random().toString(36).slice(2, 8);
+    var inp = el('input', { type: 'text', id: id, value: val || '', placeholder: ph || '' });
+    inp.addEventListener('change', function () { onSave(inp.value.trim()); });
+    return el('label', { class: 'org-champ', for: id }, [el('span', {}, [lbl]), inp]);
+  }
+  function orgEditeur(li, rerender) {
+    var box = el('div', { class: 'org-edit' });
+    if (!li.identifie) {
+      var sel = el('select', { 'aria-label': 'Nature du projet ' + li.court });
+      sel.appendChild(el('option', { value: '' }, ['Selon le numéro : ' + ORG_NATURES[orgNatureCode(li.id)]]));
+      Object.keys(ORG_NATURES).forEach(function (k) { var o = el('option', { value: k }, [(/^\d/.test(k) ? k + ' · ' : '') + ORG_NATURES[k]]); if (li.natureCorrigee && li.nature === k) o.selected = true; sel.appendChild(o); });
+      sel.addEventListener('change', function () { orgSaisie('items', li.id, { nature: sel.value }); rerender(); });
+      box.appendChild(el('label', { class: 'org-champ' }, [el('span', {}, ['Nature']), sel]));
+    }
+    box.appendChild(orgChampTexte('Délégation : RP', li.rp, function (v) { orgSaisie('items', li.id, { rp: v }); }, 'nom du RP'));
+    box.appendChild(orgChampTexte('Service', li.service, function (v) { orgSaisie('items', li.id, { service: v }); }, 'ex. SIP'));
+    var cb = el('input', { type: 'checkbox' }); cb.checked = li.masque;
+    cb.addEventListener('change', function () { orgSaisie('items', li.id, { masque: cb.checked }); ORG.edite = null; rerender(); });
+    box.appendChild(el('label', { class: 'org-cb' }, [cb, ' Masquer cette ligne']));
+    var fermer = el('button', { type: 'button', class: 'btn' }, ['Fermer']);
+    fermer.addEventListener('click', function () { ORG.edite = null; rerender(); });
+    box.appendChild(fermer);
+    return box;
+  }
+  function orgLigne(li, rerender) {
+    var ph = orgPhaseInfo(li.phase), g = (!li.identifie && DB.gei && DB.gei[li.id]) || {};
+    var row = el('div', { class: 'org-l' + (li.masque ? ' org-masque' : '') });
+    row.appendChild(tip(el('span', { class: 'org-pt ' + ph.cls, role: 'img', 'aria-label': ph.lib }), ph.lib));
+    if (li.identifie) {
+      row.appendChild(el('span', { class: 'org-num org-x' }, ['XXXX']));
+      row.appendChild(tip(el('span', { class: 'org-nat' }, [li.libelle]),
+        'Identifié par l’audit CECB+, sans projet GE-Invest de cette nature : ' + (li.kwc ? fmt(li.kwc, 0) + ' kWc' : fmtK(li.montant / 1000) + ' MCHF') + ' (Plan_PTE!' + li.source + ').'));
+    } else {
+      var p = li.projet, lienG = lienGEI(li.id, li.court);
+      row.appendChild(lienG ? el('span', { class: 'org-num' }, [lienG]) : el('span', { class: 'org-num' }, [li.court]));
+      var nat = el('button', { type: 'button', class: 'org-nat org-lien' }, [ORG_NATURES[li.nature]]);
+      nat.addEventListener('click', function () { STATE.projetSel = li.id; showView('fiche'); try { window.scrollTo(0, 0); } catch (e) { /* ignoré */ } });
+      tip(nat, (p.nom_projet || li.id) + ' — ' + ph.lib + (g.avancement !== null && g.avancement !== undefined ? ' (avancement ' + Math.round(g.avancement) + ' %)' : '') +
+        (statutDe(p) ? ' · ' + statutDe(p) : '') + (p.rp ? ' · RP ' + p.rp : '') + ' · ' + orgNatureTip(li.nature) + (li.natureCorrigee ? ' · nature corrigée dans l’organigramme' : ' · nature selon le code du numéro') + '. Ouvre la fiche projet.');
+      row.appendChild(nat);
+    }
+    if (li.rp || li.service) row.appendChild(el('span', { class: 'org-deleg' }, ['Délégation : ' + (li.rp || '—') + (li.service ? ' (' + li.service + ')' : '')]));
+    if (li.masque) row.appendChild(el('span', { class: 'org-badge' }, ['masquée']));
+    if (ORG.edition) {
+      var b = el('button', { type: 'button', class: 'org-crayon no-print', 'aria-label': 'Modifier la ligne ' + (li.court || li.libelle) }, ['✎']);
+      b.addEventListener('click', function () { ORG.edite = ORG.edite === li.id ? null : li.id; rerender(); });
+      row.appendChild(b);
+    }
+    var frag = el('div', {}, [row]);
+    if (ORG.edition && ORG.edite === li.id) frag.appendChild(orgEditeur(li, rerender));
+    return frag;
+  }
+  function orgCarte(s, rerender) {
+    var card = el('div', { class: 'org-site' });
+    var nums = s.sousSites.map(function (x) { return x.num; }).join(' / ');
+    var head = el('div', { class: 'org-site-h' }, [el('b', {}, [s.nom]), el('span', { class: 'org-nums' }, [nums])]);
+    card.appendChild(head);
+    var un = s.sousSites.length === 1;
+    card.appendChild(el('div', { class: 'org-sub' }, [s.nbVisibles + ' projet' + (s.nbVisibles > 1 ? 's' : '') + (s.nbVisibles < s.nbProjets ? ' affiché' + (s.nbVisibles > 1 ? 's' : '') + ' sur ' + s.nbProjets : '') + (s.sre > 0 ? ' · ' + fmt(s.sre, 0) + ' m²' : '')].concat(
+      un && s.sousSites[0].cecb ? [el('span', { class: 'org-cecb' }, [s.sousSites[0].cecb])] : [])));
+    if (ORG.edition) card.appendChild(orgChampTexte('Note', s.note, function (v) { orgSaisie('sites', s.cle, { note: v }); }, 'ex. démolition possible, à confirmer'));
+    else if (s.note) card.appendChild(el('p', { class: 'org-note' }, [s.note]));
+    s.sousSites.forEach(function (x) {
+      var vis = x.lignes.filter(function (l) { return (ORG.masques || !l.masque) && (ORG.termines || !l.termine); });
+      if (!un) card.appendChild(el('div', { class: 'org-ss' }, ['Sous-site ' + x.num + (x.sre > 0 ? ' · ' + fmt(x.sre, 0) + ' m²' : '') + (x.t && x.t !== s.t ? ' · T' + x.t : '')].concat(
+        x.cecb ? [el('span', { class: 'org-cecb' }, [x.cecb])] : [])));
+      if (!vis.length) card.appendChild(el('p', { class: 'org-vide' }, [x.lignes.length ? 'lignes masquées' : 'aucun projet, rien d’identifié']));
+      vis.forEach(function (l) { card.appendChild(orgLigne(l, rerender)); });
+    });
+    return card;
+  }
+  function renderOrganigrammeView() {
+    var host = $('#organigramme-content'); if (!host) return;
+    host.innerHTML = '';
+    var pfs = orgPortefeuilles();
+    if (!pfs.length) { host.appendChild(emptyCard('Aucun responsable de portefeuille dans le classeur : l’organigramme se construit à partir de la colonne « Responsable Portefeuille » de Plan_PTE. Charger le classeur.')); return; }
+    if (!ORG.pf || !pfs.some(function (x) { return x.rpf === ORG.pf; })) {
+      var dep = STATE.perimetre && STATE.perimetre.indexOf('RPF:') === 0 ? STATE.perimetre.slice(4) : null;
+      ORG.pf = (dep && pfs.some(function (x) { return x.rpf === dep; })) ? dep : pfs[0].rpf;
+    }
+    var rerender = function () { renderOrganigrammeView(); };
+    var M = orgModele(ORG.pf);
+    // barre d'outils
+    var sel = el('select', { id: 'org-pf', 'aria-label': 'Portefeuille' });
+    pfs.forEach(function (x) { var o = el('option', { value: x.rpf }, [x.rpf + ' (' + x.n + ' sous-sites)']); if (x.rpf === ORG.pf) o.selected = true; sel.appendChild(o); });
+    sel.addEventListener('change', function () { ORG.pf = sel.value; ORG.edite = null; try { localStorage.setItem(LS_ORG_PF, ORG.pf); } catch (e) { /* choix valable pour la page */ } rerender(); });
+    function bascule(lbl, cle, titre) {
+      var cb = el('input', { type: 'checkbox' }); cb.checked = !!ORG[cle];
+      cb.addEventListener('change', function () { ORG[cle] = cb.checked; if (cle === 'edition') ORG.edite = null; rerender(); });
+      return tip(el('label', { class: 'org-cb' }, [cb, ' ' + lbl]), titre);
+    }
+    var imp = el('button', { type: 'button', class: 'btn' }, ['Imprimer en A3']);
+    imp.addEventListener('click', function () { var e = ORG.edition; ORG.edition = false; ORG.edite = null; rerender(); printWithSize('landscape', 'A3'); if (e) { ORG.edition = true; rerender(); } });
+    host.appendChild(el('div', { class: 'org-outils no-print' }, [
+      el('label', { class: 'org-champ', for: 'org-pf' }, [el('span', {}, ['Portefeuille']), sel]),
+      bascule('Projets terminés', 'termines', 'Projets mis en service ou terminés (phase SIA 6).'),
+      bascule('Lignes masquées', 'masques', 'Montrer aussi les lignes masquées, en grisé.'),
+      bascule('Modifier', 'edition', 'Libellé et AMO du portefeuille, note de site ; par ligne (✎) : nature, délégation, masquer. Saisies gardées dans ce navigateur ; elles partent avec les autres par le bouton Saisies (fichier Excel, serveur partagé).'),
+      imp]));
+    // en-tête du portefeuille
+    var pf = M.pf;
+    var entete = el('div', { class: 'org-entete' });
+    if (ORG.edition) {
+      entete.appendChild(orgChampTexte('Libellé du portefeuille', pf.titre, function (v) { orgSaisie('pf', ORG.pf, { titre: v }); }, 'ex. Instruction publique 1'));
+      entete.appendChild(orgChampTexte('AMO', pf.amo, function (v) { orgSaisie('pf', ORG.pf, { amo: v }); }, 'ex. bureau d’AMO'));
+    } else {
+      entete.appendChild(el('div', { class: 'org-titre' }, [pf.titre ? 'Portefeuille ' + pf.titre : 'Portefeuille de ' + ORG.pf]));
+      entete.appendChild(el('div', { class: 'org-resp' }, [el('div', {}, ['Responsable portefeuille : ' + ORG.pf])].concat(pf.amo ? [el('div', {}, ['AMO : ' + pf.amo])] : [])));
+    }
+    var card = el('div', { class: 'card org-card' }, [
+      el('h2', { class: 'org-h1' }, ['Programme de transition écologique — organigramme des projets']), entete,
+      el('p', { class: 'muted small org-chiffres' }, [M.nSites + ' sites · ' + M.nSs + ' sous-sites · ' + M.nProjets + ' projets GE-Invest rattachés' + (ORG.termines && !ORG.masques ? '' : ' (en-têtes : projets affichés)')]) ]);
+    var colLots = DB.planpte && DB.planpte.colonnes ? DB.planpte.colonnes.lot_enveloppe : undefined;
+    if (!M.sansLots && colLots === null) card.appendChild(el('p', { class: 'muted small no-print' }, ['Interventions identifiées indisponibles : le classeur n’a pas de colonnes « Coût lot … » dans Plan_PTE.']));
+    if (M.sansLots) card.appendChild(el('p', { class: 'muted small no-print' }, ['Interventions identifiées et badges CECB+ indisponibles pour ' + M.sansLots + ' sous-site(s) : classeur chargé avant le 02.11.2026 ; le recharger.']));
+    var grille = el('div', { class: 'org-grille', style: 'grid-template-columns:repeat(' + M.cols.length + ',minmax(250px,1fr))' });
+    M.cols.forEach(function (c) {
+      var col = el('div', { class: 'org-col' });
+      var n = c.sites.reduce(function (a, s) { return a + s.nbVisibles; }, 0);
+      col.appendChild(el('div', { class: 'org-col-h org-t' + c.t }, [
+        el('span', { class: 'org-col-k' }, [c.t ? 'Type d’intervention ' + c.t : 'Sans type d’intervention']),
+        el('b', {}, [c.t ? famLibelleLong(c.t).replace(/^T\d · /, '') : 'IDC ou Coeff Stratus manquant']),
+        el('span', { class: 'org-col-n' }, [c.sites.length + ' site' + (c.sites.length > 1 ? 's' : '') + ' · ' + n + ' projet' + (n > 1 ? 's' : '')])]));
+      c.sites.forEach(function (s) { col.appendChild(orgCarte(s, rerender)); });
+      grille.appendChild(col);
+    });
+    card.appendChild(grille);
+    var leg = el('div', { class: 'org-legende' }, [el('b', {}, ['Légende'])]);
+    ORG_PHASES.forEach(function (p) { leg.appendChild(el('span', {}, [el('span', { class: 'org-pt ' + p.cls }), ' ' + p.lib])); });
+    card.appendChild(leg);
+    card.appendChild(el('p', { class: 'muted small' }, ['Colonnes : type d’intervention du site (le plus lourd de ses sous-sites). Nature : code du numéro GE-Invest (positions 8-9 : 10/13210/07/049), objectif du PL 13210 — 01 électricité, 02 thermique, 03 eau, 04 CO₂ (chaufferie ; plusieurs travaux CVSE), 05 IDC (rénovation), 06 électricité renouvelable, 07 chaleur renouvelable, 08 développement durable, 09 générique ; loi 12552 : embrasures ; corrigeable par ligne. Enveloppes 2030 : ' + Object.keys(ORG_OF).map(function (k) { return ORG_OF[k]; }).join(' · ') + '. « XXXX » : intervention identifiée par l’audit CECB+ (variante retenue ; coût par lot de Plan_PTE, futur projet PV) sans projet qui la couvre (05 ou embrasures : enveloppe ; 04 ou 07 : chaufferie ; 02, 04 ou 09 : technique ; 01 ou 09 : lumière). Construit à partir du classeur à chaque import.']));
+    host.appendChild(card);
+  }
+
+  // ------------------------------------------------------------------
   // VUE : Fiche projet
   // ------------------------------------------------------------------
   function renderFicheSelect() {
@@ -11258,6 +11720,7 @@ var PTE_COMMUN = (function () {
     if (name === 'reporting') renderReportingView();
     if (name === 'fiche') { renderFicheSelect(); buildFiche(STATE.projetSel); }
     if (name === 'portefeuille') renderPortefeuilleView();
+    if (name === 'organigramme') renderOrganigrammeView();
     if (name === 'parc') renderParcView();
     if (name === 'donnees') renderDonneesView();
     if (name === 'methode') renderMethodeView();
@@ -11573,9 +12036,9 @@ var PTE_COMMUN = (function () {
     });
   }
 
-  function printWithSize(orientation) {
+  function printWithSize(orientation, format) {
     var st = $('#pagesize-style');
-    st.textContent = '@page{size:A4 ' + orientation + '; margin:12mm;}';
+    st.textContent = '@page{size:' + (format || 'A4') + ' ' + orientation + '; margin:' + (format === 'A3' ? '8mm' : '12mm') + ';}';
     window.print();
   }
 

@@ -42,6 +42,11 @@ d'œil, du programme jusqu'au sous-site ?**
 - Fiche projet imprimable (description GE-Invest et commentaires des jalons compris ; le
   N° GE-Invest ouvre la fiche du projet dans GE-Invest, sur l'intranet de l'État),
   portefeuille, parc, complétude des données.
+- **Organigramme** (v0.39) : pour un responsable de portefeuille, les sites rangés par type
+  d'intervention, chaque projet GE-Invest avec sa nature (code du numéro, objectif du
+  PL 13210) et sa phase SIA en couleur, et les interventions identifiées par l'audit CECB+
+  sans projet. Libellé et AMO du portefeuille, délégations, notes : saisies partagées comme
+  les autres. Impression A3.
 
 ## Fonctionnement
 
@@ -52,5 +57,5 @@ personne choisit d'envoyer au serveur des saisies. Les données importées reste
 navigateur (IndexedDB ; décisions dans le stockage local) ; la corbeille, à côté de l'état
 des données, les efface.
 
-Version : v0.38 — 28.10.2026 (historique : lien de version en pied de page). Testée par une
+Version : v0.39 — 02.11.2026 (historique : lien de version en pied de page). Testée par une
 suite de 667 contrôles automatisés (dépôt de travail interne).
