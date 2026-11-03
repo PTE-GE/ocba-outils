@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-7ytlshlBfTzV0wA35SPT3injW9CXMbq8Y2qHVOHhWmA=' 'sha256-rAcIh4TNeoEDmSDM23ZTWqq2De0JwSuDczq7VLPZU5U=' 'sha256-QJL+jjiRUWOpCoG37fhBA2fGD4jh/nHbyQ1GpedKi2Q=' 'sha256-bYOr7rNfupUQvzQ+DwSZxgzCSMrvwthEiPxzHHf5HQw=' 'sha256-Pg5XubgP37xoJXY1+YkpWU+8AYPE+FzTQ5xEzTIPWSE=' 'sha256-H2k5JqJdhjSvy9aTSUDEgqZGxWnlG5Tim1R1TglX3k4='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-7ytlshlBfTzV0wA35SPT3injW9CXMbq8Y2qHVOHhWmA=' 'sha256-rAcIh4TNeoEDmSDM23ZTWqq2De0JwSuDczq7VLPZU5U=' 'sha256-fgCiLpQNynFME/Ub/5CbTjVUgeyrRam6Ur2vNM543Uw=' 'sha256-bYOr7rNfupUQvzQ+DwSZxgzCSMrvwthEiPxzHHf5HQw=' 'sha256-Pg5XubgP37xoJXY1+YkpWU+8AYPE+FzTQ5xEzTIPWSE=' 'sha256-H2k5JqJdhjSvy9aTSUDEgqZGxWnlG5Tim1R1TglX3k4='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Revue de projets</title>
 <style>
@@ -2895,6 +2895,7 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "03.11.2026", "objet": "commun", "version": null, "titre": "Mot de passe modifiable depuis les outils", "points": ["Bouton Saisies, une fois connecté : nouvelle entrée « Changer mon mot de passe… » (quatre pages). Mot de passe actuel, nouveau (8 caractères au moins) et confirmation.", "Après le changement, le serveur ferme les autres sessions du compte (autres onglets, autres postes) ; celle de l'outil est rouverte aussitôt avec le nouveau mot de passe. Serveur sans réponse pendant le changement : nouveau mot de passe essayé, sinon changement signalé comme incertain.", "Aucun mot de passe n'est gardé dans le navigateur. Serveur : chacun ne modifie que son propre mot de passe, et non son rôle ; nouvelle limite de 5 changements par minute (migration 1792300000), contre la recherche de l'ancien mot de passe."]},
     {"date": "03.11.2026", "objet": "revue", "version": "v0.40", "titre": "Périmètres par RPF retrouvés", "points": ["Le RPF d'un projet est désormais le « Responsable Portefeuille » de son sous-site dans Plan_PTE, comme dans la priorisation. Depuis l'extraction du 23.10, GE-Invest range tous les projets sous un seul portefeuille : le menu Périmètre n'offrait plus qu'un RPF.", "Questions du mois, Reporting et décisions suivent les mêmes portefeuilles ; un sous-site « hors périmètre » ou absent de Plan_PTE passe dans « Hors périmètre RPF »."]},
     {"date": "02.11.2026", "objet": "revue", "version": "v0.39", "titre": "Organigramme des projets d'un portefeuille", "points": ["Nouvel onglet « Organigramme » : pour un responsable de portefeuille, les sites rangés par type d'intervention, chaque projet GE-Invest avec sa nature (selon son numéro) et sa phase SIA en couleur, et les interventions identifiées par l'audit CECB+ (coûts par lot, futur projet PV) sans projet de même nature.", "Reconstruit à chaque import du classeur ; un clic sur la nature ouvre la fiche projet, le numéro ouvre GE-Invest.", "Mode « Modifier » : libellé et AMO du portefeuille, note de site, nature corrigée, délégation « RP (service) », ligne masquée — rubrique « organigramme » des saisies : fichier Excel (feuille « Organigramme ») et serveur partagé (migration 1792200000 à appliquer).", "Impression en A3 paysage."]},
     {"date": "28.10.2026", "objet": "commun", "version": null, "titre": "Fenêtres « i » sans « Details »", "points": ["Dans les fenêtres « i » tirées d'un « Comment lire… », le navigateur n'affiche plus son libellé « Details » en anglais (quatre pages)."]},
@@ -4092,11 +4093,11 @@ var PTE_COMMUN = (function () {
       if (!voile.parentNode) { document.removeEventListener('keydown', clavier, true); return; }   /* fenêtre remplacée */
       var L = document.querySelectorAll('body > .pte-fenetre');
       if (L[L.length - 1] !== voile) return;                                                         /* seule celle du dessus */
-      e.stopPropagation(); W.fermer();
+      e.stopPropagation(); if (!W.bloque) W.fermer();
     }
     voile.__detacher = function () { document.removeEventListener('keydown', clavier, true); };
     W.fermer = function () { document.removeEventListener('keydown', clavier, true); if (voile.parentNode) voile.parentNode.removeChild(voile); if (W.surFermer) { var f = W.surFermer; W.surFermer = null; f(); } };
-    voile.addEventListener('click', function (e) { var t = e.target; if (t === voile || (t.getAttribute && t.getAttribute('data-x') === 'fermer')) W.fermer(); });
+    voile.addEventListener('click', function (e) { var t = e.target; if (W.bloque) return; if (t === voile || (t.getAttribute && t.getAttribute('data-x') === 'fermer')) W.fermer(); });
     document.addEventListener('keydown', clavier, true);
     document.body.appendChild(voile);
     return W;
@@ -4442,6 +4443,7 @@ var PTE_COMMUN = (function () {
     }
     if (/^Batch transaction failed/i.test(m)) m = m.replace(/^Batch transaction failed\.?/i, 'lot refusé par le serveur');
     if (st === 401) m = 'session expirée : nouvelle connexion nécessaire';
+    if (st === 429) m = 'trop de tentatives rapprochées : nouvel essai possible dans quelques secondes';
     if (st === 403 && !/Administration/.test(m)) m = 'action non autorisée pour ce compte (' + m + ')';
     return m;
   }
@@ -4457,8 +4459,9 @@ var PTE_COMMUN = (function () {
   function lireEchue() { var st = stockSession(), o = null; try { o = st ? JSON.parse(st.getItem(LS_ECHUE) || 'null') : null; } catch (e) { o = null; } return o && typeof o === 'object' ? o : null; }
   function effacerEchue() { var st = stockSession(); try { if (st) st.removeItem(LS_ECHUE); } catch (e) {} }
   function fermerSessionEchue(motif) {
-    var s = session(), st = stockSession();
-    try { if (s && st) st.setItem(LS_ECHUE, JSON.stringify({ email: txt(s.user.email), name: txt(s.user.name), motif: motif === 'bientot' ? 'bientot' : 'echue' })); } catch (e) {}
+    var s = session(), st = stockSession(), avant = lireEchue();
+    if (!motif && avant && avant.motif === 'incertain') motif = 'incertain';   /* changement de mot de passe sans réponse du serveur : gardé */
+    try { if (s && st) st.setItem(LS_ECHUE, JSON.stringify({ email: txt(s.user.email), name: txt(s.user.name), motif: ['bientot', 'mdp', 'incertain'].indexOf(motif) >= 0 ? motif : 'echue' })); } catch (e) {}
     deconnecter();
     try { majBoutons(); } catch (e) {}   /* pastille du bouton Saisies : « non connecté » (contre-vérification D) */
   }
@@ -4475,6 +4478,7 @@ var PTE_COMMUN = (function () {
   function jetonEchu(tok) { var x = echeanceJeton(tok); return x != null && x * 1000 <= Date.now() + 5000; }
   /* accepté par le serveur alors qu'il est échu depuis plus d'une minute selon le poste : horloge du poste en avance */
   function horlogeEnAvance(tok) { var x = echeanceJeton(tok); return x != null && x * 1000 < Date.now() - 60000; }
+  function sameJeton(tok) { var s = session(); return !!(s && s.token === tok); }
   function erreurEchue() { var e = new Error(messageErreur(401, null)); e.status = 401; return e; }
   function api(methode, chemin, corps) {
     var s0 = session();
@@ -4496,12 +4500,13 @@ var PTE_COMMUN = (function () {
         return r.text().then(function (t) {
           if (to) clearTimeout(to);
           var j = null; try { j = t ? JSON.parse(t) : null; } catch (e) {}
-          if (!r.ok) { if (r.status === 401 && chemin !== '/api/collections/users/auth-with-password') fermerSessionEchue(); var err = new Error(messageErreur(r.status, j)); err.status = r.status; err.data = j; throw err; }
+          if (!r.ok) { if (r.status === 401 && chemin !== '/api/collections/users/auth-with-password' && s && sameJeton(s.token)) fermerSessionEchue();   /* seulement si la session n'a pas changé entre-temps (autre onglet, mot de passe changé) */ var err = new Error(messageErreur(r.status, j)); err.status = r.status; err.data = j; throw err; }
           return j;
         });
       }, function (e) {
         if (to) clearTimeout(to);
-        throw new Error(e && e.name === 'AbortError' ? 'le serveur ne répond pas (délai dépassé)' : 'serveur injoignable : machine éteinte, Tailscale arrêté, ou adresse bloquée par le réseau');
+        var er = new Error(e && e.name === 'AbortError' ? 'le serveur ne répond pas (délai dépassé)' : 'serveur injoignable : machine éteinte, Tailscale arrêté, ou adresse bloquée par le réseau');
+        er.reseau = true; throw er;   /* requête partie ou non, sans réponse (distinct d'un refus local avant envoi) */
       });
   }
   function connecter(courriel, mdp) {
@@ -4515,17 +4520,79 @@ var PTE_COMMUN = (function () {
       return s;
     });
   }
+  /* Changement du mot de passe du compte connecté (règle du serveur : chacun modifie son propre compte, sauf rôle,
+     courriel et vérification). Le serveur ferme alors toutes les sessions du compte (autres onglets, autres postes) ;
+     celle-ci est rouverte aussitôt avec le nouveau mot de passe. Les mots de passe ne sont ni gardés ni journalisés.
+     Rend la session rouverte ; { reconnexion: true } si le changement a réussi mais pas la reconnexion. */
+  var MDP_MIN = 8, MDP_MAX = 71;   /* bornes du serveur (PocketBase : 8 au moins, 71 octets au plus) */
+  function verifierMotDePasse(ancien, nouveau, confirmation) {
+    ancien = txt(ancien); nouveau = txt(nouveau); confirmation = txt(confirmation);
+    if (!ancien) return 'mot de passe actuel non renseigné';
+    if (nouveau.length < MDP_MIN) return 'nouveau mot de passe trop court : ' + MDP_MIN + ' caractères au moins';
+    var oct = typeof TextEncoder !== 'undefined' ? new TextEncoder().encode(nouveau).length : unescape(encodeURIComponent(nouveau)).length;
+    if (oct > MDP_MAX) return 'nouveau mot de passe trop long : ' + MDP_MAX + ' caractères au plus (moins avec des accents)';
+    if (nouveau !== confirmation) return 'la confirmation ne correspond pas au nouveau mot de passe';
+    if (nouveau === ancien) return 'nouveau mot de passe identique à l’actuel';
+    return '';
+  }
+  function erreurMdp(m, st, incertain) { var e = new Error(m); e.status = st; if (incertain) e.incertain = true; return e; }
+  function changerMotDePasse(ancien, nouveau, confirmation, etape) {
+    var pb = verifierMotDePasse(ancien, nouveau, confirmation);
+    if (pb) return Promise.reject(new Error(pb));
+    var s = session();
+    if (!s || !s.user || !s.user.id) return Promise.reject(new Error('aucune connexion au serveur partagé'));
+    var courriel = s.user.email;
+    /* connexion avec le nouveau mot de passe ; le serveur limite les connexions rapprochées (429) : deux reprises espacées */
+    var reconnecter = function (n) {
+      return connecter(courriel, nouveau).catch(function (ex) {
+        if (ex && ex.status === 429 && n < 2) return new Promise(function (ok) { setTimeout(ok, 3500); }).then(function () { return reconnecter(n + 1); });
+        throw ex;
+      });
+    };
+    return api('PATCH', '/api/collections/users/records/' + encodeURIComponent(s.user.id),
+      { oldPassword: txt(ancien), password: txt(nouveau), passwordConfirm: txt(confirmation) })
+      .then(function () {
+        /* changé : l'ancien jeton n'est plus valable ; session rouverte, sinon fermée et marquée « mot de passe changé » */
+        if (etape) { try { etape('reconnexion'); } catch (x) {} }
+        return reconnecter(0).catch(function () { fermerSessionEchue('mdp'); return { reconnexion: true }; });
+      }, function (e) {
+        var d = e && e.data && e.data.data;
+        if (e && e.reseau) {
+          /* pas de réponse (réseau, délai) : le changement a pu se faire ; le nouveau mot de passe le dit */
+          return reconnecter(0).then(function (s2) { return s2; }, function (ex) {
+            if (ex && ex.status === 400) throw e;   /* nouveau mot de passe refusé : rien n'a changé */
+            try { var st = stockSession(); if (st) st.setItem(LS_ECHUE, JSON.stringify({ email: txt(courriel), name: txt(s.user.name), motif: 'incertain' })); } catch (x) {}
+            throw erreurMdp('serveur injoignable pendant le changement : changement peut-être effectué ; si l’ancien mot de passe est refusé à la prochaine connexion, essayer le nouveau', 0, true);
+          });
+        }
+        if (e.status === 429) throw erreurMdp('trop d’essais rapprochés : nouvel essai possible dans une minute', 429);
+        if (e.status === 400 && d && d.oldPassword) throw erreurMdp('mot de passe actuel incorrect', 400);
+        if (e.status === 400 && d && (d.password || d.passwordConfirm)) throw erreurMdp('nouveau mot de passe refusé par le serveur (' + MDP_MIN + ' caractères au moins, ' + MDP_MAX + ' octets au plus)', 400);
+        if (e.status === 403 || e.status === 404) {
+          /* un jeton révoqué entre-temps rend 404 : session revérifiée avant de parler de droits */
+          return verifierSession().then(function (r) {
+            if (r.joint && !r.session) throw erreurMdp('session expirée : nouvelle connexion nécessaire', 401);
+            throw erreurMdp('changement non autorisé par le serveur pour ce compte : s’adresser à l’administrateur', e.status);
+          });
+        }
+        throw e;
+      });
+  }
   /* session vérifiée par le serveur : la session (renouvelée) ; null si le serveur la refuse (fermée, marquée) ; la
      session telle quelle si le serveur ne répond pas (l'action dira l'erreur) */
   function rafraichirSession() { return verifierSession().then(function (r) { return r.session; }); }
   /* même vérification ; joint : le serveur a répondu (false : injoignable, la session est rendue telle quelle) */
   function verifierSession() {
     if (!session()) return Promise.resolve({ session: null, joint: false });
+    var envoye = session().token;
     return appel('POST', '/api/collections/users/auth-refresh').then(function (j) {
       var u = j.record || {}, s = { token: j.token, user: { id: u.id, name: u.name || u.email || '', email: u.email || '', role: u.role || 'contributeur' } };
       if (horlogeEnAvance(s.token)) s.horloge = true;
       ecrireSession(s); effacerEchue(); return { session: s, joint: true };
-    }, function (e) { return e.status === 401 ? { session: null, joint: true } : { session: session(), joint: false }; });
+    }, function (e) {
+      if (e.status === 401 && !sameJeton(envoye) && session()) return { session: session(), joint: true };   /* jeton remplacé entre-temps (autre onglet) : le nouveau vaut */
+      return e.status === 401 ? { session: null, joint: true } : { session: session(), joint: false };
+    });
   }
   /* identifiant d'enregistrement stable (15 caractères [0-9a-f]) : rend l'envoi idempotent (PUT = créer ou remplacer) */
   function idStable(s) { return (hash(s) + hash(s + '#1') + hash(s + '#2')).slice(0, 15); }
@@ -4684,6 +4751,8 @@ var PTE_COMMUN = (function () {
 
   /* ---------- fenêtres : connexion, échange, retours ---------- */
   /* cb(session, neuve) : neuve = ouverte à l'instant par cette fenêtre */
+  /* message d'erreur en phrase : majuscule, un seul point final */
+  function phrase(m) { m = txt(m || 'erreur').replace(/[.\s]+$/, ''); return m.charAt(0).toUpperCase() + m.slice(1) + '.'; }
   function demanderConnexion(cb) {
     var s0 = session();
     if (s0 && adresseServeur()) { cb(s0, false); return; }
@@ -4693,7 +4762,7 @@ var PTE_COMMUN = (function () {
       return '<label style="display:block;font-size:12.5px;color:' + c.doux + ';margin:8px 0 4px" for="' + id + '">' + lib + '</label>' +
         '<input id="' + id + '" type="' + type + '" value="' + esc(val || '') + '" autocomplete="' + auto + '" spellcheck="false" style="font:inherit;width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid ' + c.trait + ';border-radius:6px;background:' + c.fond + ';color:' + c.encre + '">';
     };
-    W.corps.innerHTML = (echue ? '<p style="margin:0 0 6px;color:' + c.rouge + '">' + (echue.motif === 'bientot' ? 'Session proche de son échéance, fermée : nouvelle connexion nécessaire.' : 'Session expirée : nouvelle connexion nécessaire.') + '</p>' : '') +
+    W.corps.innerHTML = (echue ? '<p style="margin:0 0 6px;color:' + c.rouge + '">' + (echue.motif === 'bientot' ? 'Session proche de son échéance, fermée : nouvelle connexion nécessaire.' : echue.motif === 'mdp' ? 'Mot de passe changé : connexion avec le nouveau mot de passe.' : echue.motif === 'incertain' ? 'Changement du mot de passe peut-être effectué (serveur sans réponse) : si l’ancien est refusé, essayer le nouveau.' : 'Session expirée : nouvelle connexion nécessaire.') + '</p>' : '') +
       '<p style="margin:0 0 6px">Compte créé par l’administrateur du serveur. ' + (SES_ONGLET
         ? 'L’adresse reste dans ce navigateur ; la session, dans cet onglet seulement (outils ouverts depuis le disque).'
         : 'L’adresse et la session restent dans ce navigateur.') + '</p>' +
@@ -4710,10 +4779,58 @@ var PTE_COMMUN = (function () {
       bC.disabled = true; bC.textContent = 'Connexion…';
       connecter(W.corps.querySelector('#pte-srv-c').value, W.corps.querySelector('#pte-srv-m').value)
         .then(function (s) { fini = true; W.fermer(); cb(s, true); })
-        .catch(function (e) { bC.disabled = false; bC.textContent = 'Se connecter'; err.textContent = e.message.charAt(0).toUpperCase() + e.message.slice(1) + '.'; });
+        .catch(function (e) { bC.disabled = false; bC.textContent = 'Se connecter'; err.textContent = phrase(e.message); });
     });
     W.corps.addEventListener('keydown', function (e) { if (e.key === 'Enter') bC.click(); });
     try { W.corps.querySelector(adresseServeur() ? '#pte-srv-c' : '#pte-srv-a').focus(); } catch (e) {}
+  }
+  /* fenêtre « Changer mon mot de passe » ; cb(true) si changé, cb(null) sinon */
+  function demanderMotDePasse(cb) {
+    var s = session(); if (!s) { if (cb) cb(null); return; }
+    var W = fenetre('pte-mdp', 'Changer mon mot de passe', 480), c = W.c, fini = false;
+    var champ = function (id, lib, auto) {
+      return '<label style="display:block;font-size:12.5px;color:' + c.doux + ';margin:8px 0 4px" for="' + id + '">' + lib + '</label>' +
+        '<input id="' + id + '" type="password" autocomplete="' + auto + '" spellcheck="false" maxlength="128" style="font:inherit;width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid ' + c.trait + ';border-radius:6px;background:' + c.fond + ';color:' + c.encre + '">';
+    };
+    W.corps.innerHTML = '<p style="margin:0 0 6px">Compte : <b>' + esc(s.user.email || s.user.name) + '</b>. ' + MDP_MIN + ' caractères au moins. ' +
+      'Après le changement, les sessions de ce compte sur les autres postes et navigateurs sont fermées ; celle-ci reste ouverte.</p>' +
+      '<input type="text" autocomplete="username" value="' + esc(s.user.email || '') + '" hidden aria-hidden="true" tabindex="-1">' +
+      champ('pte-mdp-a', 'Mot de passe actuel', 'current-password') +
+      champ('pte-mdp-n', 'Nouveau mot de passe', 'new-password') +
+      champ('pte-mdp-c', 'Confirmation du nouveau mot de passe', 'new-password') +
+      '<p data-x="err" role="alert" style="margin:10px 0 0;color:' + c.rouge + '"></p>';
+    var err = W.corps.querySelector('[data-x="err"]');
+    var val = function (id) { return W.corps.querySelector('#' + id).value; };
+    var vider = function () { ['pte-mdp-a', 'pte-mdp-n', 'pte-mdp-c'].forEach(function (id) { try { W.corps.querySelector('#' + id).value = ''; } catch (e) {} }); };
+    W.surFermer = function () { vider(); if (!fini && cb) cb(null); };
+    var bA = bouton(W, 'Annuler', false, function () { if (!W.bloque) W.fermer(); });
+    var occupe = function (o) { W.bloque = o; bA.disabled = o; bC.disabled = o; bC.textContent = o ? 'Changement…' : 'Changer'; };
+    var bC = bouton(W, 'Changer', true, function () {
+      err.textContent = '';
+      var pb = verifierMotDePasse(val('pte-mdp-a'), val('pte-mdp-n'), val('pte-mdp-c'));
+      if (pb) { err.textContent = phrase(pb); return; }
+      occupe(true);
+      var a = val('pte-mdp-a'), n = val('pte-mdp-n'), k = val('pte-mdp-c');
+      rafraichirSession().then(function (s2) {
+        if (!s2) throw erreurMdp('session expirée : nouvelle connexion nécessaire', 401);
+        return changerMotDePasse(a, n, k, function () { W.bloque = false; bA.disabled = false; bC.textContent = 'Changé, reconnexion…'; });
+      }).then(function (r) {
+        occupe(false); fini = true; W.fermer();
+        try { majBoutons(); } catch (e) {}
+        signaler(r && r.reconnexion
+          ? 'Mot de passe changé. Reconnexion impossible pour l’instant : connexion à refaire avec le nouveau mot de passe.'
+          : 'Mot de passe changé. Les sessions de ce compte sur les autres postes sont fermées.', r && r.reconnexion ? 'wr' : 'ok');
+        if (r && r.reconnexion) demanderConnexion(function () { try { majBoutons(); } catch (x) {} });
+        if (cb) cb(true);
+      }).catch(function (e) {
+        occupe(false);
+        err.textContent = phrase(e && e.message);
+        if (e && e.incertain) { fini = true; W.fermer(); signaler(phrase(e.message), 'wr'); if (cb) cb(null); return; }
+        if (!session()) { fini = true; W.fermer(); demanderConnexion(function () { try { majBoutons(); } catch (x) {} if (cb) cb(null); }); }
+      });
+    });
+    W.corps.addEventListener('keydown', function (e) { if (e.key === 'Enter') bC.click(); });
+    try { W.corps.querySelector('#pte-mdp-a').focus(); } catch (e) {}
   }
   /* action sur le serveur : session vérifiée d'abord (sauf ouverte à l'instant) ; refusée, la connexion est redemandée */
   function avecSession(cb, fin) {
@@ -4924,7 +5041,8 @@ var PTE_COMMUN = (function () {
   C.serveur = { adresse: adresseServeur, definirAdresse: definirAdresseServeur, session: session, connecter: connecter, deconnecter: deconnecter,
     estConsolidateur: estConsolidateur, envoyerSaisies: envoyerSaisies, paquetsDuServeur: paquetsDuServeur, paquetReference: paquetReference,
     publierReference: publierReference, demanderConnexion: demanderConnexion, envoyerSaisiesUI: envoyerSaisiesUI,
-    recevoirReferenceUI: recevoirReferenceUI, consoliderDepuisServeur: consoliderDepuisServeur };
+    recevoirReferenceUI: recevoirReferenceUI, consoliderDepuisServeur: consoliderDepuisServeur,
+    changerMotDePasse: changerMotDePasse, verifierMotDePasse: verifierMotDePasse, demanderMotDePasse: demanderMotDePasse, verifierSession: verifierSession };
   C.ouvrirRetours = ouvrirRetours;
 
   /* ==========================================================================
@@ -4952,6 +5070,7 @@ var PTE_COMMUN = (function () {
     deconnexion: 'M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3M15 17l5-5-5-5M20 12H9',
     connexion: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4.5 20.5a7.5 7.5 0 0 1 15 0',
     nom: 'M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4',
+    cle: 'M15.5 7.5 19 4M21 2l-2 2M17 6l3 3M11.4 11.6a5.5 5.5 0 1 1-7.8 7.8 5.5 5.5 0 0 1 7.8-7.8zM11.4 11.6 15.5 7.5',
     presentation: 'M4 5h16v11H4zM12 16v4M8 20h8',
     fichier: 'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13l2 2 4-4',
     effacer: 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6'
@@ -5115,6 +5234,7 @@ var PTE_COMMUN = (function () {
       if (modeConsolidateur()) h += ligne('consoFichiers', 'consolider', 'Consolider des fichiers…', '');
       var pied = '';
       var sv = derniereSauvegarde(); if (sv && sv.v === 2) pied += ligne('annuler', 'annuler', 'Annuler le dernier import', '', 'pp-doux');
+      if (s) pied += ligne('motdepasse', 'cle', 'Changer mon mot de passe…', '', 'pp-doux');
       if (s) pied += ligne('deconnexion', 'deconnexion', 'Se déconnecter', '', 'pp-doux');
       else pied += ligne('nom', 'nom', utilisateur() ? 'Signé : ' + utilisateur() : 'Nom de signature', '<span class="pp-d">' + (utilisateur() ? 'changer' : 'à saisir') + '</span>', 'pp-doux');
       if (modeConsolidateur()) pied += ligne('quitterConso', 'consolider', 'Quitter le mode consolidateur', '', 'pp-doux');
@@ -5181,6 +5301,7 @@ var PTE_COMMUN = (function () {
         if (annulerDernierImport()) { apres({ retabli: true }); signaler('Dernier import annulé : saisies rétablies.'); }
       }
       else if (act === 'deconnexion') { deconnecter(); effacerEchue(); majBoutons(); signaler(SES_ONGLET ? 'Déconnecté du serveur partagé dans cet onglet ; les autres onglets gardent leur propre connexion.' : 'Déconnecté du serveur partagé.'); }
+      else if (act === 'motdepasse') demanderMotDePasse(function () { majBoutons(); });
       else if (act === 'nom') demanderNom(function () { majBoutons(); }, true);
       else if (act === 'quitterConso') { modeConsolidateur(false); signaler('Mode consolidateur retiré de ce poste.'); }
     }
