@@ -41,17 +41,27 @@ d'œil, du programme jusqu'au sous-site ?**
   jalons par sous-site et par projet, planning par famille d'intervention.
 - Fiche projet imprimable (description GE-Invest et commentaires des jalons compris ; le
   N° GE-Invest ouvre la fiche du projet dans GE-Invest, sur l'intranet de l'État),
-  portefeuille, parc, complétude des données.
+  portefeuille, complétude des données. Sans fiche de suivi pour le mois de revue,
+  avancement, fin ré-estimée, mise en service et événements sont lus dans l'extraction
+  GE-Invest, et la source est dite (v0.43).
+- **Vue direction** dans Reporting › Synthèse (v0.43, ex-onglet Parc) : contribution 2030,
+  capacité (projets actifs par responsable de portefeuille et par responsable de projet),
+  couverture CECB+ et top 10 rouges, sur le même périmètre et les mêmes filtres que les
+  chiffres du Reporting (v0.44).
 - **Organigramme** (v0.39) : pour un responsable de portefeuille, les sites rangés par type
   d'intervention, chaque projet GE-Invest avec sa nature (code du numéro, objectif du
   PL 13210) et sa phase SIA en couleur, et les interventions identifiées par l'audit CECB+
-  sans projet. Libellé et AMO du portefeuille, délégations, notes : saisies partagées comme
-  les autres. Impression A3.
+  sans projet. La délégation est le responsable de projet de GE-Invest, la nature suit le
+  numéro : ni l'une ni l'autre ne se modifie ici (v0.44). AMO du portefeuille, notes de site et
+  lignes masquées : saisies partagées comme les autres. Impression A3.
 - **Sémaphores par sous-site** (v0.41) : heatmap de la vue Portefeuille « Par sous-site », dépliable
   vers les projets ; chaque volet prend le pire des projets renseignés. Le Reporting donne aussi la
-  répartition des sous-sites.
+  répartition des sous-sites, et « À traiter en revue » suit la même bascule Sous-sites / Projets
+  (v0.44). Les sous-sites portent partout le nom du Classement de la priorisation ; leur tableau
+  se trie par un clic sur un titre de colonne.
 - **Périmètre** : Plan, **affectation** (colonne Affectation_AB de Plan_PTE, v0.41), portefeuilles
-  et responsables de projet ; Plan et affectation sont communs aux outils.
+  et responsables de projet ; Plan et affectation sont communs aux outils. Le menu se replie par
+  section et a un champ de recherche, comme dans la priorisation et la simulation (v0.44).
 
 ## Fonctionnement
 
@@ -62,5 +72,5 @@ personne choisit d'envoyer au serveur des saisies. Les données importées reste
 navigateur (IndexedDB ; décisions dans le stockage local) ; la corbeille, à côté de l'état
 des données, les efface.
 
-Version : v0.42 — 04.11.2026 (historique : lien de version en pied de page). Testée par une
-suite de 669 contrôles automatisés (dépôt de travail interne).
+Version : v0.44 — 04.11.2026 (historique : lien de version en pied de page). Testée par une
+suite de 685 contrôles automatisés (dépôt de travail interne).

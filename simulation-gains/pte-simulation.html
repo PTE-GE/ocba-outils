@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-/+fzRm7xDaIi8Ivz75zkQg+i6cTELGC05u1sljpkB7k=' 'sha256-i/7EtLYmidkgpgPPEq+IS+32G1tV0OAhP9NkohmUA10=' 'sha256-rRZF+HsiJOUhQ2N2oM9cKoWiKgajyVVuYURD0l2EhMI=' 'sha256-H2k5JqJdhjSvy9aTSUDEgqZGxWnlG5Tim1R1TglX3k4='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-/+fzRm7xDaIi8Ivz75zkQg+i6cTELGC05u1sljpkB7k=' 'sha256-i/7EtLYmidkgpgPPEq+IS+32G1tV0OAhP9NkohmUA10=' 'sha256-bq88A1BZpWj8QIbDB7UN5U9fjVhgIrur3kiL28Ix2dY=' 'sha256-3NcFgWFP+0eiJy75lwwdabjDO1QVG0dwx6SPagP9sVY='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Simulation des gains</title>
 <style>
@@ -637,7 +637,6 @@ html.epure .situ-k{border-left:0!important;padding-left:0!important}
 html.epure .situ-k .n{font-size:34px!important}
 html.epure .situ-phrase{font-size:15px!important;color:var(--ep-ink2)!important;line-height:1.5}
 html.epure .situ-phrase b{color:var(--ep-ink)}
-html.epure .shp{color:var(--ep-ink3)}
 
 /* ---------- revue : ligne des filtres et sauts ---------- */
 html.epure .rep-toprow{background:var(--ep-glass2)!important;-webkit-backdrop-filter:saturate(180%) blur(16px);backdrop-filter:saturate(180%) blur(16px)}
@@ -887,7 +886,7 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Simulation des gains · <a href="#" data-pte-versions="simulation" title="Historique des versions">v3.16 · 03.11.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Simulation des gains · <a href="#" data-pte-versions="simulation" title="Historique des versions">v3.17 · 04.11.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 <div id="flash"></div>
@@ -2546,6 +2545,12 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "04.11.2026", "objet": "revue", "version": "v0.44", "titre": "À traiter par sous-site, organigramme revu, Synthèse allégée", "points": ["« À traiter en revue » : par sous-site ou par projet, comme la heatmap (même bascule) ; sous-sites nommés comme dans le Classement de la priorisation, sans l'affectation, partout dans la revue.", "Tableau « Sous-sites » : tri croissant ou décroissant par un clic sur le titre d'une colonne. Partie « Tout » du Reporting retirée (doublon).", "Organigramme : nature selon le numéro, délégation = RP de GE-Invest, non modifiables ; service retiré ; « Masquer » à la place du crayon ; titre du portefeuille non modifiable ; explications derrière le « i ». Anciennes saisies de nature, délégation et service effacées.", "Synthèse : « Vue par portefeuille » retirée (doublon) ; les blocs de la vue direction suivent les filtres ; « Capacité » ne compte que les projets actifs ; « Top 10 rouges » vide remplacé par sa cause ; menu Périmètre repliable ; fiche projet : événements lus dans GE-Invest sans suivi du mois."]},
+    {"date": "04.11.2026", "objet": "priorisation", "version": "v2.34", "titre": "Menu Périmètre repliable, Plotly plus chargé", "points": ["Menu Périmètre : sections Plan, Affectation et Portefeuilles repliables, avec le nombre de cases cochées, et champ de recherche.", "Plotly (≈ 1 Mo) n'est plus téléchargé : il ne servait qu'au sous-onglet « Distribution », retiré ; il revient avec lui."]},
+    {"date": "04.11.2026", "objet": "simulation", "version": "v3.17", "titre": "Menu Périmètre repliable", "points": ["Menu Périmètre : sections Plan et Affectation repliables, avec le nombre de cases cochées, et champ de recherche."]},
+    {"date": "04.11.2026", "objet": "revue", "version": "v0.43", "titre": "Onglet Parc fondu dans la Synthèse ; fiche projet sans suivi du mois", "points": ["Onglet « Parc » supprimé : ses blocs (Contribution 2030, Capacité, Couverture CECB+, Vue par portefeuille, Top 10 rouges) sont dans Reporting › Synthèse, au niveau programme, avec les mêmes calculs qu'avant (périmètre du menu, sans les filtres du Reporting). Un ancien lien ou un choix gardé vers « Parc » ouvre le Reporting.", "Fiche projet : sans fiche de suivi pour le mois choisi, l'avancement, la fin ré-estimée et la mise en service sont lus dans l'extraction GE-Invest (GEI_Projets), source dite sous la valeur ; ils restaient vides (« aucune fiche de suivi »)."]},
+    {"date": "04.11.2026", "objet": "priorisation", "version": "v2.33", "titre": "Classement et Arbitrage allégés", "points": ["Classement : sous-onglet « Distribution » retiré (Liste, Matrice et Top 20 restent). Retrait réversible par une constante.", "Arbitrage : « Comparer deux portefeuilles » (comparateur A/B) retiré ; le reste de l'Arbitrage est inchangé."]},
+    {"date": "04.11.2026", "objet": "accueil", "version": "v1.19", "titre": "Bouton « SharePoint » supprimé", "points": ["Bouton « SharePoint », formulaire d'adresse et entrée du menu ☰ supprimés : la lecture directe depuis l'intranet ne pouvait pas aboutir (le serveur SharePoint ne l'autorise pas pour une page publiée). L'adresse gardée dans ce navigateur est effacée à l'ouverture.", "Import manuel inchangé (dépôt ou « Charger le classeur »). La page ne joint plus que le serveur des saisies."]},
     {"date": "04.11.2026", "objet": "revue", "version": "v0.42", "titre": "Estim ImmOBA dans la chaîne financière", "points": ["Chaîne financière, carte « Cohérence financière », tableau des sous-sites et fiche : Estim ImmOBA remplace Estim PTE (Estim ImmOBA → DG → crédit GE-Invest) ; l'écart du crédit se mesure au DG, à défaut à l'Estim ImmOBA.", "Tuile « Estim. ImmOBA, MCHF » à la place d'« Estim. PTE »."]},
     {"date": "03.11.2026", "objet": "revue", "version": "v0.41", "titre": "Sémaphores par sous-site, périmètre par affectation", "points": ["Vue Portefeuille : heatmap « Par sous-site » (par défaut) ou « Par projet ». Une ligne par sous-site, dépliable vers ses projets comme le planning : chaque volet prend le pire de ses projets renseignés, Global le pire des quatre volets ; tri par gravité ou par rang.", "Reporting, carte Sémaphores : répartition des sous-sites (vert, orange, rouge) sous celle des projets.", "Menu Périmètre : section « Affectation » (colonne Affectation_AB de Plan_PTE : Instruction publique, Police…), commune aux outils comme le Plan.", "Heatmap en mode épuré : la teinte des cases n'était visible qu'une ligne sur deux."]},
     {"date": "03.11.2026", "objet": "simulation", "version": "v3.16", "titre": "Périmètre par affectation", "points": ["Menu Périmètre : section « Affectation » sous le Plan ; la recherche ne propose que les sites dont un même sous-site réunit le Plan et l'une des affectations cochées. Choix commun aux outils."]},
@@ -2834,7 +2839,10 @@ var PTE_COMMUN = (function () {
   /* organigramme de la revue (02.11.2026) : une saisie par portefeuille, ligne ou site, rubrique « organigramme »,
      site = « zone:clé » (pf:RPF, item:N° projet ou sous-site|lot, site:N site) */
   var K_ORG = 'ocba_revue_organigramme_v1';
-  var ORG_ZONES = { pf: ['titre', 'amo'], item: ['nature', 'rp', 'service', 'masque'], site: ['note'] };
+  /* 04.11.2026 (décision d'Achim) : titre du portefeuille, nature, délégation (RP) et service ne se saisissent plus — nature
+     selon le numéro, RP lu dans GE-Invest ; ils ne sont plus ni lus, ni écrits, ni reçus. Les colonnes restent dans le fichier
+     (vides) pour que les fichiers déjà échangés se relisent sans avertissement. */
+  var ORG_ZONES = { pf: ['amo'], item: ['masque'], site: ['note'] };
   var ORG_STOCK = { pf: 'pf', item: 'items', site: 'sites' };
   var CH_ORG = ['titre', 'amo', 'note', 'nature', 'rp', 'service', 'masque'];
   var ORG_LIB = { pf: 'Portefeuille', item: 'Ligne', site: 'Site' };
@@ -3508,11 +3516,6 @@ var PTE_COMMUN = (function () {
           var v = ORG_ZONES[z].indexOf(c) < 0 || co[c] < 0 ? '' : (c === 'masque' ? (oui(cel(L, co.masque)) ? 'oui' : '') : txt(cel(L, co[c])).trim());
           f[c] = v; if (v) plein = true;
         });
-        if (f.nature) {   /* code de nature : « 6 » devient « 06 » ; hors table, la ligne garde ses autres champs */
-          var na = f.nature.toLowerCase(); if (/^\d$/.test(na)) na = '0' + na;
-          if (/^0[1-9]$/.test(na) || na === 'emb' || na === 'autre') f.nature = na;
-          else { avert.push('Organigramme, ligne ' + (i + 2) + ' : nature « ' + f.nature + ' » hors de la matrice (01 à 09, emb, autre), ignorée'); f.nature = ''; plein = CH_ORG.some(function (c) { return !!f[c]; }); }
-        }
         f.supprimer = oui(cel(L, co.sup)) || !plein;
         marquer(f, cel(L, co.auteur), cel(L, co.modifie));
       });
@@ -5095,6 +5098,13 @@ var PTE_COMMUN = (function () {
     s.textContent =
       '.pte-pcases{display:inline-flex;gap:3px;vertical-align:middle}.pte-pcase{display:inline-flex;flex:none}.pte-pcase svg{display:block}' +
       '.pte-ptag{display:inline-flex;vertical-align:-2px;margin-left:3px}.pte-ptag:first-child{margin-left:5px}.pte-ptag svg{display:block}' +
+      /* listes repliables (menu Périmètre, 04.11.2026) */
+      '.pte-rep-q{display:block;width:100%;box-sizing:border-box;position:sticky;top:0;z-index:1;font:inherit;font-size:12.5px;padding:5px 9px;margin:0 0 6px;border:1px solid var(--border,#dfe6ec);border-radius:7px;background:var(--card-bg,#fff);color:inherit}' +
+      '.pte-rep-h{cursor:pointer;display:flex !important;align-items:center;gap:6px;user-select:none;border-radius:6px}' +
+      '.pte-rep-h:hover{background:var(--page-bg,#f3f5f7)}.pte-rep-h:focus-visible{outline:2px solid #005F73;outline-offset:1px}' +
+      '.pte-rep-c{display:inline-block;width:.7em;font-size:.9em;transition:transform .15s}.pte-rep-h[aria-expanded="true"] .pte-rep-c{transform:rotate(90deg)}' +
+      '.pte-rep-n{margin-left:auto;font-weight:normal;letter-spacing:0;text-transform:none;font-variant-numeric:tabular-nums}.pte-rep-n.on{font-weight:bold;color:#005F73}' +
+      'body.night .pte-rep-n.on,html.nuit .pte-rep-n.on{color:#30E5D9}.pte-rep-b[hidden],.pte-rep-h[hidden],.pte-rep-b [hidden],.pte-rep-vide[hidden]{display:none !important}.pte-rep-vide{padding:6px 8px;font-size:12px;opacity:.7}' +
       '.pte-mc{position:relative;display:inline-block}' +
       '.pte-mc-b{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:6px;max-width:260px;padding:4px 10px;border-radius:8px;cursor:pointer;' +
         'border:1px solid var(--border,#dfe6ec);background:var(--card-bg,#fff);color:var(--ink,#1f2d3d)}' +
@@ -5236,6 +5246,7 @@ var PTE_COMMUN = (function () {
       var aucun = document.createElement('button'); aucun.type = 'button'; aucun.textContent = 'Tout décocher (= tous)';
       aucun.addEventListener('click', function () { vals = []; remplir(); resume(); if (opts.surChangement) opts.surChangement([]); });
       f.appendChild(aucun); pop.appendChild(f);
+      if (opts.repliable) listeRepliable(pop, { groupe: '.pte-mc-g', fin: '.pte-mc-f', seuil: opts.seuil });
     }
     function ouvrir(v) {
       if (v && mcOuvert && mcOuvert !== fermer) mcOuvert();
@@ -5249,6 +5260,83 @@ var PTE_COMMUN = (function () {
     resume();
     return { element: w, valeurs: function () { return vals.slice(); }, fixer: function (v) { vals = (v || []).slice(); resume(); if (!pop.hidden) remplir(); } };
   }
+  /* Listes à cocher longues (04.11.2026, demande d'Achim : « le menu Périmètre est devenu trop long ») : chaque
+     intertitre devient repliable et porte le nombre de cases cochées ; un champ de recherche filtre les lignes.
+     Une section s'ouvre d'elle-même si une de ses cases est cochée ou si elle compte 5 lignes au plus ; un choix
+     d'ouverture fait à la main est gardé tant que la page est ouverte. Les cases restent dans le conteneur : le code
+     qui les lit (querySelectorAll('input…')) ne change pas. À rappeler après chaque remplissage du conteneur.
+     opts : { groupe : sélecteur des intertitres, fin : sélecteur d'un pied à laisser en place,
+              seuil : nombre de cases en dessous duquel rien n'est fait (12 par défaut) } */
+  function sansAccents(t) { return String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
+  function listeRepliable(cont, opts) {
+    if (!cont || typeof document === 'undefined' || !cont.querySelectorAll) return null;
+    opts = opts || {};
+    if (cont.querySelectorAll('input[type="checkbox"]').length <= (opts.seuil || 12)) return null;
+    styleProg();
+    var etat = cont.__pteRep || (cont.__pteRep = {});
+    var sections = [], cur = null, fin = false;
+    Array.prototype.slice.call(cont.children).forEach(function (n) {
+      if (fin || (opts.fin && n.matches && n.matches(opts.fin))) { fin = true; return; }
+      if (n.classList.contains('pte-rep-q')) { n.parentNode.removeChild(n); return; }
+      if (n.matches && n.matches(opts.groupe)) {
+        var b = document.createElement('div'); b.className = 'pte-rep-b';
+        n.parentNode.insertBefore(b, n.nextSibling);
+        cur = { h: n, b: b, cle: n.textContent.trim() }; sections.push(cur); return;
+      }
+      if (cur && n !== cur.b) cur.b.appendChild(n);
+    });
+    if (sections.length < 2) return null;
+    function compter(sx) {
+      var c = sx.b.querySelectorAll('input[type="checkbox"]'), k = 0;
+      for (var i = 0; i < c.length; i++) if (c[i].checked) k++;
+      sx.n.textContent = k ? k + ' / ' + c.length : String(c.length);
+      sx.n.classList.toggle('on', k > 0);
+      sx.n.title = k ? k + ' coché' + (k > 1 ? 's' : '') + ' sur ' + c.length : c.length + ' ligne' + (c.length > 1 ? 's' : '') + ', aucune cochée';
+      return k;
+    }
+    function poser(sx, ouvert) { sx.b.hidden = !ouvert; sx.h.setAttribute('aria-expanded', ouvert ? 'true' : 'false'); }
+    sections.forEach(function (sx, i) {
+      var h = sx.h, id = 'pte-rep-' + Math.random().toString(36).slice(2, 8);
+      h.classList.add('pte-rep-h'); h.setAttribute('role', 'button'); h.setAttribute('tabindex', '0');
+      sx.b.id = id; h.setAttribute('aria-controls', id);
+      var c = document.createElement('span'); c.className = 'pte-rep-c'; c.setAttribute('aria-hidden', 'true'); c.textContent = '▸';
+      h.insertBefore(c, h.firstChild);
+      sx.n = document.createElement('span'); sx.n.className = 'pte-rep-n'; h.appendChild(sx.n);
+      var k = compter(sx), total = sx.b.querySelectorAll('input[type="checkbox"]').length;
+      poser(sx, Object.prototype.hasOwnProperty.call(etat, sx.cle) ? etat[sx.cle] : (k > 0 || total <= 5));
+      function basculer(e) { if (e) { e.preventDefault(); e.stopPropagation(); } etat[sx.cle] = sx.b.hidden; poser(sx, etat[sx.cle]); }
+      h.addEventListener('click', basculer);
+      h.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') basculer(e); });
+    });
+    var q = document.createElement('input'); q.type = 'search'; q.className = 'pte-rep-q';
+    q.placeholder = opts.placeholder || 'Rechercher…'; q.setAttribute('aria-label', opts.placeholder || 'Rechercher dans la liste');
+    cont.insertBefore(q, cont.firstChild);
+    var vide = document.createElement('div'); vide.className = 'pte-rep-vide'; vide.textContent = 'Aucune ligne ne correspond.'; vide.hidden = true;
+    q.parentNode.insertBefore(vide, q.nextSibling);
+    q.addEventListener('input', function () {
+      var t = sansAccents(q.value.trim()), vu = 0;
+      sections.forEach(function (sx) {
+        var lignes = sx.b.querySelectorAll('label'), n = 0;
+        for (var i = 0; i < lignes.length; i++) { var ok = !t || sansAccents(lignes[i].textContent).indexOf(t) >= 0; lignes[i].hidden = !ok; if (ok) n++; }
+        Array.prototype.forEach.call(sx.b.children, function (x) { if (x.tagName !== 'LABEL') x.hidden = !!t; });
+        sx.h.hidden = !!t && !n; vu += n;
+        if (t) poser(sx, n > 0); else poser(sx, Object.prototype.hasOwnProperty.call(etat, sx.cle) ? etat[sx.cle] : (compter(sx) > 0 || lignes.length <= 5));
+      });
+      vide.hidden = !t || vu > 0;
+    });
+    q.addEventListener('keydown', function (e) { if (e.key === 'Enter') e.preventDefault(); });
+    if (!cont.__pteRepEcoute) {
+      cont.__pteRepEcoute = true;
+      cont.addEventListener('change', function (e) {
+        /* une case cochée par l'utilisateur, ou un « change » envoyé au conteneur après un « Tout cocher / décocher » */
+        if (!e.target || (e.target !== cont && e.target.type !== 'checkbox')) return;
+        (cont.__pteRepSections || []).forEach(compter);
+      });
+    }
+    cont.__pteRepSections = sections;
+    return { sections: sections.length, recherche: q };
+  }
+  C.listeRepliable = listeRepliable;
   C.PROGRAMMES = PROGRAMMES; C.LS_PROG = LS_PROG; C.PALETTE_CAT = PALETTE_CAT;
   C.lireProgrammes = lireProgrammes; C.ecrireProgrammes = ecrireProgrammes; C.valeurTag = valeurTag;
   C.dansProgrammes = dansProgrammes; C.libelleProgrammes = libelleProgrammes;
@@ -6661,7 +6749,7 @@ function init() {
     let mcPlan = null, ecrit = false;
     const valsCommunes = () => PTE_COMMUN.lireProgrammes().map(k => 'P:' + k).concat(affEffSim().map(a => 'A:' + a));
     const poser = () => {
-      const mc = PTE_COMMUN.multiChoix({ libelle: 'Périmètre', tous: 'tout le parc', options: optsPlan(), valeurs: valsCommunes(),
+      const mc = PTE_COMMUN.multiChoix({ libelle: 'Périmètre', tous: 'tout le parc', options: optsPlan(), valeurs: valsCommunes(), repliable: true,   /* sections repliables et recherche (04.11.2026) */
         titre: 'Plan et affectation : la recherche ne propose que les sites dont un sous-site appartient aux programmes et aux affectations cochés (choix commun aux outils). Plusieurs lignes d’une section = l’une ou l’autre ; deux sections = les deux à la fois. Aucune case = tout le parc.',
         surChangement: v => {
           const prop = optsPlan().filter(o => o.groupe === 'Affectation').map(o => o.v.slice(2));
@@ -7040,11 +7128,12 @@ document.addEventListener('DOMContentLoaded', init);
   }
 
   /* ---------- 4 ter. Revue : une partie du reporting à la fois ----------
-     Les boutons « Aller à » deviennent un sélecteur : Synthèse, Sémaphores… ou Tout. La partie choisie seule
-     est montrée (les autres restent dans la page, masquées) ; « Tout » rend la page entière, comme avant.
+     Les boutons « Aller à » deviennent un sélecteur : Synthèse, Sémaphores… La partie choisie seule
+     est montrée (les autres restent dans la page, masquées). « Tout » (la page entière) est retiré depuis le 04.11.2026.
      L'impression montre toujours tout. */
   var LS_PART = 'pte.epure.revue.partie';
-  function partieChoisie() { try { return localStorage.getItem(LS_PART) || 'synthese'; } catch (e) { return 'synthese'; } }
+  /* « Tout » retiré le 04.11.2026 (doublon, demande d'Achim) : un ancien choix « tout » rouvre la Synthèse */
+  function partieChoisie() { try { var v = localStorage.getItem(LS_PART); return v && v !== 'tout' ? v : 'synthese'; } catch (e) { return 'synthese'; } }
   function appliquerPartie() {
     var body = document.getElementById('rep-body'), nav = document.querySelector('.rep-sommaire');
     if (!body || !nav) return;
@@ -7053,7 +7142,7 @@ document.addEventListener('DOMContentLoaded', init);
     var choix = partieChoisie(), cur = 'synthese';
     Array.prototype.forEach.call(body.children, function (n) {
       if (n.classList.contains('rep-ancre') && n.id) cur = n.id;
-      var montrer = choix === 'tout' || cur === choix;
+      var montrer = cur === choix;
       if (n.classList.contains('ep-cache') === montrer) n.classList.toggle('ep-cache', !montrer);
     });
     nav.querySelectorAll('.rep-saut').forEach(function (b) { var v = b.getAttribute('data-ep-partie') === choix ? 'true' : 'false'; if (b.getAttribute('aria-pressed') !== v) b.setAttribute('aria-pressed', v); });
@@ -7067,12 +7156,11 @@ document.addEventListener('DOMContentLoaded', init);
     bs.forEach(function (b, i) { if (ids[i]) b.setAttribute('data-ep-partie', ids[i]); });
     function bouton(id, lib) { var b = document.createElement('button'); b.type = 'button'; b.className = 'rep-saut'; b.textContent = lib; b.setAttribute('data-ep-partie', id); return b; }
     nav.insertBefore(bouton('synthese', 'Synthèse'), bs[0] || null);
-    nav.appendChild(bouton('tout', 'Tout'));
     nav.addEventListener('click', function (e) {
       var b = e.target.closest('.rep-saut'); if (!b) return;
       try { localStorage.setItem(LS_PART, b.getAttribute('data-ep-partie')); } catch (e2) { /* choix valable pour la page seulement */ }
       appliquerPartie();
-      if (b.getAttribute('data-ep-partie') === 'synthese' || b.getAttribute('data-ep-partie') === 'tout') window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (b.getAttribute('data-ep-partie') === 'synthese') window.scrollTo({ top: 0, behavior: 'smooth' });
     }, true);
   }
 

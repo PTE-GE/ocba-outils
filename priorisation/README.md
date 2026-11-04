@@ -22,10 +22,11 @@ ZIP + XML écrit à la main et intégré au fichier — aucune librairie externe
 pour importer, classer ou arbitrer. Aucune donnée n'est envoyée à un serveur, aucune donnée
 métier n'est intégrée au fichier HTML lui-même.
 
-Deux librairies sont chargées depuis un CDN pour l'**affichage seul** : Plotly (quatre
-graphiques de l'onglet Classement) et Leaflet (fond de carte). Si le réseau les bloque,
-l'outil le signale par un bandeau et **tout le reste continue de fonctionner** — import,
-classements, arbitrage, phasage et graphiques de trajectoire, qui sont dessinés en SVG natif.
+Une seule librairie est chargée depuis un CDN, pour l'**affichage seul** : Leaflet (fond de
+carte). Si le réseau la bloque, l'outil le signale par un bandeau et **tout le reste continue de
+fonctionner** — import, classements, arbitrage, phasage et graphiques de trajectoire, qui sont
+dessinés en SVG natif. Plotly, qui ne servait plus qu'à la vue « Distribution » du Classement,
+retirée le 04.11.2026, n'est plus téléchargé (il revient avec elle si on la rétablit).
 
 Une copie locale de la dernière donnée importée est conservée dans le stockage du navigateur
 (`localStorage`) pour éviter de réimporter le fichier à chaque ouverture — elle reste sur la
@@ -68,7 +69,7 @@ de collaborateur réels ne figurent dans le fichier.
   franchissement garde le même sens.
 - **Arbitrage** — ce qu'une enveloppe permet réellement : portefeuille optimisé sous contrainte
   d'enveloppe et de plafond annuel, étalé année par année, prix de la tonne de CO₂ évitée par
-  tranche et par politique publique, comparateur A/B de deux portefeuilles.
+  tranche et par politique publique.
 - **Carte** — localisation des sous-sites, filtres du classement appliqués.
 - **Données** — ce qui manque et ce que cela empêche de calculer : anomalies détectées dans les
   séries annuelles, colonnes qui bloquent les classements, alertes bâtiment par bâtiment, taux
@@ -235,7 +236,7 @@ le comportement voulu, et il est visible.
 Les pièces qui comptent ne dépendent d'aucune bibliothèque : la **trajectoire**, la **jauge**, le
 **ruban**, la **courbe d'achat**, le **Top 20**, la **matrice urgence × faisabilité** et la
 **répartition par état SIA** sont dessinés en SVG par l'outil lui-même et survivent à un réseau
-coupé. Il ne reste que l'histogramme de distribution et le fond de carte à dépendre de l'extérieur.
+coupé. Il ne reste que le fond de carte à dépendre de l'extérieur.
 
 ## Ce qui ne sort pas du navigateur
 
@@ -261,8 +262,7 @@ Le CEE n'était que le classement Thermique lu au mètre du CO₂.
 
 Il a donc été retiré des objectifs le 03.09.2026. Le **CHF/kWh reste une mesure** : il note le
 critère « coût de l'énergie » du score composite de repli — celui qui range les bâtiments non
-mesurables pour un objectif donné — et alimente l'histogramme de distribution de l'onglet
-Arbitrage. La durée de vie correspondante reste réglable dans ⚙️, sous le libellé
+mesurables pour un objectif donné. La durée de vie correspondante reste réglable dans ⚙️, sous le libellé
 **Coût du kWh évité**.
 
 ## Ce qui compte comme substitution
