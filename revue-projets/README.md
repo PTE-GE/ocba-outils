@@ -37,7 +37,7 @@ d'œil, du programme jusqu'au sous-site ?**
   regroupés par sous-site (bâtiment), avec repérage des sous-sites qui portent plusieurs
   projets.
 - Situation financière pluriannuelle (réalisé, prévisions, crédit voté), chaîne
-  **Estim PTE → Devis général → Crédit GE-Invest** avec écarts, performance déclarée,
+  **Estim ImmOBA → Devis général → Crédit GE-Invest** avec écarts, performance déclarée,
   jalons par sous-site et par projet, planning par famille d'intervention.
 - Fiche projet imprimable (description GE-Invest et commentaires des jalons compris ; le
   N° GE-Invest ouvre la fiche du projet dans GE-Invest, sur l'intranet de l'État),
@@ -47,6 +47,11 @@ d'œil, du programme jusqu'au sous-site ?**
   PL 13210) et sa phase SIA en couleur, et les interventions identifiées par l'audit CECB+
   sans projet. Libellé et AMO du portefeuille, délégations, notes : saisies partagées comme
   les autres. Impression A3.
+- **Sémaphores par sous-site** (v0.41) : heatmap de la vue Portefeuille « Par sous-site », dépliable
+  vers les projets ; chaque volet prend le pire des projets renseignés. Le Reporting donne aussi la
+  répartition des sous-sites.
+- **Périmètre** : Plan, **affectation** (colonne Affectation_AB de Plan_PTE, v0.41), portefeuilles
+  et responsables de projet ; Plan et affectation sont communs aux outils.
 
 ## Fonctionnement
 
@@ -57,5 +62,5 @@ personne choisit d'envoyer au serveur des saisies. Les données importées reste
 navigateur (IndexedDB ; décisions dans le stockage local) ; la corbeille, à côté de l'état
 des données, les efface.
 
-Version : v0.40 — 03.11.2026 (historique : lien de version en pied de page). Testée par une
-suite de 667 contrôles automatisés (dépôt de travail interne).
+Version : v0.42 — 04.11.2026 (historique : lien de version en pied de page). Testée par une
+suite de 669 contrôles automatisés (dépôt de travail interne).

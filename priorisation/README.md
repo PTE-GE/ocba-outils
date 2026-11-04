@@ -498,8 +498,8 @@ Ces fichiers restent dans `01_Donnees` — ils ne sont jamais copiés dans ce d�
 - **Électricité et eau ne reposent pas sur la même qualité de donnée** que le CO₂ et le
   thermique : ceux-ci viennent du calcul CECB+ complet, celles-là d'une contribution chiffrée
   héritée de l'ancienne méthode par familles, jamais recalculée depuis un audit.
-- **Le montant retenu dépend du référentiel choisi** dans le menu « Montants » (Estim PTE,
-  Invest ImmOBA, GE-Invest). Les trois n'ont ni le même nombre de bâtiments chiffrés ni les
+- **Le montant retenu dépend du référentiel choisi** dans le menu « Montants » (Estim ImmOBA
+  par défaut depuis le 03.11.2026, DG 3.31, GE-Invest ; Estim CECB+ et Estim PTE retirés). Les trois n'ont ni le même nombre de bâtiments chiffrés ni les
   mêmes montants : en changer recalcule tous les classements, et l'ordre n'est pas le même.
   La colonne « DG (25 %) » a été retirée du menu : ce n'était pas un référentiel saisi mais 25 %
   du montant ImmOBA calculé à la volée, et la proposer à côté de trois colonnes réellement

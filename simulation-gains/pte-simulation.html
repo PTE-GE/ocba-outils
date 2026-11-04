@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-/+fzRm7xDaIi8Ivz75zkQg+i6cTELGC05u1sljpkB7k=' 'sha256-i/7EtLYmidkgpgPPEq+IS+32G1tV0OAhP9NkohmUA10=' 'sha256-b/y8RK7GN5HBX8Qnveo6LzQSWWIuqb8wqYDtFZzWDlg=' 'sha256-H2k5JqJdhjSvy9aTSUDEgqZGxWnlG5Tim1R1TglX3k4='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-/+fzRm7xDaIi8Ivz75zkQg+i6cTELGC05u1sljpkB7k=' 'sha256-i/7EtLYmidkgpgPPEq+IS+32G1tV0OAhP9NkohmUA10=' 'sha256-rRZF+HsiJOUhQ2N2oM9cKoWiKgajyVVuYURD0l2EhMI=' 'sha256-H2k5JqJdhjSvy9aTSUDEgqZGxWnlG5Tim1R1TglX3k4='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Simulation des gains</title>
 <style>
@@ -887,7 +887,7 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Simulation des gains · <a href="#" data-pte-versions="simulation" title="Historique des versions">v3.15 · 27.10.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Simulation des gains · <a href="#" data-pte-versions="simulation" title="Historique des versions">v3.16 · 03.11.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 <div id="flash"></div>
@@ -1281,7 +1281,7 @@ try { if (localStorage.getItem('pte.theme.v1') === 'nuit') document.body.classLi
        sousSites: [ { num, site, nom, nomSite, rpf, rp, projets, engage, relais, sre, idc, idcAnnee,
                       chaleur:{val,source,origine}, elec:{…}, eau:{…}, co2:{…},
                       agent:{sitg, principal, cible, facteur, aRenseigner},
-                      estimPte, investCecb, co2Projete, gainCo2T, gainEauEstime, perimetreSme, siteMesure } ],
+                      estimPte, co2Projete, gainCo2T, gainEauEstime, perimetreSme, siteMesure } ],
        sites: Map(num -> { num, nom, sousSites, sre, idc, chaleur, elec, eau, co2, estimPte,
                            gainEauEstime, perimetreSme, siteMesure, brut }),
        parc: { sre, annee, chaleur, chaleurMesuree, chaleurEstimee, elec, eau, co2,
@@ -1615,7 +1615,6 @@ var PTE_CONTRAT = (function () {
       substitution: col(idx, ['Chauffage de subsitution prévu', 'Chauffage de substitution prévu']),
       rpf: col(idx, ['Responsable Portefeuille']),                       /* D8 */
       estimPte: col(idx, ['Estim PTE']),                                 /* D6 */
-      investCecb: col(idx, ['Estim CECB+', 'Invest estim. CECB+']),
       co2Proj: col(idx, ['CO2 projeté [kg/m2.an]']),                     /* D5 */
       idcProj: col(idx, ['IDC projeté [kWh]', 'IDC projeté']),
       idcGain: col(idx, ['IDC Gain retenu']),
@@ -1699,7 +1698,6 @@ var PTE_CONTRAT = (function () {
       else if (ss.agent.aRenseigner) manquants.push({ num: ss.num, champ: 'Facteur CO2', motif: 'facteur « ' + cible + ' » à renseigner dans Data (agent SITG « ' + sitg + ' »)' });
       /* D6 : montants */
       ss.estimPte = num(cell(r, C.estimPte));
-      ss.investCecb = num(cell(r, C.investCecb));
       /* D5 : CO2 projeté [kg/m2.an] */
       ss.co2Projete = num(cell(r, C.co2Proj));
       ss.idcProjete = num(cell(r, C.idcProj));
@@ -1738,7 +1736,7 @@ var PTE_CONTRAT = (function () {
       var motifEstim = !m ? 'site absent de Consommation par site' : (m.thtot == null ? 'ThTOT' + A + ' vide' : 'ThTOT' + A + ' nul');
       var sreSite = 0;
       for (j = 0; j < site.sousSites.length; j++) if (site.sousSites[j].sre != null) sreSite += site.sousSites[j].sre;
-      var agg = { chaleur: 0, elec: 0, eau: 0, co2: 0, estimPte: 0, investCecb: 0, nEstimPte: 0, nInvestCecb: 0, nEst: 0, nMes: 0, nElec: 0, nEau: 0, nCo2: 0, gainEau: 0, nGainEau: 0 };
+      var agg = { chaleur: 0, elec: 0, eau: 0, co2: 0, estimPte: 0, nEstimPte: 0, nEst: 0, nMes: 0, nElec: 0, nEau: 0, nCo2: 0, gainEau: 0, nGainEau: 0 };
       for (j = 0; j < site.sousSites.length; j++) {
         x = site.sousSites[j];
         part = (x.sre != null && sreSite > 0) ? x.sre / sreSite : null;
@@ -1764,7 +1762,6 @@ var PTE_CONTRAT = (function () {
           });
         if (x.chaleur.val != null) agg.chaleur += x.chaleur.val;
         if (x.estimPte != null) { agg.estimPte += x.estimPte; agg.nEstimPte++; }
-        if (x.investCecb != null) { agg.investCecb += x.investCecb; agg.nInvestCecb++; }
         if (x.gainEauEstime != null) { agg.gainEau += x.gainEauEstime; agg.nGainEau++; parc.gainEauEstime += x.gainEauEstime; parc.nbGainEauEstime++; }
         /* D5 : vrai gain CO2 (t/an) = émissions du sous-site − CO2 projeté × SRE ; vide si l'un des deux manque */
         x.gainCo2T = (x.co2.val != null && x.co2Projete != null && x.sre != null) ? round((x.co2.val - x.co2Projete * x.sre) / 1000, 3) : null;
@@ -1783,7 +1780,7 @@ var PTE_CONTRAT = (function () {
       site.eau = agg.nEau ? { val: agg.eau, source: 'mesuré', origine: 'Σ sous-sites' } : { val: null, source: null, origine: null };
       site.co2 = agg.nCo2 ? { val: agg.co2, source: 'mesuré', origine: 'Σ sous-sites' } : { val: null, source: null, origine: null };
       /* aucun sous-site chiffré : montant inconnu (null), pas 0 (26.10.2026) */
-      site.estimPte = agg.nEstimPte ? agg.estimPte : null; site.investCecb = agg.nInvestCecb ? agg.investCecb : null;
+      site.estimPte = agg.nEstimPte ? agg.estimPte : null;
       site.gainEauEstime = agg.nGainEau ? round(agg.gainEau, 3) : null;
       site.nbSousSitesEstimes = agg.nEst; site.nbSousSitesMesures = agg.nMes;
     });
@@ -1820,25 +1817,25 @@ var PTE_CONTRAT = (function () {
     num: 'N° sous site', site: 'N site', nom: 'Nom du site_AB', nomSite: 'Nom du site', sre: 'SRE', idc: 'IDC [kWh]',
     idcAnnee: 'Année IDC', conso: 'CONSO [kWh]', agent: 'Agent', pctAgent: '%Agent', principal: 'Chauffage Type Energie Prin',
     substitution: 'Chauffage de subsitution prévu', rpf: 'Responsable Portefeuille',
-    estimPte: 'Estim PTE', investCecb: 'Estim CECB+', co2Proj: 'CO2 projeté [kg/m2.an]', idcProj: 'IDC projeté [kWh]',
+    estimPte: 'Estim PTE', co2Proj: 'CO2 projeté [kg/m2.an]', idcProj: 'IDC projeté [kWh]',
     idcGain: 'IDC Gain retenu', affectation: 'Affectation_AB' };
   var OBLIGATOIRES = ['num', 'site', 'sre', 'idc', 'agent', 'rpf', 'estimPte'];
+  /* Estim CECB+ n'est plus lue (03.11.2026, décision d'Achim : colonne supprimée de Plan_PTE) */
   var LIB_REMPL = { sre: 'SRE', idc: 'IDC', agent: 'Agent (SITG)', rpf: 'Responsable Portefeuille', estimPte: 'Estim PTE',
-    investCecb: 'Estim CECB+', chaleurMesuree: 'Chaleur mesurée', elec: 'Électricité', eau: 'Eau', co2: 'CO2' };
+    chaleurMesuree: 'Chaleur mesurée', elec: 'Électricité', eau: 'Eau', co2: 'CO2' };
   var LIB_PARC = { sre: ['SRE du parc', 'm²', 1], chaleur: ['Chaleur du parc', 'MWh', 1000], elec: ['Électricité du parc', 'MWh', 1000],
     eau: ['Eau du parc', 'm³', 1], co2: ['CO2 du parc', 't', 1000] };
   var SEUILS = { sousSites: 0.02, remplissage: 0.10, parc: 0.10 };
 
   function empreinte(R) {
     var ss = (R && R.sousSites) || [], C = (R && R.colonnes) || {}, p = (R && R.parc) || {}, k;
-    var rempl = { sre: 0, idc: 0, agent: 0, rpf: 0, estimPte: 0, investCecb: 0, chaleurMesuree: 0, elec: 0, eau: 0, co2: 0 };
+    var rempl = { sre: 0, idc: 0, agent: 0, rpf: 0, estimPte: 0, chaleurMesuree: 0, elec: 0, eau: 0, co2: 0 };
     ss.forEach(function (x) {
       if (x.sre != null) rempl.sre++;
       if (x.idc != null) rempl.idc++;
       if (x.agent && x.agent.sitg) rempl.agent++;
       if (x.rpf) rempl.rpf++;
       if (x.estimPte != null) rempl.estimPte++;
-      if (x.investCecb != null) rempl.investCecb++;
       if (x.chaleur && x.chaleur.val != null && x.chaleur.source === 'mesuré') rempl.chaleurMesuree++;
       if (x.elec && x.elec.val != null) rempl.elec++;
       if (x.eau && x.eau.val != null) rempl.eau++;
@@ -2549,6 +2546,10 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "04.11.2026", "objet": "revue", "version": "v0.42", "titre": "Estim ImmOBA dans la chaîne financière", "points": ["Chaîne financière, carte « Cohérence financière », tableau des sous-sites et fiche : Estim ImmOBA remplace Estim PTE (Estim ImmOBA → DG → crédit GE-Invest) ; l'écart du crédit se mesure au DG, à défaut à l'Estim ImmOBA.", "Tuile « Estim. ImmOBA, MCHF » à la place d'« Estim. PTE »."]},
+    {"date": "03.11.2026", "objet": "revue", "version": "v0.41", "titre": "Sémaphores par sous-site, périmètre par affectation", "points": ["Vue Portefeuille : heatmap « Par sous-site » (par défaut) ou « Par projet ». Une ligne par sous-site, dépliable vers ses projets comme le planning : chaque volet prend le pire de ses projets renseignés, Global le pire des quatre volets ; tri par gravité ou par rang.", "Reporting, carte Sémaphores : répartition des sous-sites (vert, orange, rouge) sous celle des projets.", "Menu Périmètre : section « Affectation » (colonne Affectation_AB de Plan_PTE : Instruction publique, Police…), commune aux outils comme le Plan.", "Heatmap en mode épuré : la teinte des cases n'était visible qu'une ligne sur deux."]},
+    {"date": "03.11.2026", "objet": "simulation", "version": "v3.16", "titre": "Périmètre par affectation", "points": ["Menu Périmètre : section « Affectation » sous le Plan ; la recherche ne propose que les sites dont un même sous-site réunit le Plan et l'une des affectations cochées. Choix commun aux outils."]},
+    {"date": "03.11.2026", "objet": "priorisation", "version": "v2.32", "titre": "Montants revus, périmètre par affectation", "points": ["Menu Montants : « Estim CECB+ » retiré ; la ligne « Estim PTE » devient « Estim ImmOBA » et lit la colonne Estim ImmOBA de Plan_PTE, par défaut.", "Coût suspect (moins de 10 000 CHF ou sous le plancher en CHF/m²) : contrôlé sur le montant choisi au menu Montants.", "Menu Périmètre : section « Affectation » (colonne Affectation_AB de Plan_PTE), commune aux outils et filtrant partout comme le Plan ; une affectation absente du classeur chargé est gardée pour les autres outils sans rien filtrer ici."]},
     {"date": "03.11.2026", "objet": "commun", "version": null, "titre": "Mot de passe modifiable depuis les outils", "points": ["Bouton Saisies, une fois connecté : nouvelle entrée « Changer mon mot de passe… » (quatre pages). Mot de passe actuel, nouveau (8 caractères au moins) et confirmation.", "Après le changement, le serveur ferme les autres sessions du compte (autres onglets, autres postes) ; celle de l'outil est rouverte aussitôt avec le nouveau mot de passe. Serveur sans réponse pendant le changement : nouveau mot de passe essayé, sinon changement signalé comme incertain.", "Aucun mot de passe n'est gardé dans le navigateur. Serveur : chacun ne modifie que son propre mot de passe, et non son rôle ; nouvelle limite de 5 changements par minute (migration 1792300000), contre la recherche de l'ancien mot de passe."]},
     {"date": "03.11.2026", "objet": "revue", "version": "v0.40", "titre": "Périmètres par RPF retrouvés", "points": ["Le RPF d'un projet est désormais le « Responsable Portefeuille » de son sous-site dans Plan_PTE, comme dans la priorisation. Depuis l'extraction du 23.10, GE-Invest range tous les projets sous un seul portefeuille : le menu Périmètre n'offrait plus qu'un RPF.", "Questions du mois, Reporting et décisions suivent les mêmes portefeuilles ; un sous-site « hors périmètre » ou absent de Plan_PTE passe dans « Hors périmètre RPF »."]},
     {"date": "02.11.2026", "objet": "revue", "version": "v0.39", "titre": "Organigramme des projets d'un portefeuille", "points": ["Nouvel onglet « Organigramme » : pour un responsable de portefeuille, les sites rangés par type d'intervention, chaque projet GE-Invest avec sa nature (selon son numéro) et sa phase SIA en couleur, et les interventions identifiées par l'audit CECB+ (coûts par lot, futur projet PV) sans projet de même nature.", "Reconstruit à chaque import du classeur ; un clic sur la nature ouvre la fiche projet, le numéro ouvre GE-Invest.", "Mode « Modifier » : libellé et AMO du portefeuille, note de site, nature corrigée, délégation « RP (service) », ligne masquée — rubrique « organigramme » des saisies : fichier Excel (feuille « Organigramme ») et serveur partagé (migration 1792200000 à appliquer).", "Impression en A3 paysage."]},
@@ -5104,18 +5105,84 @@ var PTE_COMMUN = (function () {
         'background:var(--card-bg,#fff);color:var(--ink,#1f2d3d);border:1px solid var(--border,#dfe6ec);box-shadow:0 10px 30px rgba(0,0,0,.18);font-size:13px;text-align:left}' +
       '.pte-mc-pop label{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;cursor:pointer;font-weight:normal;margin:0}' +
       '.pte-mc-pop label:hover{background:var(--page-bg,#f4f6f8)}' +
+      '.pte-mc-pop .pte-mc-g{padding:7px 8px 3px;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:bold;color:var(--ink-muted,#5b6b7b)}' +
       '.pte-mc-pop label .n{margin-left:auto;color:var(--ink-muted,#5b6b7b);font-size:11.5px}' +
       '.pte-mc-pop .pte-mc-f{display:flex;gap:10px;justify-content:space-between;padding:6px 8px 2px;border-top:1px solid var(--border,#dfe6ec);margin-top:4px}' +
       '.pte-mc-pop .pte-mc-f button{font:inherit;font-size:12px;background:none;border:0;color:#005F73;cursor:pointer;padding:0}' +
       'body.night .pte-mc-pop .pte-mc-f button{color:#30E5D9}';
     document.head.appendChild(s);
   }
-  /* Suit les changements de Plan faits dans un autre outil (autre onglet, retour sur la page) ou ici. */
+  /* Affectations (03.11.2026, demande d'Achim) : périmètre par affectation du sous-site (Plan_PTE!Affectation_AB :
+     Instruction publique, Locatif, Police…), qui correspond aux utilisateurs des bâtiments. Section « Affectation » du
+     menu Périmètre de chaque outil ; sélection commune aux outils, comme le Plan (localStorage pte.affectations.v1).
+     Une cellule à plusieurs valeurs (« Administration, Police ») range le sous-site dans chacune. Plusieurs
+     affectations cochées = l'une ou l'autre ; avec un Plan ou un portefeuille = les deux à la fois. */
+  var LS_AFF = 'pte.affectations.v1';
+  function affectationsDe(v) {
+    if (v === null || v === undefined) return [];
+    var out = [];
+    String(v).split(/[,;]/).forEach(function (x) {
+      var t = x.replace(/\s+/g, ' ').trim();
+      if (!t || /^(#n\/?a|n\/a|-+|\?+|=+)$/i.test(t)) return;
+      if (out.indexOf(t) < 0) out.push(t);
+    });
+    return out;
+  }
+  function lireAffectations() {
+    try { var a = JSON.parse(localStorage.getItem(LS_AFF) || '[]'); return Array.isArray(a) ? a.filter(function (k, i, t) { return typeof k === 'string' && k && k.length <= 80 && t.indexOf(k) === i; }).slice(0, 60) : []; }
+    catch (e) { return []; }
+  }
+  function ecrireAffectations(a) {
+    var v = (a || []).filter(function (k, i, t) { return typeof k === 'string' && k && k.length <= 80 && t.indexOf(k) === i; }).slice(0, 60);
+    try { localStorage.setItem(LS_AFF, JSON.stringify(v)); } catch (e) { /* stockage indisponible */ }
+    try { window.dispatchEvent(new CustomEvent('pte-programmes', { detail: lireProgrammes() })); } catch (e) {}
+    return v;
+  }
+  /* valeur de la cellule Affectation d'un sous-site dans la sélection ; aucune sélection = vrai */
+  function dansAffectations(v, actives) {
+    actives = actives || lireAffectations();
+    if (!actives.length) return true;
+    var l = affectationsDe(v);
+    for (var i = 0; i < l.length; i++) if (actives.indexOf(l[i]) >= 0) return true;
+    return false;
+  }
+  function libelleAffectations(actives) {
+    actives = actives || lireAffectations();
+    if (!actives.length) return '';
+    return actives.length <= 2 ? actives.join(' + ') : actives.length + ' affectations';
+  }
+  /* Sélection réellement appliquée à une population (valeurs de la colonne Affectation de ses sous-sites) : les
+     affectations cochées qui y existent. Une affectation cochée ailleurs mais absente d'ici (autre classeur, valeur
+     renommée) n'y filtre rien et reste gardée pour les autres outils ; sans colonne Affectation, aucun filtre. */
+  function affectationsEffectives(valeurs, actives) {
+    actives = actives || lireAffectations();
+    if (!actives.length) return [];
+    var pres = {};
+    (valeurs || []).forEach(function (v) { affectationsDe(v).forEach(function (a) { pres[a] = 1; }); });
+    return actives.filter(function (a) { return pres[a]; });
+  }
+  /* Nouvelle sélection depuis un menu : les cases cochées parmi celles proposées (toutes = aucune restriction), plus
+     les affectations gardées qui n'y figuraient pas (absentes de ce classeur) */
+  function fusionnerAffectations(cochees, proposees, actives) {
+    actives = actives || lireAffectations();
+    var c = (cochees || []).slice();
+    if (proposees && proposees.length && c.length === proposees.length) c = [];
+    actives.forEach(function (a) { if ((proposees || []).indexOf(a) < 0 && c.indexOf(a) < 0) c.push(a); });
+    return c;
+  }
+  /* liste des affectations d'une population et nombre de sous-sites de chacune, par ordre décroissant */
+  function compterAffectations(valeurs) {
+    var n = {};
+    (valeurs || []).forEach(function (v) { affectationsDe(v).forEach(function (a) { n[a] = (n[a] || 0) + 1; }); });
+    return Object.keys(n).sort(function (a, b) { return n[b] - n[a] || a.localeCompare(b, 'fr'); }).map(function (a) { return { k: a, n: n[a] }; });
+  }
+  /* Suit les changements de Plan ou d'Affectation faits dans un autre outil (autre onglet, retour sur la page) ou ici. */
   function surProgrammes(fn) {
-    var dernier = JSON.stringify(lireProgrammes());
-    function voir() { var v = JSON.stringify(lireProgrammes()); if (v === dernier) return; dernier = v; try { fn(lireProgrammes()); } catch (e) { console.error(e); } }
+    var etat = function () { return JSON.stringify([lireProgrammes(), lireAffectations()]); };
+    var dernier = etat();
+    function voir() { var v = etat(); if (v === dernier) return; dernier = v; try { fn(lireProgrammes(), lireAffectations()); } catch (e) { console.error(e); } }
     try {
-      window.addEventListener('storage', function (e) { if (!e.key || e.key === LS_PROG) voir(); });
+      window.addEventListener('storage', function (e) { if (!e.key || e.key === LS_PROG || e.key === LS_AFF) voir(); });
       window.addEventListener('focus', voir);
       window.addEventListener('pte-programmes', voir);
     } catch (e) {}
@@ -5150,7 +5217,10 @@ var PTE_COMMUN = (function () {
     }
     function remplir() {
       pop.innerHTML = '';
+      var grp = null;
       (opts.options || []).forEach(function (o) {
+        /* sections (03.11.2026) : une option qui porte « groupe » ouvre un intertitre quand il change */
+        if (o.groupe && o.groupe !== grp) { grp = o.groupe; var g = document.createElement('div'); g.className = 'pte-mc-g'; g.textContent = o.groupe; pop.appendChild(g); }
         var lab = document.createElement('label'), c = document.createElement('input');
         c.type = 'checkbox'; c.value = String(o.v); c.checked = vals.map(String).indexOf(String(o.v)) >= 0;
         c.addEventListener('change', function () {
@@ -5183,6 +5253,8 @@ var PTE_COMMUN = (function () {
   C.lireProgrammes = lireProgrammes; C.ecrireProgrammes = ecrireProgrammes; C.valeurTag = valeurTag;
   C.dansProgrammes = dansProgrammes; C.libelleProgrammes = libelleProgrammes;
   C.surProgrammes = surProgrammes; C.multiChoix = multiChoix;
+  C.LS_AFF = LS_AFF; C.affectationsDe = affectationsDe; C.lireAffectations = lireAffectations; C.ecrireAffectations = ecrireAffectations;
+  C.dansAffectations = dansAffectations; C.libelleAffectations = libelleAffectations; C.compterAffectations = compterAffectations; C.affectationsEffectives = affectationsEffectives; C.fusionnerAffectations = fusionnerAffectations;
   C.iconeProgramme = iconeProgramme; C.badgesProgrammes = badgesProgrammes; C.casesProgrammes = casesProgrammes; C.texteProgrammes = texteProgrammes; C.dansUnProgramme = dansUnProgramme;
 })(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
 /* </PTE-MODULE pte-commun.js> */
@@ -5535,7 +5607,9 @@ function indexerSites() {
     ['p300', 'coe', 'canicule', 'emb'].forEach(k => { tags[k] = ss.some(n => PTE_COMMUN.valeurTag((extra[n] || {})[k])); });
     const I = { num: S.num, nom, sousSites: ss, adresses, affectations, nomsSs, tags,
                 sre: S.sre, nb: ss.length, nbSre: S.sousSites.filter(x => x.sre != null).length,
-                extra: o => extra[o] || {} };
+                extra: o => extra[o] || {},
+                /* affectation de chaque sous-site (03.11.2026) : Plan et affectation se testent sous-site par sous-site */
+                affSs: S.sousSites.reduce((m, x) => { m[x.num] = x.affectation || ''; return m; }, {}) };
     I.hay = (S.num + ' ' + ss.join(' ') + ' ' + nom + ' ' + nomsSs.join(' ') + ' ' + adresses.join(' ') + ' ' + affectations.join(' ')).toLowerCase();
     SITES.push(I);
   });
@@ -6405,6 +6479,12 @@ function flash(t) {
 }
 
 /* ---------------------------------------------------------------- recherche */
+/* Affectations cochées (communes aux outils) présentes dans le classeur chargé ; tags Plan d'un sous-site */
+function affEffSim() {
+  if (!PTE_COMMUN.affectationsEffectives || !CONTRAT) return [];
+  return PTE_COMMUN.affectationsEffectives(CONTRAT.sousSites.map(x => x.affectation));
+}
+function tagsSs(I, n) { const e = I.extra(n), t = {}; ['p300', 'coe', 'canicule', 'emb'].forEach(k => { t[k] = !!PTE_COMMUN.valeurTag(e[k]); }); return t; }
 /* Un résultat par site ; la requête peut être un nom, une adresse, un numéro de site
    ou de sous-site. */
 function chercher(q) {
@@ -6412,8 +6492,12 @@ function chercher(q) {
   if (q.length < 2) return [];
   const mots = q.split(/\s+/);
   const out = [], prog = PTE_COMMUN.lireProgrammes();   /* Plan (21.10.2026) : programmes cochés dans le menu Périmètre */
+  const aff = affEffSim();   /* Affectation (03.11.2026), commune aux outils : celles présentes dans ce classeur */
   for (const I of SITES) {
-    if (prog.length && !PTE_COMMUN.dansProgrammes(I.tags, prog)) continue;
+    if (!prog.length && !aff.length) { /* pas de restriction */ }
+    else if (!aff.length) { if (!PTE_COMMUN.dansProgrammes(I.tags, prog)) continue; }
+    /* un sous-site au moins qui réunit le Plan et l'affectation */
+    else if (!I.sousSites.some(n => (!prog.length || PTE_COMMUN.dansProgrammes(tagsSs(I, n), prog)) && PTE_COMMUN.dansAffectations(I.affSs[n], aff))) continue;
     if (mots.every(m => I.hay.includes(m))) out.push(I);
     if (out.length > 40) break;
   }
@@ -6564,23 +6648,38 @@ function init() {
     PTE_COMMUN.iconesMenus(menu);
   }
   /* Plan (21.10.2026, décision d'Achim) : la simulation n'a pas d'autre périmètre ; un menu « Périmètre »
-     réduit à la section Plan restreint la recherche des sites. Choix commun aux outils. */
+     réduit à la section Plan restreint la recherche des sites. Choix commun aux outils.
+     Affectation (03.11.2026, demande d'Achim) : seconde section, affectations de Plan_PTE (Affectation_AB). */
   {   /* bloc : optsPlan, relancer, poser restent locaux */
     const optsPlan = () => PTE_COMMUN.PROGRAMMES.map(p => {
       let n = null; if (SITES && SITES.length) { n = 0; SITES.forEach(I => { const e = I.extra; I.sousSites.forEach(x => { if (PTE_COMMUN.valeurTag((e(x) || {})[p.k])) n++; }); }); }
-      return { v: p.k, t: p.lib, n };
-    });
+      return { v: 'P:' + p.k, t: p.lib, n, groupe: 'Plan' };
+    }).concat(CONTRAT && PTE_COMMUN.compterAffectations
+      ? PTE_COMMUN.compterAffectations(CONTRAT.sousSites.map(x => x.affectation)).map(a => ({ v: 'A:' + a.k, t: a.k, n: a.n, groupe: 'Affectation' }))
+      : []);
     const relancer = () => { const r = $('#rech'); if (r && r.value) r.dispatchEvent(new Event('input')); };
+    let mcPlan = null, ecrit = false;
+    const valsCommunes = () => PTE_COMMUN.lireProgrammes().map(k => 'P:' + k).concat(affEffSim().map(a => 'A:' + a));
     const poser = () => {
-      const mc = PTE_COMMUN.multiChoix({ libelle: 'Périmètre', tous: 'tout le parc', options: optsPlan(), valeurs: PTE_COMMUN.lireProgrammes(),
-        titre: 'Plan : la recherche ne propose que les sites dont un sous-site appartient aux programmes cochés (choix commun aux outils). Aucune case = tout le parc.',
-        surChangement: v => { PTE_COMMUN.ecrireProgrammes(v); relancer(); } });
+      const mc = PTE_COMMUN.multiChoix({ libelle: 'Périmètre', tous: 'tout le parc', options: optsPlan(), valeurs: valsCommunes(),
+        titre: 'Plan et affectation : la recherche ne propose que les sites dont un sous-site appartient aux programmes et aux affectations cochés (choix commun aux outils). Plusieurs lignes d’une section = l’une ou l’autre ; deux sections = les deux à la fois. Aucune case = tout le parc.',
+        surChangement: v => {
+          const prop = optsPlan().filter(o => o.groupe === 'Affectation').map(o => o.v.slice(2));
+          const p = v.filter(x => x.indexOf('P:') === 0).map(x => x.slice(2)), a = v.filter(x => x.indexOf('A:') === 0).map(x => x.slice(2));
+          ecrit = true;   /* le menu reste ouvert : pas de remplacement par l'écoute ci-dessous */
+          PTE_COMMUN.ecrireProgrammes(p);
+          /* toutes cochées = aucune restriction ; affectations gardées absentes de ce classeur conservées */
+          if (PTE_COMMUN.ecrireAffectations && prop.length) PTE_COMMUN.ecrireAffectations(PTE_COMMUN.fusionnerAffectations(a, prop));
+          ecrit = false; relancer();
+        } });
+      mcPlan = mc;
       const ancien = document.getElementById('menuPlan');
       mc.element.id = 'menuPlan';
       if (ancien) ancien.replaceWith(mc.element); else { const ds = document.querySelector('.hdr-right .data-set'); ds.parentNode.insertBefore(mc.element, ds); }
     };
     poser(); window.majMenuPlan = poser;
-    PTE_COMMUN.surProgrammes(() => { poser(); relancer(); });
+    /* changement venu d'un autre outil ou d'un autre onglet : menu redessiné ; venu de ce menu, il reste ouvert */
+    PTE_COMMUN.surProgrammes(() => { if (ecrit) return; if (mcPlan && mcPlan.element.querySelector('.pte-mc-pop') && !mcPlan.element.querySelector('.pte-mc-pop').hidden) mcPlan.fixer(valsCommunes()); else poser(); relancer(); });
   }
 
   const rech = $('#rech'), resu = $('#resultats');

@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-7ytlshlBfTzV0wA35SPT3injW9CXMbq8Y2qHVOHhWmA=' 'sha256-rAcIh4TNeoEDmSDM23ZTWqq2De0JwSuDczq7VLPZU5U=' 'sha256-fgCiLpQNynFME/Ub/5CbTjVUgeyrRam6Ur2vNM543Uw=' 'sha256-bYOr7rNfupUQvzQ+DwSZxgzCSMrvwthEiPxzHHf5HQw=' 'sha256-Pg5XubgP37xoJXY1+YkpWU+8AYPE+FzTQ5xEzTIPWSE=' 'sha256-H2k5JqJdhjSvy9aTSUDEgqZGxWnlG5Tim1R1TglX3k4='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-7ytlshlBfTzV0wA35SPT3injW9CXMbq8Y2qHVOHhWmA=' 'sha256-XopipOzf//5za0o90vJ0ms/92juX8Jm5S8/WhQLGA6k=' 'sha256-l2xXW98ZWnhGariXv94Hkp8aS2Y8EytfpRcMzsGLZbU=' 'sha256-q77XoKA6aOohdOAXet2na3h+wksi6rKjLk4DnCE9stU=' 'sha256-VP62JFLD38oINBg9Svwzcn/OPz4vLtAZXO43gp2B1VU=' 'sha256-H2k5JqJdhjSvy9aTSUDEgqZGxWnlG5Tim1R1TglX3k4='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Revue de projets</title>
 <style>
@@ -327,6 +327,7 @@ td.cell-tip{cursor:help;}
 .distbar{display:flex; height:28px; border-radius:3px; overflow:hidden; width:100%; border:1px solid var(--border);}
 .distbar .seg{display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:bold; min-width:0; cursor:pointer; transition:filter .1s; border:0; border-right:2px solid var(--card-bg); padding:0; font-family:inherit;}
 .distbar .seg:last-child{border-right:none;}
+.distbar span.seg{cursor:help;}
 .distbar .seg:hover, .distbar .seg.active{filter:brightness(1.12);}
 .distbar .seg.seg-vert{background:var(--green);} .distbar .seg.seg-orange{background:var(--ochre);} .distbar .seg.seg-rouge{background:var(--red);} .distbar .seg.seg-gris{background:var(--gray);}
 .distbar-legend{display:flex; gap:1.1em; flex-wrap:wrap; margin-top:.5em; font-size:11px; color:var(--ink-70);}
@@ -394,6 +395,22 @@ td.cell-tip{cursor:help;}
 .heatmap-table th{cursor:default;}
 .heatmap-table th:not(.no-sort){cursor:pointer;}
 .heatmap-table th:not(.no-sort):hover{background:var(--teal-hover);}
+/* mode épuré : la règle des lignes paires (fond transparent) effaçait la teinte d'une ligne sur deux (corrigé le 03.11.2026) */
+html.epure .heatmap-table tbody tr td.tint-vert{background:var(--tint-vert);}
+html.epure .heatmap-table tbody tr td.tint-orange{background:var(--tint-orange);}
+html.epure .heatmap-table tbody tr td.tint-rouge{background:var(--tint-rouge);}
+html.epure .heatmap-table tbody tr td.tint-gris{background:var(--tint-gris);}
+html.epure .heatmap-table tbody tr td.tint-vert-strong{background:var(--tint-vert-strong);}
+html.epure .heatmap-table tbody tr td.tint-orange-strong{background:var(--tint-orange-strong);}
+html.epure .heatmap-table tbody tr td.tint-rouge-strong{background:var(--tint-rouge-strong);}
+html.epure .heatmap-table tbody tr td.tint-gris-strong{background:var(--tint-gris-strong);}
+.heatmap-table tr.heat-ss-row td.heat-ss{font-weight:bold; cursor:pointer; max-width:340px;}
+.heatmap-table .heat-ss-l{display:flex; align-items:baseline; gap:6px; min-width:0;}
+.heatmap-table .heat-ss-l .t{overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0;}
+.heatmap-table .heat-ss-l .heat-ss-n{flex:none;}
+.heatmap-table .heat-ss-n{font-weight:normal; color:var(--ink-muted); font-size:12px;}
+.heatmap-table tr.heat-enfant td.heat-name{padding-left:28px; color:var(--ink-70); box-shadow:inset 3px 0 0 var(--teal);}
+.heatmap-table tr.heat-ss-row:focus-visible{outline:2px solid var(--teal); outline-offset:-2px;}
 .heat-jalon-lib{font-size:12px; line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:150px;}
 .heat-jalon-date{font-size:11px; line-height:1.2; color:var(--ink-muted);}
 
@@ -493,7 +510,7 @@ tr.ss-child:hover td, .qtable tbody tr.ss-child:hover td{background:var(--surfac
 .ss-child-name{padding-left:2.2em !important; font-weight:normal;}
 .ss-freres{margin:.3em 0 0; color:var(--ink-70);}
 .ss-freres a{font-weight:bold;}
-/* Chaîne financière Estim PTE → DG → GE-Invest : cellule d'écart teintée */
+/* Chaîne financière Estim ImmOBA → DG → GE-Invest : cellule d'écart teintée */
 .qtable td.fin-ecart.tint-orange{background:var(--tint-orange);}
 .qtable td.fin-ecart.tint-rouge{background:var(--tint-rouge);}
 /* Gantt */
@@ -1233,7 +1250,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.40 · 03.11.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.42 · 04.11.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -1627,7 +1644,7 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
        sousSites: [ { num, site, nom, nomSite, rpf, rp, projets, engage, relais, sre, idc, idcAnnee,
                       chaleur:{val,source,origine}, elec:{…}, eau:{…}, co2:{…},
                       agent:{sitg, principal, cible, facteur, aRenseigner},
-                      estimPte, investCecb, co2Projete, gainCo2T, gainEauEstime, perimetreSme, siteMesure } ],
+                      estimPte, co2Projete, gainCo2T, gainEauEstime, perimetreSme, siteMesure } ],
        sites: Map(num -> { num, nom, sousSites, sre, idc, chaleur, elec, eau, co2, estimPte,
                            gainEauEstime, perimetreSme, siteMesure, brut }),
        parc: { sre, annee, chaleur, chaleurMesuree, chaleurEstimee, elec, eau, co2,
@@ -1961,7 +1978,6 @@ var PTE_CONTRAT = (function () {
       substitution: col(idx, ['Chauffage de subsitution prévu', 'Chauffage de substitution prévu']),
       rpf: col(idx, ['Responsable Portefeuille']),                       /* D8 */
       estimPte: col(idx, ['Estim PTE']),                                 /* D6 */
-      investCecb: col(idx, ['Estim CECB+', 'Invest estim. CECB+']),
       co2Proj: col(idx, ['CO2 projeté [kg/m2.an]']),                     /* D5 */
       idcProj: col(idx, ['IDC projeté [kWh]', 'IDC projeté']),
       idcGain: col(idx, ['IDC Gain retenu']),
@@ -2045,7 +2061,6 @@ var PTE_CONTRAT = (function () {
       else if (ss.agent.aRenseigner) manquants.push({ num: ss.num, champ: 'Facteur CO2', motif: 'facteur « ' + cible + ' » à renseigner dans Data (agent SITG « ' + sitg + ' »)' });
       /* D6 : montants */
       ss.estimPte = num(cell(r, C.estimPte));
-      ss.investCecb = num(cell(r, C.investCecb));
       /* D5 : CO2 projeté [kg/m2.an] */
       ss.co2Projete = num(cell(r, C.co2Proj));
       ss.idcProjete = num(cell(r, C.idcProj));
@@ -2084,7 +2099,7 @@ var PTE_CONTRAT = (function () {
       var motifEstim = !m ? 'site absent de Consommation par site' : (m.thtot == null ? 'ThTOT' + A + ' vide' : 'ThTOT' + A + ' nul');
       var sreSite = 0;
       for (j = 0; j < site.sousSites.length; j++) if (site.sousSites[j].sre != null) sreSite += site.sousSites[j].sre;
-      var agg = { chaleur: 0, elec: 0, eau: 0, co2: 0, estimPte: 0, investCecb: 0, nEstimPte: 0, nInvestCecb: 0, nEst: 0, nMes: 0, nElec: 0, nEau: 0, nCo2: 0, gainEau: 0, nGainEau: 0 };
+      var agg = { chaleur: 0, elec: 0, eau: 0, co2: 0, estimPte: 0, nEstimPte: 0, nEst: 0, nMes: 0, nElec: 0, nEau: 0, nCo2: 0, gainEau: 0, nGainEau: 0 };
       for (j = 0; j < site.sousSites.length; j++) {
         x = site.sousSites[j];
         part = (x.sre != null && sreSite > 0) ? x.sre / sreSite : null;
@@ -2110,7 +2125,6 @@ var PTE_CONTRAT = (function () {
           });
         if (x.chaleur.val != null) agg.chaleur += x.chaleur.val;
         if (x.estimPte != null) { agg.estimPte += x.estimPte; agg.nEstimPte++; }
-        if (x.investCecb != null) { agg.investCecb += x.investCecb; agg.nInvestCecb++; }
         if (x.gainEauEstime != null) { agg.gainEau += x.gainEauEstime; agg.nGainEau++; parc.gainEauEstime += x.gainEauEstime; parc.nbGainEauEstime++; }
         /* D5 : vrai gain CO2 (t/an) = émissions du sous-site − CO2 projeté × SRE ; vide si l'un des deux manque */
         x.gainCo2T = (x.co2.val != null && x.co2Projete != null && x.sre != null) ? round((x.co2.val - x.co2Projete * x.sre) / 1000, 3) : null;
@@ -2129,7 +2143,7 @@ var PTE_CONTRAT = (function () {
       site.eau = agg.nEau ? { val: agg.eau, source: 'mesuré', origine: 'Σ sous-sites' } : { val: null, source: null, origine: null };
       site.co2 = agg.nCo2 ? { val: agg.co2, source: 'mesuré', origine: 'Σ sous-sites' } : { val: null, source: null, origine: null };
       /* aucun sous-site chiffré : montant inconnu (null), pas 0 (26.10.2026) */
-      site.estimPte = agg.nEstimPte ? agg.estimPte : null; site.investCecb = agg.nInvestCecb ? agg.investCecb : null;
+      site.estimPte = agg.nEstimPte ? agg.estimPte : null;
       site.gainEauEstime = agg.nGainEau ? round(agg.gainEau, 3) : null;
       site.nbSousSitesEstimes = agg.nEst; site.nbSousSitesMesures = agg.nMes;
     });
@@ -2166,25 +2180,25 @@ var PTE_CONTRAT = (function () {
     num: 'N° sous site', site: 'N site', nom: 'Nom du site_AB', nomSite: 'Nom du site', sre: 'SRE', idc: 'IDC [kWh]',
     idcAnnee: 'Année IDC', conso: 'CONSO [kWh]', agent: 'Agent', pctAgent: '%Agent', principal: 'Chauffage Type Energie Prin',
     substitution: 'Chauffage de subsitution prévu', rpf: 'Responsable Portefeuille',
-    estimPte: 'Estim PTE', investCecb: 'Estim CECB+', co2Proj: 'CO2 projeté [kg/m2.an]', idcProj: 'IDC projeté [kWh]',
+    estimPte: 'Estim PTE', co2Proj: 'CO2 projeté [kg/m2.an]', idcProj: 'IDC projeté [kWh]',
     idcGain: 'IDC Gain retenu', affectation: 'Affectation_AB' };
   var OBLIGATOIRES = ['num', 'site', 'sre', 'idc', 'agent', 'rpf', 'estimPte'];
+  /* Estim CECB+ n'est plus lue (03.11.2026, décision d'Achim : colonne supprimée de Plan_PTE) */
   var LIB_REMPL = { sre: 'SRE', idc: 'IDC', agent: 'Agent (SITG)', rpf: 'Responsable Portefeuille', estimPte: 'Estim PTE',
-    investCecb: 'Estim CECB+', chaleurMesuree: 'Chaleur mesurée', elec: 'Électricité', eau: 'Eau', co2: 'CO2' };
+    chaleurMesuree: 'Chaleur mesurée', elec: 'Électricité', eau: 'Eau', co2: 'CO2' };
   var LIB_PARC = { sre: ['SRE du parc', 'm²', 1], chaleur: ['Chaleur du parc', 'MWh', 1000], elec: ['Électricité du parc', 'MWh', 1000],
     eau: ['Eau du parc', 'm³', 1], co2: ['CO2 du parc', 't', 1000] };
   var SEUILS = { sousSites: 0.02, remplissage: 0.10, parc: 0.10 };
 
   function empreinte(R) {
     var ss = (R && R.sousSites) || [], C = (R && R.colonnes) || {}, p = (R && R.parc) || {}, k;
-    var rempl = { sre: 0, idc: 0, agent: 0, rpf: 0, estimPte: 0, investCecb: 0, chaleurMesuree: 0, elec: 0, eau: 0, co2: 0 };
+    var rempl = { sre: 0, idc: 0, agent: 0, rpf: 0, estimPte: 0, chaleurMesuree: 0, elec: 0, eau: 0, co2: 0 };
     ss.forEach(function (x) {
       if (x.sre != null) rempl.sre++;
       if (x.idc != null) rempl.idc++;
       if (x.agent && x.agent.sitg) rempl.agent++;
       if (x.rpf) rempl.rpf++;
       if (x.estimPte != null) rempl.estimPte++;
-      if (x.investCecb != null) rempl.investCecb++;
       if (x.chaleur && x.chaleur.val != null && x.chaleur.source === 'mesuré') rempl.chaleurMesuree++;
       if (x.elec && x.elec.val != null) rempl.elec++;
       if (x.eau && x.eau.val != null) rempl.eau++;
@@ -2895,6 +2909,10 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "04.11.2026", "objet": "revue", "version": "v0.42", "titre": "Estim ImmOBA dans la chaîne financière", "points": ["Chaîne financière, carte « Cohérence financière », tableau des sous-sites et fiche : Estim ImmOBA remplace Estim PTE (Estim ImmOBA → DG → crédit GE-Invest) ; l'écart du crédit se mesure au DG, à défaut à l'Estim ImmOBA.", "Tuile « Estim. ImmOBA, MCHF » à la place d'« Estim. PTE »."]},
+    {"date": "03.11.2026", "objet": "revue", "version": "v0.41", "titre": "Sémaphores par sous-site, périmètre par affectation", "points": ["Vue Portefeuille : heatmap « Par sous-site » (par défaut) ou « Par projet ». Une ligne par sous-site, dépliable vers ses projets comme le planning : chaque volet prend le pire de ses projets renseignés, Global le pire des quatre volets ; tri par gravité ou par rang.", "Reporting, carte Sémaphores : répartition des sous-sites (vert, orange, rouge) sous celle des projets.", "Menu Périmètre : section « Affectation » (colonne Affectation_AB de Plan_PTE : Instruction publique, Police…), commune aux outils comme le Plan.", "Heatmap en mode épuré : la teinte des cases n'était visible qu'une ligne sur deux."]},
+    {"date": "03.11.2026", "objet": "simulation", "version": "v3.16", "titre": "Périmètre par affectation", "points": ["Menu Périmètre : section « Affectation » sous le Plan ; la recherche ne propose que les sites dont un même sous-site réunit le Plan et l'une des affectations cochées. Choix commun aux outils."]},
+    {"date": "03.11.2026", "objet": "priorisation", "version": "v2.32", "titre": "Montants revus, périmètre par affectation", "points": ["Menu Montants : « Estim CECB+ » retiré ; la ligne « Estim PTE » devient « Estim ImmOBA » et lit la colonne Estim ImmOBA de Plan_PTE, par défaut.", "Coût suspect (moins de 10 000 CHF ou sous le plancher en CHF/m²) : contrôlé sur le montant choisi au menu Montants.", "Menu Périmètre : section « Affectation » (colonne Affectation_AB de Plan_PTE), commune aux outils et filtrant partout comme le Plan ; une affectation absente du classeur chargé est gardée pour les autres outils sans rien filtrer ici."]},
     {"date": "03.11.2026", "objet": "commun", "version": null, "titre": "Mot de passe modifiable depuis les outils", "points": ["Bouton Saisies, une fois connecté : nouvelle entrée « Changer mon mot de passe… » (quatre pages). Mot de passe actuel, nouveau (8 caractères au moins) et confirmation.", "Après le changement, le serveur ferme les autres sessions du compte (autres onglets, autres postes) ; celle de l'outil est rouverte aussitôt avec le nouveau mot de passe. Serveur sans réponse pendant le changement : nouveau mot de passe essayé, sinon changement signalé comme incertain.", "Aucun mot de passe n'est gardé dans le navigateur. Serveur : chacun ne modifie que son propre mot de passe, et non son rôle ; nouvelle limite de 5 changements par minute (migration 1792300000), contre la recherche de l'ancien mot de passe."]},
     {"date": "03.11.2026", "objet": "revue", "version": "v0.40", "titre": "Périmètres par RPF retrouvés", "points": ["Le RPF d'un projet est désormais le « Responsable Portefeuille » de son sous-site dans Plan_PTE, comme dans la priorisation. Depuis l'extraction du 23.10, GE-Invest range tous les projets sous un seul portefeuille : le menu Périmètre n'offrait plus qu'un RPF.", "Questions du mois, Reporting et décisions suivent les mêmes portefeuilles ; un sous-site « hors périmètre » ou absent de Plan_PTE passe dans « Hors périmètre RPF »."]},
     {"date": "02.11.2026", "objet": "revue", "version": "v0.39", "titre": "Organigramme des projets d'un portefeuille", "points": ["Nouvel onglet « Organigramme » : pour un responsable de portefeuille, les sites rangés par type d'intervention, chaque projet GE-Invest avec sa nature (selon son numéro) et sa phase SIA en couleur, et les interventions identifiées par l'audit CECB+ (coûts par lot, futur projet PV) sans projet de même nature.", "Reconstruit à chaque import du classeur ; un clic sur la nature ouvre la fiche projet, le numéro ouvre GE-Invest.", "Mode « Modifier » : libellé et AMO du portefeuille, note de site, nature corrigée, délégation « RP (service) », ligne masquée — rubrique « organigramme » des saisies : fichier Excel (feuille « Organigramme ») et serveur partagé (migration 1792200000 à appliquer).", "Impression en A3 paysage."]},
@@ -5450,18 +5468,84 @@ var PTE_COMMUN = (function () {
         'background:var(--card-bg,#fff);color:var(--ink,#1f2d3d);border:1px solid var(--border,#dfe6ec);box-shadow:0 10px 30px rgba(0,0,0,.18);font-size:13px;text-align:left}' +
       '.pte-mc-pop label{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;cursor:pointer;font-weight:normal;margin:0}' +
       '.pte-mc-pop label:hover{background:var(--page-bg,#f4f6f8)}' +
+      '.pte-mc-pop .pte-mc-g{padding:7px 8px 3px;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:bold;color:var(--ink-muted,#5b6b7b)}' +
       '.pte-mc-pop label .n{margin-left:auto;color:var(--ink-muted,#5b6b7b);font-size:11.5px}' +
       '.pte-mc-pop .pte-mc-f{display:flex;gap:10px;justify-content:space-between;padding:6px 8px 2px;border-top:1px solid var(--border,#dfe6ec);margin-top:4px}' +
       '.pte-mc-pop .pte-mc-f button{font:inherit;font-size:12px;background:none;border:0;color:#005F73;cursor:pointer;padding:0}' +
       'body.night .pte-mc-pop .pte-mc-f button{color:#30E5D9}';
     document.head.appendChild(s);
   }
-  /* Suit les changements de Plan faits dans un autre outil (autre onglet, retour sur la page) ou ici. */
+  /* Affectations (03.11.2026, demande d'Achim) : périmètre par affectation du sous-site (Plan_PTE!Affectation_AB :
+     Instruction publique, Locatif, Police…), qui correspond aux utilisateurs des bâtiments. Section « Affectation » du
+     menu Périmètre de chaque outil ; sélection commune aux outils, comme le Plan (localStorage pte.affectations.v1).
+     Une cellule à plusieurs valeurs (« Administration, Police ») range le sous-site dans chacune. Plusieurs
+     affectations cochées = l'une ou l'autre ; avec un Plan ou un portefeuille = les deux à la fois. */
+  var LS_AFF = 'pte.affectations.v1';
+  function affectationsDe(v) {
+    if (v === null || v === undefined) return [];
+    var out = [];
+    String(v).split(/[,;]/).forEach(function (x) {
+      var t = x.replace(/\s+/g, ' ').trim();
+      if (!t || /^(#n\/?a|n\/a|-+|\?+|=+)$/i.test(t)) return;
+      if (out.indexOf(t) < 0) out.push(t);
+    });
+    return out;
+  }
+  function lireAffectations() {
+    try { var a = JSON.parse(localStorage.getItem(LS_AFF) || '[]'); return Array.isArray(a) ? a.filter(function (k, i, t) { return typeof k === 'string' && k && k.length <= 80 && t.indexOf(k) === i; }).slice(0, 60) : []; }
+    catch (e) { return []; }
+  }
+  function ecrireAffectations(a) {
+    var v = (a || []).filter(function (k, i, t) { return typeof k === 'string' && k && k.length <= 80 && t.indexOf(k) === i; }).slice(0, 60);
+    try { localStorage.setItem(LS_AFF, JSON.stringify(v)); } catch (e) { /* stockage indisponible */ }
+    try { window.dispatchEvent(new CustomEvent('pte-programmes', { detail: lireProgrammes() })); } catch (e) {}
+    return v;
+  }
+  /* valeur de la cellule Affectation d'un sous-site dans la sélection ; aucune sélection = vrai */
+  function dansAffectations(v, actives) {
+    actives = actives || lireAffectations();
+    if (!actives.length) return true;
+    var l = affectationsDe(v);
+    for (var i = 0; i < l.length; i++) if (actives.indexOf(l[i]) >= 0) return true;
+    return false;
+  }
+  function libelleAffectations(actives) {
+    actives = actives || lireAffectations();
+    if (!actives.length) return '';
+    return actives.length <= 2 ? actives.join(' + ') : actives.length + ' affectations';
+  }
+  /* Sélection réellement appliquée à une population (valeurs de la colonne Affectation de ses sous-sites) : les
+     affectations cochées qui y existent. Une affectation cochée ailleurs mais absente d'ici (autre classeur, valeur
+     renommée) n'y filtre rien et reste gardée pour les autres outils ; sans colonne Affectation, aucun filtre. */
+  function affectationsEffectives(valeurs, actives) {
+    actives = actives || lireAffectations();
+    if (!actives.length) return [];
+    var pres = {};
+    (valeurs || []).forEach(function (v) { affectationsDe(v).forEach(function (a) { pres[a] = 1; }); });
+    return actives.filter(function (a) { return pres[a]; });
+  }
+  /* Nouvelle sélection depuis un menu : les cases cochées parmi celles proposées (toutes = aucune restriction), plus
+     les affectations gardées qui n'y figuraient pas (absentes de ce classeur) */
+  function fusionnerAffectations(cochees, proposees, actives) {
+    actives = actives || lireAffectations();
+    var c = (cochees || []).slice();
+    if (proposees && proposees.length && c.length === proposees.length) c = [];
+    actives.forEach(function (a) { if ((proposees || []).indexOf(a) < 0 && c.indexOf(a) < 0) c.push(a); });
+    return c;
+  }
+  /* liste des affectations d'une population et nombre de sous-sites de chacune, par ordre décroissant */
+  function compterAffectations(valeurs) {
+    var n = {};
+    (valeurs || []).forEach(function (v) { affectationsDe(v).forEach(function (a) { n[a] = (n[a] || 0) + 1; }); });
+    return Object.keys(n).sort(function (a, b) { return n[b] - n[a] || a.localeCompare(b, 'fr'); }).map(function (a) { return { k: a, n: n[a] }; });
+  }
+  /* Suit les changements de Plan ou d'Affectation faits dans un autre outil (autre onglet, retour sur la page) ou ici. */
   function surProgrammes(fn) {
-    var dernier = JSON.stringify(lireProgrammes());
-    function voir() { var v = JSON.stringify(lireProgrammes()); if (v === dernier) return; dernier = v; try { fn(lireProgrammes()); } catch (e) { console.error(e); } }
+    var etat = function () { return JSON.stringify([lireProgrammes(), lireAffectations()]); };
+    var dernier = etat();
+    function voir() { var v = etat(); if (v === dernier) return; dernier = v; try { fn(lireProgrammes(), lireAffectations()); } catch (e) { console.error(e); } }
     try {
-      window.addEventListener('storage', function (e) { if (!e.key || e.key === LS_PROG) voir(); });
+      window.addEventListener('storage', function (e) { if (!e.key || e.key === LS_PROG || e.key === LS_AFF) voir(); });
       window.addEventListener('focus', voir);
       window.addEventListener('pte-programmes', voir);
     } catch (e) {}
@@ -5496,7 +5580,10 @@ var PTE_COMMUN = (function () {
     }
     function remplir() {
       pop.innerHTML = '';
+      var grp = null;
       (opts.options || []).forEach(function (o) {
+        /* sections (03.11.2026) : une option qui porte « groupe » ouvre un intertitre quand il change */
+        if (o.groupe && o.groupe !== grp) { grp = o.groupe; var g = document.createElement('div'); g.className = 'pte-mc-g'; g.textContent = o.groupe; pop.appendChild(g); }
         var lab = document.createElement('label'), c = document.createElement('input');
         c.type = 'checkbox'; c.value = String(o.v); c.checked = vals.map(String).indexOf(String(o.v)) >= 0;
         c.addEventListener('change', function () {
@@ -5529,6 +5616,8 @@ var PTE_COMMUN = (function () {
   C.lireProgrammes = lireProgrammes; C.ecrireProgrammes = ecrireProgrammes; C.valeurTag = valeurTag;
   C.dansProgrammes = dansProgrammes; C.libelleProgrammes = libelleProgrammes;
   C.surProgrammes = surProgrammes; C.multiChoix = multiChoix;
+  C.LS_AFF = LS_AFF; C.affectationsDe = affectationsDe; C.lireAffectations = lireAffectations; C.ecrireAffectations = ecrireAffectations;
+  C.dansAffectations = dansAffectations; C.libelleAffectations = libelleAffectations; C.compterAffectations = compterAffectations; C.affectationsEffectives = affectationsEffectives; C.fusionnerAffectations = fusionnerAffectations;
   C.iconeProgramme = iconeProgramme; C.badgesProgrammes = badgesProgrammes; C.casesProgrammes = casesProgrammes; C.texteProgrammes = texteProgrammes; C.dansUnProgramme = dansUnProgramme;
 })(typeof PTE_COMMUN !== 'undefined' ? PTE_COMMUN : null);
 
@@ -6081,8 +6170,8 @@ var PTE_COMMUN = (function () {
       dateDg: _findCol(header, ['date_dg']),
       statutConsolidation: _findCol(header, ['statut_consolidation']),
       gei: _findCol(header, ['previsionnel_pte_gei', 'ge_invest', 'geinvest', 'invest_ge']),
-      cecb: _findCol(header, ['estim_cecb', 'invest_estim_cecb', 'invest_estim_cecb_chf']),   // « Estim CECB+ » depuis le 23.09.2026
       immoba: _findCol(header, ['estim_immoba', 'invest_immoba']),
+      affectation: _findCol(header, ['affectation_ab', 'affectation']),   // 03.11.2026 : périmètre par affectation (commun aux outils)
       // gains PTE par sous-site (db.pte) — cf. commentaire ci-dessus
       idcGainRetenu: _findCol(header, ['idc_gain_retenu']),
       co2ProjeteKgM2An: _findCol(header, ['co2_projete_kg_m2_an']),
@@ -6137,13 +6226,13 @@ var PTE_COMMUN = (function () {
         date_dg: txt(get(cols.dateDg, r)),
         statut_consolidation: txt(get(cols.statutConsolidation, r)),
         prev_gei_kchf: _toKCHF(get(cols.gei, r)),
-        invest_cecb_kchf: _toKCHF(get(cols.cecb, r)),
         invest_immoba_kchf: _toKCHF(get(cols.immoba, r)),
         tags: { p300: tag(cols.tag300, r), coe: tag(cols.tagCoe, r), canicule: tag(cols.tagCanicule, r), emb: tag(cols.tagEmb, r) },
         /* organigramme (02.11.2026) : null = colonne absente ou cellule vide, jamais 0 */
         lots: { idc: lot(cols.lotEnv, r), chaufferie: lot(cols.lotChauf, r), technique: lot(cols.lotTech, r), lumiere: lot(cols.lotElec, r), eau: lot(cols.lotEau, r) },
         pv_kwc: cols.pvKwc ? parseNum(get(cols.pvKwc, r)) : null,
-        audit_cecb: cols.auditCecb ? txt(get(cols.auditCecb, r)) : ''
+        audit_cecb: cols.auditCecb ? txt(get(cols.auditCecb, r)) : '',
+        affectation: cols.affectation ? txt(get(cols.affectation, r)) : ''
       };
       n++;
 
@@ -6168,7 +6257,8 @@ var PTE_COMMUN = (function () {
         gain_m3_eau_source: eauEst ? 'estimé' : (gainEauSim !== null ? 'simulé' : null),
         pv_kwc: parseNum(get(cols.pvKwc, r)),
         vegetalisation_m2: parseNum(get(cols.vegetalisation, r)),
-        estim_pte_kchf: estimKchf
+        estim_pte_kchf: estimKchf,
+        estim_immoba_kchf: _toKCHF(get(cols.immoba, r))   // 04.11.2026 : référence financière de la revue
       });
     });
     db.planpte = {
@@ -6184,7 +6274,6 @@ var PTE_COMMUN = (function () {
         date_dg: cols.dateDg ? cols.dateDg.header : null,
         statut_consolidation: cols.statutConsolidation ? cols.statutConsolidation.header : null,
         prev_gei: cols.gei ? cols.gei.header : null,
-        invest_cecb: cols.cecb ? cols.cecb.header : null,
         invest_immoba: cols.immoba ? cols.immoba.header : null,
         lot_enveloppe: cols.lotEnv ? cols.lotEnv.header : null
       }
@@ -6367,7 +6456,6 @@ var PTE_COMMUN = (function () {
       if (!s) { pp.mesures = null; return; }
       pp.sre_m2 = s.sre;                                              // D1 : Plan_PTE!SRE, null si vide
       pp.estim_pte_kchf = s.estimPte === null ? null : Math.round(s.estimPte / 100) / 10;   // D6
-      pp.invest_cecb_kchf = s.investCecb === null ? null : Math.round(s.investCecb / 100) / 10;
       if (s.rpf) pp.rpf_ou_agent = s.rpf;                             // D8
       pp.mesures = {
         annee: R.annee, sre: s.sre, idc: s.idc, idcAnnee: s.idcAnnee,
@@ -6555,7 +6643,7 @@ var PTE_COMMUN = (function () {
       portefeuilleGrisMaxPct: 20, // au-delà => gris
       seuilStructurantKCHF: 2000,
       seuilTop: 50, // seuil « top » de la priorisation PTE (sous-site bien classé)
-      ecartFinOrangePct: 20, // écart |crédit GEI vs référence (DG ou Estim PTE)| => orange
+      ecartFinOrangePct: 20, // écart |crédit GEI vs référence (DG ou Estim ImmOBA)| => orange
       ecartFinRougePct: 50,  // écart |crédit GEI vs référence| => rouge
       planningRepere: 80,    // planning par famille : repère « xx % des projets de travaux terminés » (26.10.2026)
       planningEcheance: 2030 // planning par famille : année d'échéance (fin au plus tard le 31.12)
@@ -7705,9 +7793,35 @@ var PTE_COMMUN = (function () {
     return m ? m.tags : null;
   }
   function programmesActifs() { return (COMMUN && COMMUN.lireProgrammes) ? COMMUN.lireProgrammes() : []; }
+  /* Affectation (03.11.2026, demande d'Achim) : affectation du sous-site dans Plan_PTE (Affectation_AB), sélection
+     commune aux outils comme le Plan ; elle s'ajoute au Plan (les deux à la fois). */
+  /* cochées (communes aux outils) et présentes dans Plan_PTE chargé ; les autres restent gardées pour les autres outils */
+  var AFF_CACHE = { k: null, v: [] };
+  function affectationsActives() {
+    if (!COMMUN || !COMMUN.lireAffectations || !COMMUN.affectationsEffectives) return [];
+    var sel = COMMUN.lireAffectations(); if (!sel.length) return [];
+    var b = DB.planpte && DB.planpte.bySousSite; if (!b) return [];
+    var k = sel.join('\u0001') + '|' + Object.keys(b).length + '|' + (DB.planpte.fichier || '') + '|' + (DB.planpte.date || '');
+    if (AFF_CACHE.k === k && AFF_CACHE.b === b) return AFF_CACHE.v;
+    AFF_CACHE = { k: k, b: b, v: COMMUN.affectationsEffectives(Object.keys(b).map(function (n) { return b[n].affectation; }), sel) };
+    return AFF_CACHE.v;
+  }
+  function affectationSousSite(num) {
+    var m = DB.planpte && DB.planpte.bySousSite ? DB.planpte.bySousSite[String(num || '').trim()] : null;
+    return m ? m.affectation : null;
+  }
   function sousSiteDansProgrammes(num) {
-    var a = programmesActifs(); if (!a.length) return true;
+    var a = programmesActifs(), f = affectationsActives();
+    if (f.length && !COMMUN.dansAffectations(affectationSousSite(num), f)) return false;
+    if (!a.length) return true;
     return COMMUN.dansProgrammes(tagsSousSite(num), a);
+  }
+  /* Plan et affectation actifs, en clair (titres, libellé du périmètre) */
+  function libellePlanAff() {
+    var t = [];
+    if (programmesActifs().length && COMMUN.libelleProgrammes) t.push(COMMUN.libelleProgrammes());
+    if (affectationsActives().length && COMMUN.libelleAffectations) t.push(COMMUN.libelleAffectations());
+    return t.join(' · ');
   }
   function projetDansProgrammes(p) { return sousSiteDansProgrammes(p && p.numero_sous_site); }
   function projetsByPerimetre(key) {
@@ -7753,7 +7867,7 @@ var PTE_COMMUN = (function () {
         opts.filterRow = function (r) { return lm.some(function (k) { return k === 'HORS' ? (!r.rpf || !r.rpf.trim()) : r.rpf === k.slice(4); }); };
       }
     }
-    if (programmesActifs().length) {
+    if (programmesActifs().length || affectationsActives().length) {
       var fr = opts.filterRow;
       opts.filterRow = function (r) { return sousSiteDansProgrammes(r.numero_sous_site) && (!fr || fr(r)); };
     }
@@ -7777,14 +7891,14 @@ var PTE_COMMUN = (function () {
 
   function pteGainsFor(numeroProjets) {
     var sousSites = DB.projets.filter(function (p) { return numeroProjets.indexOf(p.numero_projet) !== -1 && p.numero_sous_site; }).map(function (p) { return p.numero_sous_site; });
-    var out = { gain_kwh_th: 0, gain_t_co2: 0, gain_kwh_el: 0, gain_m3_eau: 0, pv_kwc: 0, vegetalisation_m2: 0, estim_pte_kchf: 0, n: 0 };
+    var out = { gain_kwh_th: 0, gain_t_co2: 0, gain_kwh_el: 0, gain_m3_eau: 0, pv_kwc: 0, vegetalisation_m2: 0, estim_immoba_kchf: 0, n: 0 };
     var seen = {};
     DB.pte.forEach(function (r) {
       if (sousSites.indexOf(r.numero_sous_site) === -1) return;
       if (seen[r.numero_sous_site]) return;
       seen[r.numero_sous_site] = true;
       out.n++;
-      ['gain_kwh_th', 'gain_t_co2', 'gain_kwh_el', 'gain_m3_eau', 'pv_kwc', 'vegetalisation_m2', 'estim_pte_kchf'].forEach(function (k) {
+      ['gain_kwh_th', 'gain_t_co2', 'gain_kwh_el', 'gain_m3_eau', 'pv_kwc', 'vegetalisation_m2', 'estim_immoba_kchf'].forEach(function (k) {
         out[k] += Engine.parseNum(r[k]) || 0;
       });
     });
@@ -8013,7 +8127,9 @@ var PTE_COMMUN = (function () {
 
   // Barre empilée horizontale unique — répartition des sémaphores globaux,
   // segments cliquables (boutons, focalisables au clavier).
-  function distBar(counts, onClick) {
+  /* unite (03.11.2026) : mot compté, « projet » par défaut ; sans onClick, la barre ne filtre rien */
+  function distBar(counts, onClick, unite) {
+    unite = unite || 'projet';
     var total = counts.vert + counts.orange + counts.rouge + counts.gris;
     var wrap = el('div');
     var bar = el('div', { class: 'distbar' });
@@ -8021,13 +8137,13 @@ var PTE_COMMUN = (function () {
     ['vert', 'orange', 'rouge', 'gris'].forEach(function (color) {
       var n = counts[color]; if (!n) return;
       var pct = total ? (100 * n / total) : 0;
-      var seg = el('button', { type: 'button', class: 'seg seg-' + color, style: 'width:' + pct + '%;' }, [String(n)]);
-      tip(seg, n + ' projet' + (n > 1 ? 's' : '') + ' ' + Engine.COLOR_LABEL[color].toLowerCase() + ' (' + Math.round(pct) + ' %). Cliquer pour filtrer la liste ci-dessous.');
+      var seg = el(onClick ? 'button' : 'span', onClick ? { type: 'button', class: 'seg seg-' + color, style: 'width:' + pct + '%;' } : { class: 'seg seg-' + color, style: 'width:' + pct + '%;', tabindex: '0' }, [String(n)]);
+      tip(seg, n + ' ' + unite + (n > 1 ? 's' : '') + ' ' + Engine.COLOR_LABEL[color].toLowerCase() + ' (' + Math.round(pct) + ' %).' + (onClick ? ' Cliquer pour filtrer la liste ci-dessous.' : ''));
       segEls[color] = seg;
       bar.appendChild(seg);
     });
     var active = null;
-    bar.addEventListener('click', function (e) {
+    if (onClick) bar.addEventListener('click', function (e) {
       var seg = e.target.closest ? e.target.closest('.seg') : null; if (!seg) return;
       var color = Object.keys(segEls).filter(function (k) { return segEls[k] === seg; })[0];
       active = (active === color) ? null : color;
@@ -8323,7 +8439,7 @@ var PTE_COMMUN = (function () {
     return arr;
   }
 
-  function heatmapTable(list, gel) {
+  function heatmapTable(list, gel, parSs) {
     var monthsAvail = Engine.moisDisponibles(DB);
     var showSpark = monthsAvail.length > 1, idx = showSpark ? Engine.indexParProjet(DB) : null;
     var sorted = heatmapSortedList(list);
@@ -8347,7 +8463,8 @@ var PTE_COMMUN = (function () {
     var theadRow = el('tr', {}, [thProjet, thRang].concat(restTh));
     var tbl = el('table', { class: 'heatmap-table' }, [el('thead', {}, [theadRow])]);
     var tbody = el('tbody');
-    sorted.forEach(function (c) {
+    /* une ligne projet ; enfant = sous une ligne de sous-site dépliée */
+    function ligneProjet(c, enfant) {
       var nj = nextJalon(c.projet.numero_projet, gel);
       function dotCell(key) {
         var s = c.sems[key];
@@ -8378,12 +8495,99 @@ var PTE_COMMUN = (function () {
         : el('td', { class: 'muted small' }, ['—']);
       if (nj) tip(jalonTd, nj.libelle + ' (' + nj.date_prevue + ')');
       tds.push(jalonTd);
-      var tr = el('tr', { class: 'clickable' }, tds);
+      var tr = el('tr', { class: 'clickable' + (enfant ? ' heat-enfant' : ''), tabindex: '0' }, tds);
       tr.addEventListener('click', function () { STATE.projetSel = c.projet.numero_projet; showView('fiche'); });
-      tbody.appendChild(tr);
-    });
+      tr.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); STATE.projetSel = c.projet.numero_projet; showView('fiche'); } });
+      return tr;
+        }
+    if (!parSs) sorted.forEach(function (c) { tbody.appendChild(ligneProjet(c, false)); });
+    else {
+      /* Par sous-site (03.11.2026, demande d'Achim) : une ligne par sous-site, dépliable vers ses projets, comme le planning */
+      STATE.heatOuverts = STATE.heatOuverts || {};
+      var nCols = theadRow.children.length;
+      heatSousSites(list).forEach(function (g) {
+        var ouvert = !!STATE.heatOuverts[g.key];
+        var nom = (g.num ? g.num + ' — ' : '') + g.nom;
+        var nameTd = el('td', { class: 'heat-name heat-ss' }, [el('span', { class: 'heat-ss-l' }, [el('span', { class: 't' }, [(ouvert ? '▾ ' : '▸ ') + nom]), el('span', { class: 'heat-ss-n' }, [g.items.length + ' projet' + (g.items.length > 1 ? 's' : '')])])]);
+        tip(nameTd, nom + ' : ' + g.items.length + ' projet' + (g.items.length > 1 ? 's' : '') + ' — cliquer pour ' + (ouvert ? 'replier.' : 'afficher ses projets.'));
+        var tds = [nameTd, el('td', {}, [g.num ? (rangBadgeSs(g.num) || '') : ''])];
+        ['delais', 'livrables', 'depenses', 'risques'].forEach(function (k) {
+          var x = g.volets[k];
+          var td = el('td', { class: 'cell-tip ' + tintClass(x.color) }, [el('span', { class: 'cell-inline' }, [el('span', { class: 'heat-dot', style: 'background:' + semHex(x.color) + ';', 'aria-hidden': 'true' })])]);
+          tip(td, { delais: 'Délais', livrables: 'Livrables', depenses: 'Dépenses', risques: 'Risques' }[k] + ' du sous-site : ' + x.texte);
+          tds.push(td);
+        });
+        tds.push(el('td', { class: tintClass(g.global.color, true) }, [semInline(g.global.color, null, { tipText: 'Sémaphore global du sous-site : pire de ses quatre volets — ' + g.global.texte })]));
+        var reste = nCols - tds.length, avTd = null;
+        /* tendance, 4 mois : propres à chaque projet ; avancement : moyenne ; RP ; prochain jalon */
+        var avs = g.items.map(function (c) { return c.suiviRow ? Engine.parseNum(c.suiviRow.avancement_pct) : null; }).filter(function (v) { return v !== null && !isNaN(v); });
+        for (var q = 0; q < reste - 3; q++) tds.push(el('td', { class: 'muted small' }, ['']));
+        avTd = avs.length ? avancementCell(Math.round(avs.reduce(function (a, b) { return a + b; }, 0) / avs.length)) : el('td', { class: 'muted small' }, ['—']);
+        if (avs.length) tip(avTd, 'Avancement moyen de ' + avs.length + ' projet' + (avs.length > 1 ? 's' : '') + ' du sous-site.');
+        tds.push(avTd);
+        var rps = []; g.items.forEach(function (c) { if (c.projet.rp && rps.indexOf(c.projet.rp) < 0) rps.push(c.projet.rp); });
+        var rpTxt = !rps.length ? '—' : (rps.length === 1 ? rps[0] : rps[0] + ' +' + (rps.length - 1));
+        var rpTd = el('td', { class: 'heat-rp' }, [rpTxt.length > 22 ? rpTxt.slice(0, 21) + '…' : rpTxt]); if (rps.length) tip(rpTd, rps.join(', '));
+        tds.push(rpTd);
+        var nj = null; g.items.forEach(function (c) { var j = nextJalon(c.projet.numero_projet, gel); if (j && (!nj || Engine.parseDate(j.date_prevue) < Engine.parseDate(nj.date_prevue))) nj = j; });
+        var jalonTd = nj ? el('td', {}, [el('div', { class: 'heat-jalon-lib' }, [nj.libelle]), el('div', { class: 'heat-jalon-date' }, [nj.date_prevue])]) : el('td', { class: 'muted small' }, ['—']);
+        if (nj) tip(jalonTd, 'Prochain jalon des projets du sous-site : ' + nj.libelle + ' (' + nj.date_prevue + ').');
+        tds.push(jalonTd);
+        var tr = el('tr', { class: 'clickable heat-ss-row', tabindex: '0', role: 'button', 'aria-expanded': ouvert ? 'true' : 'false', 'data-cle': g.key }, tds);
+        var basculer = function () {
+          STATE.heatOuverts[g.key] = !STATE.heatOuverts[g.key]; hideTipBubble();
+          var y = window.scrollY; renderPortefeuilleView();
+          try { window.scrollTo(0, y); var t = $all('#portefeuille-content tr.heat-ss-row').filter(function (x) { return x.getAttribute('data-cle') === g.key; })[0]; if (t) t.focus({ preventScroll: true }); } catch (e) { /* rendu sans DOM complet */ }
+        };
+        tr.addEventListener('click', basculer);
+        tr.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); basculer(); } });
+        tbody.appendChild(tr);
+        if (ouvert) heatmapSortedList(g.items).forEach(function (c) { tbody.appendChild(ligneProjet(c, true)); });
+      });
+    }
     tbl.appendChild(tbody);
     return tbl;
+  }
+
+  /* Sémaphores consolidés par sous-site (03.11.2026) : pour chaque volet, le pire des projets renseignés ;
+     gris seulement si aucun projet n'est renseigné pour ce volet. Global = pire des quatre volets ainsi consolidés.
+     Le nombre de projets gris est dit au survol. */
+  function semSousSite(colors) {
+    var n = { vert: 0, orange: 0, rouge: 0, gris: 0 };
+    colors.forEach(function (c) { n[c] = (n[c] || 0) + 1; });
+    var color = n.rouge ? 'rouge' : (n.orange ? 'orange' : (n.vert ? 'vert' : 'gris'));
+    var t = ['rouge', 'orange', 'vert', 'gris'].filter(function (k) { return n[k]; }).map(function (k) { return n[k] + ' ' + (k === 'gris' ? 'non renseigné' + (n[k] > 1 ? 's' : '') : k); });
+    return { color: color, n: n, texte: t.join(' · ') + '.' };
+  }
+  function heatSousSites(list) {
+    var map = {}, order = [];
+    list.forEach(function (c) {
+      var num = String(c.projet.numero_sous_site || '').trim(), key = num || ('__p_' + c.projet.numero_projet);
+      if (!map[key]) { map[key] = { key: key, num: num, nom: '', items: [] }; order.push(key); }
+      map[key].items.push(c);
+      if (!map[key].nom && c.projet.nom_sous_site) map[key].nom = c.projet.nom_sous_site;
+    });
+    var out = order.map(function (k) {
+      var g = map[k]; if (!g.nom) g.nom = g.items[0].projet.nom_projet;
+      g.volets = {};
+      ['delais', 'livrables', 'depenses', 'risques'].forEach(function (v) { g.volets[v] = semSousSite(g.items.map(function (c) { return c.sems[v].color; })); });
+      /* global du sous-site = pire de ses quatre volets consolidés (ce que la ligne montre) ; gris si aucun n'est renseigné */
+      var gv = semSousSite(['delais', 'livrables', 'depenses', 'risques'].map(function (v) { return g.volets[v].color; }));
+      var nRens = g.items.filter(function (c) { return c.global !== 'gris'; }).length;
+      g.global = { color: gv.color, n: semSousSite(g.items.map(function (c) { return c.global; })).n,
+        texte: nRens + ' projet' + (nRens > 1 ? 's' : '') + ' sur ' + g.items.length + ' entièrement renseigné' + (nRens > 1 ? 's' : '') + ' ce mois.' };
+      return g;
+    });
+    /* du plus grave au plus favorable ; à gravité égale, le plus de projets rouges puis orange */
+    var rg = { rouge: 4, orange: 3, gris: 2, vert: 1 };
+    out.sort(function (a, b) { return (rg[b.global.color] - rg[a.global.color]) || (b.global.n.rouge - a.global.n.rouge) || (b.global.n.orange - a.global.n.orange) || a.key.localeCompare(b.key); });
+    if (STATE.heatmapSort && STATE.heatmapSort.key === 'rang') {
+      /* colonne Rang (clic sur l'en-tête) : rang de priorisation du sous-site ; non classés à la fin */
+      var rang = {};
+      out.forEach(function (g) { var row = g.num ? Engine.findPrioRow(DB, g.num) : null, r = row ? Engine.parseNum(row.rang_global) : null; rang[g.key] = r === null ? Infinity : r; });
+      out.sort(function (a, b) { var x = rang[a.key], y = rang[b.key]; if (x === y) return 0; if (x === Infinity) return 1; if (y === Infinity) return -1; return (x - y) * STATE.heatmapSort.dir; });
+    }
+    return out;
   }
 
   function buildRisquesMajeurs(list) {
@@ -8427,7 +8631,7 @@ var PTE_COMMUN = (function () {
     tiles.appendChild(kpiTile('Prévision, MCHF', fmtK(fin.prevision), String(annee), 'Somme des prévisions budgétaires ' + annee + '.'));
     tiles.appendChild(kpiTile('Dépensé, MCHF', fmtK(fin.depense), String(annee), 'Somme des dépenses enregistrées ' + annee + '.'));
     tiles.appendChild(kpiTile('Dérive délais, j', driftN ? String(Math.round(driftSum / driftN)) : '—', null, 'Écart moyen entre fin prévue et fin ré-estimée, sur les projets disposant des deux dates.'));
-    tiles.appendChild(kpiTile('Estim. PTE, MCHF', fmtK(pte.estim_pte_kchf), pte.n + ' sous-site(s)', 'Estimation financière PTE cumulée des sous-sites reliés à ce périmètre.', 'pte'));
+    tiles.appendChild(kpiTile('Estim. ImmOBA, MCHF', fmtK(pte.estim_immoba_kchf), pte.n + ' sous-site(s)', 'Estimation ImmOBA (Plan_PTE!Estim ImmOBA) cumulée des sous-sites reliés à ce périmètre.', 'pte'));
     return tiles;
   }
 
@@ -8566,7 +8770,7 @@ var PTE_COMMUN = (function () {
         kv('CO₂', m.co2 && m.co2.val !== null ? fmt(Math.round(m.co2.val / 100) / 10, 1) + ' t/an' : null, 'scope 1+2', (m.co2 && m.co2.origine) || 'CO₂ non renseigné pour cette année.')
       ]);
     }
-    // 4. Finances : chaîne Estim PTE → DG → crédit GE-Invest
+    // 4. Finances : chaîne Estim ImmOBA → DG → crédit GE-Invest (Estim PTE jusqu'au 03.11.2026)
     var chain = finChainInfo(num);
     if (chain) {
       var ecart = null, ecartCls = '';
@@ -8576,10 +8780,10 @@ var PTE_COMMUN = (function () {
         ecartCls = abs > PARAMS.ecartFinRougePct ? 'alert-text' : (abs > PARAMS.ecartFinOrangePct ? 'mes-warn' : '');
       }
       bloc('Finances, MCHF', [
-        kv('Estim PTE', chain.estim === null || chain.estim === undefined ? null : fmtK(chain.estim), 'CECB+', 'Ordre de grandeur de l’investissement (Plan_PTE!Estim PTE).'),
+        kv('Estim ImmOBA', chain.estim === null || chain.estim === undefined ? null : fmtK(chain.estim), 'ImmOBA', 'Ordre de grandeur de l’investissement (Plan_PTE!Estim ImmOBA).'),
         kv('Devis général (DG)', chain.dg === null || chain.dg === undefined ? null : fmtK(chain.dg), chain.pp && chain.pp.date_dg ? 'du ' + chain.pp.date_dg : '', 'Le DG fige la base du crédit.'),
         opts.creditSS !== undefined ? kv('Crédit GE-Invest', opts.creditSS === null ? null : fmtK(opts.creditSS), opts.nbProjets > 1 ? opts.nbProjets + ' projets additionnés' : '', 'Crédit voté, porté par GE-Invest.') : null,
-        opts.creditSS !== undefined ? kv('Écart', ecart, ecart ? 'référence : ' + chain.refLabel : '', 'Écart du crédit GE-Invest à la référence (DG, à défaut Estim PTE) ; teinté au-delà des seuils de l’onglet Données.', ecartCls) : null
+        opts.creditSS !== undefined ? kv('Écart', ecart, ecart ? 'référence : ' + chain.refLabel : '', 'Écart du crédit GE-Invest à la référence (DG, à défaut Estim ImmOBA) ; teinté au-delà des seuils de l’onglet Données.', ecartCls) : null
       ]);
       if (opts.financesAvant) blocs.unshift(blocs.pop());
     }
@@ -9226,15 +9430,16 @@ var PTE_COMMUN = (function () {
     return rps.length === 1 ? rps[0] : (rps[0] + ' +' + (rps.length - 1));
   }
 
-  // ---- Chaîne financière Estim PTE → DG → Crédit GE-Invest -----------
+  // ---- Chaîne financière Estim ImmOBA → DG → Crédit GE-Invest (04.11.2026, décision d'Achim : Estim ImmOBA remplace Estim PTE) ----
   // db.planpte doit exister ; renvoie null si le sous-site n'y figure pas.
   function finChainInfo(numero) {
     if (!DB.planpte || !DB.planpte.bySousSite || !numero) return null;
     var pp = DB.planpte.bySousSite[numero];
     if (!pp) return null;
     var hasDG = pp.dg_kchf !== null && pp.dg_kchf !== undefined;
-    var ref = hasDG ? pp.dg_kchf : pp.estim_pte_kchf;
-    return { pp: pp, estim: pp.estim_pte_kchf, dg: pp.dg_kchf, ref: ref, refLabel: hasDG ? 'DG' : 'Estim PTE' };
+    var estim = pp.invest_immoba_kchf === undefined ? null : pp.invest_immoba_kchf;
+    var ref = hasDG ? pp.dg_kchf : estim;
+    return { pp: pp, estim: estim, dg: pp.dg_kchf, ref: ref, refLabel: hasDG ? 'DG' : 'Estim ImmOBA' };
   }
   // Cellule « Écart » (crédit GE-Invest vs référence), teintée selon
   // PARAMS.ecartFinOrangePct / ecartFinRougePct. « — » si pas de référence
@@ -9250,7 +9455,7 @@ var PTE_COMMUN = (function () {
     if (abs > PARAMS.ecartFinRougePct) td.className += ' tint-rouge';
     else if (abs > PARAMS.ecartFinOrangePct) td.className += ' tint-orange';
     td.appendChild(document.createTextNode((pct >= 0 ? '+' : '−') + Math.round(abs) + ' %'));
-    tip(td, 'Estim PTE ' + fmtK(chain.estim) + ' MCHF → DG ' + (chain.dg === null || chain.dg === undefined ? '(non renseigné)' : fmtK(chain.dg) + ' MCHF') +
+    tip(td, 'Estim ImmOBA ' + fmtK(chain.estim) + ' MCHF → DG ' + (chain.dg === null || chain.dg === undefined ? '(non renseigné)' : fmtK(chain.dg) + ' MCHF') +
       ' → Crédit GE-Invest ' + fmtK(credit) + ' MCHF. Référence de l\'écart : ' + chain.refLabel + '.');
     return td;
   }
@@ -9276,9 +9481,9 @@ var PTE_COMMUN = (function () {
       el('th', { class: 'no-sort num' }, ['Crédit total'])
     ];
     if (hasPP) {
-      headCells.push(el('th', { class: 'no-sort num' }, ['Estim PTE']));
+      headCells.push(el('th', { class: 'no-sort num' }, ['Estim ImmOBA']));
       var thEcart = el('th', { class: 'no-sort num' }, ['Écart']);
-      tip(thEcart, 'Écart entre le crédit total GE-Invest et la référence financière du sous-site (DG si renseigné, sinon Estim PTE).');
+      tip(thEcart, 'Écart entre le crédit total GE-Invest et la référence financière du sous-site (DG si renseigné, sinon Estim ImmOBA).');
       headCells.push(thEcart);
     }
     headCells.push(el('th', { class: 'no-sort num' }, ['Dépensé cumulé']));
@@ -9361,7 +9566,7 @@ var PTE_COMMUN = (function () {
     return carte;
   }
 
-  // ---- Carte « Cohérence financière (Estim PTE → DG → GE-Invest) » ---
+  // ---- Carte « Cohérence financière (Estim ImmOBA → DG → GE-Invest) » ---
   function repFinChainCard(rows) {
     if (!DB.planpte || !DB.planpte.bySousSite) return null;
     var groups = repSousSiteGroups(rows).filter(function (g) { return g.num && DB.planpte.bySousSite[g.num]; });
@@ -9379,8 +9584,8 @@ var PTE_COMMUN = (function () {
     var top = items.slice(0, 10);
 
     var card = el('div', { class: 'card' }, [
-      cardTitle('Cohérence financière (Estim PTE → DG → GE-Invest)', 'L\'Estim PTE (CECB+) donne l\'ordre de grandeur, le Devis général (DG) fige la base du crédit, GE-Invest porte le crédit voté et son exécution.'),
-      el('p', { class: 'small muted' }, [groups.length + ' sous-site(s) du périmètre reconnu(s) dans le Plan_PTE — ' + nEstim + ' avec Estim PTE, ' + nDG + ' avec DG, ' + nCredit + ' avec crédit GE-Invest.'])
+      cardTitle('Cohérence financière (Estim ImmOBA → DG → GE-Invest)', 'L\'Estim ImmOBA donne l\'ordre de grandeur, le Devis général (DG) fige la base du crédit, GE-Invest porte le crédit voté et son exécution.'),
+      el('p', { class: 'small muted' }, [groups.length + ' sous-site(s) du périmètre reconnu(s) dans le Plan_PTE — ' + nEstim + ' avec Estim ImmOBA, ' + nDG + ' avec DG, ' + nCredit + ' avec crédit GE-Invest.'])
     ]);
     if (!DB.planpte.colonnes.dg) {
       card.appendChild(el('p', { class: 'small alert-text' }, ['Colonne « DG [CHF] » à ajouter au Plan_PTE (bloc Financement) — voir 01_Donnees/Requete_GEI_Suivi.md.']));
@@ -9388,7 +9593,7 @@ var PTE_COMMUN = (function () {
     if (top.length) {
       var head = el('tr', {}, [
         el('th', { class: 'no-sort' }, ['Sous-site']),
-        el('th', { class: 'no-sort num' }, ['Estim PTE']),
+        el('th', { class: 'no-sort num' }, ['Estim ImmOBA']),
         el('th', { class: 'no-sort num' }, ['DG']),
         el('th', { class: 'no-sort num' }, ['Crédit GEI']),
         el('th', { class: 'no-sort num' }, ['Écart'])
@@ -9926,7 +10131,7 @@ var PTE_COMMUN = (function () {
     if (f.pf && lib.indexOf(f.pf) === -1) lib = (STATE.perimetre && STATE.perimetre !== 'ALL' ? lib + ' · ' : '') + 'Portefeuille ' + f.pf;
     var fRp = listeF(f.rp);
     if (fRp.length === 1 && lib.indexOf(nomP(fRp[0])) === -1) lib += ' · RP ' + nomP(fRp[0]);
-    if (programmesActifs().length && COMMUN.libelleProgrammes) lib += ' · ' + COMMUN.libelleProgrammes();
+    if (libellePlanAff()) lib += ' · ' + libellePlanAff();
     if (statutParDefaut() && statutsActifs().length) lib += ' · projets en cours';
     if (fRp.length > 1 || (!statutParDefaut() && statutsActifs().length) || listeF(f.type).length || listeF(f.sia).length || f.q) lib += ' (filtré)';
     return lib;
@@ -10266,6 +10471,15 @@ var PTE_COMMUN = (function () {
       lienGris.addEventListener('click', function (e) { e.preventDefault(); filtrer('gris'); });
       boxB.appendChild(el('div', { style: 'margin-top:.5em;' }, [lienGris]));
     }
+    /* Sous-sites (03.11.2026, demande d'Achim) : même lecture, consolidée par sous-site — le pire de ses projets renseignés */
+    var gss = heatSousSites(list), cs = { vert: 0, orange: 0, rouge: 0, gris: 0 };
+    gss.forEach(function (g) { cs[g.global.color]++; });
+    if (gss.length) {
+      var capSs = el('div', { class: 'hero-cap', style: 'margin:.9em 0 .5em;' }, ['Sous-sites : répartition']);
+      tip(capSs, gss.length + ' sous-site' + (gss.length > 1 ? 's' : '') + ' : chacun prend le pire de ses quatre volets, chaque volet étant le pire de ses projets renseignés ; gris si aucun ne l’est. Détail par volet : heatmap « Par sous-site » de la vue Portefeuille.');
+      boxB.appendChild(capSs);
+      boxB.appendChild(distBar({ vert: cs.vert, orange: cs.orange, rouge: cs.rouge, gris: cs.gris }, null, 'sous-site'));
+    }
     var boxC = el('div', { class: 'hero-box', tabindex: '0' });
     boxC.appendChild(donutSVG(pctRenseigne, JETON.teal, { size: 64, stroke: 7 }));
     boxC.appendChild(el('div', { class: 'hero-cap' }, ['Complétude du suivi']));
@@ -10348,7 +10562,7 @@ var PTE_COMMUN = (function () {
         lienG ? ' · ' : null, lienG
       ])
     ]);
-    // Chaîne financière du sous-site (Estim PTE → DG → Crédit GE-Invest)
+    // Chaîne financière du sous-site (Estim ImmOBA → DG → Crédit GE-Invest)
     var chain = finChainInfo(ssNum);
     var creditSS = null, nbSS = 0;
     rows.forEach(function (x) {
@@ -10678,6 +10892,18 @@ var PTE_COMMUN = (function () {
     renderRepBody();
   }
 
+  /* Heatmap par projet ou par sous-site (03.11.2026, demande d'Achim), choix gardé dans ce navigateur ; par sous-site par défaut */
+  var LS_HEAT = 'pte.revue.heatmap.v1';
+  function heatVue() { try { var v = localStorage.getItem(LS_HEAT); return v === 'p' ? 'p' : 's'; } catch (e) { return 's'; } }
+  function heatVueChoix(onChange) {
+    var g = el('span', { class: 'seg', role: 'group', 'aria-label': 'Regroupement' });
+    [['s', 'Par sous-site', 'Une ligne par sous-site, dépliable vers ses projets'], ['p', 'Par projet', 'Une ligne par projet']].forEach(function (c) {
+      var b = el('button', { type: 'button', 'aria-pressed': heatVue() === c[0] ? 'true' : 'false', title: c[2] }, [c[1]]);
+      b.addEventListener('click', function (e) { e.stopPropagation(); try { localStorage.setItem(LS_HEAT, c[0]); } catch (e2) { /* page seulement */ } onChange(); });
+      g.appendChild(b);
+    });
+    return el('span', { class: 'gantt-reglages no-print' }, [g]);
+  }
   // ------------------------------------------------------------------
   // VUE : Portefeuille
   // ------------------------------------------------------------------
@@ -10695,8 +10921,12 @@ var PTE_COMMUN = (function () {
     host.appendChild(c1);
 
     var c2 = el('div', { class: 'card' });
-    c2.appendChild(cardTitle('Heatmap des projets', 'Pastilles : vert conforme, orange à surveiller, rouge action requise, gris non renseigné. Cliquer une ligne ouvre la fiche.'));
-    c2.appendChild(el('div', { class: 'table-scroll' }, [heatmapTable(list, gel)]));
+    var parSs = heatVue() === 's';
+    c2.appendChild(cardTitle(parSs ? 'Heatmap des sous-sites' : 'Heatmap des projets',
+      parSs ? 'Une ligne par sous-site : pour chaque volet, le pire de ses projets renseignés (gris : aucun renseigné) ; Global, le pire des quatre volets. Cliquer une ligne affiche ses projets ; cliquer un projet ouvre sa fiche.'
+            : 'Pastilles : vert conforme, orange à surveiller, rouge action requise, gris non renseigné. Cliquer une ligne ouvre la fiche.',
+      heatVueChoix(function () { renderPortefeuilleView(); })));
+    c2.appendChild(el('div', { class: 'table-scroll' }, [heatmapTable(list, gel, parSs)]));
     host.appendChild(c2);
 
     buildAlignementCard(host, list, STATE.perimetre);
@@ -11900,7 +12130,7 @@ var PTE_COMMUN = (function () {
     if (btn) {
       var lib = labelPerimetre(STATE.perimetre), cles = perimetreCles();
       if (cles.length === 1 && cles[0] !== 'HORS') lib = (cles[0].indexOf('RPF:') === 0 ? 'RPF — ' : 'RP — ') + nomP(cles[0].replace(/^RPF?:/, ''));
-      if (programmesActifs().length && COMMUN.libelleProgrammes) lib = COMMUN.libelleProgrammes() + (cles.length ? ' · ' + lib : '');
+      if (libellePlanAff()) lib = libellePlanAff() + (cles.length ? ' · ' + lib : '');
       btn.textContent = lib.charAt(0).toUpperCase() + lib.slice(1);
       btn.title = cles.length > 1 ? 'Périmètre : ' + cles.map(function (k) { return k === 'HORS' ? 'hors périmètre RPF' : (k.indexOf('RPF:') === 0 ? 'RPF ' : 'RP ') + nomP(k.replace(/^RPF?:/, '')); }).join(' ; ')
                                   : "Restreindre tout l'outil à un ou plusieurs portefeuilles ou responsables de projet";
@@ -11932,6 +12162,22 @@ var PTE_COMMUN = (function () {
         var l = el('label', { class: 'pm-i' }, [c, pg.lib, el('span', { class: 'n' }, [String(n)])]); l.title = pg.titre + ' (colonne « ' + pg.col + ' » de Plan_PTE) : ' + n + ' sous-sites.';
         liste.appendChild(l);
       });
+    }
+    /* Section « Affectation » (03.11.2026) : affectations de Plan_PTE, choix commun aux outils ; nombre de sous-sites */
+    if (COMMUN && COMMUN.compterAffectations && DB.planpte && DB.planpte.bySousSite) {
+      var bA = DB.planpte.bySousSite, fA = COMMUN.lireAffectations();
+      var lA = COMMUN.compterAffectations(Object.keys(bA).map(function (k) { return bA[k].affectation; }));
+      if (lA.length) {
+        liste.appendChild(el('div', { class: 'pm-g' }, ['Affectation']));
+        lA.forEach(function (a) {
+          var c = el('input', { type: 'checkbox', value: 'AFF:' + a.k }); c.checked = fA.indexOf(a.k) >= 0;
+          var l = el('label', { class: 'pm-i' }, [c, a.k, el('span', { class: 'n' }, [String(a.n)])]);
+          l.title = 'Sous-sites dont l’affectation (colonne « Affectation_AB » de Plan_PTE) comprend « ' + a.k + ' » : ' + a.n + '.';
+          liste.appendChild(l);
+        });
+        var absA = fA.filter(function (x) { return !lA.some(function (a) { return a.k === x; }); });
+        if (absA.length) liste.appendChild(el('div', { class: 'pm-h small muted', style: 'padding:2px 8px 6px;' }, ['Gardée pour les autres outils, absente de ce classeur : ' + absA.join(', ') + '.']));
+      }
     }
     liste.appendChild(el('div', { class: 'pm-g' }, ['Portefeuilles (RPF)']));
     Object.keys(nPf).sort().forEach(function (r) { ligne('RPF:' + r, nomP(r), nPf[r]); });
@@ -11983,7 +12229,13 @@ var PTE_COMMUN = (function () {
       $('#pm-ok').addEventListener('click', function () {
         var coch = $all('#pm-list input').filter(function (c) { return c.checked; }).map(function (c) { return c.value; });
         if (COMMUN && COMMUN.ecrireProgrammes) COMMUN.ecrireProgrammes(coch.filter(function (v) { return v.indexOf('PLAN:') === 0; }).map(function (v) { return v.slice(5); }));
-        setPerimetres(coch.filter(function (v) { return v.indexOf('PLAN:') !== 0; }));
+        /* section absente (classeur sans colonne Affectation) : sélection commune intacte ; sinon cases cochées
+           (toutes = aucune restriction) + affectations gardées absentes de ce classeur */
+        var propA = $all('#pm-list input[value^="AFF:"]').map(function (c) { return c.value.slice(4); });
+        if (COMMUN && COMMUN.ecrireAffectations && COMMUN.fusionnerAffectations && propA.length) {
+          COMMUN.ecrireAffectations(COMMUN.fusionnerAffectations(coch.filter(function (v) { return v.indexOf('AFF:') === 0; }).map(function (v) { return v.slice(4); }), propA));
+        }
+        setPerimetres(coch.filter(function (v) { return v.indexOf('PLAN:') !== 0 && v.indexOf('AFF:') !== 0; }));
         pmOuvrir(false); renderAll();
       });
     }
