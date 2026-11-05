@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-/+fzRm7xDaIi8Ivz75zkQg+i6cTELGC05u1sljpkB7k=' 'sha256-i/7EtLYmidkgpgPPEq+IS+32G1tV0OAhP9NkohmUA10=' 'sha256-bq88A1BZpWj8QIbDB7UN5U9fjVhgIrur3kiL28Ix2dY=' 'sha256-3NcFgWFP+0eiJy75lwwdabjDO1QVG0dwx6SPagP9sVY='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-/+fzRm7xDaIi8Ivz75zkQg+i6cTELGC05u1sljpkB7k=' 'sha256-i/7EtLYmidkgpgPPEq+IS+32G1tV0OAhP9NkohmUA10=' 'sha256-7CCwXqgmtbajGSrKEVhmGbn/Z1H4MNJHRrVu40OnfvE=' 'sha256-3NcFgWFP+0eiJy75lwwdabjDO1QVG0dwx6SPagP9sVY='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Simulation des gains</title>
 <style>
@@ -1330,6 +1330,47 @@ var PTE_CONTRAT = (function () {
   /* Avancement GE-Invest à partir duquel un projet est en phase SIA 3 (avant-projet) : 0 à 3 % = phase 21. */
   var AVANCEMENT_PHASE3 = 4;
 
+  /* ---------- Apport des projets en cours (05.11.2026, décision d'Achim) ----------
+     Règle commune à la revue (Contribution 2030 dans le temps) et à la priorisation (trajectoires « acquis / si tout
+     aboutit ») : le gain d'un sous-site arrive d'un coup, l'année où son dernier projet en cours est livré ; la
+     certitude se lit à la phase SIA de son projet en cours le plus avancé (table GPR.6MO.04 de la revue).
+     Année : mise en service GE-Invest, sinon fin ré-estimée, sinon fin initiale. Projets « en cours » seulement. */
+  var PHASES_APPORT = [
+    { k: 'ms', de: 96, lib: 'Mise en service (53)' },
+    { k: 'chantier', de: 51, lib: 'Chantier (51-52)' },
+    { k: 'ao', de: 33, lib: 'Appel d\u2019offres (41)' },
+    { k: 'etudes', de: 0, lib: '\u00c9tudes (21-33)' }
+  ];
+  function phaseApport(av) {
+    if (av == null || !isFinite(av)) return null;
+    for (var i = 0; i < PHASES_APPORT.length; i++) if (av >= PHASES_APPORT[i].de) return PHASES_APPORT[i].k;
+    return null;
+  }
+  /* année d'une date GE-Invest : numéro de série Excel, JJ/MM/AAAA (heure tolérée), AAAA-MM-JJ, ou Date ; sinon null */
+  function anneeDate(v) {
+    if (v == null || v === '') return null;
+    if (v instanceof Date) return isNaN(v.getTime()) ? null : v.getFullYear();
+    if (isNum(v)) return v > 20000 && v < 80000 ? new Date(Math.round(v - 25569) * 86400000).getUTCFullYear() : null;
+    var t = String(v).trim(), m = t.match(/^(\d{4})-\d{1,2}-\d{1,2}/) || t.match(/^\d{1,2}[.\/]\d{1,2}[.\/](\d{4})/);
+    if (m) return +m[1];
+    var n = num(t);
+    return n != null ? anneeDate(n) : null;
+  }
+  /* projets : [{ statut, avancement, miseEnService, finReestimee, finInitiale }] d'un sous-site → { annee, avancement, phase, n }
+     ou null (aucun projet en cours). annee null : aucune date ; phase null : aucun avancement saisi. */
+  function apportProjets(projets) {
+    var actifs = (projets || []).filter(function (p) { return /cours/i.test(String(p && p.statut || '')); });
+    if (!actifs.length) return null;
+    var an = null, av = null;
+    actifs.forEach(function (p) {
+      var a = anneeDate(p.miseEnService) || anneeDate(p.finReestimee) || anneeDate(p.finInitiale);
+      if (a != null && (an == null || a > an)) an = a;
+      var v = num(p.avancement);
+      if (v != null && (av == null || v > av)) av = v;
+    });
+    return { annee: an, avancement: av, phase: phaseApport(av), n: actifs.length };
+  }
+
   /* ---------- Type d'intervention T1 à T4 (règle unique des trois outils, 26.10.2026) ----------
      Règle de l'ancienne colonne « Type d'intervention » de Plan_PTE (retirée du classeur le
      20.10.2026, décision d'Achim), reprise à l'identique : d'abord dans la priorisation (calcTI,
@@ -1542,6 +1583,8 @@ var PTE_CONTRAT = (function () {
     jO = col(idx, ['Objet (actif)']); jN = col(idx, ['Numéro']); jR = col(idx, ['Nom responsable suivi']); jL = col(idx, ['Nom long', 'Libellé']);
     jS = col(idx, ['Statut']);   /* 06.10.2026 : statut GE-Invest du projet, pour la carte de la priorisation */
     jA = col(idx, ['Avancement global']);   /* 18.10.2026 : phase SIA du projet, engagement du sous-site */
+    /* 05.11.2026 : dates de livraison, pour l'apport des projets en cours (apportProjets) ; facultatives */
+    var jMS = col(idx, ['Date mise en service GeI', 'Date mise en service']), jFR = col(idx, ['Date fin ré-estimée']), jFI = col(idx, ['Date de fin initiale']);
     /* colonne absente : signalée (26.10.2026) ; sans « Objet (actif) », aucun projet n'est rattachable */
     [[jO, 'Objet (actif)', 'aucun projet rattaché aux sous-sites'], [jR, 'Nom responsable suivi', 'responsables de projet vides'],
      [jS, 'Statut', 'engagement non calculable'], [jA, 'Avancement global', 'engagement non calculable']].forEach(function (c) {
@@ -1577,7 +1620,7 @@ var PTE_CONTRAT = (function () {
       vus[n + '|' + ss] = true;
       rp = txt(cell(r, jR));
       (parSousSite[ss] = parSousSite[ss] || []).push({ numero: n, nom: txt(cell(r, jL)), rp: rp, statut: txt(cell(r, jS)),
-        avancement: num(cell(r, jA)) });
+        avancement: num(cell(r, jA)), miseEnService: cell(r, jMS), finReestimee: cell(r, jFR), finInitiale: cell(r, jFI) });
     }
     return parSousSite;
   }
@@ -1909,7 +1952,8 @@ var PTE_CONTRAT = (function () {
   return { lire: lire, norm: norm, cibleAgent: cibleAgent, CORRESPONDANCE_AGENT: CORRESPONDANCE_AGENT, CAD_GENERIQUE: CAD_GENERIQUE,
            empreinte: empreinte, comparer: comparer,
            calcTI: calcTI, classeIDC: classeIDC, classeVetuste: classeVetuste, TI_SEUILS: TI_SEUILS, TI_LABELS: TI_LABELS,
-           version: '2026-10-27' };
+           apportProjets: apportProjets, phaseApport: phaseApport, anneeDate: anneeDate, PHASES_APPORT: PHASES_APPORT,
+           version: '2026-11-05' };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = PTE_CONTRAT;
 /* </PTE-MODULE pte-contrat.js> */
@@ -1935,6 +1979,7 @@ var PTE_COMMUN = (function () {
   var LS_META = 'pte.classeur.meta.v1';      /* {nom, date, taille, empreinte, outil} */
   var LS_CLASSEMENT = 'pte.classement.v1';   /* {date, source, lignes:[{num, rang, objectifs:[...], ...}]} */
   var LS_QUESTIONS = 'pte.questions.v1';     /* revue : questions du mois (voir SPEC) */
+  var LS_TRAJECTOIRES = 'pte.trajectoires.v1';   /* {date, source, objectifs:{co2:{reste, unite, ...}, ...}} — 05.11.2026 */
 
   /* ---------- où sommes-nous ? (kDrive ou GitHub Pages) ---------- */
   /* Les quatre pages vivent dans deux arborescences différentes ; on reconnaît
@@ -2128,6 +2173,16 @@ var PTE_COMMUN = (function () {
     try { localStorage.setItem(LS_CLASSEMENT, JSON.stringify({ date: new Date().toISOString(), source: source || '', lignes: lignes })); return true; } catch (e) { return false; }
   }
   function lireClassement() { try { return JSON.parse(localStorage.getItem(LS_CLASSEMENT) || 'null'); } catch (e) { return null; } }
+
+  /* ---------- reste à faire par objectif, publié par la priorisation (05.11.2026) ----------
+     Décision d'Achim : la « Contribution 2030 » de la revue se rapporte au même écart que la Vue d'ensemble de la
+     priorisation (mesuré de l'année des mesures → cible 2030, lue comme la priorisation la lit) ; la revue ne
+     recalcule ni la cible ni l'écart. objectifs = { co2|th|ren|elec|eau|pv|veg : { reste, unite, mesure, cible,
+     annee, cibleMode, chemin } } ; valeurs null quand inconnues, jamais 0 par défaut. */
+  function publierTrajectoires(objectifs, source) {
+    try { localStorage.setItem(LS_TRAJECTOIRES, JSON.stringify({ date: new Date().toISOString(), source: source || '', objectifs: objectifs })); return true; } catch (e) { return false; }
+  }
+  function lireTrajectoires() { try { return JSON.parse(localStorage.getItem(LS_TRAJECTOIRES) || 'null'); } catch (e) { return null; } }
 
   /* ---------- questions du mois (revue) ---------- */
   function lireQuestions() { try { return JSON.parse(localStorage.getItem(LS_QUESTIONS) || 'null') || { mois: {} }; } catch (e) { return { mois: {} }; } }
@@ -2545,6 +2600,9 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "05.11.2026", "objet": "revue", "version": "v0.45", "titre": "Contribution 2030 dans le temps, alignée sur la priorisation", "points": ["Contribution 2030 : une barre par objectif, part du reste à faire couverte par les projets en cours — acquis (chantier ou mise en service, livré d'ici 2030), encore en études, livré après 2030. Un clic sur un objectif montre ses sous-sites un par un (année de livraison × avancement, taille = gain).", "Écart : ce qui reste à faire d'ici 2030 (mesuré de l'année des mesures → cible 2030, lue comme dans la priorisation), publié par la priorisation, à la place de l'écart 2005 → 2030 entier en cible absolue. Le CO₂ passait pour couvert à 32 % quand 99 % du chemin était déjà fait.", "Gains : ceux du classement de la priorisation (variante CECB+ A, B ou C, facteurs de la feuille Data), à la place de la colonne « CO2 projeté » de Plan_PTE.", "Fiches sous-site et projet : bloc « Gains attendus » (CO₂, thermique, et les autres objectifs auxquels le sous-site contribue), lu dans le classement de la priorisation ; « Gain thermique » et « Gain CO₂ réel », calculés autrement, sont retirés."]},
+    {"date": "05.11.2026", "objet": "priorisation", "version": "v2.36", "titre": "Projets en cours sur les trajectoires, projection agrandie, IDC", "points": ["IDC : projection 2025 → 2030, IDC moyen du parc et nombre de sous-sites au-dessus de 450 MJ/m²·an (cible 0) — portefeuille, projets en cours (acquis, si les études aboutissent), tous les projets repérés. « IDC après les projets repérés » ne compte plus un IDC projeté vide pour 0.", "Vue d'ensemble : bascule « Depuis 2005 / Projection 2025 → 2030 » au-dessus des graphiques (un clic sur la zone de projection l'ouvre aussi) ; la projection agrandie resserre l'échelle et nomme chaque courbe en bout de ligne. Légendes en lignes : courbe, valeur fin 2030, écart ; sous chaque graphique, une « Légende du graphique » discrète (avec celle du ruban), puis les « Chiffres clés » au premier plan, sur fond teinté.", "Vue d'ensemble, graphiques CO₂, thermique, électricité et eau : deux traits magenta pour les projets GE-Invest en cours — acquis (chantier ou mise en service) et « si les études aboutissent » —, chaque sous-site compté l'année où son dernier projet en cours est livré.", "Le reste à faire de chaque objectif est publié avec le classement, pour la « Contribution 2030 » de la revue."]},
+    {"date": "05.11.2026", "objet": "priorisation", "version": "v2.35", "titre": "Affectation retrouvée sur des données anciennes", "points": ["Données gardées d'un import antérieur au 03.11.2026 (sans affectation) : relues depuis le classeur commun de Pilotage PTE ; sans classeur commun, un bandeau demande de réimporter. La section Affectation du menu Périmètre réapparaît."]},
     {"date": "04.11.2026", "objet": "revue", "version": "v0.44", "titre": "À traiter par sous-site, organigramme revu, Synthèse allégée", "points": ["« À traiter en revue » : par sous-site ou par projet, comme la heatmap (même bascule) ; sous-sites nommés comme dans le Classement de la priorisation, sans l'affectation, partout dans la revue.", "Tableau « Sous-sites » : tri croissant ou décroissant par un clic sur le titre d'une colonne. Partie « Tout » du Reporting retirée (doublon).", "Organigramme : nature selon le numéro, délégation = RP de GE-Invest, non modifiables ; service retiré ; « Masquer » à la place du crayon ; titre du portefeuille non modifiable ; explications derrière le « i ». Anciennes saisies de nature, délégation et service effacées.", "Synthèse : « Vue par portefeuille » retirée (doublon) ; les blocs de la vue direction suivent les filtres ; « Capacité » ne compte que les projets actifs ; « Top 10 rouges » vide remplacé par sa cause ; menu Périmètre repliable ; fiche projet : événements lus dans GE-Invest sans suivi du mois."]},
     {"date": "04.11.2026", "objet": "priorisation", "version": "v2.34", "titre": "Menu Périmètre repliable, Plotly plus chargé", "points": ["Menu Périmètre : sections Plan, Affectation et Portefeuilles repliables, avec le nombre de cases cochées, et champ de recherche.", "Plotly (≈ 1 Mo) n'est plus téléchargé : il ne servait qu'au sous-onglet « Distribution », retiré ; il revient avec lui."]},
     {"date": "04.11.2026", "objet": "simulation", "version": "v3.17", "titre": "Menu Périmètre repliable", "points": ["Menu Périmètre : sections Plan et Affectation repliables, avec le nombre de cases cochées, et champ de recherche."]},
@@ -2790,7 +2848,7 @@ var PTE_COMMUN = (function () {
     });
   }
 
-  return { LS_META: LS_META, LS_CLASSEMENT: LS_CLASSEMENT, LS_QUESTIONS: LS_QUESTIONS, LS_THEME: LS_THEME, LS_CONTROLE: LS_CONTROLE,
+  return { LS_META: LS_META, LS_CLASSEMENT: LS_CLASSEMENT, LS_QUESTIONS: LS_QUESTIONS, LS_TRAJECTOIRES: LS_TRAJECTOIRES, LS_THEME: LS_THEME, LS_CONTROLE: LS_CONTROLE,
            echapperHtml: echapperHtml, normEntete: normEntete, couleursFenetres: couleursFenetres,
            controleImport: controleImport,
            themeCourant: themeCourant, appliquerTheme: appliquerTheme, basculerTheme: basculerTheme,
@@ -2802,6 +2860,7 @@ var PTE_COMMUN = (function () {
            demanderEffacerClasseur: demanderEffacerClasseur,
            lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,
            publierClassement: publierClassement, lireClassement: lireClassement,
+           publierTrajectoires: publierTrajectoires, lireTrajectoires: lireTrajectoires,
            lireQuestions: lireQuestions, ecrireQuestions: ecrireQuestions,
            dateCourte: dateCourte, dateHeure: dateHeure, texteBadge: texteBadge, nomPropre: nomPropre,
            ENVELOPPE_VOTEE: ENVELOPPE_VOTEE, TOTAUX_OCBA: TOTAUX_OCBA, situationProgramme: situationProgramme, mchf: mchf,

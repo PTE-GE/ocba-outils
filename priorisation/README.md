@@ -49,6 +49,11 @@ de collaborateur réels ne figurent dans le fichier.
   l'objectif étaient réalisés, quel que soit leur coût (v2.29, 28.10.2026). Le photovoltaïque
   et le renouvelable sont projetés comme les autres ; l'Arbitrage ne choisissant pas
   d'installation photovoltaïque, le PV n'a pas de courbe du portefeuille.
+  Les projets GE-Invest en cours y figurent aussi (v2.36) : ce qui est acquis (chantier ou mise
+  en service) et ce que donneraient les études si elles aboutissent, chaque sous-site compté
+  l'année où son dernier projet en cours est livré. Une bascule « Depuis 2005 / Projection
+  2025 → 2030 » (ou un clic sur la zone de projection) agrandit la projection. L'IDC a sa
+  projection : IDC moyen du parc et sous-sites au-dessus de 450 MJ/m²·an.
 - **Classement** — objectif par objectif, du **coût de l'unité gagnée** le plus faible au plus
   élevé (CHF par kg de CO₂, par kWh, par m³…), sur la durée de vie retenue. Chaque ligne montre
   l'agent de chauffage actuel **et la substitution prévue** — c'est cette bascule qui produit le

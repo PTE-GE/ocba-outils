@@ -44,6 +44,12 @@ d'œil, du programme jusqu'au sous-site ?**
   portefeuille, complétude des données. Sans fiche de suivi pour le mois de revue,
   avancement, fin ré-estimée, mise en service et événements sont lus dans l'extraction
   GE-Invest, et la source est dite (v0.43).
+- **Contribution 2030** (v0.45) : une barre par objectif — part du reste à faire d'ici 2030,
+  tel que la priorisation le publie, couverte par les projets en cours : acquis (chantier ou
+  mise en service, livré d'ici 2030), encore en études, livré après 2030. Un clic montre les
+  sous-sites un par un (année de livraison × avancement, taille = gain). Gains et reste à faire
+  sont ceux de l'outil de priorisation, ouvert avec le classeur dans le même navigateur ; les
+  fiches affichent les mêmes gains (« Gains attendus »).
 - **Vue direction** dans Reporting › Synthèse (v0.43, ex-onglet Parc) : contribution 2030,
   capacité (projets actifs par responsable de portefeuille et par responsable de projet),
   couverture CECB+ et top 10 rouges, sur le même périmètre et les mêmes filtres que les
@@ -72,5 +78,5 @@ personne choisit d'envoyer au serveur des saisies. Les données importées reste
 navigateur (IndexedDB ; décisions dans le stockage local) ; la corbeille, à côté de l'état
 des données, les efface.
 
-Version : v0.44 — 04.11.2026 (historique : lien de version en pied de page). Testée par une
-suite de 685 contrôles automatisés (dépôt de travail interne).
+Version : v0.45 — 05.11.2026 (historique : lien de version en pied de page). Testée par une
+suite de 700 contrôles automatisés (dépôt de travail interne).
