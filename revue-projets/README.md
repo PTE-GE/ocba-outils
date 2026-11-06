@@ -57,9 +57,12 @@ d'œil, du programme jusqu'au sous-site ?**
 - **Organigramme** (v0.39) : pour un responsable de portefeuille, les sites rangés par type
   d'intervention, chaque projet GE-Invest avec sa nature (code du numéro, objectif du
   PL 13210) et sa phase SIA en couleur, et les interventions identifiées par l'audit CECB+
-  sans projet. La délégation est le responsable de projet de GE-Invest, la nature suit le
-  numéro : ni l'une ni l'autre ne se modifie ici (v0.44). AMO du portefeuille, notes de site et
-  lignes masquées : saisies partagées comme les autres. Impression A3.
+  sans projet. Le RP est le responsable de projet de GE-Invest, la nature suit le
+  numéro : ni l'un ni l'autre ne se modifie ici (v0.44). AMO du portefeuille, notes de site et
+  lignes masquées : saisies partagées comme les autres. **« Disposer »** (v0.46) : les tuiles de
+  site se rangent librement (glisser-déposer ou flèches), dans 2 à 5 colonnes nommées ;
+  disposition personnelle, par portefeuille, gardée dans le navigateur et dans le fichier
+  « Mes saisies », jamais partagée. Impression A3.
 - **Sémaphores par sous-site** (v0.41) : heatmap de la vue Portefeuille « Par sous-site », dépliable
   vers les projets ; chaque volet prend le pire des projets renseignés. Le Reporting donne aussi la
   répartition des sous-sites, et « À traiter en revue » suit la même bascule Sous-sites / Projets
@@ -68,6 +71,12 @@ d'œil, du programme jusqu'au sous-site ?**
 - **Périmètre** : Plan, **affectation** (colonne Affectation_AB de Plan_PTE, v0.41), portefeuilles
   et responsables de projet ; Plan et affectation sont communs aux outils. Le menu se replie par
   section et a un champ de recherche, comme dans la priorisation et la simulation (v0.44).
+- **Mois de revue** (v0.46) : le dernier mois des fiches de suivi de l'extraction, sans
+  sélecteur ; la carte Sémaphores signale les projets sans fiche pour ce mois, par âge de leur
+  dernière fiche. La bande « 4 mois » de la heatmap garde les mois précédents.
+- **Diagnostic polluants** (v0.46, colonne « Diag polluants » de Plan_PTE) : dans les fiches,
+  en colonne triable du tableau des sous-sites et en question automatique pour un projet au
+  stade projet de l'ouvrage ou plus loin sans diagnostic complet à jour.
 
 ## Fonctionnement
 
@@ -78,5 +87,5 @@ personne choisit d'envoyer au serveur des saisies. Les données importées reste
 navigateur (IndexedDB ; décisions dans le stockage local) ; la corbeille, à côté de l'état
 des données, les efface.
 
-Version : v0.45 — 05.11.2026 (historique : lien de version en pied de page). Testée par une
-suite de 700 contrôles automatisés (dépôt de travail interne).
+Version : v0.46 — 06.11.2026 (historique : lien de version en pied de page). Testée par une
+suite de 701 contrôles automatisés (dépôt de travail interne).

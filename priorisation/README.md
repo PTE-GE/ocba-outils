@@ -63,8 +63,10 @@ de collaborateur réels ne figurent dans le fichier.
   Sa vue **Matrice urgence × faisabilité** croise la priorité et la faisabilité (v2.31) :
   maturité (phase SIA du projet GE-Invest, /50) + préparation (variante CECB+, chauffage défini,
   montant chiffré, montant prévu, /25) + contraintes (patrimoine, risques GE-Invest, santé du
-  projet, /25). Trois curseurs règlent les poids, non mémorisés ; un clic sur une case liste
-  ses sous-sites.
+  projet, diagnostic polluants depuis la v2.37, /25). Trois curseurs règlent les poids, non
+  mémorisés ; un clic sur une case liste ses sous-sites. Le diagnostic polluants (colonne
+  « Diag polluants ») retire peu : aucun 3, partiel 2, complet à mettre à jour 1, complet à
+  jour 0 ; une case vide ne retire rien mais baisse la fiabilité (sur 6 données).
   La colonne « **% de l'écart comblé** » dit, à chaque rang, quelle part de l'écart **restant**
   le cumul a couverte. Ce n'est pas le pourcentage de la tuile, qui mesure le chemin parcouru
   **depuis 2005** — voir « Deux pourcentages, deux dénominateurs » ci-dessous.

@@ -1367,8 +1367,8 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 <div class="cd">
 <div class="wt op" onclick="tglS('ufB','ufCh')"><h3 style="margin:0;border:none;padding:0">Matrice Urgence × Faisabilité</h3><span class="ch op" id="ufCh">▼</span></div>
 <div class="wb op" id="ufB"><div style="padding-top:8px">
-<p style="font-size:.72rem;color:var(--ink3);margin-bottom:4px">Quadrant <b>haut-droite</b> = urgent ET faisable → à engager en premier. Faisabilité = <b>maturité</b> (phase SIA du projet GE-Invest) + <b>préparation</b> (variante CECB+, chauffage défini, montant chiffré, montant prévu) + <b>contraintes</b> (patrimoine, risques et santé des projets, en retrait). Une donnée absente ne compte ni pour ni contre : elle baisse la fiabilité. Un clic sur une case liste ses sous-sites.</p>
-<details class="howto"><summary>Comment lire la matrice</summary><div><p><b>Les deux axes.</b> En hauteur, la <b>priorité</b> : la meilleure place du sous-site dans les classements par objectif (100 = tête de classement). En largeur, la <b>faisabilité</b> : la capacité à réaliser les travaux d'ici 2030. Chaque case compte les sous-sites qui tombent à ce croisement ; la case encadrée de vert, en haut à droite, réunit ceux qui sont à la fois prioritaires et faisables (80 ou plus sur les deux axes).</p><p><b>La faisabilité</b> additionne trois blocs, chacun ramené à sa part puis pondéré par les curseurs :</p><table class="m-feas-tbl"><thead><tr><th>Bloc</th><th>Ce qui compte</th><th>Points</th></tr></thead><tbody><tr><td><b>Maturité</b> (sur 50)</td><td>Phase SIA du projet GE-Invest « en cours » le plus avancé du sous-site, déduite de l'« Avancement global » (table GPR.6MO.04, comme la revue de projets)</td><td>aucun projet 0 · 21 : 10 · 31 : 20 · 32 : 28 · 33 : 34 · 41 : 40 · 51 : 46 · 52 et 53 : 50</td></tr><tr><td><b>Préparation</b> (sur 25)</td><td>Variante CECB+ retenue (A, B ou C) ; audit sans variante précisée ou en cours</td><td>10 ; 5</td></tr><tr><td></td><td>Chauffage de substitution défini — « == » (maintien) compris, pas « ??? », « --- » ni vide</td><td>5</td></tr><tr><td></td><td>Montant chiffré dans le référentiel du menu « Montants »</td><td>5</td></tr><tr><td></td><td>Montant prévu dans « Prévisionnel PTE GEI »</td><td>5</td></tr><tr><td><b>Contraintes</b> (25, en retrait)</td><td>Patrimoine : classé · zone ou périmètre protégé · inventaire · ensembles 19e-20e · objets d'intérêt</td><td>−12 · −8 · −6 · −4 · −2</td></tr><tr><td></td><td>Risque ouvert le plus sévère des projets (feuille <code>GEI_Risques</code>, sévérité sur 16) ou, à défaut, « Évaluation des risques » de GE-Invest — le plus fort des deux</td><td>12 et plus : −10 · 8-9 : −7 · 4-6 : −4 · 1-3 : −1 · Majeur : −10 · Moyen : −5</td></tr><tr><td></td><td>Santé du projet : performance « Critique » ou délais « En retard » ; « À surveiller »</td><td>−5 ; −2</td></tr></tbody></table><p><b>Les poids.</b> Par défaut maturité 50, préparation 25, contraintes 25. Les curseurs (ou les cases de saisie) les modifient pour voir comment la matrice réagit ; « Réinitialiser » revient au réglage de référence. Les poids ne sont pas mémorisés : chaque ouverture de la page repart du même réglage, pour que tous lisent la même matrice.</p><p><b>Une donnée absente</b> ne compte ni pour ni contre : un projet sans risque saisi n'est pas un projet sans risque. Elle baisse en revanche la <b>fiabilité</b>, de 0 à 5 : nombre de données connues parmi le projet GE-Invest, l'audit CECB+, le chauffage de substitution, le patrimoine et les risques saisis. « Ce que la matrice compte » dit combien de sous-sites ont une fiabilité faible (2 sur 5 ou moins).</p><p><b>Les sous-sites en travaux</b> (phase 51 et plus) ont la faisabilité la plus haute, mais la décision est déjà prise. La case à cocher les masque pour ne lire que ce qui reste à engager.</p><p><b>La liste.</b> Un clic sur une case (ou Entrée) affiche ses sous-sites sous la matrice, avec le détail de leur faisabilité ; un second clic la referme. Chaque en-tête de colonne trie la liste ; « Revue » ouvre la revue de projets sur le sous-site.</p><p><b>Ce qui n'est pas compté.</b> Les sous-sites qu'aucun objectif ne classe et ceux exclus du programme ne sont pas dans la matrice ; leur nombre est indiqué à droite.</p></div></details>
+<p style="font-size:.72rem;color:var(--ink3);margin-bottom:4px">Quadrant <b>haut-droite</b> = urgent ET faisable → à engager en premier. Faisabilité = <b>maturité</b> (phase SIA du projet GE-Invest) + <b>préparation</b> (variante CECB+, chauffage défini, montant chiffré, montant prévu) + <b>contraintes</b> (patrimoine, risques et santé des projets, diagnostic polluants, en retrait). Une donnée absente ne compte ni pour ni contre : elle baisse la fiabilité. Un clic sur une case liste ses sous-sites.</p>
+<details class="howto"><summary>Comment lire la matrice</summary><div><p><b>Les deux axes.</b> En hauteur, la <b>priorité</b> : la meilleure place du sous-site dans les classements par objectif (100 = tête de classement). En largeur, la <b>faisabilité</b> : la capacité à réaliser les travaux d'ici 2030. Chaque case compte les sous-sites qui tombent à ce croisement ; la case encadrée de vert, en haut à droite, réunit ceux qui sont à la fois prioritaires et faisables (80 ou plus sur les deux axes).</p><p><b>La faisabilité</b> additionne trois blocs, chacun ramené à sa part puis pondéré par les curseurs :</p><table class="m-feas-tbl"><thead><tr><th>Bloc</th><th>Ce qui compte</th><th>Points</th></tr></thead><tbody><tr><td><b>Maturité</b> (sur 50)</td><td>Phase SIA du projet GE-Invest « en cours » le plus avancé du sous-site, déduite de l'« Avancement global » (table GPR.6MO.04, comme la revue de projets)</td><td>aucun projet 0 · 21 : 10 · 31 : 20 · 32 : 28 · 33 : 34 · 41 : 40 · 51 : 46 · 52 et 53 : 50</td></tr><tr><td><b>Préparation</b> (sur 25)</td><td>Variante CECB+ retenue (A, B ou C) ; audit sans variante précisée ou en cours</td><td>10 ; 5</td></tr><tr><td></td><td>Chauffage de substitution défini — « == » (maintien) compris, pas « ??? », « --- » ni vide</td><td>5</td></tr><tr><td></td><td>Montant chiffré dans le référentiel du menu « Montants »</td><td>5</td></tr><tr><td></td><td>Montant prévu dans « Prévisionnel PTE GEI »</td><td>5</td></tr><tr><td><b>Contraintes</b> (25, en retrait)</td><td>Patrimoine : classé · zone ou périmètre protégé · inventaire · ensembles 19e-20e · objets d'intérêt</td><td>−12 · −8 · −6 · −4 · −2</td></tr><tr><td></td><td>Risque ouvert le plus sévère des projets (feuille <code>GEI_Risques</code>, sévérité sur 16) ou, à défaut, « Évaluation des risques » de GE-Invest — le plus fort des deux</td><td>12 et plus : −10 · 8-9 : −7 · 4-6 : −4 · 1-3 : −1 · Majeur : −10 · Moyen : −5</td></tr><tr><td></td><td>Santé du projet : performance « Critique » ou délais « En retard » ; « À surveiller »</td><td>−5 ; −2</td></tr><tr><td></td><td>Diagnostic polluants (colonne « Diag polluants ») : aucun · partiel · complet à mettre à jour · complet à jour ; vide : inconnu, sans malus. Il dit si un diagnostic existe, pas s'il y a des polluants</td><td>−3 · −2 · −1 · 0</td></tr></tbody></table><p><b>Les poids.</b> Par défaut maturité 50, préparation 25, contraintes 25. Les curseurs (ou les cases de saisie) les modifient pour voir comment la matrice réagit ; « Réinitialiser » revient au réglage de référence. Les poids ne sont pas mémorisés : chaque ouverture de la page repart du même réglage, pour que tous lisent la même matrice.</p><p><b>Une donnée absente</b> ne compte ni pour ni contre : un projet sans risque saisi n'est pas un projet sans risque. Elle baisse en revanche la <b>fiabilité</b>, de 0 à 6 : nombre de données connues parmi le projet GE-Invest, l'audit CECB+, le chauffage de substitution, le patrimoine, les risques saisis et le diagnostic polluants. « Ce que la matrice compte » dit combien de sous-sites ont une fiabilité faible (2 sur 6 ou moins).</p><p><b>Les sous-sites en travaux</b> (phase 51 et plus) ont la faisabilité la plus haute, mais la décision est déjà prise. La case à cocher les masque pour ne lire que ce qui reste à engager.</p><p><b>La liste.</b> Un clic sur une case (ou Entrée) affiche ses sous-sites sous la matrice, avec le détail de leur faisabilité ; un second clic la referme. Chaque en-tête de colonne trie la liste ; « Revue » ouvre la revue de projets sur le sous-site.</p><p><b>Ce qui n'est pas compté.</b> Les sous-sites qu'aucun objectif ne classe et ceux exclus du programme ne sont pas dans la matrice ; leur nombre est indiqué à droite.</p></div></details>
 <div class="uf-ctl" id="ufCtl">
 <span class="uf-w"><label for="ufWm">Maturité</label><input type="range" id="ufWm" min="0" max="100" step="5" value="50"><input type="number" id="ufWmN" min="0" max="100" step="5" value="50" aria-label="Poids de la maturité"></span>
 <span class="uf-w"><label for="ufWp">Préparation</label><input type="range" id="ufWp" min="0" max="100" step="5" value="25"><input type="number" id="ufWpN" min="0" max="100" step="5" value="25" aria-label="Poids de la préparation"></span>
@@ -1720,7 +1720,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.36 · 05.11.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.37 · 06.11.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -3132,7 +3132,10 @@ var PTE_COMMUN = (function () {
         var n = 0; if (v) { for (var k in v) if (v[k] && v[k].length) n += v[k].length; }
         return n + ' mesure(s) simulée(s)'; } },
     { outil: 'revue', cle: LS_QUESTIONS, tout: true,
-      resume: function (o) { var m = o && o.mois ? Object.keys(o.mois).length : 0; return m + ' mois de questions'; } }
+      resume: function (o) { var m = o && o.mois ? Object.keys(o.mois).length : 0; return m + ' mois de questions'; } },
+    /* disposition personnelle de l'organigramme (06.11.2026) : réglage du fichier « Mes saisies », jamais consolidé */
+    { outil: 'revue', cle: 'pte.revue.organigramme.dispo.v1', tout: true,
+      resume: function (o) { var n = o ? Object.keys(o).length : 0; return 'disposition de l’organigramme (' + n + ' portefeuille' + (n > 1 ? 's' : '') + ')'; } }
   ];
   function lireJSON(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
   /* Réglage qu'un fichier de saisies peut faire reprendre (26.10.2026) : les clés et champs de l'export,
@@ -3429,6 +3432,8 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "06.11.2026", "objet": "revue", "version": "v0.46", "titre": "Organigramme à disposer, diagnostic polluants, mois de revue retiré", "points": ["Organigramme : bascule « Disposer » — tuiles de site déplacées par glisser-déposer ou par les flèches, 2 à 5 colonnes, titres de colonne libres ; disposition personnelle par portefeuille, gardée dans ce navigateur et dans le fichier « Mes saisies » (jamais partagée) ; « Délégation » devient « RP ».", "Diag polluants (Plan_PTE) : ligne dans les fiches sous-site et projet, colonne triable du tableau des sous-sites, question automatique pour un projet au stade projet de l'ouvrage ou plus loin sans diagnostic complet à jour.", "Sélecteur « Mois de revue » supprimé : le mois de revue est le dernier mois des fiches de suivi de l'extraction ; la bande « 4 mois » reste ; la carte Sémaphores signale les projets sans fiche pour ce mois, par âge de leur dernière fiche."]},
+    {"date": "06.11.2026", "objet": "priorisation", "version": "v2.37", "titre": "Diagnostic polluants dans la faisabilité", "points": ["Colonne « Diag polluants » de Plan_PTE lue : contrainte légère de la matrice urgence × faisabilité (aucun −3, partiel −2, complet à mettre à jour −1, complet à jour 0 ; vide = inconnu, sans malus) ; fiabilité sur 6 données.", "Ligne « Diagnostic polluants » dans la fiche du sous-site ; complétude dans l'onglet Données ; recherche globale.", "Copie gardée sans ce champ : relue depuis le classeur commun, comme l'affectation (v2.35)."]},
     {"date": "05.11.2026", "objet": "revue", "version": "v0.45", "titre": "Contribution 2030 dans le temps, alignée sur la priorisation", "points": ["Contribution 2030 : une barre par objectif, part du reste à faire couverte par les projets en cours — acquis (chantier ou mise en service, livré d'ici 2030), encore en études, livré après 2030. Un clic sur un objectif montre ses sous-sites un par un (année de livraison × avancement, taille = gain).", "Écart : ce qui reste à faire d'ici 2030 (mesuré de l'année des mesures → cible 2030, lue comme dans la priorisation), publié par la priorisation, à la place de l'écart 2005 → 2030 entier en cible absolue. Le CO₂ passait pour couvert à 32 % quand 99 % du chemin était déjà fait.", "Gains : ceux du classement de la priorisation (variante CECB+ A, B ou C, facteurs de la feuille Data), à la place de la colonne « CO2 projeté » de Plan_PTE.", "Fiches sous-site et projet : bloc « Gains attendus » (CO₂, thermique, et les autres objectifs auxquels le sous-site contribue), lu dans le classement de la priorisation ; « Gain thermique » et « Gain CO₂ réel », calculés autrement, sont retirés."]},
     {"date": "05.11.2026", "objet": "priorisation", "version": "v2.36", "titre": "Projets en cours sur les trajectoires, projection agrandie, IDC", "points": ["IDC : projection 2025 → 2030, IDC moyen du parc et nombre de sous-sites au-dessus de 450 MJ/m²·an (cible 0) — portefeuille, projets en cours (acquis, si les études aboutissent), tous les projets repérés. « IDC après les projets repérés » ne compte plus un IDC projeté vide pour 0.", "Vue d'ensemble : bascule « Depuis 2005 / Projection 2025 → 2030 » au-dessus des graphiques (un clic sur la zone de projection l'ouvre aussi) ; la projection agrandie resserre l'échelle et nomme chaque courbe en bout de ligne. Légendes en lignes : courbe, valeur fin 2030, écart ; sous chaque graphique, une « Légende du graphique » discrète (avec celle du ruban), puis les « Chiffres clés » au premier plan, sur fond teinté.", "Vue d'ensemble, graphiques CO₂, thermique, électricité et eau : deux traits magenta pour les projets GE-Invest en cours — acquis (chantier ou mise en service) et « si les études aboutissent » —, chaque sous-site compté l'année où son dernier projet en cours est livré.", "Le reste à faire de chaque objectif est publié avec le classement, pour la « Contribution 2030 » de la revue."]},
     {"date": "05.11.2026", "objet": "priorisation", "version": "v2.35", "titre": "Affectation retrouvée sur des données anciennes", "points": ["Données gardées d'un import antérieur au 03.11.2026 (sans affectation) : relues depuis le classeur commun de Pilotage PTE ; sans classeur commun, un bandeau demande de réimporter. La section Affectation du menu Périmètre réapparaît."]},
@@ -4019,6 +4024,7 @@ var PTE_COMMUN = (function () {
     if (cle === 'ocba_revue_params_v1') return 'seuils des sémaphores de la revue';
     if (cle === 'pte-simulation-v3') { var n = 0, v = c && c.variantes; if (v) for (var k in v) if (v[k] && v[k].length) n += v[k].length; return n + ' mesure(s) simulée(s)'; }
     if (cle === C.LS_QUESTIONS) return (c && c.mois ? Object.keys(c.mois).length : 0) + ' mois de questions de la revue';
+    if (cle === 'pte.revue.organigramme.dispo.v1') { var np = c ? Object.keys(c).length : 0; return 'disposition de l’organigramme de la revue (' + np + ' portefeuille' + (np > 1 ? 's' : '') + ')'; }
     return cle;
   }
 
@@ -7204,9 +7210,10 @@ function patMalus(pat){if(!pat)return 0;if(pat.includes('Classé'))return -50;if
    · CONTRAINTES (/25, on retire) — patrimoine (−12 à −2), risque ouvert le plus
      sévère des projets (GEI_Risques, sur 16) ou, à défaut, « Évaluation des
      risques » (Majeur −10, Moyen −5), santé du projet (Critique ou En retard −5,
-     À surveiller −2).
+     À surveiller −2), diagnostic polluants (aucun −3, partiel −2, complet à mettre à
+     jour −1, 06.11.2026).
    Une donnée absente ne donne ni bonus ni malus : elle baisse la FIABILITÉ
-   (0 à 5 données connues : projet, CECB+, chauffage, patrimoine, risques).
+   (0 à 6 données connues : projet, CECB+, chauffage, patrimoine, risques, diagnostic polluants).
    Ancienne règle (03.09.2026) : CECB+ 33 + substitution 33 + montant 34 −
    patrimoine — dix-huit valeurs possibles, l'avancement réel ignoré.
    ================================================================ */
@@ -7216,6 +7223,15 @@ function phaseFeas(av){if(av==null||av===''||isNaN(av))return null;av=+av;
 const FW_DEF={m:50,p:25,c:25};let FW=Object.assign({},FW_DEF);
 /* « == » (maintien du chauffage actuel) est une solution définie (Achim, 28.10.2026) ; « ??? », « --- » et le vide ne le sont pas */
 function chauffageDefini(h){const v=String(h==null?'':h).trim();return !!v&&!/^[?\-\s.]*$/.test(v)}
+/* Diagnostic polluants (colonne « Diag polluants », 06.11.2026, décision d'Achim) : présence d'un diagnostic, pas de
+   polluants. Contrainte légère : aucun −3, partiel −2, complet à mettre à jour −1, complet à jour 0 ; vide = inconnu. */
+const DIAG_NIV={aucun:{p:3,lib:'aucun diagnostic',court:'Aucun'},partiel:{p:2,lib:'diagnostic partiel',court:'Partiel'},
+  maj:{p:1,lib:'diagnostic complet à mettre à jour',court:'À mettre à jour'},ajour:{p:0,lib:'diagnostic complet à jour',court:'À jour'}};
+function diagNiveau(v){const t=gsNorm(String(v==null?'':v).replace(/[\u00a0\u202f]/g,' ')).trim();if(!t)return null;
+  if(/^aucun/.test(t))return 'aucun';if(/partiel/.test(t))return 'partiel';
+  if(/mettre a jour|a mettre|a actualiser/.test(t))return 'maj';if(/a jour/.test(t))return 'ajour';return null}
+function diagPoints(v){const k=diagNiveau(v);return k?DIAG_NIV[k].p:0}
+function diagLib(v){const k=diagNiveau(v);return k?DIAG_NIV[k].lib:(v==null?'colonne absente du classeur':'non renseigné')}
 function patPoints(pat){const p=String(pat||'');
   if(/Classé/i.test(p))return 12;if(/Zone prot|Périmètre naturel/i.test(p))return 8;if(/Inventaire/i.test(p))return 6;
   if(/Ensembles/i.test(p))return 4;if(/Objets|intérêt/i.test(p))return 2;return 0}
@@ -7237,12 +7253,13 @@ function feasDetail(s){
     else if(/surveiller/i.test(x.perf||'')||/surveiller/i.test(x.delais||'')){if(sante<2){sante=2;santeTxt='à surveiller'}}});
   const sevP=sev==null?0:(sev>=12?10:(sev>=8?7:(sev>=4?4:1)));
   const riskP=Math.max(sevP,evalP);
-  const cont=Math.max(0,25-patP-riskP-sante);
+  const diagP=diagPoints(s.diag);
+  const cont=Math.max(0,25-patP-riskP-sante-diagP);
   const tw=(FW.m+FW.p+FW.c)||1;
   const f=100*(FW.m*mat/50+FW.p*prep/25+FW.c*cont/25)/tw;
-  const connus=[pr.length>0,st!=='none',chOk,String(s.pat||'').trim().length>1,risqueConnu];
+  const connus=[pr.length>0,st!=='none',chOk,String(s.pat||'').trim().length>1,risqueConnu,!!diagNiveau(s.diag)];
   return{f:Math.max(0,Math.min(100,f)),mat:mat,prep:prep,cont:cont,phase:ph,nProjets:pr.length,
-    sev:sev,nRisques:nR,evalTxt:evalTxt,santeTxt:santeTxt,patP:patP,riskP:riskP,sante:sante,
+    sev:sev,nRisques:nR,evalTxt:evalTxt,santeTxt:santeTxt,patP:patP,riskP:riskP,sante:sante,diagP:diagP,
     fiab:connus.filter(Boolean).length,travaux:ph==='51'||ph==='52'||ph==='53',
     rp:(pr.find(function(x){return x.rp})||{}).rp||''}}
 function feasib(s){return feasDetail(s).f}
@@ -7455,6 +7472,7 @@ function importFromRows(rows){
     prodPuiss:fcExact(h,'Producteur d\'Elec Puissance'),toitSitg:fcExact(h,'Surface toiture SITG [m2]'),
     /* programmes (21.10.2026) : sous-sites marqués dans Plan_PTE, lus au nom exact */
     aff:(fcExact(h,'Affectation_AB')>=0?fcExact(h,'Affectation_AB'):fcExact(h,'Affectation')),
+    diag:(fcExact(h,'Diag polluants')>=0?fcExact(h,'Diag polluants'):fcExact(h,'Diagnostic polluants')),   /* 06.11.2026 */
     tag300:fcExact(h,'Tag 300'),tagCoe:fcExact(h,'Tag COE'),tagCan:fcExact(h,'Tag Canicule'),tagEmb:fcExact(h,'Tag Emblématique'),
     vegExist:fcExact(h,'Toiture végétalisée existante SITG [m2]'),
     ddTriOk:fc(h,['DD Tri conforme']),ddMat:fc(h,['DD Exigence matériaux']),ddLci:fc(h,['DD LCI 117-118']),idcpB:fc(h,['IDC projeté VB [kWh]','IDC projeté VB']),idcpC:fc(h,['IDC projeté VC [kWh]','IDC projeté VC']),idcpGen:fc(h,['IDC projeté','IDCprojeté']),invEstim:fc(h,['Estim PTE','EstimPTE']),invVB:fc(h,['Estim ImmOBA','Invest ImmOBA','InvestImmOBA','Invest VB']),invGE:fc(h,['Prévisionnel PTE GEI','GE-Invest','GEInvest','GE Invest','Invest GE']),invDG:fc(h,['DG 3.31 [CHF]','DG 3.31','DG [CHF]','DG (25%)','DG(25%)','DG 25%','DG25','Invest DG','DG']),lat:fc(h,['Latitude','Lat','GPS_Lat','YCOOR']),lng:fc(h,['Longitude','Long','Lng','GPS_Lng','XCOOR','lon']),gainElec:fc(h,['Gain Electricité (Max) - kWh','Gain Électricité (Max) - kWh']),gainEau:fc(h,['Gain Eau (Max) - m3']),pvKwc:fc(h,['Futur projet PV - puissance estimée [kWc]','Futur projet PV - puissance estimée (kWc)']),pvM2:fc(h,['Futur projet PV - surface toiture PV estimée [m2]','Futur projet PV - surface toiture PV estimée (m2)'])};
@@ -7505,7 +7523,7 @@ function importFromRows(rows){
     ddPerm:pn(gvr(R,c.ddPerm)),ddVeget:pn(gvr(R,c.ddVeget)),ddVegCout:pn(gvr(R,c.ddVegCout)),ddArbres:pn(gvr(R,c.ddArbres)),
     ddCour:gv(R,c.ddCour),ddTri:pn(gvr(R,c.ddTri)),ddTriOk:gv(R,c.ddTriOk),
     ddToitProj:pn(gvr(R,c.ddToitProj)),ddTriProj:pn(gvr(R,c.ddTriProj)),
-    aff:c.aff>=0?String(gv(R,c.aff)||''):'',tags:{p300:tagVal(gvr(R,c.tag300)),coe:tagVal(gvr(R,c.tagCoe)),canicule:tagVal(gvr(R,c.tagCan)),emb:tagVal(gvr(R,c.tagEmb))},
+    aff:c.aff>=0?String(gv(R,c.aff)||''):'',diag:c.diag>=0?String(gv(R,c.diag)||'').trim():null,tags:{p300:tagVal(gvr(R,c.tag300)),coe:tagVal(gvr(R,c.tagCoe)),canicule:tagVal(gvr(R,c.tagCan)),emb:tagVal(gvr(R,c.tagEmb))},
     lotEnv:pn(gvr(R,c.lotEnv)),lotChauf:pn(gvr(R,c.lotChauf)),lotTech:pn(gvr(R,c.lotTech)),lotElec:pn(gvr(R,c.lotElec)),lotEau:pn(gvr(R,c.lotEau)),scop:pn(gvr(R,c.scop)),
     pvSitgKw:pn(gvr(R,c.pvSitgKw)),prodType:String(gv(R,c.prodType)||'').trim(),prodPuiss:String(gv(R,c.prodPuiss)||'').trim(),
     toitSitg:pn(gvr(R,c.toitSitg)),vegExist:pn(gvr(R,c.vegExist)),
@@ -8591,14 +8609,17 @@ function importerClasseurCommun(item){
 /* Données gardées d'un import d'avant le 03.11.2026 : les sous-sites n'ont pas le champ « aff » (Affectation_AB), la
    section Affectation du menu Périmètre manque (constat d'Achim, 05.11.2026). Elles sont relues depuis le classeur
    commun s'il y en a un ; sinon un bandeau demande de réimporter. */
-function donneesAnciennes(){return !!(S&&S.length&&!S.some(function(s){return s&&Object.prototype.hasOwnProperty.call(s,'aff')}))}
+/* champs ajoutés au fil des versions : une copie gardée qui n'en a pas un est relue (aff 03.11, diag 06.11.2026) */
+function donneesAnciennes(){return !!(S&&S.length&&['aff','diag'].some(function(k){return !S.some(function(s){return s&&Object.prototype.hasOwnProperty.call(s,k)})}))}
 function demarrerDepuisCommun(hasData){
   let pr=null;
   try{pr=PTE_COMMUN.lireClasseur()}catch(e){pr=null}
   if(!pr||!pr.then){renNotice();return}
   pr.then(function(item){
     if(!item){renNotice();return}
-    if(!hasData||donneesAnciennes()){importerClasseurCommun(item);return}
+    if(!hasData){importerClasseurCommun(item);return}
+    /* copie gardée ancienne : relue seulement si le classeur commun n'est pas plus ancien qu'elle (relecture du 06.11) ; sinon le bandeau */
+    if(donneesAnciennes()){const d=item.meta&&item.meta.date;if(d&&!(importIso&&String(d)<String(importIso))){importerClasseurCommun(item);return}}
     renNotice()}).catch(function(){renNotice()})}
 function utiliserClasseurCommun(){
   let pr=null;
@@ -8611,7 +8632,7 @@ function renNotice(){
   let plusRecent=false,meta=null;
   try{meta=PTE_COMMUN.lireMeta();plusRecent=!!(S&&S.length&&meta&&PTE_COMMUN.plusRecentQue(importIso)&&!(importEmpreinte&&meta.empreinte===importEmpreinte))}catch(e){plusRecent=false}
   if(!plusRecent&&donneesAnciennes()){el.hidden=false;
-    el.innerHTML='<div class="notice-in">Données importées avant le 03.11.2026 : l\'affectation des sous-sites manque. Réimporter le classeur (bouton Importer, ou dépôt dans Pilotage PTE) pour l\'obtenir.</div>';return}
+    el.innerHTML='<div class="notice-in">Données importées avec une version plus ancienne de l\'outil : l\'affectation ou le diagnostic polluants des sous-sites manquent. Réimporter le classeur (bouton Importer, ou dépôt dans Pilotage PTE) pour les obtenir.</div>';return}
   if(!plusRecent){el.hidden=true;el.innerHTML='';return}
   const d=meta.date?new Date(meta.date):null;
   const p2=function(n){return (n<10?'0':'')+n};
@@ -8947,7 +8968,7 @@ $('alList').innerHTML=al.map(a=>'<div class="alert-card al-'+(a.t==='err'?'err':
 
 function renCompleteness(all){
 const el=$('cpList');if(!el)return;const n=all.length||1;
-const fields=[['SRE',s=>!!s.sre],['IDC',s=>!!s.idcC],['Chauffage',s=>!!(s.ht&&s.ht.length>1)],['Coeff Stratus',s=>s.coeff!=null],['Investissement',s=>!!(s.invVB&&s.invVB>0)],['Substitution',s=>!!(s.hsub&&s.hsub.length>2&&!/rien|maintien/i.test(s.hsub))],['Patrimoine',s=>!!(s.pat&&s.pat.length>1)],['Électricité',s=>!!s.elec],['Eau',s=>!!s.eau]];
+const fields=[['SRE',s=>!!s.sre],['IDC',s=>!!s.idcC],['Chauffage',s=>!!(s.ht&&s.ht.length>1)],['Coeff Stratus',s=>s.coeff!=null],['Investissement',s=>!!(s.invVB&&s.invVB>0)],['Substitution',s=>!!(s.hsub&&s.hsub.length>2&&!/rien|maintien/i.test(s.hsub))],['Patrimoine',s=>!!(s.pat&&s.pat.length>1)]].concat(all.some(s=>s.diag!=null)?[['Diag polluants',s=>!!diagNiveau(s.diag)]]:[]).concat([['Électricité',s=>!!s.elec],['Eau',s=>!!s.eau]]);
 let tot=0,h='';
 fields.forEach(f=>{const p=Math.round(all.filter(f[1]).length/n*100);tot+=p;const col=p>=80?'var(--ok)':p>=50?'var(--warn)':'var(--red)';
 h+='<div style="display:grid;grid-template-columns:150px 1fr 44px;align-items:center;gap:8px;margin-bottom:5px"><span style="font-size:.73rem;font-weight:600">'+f[0]+'</span><div class="sb" style="height:14px"><div class="sf" style="width:'+p+'%;background:'+col+'"></div></div><span style="font-size:.73rem;font-weight:700;color:'+col+'">'+p+'%</span></div>'});
@@ -10138,6 +10159,7 @@ const bBat=bloc('Bâtiment',
   kv('Montant actif','<b>'+fmtInv(site.invVB)+'</b>',invDef().short)+
   kv('Complétude','<b>'+cp+' %</b> <span class="sem sm"><i class="sem-dot '+dotCp+'"></i>'+motCp+'</span>','')+
   (sc.t!=null?kv('Priorité (classements par objectif)','<b>'+sc.t+'</b>',''):'')+
+  (site.diag!=null?kv('Diag polluants','<b>'+esc(site.diag||'—')+'</b>',diagNiveau(site.diag)?(DIAG_NIV[diagNiveau(site.diag)].p?'contraintes −'+DIAG_NIV[diagNiveau(site.diag)].p+' sur 25 (matrice)':''):(site.diag?'valeur non reconnue, sans effet':'non renseigné'),'Colonne « Diag polluants » de Plan_PTE : existence d\'un diagnostic des polluants du bâtiment (amiante, PCB, plomb…), pas leur présence. Contrainte légère de la matrice urgence × faisabilité.'):'')+
   (function(){const t=calcTI(site),a=classeIDC(site.idcC),b=classeVetuste(site.coeff);
     return kv('Type d\'intervention',t==null?'—':(tiBg(t)+' <b>'+esc(TI_LABELS[t]||'')+'</b>'),
       (a!=null&&b!=null)?('classe IDC '+a+' × classe vétusté '+b+' (Coeff Stratus '+nf(site.coeff,2)+')'):'IDC ou Coeff Stratus manquant',
@@ -10670,7 +10692,7 @@ function gsNorm(t){return String(t==null?'':t).toLowerCase().normalize('NFD').re
 function gsChamps(s){
   var id=String(s.id),p=s.projets||[];
   return [['Note',siteNotes[id]],['Adresse',s.adr],['RPF',s.rp],['RP (projets)',p.map(function(x){return x.rp||''}).filter(function(v,i,a){return v&&a.indexOf(v)===i}).join(' · ')],['Chauffage',s.ht],['Chauffage prévu',s.hsub],
-    ['Patrimoine',s.pat],['Projet GE-Invest',p.map(function(x){return x.numero+' '+(x.nom||'')}).join(' · ')],
+    ['Patrimoine',s.pat],['Diag polluants',s.diag],['Projet GE-Invest',p.map(function(x){return x.numero+' '+(x.nom||'')}).join(' · ')],
     ['Surfaces de relais',s.relais]].filter(function(c){return c[1]!=null&&String(c[1]).trim()!==''})}
 function gsTexte(s){return gsNorm(String(s.id)+' '+(s.nom||'')+' '+gsChamps(s).map(function(c){return c[1]}).join(' '))}
 function gsExtrait(t,q){
@@ -10773,6 +10795,7 @@ function printSite(id){
      row('Chauffage actuel',esc(s.htPrin||s.ht||'—'))+
      row('Substitution prévue',esc(s.hsub||'—'))+
      row('Classement au patrimoine',esc(s.pat||'—'))+
+     row('Diagnostic polluants',esc(s.diag?s.diag:'—'))+
      row('Montant ('+invDef().short+')',fmtInv(s.invVB))+
      row('Complétude des données',compl(s)+' %')+
      row('Priorité (classements par objectif)',(sc.t!=null?sc.t:'non classé'))+
@@ -12872,7 +12895,7 @@ function drawUF(all){
   li(nf(nEx)+' exclus du programme, comptés nulle part ici');
   if(nIn)li(nf(nIn)+' imposés — comptés à leur place réelle');
   const faible=rows.filter(function(s){return det[s.id].fiab<=2}).length;
-  li(nf(faible)+' à fiabilité faible (2 données sur 5 ou moins)');
+  li(nf(faible)+' à fiabilité faible (2 données sur 6 ou moins)');
   y+=26;
   g+='<rect x="'+X+'" y="'+(y-9)+'" width="12" height="12" rx="2" fill="none" stroke="'+C.ok+'" stroke-width="2"/>'
     +txt(X+19,y,'priorité et faisabilité ≥ 80',{s:10.5,c:C.ink,w:700,fix:1});
@@ -12916,18 +12939,18 @@ function ufListe(){
     '<div style="max-height:460px;overflow:auto"><table class="tblx"><thead><tr>'+
     th('id','N°')+th('nom','Sous-site')+th('pr','Priorité',1,'Meilleure place dans les classements par objectif, 100 = tête')+
     th('f','Faisabilité',1,'Score pondéré par les curseurs')+th('m','Maturité',1,'Phase SIA du projet GE-Invest le plus avancé, sur 50')+
-    th('p','Préparation',1,'CECB+, chauffage, montant chiffré, montant prévu, sur 25')+th('c','Contraintes',1,'25 moins patrimoine, risques et santé des projets')+
+    th('p','Préparation',1,'CECB+, chauffage, montant chiffré, montant prévu, sur 25')+th('c','Contraintes',1,'25 moins patrimoine, risques et santé des projets, diagnostic polluants')+
     th('ph','Phase',0,'Phase SIA déduite de l\'avancement GE-Invest')+th('sev','Risque max.',1,'Risque ouvert le plus sévère, sur 16 (GEI_Risques)')+
-    '<th>Patrimoine</th><th>Resp. de projet</th>'+th('fiab','Fiabilité',1,'Données connues sur 5 : projet, CECB+, chauffage, patrimoine, risques')+'<th></th></tr></thead><tbody>';
+    '<th>Patrimoine</th><th>Resp. de projet</th>'+th('fiab','Fiabilité',1,'Données connues sur 6 : projet, CECB+, chauffage, patrimoine, risques, diagnostic polluants')+'<th></th></tr></thead><tbody>';
   tri.forEach(function(s){const d=D[s.id];
     const rq=d.sev!=null?(d.sev+' / 16'+(d.nRisques>1?' ('+d.nRisques+')':'')):(d.evalTxt?d.evalTxt:(d.nProjets?'non saisi':'—'));
-    const det='CECB+ '+(cecbInfo(s).txt||cecbInfo(s).ico)+' · chauffage '+(chauffageDefini(s.hsub)?esc(s.hsub):'non défini')+(d.santeTxt?' · projet '+d.santeTxt:'');
+    const det='CECB+ '+(cecbInfo(s).txt||cecbInfo(s).ico)+' · chauffage '+(chauffageDefini(s.hsub)?esc(s.hsub):'non défini')+(d.santeTxt?' · projet '+d.santeTxt:'')+' · '+diagLib(s.diag);
     let lien=null;try{lien=PTE_COMMUN.lien('revue',String(s.id))}catch(e){lien=null}
     h+='<tr><td>'+esc(s.id)+'</td><td>'+esc(s.nom||'—')+'<div class="dt">'+det+'</div></td>'+
       '<td class="num">'+nf(s.sc.t,0)+'</td><td class="num"><b>'+nf(d.f,0)+'</b></td>'+
       '<td class="num">'+d.mat+'</td><td class="num">'+d.prep+'</td><td class="num">'+d.cont+'</td>'+
       '<td>'+(d.phase||(d.nProjets?'non renseignée':'aucun projet'))+'</td><td class="num">'+esc(rq)+'</td>'+
-      '<td>'+esc(s.pat||'non renseigné')+'</td><td>'+esc(d.rp||'—')+'</td><td class="num">'+d.fiab+' / 5</td>'+
+      '<td>'+esc(s.pat||'non renseigné')+'</td><td>'+esc(d.rp||'—')+'</td><td class="num">'+d.fiab+' / 6</td>'+
       '<td>'+(lien?'<a href="'+esc(lien)+'" title="Ouvrir la revue de projets sur ce sous-site">Revue</a>':'')+'</td></tr>'});
   h+='</tbody></table></div>';
   host.innerHTML=h}
