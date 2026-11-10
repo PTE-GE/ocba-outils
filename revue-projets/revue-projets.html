@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-7ytlshlBfTzV0wA35SPT3injW9CXMbq8Y2qHVOHhWmA=' 'sha256-PHJ5P9SeK/mTT5SCaNXhrskArUEovNgIwDLhIyHcFIo=' 'sha256-yap1xRp4465MS8MN4sNgQv7IWkUlmcsDhuIqIzTuzVM=' 'sha256-BZ/uI2lCM71bd1p2+wEDfwEC5Jpy4PMXLk0BJxlZREQ=' 'sha256-6CcXg56MHeqxfBdSyc7Ruc/JCZbhdsbDAltRBObb8HE=' 'sha256-cYEkQGkGJBK5DoSJmE6cw8kqhflhQ3ENdg7IgEPlo+4='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-7ytlshlBfTzV0wA35SPT3injW9CXMbq8Y2qHVOHhWmA=' 'sha256-PHJ5P9SeK/mTT5SCaNXhrskArUEovNgIwDLhIyHcFIo=' 'sha256-RuGr7yuPrl8Ghz2x/er6GpX+wTDLs1uROLEYYnMOWUQ=' 'sha256-gaECVxvBTF5R6/F2Fwhi5qZpNGXXIfBT3ANxiUU+wkk=' 'sha256-mC2guRT8XKqcOUCyiybWwIOqnU+hfLlY9SOpOzXNLC4=' 'sha256-cYEkQGkGJBK5DoSJmE6cw8kqhflhQ3ENdg7IgEPlo+4='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Revue de projets</title>
 <style>
@@ -238,6 +238,25 @@ button:disabled{opacity:.5; cursor:not-allowed;}
 .hdr-ctx select.cx-in:hover,.hdr-ctx select.cx-in:focus{border-color:var(--border)}
 .hdr-ctx .btn{padding:4px 12px;font-size:12.5px}
 body.no-data .hdr-ctx{display:none !important}
+/* recherche de l'en-tête (10.11.2026) : même place et même aspect que dans Prioriser */
+.hdr-ctx .rv-gs{position:relative;margin-left:auto}
+.hdr-ctx .rv-gs input{width:270px;padding:4px 10px;font:inherit;font-size:12.5px;color:var(--ink);border:1px solid var(--border);border-radius:var(--r-in);background:var(--page-bg)}
+.rv-gs .gs-res{position:absolute;top:110%;right:0;min-width:380px;max-width:520px;max-height:380px;overflow:auto;z-index:300;display:none;background:var(--card-bg);border-radius:8px;box-shadow:0 8px 26px rgba(0,0,0,.28)}
+.rv-gs .gs-res.on{display:block}
+.rv-gs .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.rv-gs .gs-it{padding:7px 11px;font-size:12.5px;line-height:1.35;color:var(--ink);cursor:pointer;border-bottom:1px solid var(--border)}
+.rv-gs .gs-it:hover,.rv-gs .gs-it[aria-selected="true"]{background:var(--blue-pale)}
+.rv-gs .gs-it b{color:var(--teal)}
+.rv-gs .gs-it .s{display:block;font-size:11px;color:var(--ink-muted)}
+.rv-gs .gs-it.gs-filtre{color:var(--teal);font-weight:bold}
+.rv-gs .gs-k{display:inline-block;min-width:58px;font-size:10.5px;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.03em}
+.rv-gs .gs-vide{padding:8px 11px;font-size:12px;color:var(--ink-muted)}
+html.epure .rv-gs input{background:var(--ep-fill)!important;border:0!important;border-radius:9px!important;color:var(--ep-ink)!important}
+.filterbar .filter-item.f-q-chip{flex-direction:row;align-self:flex-end;white-space:nowrap;min-height:30px;box-sizing:border-box}
+.filter-item.f-q-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 4px 3px 12px;border:1px solid var(--teal);border-radius:var(--pill);font-size:12.5px;color:var(--ink)}
+.f-q-chip button{border:0;background:transparent;color:var(--ink-muted);font-size:15px;line-height:1;padding:0 6px;cursor:pointer;border-radius:50%}
+.f-q-chip button:hover,.f-q-chip button:focus-visible{color:var(--red)}
+@media (max-width:700px){ .hdr-ctx .rv-gs{margin-left:0;flex:1 1 100%} .hdr-ctx .rv-gs input{width:100%} .rv-gs .gs-res{left:0;right:auto;min-width:0;width:100%} }
 #view-methode{max-width:900px;}
 #view-methode p{font-size:13px; line-height:1.55; margin:0 0 .8em;}
 #view-methode table{font-size:12px;}
@@ -528,13 +547,17 @@ svg.gantt{width:100%; height:auto; display:block;}
 .gantt-tete{position:sticky; top:0; z-index:2; background:var(--card-bg); border-bottom:1px solid var(--border);}
 .gantt-scroll.gantt-h-t .gantt-tete{position:static;}
 svg.gantt-axe{width:100%; height:auto; display:block;}
-.gantt-reglages{display:inline-flex; align-items:center; gap:4px 14px; flex-wrap:wrap; font-size:11.5px; font-weight:normal; color:var(--ink-muted);}
-.gantt-reglages .seg{display:inline-flex; border:1px solid var(--border); border-radius:999px; overflow:hidden; margin-left:5px;}
-.gantt-reglages .seg button{font:inherit; font-size:11.5px; border:0; background:var(--card-bg); color:var(--ink-70); padding:3px 10px; cursor:pointer;}
-.gantt-reglages .seg button + button{border-left:1px solid var(--border);}
-.gantt-reglages .seg button[aria-pressed="true"]{background:var(--slate); color:#fff; font-weight:bold;}
-.gantt-reglages .seg button:focus-visible{outline:2px solid var(--teal); outline-offset:-2px;}
-@media print{ .gantt-reglages{display:none;} .gantt-scroll{max-height:none !important; overflow:visible !important;} .gantt-tete{position:static;} }
+.gantt-reglages,.plan-choix{display:inline-flex; align-items:center; gap:4px 14px; flex-wrap:wrap; font-size:11.5px; font-weight:normal; color:var(--ink-muted);}
+/* carte unique du planning (10.11.2026) : choix du planning et du niveau, puis réglages d'affichage */
+.plan-entete-ctrl{display:inline-flex; align-items:center; gap:4px 14px; flex-wrap:wrap; justify-content:flex-end;}
+.plan-choix .seg button{white-space:nowrap;}
+.gantt-reglages .seg,.plan-choix .seg{display:inline-flex; border:1px solid var(--border); border-radius:999px; overflow:hidden; margin-left:5px;}
+.gantt-reglages .seg button,.plan-choix .seg button{font:inherit; font-size:11.5px; border:0; background:var(--card-bg); color:var(--ink-70); padding:3px 10px; cursor:pointer;}
+.gantt-reglages .seg button + button,.plan-choix .seg button + button{border-left:1px solid var(--border);}
+.gantt-reglages .seg button[aria-pressed="true"],.plan-choix .seg button[aria-pressed="true"]{background:var(--slate); color:#fff; font-weight:bold;}
+.gantt-reglages .seg button:focus-visible,.plan-choix .seg button:focus-visible{outline:2px solid var(--teal); outline-offset:-2px;}
+@media print{ .perim-liste-scroll{max-height:none; overflow:visible;} }
+@media print{ .gantt-reglages,.plan-choix{display:none;} .gantt-scroll{max-height:none !important; overflow:visible !important;} .gantt-tete{position:static;} }
 /* Périmètre à choix multiple (06.10.2026), à l'image de la priorisation */
 .pm-sel{position:relative; display:inline-flex; align-items:center;}
 .pm-txt{font:inherit; font-size:12.5px; font-weight:bold; color:var(--ink-70); border:1px solid transparent; border-radius:6px; background:transparent; cursor:pointer;
@@ -662,6 +685,12 @@ body.night .distbar.sia .seg-snr{color:var(--ink-70);}
 .liens-croises{display:flex; gap:.5em; flex-wrap:wrap; margin-top:.8em;}
 .liens-croises a.btn{text-decoration:none; font-size:12px; padding:5px 12px; display:inline-block;}
 /* Questions du mois */
+/* Périmètre d'action : projets du segment de phase choisi (10.11.2026) */
+.perim-liste{margin-top:.7em;}
+.perim-liste-tete{display:flex; align-items:center; gap:.6em; flex-wrap:wrap; font-size:12.5px; margin-bottom:.4em;}
+.perim-liste-scroll{max-height:360px; overflow:auto;}
+.perim-liste-t tr.clickable{cursor:pointer;}
+.perim-liste-aide{margin:.4em 0 0;}
 .questions-rpf{margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border);}
 .questions-rpf:last-child{border-bottom:none; margin-bottom:0;}
 .questions-rpf-head{display:flex; align-items:center; gap:.8em; flex-wrap:wrap; margin-bottom:.4em;}
@@ -675,6 +704,10 @@ body.night .distbar.sia .seg-snr{color:var(--ink-70);}
 .questions-list .q-txt{flex:1;}
 .questions-list li.q-soldee .q-txt{color:var(--ink-muted); text-decoration:line-through;}
 .questions-list .sem{flex:none; min-width:76px;}
+/* regroupement par nature (10.11.2026) */
+.questions-grp .q-ou{font-size:11px; font-weight:bold; color:var(--teal); white-space:nowrap; min-width:72px; padding-top:.15em;}
+.questions-grp .q-nums{font-size:12px; color:var(--ink-muted); overflow-wrap:anywhere;}
+.questions-grp li.q-soldee .q-txt{text-decoration:none;}
 /* Lien de renvoi vers un indicateur affiché ailleurs (un seul emplacement par indicateur) */
 .renvoi{font-size:13px; color:var(--ink-70); margin:0 0 16px;}
 .renvoi a{font-weight:bold;}
@@ -886,8 +919,11 @@ body.night{--ap-acq:#2FB68F; --ap-etu:#2E6B5A; --ap-apr:#5F5E5A;}
 :root{--oph2:var(--pte-sia-21); --oph31:var(--pte-sia-31); --oph32:var(--pte-sia-32); --oph33:var(--pte-sia-33); --oph4:var(--pte-sia-41); --oph51:var(--pte-sia-51); --oph52:var(--pte-sia-52); --oph53:var(--pte-sia-53); --oph6:var(--pte-sia-6); --oph-nr:var(--pte-sia-nr);}
 body.night{--oph-nr:#6E7C88;}
 @media print{ body.night{--oph-nr:var(--pte-sia-nr);} }
-.org-outils{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 18px;margin:0 0 12px}
+.org-outils{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:0 0 12px}
 .org-outils .org-champ select{min-width:260px}
+.org-perim{font-size:13px;color:var(--ink-70);margin-right:auto}
+.org-sommaire{margin:0 0 14px;flex-wrap:wrap}
+.org-card + .org-card{margin-top:22px}
 .org-champ{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--ink-70)}
 .org-champ input{font-size:12.5px}
 .org-cb{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:var(--ink-70);cursor:pointer}
@@ -935,7 +971,7 @@ body.night{--oph-nr:#6E7C88;}
 .org-masq{margin-left:auto;font:inherit;font-size:10.5px;border:1px solid var(--border);background:var(--card-bg);color:var(--ink-70);border-radius:4px;cursor:pointer;padding:0 6px}
 .org-masq[aria-pressed="true"]{color:var(--teal);border-color:var(--teal)}
 .org-legende{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:11px;color:var(--ink-70);border-top:1px solid var(--border);margin-top:14px;padding-top:8px}
-@media print{ #view-organigramme .org-card{box-shadow:none;border:0;padding:0} .org-site{break-inside:avoid} .org-grille{gap:8px} .org-l{font-size:10px} .org-site-h{font-size:11px} }
+@media print{ #view-organigramme .org-card + .org-card{break-before:page;margin-top:0} #view-organigramme .org-card{box-shadow:none;border:0;padding:0} .org-site{break-inside:avoid} .org-grille{gap:8px} .org-l{font-size:10px} .org-site-h{font-size:11px} }
 </style>
 <!-- PTE-EPURE:tete — module commun 00_Design-System/pte-epure.css, inséré par build-html.js -->
 <script>/* présentation épurée, seule présentation depuis le 18.10.2026. Posée avant le premier rendu : pas d'éclair. */
@@ -1259,7 +1295,7 @@ html.epure [data-ep-repli] > [data-ep-tete]{cursor:pointer}
     <button type="button" class="tab" data-view="planning" title="Planning des projets du périmètre : familles d’intervention et jalons par sous-site, dépliables vers les projets.">Planning</button>
     <button type="button" class="tab" data-view="semaphores" title="Sémaphores des projets du périmètre (délais, dépenses, risques, global), projets à surveiller et diagramme CPI / SPI.">Sémaphores</button>
     <button type="button" class="tab" data-view="finances" title="Situation financière pluriannuelle du périmètre : réalisé, prévisions, crédit voté, performance et cohérence Estim ImmOBA → DG → GE-Invest.">Finances</button>
-    <button type="button" class="tab" data-view="organigramme" title="Organigramme des projets d’un portefeuille : sites par type d’intervention, projets GE-Invest et leur phase SIA, interventions identifiées par l’audit CECB+ ; imprimable en A3.">Organigramme</button>
+    <button type="button" class="tab" data-view="organigramme" title="Organigramme des projets du périmètre de l’en-tête, un par portefeuille : sites par type d’intervention, projets GE-Invest et leur phase SIA, interventions identifiées par l’audit CECB+ ; imprimable en A3.">Organigramme</button>
     <button type="button" class="tab" data-view="reporting" title="Portefeuilles et sous-sites du périmètre de l’en-tête ; un clic sur un sous-site ouvre sa fiche.">Autres vues</button>
     <button type="button" class="tab" data-view="fiche" hidden data-ancien-onglet="1" title="Un projet en détail : sémaphores, jalons, finances, risques et registre des décisions, imprimable en A4.">Fiche projet</button>
     <button type="button" class="tab" data-view="donnees" title="Chargement du classeur, complétude du mois et seuils des sémaphores.">Données</button>
@@ -1269,8 +1305,14 @@ html.epure [data-ep-repli] > [data-ep-tete]{cursor:pointer}
     <span class="cx-l">Périmètre
       <span class="pm-sel" id="pm-sel"><!-- menu Périmètre commun (PTE_COMMUN.menuPerimetre, séance 6) --></span>
       <select id="sel-filtre" hidden aria-hidden="true" tabindex="-1"></select></span>
-    <button type="button" class="btn" id="btn-questions" title="Générer les questions du mois par RPF (Reporting)">Questions du mois</button>
+    <button type="button" class="btn" id="btn-questions" hidden title="Questions du mois : dans Suivre › Sémaphores, carte « À compléter »">Questions du mois</button>
     <button type="button" class="btn" id="btn-fil-rouge" aria-pressed="false" title="Ordre du jour de la revue en cinq temps : préparer, constater, analyser, décider, restituer">Mode revue</button>
+    <!-- recherche dans l'en-tête (10.11.2026, demande d'Achim), comme dans Prioriser : une proposition ouvre le sous-site ou le projet ; texte libre + Entrée : filtre de texte des vues -->
+    <div class="gsearch rv-gs no-print" id="rv-gs">
+      <input type="search" id="rv-gq" placeholder="Rechercher…" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="rv-gs-lb" aria-label="Rechercher un projet ou un sous-site" title="Numéro ou nom de projet, numéro ou nom de sous-site, RP : une proposition ouvre le sous-site ou le projet. Texte libre + Entrée : filtre les projets de Planning, Sémaphores, Finances et Autres vues.">
+      <div class="gs-res" id="rv-gs-res" tabindex="-1"></div>
+      <span class="sr-only" id="rv-gs-statut" role="status" aria-live="polite"></span>
+    </div>
   </div>
   </div>
 </header>
@@ -1318,7 +1360,7 @@ html.epure [data-ep-repli] > [data-ep-tete]{cursor:pointer}
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.57 · 10.11.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.60 · 10.11.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -3148,6 +3190,9 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "10.11.2026", "objet": "revue", "version": "v0.60", "titre": "Recherche dans l’en-tête ; organigramme sur le périmètre", "points": ["Recherche dans l’en-tête, comme dans Prioriser : une proposition ouvre le sous-site ou le projet ; texte libre + Entrée filtre les projets des vues, filtre rappelé en pastille.", "Organigramme sur le périmètre du fil d’Ariane (tout le parc, portefeuilles, RP, plan, affectation) : un organigramme par portefeuille ; menu « Portefeuille » de l’onglet retiré."]},
+    {"date": "10.11.2026", "objet": "revue", "version": "v0.59", "titre": "Jalons à la liste normée ; planning par affectation", "points": ["Jalons comparés à la liste normée GE-Invest (12 jalons de phase SIA) : tout autre libellé est signalé pour correction ; une date prévue vide n’est plus une anomalie.", "Planning par affectation : une affectation dépliée montre ses sous-sites ou ses projets, à la couleur de leur famille d’intervention, avec leurs jalons.", "Filtres : boutons sur une ligne, phase SIA choisie dite en court, valeurs entières au survol."]},
+    {"date": "10.11.2026", "objet": "revue", "version": "v0.58", "titre": "Planning à trois vues ; questions dans Sémaphores ; revue guidée", "points": ["Planning : une seule carte, trois plannings au choix (familles par portefeuille, jalons, familles par affectation), une ligne par sous-site ou par projet.", "Fraîcheur : jusqu’au 20 du mois, la fiche du mois précédent compte encore, marquée « à mettre à jour » ; délai réglable.", "Sémaphores : carte « À compléter », questions du mois regroupées par portefeuille et par nature ; liste des projets du segment choisi dans « Projets par phase SIA ».", "Mode revue : chaque temps ouvre son onglet de Suivre, « Temps suivant » enchaîne."]},
     {"date": "10.11.2026", "objet": "revue", "version": "v0.57", "titre": "Sémaphores et Finances dans l’en-tête ; Synthèse retirée", "points": ["Onglets de Suivre : Portefeuille · Planning · Sémaphores · Finances · Organigramme · Autres vues ; Sémaphores réunit le périmètre d’action, les indicateurs du mois, les sémaphores, « À traiter » et CPI / SPI ; Finances, la situation pluriannuelle, la performance et la cohérence Estim ImmOBA → DG → GE-Invest.", "Synthèse retirée (doublon du tableau de bord) ; l’apport des projets d’ici 2030, la capacité, la couverture CECB+ et les rouges passent dans Portefeuille. Autres vues = Portefeuilles et Sous-sites du périmètre de l’en-tête ; un portefeuille cliqué devient le périmètre (plus de « Programme › Portefeuille »).", "Planning et Finances n’étaient plus affichés (découpage en parties de la présentation épurée) : corrigé. Organigramme : « Disposer » et « Modifier » ne font plus qu’un. « Portefeuille validé » retiré de Suivre.", "Relecture : mode revue « Constater » ouvre Sémaphores ; blocs de Portefeuille filtrés comme Sémaphores ; visite guidée à jour ; tableau des portefeuilles au clavier ; noms des RP en « Prénom Nom » ; plus de débordement sur téléphone. Portefeuille : la carte « Situation » porte le nom du périmètre choisi, compte les projets en cours et dit la part de non renseignés et la répartition des couleurs."]},
     {"date": "10.11.2026", "objet": "priorisation", "version": "v2.49", "titre": "Validation dans les Scénarios ; mode nuit", "points": ["La validation du portefeuille est dans la tuile des scénarios ; sans validation, le scénario affiché fait foi, « CO₂ au meilleur prix » par défaut. La validation sert de repère : sous-sites ajoutés ou retirés par un autre scénario.", "Le mode nuit suit la clé commune aux outils : un ancien réglage de la priorisation ne la rebascule plus au noir ; le menu dit l’état juste."]},
     {"date": "10.11.2026", "objet": "accueil", "version": "v1.29", "titre": "Trajectoires sous les tuiles des engagements ; cartes du bas retirées", "points": ["Chaque tuile des 8 engagements porte sa courbe annuelle ; un clic ouvre dessous la trajectoire jusqu’en 2030 de Prioriser (depuis 2005, chemin projeté et son zoom, chiffres clés), sans quitter le tableau de bord.", "Les cartes « Prioriser » et « Suivre » du bas de la page sont retirées : l’en-tête y mène déjà."]},
@@ -5976,7 +6021,9 @@ var PTE_COMMUN = (function () {
       '.pte-mc{position:relative;display:inline-block}' +
       '.pte-mc-b{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:6px;max-width:260px;padding:4px 10px;border-radius:8px;cursor:pointer;' +
         'border:1px solid var(--border,#dfe6ec);background:var(--card-bg,#fff);color:var(--ink,#1f2d3d)}' +
-      '.pte-mc-b .v{font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}' +
+      '.pte-mc-b .v{font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}' +
+      /* 10.11.2026 (capture d'Achim) : le libellé ne passe jamais à la ligne ; la valeur se coupe, en entier au survol */
+      '.pte-mc-b{white-space:nowrap}.pte-mc-b>span:not(.v){flex:none;white-space:nowrap}' +
       '.pte-mc-b.on{border-color:#005F73}body.night .pte-mc-b.on{border-color:#30E5D9}' +
       '.pte-mc-b::after{content:"";border:4px solid transparent;border-top-color:currentColor;margin-top:4px;opacity:.6}' +
       '.pte-mc-pop{position:absolute;z-index:60;top:calc(100% + 4px);left:0;min-width:220px;max-width:340px;max-height:320px;overflow:auto;padding:6px;border-radius:10px;' +
@@ -6107,8 +6154,11 @@ var PTE_COMMUN = (function () {
     function resume() {
       var opt = opts.options || [];
       var lib = !vals.length || vals.length === opt.length ? (opts.tous || 'Tous')
-        : vals.length === 1 ? ((opt.filter(function (o) { return String(o.v) === String(vals[0]); })[0] || { t: vals[0] }).t)
+        : vals.length === 1 ? (function (o) { return o.court || o.t; })(opt.filter(function (o) { return String(o.v) === String(vals[0]); })[0] || { t: vals[0] })
         : vals.length + ' choix';
+      /* valeur entière au survol (une option peut porter un libellé court, « court », pour le bouton) */
+      var choisis = opt.filter(function (o) { return vals.map(String).indexOf(String(o.v)) >= 0; }).map(function (o) { return o.t; });
+      b.title = (opts.titre ? opts.titre + (choisis.length ? ' — ' : '') : '') + (choisis.length && choisis.length !== opt.length ? choisis.join(', ') : '');
       b.innerHTML = ''; var s1 = document.createElement('span'); s1.textContent = (opts.libelle ? opts.libelle + ' :' : '');
       var s2 = document.createElement('span'); s2.className = 'v'; s2.textContent = lib;
       b.appendChild(s1); b.appendChild(s2);
@@ -10163,6 +10213,7 @@ var PTE_FICHE = (function (C, T) {
       portefeuilleRougeMinPct: 20,
       portefeuilleOrangeMinPct: 30,
       portefeuilleGrisMaxPct: 20, // au-delà => gris
+      fraicheurDelaiJour: 20, // 10.11.2026 (Achim) : jusqu'à ce jour du mois de revue, la fiche du mois précédent compte encore
       seuilStructurantKCHF: 2000,
       seuilTop: 50, // seuil « top » de la priorisation PTE (sous-site bien classé)
       ecartFinOrangePct: 20, // écart |crédit GEI vs référence (DG ou Estim ImmOBA)| => orange
@@ -10217,12 +10268,34 @@ var PTE_FICHE = (function (C, T) {
     return db.suivi.find(function (r) { return r.numero_projet === numeroProjet && r.mois === mois; }) || null;
   }
 
-  function computeFraicheur(db, projet, mois) {
+  /* Mois précédent d'un « AAAA-MM ». */
+  function moisPrecedent(mois) {
+    var m = /^(\d{4})-(\d{2})$/.exec(mois || ''); if (!m) return null;
+    var a = +m[1], n = +m[2] - 1; if (n < 1) { n = 12; a--; }
+    return a + '-' + (n < 10 ? '0' : '') + n;
+  }
+  /* 10.11.2026 (Achim, QCM) : délai de saisie. Tant que le mois de revue est le mois courant et que le jour
+     ne dépasse pas params.fraicheurDelaiJour, la fiche du mois précédent compte encore (sémaphore vert,
+     marqué « à mettre à jour ») ; au-delà, ou pour un mois passé, sans fiche du mois → gris. */
+  function delaiSaisieOuvert(mois, params) {
+    var j = params && params.fraicheurDelaiJour; if (!(j > 0)) return false;
+    var d = (params && params._aujourdhui) ? new Date(params._aujourdhui) : new Date();
+    if (isNaN(d)) return false;
+    var cur = d.getFullYear() + '-' + (d.getMonth() < 9 ? '0' : '') + (d.getMonth() + 1);
+    return cur === mois && d.getDate() <= j;
+  }
+  function computeFraicheur(db, projet, mois, params) {
     var row = getSuiviRow(db, projet.numero_projet, mois);
     if (row) return { color: 'vert', row: row, reason: 'Mis à jour pour ' + mois + '.' };
     // chercher le dernier mois connu
-    var rows = db.suivi.filter(function (r) { return r.numero_projet === projet.numero_projet; }).sort(function (a, b) { return a.mois < b.mois ? -1 : 1; });
+    /* fiches antérieures au mois de revue seulement : une fiche datée d'un mois futur (faute de saisie) est écartée */
+    var rows = db.suivi.filter(function (r) { return r.numero_projet === projet.numero_projet && r.mois && r.mois <= mois; }).sort(function (a, b) { return a.mois < b.mois ? -1 : 1; });
     var last = rows.length ? rows[rows.length - 1].mois : null;
+    var prec = moisPrecedent(mois);
+    if (prec && last === prec && delaiSaisieOuvert(mois, params)) {
+      return { color: 'vert', row: rows[rows.length - 1], aMettreAJour: true,
+        reason: 'À mettre à jour : fiche de ' + prec + ' retenue jusqu’au ' + params.fraicheurDelaiJour + ' du mois ; fiche de ' + mois + ' pas encore saisie.' };
+    }
     return { color: 'gris', row: null, reason: last ? ('Non renseigné pour ' + mois + ' (dernière mise à jour : ' + last + ').') : ('Aucune donnée de suivi mensuel pour ce projet.') };
   }
 
@@ -10365,7 +10438,7 @@ var PTE_FICHE = (function (C, T) {
   }
 
   function computeProjectMonth(db, projet, mois, params) {
-    var fraicheur = computeFraicheur(db, projet, mois);
+    var fraicheur = computeFraicheur(db, projet, mois, params);
     var suiviRow = fraicheur.row;
     var delais = computeDelais(db, projet, suiviRow, mois, params);
     var depenses = computeDepenses(db, projet, mois, params);
@@ -10458,41 +10531,61 @@ var PTE_FICHE = (function (C, T) {
   // Rapport de complétude
   // -------------------------------------------------------------------
   // -------------------------------------------------------------------
-  // Libellés de phase des jalons (26.10.2026, demande d'Achim)
-  // L'harmonisation des libellés GE-Invest est en cours. Pour chaque phase SIA (code lu dans le
-  // libellé : « SIA 32 … », « Phase 32 », « SIA 53a … »), le libellé le plus fréquent sert de
-  // référence ; tout autre libellé de la même phase est signalé. Les jalons sans code de phase
-  // (« Mise en service », « Faisabilité »…) ou à code composé (« Phase 4.31 ») ne sont pas jugés.
+  // Libellés de phase des jalons (26.10.2026, demande d'Achim ; liste normée depuis le 10.11.2026)
+  // Le code de phase est lu dans le libellé (« SIA 32 … », « Phase 32 », « SIA 53a … ») ; il sert à proposer le
+  // libellé normé de la même phase. La conformité, elle, se juge sur la liste normée NORME_JALONS (plus bas).
   // -------------------------------------------------------------------
   function codePhaseJalon(lib) {
     var m = /(?:^|[^a-z])(?:sia|phase)\s*[-–]?\s*(\d{1,2}[a-d]?)(?![0-9a-z]|[.,]\d)/i.exec(String(lib || ''));
     return m ? m[1].toLowerCase() : null;
   }
+  /* Liste normée des jalons GE-Invest (10.11.2026, Achim, QCM : « seule la liste standard » ; « signaler aussi » les jalons
+     qui ne nomment pas de phase). Tout jalon dont le libellé n'est pas l'un de ces douze est signalé pour correction ;
+     une date prévue vide n'est plus une anomalie (un projet peut ne couvrir qu'une partie des phases, ex. CECB+). */
+  var NORME_JALONS = [
+    'SIA 21 Etude préliminaire',
+    'SIA 31 Av-projet, fiche projet approuvée = début réel',
+    'SIA 32 Projet de l\'ouvrage - DG validé',
+    'SIA 33 Demande d\'autorisation',
+    'SIA 41 Appel d\'offres',
+    'SIA 51 Projet d\'exécution',
+    'SIA 52 Exécution de l\'ouvrage (ouverture chantier)',
+    'SIA 53a Mise en service et achèvement',
+    'SIA 53b Remise ouvrage (début garantie) = date MES',
+    'SIA 53c Projet livré et récept., engagés non soldés',
+    'SIA 53d Projet terminé (décompte final) = fin réestimée',
+    'SIA 62 Bouclement (fin de garantie SIA)'
+  ];
+  function libNorme(lib) { return String(lib || '').replace(/[\u2018\u2019\u00b4`]/g, '\'').replace(/\s+/g, ' ').trim(); }
   function controleLibellesPhases(db) {
-    var parCode = {};
+    var norme = {}, refParCode = {};
+    NORME_JALONS.forEach(function (l) { norme[libNorme(l)] = l; refParCode[codePhaseJalon(l)] = l; });
+    var conformes = {}, groupes = {};
+    /* libellé normé proposé : celui de la même phase ; « 53 » seul → l'un des quatre jalons 53a à 53d (relecture du 10.11) */
+    function refPour(code) { return refParCode[code] || (code === '53' ? 'SIA 53a à 53d (à préciser)' : null); }
     (db.jalons || []).forEach(function (j) {
-      var lib = String(j.libelle || '').trim(), code = codePhaseJalon(lib);
-      if (!code) return;
-      var c = parCode[code] || (parCode[code] = {});
-      c[lib] = (c[lib] || 0) + 1;
+      var lib = libNorme(j.libelle);
+      if (norme[lib]) { var c0 = codePhaseJalon(lib); conformes[c0] = (conformes[c0] || 0) + 1; return; }
+      var code = codePhaseJalon(lib) || '—', brut = String(j.libelle || '').trim() || '(sans libellé)';   /* texte exact de GE-Invest, pour le retrouver */
+      var g = groupes[code] || (groupes[code] = {});
+      g[brut] = (g[brut] || 0) + 1;
     });
-    var phases = [], reference = {};
-    Object.keys(parCode).forEach(function (code) {
-      var libs = Object.keys(parCode[code]).map(function (l) { return { libelle: l, n: parCode[code][l] }; })
+    var codes = {}; Object.keys(refParCode).concat(Object.keys(groupes)).forEach(function (c) { codes[c] = 1; });
+    var phases = Object.keys(codes).map(function (code) {
+      var libs = Object.keys(groupes[code] || {}).map(function (l) { return { libelle: l, n: groupes[code][l] }; })
         .sort(function (a, b) { return b.n - a.n || (a.libelle < b.libelle ? -1 : 1); });
-      reference[code] = libs[0].libelle;
-      phases.push({ code: code, reference: libs[0].libelle, nRef: libs[0].n, variantes: libs.slice(1),
-                    nEcarts: libs.slice(1).reduce(function (s, v) { return s + v.n; }, 0) });
-    });
-    phases.sort(function (a, b) { return parseInt(a.code, 10) - parseInt(b.code, 10) || (a.code < b.code ? -1 : 1); });
+      return { code: code, reference: refPour(code), nRef: conformes[code] || 0, variantes: libs,
+               nEcarts: libs.reduce(function (s, v) { return s + v.n; }, 0) };
+    }).sort(function (a, b) { return (a.code === '—') - (b.code === '—') || (parseInt(a.code, 10) || 99) - (parseInt(b.code, 10) || 99) || (a.code < b.code ? -1 : 1); });
     var parProjet = {}, nEcarts = 0;
     (db.jalons || []).forEach(function (j) {
-      var lib = String(j.libelle || '').trim(), code = codePhaseJalon(lib);
-      if (!code || lib === reference[code]) return;
-      (parProjet[j.numero_projet] || (parProjet[j.numero_projet] = [])).push({ libelle: lib, reference: reference[code], code: code });
+      var lib = libNorme(j.libelle);
+      if (norme[lib]) return;
+      var code = codePhaseJalon(lib);
+      (parProjet[j.numero_projet] || (parProjet[j.numero_projet] = [])).push({ libelle: String(j.libelle || '').trim() || '(sans libellé)', reference: code ? refPour(code) : null, code: code || '—' });
       nEcarts++;
     });
-    return { phases: phases, parProjet: parProjet, nEcarts: nEcarts };
+    return { phases: phases, parProjet: parProjet, nEcarts: nEcarts, norme: NORME_JALONS.slice() };
   }
 
   function computeCompleteness(db, mois) {
@@ -10518,9 +10611,8 @@ var PTE_FICHE = (function (C, T) {
         if (pp.mesures.sre === null) pb.push('sous-site sans SRE');
         if (pp.mesures.agent && pp.mesures.agent.aRenseigner) pb.push('facteur CO₂ à renseigner (Data)');
       }
-      if (J.some(function (j) { return !j.date_prevue; })) pb.push('jalon sans date prévue');
       var ecartsLib = libPhases.parProjet[np];
-      if (ecartsLib && ecartsLib.length) pb.push('libellé de phase à harmoniser (' + ecartsLib.length + ')');
+      if (ecartsLib && ecartsLib.length) pb.push('jalon hors de la liste normée (' + ecartsLib.length + ')');
       if (reprises[np]) pb.push('année de référence financière absente (' + db.meta.gei.anneeRef + ' reprise)');
       if (pb.length) out.push({ projet: p, problemes: pb });
     });
@@ -10799,9 +10891,9 @@ var PTE_FICHE = (function (C, T) {
     mapPerfGlobale: mapPerfGlobale, cleanRPF: cleanRPF, sousSiteFromObjet: sousSiteFromObjet, kchf: kchf, pct01: pct01,
     defaultParams: defaultParams, SEV: SEV, COLOR_LABEL: COLOR_LABEL, worst: worst,
     mapDeclareDelais: mapDeclareDelais, mapDeclareLivrables: mapDeclareLivrables, mapDeclareDepenses: mapDeclareDepenses, mapDeclareRisques: mapDeclareRisques,
-    computeFraicheur: computeFraicheur, computeDelais: computeDelais, computeDepenses: computeDepenses, computeLivrables: computeLivrables, computeRisques: computeRisques,
+    computeFraicheur: computeFraicheur, delaiSaisieOuvert: delaiSaisieOuvert, moisPrecedent: moisPrecedent, computeDelais: computeDelais, computeDepenses: computeDepenses, computeLivrables: computeLivrables, computeRisques: computeRisques,
     computeGlobal: computeGlobal, computeProjectMonth: computeProjectMonth, computeTendance: computeTendance, computeAllProjects: computeAllProjects,
-    computePortfolioSemaphore: computePortfolioSemaphore, computeCompleteness: computeCompleteness, controleLibellesPhases: controleLibellesPhases, codePhaseJalon: codePhaseJalon, moisDisponibles: moisDisponibles,
+    computePortfolioSemaphore: computePortfolioSemaphore, computeCompleteness: computeCompleteness, controleLibellesPhases: controleLibellesPhases, NORME_JALONS: NORME_JALONS, codePhaseJalon: codePhaseJalon, moisDisponibles: moisDisponibles,
     gelDate: gelDate, getSuiviRow: getSuiviRow, indexParProjet: indexParProjet, vueProjet: vueProjet,
     pteFieldForObjectif: pteFieldForObjectif, pteGainsTousPortefeuilles: pteGainsTousPortefeuilles, computeTrajectoire2030: computeTrajectoire2030, OBJ_CONTRIB: OBJ_CONTRIB, computeApport2030: computeApport2030, apportParSousSite: apportParSousSite,
     OBJ_PTE: OBJ_PTE, median: median, prioOf: prioOf, findPrioRow: findPrioRow, alignementPerimetre: alignementPerimetre
@@ -11348,7 +11440,7 @@ var PTE_FICHE = (function (C, T) {
     DB = registreSeul || Engine.createDB(); REG = null;
     STATE.mois = null; STATE.projetSel = null; STATE.perimetre = 'ALL'; STATE.perimetres = [];
     STATE.rep = { pf: null, ss: null, projet: null, rp: [], statut: null, type: [], sia: [], q: '', expanded: {}, mode: 'autres' };   /* mode : relecture du 10.11 */
-    STATE.questionsOuvertes = false; STATE.hashMessage = null; STATE.communMeta = null;
+    STATE.questionsOuvertes = false; STATE.questionsGenerees = null; STATE.hashMessage = null; STATE.communMeta = null;
   }
   /* Rend la promesse de la suppression dans IndexedDB (le rechargement qui suit l'attend). Le registre n'est pas
      retiré : vidé, il garde la date de l'effacement (27.10.2026). Un autre onglet ouvert, aux données antérieures,
@@ -11379,9 +11471,14 @@ var PTE_FICHE = (function (C, T) {
     var moisDisp = Engine.moisDisponibles(DB);
     if (MOIS_FORCE && moisDisp.indexOf(STATE.mois) !== -1) return;
     /* une fiche datée d'un mois futur (saisie en avance, faute de frappe) ne fait pas basculer la revue (relecture du 06.11) */
-    var d = new Date(), courant = d.getFullYear() + '-' + (d.getMonth() < 9 ? '0' : '') + (d.getMonth() + 1);
+    var d = PARAMS._aujourdhui ? new Date(PARAMS._aujourdhui) : new Date(), courant = d.getFullYear() + '-' + (d.getMonth() < 9 ? '0' : '') + (d.getMonth() + 1);
     var ok = moisDisp.filter(function (m) { return m <= courant; });
     STATE.mois = ok.length ? ok[ok.length - 1] : (moisDisp.length ? moisDisp[moisDisp.length - 1] : null);
+    /* 10.11.2026 (Achim, QCM « Mois courant après le 20 ») : passé le délai de saisie, le mois de revue est le mois courant,
+       même sans aucune fiche de ce mois — les projets sans fiche du mois passent alors en gris. Seulement quand les fiches
+       vont jusqu'au mois précédent (un classeur ancien garde son dernier mois). */
+    var J = +PARAMS.fraicheurDelaiJour;
+    if (STATE.mois && STATE.mois < courant && J > 0 && d.getDate() > J && STATE.mois === Engine.moisPrecedent(courant)) STATE.mois = courant;
   }
   var MOIS_FORCE = false;
 
@@ -12585,7 +12682,7 @@ var PTE_FICHE = (function (C, T) {
   // ==================================================================
   // C3 — « Questions du mois » : la revue commence par les trous.
   // Détection à partir du rapport de complétude et des règles existantes ;
-  // cinq questions par RPF (les plus bloquantes), numérotées
+  // une question par trou (plafond de cinq par RPF levé le 10.11.2026), numérotées
   // Q-<RPF court>-<AAAA-MM>-<n>, formulées par Pauline (≤ 25 mots, une
   // action, où la saisir). Stockage : PTE_COMMUN.ecrireQuestions
   // (localStorage). Au mois suivant, à l'import du nouveau classeur, les
@@ -12597,7 +12694,8 @@ var PTE_FICHE = (function (C, T) {
     sans_suivi_mois:       { poids: 9,  texte: function (d) { return 'Dans GE-Invest, fiche ' + d.np + ' : saisissez le suivi mensuel de ' + d.moisLib + ' (sémaphores et avancement).'; } },
     sans_prevision:        { poids: 8,  texte: function (d) { return 'Dans GE-Invest, fiche ' + d.np + ' : renseignez le budget et la prévision de dépenses ' + d.annee + '.'; } },
     risque_sans_probabilite: { poids: 7, texte: function (d) { return 'Dans GE-Invest, fiche ' + d.np + ', risque « ' + d.lib + ' » : indiquez sa probabilité et son impact.'; } },
-    jalon_sans_date:       { poids: 6,  texte: function (d) { return 'Dans GE-Invest, fiche ' + d.np + ' : renseignez la date prévue du jalon « ' + d.lib + ' ».'; } },
+    /* 10.11.2026 : « jalon sans date » retiré (un projet peut ne couvrir qu'une partie des phases) ; jalon hors liste normée signalé */
+    jalon_hors_norme:      { poids: 5,  texte: function (d) { return 'Dans GE-Invest, fiche ' + d.np + ' : ' + d.n + (d.n > 1 ? ' jalons hors liste normée' : ' jalon hors liste normée') + ' (' + d.libs + '), à renommer selon la liste normée' + (d.sansPhase ? ' ou à supprimer' : '') + '.'; } },
     sans_jalon:            { poids: 6,  texte: function (d) { return 'Dans GE-Invest, fiche ' + d.np + ' : saisissez au moins un jalon avec sa date prévue.'; } },
     fiche_60j:             { poids: 5,  texte: function (d) { return 'Dans GE-Invest, fiche ' + d.np + ' : mettez à jour la fiche de suivi, inchangée depuis le ' + d.date + '.'; } },
     sans_sous_site:        { poids: 4,  texte: function (d) { return 'Dans GE-Invest, fiche ' + d.np + ' : rattachez l’objet actif au sous-site concerné (numéro à six chiffres).'; } },
@@ -12605,6 +12703,22 @@ var PTE_FICHE = (function (C, T) {
     sous_site_sans_sre:    { poids: 2,  texte: function (d) { return 'Dans Plan_PTE, sous-site ' + d.ss + ' : renseignez la SRE (colonne SRE), sinon aucune chaleur n’est calculable.'; } },
     diag_polluants:        { poids: 2,  texte: function (d) { return d.niv ? 'Diagnostic polluants du sous-site ' + d.ss + ' (' + d.niv + ') : à compléter' + (d.travaux ? ', projet ' + d.np + ' en travaux (phase ' + d.phase + ').' : ' avant l’appel d’offres du projet ' + d.np + ' (phase ' + d.phase + ').') : 'Dans Plan_PTE, sous-site ' + d.ss + ' : renseignez « Diag polluants » (projet ' + d.np + ' en phase ' + d.phase + ').'; } },
     facteur_co2:           { poids: 1,  texte: function (d) { return 'Dans Data, colonnes FournisseurChaleur et FacteurCO2 : renseignez le facteur de « ' + d.cible + ' » (sous-site ' + d.ss + ').'; } }
+  };
+  var QUESTIONS_MAX_PAR_RPF = Infinity;   /* 5 jusqu'au 10.11.2026 */
+  /* Regroupement des questions identiques (10.11.2026, Achim : « Dans Sémaphores, regroupées ») : un libellé et un lieu par règle */
+  var GROUPES_QUESTIONS = {
+    engage_sup_credit:       { ou: 'GE-Invest', lib: function () { return 'Engagé supérieur au crédit'; } },
+    sans_suivi_mois:         { ou: 'GE-Invest', lib: function (m) { return 'Suivi mensuel de ' + moisLibelle(m) + ' à saisir' + (Engine.delaiSaisieOuvert && Engine.delaiSaisieOuvert(m, PARAMS) ? ' (délai : ' + PARAMS.fraicheurDelaiJour + ' ' + MOIS_LIB[+m.slice(5, 7) - 1] + ')' : ''); } },
+    sans_prevision:          { ou: 'GE-Invest', lib: function (m) { return 'Budget et prévision de dépenses ' + m.slice(0, 4) + ' à renseigner'; } },
+    risque_sans_probabilite: { ou: 'GE-Invest', lib: function () { return 'Risques sans probabilité ou sans impact'; } },
+    jalon_hors_norme:        { ou: 'GE-Invest', lib: function () { return 'Jalons hors de la liste normée'; } },
+    sans_jalon:              { ou: 'GE-Invest', lib: function () { return 'Aucun jalon saisi'; } },
+    fiche_60j:               { ou: 'GE-Invest', lib: function () { return 'Fiche de suivi inchangée depuis plus de 60 jours'; } },
+    sans_sous_site:          { ou: 'GE-Invest', lib: function () { return 'Objet actif sans sous-site'; } },
+    sans_ligne_pte:          { ou: 'Plan_PTE', lib: function () { return 'Sous-site absent de Plan_PTE'; } },
+    sous_site_sans_sre:      { ou: 'Plan_PTE', lib: function () { return 'Sous-site sans SRE'; } },
+    diag_polluants:          { ou: 'Plan_PTE', lib: function () { return 'Diagnostic polluants à compléter'; } },
+    facteur_co2:             { ou: 'Data', lib: function () { return 'Facteur CO₂ à renseigner'; } }
   };
   var MOIS_LIB = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
   function moisLibelle(mois) { var m = /^(\d{4})-(\d{2})$/.exec(mois || ''); return m ? (MOIS_LIB[+m[2] - 1] + ' ' + m[1]) : (mois || '—'); }
@@ -12626,9 +12740,11 @@ var PTE_FICHE = (function (C, T) {
       var cle = np + '|' + regle + (cleDetail ? '|' + cleDetail : '');
       if (vus[cle]) return; vus[cle] = true;
       d.np = np; d.annee = annee; d.moisLib = moisLibelle(mois);
-      out.push({ cle: cle, regle: regle, np: np, rpf: rpf || '', poids: REGLES_QUESTIONS[regle].poids, credit: credit || 0, texte: REGLES_QUESTIONS[regle].texte(d) });
+      out.push({ cle: cle, regle: regle, np: np, rpf: rpf || '', poids: REGLES_QUESTIONS[regle].poids, credit: credit || 0, texte: REGLES_QUESTIONS[regle].texte(d),
+        det: d.lib || (regle === 'diag_polluants' || regle === 'sous_site_sans_sre' || regle === 'sans_ligne_pte' || regle === 'facteur_co2' ? 'sous-site ' + d.ss : '') + (d.cible ? ' · ' + d.cible : '') });
     }
     var idx = Engine.indexParProjet(DB);   /* lignes par projet, ordre d'origine : une passe par tableau */
+    var lpQ = Engine.controleLibellesPhases(DB);
     var avecDiagQ = diagColonnePresente(), diagQ = {};
     DB.projets.forEach(function (p) {
       var np = p.numero_projet, rpf = (p.rpf || '').trim(), V = Engine.vueProjet(idx, np);
@@ -12647,7 +12763,10 @@ var PTE_FICHE = (function (C, T) {
       });
       var jal = V.jalons;
       if (!jal.length) push('sans_jalon', np, rpf, credit, {});
-      jal.forEach(function (j) { if (!j.date_prevue) push('jalon_sans_date', np, rpf, credit, { lib: j.libelle }, j.libelle); });
+      /* une question par projet (relecture du 10.11 : 1 100 jalons hors norme sur le classeur réel) ; détail dans le panneau Données et son export */
+      var hn = lpQ.parProjet[np] || [];
+      if (hn.length) push('jalon_hors_norme', np, rpf, credit, { n: hn.length, libs: hn.slice(0, 2).map(function (e) { return '« ' + e.libelle + ' »'; }).join(', ') + (hn.length > 2 ? '…' : ''),
+        sansPhase: hn.some(function (e) { return e.code === '—'; }), lib: hn.length + (hn.length > 1 ? ' jalons' : ' jalon') });
       var rows = V.suivi.filter(function (r) { return r.date_maj; }).sort(function (a, b) { return a.date_maj < b.date_maj ? 1 : -1; });
       if (rows.length) { var dm = Engine.parseDate(rows[0].date_maj); if (dm && Engine.dayDiff(gel, dm) > 60) push('fiche_60j', np, rpf, credit, { date: fmtDateCH(rows[0].date_maj) }); }
       if (!ss) push('sans_sous_site', np, rpf, credit, {});
@@ -12679,6 +12798,8 @@ var PTE_FICHE = (function (C, T) {
       var e = s.mois[m];
       if (!e || typeof e !== 'object' || !Array.isArray(e.questions)) s.mois[m] = { genereLe: null, questions: [] };
       else e.questions = e.questions.filter(function (q) { return q && typeof q === 'object'; });
+      /* règle retirée (10.11.2026 : « jalon sans date ») : statut « retirée », hors carte, rejeu et taux de réponse ; numéro gardé */
+      if (e && Array.isArray(e.questions)) e.questions.forEach(function (q) { if (!REGLES_QUESTIONS[q.regle] && q.statut !== 'soldée') q.statut = 'retirée'; });
     });
     return s;
   }
@@ -12686,7 +12807,7 @@ var PTE_FICHE = (function (C, T) {
 
   // Génère (ou complète) les questions du mois `mois` pour chaque RPF (ou le
   // RPF filtré). Une question déjà posée garde son numéro et son statut ;
-  // les clés disparues passent « soldée » ; au plus 5 questions par RPF.
+  // les clés disparues passent « soldée » ; plus de plafond (QUESTIONS_MAX_PAR_RPF).
   function genererQuestions(mois, rpfSeul) {
     var stock = lireQuestionsStock();
     var det = detecterQuestions(mois);
@@ -12705,10 +12826,11 @@ var PTE_FICHE = (function (C, T) {
       var nOuvertes = existantes.filter(function (q) { return q.statut === 'ouverte'; }).length;
       var cand = parRpf[rpf].filter(function (d) { return !dejaCle[d.cle]; })
         .sort(function (a, b) { return (b.poids - a.poids) || (b.credit - a.credit) || (a.np < b.np ? -1 : 1); });
-      for (var i = 0; i < cand.length && nOuvertes < 5; i++) {
+      /* 10.11.2026 (Achim, QCM) : plus de plafond de cinq — les questions identiques sont regroupées à l'affichage */
+      for (var i = 0; i < cand.length && nOuvertes < QUESTIONS_MAX_PAR_RPF; i++) {
         var d = cand[i]; maxN++; nOuvertes++;
         entree.questions.push({ id: 'Q-' + rpfCourt(rpf) + '-' + mois + '-' + maxN, n: maxN, mois: mois, rpf: rpf, rpfCourt: rpfCourt(rpf),
-          projet: d.np, regle: d.regle, cle: d.cle, texte: d.texte, statut: 'ouverte', poseeLe: now, soldeeLe: null });
+          projet: d.np, regle: d.regle, cle: d.cle, det: d.det || '', texte: d.texte, statut: 'ouverte', poseeLe: now, soldeeLe: null });
       }
     });
     entree.genereLe = now;
@@ -12743,18 +12865,45 @@ var PTE_FICHE = (function (C, T) {
     var prev = Object.keys(stock.mois || {}).filter(function (m) { return m < mois; }).sort().pop() || null;
     var cur = stock.mois[mois] || null;
     if (!prev) return { taux: null, posees: 0, soldees: 0, moisPrecedent: null, premieres: !!(cur && cur.questions.length) };
-    var qs = stock.mois[prev].questions.filter(function (q) { return rpf === null || rpf === undefined || q.rpf === rpf; });
+    var qs = stock.mois[prev].questions.filter(function (q) { return q.statut !== 'retirée' && REGLES_QUESTIONS[q.regle] && (rpf === null || rpf === undefined || q.rpf === rpf); });
     var s = qs.filter(function (q) { return q.statut === 'soldée'; }).length;
     return { taux: qs.length ? s / qs.length : null, posees: qs.length, soldees: s, moisPrecedent: prev, premieres: false };
   }
 
-  function texteQuestionsMail(mois, rpf) {
+  /* Questions d'un RPF regroupées par règle (10.11.2026) : [{ regle, ou, lib, ouvertes:[q], soldees:[q] }], ordre de gravité.
+     `garder(q)` : filtre de périmètre (projets des lignes affichées). */
+  function questionsGroupees(e, rpf, mois, garder) {
+    var qs = (e ? e.questions : []).filter(function (q) { return q.rpf === rpf && q.statut !== 'retirée' && (!garder || garder(q)); });
+    var g = {};
+    qs.forEach(function (q) {
+      var G = GROUPES_QUESTIONS[q.regle] || { ou: '', lib: function () { return q.regle; } };
+      var x = g[q.regle] || (g[q.regle] = { regle: q.regle, ou: G.ou, lib: G.lib(mois), poids: (REGLES_QUESTIONS[q.regle] || {}).poids || 0, ouvertes: [], soldees: [] });
+      (q.statut === 'soldée' ? x.soldees : x.ouvertes).push(q);
+    });
+    return Object.keys(g).map(function (k) { return g[k]; }).sort(function (a, b) { return (b.poids - a.poids) || a.lib.localeCompare(b.lib); });
+  }
+  function libQuestion(q) { return q.projet + (q.det ? ' (' + q.det + ')' : ''); }
+  function texteQuestionsMail(mois, rpf, garder) {
     var stock = lireQuestionsStock(), e = stock.mois[mois];
-    var qs = e ? e.questions.filter(function (q) { return q.rpf === rpf; }) : [];
+    var grp = questionsGroupees(e, rpf, mois, garder).filter(function (x) { return x.ouvertes.length; });
     var lines = ['Questions du mois — ' + moisLibelle(mois) + ' — ' + (rpf ? nomRpf(rpf) : 'Hors périmètre RPF'), ''];
-    qs.forEach(function (q) { lines.push(q.id + (q.statut === 'soldée' ? ' (soldée)' : '') + ' : ' + q.texte); });
-    lines.push('', 'Revue de projets · Programme de transition écologique · OCBA');
+    if (!grp.length) lines.push('Rien à compléter.');
+    grp.forEach(function (x) {
+      var nPm = {}; x.ouvertes.forEach(function (q) { nPm[q.projet] = 1; }); nPm = Object.keys(nPm).length;
+      lines.push((x.ou ? 'Dans ' + x.ou + ' — ' : '') + x.lib + ' : ' + nPm + (nPm > 1 ? ' fiches' : ' fiche') + (x.ouvertes.length > nPm ? ' (' + x.ouvertes.length + ' questions)' : ''));
+      x.ouvertes.forEach(function (q) { lines.push('  ' + q.id + ' · ' + libQuestion(q)); });
+      lines.push('');
+    });
+    lines.push('Revue de projets · Programme de transition écologique · OCBA');
     return lines.join('\n');
+  }
+  /* Génération automatique (10.11.2026 : plus de bouton) : une fois par mois de revue et par classeur, à l'affichage */
+  function assurerQuestions(mois) {
+    if (!mois) return;
+    var cle = mois + '|' + (((planFileInfo() || {}).name) || '') + '|' + DB.projets.length + '|' + ((DB.meta && DB.meta.geiImport && DB.meta.geiImport.date) || '') + '|' + ((((planFileInfo() || {}).info) || {}).importedAt || '');
+    if (STATE.questionsGenerees === cle) return;
+    STATE.questionsGenerees = cle;
+    try { genererQuestions(mois); } catch (e) { console.error(e); }
   }
   function copierTexte(txt) {
     try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(txt); return true; } } catch (e) { /* repli */ }
@@ -12763,44 +12912,60 @@ var PTE_FICHE = (function (C, T) {
       var okc = document.execCommand && document.execCommand('copy'); document.body.removeChild(ta); return !!okc;
     } catch (e2) { return false; }
   }
-  function exportQuestionsCSV(mois) {
+  function exportQuestionsCSV(mois, garder) {
     var stock = lireQuestionsStock(), e = stock.mois[mois];
-    var rows = (e ? e.questions : []).map(function (q) { return { id: q.id, mois: q.mois, rpf: q.rpf, projet: q.projet, regle: q.regle, statut: q.statut, texte: q.texte, posee_le: q.poseeLe || '', soldee_le: q.soldeeLe || '' }; });
+    var rows = (e ? e.questions : []).filter(function (q) { return !garder || garder(q); }).map(function (q) { return { id: q.id, mois: q.mois, rpf: q.rpf, projet: q.projet, regle: q.regle, statut: q.statut, texte: q.texte, posee_le: q.poseeLe || '', soldee_le: q.soldeeLe || '' }; });
     return downloadCSV('questions_' + mois + '.csv', ['id', 'mois', 'rpf', 'projet', 'regle', 'statut', 'texte', 'posee_le', 'soldee_le'], rows);
   }
 
-  // Carte « Questions du mois » (Reporting)
-  function questionsCard(mois) {
+  // Carte « À compléter » (Sémaphores, 10.11.2026 — Achim : « Dans Sémaphores, regroupées ») : par RPF du périmètre,
+  // une ligne par règle (« N fiches »), numéros des projets, « Copier pour un mail » ; questions soldées comptées à part.
+  function questionsCard(mois, rows) {
+    assurerQuestions(mois);
     var stock = lireQuestionsStock(), e = stock.mois[mois];
+    /* périmètre de l'en-tête seulement (pas les filtres du Reporting) : mêmes comptes que le mode revue et l'export */
+    var dans = null;
+    if (rows) { dans = {}; projetsByPerimetre(STATE.perimetre).forEach(function (c) { dans[c.projet.numero_projet] = true; }); }
+    var garder = dans ? function (q) { return dans[q.projet]; } : null;
     var card = el('div', { class: 'card', id: 'questions-card' });
-    var btnCsv = el('button', { type: 'button', class: 'btn' }, ['Exporter les questions (CSV)']);
-    btnCsv.addEventListener('click', function () { exportQuestionsCSV(mois); });
-    var btnClose = el('button', { type: 'button', class: 'btn' }, ['Masquer']);
-    btnClose.addEventListener('click', function () { STATE.questionsOuvertes = false; renderReportingView(); });
-    var right = el('span', {}, [btnCsv, ' ', btnClose]);
-    card.appendChild(cardTitle('Questions du mois — ' + moisLibelle(mois), 'Cinq questions par RPF, les plus bloquantes pour les sémaphores, tirées du contrôle de complétude. Numéro Q-<RPF>-<mois>-<n>. « Copier pour un mail » reprend les questions du RPF.', right));
-    if (!e || !e.questions.length) { card.appendChild(el('p', { class: 'muted small' }, ['Aucun trou détecté pour ce mois : rien à demander.'])); return card; }
-    var rpfs = []; e.questions.forEach(function (q) { if (rpfs.indexOf(q.rpf) === -1) rpfs.push(q.rpf); });
-    rpfs.sort();
+    var btnCsv = el('button', { type: 'button', class: 'btn' }, ['Exporter (CSV)']);
+    btnCsv.addEventListener('click', function () { exportQuestionsCSV(mois, garder); });
+    card.appendChild(cardTitle('À compléter — questions de ' + moisLibelle(mois), 'Trous de données qui empêchent un sémaphore d’être juste, détectés à chaque classeur, regroupés par portefeuille puis par nature. Chaque question garde son numéro Q-<RPF>-<mois>-<n> ; au classeur suivant, celles dont le trou est comblé se soldent. « Copier pour un mail » reprend la liste du portefeuille.', btnCsv));
+    var rpfs = []; (e ? e.questions : []).forEach(function (q) { if (q.statut !== 'retirée' && (!garder || garder(q)) && rpfs.indexOf(q.rpf) === -1) rpfs.push(q.rpf); });
+    rpfs.sort(function (a, b) { return (!a) - (!b) || nomRpf(a).localeCompare(nomRpf(b)); });
+    if (!rpfs.length) { card.appendChild(el('p', { class: 'muted small' }, ['Aucun trou détecté pour ce mois dans le périmètre : rien à demander.'])); return card; }
     rpfs.forEach(function (rpf) {
-      var qs = e.questions.filter(function (q) { return q.rpf === rpf; });
+      var grp = questionsGroupees(e, rpf, mois, garder);
+      var nO = 0, nS = 0; grp.forEach(function (x) { nO += x.ouvertes.length; nS += x.soldees.length; });
       var tr = tauxReponse(mois, rpf);
       var sec = el('div', { class: 'questions-rpf' });
       var head = el('div', { class: 'questions-rpf-head' }, [el('h3', {}, [rpf ? nomRpf(rpf) : 'Hors périmètre RPF'])]);
-      head.appendChild(el('span', { class: 'taux' }, [qs.filter(function (q) { return q.statut === 'ouverte'; }).length + ' ouverte(s) · ' + qs.filter(function (q) { return q.statut === 'soldée'; }).length + ' soldée(s)' +
+      head.appendChild(el('span', { class: 'taux' }, [nO + ' ouverte' + (nO > 1 ? 's' : '') + ' · ' + nS + ' soldée' + (nS > 1 ? 's' : '') +
         (tr.moisPrecedent ? ' · taux de réponse ' + moisLibelle(tr.moisPrecedent) + ' : ' + (tr.taux === null ? '—' : Math.round(tr.taux * 100) + ' %') : '')]));
       var btnCopy = el('button', { type: 'button', class: 'btn' }, ['Copier pour un mail']);
-      btnCopy.addEventListener('click', function () { var okc = copierTexte(texteQuestionsMail(mois, rpf)); btnCopy.textContent = okc ? 'Copié' : 'Copie impossible'; setTimeout(function () { btnCopy.textContent = 'Copier pour un mail'; }, 1800); });
-      head.appendChild(btnCopy);
+      btnCopy.addEventListener('click', function () { var okc = copierTexte(texteQuestionsMail(mois, rpf, garder)); btnCopy.textContent = okc ? 'Copié' : 'Copie impossible'; setTimeout(function () { btnCopy.textContent = 'Copier pour un mail'; }, 1500); });
+      if (nO) head.appendChild(btnCopy);
       sec.appendChild(head);
-      var ul = el('ul', { class: 'questions-list' });
-      qs.forEach(function (q) {
-        var li = el('li', { class: q.statut === 'soldée' ? 'q-soldee' : '' }, [
-          el('span', { class: 'q-id' }, [q.id]),
-          el('span', { class: 'q-txt' }, [q.texte]),
-          semInline(q.statut === 'soldée' ? 'vert' : 'orange', q.statut)
+      var ul = el('ul', { class: 'questions-list questions-grp' });
+      grp.forEach(function (x) {
+        var n = x.ouvertes.length;
+        /* un projet par lien : ses questions de même nature (plusieurs jalons, plusieurs risques) en info-bulle */
+        var parP = {}, ordreP = [];
+        x.ouvertes.forEach(function (q) { if (!parP[q.projet]) { parP[q.projet] = []; ordreP.push(q.projet); } parP[q.projet].push(q); });
+        var nums = el('span', { class: 'q-nums' });
+        ordreP.forEach(function (np, i) {
+          var qs = parP[np];
+          var a = el('a', { href: '#', class: 'q-np' }, [qs.length > 1 ? np + ' (' + qs.length + ')' : libQuestion(qs[0])]);
+          tip(a, qs.map(function (q) { return q.id + ' · ' + q.texte; }).join(' — ') + ' Posée' + (qs.length > 1 ? 's' : '') + ' le ' + fmtDateCH(qs[0].poseeLe) + '.');
+          a.addEventListener('click', function (ev) { ev.preventDefault(); if (DB.projets.some(function (p) { return p.numero_projet === np; })) { STATE.projetSel = np; showView('fiche'); } });
+          nums.appendChild(a); if (i < ordreP.length - 1) nums.appendChild(document.createTextNode(', '));
+        });
+        var nP = ordreP.length;
+        var li = el('li', { class: n ? '' : 'q-soldee' }, [
+          el('span', { class: 'q-ou' }, [x.ou || '']),
+          el('span', { class: 'q-txt' }, [el('b', {}, [x.lib]), ' — ' + (n ? nP + (nP > 1 ? ' fiches' : ' fiche') + (n > nP ? ' (' + n + ' questions)' : '') : 'tout soldé') + (x.soldees.length ? ' · ' + x.soldees.length + ' soldée' + (x.soldees.length > 1 ? 's' : '') : ''), n ? el('br') : null, n ? nums : null]),
+          semInline(n ? 'orange' : 'vert', n ? 'ouverte' + (n > 1 ? 's' : '') : 'soldée')
         ]);
-        tip(li, 'Projet ' + q.projet + ' · règle « ' + q.regle + ' » · posée le ' + fmtDateCH(q.poseeLe) + (q.soldeeLe ? ' · soldée le ' + fmtDateCH(q.soldeeLe) : '') + '.');
         ul.appendChild(li);
       });
       sec.appendChild(ul);
@@ -12914,7 +13079,7 @@ var PTE_FICHE = (function (C, T) {
   function statutParDefaut() { return STATE.rep.statut === null || STATE.rep.statut === undefined; }
   function viderFiltresRep() { var f = STATE.rep; f.rp = []; f.statut = []; f.type = []; f.sia = []; f.q = ''; }
   function filtresRepModifies() { var f = STATE.rep; return !!(listeF(f.rp).length || !statutParDefaut() || listeF(f.type).length || listeF(f.sia).length || f.q); }
-  function repFilterRows(rows, ignorePf) {
+  function repFilterRows(rows, ignorePf, sansTexte) {
     var f = STATE.rep, fRp = listeF(f.rp), fSt = statutsActifs(), fTy = listeF(f.type), fSia = listeF(f.sia);
     return rows.filter(function (r) {
       if (!ignorePf && f.pf && r.pf !== f.pf) return false;
@@ -12923,9 +13088,9 @@ var PTE_FICHE = (function (C, T) {
       if (fTy.length === 1 && fTy[0] === 'etude' && r.p.projet_etude !== 'oui') return false;
       if (fTy.length === 1 && fTy[0] === 'realisation' && r.p.projet_etude === 'oui') return false;
       if (fSia.length && fSia.indexOf(phaseSia(r.avancement) || 'nr') === -1) return false;
-      if (f.q) {
+      if (f.q && !sansTexte) {
         var hay = (r.p.numero_projet + ' ' + r.p.nom_projet + ' ' + (r.p.numero_sous_site || '') + ' ' + (r.p.nom_sous_site || '') + ' ' + nomSousSite(r.p.numero_sous_site, '') + ' ' + (r.p.rp ? r.p.rp + ' ' + nRp(r.p.rp) : '') + ' ' + (r.p.rp || '')).toLowerCase();
-        if (hay.indexOf(f.q.toLowerCase()) === -1) return false;
+        if (gsNorm(hay).indexOf(gsNorm(f.q.trim())) === -1) return false;   /* casse et accents ignorés (10.11.2026, comme Prioriser) */
       }
       return true;
     });
@@ -13575,10 +13740,52 @@ var PTE_FICHE = (function (C, T) {
      l : n (lignes normales), s (serrées). */
   var LS_PLANNING = 'pte.revue.planning.v1';
   var PLANNING = (function () {
-    var d = { h: 'n', l: 'n' };
-    try { var o = JSON.parse(localStorage.getItem(LS_PLANNING) || '{}'); if (o && /^[ngt]$/.test(o.h)) d.h = o.h; if (o && /^[ns]$/.test(o.l)) d.l = o.l; } catch (e) { /* stockage indisponible */ }
+    /* v : planning affiché (10.11.2026, demande d'Achim : une carte, trois plannings) — fam (familles par portefeuille),
+       ss (jalons par sous-site), aff (familles par affectation) ; n : une ligne par sous-site (s) ou par projet (p) */
+    var d = { h: 'n', l: 'n', v: 'fam', n: 's' };
+    try { var o = JSON.parse(localStorage.getItem(LS_PLANNING) || '{}'); if (o && /^[ngt]$/.test(o.h)) d.h = o.h; if (o && /^[ns]$/.test(o.l)) d.l = o.l;
+      if (o && /^(fam|ss|aff)$/.test(o.v)) d.v = o.v; if (o && /^[sp]$/.test(o.n)) d.n = o.n; } catch (e) { /* stockage indisponible */ }
     return d;
   })();
+  /* Choix du planning et du niveau (10.11.2026) : posés dans l'en-tête de la carte affichée */
+  function planningChoix(onChange, avecNiveau) {
+    function seg(nom, cle, choix) {
+      var g = el('span', { class: 'seg', role: 'group', 'aria-label': nom });
+      choix.forEach(function (c) {
+        var b = el('button', { type: 'button', 'aria-pressed': PLANNING[cle] === c[0] ? 'true' : 'false', title: c[2], 'data-plan': cle + ':' + c[0] }, [c[1]]);
+        b.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (PLANNING[cle] === c[0]) return;
+          PLANNING[cle] = c[0];
+          try { localStorage.setItem(LS_PLANNING, JSON.stringify(PLANNING)); } catch (e2) { /* réglage valable pour la page seulement */ }
+          hideTipBubble(); onChange();
+          var nb = document.querySelector('#plan-hote [data-plan="' + cle + ':' + c[0] + '"]'); if (nb) nb.focus();   /* le focus suit le redessin */
+        });
+        g.appendChild(b);
+      });
+      return el('span', {}, [nom, g]);
+    }
+    return el('span', { class: 'plan-choix no-print' }, [
+      seg('Planning', 'v', [['fam', 'Familles · portefeuilles', 'Familles d’intervention T1 à T4, regroupées par portefeuille (RPF)'],
+        ['ss', 'Jalons · sous-sites', 'Durée et jalons GE-Invest, une ligne par sous-site ou par projet'],
+        ['aff', 'Affectations', 'Sous-sites ou projets regroupés par affectation, à la couleur de leur famille d’intervention, avec leurs jalons']]),
+      avecNiveau ? seg('Lignes', 'n', [['s', 'Par sous-site', 'Une ligne par sous-site (projets regroupés)'], ['p', 'Par projet', 'Une ligne par projet']]) : null
+    ]);
+  }
+  /* Carte unique du planning (10.11.2026) : un des trois plannings, selon PLANNING.v ; se redessine sur place */
+  function repPlanningCard(rows, optsGantt) {
+    var hote = el('div', { class: 'plan-hote', id: 'plan-hote' });
+    function dessiner() {
+      hote.innerHTML = '';
+      var c = null, ctrl = planningChoix(dessiner, true);
+      if (PLANNING.v === 'ss') c = repGanttHote(rows, Object.assign({}, optsGantt, { controles: ctrl, parProjet: PLANNING.n === 'p',
+        title: PLANNING.n === 'p' ? String(optsGantt.title || 'Planning').replace('jalons par sous-site', 'jalons par projet') : optsGantt.title }));
+      else c = repPlanFamillesCard(rows, PLANNING.v === 'aff' ? 'aff' : 'pf', ctrl);
+      hote.appendChild(c || el('div', { class: 'card' }, [cardTitle('Planning', null, ctrl), el('p', { class: 'muted small' }, ['Aucun projet daté dans le périmètre.'])]));
+    }
+    dessiner();
+    return hote;
+  }
   function planningReglages(onChange) {
     function seg(nom, cle, choix) {
       var g = el('span', { class: 'seg', role: 'group', 'aria-label': nom });
@@ -13596,7 +13803,7 @@ var PTE_FICHE = (function (C, T) {
     }
     return el('span', { class: 'gantt-reglages no-print' }, [
       seg('Hauteur', 'h', [['n', 'Normale', 'Liste de hauteur fixe, qui défile'], ['g', 'Grande', 'Liste à la hauteur de la fenêtre'], ['t', 'Tout', 'Toute la liste, sans défilement']]),
-      seg('Lignes', 'l', [['n', 'Normales', 'Lignes de hauteur normale'], ['s', 'Serrées', 'Lignes plus basses : davantage de sous-sites à l’écran']])
+      seg('Densité', 'l', [['n', 'Normales', 'Lignes de hauteur normale'], ['s', 'Serrées', 'Lignes plus basses : davantage de sous-sites à l’écran']])
     ]);
   }
   function dureeTexte(d0, d1) {
@@ -13746,7 +13953,7 @@ var PTE_FICHE = (function (C, T) {
     var wrap = el('div', { class: defile ? 'gantt-scroll' + (mode === 'g' ? ' gantt-h-g' : '') : 'gantt-scroll gantt-h-t' }, [el('div', { class: 'gantt-tete' }, [tete]), svg]);
     return el('div', { class: 'card' }, [
       cardTitle(opts.title || 'Planning (jalons)', opts.tipText || 'Gantt sur les dates prévisionnelles des jalons GE-Invest. En tête, la durée du périmètre affiché (début le plus tôt → fin la plus tardive). Barre : durée du sous-site (début le plus tôt → fin la plus tardive de ses projets). Un clic sur un sous-site affiche le planning de chacun de ses projets. Le survol des marqueurs donne le détail.',
-        opts.reglages ? planningReglages(opts.reglages) : null),
+        (opts.reglages || opts.controles) ? el('span', { class: 'plan-entete-ctrl' }, [opts.controles || null, opts.reglages ? planningReglages(opts.reglages) : null]) : null),
       wrap, legend
     ]);
   }
@@ -13809,13 +14016,51 @@ var PTE_FICHE = (function (C, T) {
   function planPalier(n) { return n >= 5 ? 0.95 : n >= 2 ? 0.6 : n >= 1 ? 0.28 : 0; }
   function dateCH(d) { return d ? ('0' + d.getUTCDate()).slice(-2) + '.' + ('0' + (d.getUTCMonth() + 1)).slice(-2) + '.' + d.getUTCFullYear() : '?'; }
 
-  function repPlanFamillesCard(rows) {
+  /* grp : 'pf' (par portefeuille, depuis le 26.10) ou 'aff' (par affectation du sous-site, 10.11.2026, demande d'Achim) ;
+     ctrl : choix du planning et du niveau, posé dans l'en-tête. Lignes dépliées : un projet ou un sous-site (PLANNING.n). */
+  var AFF_OUVERTES = {};
+  function repPlanFamillesCard(rows, grp, ctrl) {
+    grp = grp === 'aff' ? 'aff' : 'pf';
     var pct = Math.min(100, Math.max(1, +PARAMS.planningRepere || 80)), ech = +PARAMS.planningEcheance || 2030;
     var items = rows.map(planItem);
     if (!items.length) return null;
+    items.forEach(function (i) { i.aff = (affectationSousSite(i.r.p.numero_sous_site) || '').trim() || 'Sans affectation'; });
+    var parSs = PLANNING.n !== 'p';
     /* 10.11.2026 : un seul portefeuille dans le périmètre de l'en-tête = niveau portefeuille (plus de descente dans la page) */
     var pfsU = items.reduce(function (o, i) { o[i.r.pf] = 1; return o; }, {}), pfSeul = Object.keys(pfsU).length === 1 ? Object.keys(pfsU)[0] : null;
-    var pfNiv = STATE.rep.pf || pfSeul, auPf = !!pfNiv;
+    var pfNiv = grp === 'pf' ? (STATE.rep.pf || pfSeul) : null, auPf = !!pfNiv;
+    var depliable = auPf || grp === 'aff';
+    function cleFam(g, fk) { return grp === 'aff' ? g + '|' + fk : String(fk); }
+    function famDe(k) { return FAMILLES.filter(function (f) { return f.k === k; })[0] || FAMILLES[FAMILLES.length - 1]; }
+    /* jalons d'une ligne (planning par affectation) : réalisé = rond, prévu = losange, échu non réalisé = losange plein rouge */
+    var auj = STATE.mois ? Engine.gelDate(STATE.mois, PARAMS) : new Date();   /* « échu » à la date de gel du mois de revue, comme ailleurs */
+    function marquesJalons(g, nps, yc) {
+      nps.forEach(function (np) {
+        jalonsDe(np).forEach(function (j) {
+          var d = Engine.parseDate(j.date_realisee || j.date_prevue); if (!d) return;
+          if (d.getTime() < tMin || d.getTime() >= tMax) return;   /* hors de l'axe : pas posé au bord (relecture du 10.11) */
+          var mx = x(d), late = !j.date_realisee && Engine.parseDate(j.date_prevue) < auj, m, c = 3.2;
+          if (j.date_realisee) m = sv('circle', { cx: mx, cy: yc, r: '3.4', fill: JETON.teal });
+          else m = sv('rect', { x: mx - c, y: yc - c, width: 2 * c, height: 2 * c, transform: 'rotate(45 ' + mx + ' ' + yc + ')', fill: late ? JETON.rouge : JETON.carte, stroke: late ? JETON.rouge : JETON.slate, 'stroke-width': '1.1' });
+          tip(m, (nps.length > 1 ? np + ' — ' : '') + (j.libelle || 'jalon') + ' : ' + (j.date_realisee ? 'réalisé le ' + dateCH(Engine.parseDate(j.date_realisee)) : (late ? 'prévu le ' + dateCH(Engine.parseDate(j.date_prevue)) + ' — échu non réalisé' : 'prévu le ' + dateCH(Engine.parseDate(j.date_prevue)))) + '.');
+          g.appendChild(m);
+        });
+      });
+    }
+    /* sous-sites des projets dépliés : début le plus tôt, fin la plus tardive, étude si tous ses projets sont en étude */
+    function parSousSite(sel) {
+      var o = {}, ordre = [];
+      sel.forEach(function (i) {
+        var k = (i.r.p.numero_sous_site || '').trim() || ('—' + i.r.p.numero_projet);
+        if (!o[k]) { o[k] = { ss: k, its: [] }; ordre.push(k); }
+        o[k].its.push(i);
+      });
+      return ordre.map(function (k) {
+        var g = o[k], deb = null, fin = null;
+        g.its.forEach(function (i) { if (i.deb && (!deb || i.deb < deb)) deb = i.deb; if (i.fin && (!fin || i.fin > fin)) fin = i.fin; });
+        return { ss: g.ss, its: g.its, deb: deb, fin: fin, etude: g.its.every(function (i) { return i.etude; }) };
+      });
+    }
     var nSansFam = items.filter(function (i) { return !i.fam; }).length;
     var mesuresAnciennes = Object.keys((DB.planpte && DB.planpte.bySousSite) || {}).some(function (k) {
       var m = DB.planpte.bySousSite[k].mesures; return m && m.typeIntervention === undefined; });
@@ -13827,14 +14072,32 @@ var PTE_FICHE = (function (C, T) {
         var sel = its.filter(function (i) { return i.fam === f.k; });
         if (!sel.length) return;
         var et = sel.filter(function (i) { return i.etude; }), tr = sel.filter(function (i) { return !i.etude; });
-        var ouvert = auPf && !!FAM_OUVERTES[f.k];
+        var ouvert = depliable && !!FAM_OUVERTES[cleFam(pf, f.k)];
         lignes.push({ type: 'fam', f: f, pf: pf, n: sel.length, sE: planSerie(et, pct, ech), sT: planSerie(tr, pct, ech), ouvert: ouvert });
-        if (ouvert) sel.slice().sort(function (a, b) { return (a.fin ? a.fin.getTime() : 9e15) - (b.fin ? b.fin.getTime() : 9e15); })
-          .forEach(function (i) { lignes.push({ type: 'proj', it: i, f: f }); });
+        var parFin = function (a, b) { return (a.fin ? a.fin.getTime() : 9e15) - (b.fin ? b.fin.getTime() : 9e15); };
+        if (ouvert && parSs) parSousSite(sel).sort(parFin).forEach(function (g) { lignes.push({ type: 'ss', g: g, f: f }); });
+        else if (ouvert) sel.slice().sort(parFin).forEach(function (i) { lignes.push({ type: 'proj', it: i, f: f }); });
       });
     }
     if (auPf) lignesFamilles(items, pfNiv);
-    else {
+    else if (grp === 'aff') {
+      var parAff = {}, ordreA = [];
+      items.forEach(function (i) { if (!parAff[i.aff]) { parAff[i.aff] = []; ordreA.push(i.aff); } parAff[i.aff].push(i); });
+      ordreA.sort(function (a, b) { return (a === 'Sans affectation') - (b === 'Sans affectation') || a.localeCompare(b); });
+      ordreA.forEach(function (a) {
+        var trA = parAff[a].filter(function (i) { return !i.etude; });
+        var nSsA = {}; parAff[a].forEach(function (i) { nSsA[i.r.p.numero_sous_site || i.r.p.numero_projet] = 1; });
+        var ouvA = !!AFF_OUVERTES[a];
+        lignes.push({ type: 'pf', grp: 'aff', label: a, n: parAff[a].length, nSs: Object.keys(nSsA).length, sT: planSerie(trA, pct, ech), ouvert: ouvA });
+        /* 10.11.2026 au soir (Achim) : une affectation dépliée montre directement ses sous-sites OU ses projets, triés par début,
+           chacun à la couleur de sa famille d'intervention, avec ses jalons — plus de niveau « famille » */
+        if (ouvA) {
+          var parDeb = function (u, v) { return (u.deb ? u.deb.getTime() : 9e15) - (v.deb ? v.deb.getTime() : 9e15); };
+          if (parSs) parSousSite(parAff[a]).sort(parDeb).forEach(function (g) { lignes.push({ type: 'ss', g: g, f: famDe(g.its[0].fam), jal: true }); });
+          else parAff[a].slice().sort(parDeb).forEach(function (i) { lignes.push({ type: 'proj', it: i, f: famDe(i.fam), jal: true }); });
+        }
+      });
+    } else {
       var parPf = {}, ordre = [];
       items.forEach(function (i) { var k = i.r.pf; if (!parPf[k]) { parPf[k] = []; ordre.push(k); } parPf[k].push(i); });
       ordre.sort();
@@ -13851,11 +14114,12 @@ var PTE_FICHE = (function (C, T) {
     minAn = Math.max(minAn, anAuj - 3); maxAn = Math.min(maxAn, 2050);
     var tMin = Date.UTC(minAn, 0, 1), tMax = Date.UTC(maxAn + 1, 0, 1);
     var W = 960, padL = 262, padR = 64, axeH = 24;
-    var hL = { pf: 22, fam: 26, proj: 18 };
+    var hL = { pf: 22, fam: 26, proj: 18, ss: 18 };
     var H = axeH + lignes.reduce(function (s, l) { return s + hL[l.type]; }, 0) + 6;
     function x(d) { var t = typeof d === 'number' ? d : d.getTime(); return Math.max(padL, Math.min(W - padR, padL + (W - padL - padR) * (t - tMin) / (tMax - tMin))); }
     var svg = sv('svg', { class: 'chart plan-fam', viewBox: '0 0 ' + W + ' ' + H, role: 'img',
-      'aria-label': 'Planning par famille d’intervention : enveloppe, densité des projets par trimestre, repère ' + pct + ' % des travaux terminés et part des travaux finis au plus tard en ' + ech + '.' });
+      'aria-label': grp === 'aff' ? 'Planning par affectation : travaux en cours par trimestre et part des travaux finis au plus tard en ' + ech + ' ; sous-sites ou projets dépliés à la couleur de leur famille, avec leurs jalons.'
+        : 'Planning par famille d’intervention : enveloppe, densité des projets par trimestre, repère ' + pct + ' % des travaux terminés et part des travaux finis au plus tard en ' + ech + '.' });
     for (var an = minAn; an <= maxAn + 1; an++) {
       var gx = x(Date.UTC(an, 0, 1));
       svg.appendChild(sv('line', { x1: gx, x2: gx, y1: axeH - 6, y2: H - 6, stroke: JETON.grille, 'stroke-width': '1' }));
@@ -13867,7 +14131,27 @@ var PTE_FICHE = (function (C, T) {
     lignes.forEach(function (l, idx) {
       var h = hL[l.type], g = sv('g', {});
       svg.appendChild(g);
-      if (l.type === 'pf') {
+      if (l.type === 'pf' && l.grp === 'aff') {
+        /* ligne d'affectation (10.11.2026) : enveloppe et densité des travaux, % finis à l'échéance ; un clic déplie ses sous-sites ou ses projets */
+        g.appendChild(sv('rect', { x: 0, y: y, width: W, height: h, fill: JETON.bande }));
+        var libA = (l.ouvert ? '▾ ' : '▸ ') + l.label, libA2 = ' · ' + l.nSs + ' sous-site' + (l.nSs > 1 ? 's' : '') + ', ' + l.n + ' projet' + (l.n > 1 ? 's' : '');
+        g.appendChild(sv('text', { x: 6, y: y + 15, 'font-size': '11.5', 'font-weight': 'bold', fill: JETON.ink }, (libA.length > 30 ? libA.slice(0, 29) + '…' : libA) + libA2));
+        if (l.sT.nDat) {
+          l.sT.trim.forEach(function (t) {
+            if (!t.n) return;
+            var ra = sv('rect', { x: x(t.a), y: y + 6, width: Math.max(0.5, x(t.b) - x(t.a)), height: 10, fill: JETON.slate, 'fill-opacity': String(planPalier(t.n)) });
+            ra.style.pointerEvents = 'none'; g.appendChild(ra);
+          });
+          g.appendChild(sv('text', { x: W - padR + 8, y: y + 15, 'font-size': '11', 'font-weight': 'bold', fill: JETON.ink }, l.sT.pctEch + ' %'));
+        }
+        var hitA = sv('rect', { x: 0, y: y, width: W, height: h, fill: 'transparent', class: 'gantt-hit', tabindex: '0', role: 'button', 'aria-expanded': l.ouvert ? 'true' : 'false', 'aria-label': (l.ouvert ? 'Replier ' : 'Déplier ') + 'l’affectation ' + l.label });
+        hitA.style.cursor = 'pointer';
+        tip(hitA, l.label + ' : ' + l.nSs + ' sous-site' + (l.nSs > 1 ? 's' : '') + ', ' + l.n + ' projet' + (l.n > 1 ? 's' : '') + (l.sT.nDat ? ' ; travaux finis au plus tard en ' + ech + ' : ' + l.sT.nEch + ' sur ' + l.sT.nDat + ' datés (' + l.sT.pctEch + ' %)' : '') + ' — cliquer pour ' + (l.ouvert ? 'replier.' : (parSs ? 'afficher ses sous-sites.' : 'afficher ses projets.')));
+        var basculerA = function () { AFF_OUVERTES[l.label] = !AFF_OUVERTES[l.label]; hideTipBubble(); redessiner(); };
+        hitA.addEventListener('click', basculerA);
+        hitA.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); basculerA(); } });
+        g.appendChild(hitA);
+      } else if (l.type === 'pf') {
         g.appendChild(sv('rect', { x: 0, y: y, width: W, height: h, fill: JETON.bande }));
         var tpf = sv('text', { x: 6, y: y + 15, 'font-size': '11.5', 'font-weight': 'bold', fill: JETON.ink }, '▸ ' + nPf(l.label) + ' · ' + l.n + ' projet' + (l.n > 1 ? 's' : ''));
         g.appendChild(tpf);
@@ -13881,21 +14165,22 @@ var PTE_FICHE = (function (C, T) {
         g.appendChild(hitPf);
       } else if (l.type === 'fam') {
         var f = l.f, x0 = auPf ? 8 : 22;
-        if (auPf) {
+        if (depliable) {
           var hit = sv('rect', { x: 0, y: y, width: padL, height: h, fill: 'transparent', class: 'gantt-hit', tabindex: '0', role: 'button',
-            'aria-expanded': l.ouvert ? 'true' : 'false', 'aria-label': (l.ouvert ? 'Replier ' : 'Déplier ') + f.nom });
+            'aria-expanded': l.ouvert ? 'true' : 'false', 'aria-label': (l.ouvert ? 'Replier ' : 'Déplier ') + f.nom + (grp === 'aff' ? ' (' + l.pf + ')' : '') });
           hit.style.cursor = 'pointer';
-          tip(hit, famLibelleLong(f.k) + ' — cliquer pour ' + (l.ouvert ? 'replier.' : 'afficher ses projets.'));
-          var basculer = function () { FAM_OUVERTES[f.k] = !FAM_OUVERTES[f.k]; hideTipBubble(); var nv = repPlanFamillesCard(rows); if (nv && carte.parentNode) carte.parentNode.replaceChild(nv, carte); };
+          tip(hit, famLibelleLong(f.k) + ' — cliquer pour ' + (l.ouvert ? 'replier.' : (parSs ? 'afficher ses sous-sites.' : 'afficher ses projets.')));
+          var cF = cleFam(l.pf, f.k);
+          var basculer = function () { FAM_OUVERTES[cF] = !FAM_OUVERTES[cF]; hideTipBubble(); redessiner(); };
           hit.addEventListener('click', basculer);
           hit.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); basculer(); } });
           g.appendChild(hit);
         }
         g.appendChild(sv('rect', { x: x0, y: y + 8, width: 10, height: 10, rx: '2', fill: f.coul }));
         var lt = sv('text', { x: x0 + 15, y: y + 17, 'font-size': '11', fill: JETON.ink },
-          (auPf ? (l.ouvert ? '▾ ' : '▸ ') : '') + (f.k ? f.court + ' · ' : '') + f.nom + ' · ' + l.n);
+          (depliable ? (l.ouvert ? '▾ ' : '▸ ') : '') + (f.k ? f.court + ' · ' : '') + f.nom + ' · ' + l.n);
         tip(lt, famLibelleLong(f.k) + ' : ' + l.n + ' projet' + (l.n > 1 ? 's' : '') + ' (' + l.sE.n + ' étude' + (l.sE.n > 1 ? 's' : '') + ', ' + l.sT.n + ' travaux).');
-        if (auPf) lt.style.pointerEvents = 'none';   /* la zone cliquable porte l'info-bulle */
+        if (depliable) lt.style.pointerEvents = 'none';   /* la zone cliquable porte l'info-bulle */
         g.appendChild(lt);
         // bandes : études (fine, en haut), travaux (épaisse)
         [[l.sE, y + 3, 5, 'Études'], [l.sT, y + 10, 11, 'Travaux']].forEach(function (b) {
@@ -13922,6 +14207,27 @@ var PTE_FICHE = (function (C, T) {
         } else if (l.sT.n) {
           g.appendChild(tip(sv('text', { x: W - padR + 8, y: y + 19, 'font-size': '11', fill: JETON.inkMuted }, '—'), 'Aucun projet de travaux daté.'));
         }
+      } else if (l.type === 'ss') {
+        /* sous-site déplié (10.11.2026) : ses projets de la famille regroupés, début le plus tôt → fin la plus tardive */
+        var gs = l.g, numS = gs.ss.charAt(0) === '—' ? '' : gs.ss;
+        if (idx % 2) g.appendChild(sv('rect', { x: 0, y: y, width: W, height: h, fill: JETON.bande }));
+        var nomS = numS ? nomSousSite(numS, gs.its[0].r.p.nom_sous_site) : (gs.its[0].r.p.nom_projet || '');
+        var lsS = (numS || 'sans sous-site') + ' — ' + nomS + (gs.its.length > 1 ? ' (' + gs.its.length + ')' : '');
+        var tS = sv('text', { x: 40, y: y + 13, 'font-size': '10', fill: JETON.inkMuted }, lsS.length > 40 ? lsS.slice(0, 39) + '…' : lsS);
+        tip(tS, lsS + ' · ' + gs.its.map(function (i) { return i.r.p.numero_projet + (i.etude ? ' (étude)' : ''); }).join(', ') + (numS ? ' — cliquer pour ouvrir la fiche du sous-site.' : ''));
+        if (numS) {
+          tS.style.cursor = 'pointer'; tS.setAttribute('tabindex', '0'); tS.setAttribute('role', 'link');
+          tS.addEventListener('click', function () { hideTipBubble(); ouvrirSousSite(numS); });
+          tS.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); hideTipBubble(); ouvrirSousSite(numS); } });
+        }
+        g.appendChild(tS);
+        if (gs.deb) {
+          var sb = sv('rect', { x: x(gs.deb), y: y + (gs.etude ? 7 : 4), width: Math.max(2, x(gs.fin) - x(gs.deb)), height: gs.etude ? 5 : 10, rx: '2', fill: l.f.coul, 'fill-opacity': gs.etude ? '0.5' : '0.9' });
+          tip(sb, lsS + ' — ' + (gs.etude ? 'études' : 'études et travaux') + ' du ' + dateCH(gs.deb) + ' au ' + dateCH(gs.fin) + '.');
+          g.appendChild(sb);
+        } else {
+          g.appendChild(sv('text', { x: padL + 4, y: y + 13, 'font-size': '10', fill: JETON.inkMuted }, 'sans date de début ou de fin'));
+        }
       } else {
         var it = l.it, p = it.r.p;
         if (idx % 2) g.appendChild(sv('rect', { x: 0, y: y, width: W, height: h, fill: JETON.bande }));
@@ -13930,8 +14236,9 @@ var PTE_FICHE = (function (C, T) {
         var phP = phaseSia(it.r.avancement);   /* phase SIA = avancement global GE-Invest (table GPR.6MO.04), jamais le libellé d'un jalon */
         tip(tp, lp + (p.numero_sous_site ? ' · sous-site ' + p.numero_sous_site : '') + ' · ' + (it.etude ? 'étude' : 'travaux') +
           ' · ' + (phP ? 'phase SIA ' + phP + ' (avancement ' + Math.round(it.r.avancement) + ' %)' : 'phase SIA non renseignée (avancement vide)') + ' — cliquer pour ouvrir sa fiche de reporting.');
-        tp.style.cursor = 'pointer';
+        tp.style.cursor = 'pointer'; tp.setAttribute('tabindex', '0'); tp.setAttribute('role', 'link');
         tp.addEventListener('click', function () { STATE.rep.projet = p.numero_projet; hideTipBubble(); renderReportingView(); });
+        tp.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); STATE.rep.projet = p.numero_projet; hideTipBubble(); renderReportingView(); } });
         g.appendChild(tp);
         if (it.deb) {
           var pb = sv('rect', { x: x(it.deb), y: y + (it.etude ? 7 : 4), width: Math.max(2, x(it.fin) - x(it.deb)), height: it.etude ? 5 : 10, rx: '2',
@@ -13948,6 +14255,7 @@ var PTE_FICHE = (function (C, T) {
           g.appendChild(sv('text', { x: padL + 4, y: y + 13, 'font-size': '10', fill: JETON.inkMuted }, 'sans date de début ou de fin'));
         }
       }
+      if (l.jal) marquesJalons(g, l.type === 'ss' ? l.g.its.map(function (u) { return u.r.p.numero_projet; }) : [l.it.r.p.numero_projet], y + 9);
       y += h;
     });
     // aujourd'hui et échéance, par-dessus
@@ -13958,24 +14266,31 @@ var PTE_FICHE = (function (C, T) {
     svg.appendChild(le);
 
     var presentes = FAMILLES.filter(function (f) { return items.some(function (i) { return i.fam === f.k; }); });
+    var unDeplie = lignes.some(function (l) { return l.type === 'ss' || l.type === 'proj'; });
+    /* légende selon ce qui est dessiné (relecture du 10.11) : par affectation, densité des travaux, puis lignes et jalons */
     var legende = el('div', { class: 'rep-legend' }, presentes.map(function (f) {
       return tip(el('span', {}, [el('span', { class: 'sw', style: 'background:' + f.coul }), (f.k ? f.court + ' ' : '') + f.nom]), famLibelleLong(f.k));
     }).concat([
-      el('span', {}, [el('span', { class: 'sw sw-env' }), 'Enveloppe : premier début → dernière fin']),
-      el('span', {}, [el('span', { class: 'sw sw-dens' }, [el('i', { style: 'opacity:.28' }), el('i', { style: 'opacity:.6' }), el('i', { style: 'opacity:.95' })]), 'Projets en cours par trimestre : 1 · 2 à 4 · 5 et plus']),
-      el('span', {}, [el('span', { class: 'sw sw-repere' }), pct + ' % des travaux terminés']),
+      grp === 'aff' ? null : el('span', {}, [el('span', { class: 'sw sw-env' }), 'Enveloppe : premier début → dernière fin']),
+      el('span', {}, [el('span', { class: 'sw sw-dens' }, [el('i', { style: 'opacity:.28' }), el('i', { style: 'opacity:.6' }), el('i', { style: 'opacity:.95' })]), (grp === 'aff' ? 'Travaux en cours par trimestre' : 'Projets en cours par trimestre') + ' : 1 · 2 à 4 · 5 et plus']),
+      grp === 'aff' ? null : el('span', {}, [el('span', { class: 'sw sw-repere' }), pct + ' % des travaux terminés']),
       el('span', {}, [el('span', { class: 'sw sw-today' }), "Aujourd'hui"]),
       el('span', {}, [el('span', { class: 'sw sw-line' }), 'Échéance : 31.12.' + ech]),
-      auPf ? el('span', {}, [el('span', { class: 'sw sw-finit' }), 'Fin initiale GE-Invest (projet)']) : null
+      unDeplie && !parSs ? el('span', {}, [el('span', { class: 'sw sw-finit' }), 'Fin initiale GE-Invest (projet)']) : null,
+      grp === 'aff' && unDeplie ? el('span', {}, [el('span', { class: 'sw sw-dot' }), 'Jalon réalisé']) : null,
+      grp === 'aff' && unDeplie ? el('span', {}, [el('span', { class: 'sw sw-diamond' }), 'Jalon prévu']) : null,
+      grp === 'aff' && unDeplie ? el('span', {}, [el('span', { class: 'sw sw-diamond sw-late' }), 'Jalon échu non réalisé']) : null
     ]).filter(Boolean));
     var nEt = items.filter(function (i) { return i.etude; }).length, nSD = items.filter(function (i) { return !i.deb; }).length;
     var resume = el('p', { class: 'muted small', style: 'margin:.2em 0 .5em;' }, [
       items.length + ' projets (' + nEt + ' études, ' + (items.length - nEt) + ' travaux) selon les filtres du reporting'
       + (nSD ? ' · ' + nSD + ' sans date' : '') + (nSansFam ? ' · ' + nSansFam + ' sans famille' : '')
-      + (auPf ? ' · un clic sur une famille affiche ses projets.' : ' · un clic sur un portefeuille y descend.')]);
-    var carte = el('div', { class: 'card plan-fam-card' }, [
-      cardTitle('Planning par famille d’intervention',
-        'Lecture du planning général intentionnel PTE, sur les plannings GE-Invest. Famille = type d’intervention T1 à T4 du sous-site (classe IDC × classe de vétusté Stratus, règle commune aux trois outils) ; un projet prend la famille de son sous-site. Bande fine = études (projets d’étude GE-Invest), bande épaisse = travaux. Contour = enveloppe (premier début → dernière fin) ; remplissage = nombre de projets en cours par trimestre ; trait noir = date à laquelle ' + pct + ' % des projets de travaux sont terminés ; à droite, part des travaux datés finis au plus tard le 31.12.' + ech + '. Dates : début réel sinon initial, fin ré-estimée sinon initiale. Repère et échéance réglables dans le panneau « Données ».'),
+      + (grp === 'aff' ? ' · un clic sur une affectation affiche ses ' + (parSs ? 'sous-sites' : 'projets') + ', à la couleur de leur famille d’intervention, avec leurs jalons.'
+        : auPf ? ' · un clic sur une famille affiche ses ' + (parSs ? 'sous-sites.' : 'projets.') : ' · un clic sur un portefeuille le choisit comme périmètre.')]);
+    function redessiner() { var nv = repPlanFamillesCard(rows, grp, ctrl); if (nv && carte.parentNode) carte.parentNode.replaceChild(nv, carte); }
+    var carte = el('div', { class: 'card plan-fam-card', 'data-plan-grp': grp }, [
+      cardTitle(grp === 'aff' ? 'Planning par affectation' : 'Planning par famille d’intervention',
+        grp === 'aff' ? 'Une ligne par affectation du sous-site (Plan_PTE) : remplissage = travaux en cours par trimestre ; à droite, part des travaux datés finis au plus tard le 31.12.' + ech + '. Une affectation dépliée montre ses sous-sites ou ses projets : barre = début → fin (réel sinon initial, ré-estimée sinon initiale), à la couleur de la famille d’intervention T1 à T4 ; bande fine = étude ; jalons GE-Invest : rond réalisé, losange prévu, losange rouge échu à la date de gel du mois de revue.' : 'Lecture du planning général intentionnel PTE, sur les plannings GE-Invest. Famille = type d’intervention T1 à T4 du sous-site (classe IDC × classe de vétusté Stratus, règle commune aux trois outils) ; un projet prend la famille de son sous-site. Bande fine = études (projets d’étude GE-Invest), bande épaisse = travaux. Contour = enveloppe (premier début → dernière fin) ; remplissage = nombre de projets en cours par trimestre ; trait noir = date à laquelle ' + pct + ' % des projets de travaux sont terminés ; à droite, part des travaux datés finis au plus tard le 31.12.' + ech + '. Dates : début réel sinon initial, fin ré-estimée sinon initiale. Repère et échéance réglables dans le panneau « Données ».', ctrl || null),
       resume,
       mesuresAnciennes ? el('div', { class: 'notice warn' }, ['Familles non calculées : elles le seront au prochain chargement du classeur Plan_PTE.']) : null,
       el('div', { class: 'plan-fam-scroll' }, [svg]),
@@ -14000,6 +14315,18 @@ var PTE_FICHE = (function (C, T) {
   }
   function repGanttSousSites(rows, opts) {
     opts = opts || {};
+    /* une ligne par projet (10.11.2026) : durée et jalons de chaque projet, triés par début */
+    if (opts.parProjet) {
+      var lp = rows.map(function (r) { var o = repGanttProjetLigne(r); o.enfant = false; o._deb = o.debut || '9999'; return o; })
+        .filter(function (r) { return r.debut || r.fin || (r.jalons && r.jalons.length); })
+        .sort(function (a, b) { return a._deb < b._deb ? -1 : (a._deb > b._deb ? 1 : (a.label < b.label ? -1 : 1)); });
+      if (opts.resumeLabel) {
+        var pDeb = null, pFin = null;
+        lp.forEach(function (r) { if (r.debut && (!pDeb || r.debut < pDeb)) pDeb = r.debut; if (r.fin && (!pFin || r.fin > pFin)) pFin = r.fin; });
+        opts = Object.assign({}, opts, { resume: { label: opts.resumeLabel, debut: pDeb, fin: pFin, tipLabel: opts.resumeLabel + ' : ' + lp.length + ' projet' + (lp.length > 1 ? 's' : '') } });
+      }
+      return repGantt(lp, opts);
+    }
     var ouverts = opts.ouverts || {};
     var groups = repSousSiteGroups(rows);
     var rowsG = groups.map(function (g) {
@@ -14058,7 +14385,7 @@ var PTE_FICHE = (function (C, T) {
       var sc2 = hote.querySelector('.gantt-scroll'); if (sc2) sc2.scrollTop = haut;
     }
     dessiner();
-    return hote;
+    return hote.firstChild ? hote : null;   /* rien de daté : la carte de repli garde les choix du planning (relecture du 10.11) */
   }
 
   // Gantt d'un projet : une ligne par phase de jalons (+ ligne projet)
@@ -14250,14 +14577,18 @@ var PTE_FICHE = (function (C, T) {
       'Statut GE-Invest. Par défaut : projets « 2-EN COURS ». Tout décocher = tous les statuts.'));
     bar.appendChild(multi('Type', 'type', [{ v: 'etude', t: 'Études', n: nTy.etude || 0 }, { v: 'realisation', t: 'Réalisations', n: nTy.realisation || 0 }]));
     /* État SIA (07.10.2026) : phase déduite de l'avancement global, table GPR.6MO.04 */
-    bar.appendChild(multi('État SIA', 'sia', PHASES_SIA.map(function (p) { return { v: p.k, t: p.k + ' · ' + p.nom, n: nSia[p.k] || 0 }; }).concat([{ v: 'nr', t: 'Non renseigné', n: nSia.nr || 0 }]),
+    bar.appendChild(multi('État SIA', 'sia', PHASES_SIA.map(function (p) { return { v: p.k, t: p.k + ' · ' + p.nom, court: 'phase ' + p.k, n: nSia[p.k] || 0 }; }).concat([{ v: 'nr', t: 'Non renseigné', n: nSia.nr || 0 }]),
       'Phase SIA déduite de l’« Avancement global » saisi dans GE-Invest'));
-    var q = el('input', { type: 'text', placeholder: 'N°, nom, sous-site, RP…', value: f.q || '' });
-    var attenteQ = null;   /* rendu différé : le Reporting n'est refait qu'une fois la frappe arrêtée (338 ms par touche avant) */
-    q.addEventListener('input', function (e) { f.q = e.target.value; clearTimeout(attenteQ); attenteQ = setTimeout(renderRepBody, 200); });
-    bar.appendChild(el('span', { class: 'filter-item filter-search' }, [el('label', {}, ['Rechercher']), q]));
+    /* 10.11.2026 (Achim) : le champ de recherche est dans l'en-tête, comme dans Prioriser ; le filtre de texte posé
+       depuis l'en-tête (texte libre + Entrée) reste visible ici, en pastille, et s'ôte d'un clic */
+    if (f.q) {
+      var ote = el('button', { type: 'button', 'aria-label': 'Retirer le filtre de texte « ' + f.q + ' »', title: 'Retirer le filtre de texte' }, ['×']);
+      ote.addEventListener('click', function () { f.q = ''; renderReportingView(); try { var g = $('#rv-gq'); if (g) g.focus(); } catch (e) { /* ignoré */ } });
+      bar.appendChild(tip(el('span', { class: 'filter-item f-q-chip' }, [el('span', {}, ['Texte : « ', el('b', {}, [f.q]), ' »']), ote]),
+        'Filtre de texte posé depuis la recherche de l’en-tête : numéro et nom du projet, numéro et nom du sous-site, RP ; casse et accents ignorés.'));
+    }
     if (filtresRepModifies()) {
-      var reset = el('button', { type: 'button', class: 'btn', title: 'Revenir aux filtres par défaut : projets « 2-EN COURS », tous RP, types et états SIA' }, ['Réinitialiser']);
+      var reset = el('button', { type: 'button', class: 'btn', title: 'Revenir aux filtres par défaut : projets « 2-EN COURS », tous RP, types et états SIA, sans filtre de texte' }, ['Réinitialiser']);
       reset.addEventListener('click', function () { f.rp = []; f.statut = null; f.type = []; f.sia = []; f.q = ''; renderReportingView(); });
       bar.appendChild(reset);
     }
@@ -14279,7 +14610,7 @@ var PTE_FICHE = (function (C, T) {
       var tr = tauxReponse(STATE.mois, (STATE.rep.pf ? (STATE.rep.pf === 'Sans portefeuille' ? '' : STATE.rep.pf) : (STATE.perimetre && STATE.perimetre.indexOf('RPF:') === 0 ? STATE.perimetre.slice(4) : null)));
       var qVal = tr.taux === null ? '—' : Math.round(tr.taux * 100) + ' %';
       var qSub = tr.moisPrecedent ? (tr.soldees + ' sur ' + tr.posees + ' · ' + moisLibelle(tr.moisPrecedent)) : (tr.premieres ? 'premières questions posées ce mois' : 'aucune question posée');
-      tile('Questions soldées', qVal, qSub, 'Taux de réponse aux questions du mois précédent : questions soldées (trou comblé dans le nouveau classeur) ÷ questions posées. Bouton « Questions du mois » dans l’en-tête.', 'kpi-questions');
+      tile('Questions soldées', qVal, qSub, 'Taux de réponse aux questions du mois précédent : questions soldées (trou comblé dans le nouveau classeur) ÷ questions posées. Questions du mois : carte « À compléter » de l’onglet Sémaphores.', 'kpi-questions');
     }
     var I = opts.ind;
     if (I && I.credits && I.depense && I.engage) {
@@ -14315,6 +14646,43 @@ var PTE_FICHE = (function (C, T) {
      lesquels le programme travaille, chacun avec sa définition, face au total géré par l'OCBA ; puis les projets
      par phase SIA. Les totaux OCBA viennent de PTE_COMMUN.TOTAUX_OCBA ; absents, la carte le dit et donne, pour
      les sites et les sous-sites, le décompte du Plan_PTE, nommé comme tel. Suit le périmètre et les filtres. */
+  /* Projets du ou des segments choisis sur la barre des phases SIA (10.11.2026, demande d'Achim) : les lignes affichées
+     portent déjà le filtre de phase ; un clic sur une ligne ouvre la fiche de reporting du projet. */
+  function perimListePhase(rows) {
+    var sel = listeF(STATE.rep.sia);
+    if (!sel.length) return el('p', { class: 'muted small perim-liste-aide' }, ['Un clic sur un segment de la barre affiche ici la liste de ses projets.']);
+    var semDe = {}; computedFor(rows).forEach(function (c) { semDe[c.projet.numero_projet] = c.global; });
+    var ordre = {}; PHASES_SIA.forEach(function (p, i) { ordre[p.k] = i; }); ordre.nr = 99;
+    var lignes = rows.map(function (r) { return { r: r, ph: phaseSia(r.avancement) || 'nr' }; })
+      .sort(function (a, b) { return (ordre[a.ph] - ordre[b.ph]) || String(a.r.p.numero_projet).localeCompare(String(b.r.p.numero_projet)); });
+    var libs = sel.map(function (k) { var p = PHASES_SIA.filter(function (x) { return x.k === k; })[0]; return k === 'nr' ? 'phase non renseignée' : k + ' · ' + (p ? p.nom : ''); });
+    var effacer = el('button', { type: 'button', class: 'btn fr-mini' }, ['Effacer la sélection']);
+    effacer.addEventListener('click', function () { STATE.rep.sia = []; renderReportingView(); });
+    var tb = el('tbody');
+    lignes.forEach(function (x) {
+      var p = x.r.p, np = p.numero_projet, ssn = String(p.numero_sous_site || '').trim();
+      var tr = el('tr', { class: 'clickable', tabindex: '0' }, [
+        el('td', {}, [np]),
+        el('td', {}, [p.nom_projet || '']),
+        el('td', {}, [ssn ? ssn + ' — ' + nomSousSite(ssn, p.nom_sous_site) : '—']),
+        el('td', {}, [nPf(x.r.pf)]),
+        el('td', {}, [p.rp ? nRp(p.rp) : '—']),
+        el('td', { class: 'num nowrap' }, [x.ph === 'nr' ? '—' : x.ph + ' (' + Math.round(x.r.avancement) + ' %)']),
+        el('td', { class: 'nowrap' }, [String(x.r.statut || '—').replace(/^\s*\d+\s*-\s*/, '').toLocaleLowerCase('fr')]),
+        el('td', {}, [semDe[np] ? semInline(semDe[np]) : '—'])
+      ]);
+      var ouvrir = function () { hideTipBubble(); STATE.rep.projet = np; renderReportingView(); try { window.scrollTo(0, 0); } catch (e) { /* jsdom */ } };
+      tr.addEventListener('click', ouvrir);
+      tr.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ouvrir(); } });
+      tip(tr, np + ' — ' + (p.nom_projet || '') + ' : cliquer pour ouvrir sa fiche de reporting.');
+      tb.appendChild(tr);
+    });
+    var t = el('table', { class: 'small perim-liste-t' }, [el('thead', {}, [el('tr', {}, ['N° projet', 'Projet', 'Sous-site', 'Portefeuille', 'RP', 'Phase SIA', 'Statut', 'Sémaphore'].map(function (h) { return el('th', { class: 'no-sort' }, [h]); }))]), tb]);
+    return el('div', { class: 'perim-liste', id: 'perim-liste' }, [
+      el('div', { class: 'perim-liste-tete' }, [el('b', {}, [lignes.length + ' projet' + (lignes.length > 1 ? 's' : '') + ' · ' + libs.join(', ')]), ' ', effacer]),
+      el('div', { class: 'table-scroll perim-liste-scroll' }, [t])
+    ]);
+  }
   function repPerimetreCard(rows, ind) {
     var nf = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); };
     var ss = {}, sites = {}, parStatut = {}, sansSs = 0;
@@ -14381,7 +14749,7 @@ var PTE_FICHE = (function (C, T) {
       (nPr ? ' Avancement saisi pour ' + nf(nPr - nr) + ' projet' + (nPr - nr > 1 ? 's' : '') + ' sur ' + nf(nPr) + '.' : '')]);
     return el('div', { class: 'card', id: 'perim-card' }, [
       cardTitle('Périmètre d’action du programme', 'Sites, sous-sites et projets sur lesquels le programme travaille, dans le périmètre et avec les filtres affichés. Un site ou un sous-site est compté dès qu’il porte au moins un projet GE-Invest. Totaux gérés par l’OCBA : extraction GE-Invest, à fournir.'),
-      grille, el('div', { class: 'perim-sia-t' }, ['Projets par phase SIA' + filtreLib]), bar, legend, note
+      grille, el('div', { class: 'perim-sia-t' }, ['Projets par phase SIA' + filtreLib]), bar, legend, perimListePhase(rows), note
     ]);
   }
 
@@ -14389,7 +14757,9 @@ var PTE_FICHE = (function (C, T) {
   function repSemCard(list, gel, watchlistHostRef) {
     var sem = Engine.computePortfolioSemaphore(list, PARAMS);
     var counts = { vert: 0, orange: 0, rouge: 0, gris: 0 }; list.forEach(function (c) { counts[c.global]++; });
-    var renseignes = list.filter(function (c) { return c.sems.fraicheur.color === 'vert'; }).length;
+    /* délai de saisie (10.11.2026) : « avec suivi du mois » = fiche du mois ; les fiches du mois précédent retenues sont dites à part */
+    var renseignes = list.filter(function (c) { return c.sems.fraicheur.color === 'vert' && !c.sems.fraicheur.aMettreAJour; }).length;
+    var aMajC = list.filter(function (c) { return c.sems.fraicheur.aMettreAJour; }).length;
     var pctRenseigne = list.length ? Math.round(100 * renseignes / list.length) : 0;
     var card = el('div', { class: 'card' });
     card.appendChild(cardTitle('Sémaphores — ' + moisLibelle(STATE.mois), 'Périmètre : ' + labelPerimetre(STATE.perimetre) + (STATE.rep.pf ? ' · portefeuille ' + nPf(STATE.rep.pf) : '') + '. Cliquer un segment filtre la liste « À traiter en revue ».'));
@@ -14425,8 +14795,8 @@ var PTE_FICHE = (function (C, T) {
     var boxC = el('div', { class: 'hero-box', tabindex: '0' });
     boxC.appendChild(donutSVG(pctRenseigne, JETON.teal, { size: 64, stroke: 7 }));
     boxC.appendChild(el('div', { class: 'hero-cap' }, ['Complétude du suivi']));
-    boxC.appendChild(el('div', { class: 'small muted' }, [renseignes + ' sur ' + list.length + ' projets avec suivi du mois']));
-    tip(boxC, renseignes + '/' + list.length + ' projets avec suivi saisi pour ' + STATE.mois + '. Un projet sans suivi est gris : c\u2019est un état de la donnée, pas du projet.');
+    boxC.appendChild(el('div', { class: 'small muted' }, [renseignes + ' sur ' + list.length + ' projets avec suivi du mois' + (aMajC ? ' · ' + aMajC + ' sur la fiche du mois précédent' : '')]));
+    tip(boxC, renseignes + '/' + list.length + ' projets avec suivi saisi pour ' + STATE.mois + (aMajC ? ' ; ' + aMajC + ' encore sur la fiche du mois précédent, retenue jusqu’au ' + PARAMS.fraicheurDelaiJour + ' du mois' : '') + '. Un projet sans suivi est gris : c\u2019est un état de la donnée, pas du projet.');
     hero.appendChild(boxC);
     hero.appendChild(boxA);
     hero.appendChild(boxB);
@@ -14444,7 +14814,7 @@ var PTE_FICHE = (function (C, T) {
     var b = { m1: 0, m23: 0, m4: 0, aucune: 0 }, n = 0, plusVieux = null;
     function ecart(m) { var a = /^(\d{4})-(\d{2})$/.exec(m), c = /^(\d{4})-(\d{2})$/.exec(STATE.mois); return a && c ? (+c[1] - +a[1]) * 12 + (+c[2] - +a[2]) : null; }
     list.forEach(function (c) {
-      if (c.sems.fraicheur.color === 'vert') return;
+      if (c.sems.fraicheur.color === 'vert' && !c.sems.fraicheur.aMettreAJour) return;   /* « à mettre à jour » : fiche du mois précédent (10.11.2026) */
       n++;
       var d = dernier[c.projet.numero_projet], e = d ? ecart(d) : null;
       if (e === null) b.aucune++; else if (e <= 1) b.m1++; else if (e <= 3) b.m23++; else { b.m4++; if (!plusVieux || d < plusVieux) plusVieux = d; }
@@ -14459,7 +14829,7 @@ var PTE_FICHE = (function (C, T) {
       el('b', {}, ['Fiches de suivi anciennes : ']),
       n + ' projet' + (n > 1 ? 's' : '') + ' sur ' + list.length + ' sans fiche de suivi pour ' + moisLibelle(STATE.mois) + (parts.length ? ' — ' + parts.join(', ') : '') + '.'
     ]);
-    return tip(p, 'Le mois de revue est le dernier mois des fiches de suivi de l’extraction GE-Invest. Un projet sans fiche pour ce mois a son volet Suivi gris ; la fiche projet lit alors l’avancement et les dates dans l’extraction. La bande « 4 mois » de la heatmap montre les mois précédents.');
+    return tip(p, 'Le mois de revue est le dernier mois des fiches de suivi de l’extraction GE-Invest ; passé le ' + PARAMS.fraicheurDelaiJour + ' du mois, c’est le mois courant. Jusqu’à ce jour, une fiche du mois précédent compte encore ; ensuite, un projet sans fiche pour ce mois a son volet Suivi gris ; la fiche projet lit alors l’avancement et les dates dans l’extraction. La bande « 4 mois » de la heatmap montre les mois précédents.');
   }
 
   // (d) « À traiter en revue »
@@ -14835,9 +15205,9 @@ var PTE_FICHE = (function (C, T) {
     /* onglet « Planning » (séance 7) : le planning seul, mêmes filtres et mêmes niveaux */
     if (STATE.rep.mode === 'planning') {
       body.appendChild(el('div', { id: 'rep-sec-planning', class: 'rep-ancre' }));
-      var planF = repPlanFamillesCard(rows);
-      if (planF) { body.appendChild(planF); body.appendChild(el('div', { style: 'height:16px;' })); }
-      body.appendChild(repGanttHote(rows, {
+      /* une seule carte, trois plannings au choix (10.11.2026, demande d'Achim) : familles par portefeuille, jalons par sous-site
+         ou par projet, familles par affectation */
+      body.appendChild(repPlanningCard(rows, {
         title: STATE.rep.pf ? 'Planning du portefeuille (jalons par sous-site)' : (STATE.perimetre && STATE.perimetre !== 'ALL' ? 'Planning du périmètre (jalons par sous-site)' : 'Planning du parc (jalons par sous-site)'),
         aria: 'Planning des sous-sites : durée et jalons prévus, réalisés ou en retard.',
         resumeLabel: repPerimetreLibelle()
@@ -14846,7 +15216,6 @@ var PTE_FICHE = (function (C, T) {
       return;
     }
 
-    if (STATE.questionsOuvertes && STATE.mois && STATE.rep.mode !== 'finances') body.appendChild(questionsCard(STATE.mois));
 
     /* onglets du 10.11.2026 (demandes d'Achim) : Sémaphores (avec CPI / SPI) et Finances montent dans l'en-tête de Suivre ;
        la Synthèse, doublon du tableau de bord, est retirée (QCM du 10.11 : « Supprimer, garder l'Apport ») — ses blocs
@@ -14854,6 +15223,7 @@ var PTE_FICHE = (function (C, T) {
     if (STATE.rep.mode === 'semaphores') {
       /* périmètre d'action (demande de la direction, 07.10.2026) et bande des indicateurs du mois (taux de réponse aux
          questions, crédits, jalons, risques) : ex-Synthèse, gardés ici le 10.11.2026 */
+      if (STATE.mois) assurerQuestions(STATE.mois);   /* avant la tuile « Questions soldées » */
       var indSem = repIndicateurs(scoped, rows);
       body.appendChild(repPerimetreCard(rows, indSem));
       body.appendChild(el('div', { style: 'height:16px;' }));
@@ -14873,6 +15243,12 @@ var PTE_FICHE = (function (C, T) {
       /* CPI / SPI : suit le périmètre et les filtres affichés */
       body.appendChild(el('div', { id: 'rep-sec-cpi', class: 'rep-ancre' }));
       body.appendChild(repCpiSpiCard(rows, gel));
+      /* questions du mois regroupées (10.11.2026) : ce qu'il manque pour que les sémaphores soient justes */
+      if (STATE.mois) {
+        body.appendChild(el('div', { style: 'height:16px;' }));
+        body.appendChild(el('div', { id: 'rep-sec-questions', class: 'rep-ancre' }));
+        body.appendChild(questionsCard(STATE.mois, rows));
+      }
       markUnits(body);
       return;
     }
@@ -14926,7 +15302,7 @@ var PTE_FICHE = (function (C, T) {
     var topRow = el('div', { class: 'rep-toprow no-print' }, [repCrumbs()]);
     if (!STATE.rep.projet && !STATE.rep.ss) {
       var SECTIONS = STATE.rep.mode === 'autres' ? [['rep-sec-portefeuilles', STATE.rep.pf ? 'Statuts' : 'Portefeuilles'], ['rep-sec-sous-sites', 'Sous-sites']]
-        : STATE.rep.mode === 'semaphores' ? [['rep-sec-semaphores', 'Sémaphores'], ['rep-sec-cpi', 'CPI / SPI']] : [];
+        : STATE.rep.mode === 'semaphores' ? [['rep-sec-semaphores', 'Sémaphores'], ['rep-sec-cpi', 'CPI / SPI'], ['rep-sec-questions', 'À compléter']] : [];
       /* data-ep : la présentation épurée ne découpe plus les vues en parties (10.11.2026 : planning et finances vides) */
       var sommaire = el('nav', { class: 'rep-sommaire', 'data-ep': '1', 'data-ep-sans-partie': '1', 'aria-label': 'Aller à une partie de la vue' }, [el('span', { class: 'muted small' }, ['Aller à :'])]);
       if (!SECTIONS.length) sommaire.hidden = true;
@@ -15032,8 +15408,9 @@ var PTE_FICHE = (function (C, T) {
 
     buildAlignementCard(host, list, STATE.perimetre);
     /* blocs propres de l'ex-Synthèse (10.11.2026) : apport des projets d'ici 2030, capacité, couverture CECB+, rouges */
-    /* mêmes lignes que Sémaphores (filtres de Suivre, statut « en cours » par défaut) : relecture du 10.11 */
-    try { var rowsPf = repFilterRows(repRows()); parcBlocs(host, rowsPf, computedFor(rowsPf)); } catch (e) { console.error(e); }
+    /* mêmes lignes que Sémaphores (filtres de Suivre, statut « en cours » par défaut) : relecture du 10.11 ; sans le filtre de texte,
+       que l'onglet ne montre pas (comme la situation et la heatmap) — relecture du 10.11 au soir */
+    try { var rowsPf = repFilterRows(repRows(), false, true); parcBlocs(host, rowsPf, computedFor(rowsPf)); } catch (e) { console.error(e); }
 
     var grid = el('div', { class: 'grid cols-2' });
     var c3 = el('div', { class: 'card' }); c3.appendChild(cardTitle('Jalons à 60 jours')); c3.appendChild(buildJalons60Table(jalons60Rows(list, gel))); grid.appendChild(c3);
@@ -15042,7 +15419,7 @@ var PTE_FICHE = (function (C, T) {
 
     host.appendChild(renvoi('Voir la situation financière', 'finances', 'Situation financière pluriannuelle du périmètre : un seul emplacement, l’onglet Finances.'));
 
-    var c6 = el('div', { class: 'card' });
+    var c6 = el('div', { class: 'card', id: 'pf-decisions' });
     c6.appendChild(cardTitle('Décisions ouvertes'));
     c6.appendChild(buildDecisionsOuvertes(list));
     host.appendChild(c6);
@@ -15103,7 +15480,7 @@ var PTE_FICHE = (function (C, T) {
     { k: '52', lib: 'Phase SIA 52', cls: 'oph-52' }, { k: '53', lib: 'Phase SIA 53', cls: 'oph-53' }, { k: '6', lib: 'Phase SIA 6 (mis en service, terminé)', cls: 'oph-6' },
     { k: 'nr', lib: 'Phase non renseignée', cls: 'oph-nr' }, { k: 'id', lib: 'Identifié (audit CECB+), sans projet', cls: 'oph-id' }
   ];
-  var ORG = { pf: null, edition: false, disposer: false, termines: true, masques: false };
+  var ORG = { edition: false, disposer: false, termines: true, masques: false };
   /* Disposition libre (06.11.2026, demande d'Achim) : chaque utilisateur range les tuiles de site dans 2 à 5 colonnes,
      dans l'ordre qu'il veut, et nomme les colonnes ; une disposition par portefeuille. Propre à l'utilisateur : gardée
      dans ce navigateur et, comme réglage, dans le fichier « Mes saisies » ; jamais envoyée au serveur ni consolidée.
@@ -15138,7 +15515,7 @@ var PTE_FICHE = (function (C, T) {
     M.cols.forEach(function (c) { c.sites.forEach(function (s) { parCle[s.cle] = s; tous.push(s); }); });
     var garde = orgDispoLire(M.rpf), D = garde;
     if (!D) {
-      D = { n: Math.max(ORG.disposer ? 2 : 1, Math.min(5, M.cols.length)), cols: [], titres: [], types: [] };
+      D = { n: Math.max(ORG.disposer && !M.fige ? 2 : 1, Math.min(5, M.cols.length)), cols: [], titres: [], types: [] };
       for (var i = 0; i < D.n; i++) { var c = M.cols[i]; D.cols.push(c ? c.sites.map(function (x) { return x.cle; }) : []); D.titres.push(''); D.types.push(c ? c.t : null); }
     }
     var out = [], place = {};
@@ -15151,8 +15528,8 @@ var PTE_FICHE = (function (C, T) {
     return orgDispoEcrire(rpf, { n: cols.length, cols: cols.map(function (c) { return c.sites.map(function (x) { return x.cle; }); }),
       titres: cols.map(function (c) { return c.titre || ''; }), types: cols.map(function (c) { return c.t === undefined ? null : c.t; }) });
   }
-  var LS_ORG_PF = 'ocba_revue_organigramme_pf';   /* portefeuille affiché : commodité de ce navigateur, pas une saisie */
-  try { ORG.pf = localStorage.getItem(LS_ORG_PF) || null; } catch (e) { ORG.pf = null; }
+  /* 10.11.2026 : plus de portefeuille choisi dans l'onglet : le périmètre de l'en-tête décide (ancienne clé effacée) */
+  try { localStorage.removeItem('ocba_revue_organigramme_pf'); } catch (e) { /* ignoré */ }
   function orgStock() {
     var o = null; try { o = JSON.parse(localStorage.getItem(LS_ORG) || 'null'); } catch (e) { o = null; }
     if (!o || typeof o !== 'object' || Array.isArray(o)) o = {};
@@ -15221,13 +15598,18 @@ var PTE_FICHE = (function (C, T) {
     return Object.keys(c).sort(function (a, b) { return (a === '0') - (b === '0') || String(nomRpf(a)).localeCompare(String(nomRpf(b)), 'fr'); }).map(function (r) { return { rpf: r, n: c[r] }; });
   }
   /* modèle du portefeuille : colonnes → sites → sous-sites → lignes */
-  function orgModele(rpf) {
+  /* portefeuille d'un sous-site de Plan_PTE ; vide, « - » ou « hors périmètre » : sans portefeuille ('') */
+  function orgRpfDe(pp) {
+    var r = String((pp && pp.mesures && pp.mesures.rpf) || (pp && pp.rpf_ou_agent) || '').trim();
+    return (!r || /^-+$/.test(r) || /hors p[ée]rim/i.test(r)) ? '' : r;
+  }
+  function orgModele(rpf, garder) {
     var bs = (DB.planpte && DB.planpte.bySousSite) || {}, S = orgStock(), sites = {}, sansLots = 0;
     var parSs = {};
     DB.projets.forEach(function (p) { if (p.numero_sous_site) (parSs[p.numero_sous_site] = parSs[p.numero_sous_site] || []).push(p); });
     Object.keys(bs).forEach(function (num) {
-      var pp = bs[num], m = pp.mesures || {}, r = String(m.rpf || pp.rpf_ou_agent || '').trim();
-      if (r !== rpf) return;
+      var pp = bs[num], m = pp.mesures || {}, r = orgRpfDe(pp);
+      if (r !== rpf || (garder && !garder(num))) return;
       var cleSite = String(m.site || num.slice(0, 4)), s = sites[cleSite];
       if (!s) s = sites[cleSite] = { cle: cleSite, nom: m.nomSite || pp.nom || cleSite, sousSites: [], t: 0 };
       var t = (m.typeIntervention >= 1 && m.typeIntervention <= 4) ? m.typeIntervention : 0;
@@ -15324,7 +15706,7 @@ var PTE_FICHE = (function (C, T) {
     if (dispo) {
       /* seule l'en-tête se glisse : les champs de la tuile (note, mode « Modifier ») restent utilisables */
       head.setAttribute('draggable', 'true'); head.classList.add('org-poignee');
-      head.addEventListener('dragstart', function (e) { e.stopPropagation(); try { e.dataTransfer.setData('text/plain', s.cle); e.dataTransfer.effectAllowed = 'move'; } catch (x) { /* navigateur sans glisser */ } card.classList.add('org-drag'); });
+      head.addEventListener('dragstart', function (e) { e.stopPropagation(); try { e.dataTransfer.setData('text/plain', 'org:' + dispo.idx + '|' + s.cle); e.dataTransfer.effectAllowed = 'move'; } catch (x) { /* navigateur sans glisser */ } card.classList.add('org-drag'); });
       head.addEventListener('dragend', function () { card.classList.remove('org-drag'); });
       /* clavier et écran tactile : quatre boutons, la tuile garde le focus après le déplacement */
       var mv = el('span', { class: 'org-mv no-print' });
@@ -15350,31 +15732,55 @@ var PTE_FICHE = (function (C, T) {
     return card;
   }
   function orgFocus(sel) { try { var n = document.querySelector('#organigramme-content ' + sel); if (n) n.focus({ preventScroll: true }); } catch (e) { /* rendu sans DOM complet */ } }
+  /* Organigramme sur le périmètre de l'en-tête (10.11.2026, demande d'Achim) : le menu « Portefeuille » propre à l'onglet
+     est retiré ; l'organigramme suit le menu Périmètre du fil d'Ariane — tout le parc, un ou plusieurs portefeuilles,
+     « Portefeuille 0 », hors périmètre RPF, RP, plan et affectation. Un organigramme par portefeuille du périmètre, l'un
+     sous l'autre (un par page A3 à l'impression) ; un sous-site entre s'il est dans le plan et l'affectation choisis et
+     dans l'une des clés cochées (portefeuille du sous-site dans Plan_PTE ; RP : un de ses projets). Un portefeuille montré
+     en partie garde sa disposition : elle ne se modifie que sur le portefeuille entier. */
+  function orgSsDans(num, rpf) {
+    if (!sousSiteDansProgrammes(num)) return false;
+    var cles = perimetreCles(); if (!cles.length) return true;
+    return cles.some(function (k) {
+      if (k === 'HORS') return !rpf;
+      if (k.indexOf('RPF:') === 0) return rpf === k.slice(4);
+      if (k.indexOf('RP:') === 0) { var r = k.slice(3); return DB.projets.some(function (p) { return (p.numero_sous_site || '').trim() === num && p.rp === r; }); }
+      return true;
+    });
+  }
+  function orgGroupes() {
+    var bs = (DB.planpte && DB.planpte.bySousSite) || {}, tous = {}, dans = {};
+    /* sous-sites sans portefeuille (hors programme, sans projet GE-Invest) : seulement sur « Hors périmètre RPF » */
+    var hors = perimetreCles().indexOf('HORS') >= 0;
+    Object.keys(bs).forEach(function (num) {
+      var r = orgRpfDe(bs[num]);
+      if (!r && !hors) return;
+      tous[r] = (tous[r] || 0) + 1;
+      if (orgSsDans(num, r)) dans[r] = (dans[r] || 0) + 1;
+    });
+    /* ordre des noms affichés (« Prénom Nom »), « Portefeuille 0 » puis « Sans portefeuille » en dernier */
+    return Object.keys(dans).sort(function (a, b) { return (a === '') - (b === '') || (a === '0') - (b === '0') || String(nomRpf(a)).localeCompare(String(nomRpf(b)), 'fr'); })
+      .map(function (r) { return { rpf: r, n: dans[r], partiel: dans[r] < tous[r] }; });
+  }
   function renderOrganigrammeView() {
     var host = $('#organigramme-content'); if (!host) return;
     host.innerHTML = '';
     orgPurger();
-    var pfs = orgPortefeuilles();
-    if (!pfs.length) { host.appendChild(emptyCard('Aucun responsable de portefeuille dans le classeur : l’organigramme se construit à partir de la colonne « Responsable Portefeuille » de Plan_PTE. Charger le classeur.')); return; }
-    if (!ORG.pf || !pfs.some(function (x) { return x.rpf === ORG.pf; })) {
-      var dep = STATE.perimetre && STATE.perimetre.indexOf('RPF:') === 0 ? STATE.perimetre.slice(4) : null;
-      ORG.pf = (dep && pfs.some(function (x) { return x.rpf === dep; })) ? dep : pfs[0].rpf;
-    }
+    var bsOrg = (DB.planpte && DB.planpte.bySousSite) || {};
+    if (!Object.keys(bsOrg).length) { host.appendChild(emptyCard('Feuille Plan_PTE absente des données chargées : l’organigramme se construit à partir de Plan_PTE (colonne « Responsable Portefeuille »). Charger le classeur.')); return; }
+    var grs = orgGroupes();
     var rerender = function () { renderOrganigrammeView(); };
-    var M = orgModele(ORG.pf);
-    // barre d'outils
-    var sel = el('select', { id: 'org-pf', 'aria-label': 'Portefeuille' });
-    pfs.forEach(function (x) { var o = el('option', { value: x.rpf }, [nomRpf(x.rpf) + ' (' + x.n + ' sous-sites)']); if (x.rpf === ORG.pf) o.selected = true; sel.appendChild(o); });
-    sel.addEventListener('change', function () { ORG.pf = sel.value; try { localStorage.setItem(LS_ORG_PF, ORG.pf); } catch (e) { /* choix valable pour la page */ } rerender(); });
     function bascule(lbl, cle, titre) {
       var cb = el('input', { type: 'checkbox', id: 'org-cb-' + cle }); cb.checked = !!ORG[cle];
       cb.addEventListener('change', function () { ORG[cle] = cb.checked; rerender(); orgFocus('#org-cb-' + cle); });
       return tip(el('label', { class: 'org-cb' }, [cb, ' ' + lbl]), titre);
     }
     var imp = el('button', { type: 'button', class: 'btn' }, ['Imprimer en A3']);
+    tip(imp, 'Un organigramme par portefeuille du périmètre, un par page A3 en paysage.');
     imp.addEventListener('click', function () { var e = ORG.edition, d = ORG.disposer; ORG.edition = false; ORG.disposer = false; rerender(); printWithSize('landscape', 'A3'); if (e || d) { ORG.edition = e; ORG.disposer = d; rerender(); } });
+    var nSs = grs.reduce(function (a, g) { return a + g.n; }, 0), nPfs = grs.filter(function (g) { return g.rpf; }).length;
     host.appendChild(el('div', { class: 'org-outils no-print' }, [
-      el('label', { class: 'org-champ', for: 'org-pf' }, [el('span', {}, ['Portefeuille']), sel]),
+      el('span', { class: 'org-perim' }, [el('b', {}, [cap(labelPerimetre(STATE.perimetre))]), (nPfs ? ' · ' + nPfs + ' portefeuille' + (nPfs > 1 ? 's' : '') : '') + ' · ' + nSs + ' sous-site' + (nSs > 1 ? 's' : '')]),
       bascule('Projets terminés', 'termines', 'Projets mis en service ou terminés (phase SIA 6).'),
       bascule('Lignes masquées', 'masques', 'Montrer aussi les lignes masquées, en grisé.'),
       /* 10.11.2026 (Achim) : « Disposer » et « Modifier » fusionnés — un seul mode pour ranger les tuiles et saisir */
@@ -15384,24 +15790,44 @@ var PTE_FICHE = (function (C, T) {
         return tip(el('label', { class: 'org-cb' }, [cb, ' Modifier']), 'Ranger les tuiles de site (glisser-déposer, ou les flèches de chaque tuile), choisir de 2 à 5 colonnes et les nommer ; saisir l’AMO du portefeuille et la note de site ; masquer ou réafficher une ligne. Nature (selon le numéro) et RP (de GE-Invest) ne se modifient pas ici. Disposition et saisies personnelles, gardées dans ce navigateur et dans le fichier « Mes saisies ».');
       })(),
       imp]));
+    if (!grs.length) { host.appendChild(emptyCard(orgPortefeuilles().length ? 'Aucun sous-site de Plan_PTE dans ce périmètre (' + labelPerimetre(STATE.perimetre) + ').' : 'Aucun responsable de portefeuille dans Plan_PTE (colonne « Responsable Portefeuille ») ; les sous-sites sans portefeuille se voient avec « Hors périmètre RPF ».')); return; }
+    if (grs.length > 1) {
+      var nav = el('nav', { class: 'rep-sommaire org-sommaire no-print', 'data-ep': '1', 'data-ep-sans-partie': '1', 'aria-label': 'Aller à un portefeuille' }, [el('span', { class: 'muted small' }, ['Aller à :'])]);
+      grs.forEach(function (g, i) {
+        var b = el('button', { type: 'button', class: 'rep-saut', title: g.n + ' sous-site' + (g.n > 1 ? 's' : '') + (g.partiel ? ' (une partie du portefeuille)' : '') }, [!g.rpf ? 'Sans portefeuille' : String(g.rpf).trim() === '0' ? 'Portefeuille 0' : nomRpf(g.rpf)]);
+        b.addEventListener('click', function () { var c = document.getElementById('org-pf-' + i); if (c && c.scrollIntoView) c.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+        nav.appendChild(b);
+      });
+      host.appendChild(nav);
+    }
+    grs.forEach(function (g, i) { host.appendChild(orgCartePf(g, i, rerender)); });
+  }
+  /* « Portefeuille d’Achim Siegele », « Portefeuille de Hugo Kohler » */
+  function orgDe(nom) { nom = String(nom || ''); return 'Portefeuille ' + (/^[aeiouyàâéèêëîïôûüh]/i.test(nom) && !/^h[aeiou]/i.test(nom) ? 'd’' : 'de ') + nom; }
+  function cap(t) { t = String(t || ''); return t.charAt(0).toUpperCase() + t.slice(1); }
+  function orgCartePf(g, idx, rerender) {
+    var partiel = g.partiel;
+    var M = orgModele(g.rpf, function (num) { return orgSsDans(num, g.rpf); });
     // en-tête du portefeuille
     var pf = M.pf;
     var entete = el('div', { class: 'org-entete' });
     /* titre et responsable de portefeuille, non modifiables (04.11.2026) : le nom de portefeuille viendra quand
        l'organisation des portefeuilles sera fixée ; seul l'AMO se saisit, en mode « Modifier » */
-    entete.appendChild(el('div', { class: 'org-titre' }, [String(ORG.pf).trim() === '0' ? 'Portefeuille 0' : 'Portefeuille de ' + nomRpf(ORG.pf)]));
-    var resp = el('div', { class: 'org-resp' }, [el('div', {}, [String(ORG.pf).trim() === '0' ? 'Sans responsable de portefeuille (RPF « 0 » dans Plan_PTE)' : 'Responsable portefeuille : ' + nomRpf(ORG.pf)])]);
-    if (ORG.edition) resp.appendChild(orgChampTexte('AMO', pf.amo, function (v) { orgSaisie('pf', ORG.pf, { amo: v }); }, 'ex. bureau d’AMO'));
+    entete.appendChild(el('div', { class: 'org-titre' }, [!M.rpf ? 'Sans portefeuille' : String(M.rpf).trim() === '0' ? 'Portefeuille 0' : orgDe(nomRpf(M.rpf))]));
+    var resp = el('div', { class: 'org-resp' }, [el('div', {}, [!M.rpf ? 'Sous-sites sans responsable de portefeuille dans Plan_PTE' : String(M.rpf).trim() === '0' ? 'Sans responsable de portefeuille (RPF « 0 » dans Plan_PTE)' : 'Responsable portefeuille : ' + nomRpf(M.rpf)])]);
+    if (ORG.edition && M.rpf) resp.appendChild(orgChampTexte('AMO', pf.amo, function (v) { orgSaisie('pf', M.rpf, { amo: v }); }, 'ex. bureau d’AMO'));
     else if (pf.amo) resp.appendChild(el('div', {}, ['AMO : ' + pf.amo]));
     entete.appendChild(resp);
-    var card = el('div', { class: 'card org-card' }, [
+    var card = el('div', { class: 'card org-card', id: 'org-pf-' + idx, 'data-org-pf': M.rpf }, [
       el('h2', { class: 'org-h1' }, ['Programme de transition écologique — organigramme des projets']), entete,
-      el('p', { class: 'muted small org-chiffres' }, [M.nSites + ' sites · ' + M.nSs + ' sous-sites · ' + M.nProjets + ' projets GE-Invest rattachés' + (ORG.termines && !ORG.masques ? '' : ' (en-têtes : projets affichés)')]) ]);
+      el('p', { class: 'muted small org-chiffres' }, [M.nSites + ' site' + (M.nSites > 1 ? 's' : '') + ' · ' + M.nSs + ' sous-site' + (M.nSs > 1 ? 's' : '') + ' · ' + M.nProjets + ' projet' + (M.nProjets > 1 ? 's' : '') + ' GE-Invest rattaché' + (M.nProjets > 1 ? 's' : '') + (ORG.termines && !ORG.masques ? '' : ' (en-têtes : projets affichés)')]) ]);
     var colLots = DB.planpte && DB.planpte.colonnes ? DB.planpte.colonnes.lot_enveloppe : undefined;
     if (!M.sansLots && colLots === null) card.appendChild(el('p', { class: 'muted small no-print' }, ['Interventions identifiées indisponibles : le classeur n’a pas de colonnes « Coût lot … » dans Plan_PTE.']));
     if (M.sansLots) card.appendChild(el('p', { class: 'muted small no-print' }, ['Interventions identifiées et badges CECB+ indisponibles pour ' + M.sansLots + ' sous-site(s) : classeur chargé avant le 02.11.2026 ; le recharger.']));
+    M.fige = partiel || !M.rpf;   /* disposition non modifiable : portefeuille montré en partie, ou sous-sites sans portefeuille (rien où l'enregistrer) */
     var E = orgDispoAppliquer(M), cols = E.cols;
-    var dispo = ORG.disposer ? {
+    var dispo = ORG.disposer && !M.fige ? {
+      idx: idx,
       bouger: function (cle, sens) {
         var ci = -1, si = -1;
         cols.forEach(function (c, i) { c.sites.forEach(function (x, j) { if (x.cle === cle) { ci = i; si = j; } }); });
@@ -15413,7 +15839,7 @@ var PTE_FICHE = (function (C, T) {
         else if (sens === 'd' && ci < cols.length - 1) { cols[ci].sites.splice(si, 1); cols[ci + 1].sites.push(x); }
         else return;
         orgDispoSauver(M.rpf, cols); rerender();
-        try { var t = Array.prototype.filter.call(document.querySelectorAll('#organigramme-content .org-site'), function (n) { return n.getAttribute('data-org-site') === cle; })[0];
+        try { var t = Array.prototype.filter.call(document.querySelectorAll('#organigramme-content #org-pf-' + idx + ' .org-site'), function (n) { return n.getAttribute('data-org-site') === cle; })[0];
           var bt = t && t.querySelector('[data-mv="' + sens + '"]'); if (bt) bt.focus({ preventScroll: false }); } catch (e) { /* rendu sans DOM complet */ }
       },
       deposer: function (cle, ci, avant) {
@@ -15426,29 +15852,30 @@ var PTE_FICHE = (function (C, T) {
         orgDispoSauver(M.rpf, cols); rerender();
       }
     } : null;
-    if (ORG.disposer) {
-      var nSel = el('select', { id: 'org-ncols', 'aria-label': 'Nombre de colonnes' });
+    if (ORG.disposer && M.fige) card.appendChild(el('p', { class: 'muted small no-print org-dispo-outils' }, [!M.rpf ? 'Disposition des tuiles non modifiable pour les sous-sites sans portefeuille ; notes de site modifiables.' : 'Disposition des tuiles modifiable sur le portefeuille entier : le périmètre de l’en-tête (affectation, plan ou RP) n’en montre qu’une partie. AMO et notes de site restent modifiables.']));
+    if (dispo) {
+      var nSel = el('select', { id: 'org-ncols-' + idx, 'aria-label': 'Nombre de colonnes' });
       [2, 3, 4, 5].forEach(function (k) { var o = el('option', { value: String(k) }, [String(k)]); if (k === cols.length) o.selected = true; nSel.appendChild(o); });
       nSel.addEventListener('change', function () {
         var k = +nSel.value;
         while (cols.length > k) { var der = cols.pop(); cols[cols.length - 1].sites = cols[cols.length - 1].sites.concat(der.sites); }
         while (cols.length < k) cols.push({ i: cols.length, titre: '', t: null, sites: [] });
-        orgDispoSauver(M.rpf, cols); rerender(); orgFocus('#org-ncols');
+        orgDispoSauver(M.rpf, cols); rerender(); orgFocus('#org-ncols-' + idx);
       });
-      var rz = el('button', { type: 'button', class: 'btn', id: 'org-dispo-defaut' }, ['Disposition par défaut']);
+      var rz = el('button', { type: 'button', class: 'btn', id: 'org-dispo-defaut-' + idx }, ['Disposition par défaut']);
       tip(rz, 'Revenir aux colonnes par type d’intervention, pour ce portefeuille.');
-      rz.addEventListener('click', function () { orgDispoEcrire(M.rpf, null); rerender(); orgFocus('#org-dispo-defaut'); });
+      rz.addEventListener('click', function () { orgDispoEcrire(M.rpf, null); rerender(); orgFocus('#org-dispo-defaut-' + idx); });
       card.appendChild(el('div', { class: 'org-dispo-outils no-print' }, [
-        el('label', { class: 'org-champ', for: 'org-ncols' }, [el('span', {}, ['Colonnes']), nSel]), rz,
+        el('label', { class: 'org-champ', for: 'org-ncols-' + idx }, [el('span', {}, ['Colonnes']), nSel]), rz,
         el('span', { class: 'muted small' }, ['Glisser une tuile, ou utiliser ses flèches ; un titre de colonne se change en place. Disposition personnelle' + (E.garde ? '' : ' (par défaut tant que rien n’est déplacé)') + '.'])]));
     }
-    var grille = el('div', { class: 'org-grille' + (ORG.disposer ? ' org-dispo' : ''), style: 'grid-template-columns:repeat(' + cols.length + ',minmax(250px,1fr))' });
+    var grille = el('div', { class: 'org-grille' + (dispo ? ' org-dispo' : ''), style: 'grid-template-columns:repeat(' + cols.length + ',minmax(250px,1fr))' });
     cols.forEach(function (c, ci) {
       var col = el('div', { class: 'org-col', 'data-org-col': String(ci) });
       var n = c.sites.reduce(function (a, s) { return a + s.nbVisibles; }, 0);
       var defLib = c.t !== null && c.t !== undefined ? (c.t ? famLibelleLong(c.t).replace(/^T\d · /, '') : 'IDC ou Coeff Stratus manquant') : 'Colonne ' + (ci + 1);
       var tete;
-      if (ORG.disposer) {
+      if (dispo) {
         var inT = el('input', { type: 'text', value: c.titre || '', placeholder: defLib, 'aria-label': 'Titre de la colonne ' + (ci + 1), maxlength: '80' });
         inT.addEventListener('change', function () { c.titre = inT.value.trim(); orgDispoSauver(M.rpf, cols); });   /* pas de reconstruction : le champ suivant garde le focus */
         tete = inT;
@@ -15465,7 +15892,9 @@ var PTE_FICHE = (function (C, T) {
         col.addEventListener('drop', function (e) {
           e.preventDefault(); col.classList.remove('org-drop');
           var cle = ''; try { cle = e.dataTransfer.getData('text/plain'); } catch (x) { cle = ''; }
-          if (!cle) return;
+          var mx = /^org:(\d+)\|(.*)$/.exec(cle || '');   /* une tuile ne passe pas d'un portefeuille à l'autre */
+          if (!mx || +mx[1] !== idx) return;
+          cle = mx[2];
           var cible = e.target && e.target.closest ? e.target.closest('.org-site') : null, avant = null;
           if (cible && cible.getAttribute('data-org-site') === cle) return;
           if (cible) {
@@ -15487,7 +15916,7 @@ var PTE_FICHE = (function (C, T) {
     leg.firstChild.appendChild(infoIcon(orgAide));
     /* à l'impression A3, la bulle ne s'ouvre pas : le texte est repris sous la légende (relecture du 04.11.2026) */
     card.appendChild(el('p', { class: 'muted small print-only org-aide-imp' }, [orgAide]));
-    host.appendChild(card);
+    return card;
   }
 
   // ------------------------------------------------------------------
@@ -15524,7 +15953,10 @@ var PTE_FICHE = (function (C, T) {
        la fin ré-estimée et la mise en service. Elle les lit désormais à défaut du suivi du mois, source dite sous la valeur.
        Base enregistrée avant le 04.11 (sans ces dates dans DB.gei) : dernière fiche de suivi connue, même source. */
     var gFiche = (DB.gei && DB.gei[projet.numero_projet]) || null;
-    var suiviPrec = comp.suiviRow ? null : (DB.suivi.filter(function (r) { return r.numero_projet === projet.numero_projet; })
+    /* délai de saisie (10.11.2026) : une fiche du mois précédent retenue pour les sémaphores n'est pas le suivi du mois —
+       la fiche lit alors GE-Invest d'abord, comme sans suivi (E10) */
+    var rowMois = comp.sems.fraicheur.aMettreAJour ? null : comp.suiviRow;
+    var suiviPrec = rowMois ? null : (DB.suivi.filter(function (r) { return r.numero_projet === projet.numero_projet; })
       .sort(function (a, b) { return a.mois < b.mois ? -1 : (a.mois > b.mois ? 1 : 0); }).pop() || null);
     /* même règle pour les trois valeurs : extraction GE-Invest si elle est renseignée, sinon dernière fiche connue ;
        chaque valeur garde sa source (libellé et info-bulle disent d'où elle vient) */
@@ -15540,10 +15972,10 @@ var PTE_FICHE = (function (C, T) {
       return 'Pas de fiche de suivi pour ' + STATE.mois + ' : ' + quoi + (x.src === 'gei' ? ' lu(e) dans l’extraction GE-Invest (GEI_Projets).' : ' repris(e) de la dernière fiche de suivi connue' + (datePrec ? ' (' + datePrec + ')' : '') + '.')
         + ' Les sémaphores du mois ne l’utilisent pas.';
     }
-    var avX = comp.suiviRow ? { v: Engine.parseNum(comp.suiviRow.avancement_pct), src: null }
+    var avX = rowMois ? { v: Engine.parseNum(rowMois.avancement_pct), src: null }
       : aDefaut(gFiche && gFiche.avancement !== null && gFiche.avancement !== undefined ? gFiche.avancement / 100 : null, suiviPrec ? Engine.parseNum(suiviPrec.avancement_pct) : null);
-    var finX = comp.suiviRow ? { v: comp.suiviRow.date_fin_reestimee || null, src: null } : aDefaut(gFiche && gFiche.finReestimee, suiviPrec && suiviPrec.date_fin_reestimee);
-    var mesX = comp.suiviRow ? { v: comp.suiviRow.date_mise_en_service || null, src: null } : aDefaut(gFiche && gFiche.miseEnService, suiviPrec && suiviPrec.date_mise_en_service);
+    var finX = rowMois ? { v: rowMois.date_fin_reestimee || null, src: null } : aDefaut(gFiche && gFiche.finReestimee, suiviPrec && suiviPrec.date_fin_reestimee);
+    var mesX = rowMois ? { v: rowMois.date_mise_en_service || null, src: null } : aDefaut(gFiche && gFiche.miseEnService, suiviPrec && suiviPrec.date_mise_en_service);
     var avF = avX.v === undefined ? null : avX.v, finReest = finX.v, miseServ = mesX.v;
 
     // En-tête compact
@@ -15573,8 +16005,8 @@ var PTE_FICHE = (function (C, T) {
         var k = phaseSia(g && g.avancement !== null && g.avancement !== undefined ? g.avancement : (avF === null ? null : avF * 100));
         return k ? k + ' · ' + PHASES_SIA.filter(function (x) { return x.k === k; })[0].nom : null;
       })(), null, 'Phase déduite de l’« Avancement global » GE-Invest (table GPR.6MO.04), comme dans le Reporting.'),
-      ficheKV('Avancement', avF === null ? null : fmtPct(avF), comp.suiviRow ? 'suivi ' + (comp.suiviRow.date_maj || comp.suiviRow.mois || '') : (avF === null ? 'aucune fiche de suivi' : srcLib(avX)),
-        comp.suiviRow ? null : srcTip(avX, 'avancement global')),
+      ficheKV('Avancement', avF === null ? null : fmtPct(avF), rowMois ? 'suivi ' + (rowMois.date_maj || rowMois.mois || '') : (avF === null ? 'aucune fiche de suivi' : srcLib(avX)),
+        rowMois ? null : srcTip(avX, 'avancement global')),
       ficheKV('RP', projet.rp ? nRp(projet.rp) : null),
       ficheKV('Crédit du projet', creditF === null ? null : fmtK(creditF) + ' MCHF')
     ]));
@@ -15584,7 +16016,7 @@ var PTE_FICHE = (function (C, T) {
       ficheKV('Fin prévue', fDate(projet.date_fin_prevue) || null),
       /* rouge seulement avec le suivi du mois : sans lui, le sémaphore Délais n'en tient pas compte (la fiche ne doit pas se contredire) */
       ficheKV('Fin ré-estimée', fDate(finReest) || null, [finTard ? 'après la fin prévue' : '', srcLib(finX)].filter(Boolean).join(' · '),
-        srcTip(finX, 'date'), finTard && comp.suiviRow ? 'alert-text' : ''),
+        srcTip(finX, 'date'), finTard && rowMois ? 'alert-text' : ''),
       ficheKV('Mise en service', fDate(miseServ) || null, srcLib(mesX), srcTip(mesX, 'date'))
     ]));
     if (ssB) {
@@ -15668,8 +16100,8 @@ var PTE_FICHE = (function (C, T) {
     }
     var evGei = gFiche && (gFiche.evMarquants || gFiche.evRisque || gFiche.evProblematiques);
     var evPrec = suiviPrec && (suiviPrec.evenements_marquants || suiviPrec.evenements_risque || suiviPrec.evenements_problematiques);
-    var evX = comp.suiviRow
-      ? { m: { v: comp.suiviRow.evenements_marquants, src: null }, r: { v: comp.suiviRow.evenements_risque, src: null }, p: { v: comp.suiviRow.evenements_problematiques, src: null } }
+    var evX = rowMois
+      ? { m: { v: rowMois.evenements_marquants, src: null }, r: { v: rowMois.evenements_risque, src: null }, p: { v: rowMois.evenements_problematiques, src: null } }
       : evGei ? evDe('gei', gFiche) : evPrec ? evDe('prec', suiviPrec) : evDe(null, null);
     var evSrc = [evX.m, evX.r, evX.p].filter(function (x) { return x.src; })[0];
     evCard.appendChild(cardTitle(evSrc ? 'Événements — ' + srcLib(evSrc) : 'Événements du mois',
@@ -16151,6 +16583,7 @@ var PTE_FICHE = (function (C, T) {
     numField('Portefeuille gris max, %', 'portefeuilleGrisMaxPct', '1', 'Au-delà de ce pourcentage de projets non renseignés, le portefeuille est jugé gris.');
     numField('Seuil structurant, kCHF', 'seuilStructurantKCHF', '10', 'Budget à partir duquel un projet rouge rend automatiquement son portefeuille rouge.');
     numField('Jour de gel', 'dateGelJour', '1', 'Jour du mois utilisé comme date de gel des données pour le calcul des sémaphores.');
+    numField('Délai de saisie, jour', 'fraicheurDelaiJour', '1', 'Jusqu’à ce jour du mois de revue, la fiche du mois précédent compte encore (« à mettre à jour ») ; 0 = aucun délai.');
     numField('Planning : repère, % terminés', 'planningRepere', '5', 'Planning par famille : position du trait noir, date à laquelle ce pourcentage des projets de travaux est terminé.');
     numField('Planning : échéance, année', 'planningEcheance', '1', 'Planning par famille : année d’échéance ; la part en bout de ligne compte les travaux finis au plus tard le 31.12 de cette année.');
     numField('Seuil « top » priorisation', 'seuilTop', '5', 'Rang de priorisation PTE (rang_global) en dessous duquel un sous-site est considéré bien classé (alignement, sous-sites « à proposer »).');
@@ -16183,7 +16616,7 @@ var PTE_FICHE = (function (C, T) {
     host.appendChild(el('div', { class: 'muted small', id: 'import-summary', style: 'margin:0 0 12px;' }));
 
     var accComp = el('details', { class: 'accordion', open: '' });
-    accComp.appendChild(el('summary', {}, ['Contrôle de complétude', infoIcon('Projets sans suivi du mois, sans sous-site, sans jalon ou jalon sans date, sans prévision annuelle, sans ligne PTE, risque sans probabilité, sous-site sans SRE, facteur CO₂ à renseigner.')]));
+    accComp.appendChild(el('summary', {}, ['Contrôle de complétude', infoIcon('Projets sans suivi du mois, sans sous-site, sans jalon ou avec un jalon hors de la liste normée, sans prévision annuelle, sans ligne PTE, risque sans probabilité, sous-site sans SRE, facteur CO₂ à renseigner.')]));
     var body2 = el('div', { class: 'accordion-body' });
     var btnExport = el('button', { type: 'button', class: 'btn' }, ['Exporter la complétude (CSV)']);
     btnExport.addEventListener('click', exportCompletude);
@@ -16256,29 +16689,33 @@ var PTE_FICHE = (function (C, T) {
     accGei.appendChild(bodyGei);
     host.appendChild(accGei);
 
-    /* Libellés de phase à harmoniser (26.10.2026, demande d'Achim) */
+    /* Jalons hors de la liste normée (26.10.2026 ; liste normée GE-Invest depuis le 10.11.2026, QCM d'Achim) */
     var lp = Engine.controleLibellesPhases(DB);
     var accLp = el('details', { class: 'accordion' });
-    accLp.appendChild(el('summary', {}, ['Libellés de phase à harmoniser' + (lp.nEcarts ? ' (' + lp.nEcarts + ' jalons)' : ''),
-      infoIcon('Jalons GE-Invest. Pour chaque phase SIA, dont le code est lu dans le libellé (« SIA 32 … », « Phase 32 »), le libellé le plus fréquent sert de référence ; tout autre libellé de la même phase est à harmoniser. Les jalons sans code de phase ne sont pas jugés. Chaque projet concerné figure aussi au contrôle de complétude.')]));
+    accLp.appendChild(el('summary', {}, ['Jalons hors de la liste normée' + (lp.nEcarts ? ' (' + lp.nEcarts + ' jalons)' : ''),
+      infoIcon('Jalons GE-Invest comparés à la liste normée des ' + lp.norme.length + ' jalons de phase SIA. Tout autre libellé est à corriger dans GE-Invest : variante d’une phase (« Phase 32 », « SIA 32 - Étude ») ou jalon qui ne nomme pas de phase. Une date prévue vide n’est pas une anomalie : un projet peut ne couvrir qu’une partie des phases. Chaque projet concerné porte une question du mois.')]));
     var bodyLp = el('div', { class: 'accordion-body' });
+    bodyLp.appendChild(el('details', { class: 'small' }, [el('summary', {}, ['Liste normée (' + lp.norme.length + ' jalons)']),
+      el('ol', { class: 'small' }, lp.norme.map(function (l) { return el('li', {}, [l]); }))]));
     var avecVar = lp.phases.filter(function (ph) { return ph.variantes.length; });
-    if (!lp.phases.length) bodyLp.appendChild(el('p', { class: 'small muted' }, ['Aucun jalon avec un code de phase.']));
-    else if (!avecVar.length) bodyLp.appendChild(el('p', { class: 'small' }, ['Tous les libellés de phase sont harmonisés.']));
+    if (!(DB.jalons || []).length) bodyLp.appendChild(el('p', { class: 'small muted' }, ['Aucun jalon chargé.']));
+    else if (!avecVar.length) bodyLp.appendChild(el('p', { class: 'small' }, ['Tous les jalons suivent la liste normée.']));
     else {
-      var tLp = el('table', { class: 'qtable' }, [el('thead', {}, [el('tr', {}, [el('th', { class: 'no-sort' }, ['Phase']), el('th', { class: 'no-sort' }, ['Libellé de référence']),
-        el('th', { class: 'no-sort num' }, ['Jalons']), el('th', { class: 'no-sort' }, ['Autres libellés (nombre de jalons)'])])])]);
+      var tLp = el('table', { class: 'qtable' }, [el('thead', {}, [el('tr', {}, [el('th', { class: 'no-sort' }, ['Phase']), el('th', { class: 'no-sort' }, ['Libellé normé']),
+        el('th', { class: 'no-sort num' }, ['Conformes']), el('th', { class: 'no-sort' }, ['Libellés hors norme (nombre de jalons)'])])])]);
       var tbLp = el('tbody');
       avecVar.forEach(function (ph) {
-        tbLp.appendChild(el('tr', {}, [el('td', {}, [ph.code]), el('td', {}, [ph.reference]), el('td', { class: 'num' }, [String(ph.nRef)]),
+        tbLp.appendChild(el('tr', {}, [el('td', {}, [ph.code === '—' ? 'sans phase' : ph.code]),
+          el('td', {}, [ph.reference || (ph.code === '—' ? '— (jalon qui ne nomme pas de phase)' : '— (pas de jalon normé pour ce code)')]),
+          el('td', { class: 'num' }, [String(ph.nRef)]),
           el('td', {}, ph.variantes.map(function (v) { return el('span', { class: 'tag' }, [v.libelle + ' (' + v.n + ')']); }))]));
       });
       tLp.appendChild(tbLp); bodyLp.appendChild(tLp);
-      var btnLp = el('button', { type: 'button', class: 'btn', style: 'margin-top:.6em;' }, ['Exporter les jalons à harmoniser (CSV)']);
+      var btnLp = el('button', { type: 'button', class: 'btn', style: 'margin-top:.6em;' }, ['Exporter les jalons hors norme (CSV)']);
       btnLp.addEventListener('click', function () {
         var out = [];
-        Object.keys(lp.parProjet).forEach(function (np) { lp.parProjet[np].forEach(function (e) { out.push({ numero_projet: np, phase: e.code, libelle: e.libelle, libelle_reference: e.reference }); }); });
-        downloadCSV('libelles_phases_a_harmoniser.csv', ['numero_projet', 'phase', 'libelle', 'libelle_reference'], out);
+        Object.keys(lp.parProjet).forEach(function (np) { lp.parProjet[np].forEach(function (e) { out.push({ numero_projet: np, phase: e.code, libelle: e.libelle, libelle_norme: e.reference || '' }); }); });
+        downloadCSV('jalons_hors_norme.csv', ['numero_projet', 'phase', 'libelle', 'libelle_norme'], out);
       });
       bodyLp.appendChild(btnLp);
     }
@@ -16329,6 +16766,7 @@ var PTE_FICHE = (function (C, T) {
     b1.appendChild(el('ul', { style: 'margin:.6em 0 0; padding-left:1.2em; font-size:13px; line-height:1.55;' }, [
       el('li', {}, ['Global : la pire des quatre couleurs, gris d’abord.']),
       el('li', {}, ['Tendance : comparaison au mois précédent.']),
+      el('li', {}, ['Fraîcheur : jusqu’au ' + PARAMS.fraicheurDelaiJour + ' du mois de revue, la fiche du mois précédent compte encore (« à mettre à jour ») ; ensuite, sans fiche du mois, gris.']),
       el('li', {}, ['Portefeuille : rouge si ≥ ' + PARAMS.portefeuilleRougeMinPct + ' % de rouges ou un projet structurant (> ' + PARAMS.seuilStructurantKCHF + ' kCHF) rouge ; orange si ≥ ' + PARAMS.portefeuilleOrangeMinPct + ' % orange + rouge ; gris si > ' + PARAMS.portefeuilleGrisMaxPct + ' % non renseignés ; vert sinon.'])
     ]));
     d1.appendChild(b1); host.appendChild(d1);
@@ -16357,9 +16795,9 @@ var PTE_FICHE = (function (C, T) {
     var dq = el('details', { class: 'accordion' });
     dq.appendChild(el('summary', {}, ['Questions du mois']));
     var bq = el('div', { class: 'accordion-body' });
-    bq.appendChild(el('p', {}, ['La revue commence par les trous. Pour le mois de revue et chaque RPF, l’outil pose au plus cinq questions, celles qui bloquent le plus les sémaphores, numérotées Q-<RPF>-<AAAA-MM>-<n>, avec l’action à faire et l’endroit où la saisir.']));
+    bq.appendChild(el('p', {}, ['La revue commence par les trous. Pour le mois de revue et chaque RPF, l’outil pose une question par trou de données détecté, numérotée Q-<RPF>-<AAAA-MM>-<n>, avec l’action à faire et l’endroit où la saisir ; la carte « À compléter » de l’onglet Sémaphores les regroupe par portefeuille puis par nature (10.11.2026 : plus de plafond de cinq).']));
     var rl = el('ul', {});
-    [['Engagé > crédit', 'GE-Invest, crédit'], ['Suivi du mois absent', 'GE-Invest, fiche de suivi'], ['Budget ou prévision N absents', 'GE-Invest, finances'], ['Risque ouvert sans probabilité ou impact', 'GE-Invest, risques'], ['Jalon sans date prévue, ou aucun jalon', 'GE-Invest, jalons'], ['Fiche non mise à jour depuis plus de 60 jours', 'GE-Invest, fiche de suivi'], ['Projet sans numéro de sous-site', 'GE-Invest, objet actif'], ['Sous-site absent du Plan_PTE, ou sans SRE', 'Plan_PTE'], ['Projet au stade projet de l’ouvrage ou plus loin, sous-site sans diagnostic polluants complet à jour', 'Plan_PTE, Diag polluants'], ['Facteur CO₂ à renseigner', 'Data, colonnes FournisseurChaleur / FacteurCO2']].forEach(function (pair) { rl.appendChild(el('li', {}, [el('strong', {}, [pair[0]]), ' — ' + pair[1]])); });
+    [['Engagé > crédit', 'GE-Invest, crédit'], ['Suivi du mois absent', 'GE-Invest, fiche de suivi'], ['Budget ou prévision N absents', 'GE-Invest, finances'], ['Risque ouvert sans probabilité ou impact', 'GE-Invest, risques'], ['Jalon hors de la liste normée, ou aucun jalon', 'GE-Invest, jalons'], ['Fiche non mise à jour depuis plus de 60 jours', 'GE-Invest, fiche de suivi'], ['Projet sans numéro de sous-site', 'GE-Invest, objet actif'], ['Sous-site absent du Plan_PTE, ou sans SRE', 'Plan_PTE'], ['Projet au stade projet de l’ouvrage ou plus loin, sous-site sans diagnostic polluants complet à jour', 'Plan_PTE, Diag polluants'], ['Facteur CO₂ à renseigner', 'Data, colonnes FournisseurChaleur / FacteurCO2']].forEach(function (pair) { rl.appendChild(el('li', {}, [el('strong', {}, [pair[0]]), ' — ' + pair[1]])); });
     bq.appendChild(rl);
     bq.appendChild(el('p', {}, ['Au mois suivant, à l’import du nouveau classeur, les détections sont rejouées : une question dont le trou est comblé passe « soldée ». Taux de réponse par RPF = soldées ÷ posées le mois précédent (première tuile du Reporting, colonne du tableau par portefeuille).']));
     bq.appendChild(el('p', {}, [el('strong', {}, ['Critère d’échec (Zoé) : '] ), 'si la complétude ne gagne pas 20 points en un cycle, on retire.']));
@@ -16481,7 +16919,7 @@ var PTE_FICHE = (function (C, T) {
     var set = {}, nSansSS = 0; DB.projets.forEach(function (p) { if (p.numero_sous_site && p.numero_sous_site.trim()) set[p.numero_sous_site.trim()] = true; else nSansSS++; });
     var nP = DB.projets.length, renseignes = null, pct = null;
     // « renseigné » = sémaphore de fraîcheur pas « non renseigné » (suivi du mois saisi) : même critère que l'anneau Complétude
-    /* fraîcheur verte ⇔ suivi du mois présent (Engine.computeFraicheur) : compté sans recalculer tous les sémaphores */
+    /* suivi du mois présent (fiche du mois ; une fiche du mois précédent retenue par le délai de saisie n'en est pas une) : compté sans recalculer tous les sémaphores */
     if (STATE.mois && nP) {
       var avecSuivi = Object.create(null);
       DB.suivi.forEach(function (r) { if (r.mois === STATE.mois) avecSuivi[r.numero_projet] = true; });
@@ -16555,6 +16993,132 @@ var PTE_FICHE = (function (C, T) {
     if (h) { try { history.replaceState(null, '', '#' + prefixeAncre() + h); } catch (e) { /* ignoré */ } ouvrirDepuisAdresse(); }
     else { if (STATE.rep) { STATE.rep.ss = null; STATE.rep.projet = null; } ecrireHashSs(null); showView('reporting', 'garder'); }
     if (BARRE) BARRE.majFil();
+  }
+
+  /* Recherche dans l'en-tête (10.11.2026, demande d'Achim) : même place et même geste que dans Prioriser. Les propositions
+     (sous-sites, puis projets, du périmètre de l'en-tête) ouvrent le sous-site ou le projet par le même chemin que le fil
+     d'Ariane ; la première ligne, ou Entrée sur un texte libre, pose le filtre de texte des vues (STATE.rep.q). */
+  function gsNorm(t) { return String(t == null ? '' : t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+  var GS = { sel: -1, items: [], texte: null, attente: null };
+  function gsPropositions(texte) {
+    var q = gsNorm(String(texte || '').trim()), out = { ss: [], pr: [], n: 0 };
+    if (q.length < 2) return out;
+    var vus = {};
+    projetsByPerimetre(STATE.perimetre).forEach(function (c) {
+      var p = c.projet, ssn = String(p.numero_sous_site || '').trim(), nomSs = ssn ? nomSousSite(ssn, p.nom_sous_site) : '';
+      var hay = gsNorm(p.numero_projet + ' ' + p.nom_projet + ' ' + ssn + ' ' + (p.nom_sous_site || '') + ' ' + nomSs + ' ' + (p.rp ? p.rp + ' ' + nRp(p.rp) : ''));
+      if (hay.indexOf(q) === -1) return;
+      out.n++;
+      if (ssn && (gsNorm(ssn + ' ' + nomSs + ' ' + (p.nom_sous_site || '')).indexOf(q) >= 0)) {
+        if (!vus[ssn]) { vus[ssn] = { num: ssn, nom: nomSs, n: 0, pf: p.rpf }; out.ss.push(vus[ssn]); }
+        vus[ssn].n++;
+      }
+      out.pr.push({ np: p.numero_projet, nom: p.nom_projet || '', ss: ssn, nomSs: nomSs, rp: p.rp ? nRp(p.rp) : '',
+        direct: gsNorm(p.numero_projet + ' ' + p.nom_projet).indexOf(q) >= 0 });
+    });
+    /* compte annoncé par « Filtrer » : les projets que la vue montrera, avec les autres filtres de Suivre (statut, RP, type, SIA) */
+    var avant = STATE.rep.q;
+    try { STATE.rep.q = String(texte || '').trim(); var tous = repRows(); out.vue = repFilterRows(STATE.rep.pf ? tous.filter(function (r) { return r.pf === STATE.rep.pf; }) : tous).length; }
+    catch (e) { out.vue = null; } finally { STATE.rep.q = avant; }
+    out.pr.sort(function (a, b) { return (b.direct - a.direct) || String(a.np).localeCompare(String(b.np)); });
+    out.ss.sort(function (a, b) { return a.num.localeCompare(b.num); });
+    return out;
+  }
+  function gsFermer() {
+    var box = $('#rv-gs-res'), inp = $('#rv-gq');
+    if (box) { box.classList.remove('on'); box.innerHTML = ''; }
+    if (inp) { inp.setAttribute('aria-expanded', 'false'); inp.removeAttribute('aria-activedescendant'); }
+    GS.sel = -1; GS.items = []; GS.texte = null; clearTimeout(GS.attente);
+    gsAnnonce('');
+  }
+  function gsAnnonce(t) { var a = $('#rv-gs-statut'); if (a && a.textContent !== t) a.textContent = t; }
+  function gsVider() { var inp = $('#rv-gq'); if (inp) inp.value = ''; gsFermer(); }
+  /* vues qui portent le filtre de texte ; ailleurs (Portefeuille, Organigramme), on passe à Sémaphores */
+  function gsFiltrer(texte) {
+    var q = String(texte || '').trim(); if (!q) return;
+    gsVider();
+    STATE.rep.q = q; STATE.rep.ss = null; STATE.rep.projet = null; ecrireHashSs(null);
+    var o = STATE.ongletRep;
+    showView(o === 'planning' || o === 'semaphores' || o === 'finances' ? o : (o === 'reporting' ? 'reporting' : 'semaphores'));
+    if (BARRE) BARRE.majFil();
+  }
+  function gsOuvrir(type, valeur, ss) {
+    gsVider();
+    if (type === 'ss') choisirFil('sousSite', valeur);
+    else choisirFil('projet', valeur, ss || null);
+    try { window.scrollTo(0, 0); } catch (e) { /* ignoré */ }
+  }
+  function gsRendre() {
+    var inp = $('#rv-gq'), box = $('#rv-gs-res'); if (!inp || !box) return;
+    var texte = inp.value, q = texte.trim();
+    clearTimeout(GS.attente);
+    box.innerHTML = ''; GS.sel = -1; GS.items = []; inp.removeAttribute('aria-activedescendant');
+    if (!q) { gsFermer(); return; }
+    GS.texte = texte;
+    var R = gsPropositions(q), items = [], k = 0;
+    /* liste d'options seule dans le listbox ; les remarques (aucun résultat, autres résultats) à côté, hors du listbox */
+    var lb = el('div', { role: 'listbox', id: 'rv-gs-lb', 'aria-label': 'Propositions' });
+    box.appendChild(lb);
+    function item(cls, contenu, action) {
+      var it = el('div', { class: 'gs-it' + (cls ? ' ' + cls : ''), role: 'option', id: 'rv-gs-' + (k++), 'aria-selected': 'false' }, contenu);
+      it.addEventListener('mousedown', function (e) { e.preventDefault(); });   /* le champ garde le focus jusqu'au clic */
+      it.addEventListener('click', action);
+      lb.appendChild(it); items.push(it);
+    }
+    var nV = R.vue != null ? R.vue : R.n;
+    item('gs-filtre', ['Filtrer les projets sur « ' + q + ' »' + (q.length >= 2 ? ' — ' + nV + ' projet' + (nV > 1 ? 's' : '') + (filtresRepModifies() || !statutParDefaut() || R.n !== nV ? ' avec les filtres de Suivre' : '') : '')], function () { gsFiltrer(q); });
+    var nSs = Math.min(R.ss.length, 5), nPr = Math.min(R.pr.length, 12 - nSs);
+    R.ss.slice(0, nSs).forEach(function (x) {
+      item('', [el('span', { class: 'gs-k' }, ['Sous-site']), el('b', {}, [x.num]), ' ' + String(x.nom || '').slice(0, 48),
+        el('span', { class: 's' }, [x.n + ' projet' + (x.n > 1 ? 's' : '') + (x.pf ? ' · ' + pfTitre(x.pf) : '')])], function () { gsOuvrir('ss', x.num); });
+    });
+    R.pr.slice(0, nPr).forEach(function (x) {
+      item('', [el('span', { class: 'gs-k' }, ['Projet']), el('b', {}, [x.np]), ' ' + String(x.nom).slice(0, 48),
+        el('span', { class: 's' }, [(x.ss ? 'sous-site ' + x.ss + (x.nomSs ? ' — ' + String(x.nomSs).slice(0, 36) : '') : 'sans sous-site') + (x.rp ? ' · RP ' + x.rp : '')])], function () { gsOuvrir('pr', x.np, x.ss); });
+    });
+    if (q.length >= 2 && !R.n) box.appendChild(el('div', { class: 'gs-vide' }, ['Aucun projet du périmètre ne contient ce texte.']));
+    else if (R.ss.length + R.pr.length > nSs + nPr) box.appendChild(el('div', { class: 'gs-vide' }, [(R.ss.length - nSs + R.pr.length - nPr) + ' autres résultats : « Filtrer » les montre tous.']));
+    box.classList.add('on'); inp.setAttribute('aria-expanded', 'true');
+    GS.items = items;
+    var nProp = items.length - 1;
+    gsAnnonce(nProp ? nProp + ' proposition' + (nProp > 1 ? 's' : '') + ', plus le filtre de texte ; flèches pour choisir' : 'Aucune proposition ; Entrée filtre les projets sur ce texte');
+  }
+  function gsMarquer(i) {
+    var items = GS.items || [], inp = $('#rv-gq');
+    items.forEach(function (it, j) { it.setAttribute('aria-selected', j === i ? 'true' : 'false'); });
+    GS.sel = i;
+    if (inp) { if (i >= 0 && items[i]) { inp.setAttribute('aria-activedescendant', items[i].id); try { items[i].scrollIntoView({ block: 'nearest' }); } catch (e) { /* ignoré */ } } else inp.removeAttribute('aria-activedescendant'); }
+  }
+  /* Entrée : la proposition surlignée ; sinon l'unique sous-site ou projet trouvé ; sinon le filtre de texte (comme Prioriser) */
+  function gsTouche(e) {
+    var box = $('#rv-gs-res'), items = GS.items || [];
+    if (e.key === 'Escape') { if (box && box.classList.contains('on')) { e.preventDefault(); gsFermer(); } return; }
+    /* liste périmée (frappe de moins de 120 ms, texte corrigé) : refaite avant de choisir */
+    if ((e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter') && GS.texte !== e.target.value) { gsRendre(); items = GS.items || []; }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (!box || !box.classList.contains('on')) { gsRendre(); items = GS.items || []; }
+      if (!items.length) return;
+      e.preventDefault();
+      gsMarquer(e.key === 'ArrowDown' ? Math.min(items.length - 1, GS.sel + 1) : Math.max(0, GS.sel - 1));
+      return;
+    }
+    if (e.key === 'Enter') {
+      var q = (e.target.value || '').trim(); if (!q) return;
+      e.preventDefault();
+      if (GS.sel >= 0 && items[GS.sel]) { items[GS.sel].click(); return; }
+      var autres = items.filter(function (it) { return !it.classList.contains('gs-filtre'); });
+      if (autres.length === 1) autres[0].click(); else gsFiltrer(q);
+    }
+  }
+  function gsInit() {
+    var inp = $('#rv-gq'); if (!inp || inp.dataset.gs) return;
+    inp.dataset.gs = '1';
+    inp.addEventListener('input', function () { clearTimeout(GS.attente); GS.attente = setTimeout(gsRendre, 120); });
+    /* Tab ou clic hors de la recherche : la liste se ferme (les propositions gardent le focus au champ jusqu'au clic) */
+    inp.addEventListener('blur', function () { setTimeout(function () { var g = $('#rv-gs'); if (g && !g.contains(document.activeElement)) gsFermer(); }, 0); });
+    inp.addEventListener('keydown', gsTouche);
+    inp.addEventListener('focus', function () { if (inp.value.trim()) gsRendre(); });
+    document.addEventListener('click', function (e) { var g = $('#rv-gs'); if (g && !(e.target && g.contains(e.target))) gsFermer(); });
   }
 
   /* Onglets de Suivre (09.11.2026, séance 7 de l'audit du 03.11) : Portefeuille · Planning · Organigramme · Autres vues.
@@ -16686,14 +17250,13 @@ var PTE_FICHE = (function (C, T) {
     if (btnEff) btnEff.addEventListener('click', demanderEffacement);
     var btnQ = $('#btn-questions');
     if (btnQ) btnQ.addEventListener('click', function () {
+      /* bouton masqué depuis le 10.11.2026 (questions générées à l'affichage, carte « À compléter » de Sémaphores) ;
+         gardé pour les anciens liens et le mode revue */
       if (!STATE.mois) return;
-      var rpfSeul = STATE.perimetre && STATE.perimetre.indexOf('RPF:') === 0 ? STATE.perimetre.slice(4) : (STATE.perimetre === 'HORS' ? '' : null);
-      genererQuestions(STATE.mois, rpfSeul);
-      STATE.questionsOuvertes = true;
       STATE.rep.ss = null; STATE.rep.projet = null;
-      showView('reporting');
-      try { window.scrollTo(0, 0); } catch (e) { /* la carte est le premier bloc du Reporting */ }
+      frAller('semaphores', 'rep-sec-questions');
     });
+    gsInit();
     var btnFR = $('#btn-fil-rouge');
     if (btnFR) btnFR.addEventListener('click', function () { frSetOuvert(!frOuvert()); renderFilRouge(); });
     if (COMMUN) window.addEventListener('hashchange', function () { if (ACTIVE && DB.projets.length) ouvrirDepuisAdresse(); });
@@ -16993,14 +17556,15 @@ var PTE_FICHE = (function (C, T) {
       d: 'Le mois de revue, projet par projet : sémaphores, questions, décisions. Tout se calcule dans ce navigateur, à partir du classeur Plan_PTE.' },
     { sel: '#badge', avant: function () { showView('reporting'); },
       t: 'État et périmètre',
-      d: 'La pastille dit quel classeur est chargé et à quelle date. À côté, le périmètre filtre tout l’écran. Le mois de revue est le dernier mois des fiches de suivi de l’extraction.' },
+      d: 'La pastille dit quel classeur est chargé et à quelle date. À côté, le périmètre filtre tout l’écran. Mois de revue : dernier mois des fiches, ou mois courant passé le délai de saisie.' },
     { sel: function () { return $('#reporting-content .rep-kpis') || $('#nav-tabs'); },
       avant: function () { showView('semaphores'); },
       t: 'Les dix tuiles',
       d: 'La première, « Questions soldées », donne le taux de réponse aux questions du mois précédent. Les autres chiffrent crédit, dépenses, avancement, jalons et risques.' },
-    { sel: function () { return $('#questions-card') || $('#btn-questions'); },
-      t: 'Questions du mois',
-      d: 'Cinq questions par portefeuille, celles qui bloquent le plus les sémaphores. Le bouton de l’en-tête les pose ; au classeur suivant, celles dont le trou est comblé se soldent.' },
+    { sel: function () { return $('#questions-card') || $('#nav-tabs'); },
+      avant: function () { showView('semaphores'); },
+      t: 'À compléter',
+      d: 'Questions du mois, par portefeuille et par nature : les trous de données qui empêchent un sémaphore d’être juste. Elles se posent à chaque classeur ; au suivant, celles dont le trou est comblé se soldent.' },
     { sel: function () { return $('#watch-card') || $('#nav-tabs'); },
       avant: function () { showView('semaphores'); },
       t: 'À traiter en revue',
@@ -17143,8 +17707,24 @@ var PTE_FICHE = (function (C, T) {
     if (!x.chrono.debut && FR.timer) { clearInterval(FR.timer); FR.timer = null; }
   }
   function frAller(vue, ancre) {
+    if (vue !== 'portefeuille' && vue !== 'fiche' && vue !== 'organigramme') { STATE.rep.ss = null; STATE.rep.projet = null; }   /* sinon le détail d'un sous-site masque l'ancre */
     showView(vue);
     if (ancre) { var c = document.getElementById(ancre); if (c && c.scrollIntoView) c.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  }
+  /* Séance guidée sur les onglets (10.11.2026, Achim, QCM) : chaque temps ouvre son onglet de Suivre.
+     Préparer et Constater → Sémaphores ; Analyser → Sémaphores (« À traiter en revue »), sauf si une fiche est ouverte ;
+     Décider → Portefeuille (décisions ouvertes), sauf fiche ouverte ; Restituer → Portefeuille.
+     Le bandeau reste en haut : pas de défilement ici, les boutons « Voir … » de chaque temps s'en chargent. */
+  var FR_ONGLET = { preparer: 'semaphores', constater: 'semaphores', analyser: 'semaphores', decider: 'portefeuille', restituer: 'portefeuille' };
+  function frGuider(k) {
+    FR.etape = k; FR.focus = k;
+    var ficheOuverte = $('#view-fiche') && !$('#view-fiche').hidden;
+    var cible = FR_ONGLET[k];
+    if (cible && !((k === 'analyser' || k === 'decider') && ficheOuverte)) {
+      var dejaLa = $('#view-' + (cible === 'portefeuille' ? 'portefeuille' : 'reporting')) && !$('#view-' + (cible === 'portefeuille' ? 'portefeuille' : 'reporting')).hidden && (cible === 'portefeuille' || STATE.rep.mode === cible) && !STATE.rep.ss && !STATE.rep.projet;
+      if (!dejaLa) { STATE.rep.ss = null; STATE.rep.projet = null; showView(cible); }
+    }
+    renderFilRouge();
   }
   function frOuvrirFiche(np) { STATE.projetSel = np; showView('fiche'); try { window.scrollTo(0, 0); } catch (e) { /* jsdom */ } }
   function frLigne(ok, texte, extra) {
@@ -17159,16 +17739,21 @@ var PTE_FICHE = (function (C, T) {
 
     if (k === 'preparer') {
       var pf = planFileInfo();
-      var rens = E.list.filter(function (c) { return c.sems.fraicheur.color === 'vert'; }).length;
+      var rens = E.list.filter(function (c) { return c.sems.fraicheur.color === 'vert' && !c.sems.fraicheur.aMettreAJour; }).length;
+      var aMaj = E.list.filter(function (c) { return c.sems.fraicheur.aMettreAJour; }).length;
+      assurerQuestions(STATE.mois);
       var q = (lireQuestionsStock().mois || {})[STATE.mois || ''];
-      var nq = q && q.questions ? q.questions.length : 0;
+      var dansFr = {}; E.list.forEach(function (c) { dansFr[c.projet.numero_projet] = true; });
+      var nq = q && q.questions ? q.questions.filter(function (qq) { return dansFr[qq.projet] && qq.statut !== 'retirée'; }).length : 0;
       var ul = el('ul', { class: 'fr-check' });
       ul.appendChild(frLigne(!!pf, pf ? 'Classeur chargé : ' + pf.name : 'Aucun classeur chargé'));
       ul.appendChild(frLigne(!!STATE.mois, 'Mois de revue : ' + moisLibelle(STATE.mois)));
       ul.appendChild(frLigne(null, 'Périmètre : ' + labelPerimetre(STATE.perimetre) + ' · ' + E.list.length + ' projet' + (E.list.length > 1 ? 's' : '')));
       ul.appendChild(frLigne(E.list.length ? rens / E.list.length >= 0.8 : false, 'Suivi du mois saisi : ' + rens + ' sur ' + E.list.length + ' projets'));
-      ul.appendChild(frLigne(nq > 0, nq ? nq + ' question' + (nq > 1 ? 's' : '') + ' du mois préparée' + (nq > 1 ? 's' : '') : 'Questions du mois pas encore générées',
-        nq ? null : frBtn('Générer', function () { var b = $('#btn-questions'); if (b) b.click(); renderFilRouge(); })));
+      if (aMaj) ul.appendChild(frLigne(null, aMaj + ' projet' + (aMaj > 1 ? 's' : '') + ' encore sur la fiche du mois précédent (délai de saisie : ' + PARAMS.fraicheurDelaiJour + ' du mois)'));
+      var nqo = q && q.questions ? q.questions.filter(function (qq) { return qq.statut === 'ouverte' && dansFr[qq.projet]; }).length : 0;
+      ul.appendChild(frLigne(nqo === 0, nqo ? nqo + ' question' + (nqo > 1 ? 's' : '') + ' ouverte' + (nqo > 1 ? 's' : '') + ' (À compléter)' : (nq ? 'Toutes les questions du mois sont soldées' : 'Aucun trou détecté pour ce mois'),
+        nqo ? frBtn('Voir', function () { frAller('semaphores', 'rep-sec-questions'); }, 'fr-mini') : null));
       p.appendChild(ul);
     }
 
@@ -17253,10 +17838,14 @@ var PTE_FICHE = (function (C, T) {
       ]));
     }
 
+    if (k === 'analyser') p.appendChild(el('div', { class: 'fr-actions' }, [frBtn('Voir « À traiter en revue »', function () { frAller('semaphores', 'watch-card'); })]));
+    if (k === 'decider') p.appendChild(el('div', { class: 'fr-actions' }, [frBtn('Voir les décisions ouvertes', function () { frAller('portefeuille', 'pf-decisions'); })]));
     var fait = !!x.faits[k];
     var cbF = el('input', { type: 'checkbox' }); cbF.checked = fait;
     cbF.addEventListener('change', function () { var y = frSeance(); y.faits[k] = cbF.checked; frEcrire(y); if (cbF.checked) { var i = FR_ETAPES.map(function (e) { return e.k; }).indexOf(k); if (i < FR_ETAPES.length - 1) FR.etape = FR_ETAPES[i + 1].k; } renderFilRouge(); });
-    p.appendChild(el('div', { class: 'fr-pied' }, [el('label', { class: 'fr-cb' }, [cbF, ' Temps « ' + et.t + ' » terminé'])]));
+    var iEt = FR_ETAPES.map(function (e) { return e.k; }).indexOf(k), suiv = FR_ETAPES[iEt + 1];
+    var bSuiv = suiv ? frBtn('Temps suivant : ' + suiv.t + ' →', function () { var y = frSeance(); y.faits[k] = true; frEcrire(y); frGuider(suiv.k); }, 'fr-mini') : null;
+    p.appendChild(el('div', { class: 'fr-pied' }, [el('label', { class: 'fr-cb' }, [cbF, ' Temps « ' + et.t + ' » terminé']), bSuiv ? ' ' : null, bSuiv]));
     return p;
   }
 
@@ -17293,12 +17882,7 @@ var PTE_FICHE = (function (C, T) {
     FR_ETAPES.forEach(function (et, i) {
       var b = el('button', { type: 'button', class: 'fr-chip' + (FR.etape === et.k ? ' on' : '') + (x.faits[et.k] ? ' fait' : ''), 'aria-pressed': FR.etape === et.k ? 'true' : 'false', title: et.d },
         [(x.faits[et.k] ? '✓ ' : (i + 1) + ' · ') + et.t, info[et.k] ? el('span', { class: 'fr-n' }, [info[et.k]]) : null]);
-      b.addEventListener('click', function () {
-        FR.etape = et.k;
-        /* le bandeau reste visible : pas de défilement ici, le bouton « Voir les sémaphores » s'en charge */
-        if (et.k === 'constater' || et.k === 'analyser') { if (!$('#view-reporting') || $('#view-reporting').hidden || STATE.rep.mode !== 'semaphores') { if (et.k === 'constater' || $('#view-fiche').hidden) showView('semaphores'); } }
-        renderFilRouge();
-      });
+      b.addEventListener('click', function () { frGuider(et.k); });
       nav.appendChild(b);
     });
     bar.appendChild(nav);
@@ -17316,6 +17900,7 @@ var PTE_FICHE = (function (C, T) {
     bar.appendChild(el('span', { class: 'fr-droite' }, [t, bPlay, bZero, bFerme]));
     host.appendChild(bar);
     host.appendChild(frPanneau(FR.etape, E, x));
+    if (FR.focus) { var ch = host.querySelectorAll('.fr-chip')[FR_ETAPES.map(function (e) { return e.k; }).indexOf(FR.focus)]; FR.focus = null; if (ch) ch.focus(); }   /* le focus reste sur le temps choisi */
     frTick();
     if (x.chrono.debut && !FR.timer) FR.timer = setInterval(frTick, 1000);
   }

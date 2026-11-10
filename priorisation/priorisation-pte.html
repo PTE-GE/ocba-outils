@@ -3603,6 +3603,9 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "10.11.2026", "objet": "revue", "version": "v0.60", "titre": "Recherche dans l’en-tête ; organigramme sur le périmètre", "points": ["Recherche dans l’en-tête, comme dans Prioriser : une proposition ouvre le sous-site ou le projet ; texte libre + Entrée filtre les projets des vues, filtre rappelé en pastille.", "Organigramme sur le périmètre du fil d’Ariane (tout le parc, portefeuilles, RP, plan, affectation) : un organigramme par portefeuille ; menu « Portefeuille » de l’onglet retiré."]},
+    {"date": "10.11.2026", "objet": "revue", "version": "v0.59", "titre": "Jalons à la liste normée ; planning par affectation", "points": ["Jalons comparés à la liste normée GE-Invest (12 jalons de phase SIA) : tout autre libellé est signalé pour correction ; une date prévue vide n’est plus une anomalie.", "Planning par affectation : une affectation dépliée montre ses sous-sites ou ses projets, à la couleur de leur famille d’intervention, avec leurs jalons.", "Filtres : boutons sur une ligne, phase SIA choisie dite en court, valeurs entières au survol."]},
+    {"date": "10.11.2026", "objet": "revue", "version": "v0.58", "titre": "Planning à trois vues ; questions dans Sémaphores ; revue guidée", "points": ["Planning : une seule carte, trois plannings au choix (familles par portefeuille, jalons, familles par affectation), une ligne par sous-site ou par projet.", "Fraîcheur : jusqu’au 20 du mois, la fiche du mois précédent compte encore, marquée « à mettre à jour » ; délai réglable.", "Sémaphores : carte « À compléter », questions du mois regroupées par portefeuille et par nature ; liste des projets du segment choisi dans « Projets par phase SIA ».", "Mode revue : chaque temps ouvre son onglet de Suivre, « Temps suivant » enchaîne."]},
     {"date": "10.11.2026", "objet": "revue", "version": "v0.57", "titre": "Sémaphores et Finances dans l’en-tête ; Synthèse retirée", "points": ["Onglets de Suivre : Portefeuille · Planning · Sémaphores · Finances · Organigramme · Autres vues ; Sémaphores réunit le périmètre d’action, les indicateurs du mois, les sémaphores, « À traiter » et CPI / SPI ; Finances, la situation pluriannuelle, la performance et la cohérence Estim ImmOBA → DG → GE-Invest.", "Synthèse retirée (doublon du tableau de bord) ; l’apport des projets d’ici 2030, la capacité, la couverture CECB+ et les rouges passent dans Portefeuille. Autres vues = Portefeuilles et Sous-sites du périmètre de l’en-tête ; un portefeuille cliqué devient le périmètre (plus de « Programme › Portefeuille »).", "Planning et Finances n’étaient plus affichés (découpage en parties de la présentation épurée) : corrigé. Organigramme : « Disposer » et « Modifier » ne font plus qu’un. « Portefeuille validé » retiré de Suivre.", "Relecture : mode revue « Constater » ouvre Sémaphores ; blocs de Portefeuille filtrés comme Sémaphores ; visite guidée à jour ; tableau des portefeuilles au clavier ; noms des RP en « Prénom Nom » ; plus de débordement sur téléphone. Portefeuille : la carte « Situation » porte le nom du périmètre choisi, compte les projets en cours et dit la part de non renseignés et la répartition des couleurs."]},
     {"date": "10.11.2026", "objet": "priorisation", "version": "v2.49", "titre": "Validation dans les Scénarios ; mode nuit", "points": ["La validation du portefeuille est dans la tuile des scénarios ; sans validation, le scénario affiché fait foi, « CO₂ au meilleur prix » par défaut. La validation sert de repère : sous-sites ajoutés ou retirés par un autre scénario.", "Le mode nuit suit la clé commune aux outils : un ancien réglage de la priorisation ne la rebascule plus au noir ; le menu dit l’état juste."]},
     {"date": "10.11.2026", "objet": "accueil", "version": "v1.29", "titre": "Trajectoires sous les tuiles des engagements ; cartes du bas retirées", "points": ["Chaque tuile des 8 engagements porte sa courbe annuelle ; un clic ouvre dessous la trajectoire jusqu’en 2030 de Prioriser (depuis 2005, chemin projeté et son zoom, chiffres clés), sans quitter le tableau de bord.", "Les cartes « Prioriser » et « Suivre » du bas de la page sont retirées : l’en-tête y mène déjà."]},
@@ -6431,7 +6434,9 @@ var PTE_COMMUN = (function () {
       '.pte-mc{position:relative;display:inline-block}' +
       '.pte-mc-b{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:6px;max-width:260px;padding:4px 10px;border-radius:8px;cursor:pointer;' +
         'border:1px solid var(--border,#dfe6ec);background:var(--card-bg,#fff);color:var(--ink,#1f2d3d)}' +
-      '.pte-mc-b .v{font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}' +
+      '.pte-mc-b .v{font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}' +
+      /* 10.11.2026 (capture d'Achim) : le libellé ne passe jamais à la ligne ; la valeur se coupe, en entier au survol */
+      '.pte-mc-b{white-space:nowrap}.pte-mc-b>span:not(.v){flex:none;white-space:nowrap}' +
       '.pte-mc-b.on{border-color:#005F73}body.night .pte-mc-b.on{border-color:#30E5D9}' +
       '.pte-mc-b::after{content:"";border:4px solid transparent;border-top-color:currentColor;margin-top:4px;opacity:.6}' +
       '.pte-mc-pop{position:absolute;z-index:60;top:calc(100% + 4px);left:0;min-width:220px;max-width:340px;max-height:320px;overflow:auto;padding:6px;border-radius:10px;' +
@@ -6562,8 +6567,11 @@ var PTE_COMMUN = (function () {
     function resume() {
       var opt = opts.options || [];
       var lib = !vals.length || vals.length === opt.length ? (opts.tous || 'Tous')
-        : vals.length === 1 ? ((opt.filter(function (o) { return String(o.v) === String(vals[0]); })[0] || { t: vals[0] }).t)
+        : vals.length === 1 ? (function (o) { return o.court || o.t; })(opt.filter(function (o) { return String(o.v) === String(vals[0]); })[0] || { t: vals[0] })
         : vals.length + ' choix';
+      /* valeur entière au survol (une option peut porter un libellé court, « court », pour le bouton) */
+      var choisis = opt.filter(function (o) { return vals.map(String).indexOf(String(o.v)) >= 0; }).map(function (o) { return o.t; });
+      b.title = (opts.titre ? opts.titre + (choisis.length ? ' — ' : '') : '') + (choisis.length && choisis.length !== opt.length ? choisis.join(', ') : '');
       b.innerHTML = ''; var s1 = document.createElement('span'); s1.textContent = (opts.libelle ? opts.libelle + ' :' : '');
       var s2 = document.createElement('span'); s2.className = 'v'; s2.textContent = lib;
       b.appendChild(s1); b.appendChild(s2);
