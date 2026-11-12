@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-ClsjLDM17RzUpUqfliSSwqUN3WN2c3hnxn3NjYFP1vo=' 'sha256-gfDIFAbjiHy1ufbiIFwVGfgZ3QfSD8cpvML/KBfk77w=' 'sha256-PXB9A3hkncmCSflcEShQs88wo0ljUhmYqIcnOdTcfdc=' 'sha256-cYEkQGkGJBK5DoSJmE6cw8kqhflhQ3ENdg7IgEPlo+4=' 'sha256-UUiI/4huYlfrewigXylxrk06b2sUllb+0XKiugUN3xI=' 'sha256-OiZbKxcrhmewxouMuwXBQu6lMJqW9CYUxrHCv/cw5XE=' 'sha256-gaECVxvBTF5R6/F2Fwhi5qZpNGXXIfBT3ANxiUU+wkk=' 'sha256-mC2guRT8XKqcOUCyiybWwIOqnU+hfLlY9SOpOzXNLC4=' 'sha256-S8IZr2RLVpRFH57GfMZUH9KWfM4Xqp2907SF0ct/Tu4=' 'sha256-OmUoq7k4l7JqX2HItKEJQELvDt2p6Iig8vLGaCdiY0I=' 'sha256-g756aLXx+vrvcO1DpcEy7hXcvaKJ3BOhMMamzomtcYo='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-ClsjLDM17RzUpUqfliSSwqUN3WN2c3hnxn3NjYFP1vo=' 'sha256-gfDIFAbjiHy1ufbiIFwVGfgZ3QfSD8cpvML/KBfk77w=' 'sha256-AmdfgRUFo6bXjOVSkj056IZniamiTKv2oqcbpxy2I+Q=' 'sha256-cYEkQGkGJBK5DoSJmE6cw8kqhflhQ3ENdg7IgEPlo+4=' 'sha256-UUiI/4huYlfrewigXylxrk06b2sUllb+0XKiugUN3xI=' 'sha256-OiZbKxcrhmewxouMuwXBQu6lMJqW9CYUxrHCv/cw5XE=' 'sha256-gaECVxvBTF5R6/F2Fwhi5qZpNGXXIfBT3ANxiUU+wkk=' 'sha256-6dRA1u98BraijrB53Q6xbwrhTzpTdeg6f0gCIpojxEg=' 'sha256-S8IZr2RLVpRFH57GfMZUH9KWfM4Xqp2907SF0ct/Tu4=' 'sha256-OmUoq7k4l7JqX2HItKEJQELvDt2p6Iig8vLGaCdiY0I=' 'sha256-g756aLXx+vrvcO1DpcEy7hXcvaKJ3BOhMMamzomtcYo='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <!-- <PTE-VUE sim:tete> -->
 <style id="css-vue-sim-jetons">
 :root{
@@ -2498,6 +2498,7 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "12.11.2026", "objet": "revue", "version": "v0.61", "titre": "Planning par famille sur tout le périmètre", "points": ["Planning « Familles » : familles d’intervention T1 à T4 sur tout le périmètre de l’en-tête, sans regroupement par portefeuille ; une famille dépliée montre ses sous-sites ou ses projets."]},
     {"date": "10.11.2026", "objet": "revue", "version": "v0.60", "titre": "Recherche dans l’en-tête ; organigramme sur le périmètre", "points": ["Recherche dans l’en-tête, comme dans Prioriser : une proposition ouvre le sous-site ou le projet ; texte libre + Entrée filtre les projets des vues, filtre rappelé en pastille.", "Organigramme sur le périmètre du fil d’Ariane (tout le parc, portefeuilles, RP, plan, affectation) : un organigramme par portefeuille ; menu « Portefeuille » de l’onglet retiré."]},
     {"date": "10.11.2026", "objet": "revue", "version": "v0.59", "titre": "Jalons à la liste normée ; planning par affectation", "points": ["Jalons comparés à la liste normée GE-Invest (12 jalons de phase SIA) : tout autre libellé est signalé pour correction ; une date prévue vide n’est plus une anomalie.", "Planning par affectation : une affectation dépliée montre ses sous-sites ou ses projets, à la couleur de leur famille d’intervention, avec leurs jalons.", "Filtres : boutons sur une ligne, phase SIA choisie dite en court, valeurs entières au survol."]},
     {"date": "10.11.2026", "objet": "revue", "version": "v0.58", "titre": "Planning à trois vues ; questions dans Sémaphores ; revue guidée", "points": ["Planning : une seule carte, trois plannings au choix (familles par portefeuille, jalons, familles par affectation), une ligne par sous-site ou par projet.", "Fraîcheur : jusqu’au 20 du mois, la fiche du mois précédent compte encore, marquée « à mettre à jour » ; délai réglable.", "Sémaphores : carte « À compléter », questions du mois regroupées par portefeuille et par nature ; liste des projets du segment choisi dans « Projets par phase SIA ».", "Mode revue : chaque temps ouvre son onglet de Suivre, « Temps suivant » enchaîne."]},
@@ -10117,7 +10118,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.60 · 10.11.2026</a> · <a href="Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.61 · 12.11.2026</a> · <a href="Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -14715,11 +14716,12 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
      l : n (lignes normales), s (serrées). */
   var LS_PLANNING = 'pte.revue.planning.v1';
   var PLANNING = (function () {
-    /* v : planning affiché (10.11.2026, demande d'Achim : une carte, trois plannings) — fam (familles par portefeuille),
-       ss (jalons par sous-site), aff (familles par affectation) ; n : une ligne par sous-site (s) ou par projet (p) */
+    /* v : planning affiché (10.11.2026, demande d'Achim : une carte, trois plannings, quatre depuis le 12.11) — fam (familles par portefeuille),
+       ss (jalons par sous-site), aff (familles par affectation) ; 12.11.2026 (Achim) : parc (familles sur tout le périmètre,
+       sans regroupement par portefeuille) ; n : une ligne par sous-site (s) ou par projet (p) */
     var d = { h: 'n', l: 'n', v: 'fam', n: 's' };
     try { var o = JSON.parse(localStorage.getItem(LS_PLANNING) || '{}'); if (o && /^[ngt]$/.test(o.h)) d.h = o.h; if (o && /^[ns]$/.test(o.l)) d.l = o.l;
-      if (o && /^(fam|ss|aff)$/.test(o.v)) d.v = o.v; if (o && /^[sp]$/.test(o.n)) d.n = o.n; } catch (e) { /* stockage indisponible */ }
+      if (o && /^(parc|fam|ss|aff)$/.test(o.v)) d.v = o.v; if (o && /^[sp]$/.test(o.n)) d.n = o.n; } catch (e) { /* stockage indisponible */ }
     return d;
   })();
   /* Choix du planning et du niveau (10.11.2026) : posés dans l'en-tête de la carte affichée */
@@ -14741,13 +14743,14 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
       return el('span', {}, [nom, g]);
     }
     return el('span', { class: 'plan-choix no-print' }, [
-      seg('Planning', 'v', [['fam', 'Familles · portefeuilles', 'Familles d’intervention T1 à T4, regroupées par portefeuille (RPF)'],
+      seg('Planning', 'v', [['parc', 'Familles', 'Familles d’intervention T1 à T4 sur tout le périmètre de l’en-tête, sans regroupement par portefeuille ; une famille dépliée montre ses sous-sites ou ses projets'],
+        ['fam', 'Familles · portefeuilles', 'Familles d’intervention T1 à T4, regroupées par portefeuille (RPF)'],
         ['ss', 'Jalons · sous-sites', 'Durée et jalons GE-Invest, une ligne par sous-site ou par projet'],
         ['aff', 'Affectations', 'Sous-sites ou projets regroupés par affectation, à la couleur de leur famille d’intervention, avec leurs jalons']]),
       avecNiveau ? seg('Lignes', 'n', [['s', 'Par sous-site', 'Une ligne par sous-site (projets regroupés)'], ['p', 'Par projet', 'Une ligne par projet']]) : null
     ]);
   }
-  /* Carte unique du planning (10.11.2026) : un des trois plannings, selon PLANNING.v ; se redessine sur place */
+  /* Carte unique du planning (10.11.2026) : un des quatre plannings, selon PLANNING.v ; se redessine sur place */
   function repPlanningCard(rows, optsGantt) {
     var hote = el('div', { class: 'plan-hote', id: 'plan-hote' });
     function dessiner() {
@@ -14755,7 +14758,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
       var c = null, ctrl = planningChoix(dessiner, true);
       if (PLANNING.v === 'ss') c = repGanttHote(rows, Object.assign({}, optsGantt, { controles: ctrl, parProjet: PLANNING.n === 'p',
         title: PLANNING.n === 'p' ? String(optsGantt.title || 'Planning').replace('jalons par sous-site', 'jalons par projet') : optsGantt.title }));
-      else c = repPlanFamillesCard(rows, PLANNING.v === 'aff' ? 'aff' : 'pf', ctrl);
+      else c = repPlanFamillesCard(rows, PLANNING.v === 'aff' ? 'aff' : PLANNING.v === 'parc' ? 'parc' : 'pf', ctrl);
       hote.appendChild(c || el('div', { class: 'card' }, [cardTitle('Planning', null, ctrl), el('p', { class: 'muted small' }, ['Aucun projet daté dans le périmètre.'])]));
     }
     dessiner();
@@ -14991,11 +14994,12 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
   function planPalier(n) { return n >= 5 ? 0.95 : n >= 2 ? 0.6 : n >= 1 ? 0.28 : 0; }
   function dateCH(d) { return d ? ('0' + d.getUTCDate()).slice(-2) + '.' + ('0' + (d.getUTCMonth() + 1)).slice(-2) + '.' + d.getUTCFullYear() : '?'; }
 
-  /* grp : 'pf' (par portefeuille, depuis le 26.10) ou 'aff' (par affectation du sous-site, 10.11.2026, demande d'Achim) ;
+  /* grp : 'pf' (par portefeuille, depuis le 26.10), 'aff' (par affectation du sous-site, 10.11.2026, demande d'Achim) ou
+     'parc' (familles sur tout le périmètre, sans regroupement par portefeuille, 12.11.2026, demande d'Achim) ;
      ctrl : choix du planning et du niveau, posé dans l'en-tête. Lignes dépliées : un projet ou un sous-site (PLANNING.n). */
   var AFF_OUVERTES = {};
   function repPlanFamillesCard(rows, grp, ctrl) {
-    grp = grp === 'aff' ? 'aff' : 'pf';
+    grp = grp === 'aff' || grp === 'parc' ? grp : 'pf';
     var pct = Math.min(100, Math.max(1, +PARAMS.planningRepere || 80)), ech = +PARAMS.planningEcheance || 2030;
     var items = rows.map(planItem);
     if (!items.length) return null;
@@ -15003,9 +15007,10 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     var parSs = PLANNING.n !== 'p';
     /* 10.11.2026 : un seul portefeuille dans le périmètre de l'en-tête = niveau portefeuille (plus de descente dans la page) */
     var pfsU = items.reduce(function (o, i) { o[i.r.pf] = 1; return o; }, {}), pfSeul = Object.keys(pfsU).length === 1 ? Object.keys(pfsU)[0] : null;
-    var pfNiv = grp === 'pf' ? (STATE.rep.pf || pfSeul) : null, auPf = !!pfNiv;
+    /* 12.11.2026 (Achim) : « parc » = familles sur tout le périmètre, sans regroupement par portefeuille, comme au niveau d'un portefeuille */
+    var pfNiv = grp === 'pf' ? (STATE.rep.pf || pfSeul) : grp === 'parc' ? '*' : null, auPf = !!pfNiv;
     var depliable = auPf || grp === 'aff';
-    function cleFam(g, fk) { return grp === 'aff' ? g + '|' + fk : String(fk); }
+    function cleFam(g, fk) { return grp === 'aff' ? g + '|' + fk : grp === 'parc' ? 'parc|' + fk : String(fk); }
     function famDe(k) { return FAMILLES.filter(function (f) { return f.k === k; })[0] || FAMILLES[FAMILLES.length - 1]; }
     /* jalons d'une ligne (planning par affectation) : réalisé = rond, prévu = losange, échu non réalisé = losange plein rouge */
     var auj = STATE.mois ? Engine.gelDate(STATE.mois, PARAMS) : new Date();   /* « échu » à la date de gel du mois de revue, comme ailleurs */
@@ -15264,7 +15269,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
         : auPf ? ' · un clic sur une famille affiche ses ' + (parSs ? 'sous-sites.' : 'projets.') : ' · un clic sur un portefeuille le choisit comme périmètre.')]);
     function redessiner() { var nv = repPlanFamillesCard(rows, grp, ctrl); if (nv && carte.parentNode) carte.parentNode.replaceChild(nv, carte); }
     var carte = el('div', { class: 'card plan-fam-card', 'data-plan-grp': grp }, [
-      cardTitle(grp === 'aff' ? 'Planning par affectation' : 'Planning par famille d’intervention',
+      cardTitle(grp === 'aff' ? 'Planning par affectation' : grp === 'parc' ? 'Planning par famille d’intervention — ' + repPerimetreLibelle() : 'Planning par famille d’intervention',
         grp === 'aff' ? 'Une ligne par affectation du sous-site (Plan_PTE) : remplissage = travaux en cours par trimestre ; à droite, part des travaux datés finis au plus tard le 31.12.' + ech + '. Une affectation dépliée montre ses sous-sites ou ses projets : barre = début → fin (réel sinon initial, ré-estimée sinon initiale), à la couleur de la famille d’intervention T1 à T4 ; bande fine = étude ; jalons GE-Invest : rond réalisé, losange prévu, losange rouge échu à la date de gel du mois de revue.' : 'Lecture du planning général intentionnel PTE, sur les plannings GE-Invest. Famille = type d’intervention T1 à T4 du sous-site (classe IDC × classe de vétusté Stratus, règle commune aux trois outils) ; un projet prend la famille de son sous-site. Bande fine = études (projets d’étude GE-Invest), bande épaisse = travaux. Contour = enveloppe (premier début → dernière fin) ; remplissage = nombre de projets en cours par trimestre ; trait noir = date à laquelle ' + pct + ' % des projets de travaux sont terminés ; à droite, part des travaux datés finis au plus tard le 31.12.' + ech + '. Dates : début réel sinon initial, fin ré-estimée sinon initiale. Repère et échéance réglables dans le panneau « Données ».', ctrl || null),
       resume,
       mesuresAnciennes ? el('div', { class: 'notice warn' }, ['Familles non calculées : elles le seront au prochain chargement du classeur Plan_PTE.']) : null,
@@ -16180,8 +16185,8 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     /* onglet « Planning » (séance 7) : le planning seul, mêmes filtres et mêmes niveaux */
     if (STATE.rep.mode === 'planning') {
       body.appendChild(el('div', { id: 'rep-sec-planning', class: 'rep-ancre' }));
-      /* une seule carte, trois plannings au choix (10.11.2026, demande d'Achim) : familles par portefeuille, jalons par sous-site
-         ou par projet, familles par affectation */
+      /* une seule carte, quatre plannings au choix (10.11.2026, demandes d'Achim ; 12.11 : familles sur tout le périmètre) :
+         familles, familles par portefeuille, jalons par sous-site ou par projet, familles par affectation */
       body.appendChild(repPlanningCard(rows, {
         title: STATE.rep.pf ? 'Planning du portefeuille (jalons par sous-site)' : (STATE.perimetre && STATE.perimetre !== 'ALL' ? 'Planning du périmètre (jalons par sous-site)' : 'Planning du parc (jalons par sous-site)'),
         aria: 'Planning des sous-sites : durée et jalons prévus, réalisés ou en retard.',
