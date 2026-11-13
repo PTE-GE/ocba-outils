@@ -421,6 +421,9 @@ body.night .f-bt.on{background:var(--soft);border-color:var(--acc)}
 .lgt-r{display:grid;grid-template-columns:20px minmax(0,1fr) 120px 92px;align-items:center;gap:8px;padding:3px 0;border-bottom:1px solid var(--line)}
 .lgt-h{border-bottom:0;color:var(--ink3);font-size:11px}
 .lgt-s{display:flex;justify-content:center}.lgt-v{text-align:right;white-space:nowrap}.lgt-t{white-space:nowrap}
+.nm-bat{text-decoration:underline dotted;text-decoration-color:rgba(127,127,127,.55);text-underline-offset:3px;cursor:help}
+.lgt.lgt-2{grid-template-columns:1fr 1fr;column-gap:28px;max-width:none}.lgt.lgt-2 .lgt-r{grid-template-columns:20px minmax(0,1fr) auto}
+@media (max-width:700px){.lgt.lgt-2{grid-template-columns:1fr}}
 .detail{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;margin-top:12px;
         box-shadow:var(--shadow)}
 .detail h3{font-size:15px;font-weight:600;letter-spacing:-.2px;border:0;padding:0;margin:0}
@@ -636,6 +639,8 @@ body.no-data .tabs,body.no-data .srcbar,body.no-data .pnl{display:none!important
 /* encart du tableau de bord (10.11) : la Vue d'ensemble seule */
 html.pte-encart body>header,html.pte-encart #emptyState,html.pte-encart #noticeCommun,html.pte-encart .pnl:not(#dash),html.pte-encart footer,html.pte-encart .tabs,html.pte-encart #dash>.sec-h,html.pte-encart #dash>.tab-howto,html.pte-encart #dash>.statbar,html.pte-encart #dash>.dash-foot,html.pte-encart #objTiles,html.pte-encart .ep-plier,html.pte-encart .ptn-bulle,html.pte-encart #toast,html.pte-encart .band{display:none!important}
 html.pte-encart,html.pte-encart body{background:transparent!important;min-height:0!important;overflow:hidden}
+html.epure.pte-encart body,html.pte-encart.epure{background:transparent!important}
+html.pte-encart #objDetail{border-radius:12px;margin:0}
 html.pte-encart #dash{display:block!important;padding:0!important;margin:0!important;max-width:none!important}
 #emptyState{display:none}
 body.no-data #emptyState{display:block}
@@ -895,6 +900,27 @@ body.no-data .hdr-row2{display:none !important}
 #noticeCommun .notice-in{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 #objFiche{display:none;margin:6px 0 10px}
 #objFiche.on{display:block}
+/* fiche en fenêtre flottante, compacte (13.11.2026) */
+#objFiche.on.flot{position:fixed;z-index:1500;top:var(--fiche-top,12px);right:16px;width:min(860px,calc(100vw - 32px));max-height:calc(100vh - var(--fiche-top,12px) - 12px);overflow:auto;margin:0;
+  border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.28);overscroll-behavior:contain}
+#objFiche.flot .fiche-card{padding:0;border:0;background:transparent}
+#objFiche.on.flot{background:var(--card-bg,#fff)}#objFiche.flot .fiche-card{padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+#objFiche.flot .ptf{margin:0;padding:12px 14px;border:0;border-radius:14px}
+#objFiche.flot .ptf h3{font-size:15px}#objFiche.flot .ptf h4{margin:10px 0 5px}
+#objFiche.flot .ptf .ptf-sous{margin:0 0 8px}
+#objFiche.flot .fiche-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin:2px 0 6px}
+#objFiche.flot .fiche-grid .fs{padding:7px 10px}#objFiche.flot .fk{padding:2px 0}
+#objFiche.flot .fiche-al{padding:6px 10px;margin-bottom:6px}
+#objFiche.flot .fiche-act{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px}
+#objFiche.flot .q-box,#objFiche.flot .fiche-notes{padding:7px 9px}#objFiche.flot .q-box h5,#objFiche.flot .fiche-notes h5{margin:0 0 4px}
+#objFiche.flot .q-box .mini{margin-top:4px!important}
+#objFiche.flot .fiche-notes textarea{min-height:52px}
+#objFiche.flot .ptf-act{margin-top:8px}
+@media (max-width:640px){#objFiche.on.flot{right:8px;left:8px;width:auto;max-height:calc(100vh - var(--fiche-top,8px) - 8px);max-height:calc(100dvh - var(--fiche-top,8px) - 8px)}}
+#objFiche.flot .ptf-x{position:sticky;top:4px;float:right;margin:-4px -4px 0 8px;z-index:2}#objFiche.flot .ptf.ptf-ax h3{padding-right:0}
+body.fiche-flot-on .hdr{z-index:1600}
+tr.row-click:focus-visible td{outline:2px solid var(--teal);outline-offset:-2px}
+@media print{#objFiche.on.flot{position:static;box-shadow:none;max-height:none;overflow:visible;width:auto}}
 .fiche-card{border:1px solid var(--border);border-radius:var(--r-card,10px);background:var(--card-bg);padding:10px 14px 12px}
 .fiche-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
 .fiche-head h4{margin:0;font-size:.9rem;color:var(--pri)}
@@ -959,24 +985,25 @@ document.documentElement.classList.add('epure');</script>
   --pte-serie-3:#856EBE;
   --pte-serie-4:#B58900;
   --pte-serie-5:#1A8554;
-  --pte-sia-21:#D3EAEE;
-  --pte-sia-21-tx:#1D2733;
-  --pte-sia-31:#AFD6DE;
+  --pte-sia-21:#FFFFFF;
+  --pte-sia-21-tx:#0072B2;
+  --pte-sia-31:#B3D7F2;
   --pte-sia-31-tx:#1D2733;
-  --pte-sia-32:#8BC3CD;
+  --pte-sia-32:#56B4E9;
   --pte-sia-32-tx:#1D2733;
-  --pte-sia-33:#64AFBD;
-  --pte-sia-33-tx:#1D2733;
-  --pte-sia-41:#479BAB;
-  --pte-sia-41-tx:#1D2733;
-  --pte-sia-51:#328597;
-  --pte-sia-51-tx:#FFFFFF;
-  --pte-sia-52:#1C7083;
-  --pte-sia-52-tx:#FFFFFF;
-  --pte-sia-53:#005B6E;
+  --pte-sia-33:#0072B2;
+  --pte-sia-33-tx:#FFFFFF;
+  --pte-sia-41:#7E5BB0;
+  --pte-sia-41-tx:#FFFFFF;
+  --pte-sia-51:#EAD6B8;
+  --pte-sia-51-tx:#1D2733;
+  --pte-sia-52:#B98A5B;
+  --pte-sia-52-tx:#1D2733;
+  --pte-sia-53:#7A4A28;
   --pte-sia-53-tx:#FFFFFF;
-  --pte-sia-6:#00404E;
+  --pte-sia-6:#2F2F2F;
   --pte-sia-6-tx:#FFFFFF;
+  --pte-sia-21-bord:#0072B2;
   --pte-sia-nr:#B8C1C8;
   --pte-sia-nr-tx:#1D2733;
   --pte-ti-1:#D3EAEE;
@@ -1114,7 +1141,8 @@ html.epure .gsearch input,html.epure #gq{background:var(--ep-fill)!important;bor
 
 /* ---------- textes : la phrase principale reste, le reste attend derrière un i ---------- */
 html.epure .ep-iw{display:inline-flex;vertical-align:middle;margin-left:8px;position:relative}
-html.epure .ep-i{width:20px;height:20px;border-radius:50%;border:1.5px solid currentColor;background:transparent;color:var(--ep-ink3);
+/* 13.11.2026 (Achim, QCM « Gris → vert ») : un seul « i » partout — cercle gris, contour fin ; au survol, fond teal et « i » blanc */
+html.epure .ep-i{width:18px;height:18px;border-radius:50%;border:1px solid currentColor;background:transparent;color:var(--ep-ink3);
   font:italic 600 12px/1 Georgia,"Times New Roman",serif;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex:none;
   transition:color .15s,background .15s}
 html.epure .ep-i:hover,html.epure .ep-i[aria-expanded="true"]{color:var(--ep-on-accent);background:var(--ep-accent-bg);border-color:var(--ep-accent-bg)}
@@ -1138,7 +1166,7 @@ html.epure .ep-banner{display:flex;align-items:center;gap:10px;padding:10px 14px
   background:var(--ep-warn-bg);color:var(--ep-warn-fg)}
 html.epure .ep-banner.ep-info{background:var(--ep-accent-soft);color:var(--ep-info-fg)}
 html.epure .ep-banner .ep-banner-t{flex:1 1 auto}
-html.epure .ep-banner .ep-i{color:inherit}
+html.epure .ep-banner .ep-i{color:var(--ep-ink3)}
 
 /* ---------- accueil ---------- */
 html.epure .drop{border:1.5px dashed var(--ep-drop)!important;border-radius:20px!important;background:var(--ep-card)!important;padding:34px 30px!important;color:var(--ep-ink)}
@@ -1186,7 +1214,8 @@ html.epure .tr-card{border:0!important;box-shadow:var(--ep-shadow)!important;bor
 html.epure .tr-card::before{content:'';position:absolute;left:14px;top:16px;width:6px;height:6px;border-radius:50%;background:var(--ep-ink3)}
 html.epure .tr-card.ok::before{background:var(--ep-ok)} html.epure .tr-card.ko::before{background:var(--ep-err)} html.epure .tr-card.mid::before{background:var(--ep-mid)}
 html.epure .tr-card .tr-h{padding-left:12px}
-html.epure .info-icon{width:17px!important;height:17px!important;border:1.5px solid var(--ep-ink3)!important;color:var(--ep-ink3)!important;font:italic 600 11px/1 Georgia,serif!important}
+html.epure .info-icon{width:18px!important;height:18px!important;box-sizing:border-box!important;border:1px solid currentColor!important;color:var(--ep-ink3)!important;background:transparent!important;font:italic 600 12px/1 Georgia,"Times New Roman",serif!important}
+html.epure .info-icon:hover,html.epure .info-icon:focus-visible{color:var(--ep-on-accent)!important;background:var(--ep-accent-bg)!important;border-color:var(--ep-accent-bg)!important}
 html.epure .ch,html.epure .card-pli{color:var(--ep-ink3)!important}
 html.epure .rep-toprow{flex-wrap:wrap!important;align-items:center!important;gap:8px 12px!important}
 html.epure .rep-toprow .filterbar{margin:0 0 0 auto!important;gap:6px!important;flex-wrap:wrap;align-items:center}
@@ -1206,7 +1235,13 @@ html.epure .gantt-reglages .seg button[aria-pressed="true"]{background:var(--ep-
 @media print{ html.epure .ep-cache{display:revert!important} html.epure .ep-i,html.epure .ep-pop{display:none!important} html.epure .ep-garde{display:block!important} html.epure .hdr{backdrop-filter:none} }
 @media (prefers-reduced-motion:reduce){ html.epure *{transition:none!important} }
 /* Tuiles repliables (09.11.2026 au soir, demande d'Achim) : chevron dans le titre, état gardé par page et par titre */
-html.epure .ep-plier{border:0;background:transparent;color:var(--ep-ink3);cursor:pointer;padding:2px;margin-left:6px;border-radius:6px;display:inline-flex;align-items:center;vertical-align:middle;order:99;flex:none;transition:transform .18s}
+/* 13.11.2026 (Achim) : « › titre i » dans les quatre vues — chevron avant le titre (ouvert : vers le bas ; replié : vers la droite) */
+html.epure .ep-plier{border:0;background:transparent;color:var(--ep-ink3);cursor:pointer;padding:2px;margin:0 4px 0 -4px;border-radius:6px;display:inline-flex;align-items:center;vertical-align:middle;order:-1;flex:none;transition:transform .18s}
+html.epure .wt > .ch{order:-1!important;margin:0 6px 0 -4px!important;font-size:0!important;width:18px;height:18px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;color:var(--ep-ink3);transform:none!important}
+html.epure .wt > .ch::before{content:'';width:6px;height:6px;border-right:1.8px solid currentColor;border-bottom:1.8px solid currentColor;transform:rotate(-45deg) translate(-1px,-1px);transition:transform .18s}
+html.epure .wt > .ch.op::before{transform:rotate(45deg) translate(-1px,-1px)}
+html.epure .wt:hover > .ch{color:var(--ep-ink);background:var(--ep-fill)}
+html.epure .wt{justify-content:flex-start!important}html.epure .wt > h3{margin-right:0!important}html.epure .wt > div:not(.objs){margin-left:auto}
 html.epure .ep-plier:hover{color:var(--ep-ink);background:var(--ep-fill)}
 html.epure .ep-plier:focus-visible{outline:2px solid var(--ep-accent);outline-offset:1px}
 html.epure .ep-replie .ep-plier{transform:rotate(-90deg)}
@@ -1584,7 +1619,7 @@ html.epure [data-ep-repli] > [data-ep-tete]{cursor:pointer}
 <div class="wt op" onclick="tglS('anoBody','anoCh')" title="Anomalies détectées dans le classeur, exportables pour correction"><h3 style="margin:0;border:none;padding:0">Anomalies détectées dans les séries</h3>
 <div style="display:flex;align-items:center;gap:8px">
 <button class="bt bt-p bt-s" onclick="event.stopPropagation();exportAnomalies()" title="Exporter la liste complète en CSV pour la corriger dans le classeur">Exporter le rapport</button>
-<span class="ch op" id="anoCh">▼</span></div></div>
+</div><span class="ch op" id="anoCh">▼</span></div>
 <div class="wb op" id="anoBody"><div id="anoBox"></div></div>
 </div>
 <div class="cd" id="qualCard">
@@ -1596,8 +1631,8 @@ html.epure [data-ep-repli] > [data-ep-tete]{cursor:pointer}
 <h3 style="margin:0;border:none;padding:0">Alertes, sous-site par sous-site <span id="alCount" style="font-weight:400;color:var(--warn);font-size:.75rem"></span></h3>
 <div style="display:flex;align-items:center;gap:6px">
 <button class="bt bt-p bt-s" onclick="event.stopPropagation();exportAlerts()" title="Exporter toutes les alertes en CSV">Exporter les alertes</button>
-<span class="ch" id="alCh">▼</span>
 </div>
+<span class="ch" id="alCh">▼</span>
 </div>
 <div class="wb" id="alB"><div style="padding-top:8px;max-height:60vh;overflow-y:auto" id="alList"></div></div>
 </div>
@@ -1778,7 +1813,7 @@ L'année des mesures est lue dans la cellule <code>Année des mesures</code> de 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.49 · 10.11.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span id="ftVer">Priorisation PTE · <a href="#" data-pte-versions="priorisation" title="Historique des versions">v2.53 · 13.11.2026</a> · <a href="../Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 <script>
 /* ==== MODULES COMMUNS DU CABINET (copiés tels quels, vague 2 — 20.09.2026) ==== */
@@ -2931,6 +2966,26 @@ var PTE_COMMUN = (function () {
     var n = String(numero == null ? '' : numero).trim();
     return /^\d{6,20}$/.test(n) ? GEI_RECHERCHE[0] + n + GEI_RECHERCHE[1] : null;
   }
+  /* N° de projet, partout le même (13.11.2026, demande d'Achim ; QCM « Fiche Suivre + icône GE-Invest ») : le numéro
+     ouvre la fiche du projet dans Suivre ; la petite flèche ↗ juste après ouvre GE-Invest dans un nouvel onglet.
+     numProjetHtml(np, ss, texte) rend ce HTML (texte : libellé à la place du numéro, en texte simple). */
+  function escNp(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function cssNumProjet() {
+    if (typeof document === 'undefined' || document.getElementById('pte-np-css')) return;
+    var s = document.createElement('style'); s.id = 'pte-np-css';
+    s.textContent = '.pte-gei{display:inline-block;margin-left:3px;padding:0 3px;border-radius:4px;font-size:.86em;line-height:1.2;color:var(--ep-ink3,#6b7280)!important;text-decoration:none!important;font-weight:500}' +
+      '.pte-gei:hover,.pte-gei:focus-visible{color:var(--ep-accent,#005F73)!important;background:var(--ep-fill,rgba(118,118,128,.12))}a.pte-np{color:inherit;text-decoration:underline;text-decoration-color:rgba(127,127,127,.45);text-underline-offset:2px}a.pte-np:hover{text-decoration-color:currentColor}' +
+      '@media print{.pte-gei{display:none!important}}';
+    (document.head || document.documentElement).appendChild(s);
+  }
+  var TITRE_GEI = 'Fiche du projet dans GE-Invest (intranet de l’État), dans un nouvel onglet';
+  function numProjetHtml(np, ss, texte) {
+    var n = String(np == null ? '' : np).trim(), t = texte == null || texte === '' ? n : String(texte);
+    var l = n ? lien('revue', ss || null, n) : null, g = lienGEInvest(n);
+    cssNumProjet();
+    return (l ? '<a class="pte-np" href="' + escNp(l) + '" data-projet="' + escNp(n) + '" title="Ouvre la fiche du projet dans Suivre">' + escNp(t) + '</a>' : escNp(t)) +
+      (g ? '<a class="pte-gei" href="' + escNp(g) + '" target="_blank" rel="noopener noreferrer" title="' + TITRE_GEI + '" aria-label="Projet ' + escNp(n) + ' dans GE-Invest">↗</a>' : '');
+  }
   function projetDepuisHash() {
     var h = (typeof location !== 'undefined' && location.hash) || '';
     var m = /[#&]projet=([0-9]{6,20})\b/.exec(h);
@@ -3603,6 +3658,27 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "13.11.2026", "objet": "accueil", "version": "v1.36", "titre": "Phases SIA : version « Terre »", "points": ["Phase 41 en violet, phases 51 → 53 du sable au brun : plus aucune phase aux couleurs des sémaphores (vert, orange, rouge)."]},
+    {"date": "13.11.2026", "objet": "revue", "version": "v0.68", "titre": "Phases SIA : version « Terre »", "points": ["Phase 41 en violet, phases 51 → 53 du sable au brun : plus aucune phase aux couleurs des sémaphores (vert, orange, rouge).", "Bleus 31 → 33, 21 creux et « terminé » noir inchangés."]},
+    {"date": "13.11.2026", "objet": "accueil", "version": "v1.35", "titre": "Nouvelle palette des phases SIA", "points": ["Phases SIA par familles, du froid au chaud (21 creux, 31-33 bleus, 41 vert d’eau, 51-53 oranges, terminé noir), lisible en cas de daltonisme : tableau de bord et Suivre dans la page."]},
+    {"date": "13.11.2026", "objet": "revue", "version": "v0.67", "titre": "Nouvelle palette des phases SIA", "points": ["Phases SIA par familles, du froid au chaud : 21 en repère creux (fond blanc, contour bleu), 31 → 33 bleus du clair au foncé, 41 vert d’eau, 51 → 53 oranges du clair au foncé, terminé en noir ; couleurs lisibles en cas de daltonisme.", "Partout où une phase a une couleur : Sémaphores (segments et liste), carte des phases SIA, organigramme, légendes."]},
+    {"date": "13.11.2026", "objet": "accueil", "version": "v1.34", "titre": "Suivre : tableau des sous-sites et projets, carte des phases SIA", "points": ["Suivre, dans la page : tableau « Sous-sites et projets » et carte des phases SIA (voir la revue v0.66).", "Leaflet intégré à la page ; la CSP n’autorise en plus que les images du fond de carte Esri."]},
+    {"date": "13.11.2026", "objet": "revue", "version": "v0.66", "titre": "Tableau « Sous-sites et projets » ; carte des phases SIA", "points": ["Portefeuille : heatmap et tableau des sous-sites (ex-Autres vues) réunis ; colonnes en trois groupes à cocher (Sémaphores · Suivi · Finances), gardés dans ce navigateur.", "Tri par clic sur l’en-tête (puis ordre inverse, puis ordre d’origine) ; filtres d’en-tête : texte (n° ou nom) et listes de valeurs ; RP en initiales (ASI = Achim Siegele).", "Planning : carte des phases SIA des sous-sites, à la couleur de leur phase à la date du curseur (jalons du planning GE-Invest), lecture animée mois par mois, légende qui compte et filtre, détail du sous-site.", "Coordonnées des sous-sites lues dans Plan_PTE (Latitude, Longitude) ; une base plus ancienne est relue depuis le classeur commun."]},
+    {"date": "13.11.2026", "objet": "accueil", "version": "v1.33", "titre": "Trajectoire raccrochée à sa tuile ; plus de ligne « Sources »", "points": ["Objectifs PTE : la trajectoire s’ouvre sous la tuile choisie, reliée par une pointe, au même arrondi ; plus de bande grise.", "La tuile choisie est cernée de teal ; celle du CO₂ l’est d’emblée.", "Ligne « Sources » retirée du bas du tableau de bord : fichier et dates restent dans « Données du … »."]},
+    {"date": "13.11.2026", "objet": "priorisation", "version": "v2.53", "titre": "Encart de trajectoire sans fond gris", "points": ["Encart du tableau de bord : fond transparent et arrondi aligné sur les tuiles."]},
+    {"date": "13.11.2026", "objet": "revue", "version": "v0.65", "titre": "Zoom et hauteur du planning ; jalons du planning dans la fiche ; liens des sémaphores", "points": ["Planning : « Hauteur » et « Densité » remplacés par un zoom (− 100 % +, Ctrl + molette) et une poignée qui règle la hauteur de la fenêtre ; réglages gardés dans ce navigateur.", "Fiche projet : « Jalons du planning » montre les jalons de l’onglet « Planning » de GE-Invest ; les phases de l’avancement global (« Synthèse ») sont dites à part.", "« À traiter en revue » : chaque n° de projet ouvre sa fiche, ↗ ouvre GE-Invest ; par sous-site, ses projets sous son nom.", "Dates des jalons au format 01.12.2026."]},
+    {"date": "13.11.2026", "objet": "accueil", "version": "v1.32", "titre": "« i » d’un seul style ; actions des fiches au même aspect", "points": ["Un seul style de « i » dans les quatre vues : cercle gris à contour fin, fond teal et « i » blanc au survol ; plus de « i » à la couleur d’un bandeau.", "Fiche d’un sous-site : « Estimer les gains » et les autres actions ont le même aspect."]},
+    {"date": "13.11.2026", "objet": "priorisation", "version": "v2.52", "titre": "Fiche en fenêtre flottante, note et ajustement dans la fiche", "points": ["Fiche d’un sous-site dans une fenêtre flottante au-dessus du classement, qui reste visible dessous ; × dans la tuile, Échap ; plus de « Fiche imprimable » ni de « Fermer ».", "Note et ajustement saisis directement dans la fiche, sans « Modifier » ; un ajustement rouvre la fiche, rang à jour.", "Fiche plus compacte, surtout en hauteur ; « Estimer les gains » et « Suivre ses projets » au même aspect."]},
+    {"date": "13.11.2026", "objet": "revue", "version": "v0.64", "titre": "Planning en une phrase ; « catégorie d’intervention »", "points": ["Réglages du planning en une phrase de trois menus : « Catégories · par portefeuille · une ligne par sous-site » (barres, regroupement, lignes).", "« Famille d’intervention » devient « catégorie d’intervention » dans Suivre.", "« i » au style commun (gris, fond teal au survol)."]},
+    {"date": "13.11.2026", "objet": "simulation", "version": "v3.26", "titre": "« i » au style commun", "points": ["Un seul style de « i » : gris au repos, fond teal et « i » blanc au survol."]},
+    {"date": "13.11.2026", "objet": "accueil", "version": "v1.31", "titre": "Objectifs PTE ; fenêtre « Estimer les gains » ; titres et n° de projet", "points": ["« Les 8 engagements 2030 » devient « Objectifs PTE ». Courbe d’un objectif : un clic sur la projection agrandie rend le graphique entier ; légende sur deux colonnes, sans la colonne « fin 2030 » (valeur au survol).", "« Estimer les gains » ouvre la simulation dans une fenêtre flottante, déplaçable, fermée par la croix ou Échap ; la vue en cours reste dessous.", "Titres de tous les blocs sur un seul schéma : chevron, titre, « i » juste après ; jamais deux « i ».", "Projets (jalons, projets clés, risques) : le nom ouvre la fiche Suivre, la flèche ↗ ouvre GE-Invest."]},
+    {"date": "13.11.2026", "objet": "priorisation", "version": "v2.51", "titre": "Fiche sous-site sans doublons ; classement IDC ; bâtiments", "points": ["Fiche d’un sous-site : plus de rangée de chiffres en tête ; rang, ligne site · portefeuille · plans, puis les blocs Bâtiment, Chaleur et travaux, Mesures, ouverts ; audit CECB+ dans le bloc Bâtiment ; chaque donnée une seule fois.", "Classement IDC : objectif 2030 atteint (IDC moyen du parc sous la cible), les sous-sites au-dessus du seuil sont classés par IDC, du plus élevé au plus bas, et la note le dit.", "Noms des bâtiments (partie entre parenthèses de « Nom du site_AB », par exemple « ECPS Budé » pour Site Moillebeau 72) : au survol du nom du sous-site et dans les recherches.", "Chevron des blocs repliables à gauche du titre ; courbes : légende sur deux colonnes, clic sur la projection agrandie = graphique entier. Projets d’un sous-site (fiche, carte) : le n° ouvre la fiche Suivre, ↗ ouvre GE-Invest."]},
+    {"date": "13.11.2026", "objet": "revue", "version": "v0.63", "titre": "Planning à trois réglages ; n° de projet ; un seul « i »", "points": ["Planning : trois réglages au lieu de quatre plannings — Regrouper par (aucun, portefeuille, affectation), Barres (familles, jalons), Lignes (sous-site, projet) ; deux combinaisons nouvelles : familles par affectation, jalons par portefeuille. Le choix d’avant est repris.", "N° de projet partout (heatmap, jalons, risques, sous-sites, organigramme, fiche, questions) : le n° ouvre la fiche du projet, ↗ ouvre GE-Invest.", "Un seul « i » par titre de carte (Planning, Périmètre d’action, CPI / SPI, Cohérence financière)."]},
+    {"date": "13.11.2026", "objet": "simulation", "version": "v3.25", "titre": "Fenêtre « Estimer les gains »", "points": ["Ouverte depuis une fiche, la simulation s’affiche dans une fenêtre flottante, sans son en-tête, au-dessus de la vue en cours ; croix ou Échap pour la fermer.", "Titres des étapes : chevron avant le titre, « i » après."]},
+    {"date": "12.11.2026", "objet": "accueil", "version": "v1.30", "titre": "« Mon périmètre »", "points": ["« Mon périmètre » dans le menu Périmètre : une liste de sous-sites propre à cet utilisateur (périmètre mixte d’un AMO, par exemple), une seule ligne quel que soit le nombre d’utilisateurs. Remplie en collant des numéros, transmise par un lien qui la propose à l’ouverture ; elle se combine avec les autres sections."]},
+    {"date": "12.11.2026", "objet": "priorisation", "version": "v2.50", "titre": "« Mon périmètre »", "points": ["« Mon périmètre » dans le menu Périmètre : une liste de sous-sites propre à cet utilisateur (périmètre mixte d’un AMO, par exemple), une seule ligne quel que soit le nombre d’utilisateurs. Remplie en collant des numéros, transmise par un lien qui la propose à l’ouverture ; elle se combine avec les autres sections."]},
+    {"date": "12.11.2026", "objet": "revue", "version": "v0.62", "titre": "« Mon périmètre »", "points": ["« Mon périmètre » dans le menu Périmètre : une liste de sous-sites propre à cet utilisateur (périmètre mixte d’un AMO, par exemple), une seule ligne quel que soit le nombre d’utilisateurs. Remplie en collant des numéros, transmise par un lien qui la propose à l’ouverture ; elle se combine avec les autres sections."]},
+    {"date": "12.11.2026", "objet": "simulation", "version": "v3.24", "titre": "« Mon périmètre »", "points": ["« Mon périmètre » dans le menu Périmètre : une liste de sous-sites propre à cet utilisateur (périmètre mixte d’un AMO, par exemple), une seule ligne quel que soit le nombre d’utilisateurs. Remplie en collant des numéros, transmise par un lien qui la propose à l’ouverture ; elle se combine avec les autres sections."]},
     {"date": "12.11.2026", "objet": "revue", "version": "v0.61", "titre": "Planning par famille sur tout le périmètre", "points": ["Planning « Familles » : familles d’intervention T1 à T4 sur tout le périmètre de l’en-tête, sans regroupement par portefeuille ; une famille dépliée montre ses sous-sites ou ses projets."]},
     {"date": "10.11.2026", "objet": "revue", "version": "v0.60", "titre": "Recherche dans l’en-tête ; organigramme sur le périmètre", "points": ["Recherche dans l’en-tête, comme dans Prioriser : une proposition ouvre le sous-site ou le projet ; texte libre + Entrée filtre les projets des vues, filtre rappelé en pastille.", "Organigramme sur le périmètre du fil d’Ariane (tout le parc, portefeuilles, RP, plan, affectation) : un organigramme par portefeuille ; menu « Portefeuille » de l’onglet retiré."]},
     {"date": "10.11.2026", "objet": "revue", "version": "v0.59", "titre": "Jalons à la liste normée ; planning par affectation", "points": ["Jalons comparés à la liste normée GE-Invest (12 jalons de phase SIA) : tout autre libellé est signalé pour correction ; une date prévue vide n’est plus une anomalie.", "Planning par affectation : une affectation dépliée montre ses sous-sites ou ses projets, à la couleur de leur famille d’intervention, avec leurs jalons.", "Filtres : boutons sur une ligne, phase SIA choisie dite en court, valeurs entières au survol."]},
@@ -3908,7 +3984,7 @@ var PTE_COMMUN = (function () {
            tour: tour, relierAccueil: relierAccueil,
            exporterSaisies: exporterSaisies, importerSaisies: importerSaisies, reglageAdmis: reglageAdmis,
            resumeSaisies: resumeSaisies,
-           layout: layout, lien: lien, lienGEInvest: lienGEInvest, ssDepuisHash: ssDepuisHash, projetDepuisHash: projetDepuisHash, ecrireHash: ecrireHash,
+           layout: layout, lien: lien, lienGEInvest: lienGEInvest, numProjetHtml: numProjetHtml, cssNumProjet: cssNumProjet, TITRE_GEI: TITRE_GEI, ssDepuisHash: ssDepuisHash, projetDepuisHash: projetDepuisHash, ecrireHash: ecrireHash,
            publierClasseur: publierClasseur, lireClasseur: lireClasseur, effacerClasseur: effacerClasseur, etats: etats,
            demanderEffacerClasseur: demanderEffacerClasseur,
            lireMeta: lireMeta, plusRecentQue: plusRecentQue, empreinte: empreinte,
@@ -6532,17 +6608,111 @@ var PTE_COMMUN = (function () {
     try { window.dispatchEvent(new CustomEvent('pte-programmes', { detail: lireProgrammes() })); } catch (e) {}
     return v;
   }
+  /* « Mon périmètre » (12.11.2026, demande d'Achim : un périmètre propre à chaque utilisateur — AMO aux périmètres mixtes —
+     sans multiplier les entrées du menu) : une liste de sous-sites, gardée dans ce navigateur (pte.monperimetre.v1), une
+     seule ligne dans le menu Périmètre. Cochée, elle restreint toutes les vues aux sous-sites de la liste, et se combine
+     avec les autres sections comme elles entre elles. Remplie en collant des numéros ; transmise par un lien (#mp=…). */
+  var LS_MP = 'pte.monperimetre.v1', MP_MAX = 2000;
+  /* numéro de sous-site comparable partout : chiffres seuls, sans zéro de tête (le contrat lit « 51120 », la revue
+     complète à 6 chiffres « 051120 », Prioriser garde la cellule) — relecture du 12.11 */
+  function numSs(n) { var t = String(n == null ? '' : n).replace(/\s+/g, ''); return /^\d+$/.test(t) ? t.replace(/^0+(?=\d)/, '') : t; }
+  /* numéros d'un texte collé : suites de 4 à 8 chiffres ; une suite plus longue (n° de projet, objet GE-Invest) est écartée */
+  function mpNums(t, sansPlafond) {
+    var vus = {}, out = [];
+    String(t == null ? '' : (Array.isArray(t) ? t.join(' ') : t)).split(/[^0-9]+/).forEach(function (x) {
+      if (x.length < 4 || x.length > 8) return;
+      var n = numSs(x); if (!vus[n]) { vus[n] = 1; out.push(n); }
+    });
+    return sansPlafond ? out : out.slice(0, MP_MAX);
+  }
+  /* lecture gardée en mémoire tant que le stockage ne change pas (la liste est testée pour chaque sous-site) */
+  var mpMem = { brut: undefined, val: null, idx: null };
+  function lireMonPerimetre() {
+    var brut = null; try { brut = localStorage.getItem(LS_MP); } catch (e) { brut = null; }
+    if (brut === mpMem.brut && mpMem.val) return { ss: mpMem.val.ss.slice(), actif: mpMem.val.actif, maj: mpMem.val.maj };
+    var v = { ss: [], actif: false, maj: null };
+    try { var o = JSON.parse(brut || 'null'); if (o && typeof o === 'object') { var ss = mpNums(o.ss || []); v = { ss: ss, actif: !!o.actif && ss.length > 0, maj: o.maj || null }; } }
+    catch (e) { /* illisible : vide */ }
+    var idx = {}; v.ss.forEach(function (n) { idx[n] = 1; });
+    mpMem = { brut: brut, val: v, idx: idx };
+    return { ss: v.ss.slice(), actif: v.actif, maj: v.maj };
+  }
+  /* o : { ss : liste (ou texte collé), actif : booléen } — un champ absent garde sa valeur */
+  function ecrireMonPerimetre(o) {
+    var av = lireMonPerimetre(), ss = o && o.ss !== undefined ? mpNums(o.ss) : av.ss;
+    var v = { ss: ss, actif: !!(o && o.actif !== undefined ? o.actif : av.actif) && ss.length > 0, maj: o && o.ss !== undefined ? new Date().toISOString() : (av.maj || null) };
+    if (JSON.stringify([v.ss, v.actif]) === JSON.stringify([av.ss, av.actif])) return v;
+    try { localStorage.setItem(LS_MP, JSON.stringify(v)); } catch (e) { /* stockage indisponible */ }
+    try { window.dispatchEvent(new CustomEvent('pte-programmes', { detail: lireProgrammes() })); } catch (e) {}
+    return v;
+  }
+  /* liste active, ou null quand « Mon périmètre » n'est pas coché (ou vide) */
+  function monPerimetreActif() { var m = lireMonPerimetre(); return m.actif ? m.ss : null; }
+  /* le sous-site est-il dans « Mon périmètre » actif (toujours vrai quand il ne l'est pas) ? liste : une autre liste */
+  function dansMonPerimetre(num, liste) {
+    if (liste === null) return true;
+    if (liste !== undefined) return liste.map(numSs).indexOf(numSs(num)) >= 0;
+    var m = lireMonPerimetre(); if (!m.actif) return true;
+    return !!mpMem.idx[numSs(num)];
+  }
+  function libelleMonPerimetre(m) { m = m || lireMonPerimetre(); return 'Mon périmètre (' + m.ss.length + ' sous-site' + (m.ss.length > 1 ? 's' : '') + ')'; }
+  /* lien qui ouvre la page unique sur cette liste (adresse de la page du haut quand elle est lisible) */
+  function lienMonPerimetre(ss) {
+    var base = null, vue = '';
+    try { if (window.top && window.top.location && window.top.location.href) {
+      var l = window.top.location; base = String(l.href).split('#')[0];
+      vue = l.hash.replace(/^#/, '').split('&').filter(function (x) { return /^vue=/.test(x); })[0] || '';
+    } } catch (e) { base = null; }
+    /* cadre dont la page du haut est illisible (file://) : le lien vise l'accueil, jamais la page du cadre */
+    if (!base || window.top !== window.self && /[?&]cadre=1/.test(base)) {
+      try { var a = C.lien ? C.lien('accueil') : null; base = a ? new URL(a, location.href).href.split('#')[0] : String(location.href).split('#')[0].split('?')[0]; }
+      catch (e) { base = String(location.href).split('#')[0].split('?')[0]; }
+    }
+    return base + '#' + (vue ? vue + '&' : '') + 'mp=' + mpNums(ss).join('.');
+  }
+  /* Ouverture par un lien « #mp=… » : bandeau « Utiliser comme Mon périmètre » / « Ignorer » (page du haut seulement) */
+  function mpDepuisAdresse() {
+    if (typeof document === 'undefined') return;
+    try { if (window.top !== window.self) return; } catch (e) { return; }
+    var h = String(location.hash || '').replace(/^#/, ''), m = /(^|&)mp=([^&]*)/.exec(h);
+    if (!m) return;
+    var ss = mpNums(decodeURIComponent(m[2]));
+    var reste = h.split('&').filter(function (x) { return x && !/^mp=/.test(x); }).join('&');
+    try { history.replaceState(null, '', location.pathname + location.search + (reste ? '#' + reste : '')); } catch (e) {}
+    if (!ss.length) return;
+    var av = lireMonPerimetre();
+    if (av.actif && JSON.stringify(av.ss) === JSON.stringify(ss)) return;
+    var bd = document.createElement('div'); bd.className = 'pte-mp-bandeau'; bd.setAttribute('role', 'region'); bd.setAttribute('aria-label', 'Périmètre proposé par le lien');
+    var st = document.getElementById('pte-mp-css');
+    if (!st) { st = document.createElement('style'); st.id = 'pte-mp-css';
+      st.textContent = '.pte-mp-bandeau{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:9000;max-width:min(560px,calc(100vw - 24px));display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:12px 14px;border-radius:12px;background:#fff;color:#1c2b36;box-shadow:0 10px 32px rgba(0,0,0,.28);font:13px/1.45 system-ui,-apple-system,sans-serif}' +
+        '.pte-mp-bandeau p{margin:0;flex:1 1 100%}.pte-mp-bandeau button.ok{margin-left:auto}.pte-mp-bandeau button{border:1px solid #c9d3dc;background:#fff;color:#1c2b36;border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer}' +
+        '.pte-mp-bandeau button.ok{background:#005F73;border-color:#005F73;color:#fff;font-weight:600}body.night .pte-mp-bandeau{background:#13232c;color:#e6eef3}body.night .pte-mp-bandeau button{background:transparent;color:#e6eef3}body.night .pte-mp-bandeau button.ok{background:#30E5D9;border-color:#30E5D9;color:#00222B}';
+      document.head.appendChild(st); }
+    var p = document.createElement('p'); p.setAttribute('aria-live', 'polite');
+    p.textContent = 'Ce lien propose un périmètre de ' + ss.length + ' sous-site' + (ss.length > 1 ? 's' : '') + '.' + (av.ss.length && JSON.stringify(av.ss) !== JSON.stringify(ss) ? ' Il remplacerait la liste actuelle de « Mon périmètre » (' + av.ss.length + ').' : '');
+    var ok = document.createElement('button'); ok.type = 'button'; ok.className = 'ok'; ok.textContent = 'Utiliser comme Mon périmètre';
+    var non = document.createElement('button'); non.type = 'button'; non.textContent = 'Ignorer';
+    var echap = function (e) { if (e.key === 'Escape') fermer(); };
+    var fermer = function () { bd.remove(); document.removeEventListener('keydown', echap); };
+    ok.addEventListener('click', function () { ecrireMonPerimetre({ ss: ss, actif: true }); fermer(); });
+    non.addEventListener('click', fermer);
+    bd.appendChild(p); bd.appendChild(ok); bd.appendChild(non);
+    /* le focus n'est pas pris : la page s'ouvre comme d'habitude ; Échap = « Ignorer » */
+    var poser = function () { var v = document.querySelector('.pte-mp-bandeau'); if (v) v.remove(); document.body.appendChild(bd); document.addEventListener('keydown', echap); };
+    if (document.body) poser(); else document.addEventListener('DOMContentLoaded', poser);
+  }
   /* Suit les changements de Plan, d'Affectation ou de portefeuilles faits dans un autre outil (autre onglet, retour sur
-     la page) ou ici : fn(programmes, affectations, portefeuilles). */
+     la page) ou ici : fn(programmes, affectations, portefeuilles). Depuis le 12.11 : « Mon périmètre » aussi. */
   function surProgrammes(fn) {
-    var etat = function () { return JSON.stringify([lireProgrammes(), lireAffectations(), lirePortefeuilles()]); };
+    var etat = function () { var m = lireMonPerimetre(); return JSON.stringify([lireProgrammes(), lireAffectations(), lirePortefeuilles(), m.actif ? m.ss : null]); };
     var dernier = etat();
     function voir0() { prevu = false; var v = etat(); if (v === dernier) return; dernier = v; try { fn(lireProgrammes(), lireAffectations(), lirePortefeuilles()); } catch (e) { console.error(e); } }
     /* plusieurs écritures d'un même « Appliquer » (plan, affectation, portefeuilles) : un seul rappel (relecture du 09.11) */
     var prevu = false;
     function voir() { if (prevu) return; prevu = true; setTimeout(voir0, 0); }
     try {
-      window.addEventListener('storage', function (e) { if (!e.key || e.key === LS_PROG || e.key === LS_AFF || e.key === LS_PF) voir(); });
+      window.addEventListener('storage', function (e) { if (!e.key || e.key === LS_PROG || e.key === LS_AFF || e.key === LS_PF || e.key === LS_MP) voir(); });
       window.addEventListener('focus', voir);
       window.addEventListener('pte-programmes', voir);
     } catch (e) {}
@@ -6701,11 +6871,12 @@ var PTE_COMMUN = (function () {
             surAppliquer(sel) : sel = { rpf, aff, plan, rp } (valeurs cochées) et sel.proposees (valeurs affichées) ;
             id, idListe, idPop : identifiants du bouton, de la liste et du menu (repères de la visite guidée et des tests).
      Renvoie { element, maj(), ouvrir(v), ouvert() }. */
-  var PM_ORDRE = ['rpf', 'aff', 'plan', 'rp'];
-  var PM_TITRES = { rpf: 'Portefeuilles (RPF)', aff: 'Affectation', plan: 'Plan', rp: 'Responsables de projet (RP)' };
+  var PM_ORDRE = ['mp', 'rpf', 'aff', 'plan', 'rp'];
+  var PM_TITRES = { mp: 'Mon périmètre', rpf: 'Portefeuilles (RPF)', aff: 'Affectation', plan: 'Plan', rp: 'Responsables de projet (RP)' };
   var PM_AIDE = 'Aucune case cochée = tout le parc. Plusieurs cases d’une même section : l’une ou l’autre. Des cases de deux sections : les deux à la fois (Plan canicule et Police = les bâtiments de police du plan canicule). Le choix vaut pour toutes les vues : tableau de bord, Prioriser, Suivre, simulation.';
   var PM_INFOS = { rpf: 'RPF : responsable de portefeuille (colonne « Responsable Portefeuille » de Plan_PTE)', aff: 'Usage des bâtiments : Instruction publique, Police… (colonne « Affectation_AB » de Plan_PTE)',
-    plan: 'Programmes marqués dans Plan_PTE : les 300, plan canicule, COE complexes, sites emblématiques', rp: 'RP : responsable de projet dans GE-Invest' };
+    plan: 'Programmes marqués dans Plan_PTE : les 300, plan canicule, COE complexes, sites emblématiques', rp: 'RP : responsable de projet dans GE-Invest',
+    mp: 'Liste de sous-sites propre à ce navigateur (périmètre mixte d’un AMO, par exemple) ; remplie en collant des numéros, transmise par un lien' };
   function stylePm() {
     if (typeof document === 'undefined' || document.getElementById('pte-pm-css')) return;
     var s = document.createElement('style'); s.id = 'pte-pm-css';
@@ -6724,7 +6895,17 @@ var PTE_COMMUN = (function () {
       '.pte-pm-pop .pte-mc-f .pte-pm-ok{background:#005F73;color:#fff;border-radius:7px;padding:5px 14px;font-weight:600}' +
       'body.night .pte-pm-pop .pte-mc-f .pte-pm-ok{background:#30E5D9;color:#00222B}' +
       'body.night .pte-pm-i:hover,body.night .pte-pm-i[aria-expanded="true"]{background:#30E5D9;border-color:#30E5D9;color:#00222B}' +
-      '.pte-pm .pte-mc-b{max-width:340px}';
+      '.pte-pm .pte-mc-b{max-width:340px}' +
+      '.pte-pm-mpa{display:flex;flex-wrap:wrap;gap:6px;padding:2px 8px 8px 30px}' +
+      '.pte-pm-mpa button,.pte-pm-ed button{border:1px solid var(--border,#d5dde4);background:transparent;color:inherit;border-radius:7px;padding:3px 10px;font:inherit;font-size:12px;cursor:pointer}' +
+      '.pte-pm-mpa button:disabled{opacity:.45;cursor:default}' +
+      '.pte-pm-ed{display:flex;flex-direction:column;gap:6px;padding:2px 4px 6px}.pte-pm-ed[hidden],.pte-pm-pop .pte-mc-f[hidden],.pte-pm-pop .pte-pm-l[hidden]{display:none!important}' +
+      '.pte-pm-ed label{font-size:12px;color:var(--ink-muted,#5b6b7b)}' +
+      '.pte-pm-ed textarea{min-height:120px;resize:vertical;font:12.5px/1.4 ui-monospace,Menlo,monospace;padding:6px 8px;border:1px solid var(--border,#d5dde4);border-radius:7px;background:transparent;color:inherit}' +
+      '.pte-pm-ed .pte-pm-edb{display:flex;gap:6px;justify-content:flex-end}.pte-pm-ed .pte-pm-edok{background:#005F73;color:#fff;border-color:#005F73;font-weight:600}' +
+      'body.night .pte-pm-ed .pte-pm-edok{background:#30E5D9;border-color:#30E5D9;color:#00222B}' +
+      '.pte-pm-msg{font-size:11.5px;color:var(--ink-muted,#5b6b7b);padding:0 8px 6px 30px}' +
+      '.pte-pm-lien{width:100%;box-sizing:border-box;font-size:11.5px;padding:4px 6px;border:1px solid var(--border,#d5dde4);border-radius:6px;background:transparent;color:inherit}';
     document.head.appendChild(s);
   }
   function menuPerimetre(opts) {
@@ -6739,9 +6920,15 @@ var PTE_COMMUN = (function () {
     pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', 'Périmètre');
     var idAide = 'pte-pm-aide-' + Math.random().toString(36).slice(2, 8);
     pop.innerHTML = '<div class="pte-pm-t"><span>Périmètre</span><button type="button" class="pte-pm-i" aria-expanded="false" aria-controls="' + idAide + '" aria-label="Aide du menu Périmètre" title="Aide du menu Périmètre">i</button></div>' +
-      '<div class="pte-pm-aide" id="' + idAide + '" hidden></div><div class="pte-pm-l"></div>' +
+      '<div class="pte-pm-aide" id="' + idAide + '" hidden></div>' +
+      '<div class="pte-pm-ed" hidden><label>Numéros de sous-site, séparés par des espaces, des virgules ou des retours à la ligne (copiés d’Excel, d’un courriel)</label>' +
+      '<textarea spellcheck="false" aria-label="Numéros de sous-site de « Mon périmètre »"></textarea>' +
+      '<div class="pte-pm-edb"><button type="button" class="pte-pm-edno">Annuler</button><button type="button" class="pte-pm-edok">Enregistrer la liste</button></div></div>' +
+      '<div class="pte-pm-l"></div>' +
       '<div class="pte-mc-f"><button type="button" class="pte-pm-aucun">Tout décocher</button><button type="button" class="pte-pm-ok">Appliquer</button></div>';
     var aide = pop.querySelector('.pte-pm-aide'), bi = pop.querySelector('.pte-pm-i'), liste = pop.querySelector('.pte-pm-l');
+    var ed = pop.querySelector('.pte-pm-ed'), edTxt = ed.querySelector('textarea'), pied = pop.querySelector('.pte-mc-f');
+    var mpConnus = null, mpMsg = '', mpEcrit = 0;
     if (opts.idListe) liste.id = opts.idListe;
     if (opts.idPop) pop.id = opts.idPop;
     [PM_AIDE].concat(opts.aide ? [opts.aide] : []).forEach(function (t) { var p = document.createElement('p'); p.textContent = t; aide.appendChild(p); });
@@ -6766,9 +6953,11 @@ var PTE_COMMUN = (function () {
         g.title = PM_INFOS[k] + (sx.unite ? '. Nombre de ' + sx.unite + ' à droite de chaque ligne.' : '');
         liste.appendChild(g);
         proposees[k] = [];
+        if (k === 'mp') mpConnus = sx.connus || null;
         sx.lignes.forEach(function (o) {
           var lab = document.createElement('label'), c = document.createElement('input');
           c.type = 'checkbox'; c.value = String(o.v); c.setAttribute('data-pm', k); c.checked = !!o.coche;
+          if (o.inactif) { c.disabled = true; c.checked = false; }
           proposees[k].push(String(o.v));
           var t = document.createElement('span'); t.textContent = o.t;
           lab.appendChild(c); lab.appendChild(t);
@@ -6776,11 +6965,64 @@ var PTE_COMMUN = (function () {
           if (o.n !== undefined && o.n !== null) { var n = document.createElement('span'); n.className = 'n'; n.textContent = String(o.n); lab.appendChild(n); }
           liste.appendChild(lab);
         });
+        if (k === 'mp') {
+          /* « Mon périmètre » : modifier la liste, copier le lien */
+          var act = document.createElement('div'); act.className = 'pte-pm-mpa';
+          var bm = document.createElement('button'); bm.type = 'button'; bm.className = 'pte-pm-mpmod'; bm.textContent = lireMonPerimetre().ss.length ? 'Modifier la liste…' : 'Coller une liste…';
+          var bl = document.createElement('button'); bl.type = 'button'; bl.className = 'pte-pm-mplien'; bl.textContent = 'Copier le lien';
+          bl.disabled = !lireMonPerimetre().ss.length;
+          bl.title = 'Lien qui ouvre les outils et propose cette liste comme « Mon périmètre » (à envoyer à un AMO, par exemple)';
+          bm.addEventListener('click', ouvrirEditeur);
+          bl.addEventListener('click', copierLien);
+          act.appendChild(bm); act.appendChild(bl); liste.appendChild(act);
+          if (mpMsg) { var mm = document.createElement('div'); mm.className = 'pte-pm-msg'; mm.setAttribute('role', 'status'); mm.textContent = mpMsg; liste.appendChild(mm); }
+        }
         if (sx.note) { var nt = document.createElement('div'); nt.className = 'pte-pm-note'; nt.textContent = sx.note; liste.appendChild(nt); }
       });
       if (!liste.children.length) { var v = document.createElement('div'); v.className = 'pte-pm-note'; v.textContent = 'Aucun classeur chargé : rien à choisir.'; liste.appendChild(v); }
       listeRepliable(liste, { groupe: '.pte-mc-g', seuil: 0, ferme: true, placeholder: opts.placeholder || 'Rechercher…' });
     }
+    function editer(v) {
+      ed.hidden = !v; liste.hidden = !!v; pied.hidden = !!v;
+      if (v) { edTxt.value = lireMonPerimetre().ss.join('\n'); try { edTxt.focus({ preventScroll: true }); } catch (e) {} }
+    }
+    function ouvrirEditeur() { mpMsg = ''; editer(true); }
+    function enregistrerListe() {
+      var av = lireMonPerimetre(), brut = mpNums(edTxt.value, true), nums = brut.slice(0, MP_MAX), coche = liste.querySelector('input[data-pm="mp"]');
+      /* la liste s'enregistre et s'applique tout de suite quand elle était vide ou déjà cochée ; sinon la case reste à cocher.
+         Les cases des autres sections, cochées sans « Appliquer », restent comme elles étaient (relecture du 12.11). */
+      var actif = !!nums.length && (av.actif || !!(coche && coche.checked) || !av.ss.length);
+      var garde = Array.prototype.slice.call(liste.querySelectorAll('input[type="checkbox"]:not([data-pm="mp"])')).map(function (c) { return [c.getAttribute('data-pm'), c.value, c.checked]; });
+      mpEcrit = Date.now();
+      ecrireMonPerimetre({ ss: nums, actif: actif });
+      var inconnus = mpConnus ? nums.filter(function (n) { return mpConnus.indexOf(n) < 0; }) : [];
+      mpMsg = nums.length ? nums.length + ' numéro' + (nums.length > 1 ? 's' : '') + ' enregistré' + (nums.length > 1 ? 's' : '') +
+        (brut.length > MP_MAX ? ' (liste limitée à ' + MP_MAX + ' ; ' + (brut.length - MP_MAX) + ' écartés)' : '') +
+        (inconnus.length ? ' ; ' + inconnus.length + ' absent' + (inconnus.length > 1 ? 's' : '') + ' du classeur chargé : ' + inconnus.slice(0, 8).join(', ') + (inconnus.length > 8 ? '…' : '') : '') +
+        (actif ? '. « Mon périmètre » appliqué.' : '. Case à cocher, puis « Appliquer ».') : 'Liste vide : « Mon périmètre » retiré.';
+      editer(false); remplir(); maj();
+      garde.forEach(function (g) { var c = liste.querySelector('input[data-pm="' + g[0] + '"][value="' + String(g[1]).replace(/"/g, '\\"') + '"]'); if (c) c.checked = g[2]; });
+      try { liste.dispatchEvent(new Event('change')); } catch (e) { /* compteurs des sections */ }
+      try { (liste.querySelector('input[data-pm="mp"]:not(:disabled)') || liste.querySelector('.pte-pm-mpmod')).focus({ preventScroll: true }); } catch (e) {}
+    }
+    function copierLien() {
+      var l = lienMonPerimetre(lireMonPerimetre().ss), n = lireMonPerimetre().ss.length;
+      var fini = function (ok) {
+        mpMsg = ok ? 'Lien copié (' + n + ' sous-site' + (n > 1 ? 's' : '') + ') : il ouvre les outils et propose cette liste.' : '';
+        remplir();
+        try { var bl2 = liste.querySelector('.pte-pm-mplien'); if (ok && bl2) bl2.focus({ preventScroll: true }); } catch (e) {}
+        if (!ok) {   /* presse-papiers refusé : le lien affiché, sélectionné */
+          var a = liste.querySelector('.pte-pm-mpa'), inp = document.createElement('input');
+          inp.className = 'pte-pm-lien'; inp.readOnly = true; inp.value = l; inp.setAttribute('aria-label', 'Lien de « Mon périmètre »');
+          if (a) a.appendChild(inp); try { inp.focus(); inp.select(); } catch (e) {}
+        }
+      };
+      try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(l).then(function () { fini(true); }, function () { fini(false); }); else fini(false); }
+      catch (e) { fini(false); }
+    }
+    ed.querySelector('.pte-pm-edok').addEventListener('click', enregistrerListe);
+    ed.querySelector('.pte-pm-edno').addEventListener('click', function () { editer(false); try { liste.querySelector('.pte-pm-mpmod').focus(); } catch (e) {} });
+    edTxt.addEventListener('keydown', function (e) { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); editer(false); try { liste.querySelector('.pte-pm-mpmod').focus(); } catch (x) {} } });
     function placer() {
       var r = b.getBoundingClientRect(), vw = window.innerWidth, pw = Math.min(340, vw - 16);
       pop.style.left = Math.round(Math.max(8, Math.min(r.left, vw - pw - 8))) + 'px';
@@ -6801,6 +7043,7 @@ var PTE_COMMUN = (function () {
       } else {
         window.removeEventListener('resize', surRedim);
         aide.hidden = true; bi.setAttribute('aria-expanded', 'false');
+        editer(false); mpMsg = '';
         if (mcOuvert === fermer) mcOuvert = null;
       }
     }
@@ -6821,13 +7064,14 @@ var PTE_COMMUN = (function () {
       try { liste.dispatchEvent(new Event('change')); } catch (e) { /* compteurs des sections */ }
     });
     pop.querySelector('.pte-pm-ok').addEventListener('click', function () {
-      var sel = { rpf: lire('rpf'), aff: lire('aff'), plan: lire('plan'), rp: lire('rp'), proposees: proposees };
+      var sel = { rpf: lire('rpf'), aff: lire('aff'), plan: lire('plan'), rp: lire('rp'), mp: lire('mp').length > 0, proposees: proposees };
       fermer(true);
       try { if (opts.surAppliquer) opts.surAppliquer(sel); } catch (e) { console.error(e); }
       maj();
     });
     mcEcouter();
-    surProgrammes(function () { maj(); if (!pop.hidden) remplir(); });
+    /* changement venu d'ailleurs : le menu ouvert se remplit de nouveau ; pas après sa propre « Enregistrer la liste » */
+    surProgrammes(function () { maj(); if (!pop.hidden && Date.now() - mpEcrit > 800) remplir(); });
     maj();
     return { element: w, bouton: b, maj: maj, ouvrir: ouvrir, ouvert: function () { return !pop.hidden; } };
   }
@@ -6852,7 +7096,13 @@ var PTE_COMMUN = (function () {
     });
     /* classeur sans colonne Tag : pas de section Plan (le plan choisi ailleurs est gardé, sans filtrer ici) */
     if (!plan.some(function (x) { return x.n > 0; })) plan = [];
+    /* « Mon périmètre » (12.11.2026) : une ligne, quel que soit le nombre d'utilisateurs ; numéros connus de la population */
+    var M = lireMonPerimetre(), connus = pop.map(function (s) { return numSs(s.num); }).filter(Boolean);
+    var avecNum = connus.length > 0, nIn = avecNum ? M.ss.filter(function (n) { return connus.indexOf(n) >= 0; }).length : M.ss.length;
+    var mp = [{ v: 'mp', t: 'Mon périmètre', n: M.ss.length ? (avecNum && nIn !== M.ss.length ? nIn + ' / ' + M.ss.length : M.ss.length) : null, coche: M.actif, inactif: !M.ss.length,
+      titre: M.ss.length ? 'Liste de ' + M.ss.length + ' sous-site' + (M.ss.length > 1 ? 's' : '') + (avecNum && nIn !== M.ss.length ? ', dont ' + nIn + ' dans ce classeur' : '') : 'Liste vide : « Coller une liste… »' }];
     return [
+      { k: 'mp', lignes: mp, connus: avecNum ? connus : null, note: !M.ss.length ? 'Liste de sous-sites propre à ce navigateur (périmètre mixte, AMO…).' : '' },
       { k: 'rpf', lignes: rpf, unite: o.unite || 'sous-sites', note: absR.length ? 'Gardé pour les autres outils, absent de ce classeur : ' + absR.map(nomR).join(', ') + '.' : '' },
       { k: 'aff', lignes: aff, unite: 'sous-sites', note: absA.length ? 'Gardée pour les autres outils, absente de ce classeur : ' + absA.join(', ') + '.' : '' },
       { k: 'plan', lignes: plan, unite: 'sous-sites', note: !plan.length && plC.length ? 'Plan gardé pour les autres outils, aucune colonne Tag dans ce classeur.' : '' }
@@ -6864,6 +7114,7 @@ var PTE_COMMUN = (function () {
   function ecrirePerimetre(sel) {
     /* une section absente du menu (aucun classeur, colonne manquante) laisse le choix commun intact (relecture du 09.11) */
     var P = sel.proposees || {};
+    if ((P.mp || []).length) ecrireMonPerimetre({ actif: !!sel.mp });
     if ((P.plan || []).length) ecrireProgrammes(sel.plan || []);
     if ((P.aff || []).length) ecrireAffectations(fusionnerAffectations(sel.aff || [], P.aff));
     if (!(P.rpf || []).length) return lirePortefeuilles();
@@ -6882,9 +7133,14 @@ var PTE_COMMUN = (function () {
     if (pf.length) t.push(pf.length === 1 ? (!vraiPf(pf[0]) ? 'Hors portefeuille' : pf[0] === '0' ? 'Portefeuille 0' : 'Portefeuille ' + nomR(pf[0])) : pf.length + ' portefeuilles');
     if (af.length) t.push(libelleAffectations(af));
     if (pl.length) t.push(libelleProgrammes(pl));
+    var M = o.mp !== undefined ? o.mp : lireMonPerimetre();
+    if (M && M.actif) t.unshift(libelleMonPerimetre(M));
     return t.join(' · ');
   }
   C.listeRepliable = listeRepliable;
+  C.LS_MP = LS_MP; C.lireMonPerimetre = lireMonPerimetre; C.ecrireMonPerimetre = ecrireMonPerimetre; C.monPerimetreActif = monPerimetreActif;
+  C.dansMonPerimetre = dansMonPerimetre; C.numeroSousSite = numSs; C.libelleMonPerimetre = libelleMonPerimetre; C.lienMonPerimetre = lienMonPerimetre; C.numerosSousSites = mpNums;
+  try { mpDepuisAdresse(); window.addEventListener('hashchange', function () { try { mpDepuisAdresse(); } catch (e) {} }); } catch (e) { /* lien illisible : ignoré */ }
   C.menuPerimetre = menuPerimetre; C.lignesPerimetre = lignesPerimetre; C.ecrirePerimetre = ecrirePerimetre; C.libellePerimetre = libellePerimetre;
   C.PROGRAMMES = PROGRAMMES; C.LS_PROG = LS_PROG; C.PALETTE_CAT = PALETTE_CAT;
   C.lireProgrammes = lireProgrammes; C.ecrireProgrammes = ecrireProgrammes; C.valeurTag = valeurTag;
@@ -7921,8 +8177,17 @@ var PTE_COULEURS = (function () {
      le blanc y donne 4,3:1, suffisant pour les chiffres en gras des segments) */
   function texteSur(bg) { return contraste('#FFFFFF', bg) >= contraste(ENCRE, bg) ? '#FFFFFF' : ENCRE; }
   function serie(i) { return SERIES[((i % SERIES.length) + SERIES.length) % SERIES.length]; }
-  var RSIA = rampe(ORDRE_SIA.length), R4 = rampe(4);
+  /* Phases SIA (13.11.2026, choix d'Achim : palette C, variante 3) : une famille de couleur par phase principale, du froid
+     au chaud, les sous-phases du clair au foncé (bleus Okabe-Ito, lisibles en cas de daltonisme). 21 = repère « creux » : fond blanc, contour bleu (CONTOUR_SIA21), partout où une phase a une
+     couleur (segments, pastilles, organigramme, carte). Avant le 13.11 : rampe teal du clair (21) au foncé (6). */
+  /* 13.11.2026 au soir (Achim, version « Terre ») : 41 violet et 51 → 53 du sable au brun, pour qu'aucune phase ne reprenne
+     le vert, l'orange ou le rouge des sémaphores (avant : 41 #009E73, 51 #F5C26B, 52 #E69F00, 53 #C24F00) */
+  var PAL_SIA = { '21': '#FFFFFF', '31': '#B3D7F2', '32': '#56B4E9', '33': '#0072B2', '41': '#7E5BB0', '51': '#EAD6B8', '52': '#B98A5B', '53': '#7A4A28', '6': '#2F2F2F' };
+  var CONTOUR_SIA21 = '#0072B2';
+  var RSIA = ORDRE_SIA.map(function (k) { return PAL_SIA[k]; }), R4 = rampe(4);
   function phaseSia(k) { k = ALIAS_SIA[k] || String(k); var i = ORDRE_SIA.indexOf(k); return i < 0 ? NON_RENSEIGNE : RSIA[i]; }
+  /* contour d'une phase : celui du repère creux de la 21, rien pour les autres */
+  function contourSia(k) { k = ALIAS_SIA[k] || String(k); return k === '21' ? CONTOUR_SIA21 : null; }
   function typeIntervention(t) { return (t >= 1 && t <= 4) ? R4[t - 1] : NON_RENSEIGNE; }
   /* trajectoires : mesuré, portefeuille, potentiel ; projets en cours = couleur réservée. Le CO₂ garde le violet de
      la charte pour le mesuré (le potentiel prend alors le teal). */
@@ -7934,7 +8199,8 @@ var PTE_COULEURS = (function () {
   function variables() {
     var v = {};
     SERIES.forEach(function (c, i) { v['--pte-serie-' + (i + 1)] = c; });
-    ORDRE_SIA.forEach(function (k, i) { v['--pte-sia-' + k] = RSIA[i]; v['--pte-sia-' + k + '-tx'] = texteSur(RSIA[i]); });
+    ORDRE_SIA.forEach(function (k, i) { v['--pte-sia-' + k] = RSIA[i]; v['--pte-sia-' + k + '-tx'] = k === '21' ? CONTOUR_SIA21 : texteSur(RSIA[i]); });
+    v['--pte-sia-21-bord'] = CONTOUR_SIA21;
     v['--pte-sia-nr'] = NON_RENSEIGNE; v['--pte-sia-nr-tx'] = ENCRE;
     R4.forEach(function (c, i) { v['--pte-ti-' + (i + 1)] = c; v['--pte-ti-' + (i + 1) + '-tx'] = texteSur(c); });
     v['--pte-co2'] = CO2;
@@ -7942,7 +8208,7 @@ var PTE_COULEURS = (function () {
     return v;
   }
   return { SERIES: SERIES, NOMS_SERIES: NOMS_SERIES, RAMPE: RAMPE, RESERVEES: RESERVEES, NON_RENSEIGNE: NON_RENSEIGNE, CO2: CO2, ORDRE_SIA: ORDRE_SIA,
-           serie: serie, rampe: rampe, texteSur: texteSur, contraste: contraste, phaseSia: phaseSia, typeIntervention: typeIntervention,
+           serie: serie, rampe: rampe, texteSur: texteSur, contraste: contraste, phaseSia: phaseSia, contourSia: contourSia, PAL_SIA: PAL_SIA, typeIntervention: typeIntervention,
            trajectoire: trajectoire, variables: variables };
 })();
 if (typeof PTE_COMMUN !== 'undefined' && PTE_COMMUN) PTE_COMMUN.couleurs = PTE_COULEURS;
@@ -8056,6 +8322,8 @@ var PTE_TABLEAU = (function (C, I, K) {
       J.slice(1).forEach(function (r) {
         var n = txt(cel(r, cj.num)), l = txt(cel(r, cj.lib)), p = dateIso(cel(r, cj.pr)); if (!n || !l) return;
         var k = n + '|' + l + '|' + p; if (vu[k]) return; vu[k] = 1;   /* dédoublonnés comme la revue */
+        /* 13.11.2026 : phases de l'avancement global (onglet « Synthèse » de GE-Invest) écartées, comme dans Suivre */
+        if (/^(faisabilit[ée]|[ée]tudes?|r[ée]alisation|cl[ôo]ture|exploitation|avancement global)$/i.test(l)) return;
         jalons.push({ numero: n, libelle: l, phase: txt(cel(r, cj.ph)), prevue: p, realisee: dateIso(cel(r, cj.re)) });
       });
     }
@@ -8205,7 +8473,10 @@ var PTE_TABLEAU = (function (C, I, K) {
        à la fois ; sans affectation ni plan, c'est le choix de portefeuilles ci-dessous */
     if (P.niveau === 'filtre') {
       var Fr = (P.rpf || []).map(txt), Fa = P.aff || [], Fp = P.plan || [];
-      if (!Fa.length && !Fp.length) P = Fr.length ? { niveau: 'rpfs', valeurs: Fr } : { niveau: 'programme' };
+      /* « Mon périmètre » (12.11.2026) : la liste active, sauf P.mp donné */
+      var Fm = P.mp !== undefined ? P.mp : (C.monPerimetreActif ? C.monPerimetreActif() : null), FmIdx = {};
+      (Fm || []).forEach(function (n) { FmIdx[C.numeroSousSite ? C.numeroSousSite(n) : txt(n)] = 1; });
+      if (!Fa.length && !Fp.length && !Fm) P = Fr.length ? { niveau: 'rpfs', valeurs: Fr } : { niveau: 'programme' };
       else {
         /* sans colonne Tag dans ce classeur, le plan ne filtre pas (comme une affectation absente) */
         var avecTags = src.B.sousSites.some(function (s) { return s.tags && Object.keys(s.tags).length; });
@@ -8215,6 +8486,7 @@ var PTE_TABLEAU = (function (C, I, K) {
           if (Fr.length && Fr.indexOf(txt(s.rpf)) < 0) return;
           if (Fa.length && !(C.dansAffectations && C.dansAffectations(s.aff, Fa))) return;
           if (avecTags && Fp.length && !(C.dansProgrammes && C.dansProgrammes(s.tags, Fp))) return;
+          if (Fm && !FmIdx[C.numeroSousSite ? C.numeroSousSite(s.num) : txt(s.num)]) return;
           Sf[s.num] = 1;
         });
         P = { niveau: 'liste', sousSites: Object.keys(Sf), projets: src.B.projets.filter(function (p) { return p.sousSite && Sf[p.sousSite]; }).map(function (p) { return p.numero; }),
@@ -8430,9 +8702,9 @@ var PTE_TABLEAU = (function (C, I, K) {
     '.ptb-tuile .k{font-size:12px;font-weight:600;color:var(--ptb-ink2);display:flex;align-items:center;gap:6px}.ptb-tuile .k i{width:8px;height:8px;border-radius:50%;background:#B8C1C8;flex:none}.ptb-tuile .v{font-size:22px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}.ptb-tuile .v .u{font-size:11px;font-weight:500;color:var(--ptb-ink2);margin-left:4px}' +
     '.ptb-tuile .c,.ptb-tuile .s{font-size:11.5px;color:var(--ptb-ink2);line-height:1.35}.ptb-tuile .p{margin-top:auto;padding-top:4px}.ptb-tuile .p .ptb-pill{font-size:11px;padding:2px 8px}' +
     '.ptb-tu-ok{border-top-color:var(--ptb-ok)}.ptb-tu-ok .k i{background:var(--ptb-ok)}.ptb-tu-surveiller{border-top-color:var(--ptb-mid)}.ptb-tu-surveiller .k i{background:var(--ptb-mid)}.ptb-tu-retard{border-top-color:var(--ptb-err)}.ptb-tu-retard .k i{background:var(--ptb-err)}' +
-    '.ptb-encart{margin:8px -6px 4px}.ptb-ve{display:block;width:100%;height:560px;border:0;background:transparent;color-scheme:normal}' +
+    '.ptb-encart{position:relative;margin:12px 0 4px}.ptb-encart>.ptb-car{position:absolute;top:-6px;left:-99px;width:12px;height:12px;background:var(--ptb-card,#fff);border-left:1px solid var(--ptb-line);border-top:1px solid var(--ptb-line);transform:translateX(-50%) rotate(45deg);z-index:1;pointer-events:none;transition:left .2s}.ptb-ve{display:block;width:100%;height:560px;border:0;background:transparent;color-scheme:normal}' +
     '.ptb-courbe{display:block;width:100%;height:26px;margin-top:4px}.ptb-courbe polyline{fill:none;stroke:var(--ptb-acc);stroke-width:1.8;vector-effect:non-scaling-stroke}.ptb-tu-ok .ptb-courbe polyline{stroke:var(--ptb-ok)}.ptb-tu-surveiller .ptb-courbe polyline{stroke:var(--ptb-mid)}.ptb-tu-retard .ptb-courbe polyline{stroke:var(--ptb-err)}' +
-    '.ptb-tuile[data-ptb-ind]{cursor:pointer;transition:box-shadow .15s}.ptb-tuile[data-ptb-ind]:hover{box-shadow:0 2px 10px rgba(0,0,0,.08)}.ptb-tuile[data-ptb-ind]:focus-visible{outline:2px solid var(--ptb-acc);outline-offset:2px}.ptb-tuile.on{box-shadow:0 0 0 2px var(--ptb-acc) inset}' +
+    '.ptb-tuile[data-ptb-ind]{cursor:pointer;transition:box-shadow .15s}.ptb-tuile[data-ptb-ind]:hover{box-shadow:0 2px 10px rgba(0,0,0,.08)}.ptb-tuile[data-ptb-ind]:focus-visible{outline:2px solid var(--ptb-acc);outline-offset:2px}.ptb-tuile.on{border-color:var(--ptb-acc);border-top-color:var(--ptb-acc);background:color-mix(in srgb,var(--ptb-acc) 6%,transparent)}.ptb-tuile.on:hover{box-shadow:none}' +
     '.ptb-pqe{margin:10px 0 2px;border-top:1px solid var(--ptb-line);padding-top:8px}.ptb-pqe>summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--ptb-acc)}.ptb-pqe>div{padding-top:6px;font-size:13.5px}.ptb-pqe p{margin:6px 0}.ptb-pqe .ptb-pqn{color:var(--ptb-ink2);font-size:12.5px}' +
     '@media print{.ptb-encart{display:none!important}.ptb-tuiles{grid-template-columns:repeat(4,minmax(0,1fr))}.ptb-pqe{display:block}}' +
     '.ptb-trk{position:relative;height:8px;border-radius:4px;background:var(--ptb-fill);overflow:hidden}.ptb-trk .f{position:absolute;left:0;top:0;bottom:0;background:var(--ptb-acc)}.ptb-trk .a{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(135deg,var(--ptb-acc) 0 3px,transparent 3px 6px);opacity:.45}' +
@@ -8483,6 +8755,8 @@ var PTE_TABLEAU = (function (C, I, K) {
     return '<div class="ptb-kpi" title="' + esc(ind ? (ind.definition || '') + (ind.couverture ? ' Couverture : ' + ind.couverture.n + ' sur ' + ind.couverture.sur + '.' : '') : '') + '"><div class="l">' + esc(l) + '</div><div class="v">' + esc(v) + (v !== '—' ? '<small>MCHF</small>' : '') + '</div><div class="d">' + sous + '</div></div>';
   }
   function lienRevue(numero, ss) { var h = C.lien ? C.lien('revue', ss || null, numero) : null; return h || '#'; }
+  /* 13.11.2026 : nom ou n° de projet vers sa fiche Suivre, ↗ vers GE-Invest (PTE_COMMUN.numProjetHtml) */
+  function numP(numero, ss, texte) { return C.numProjetHtml ? C.numProjetHtml(numero, ss, texte) : '<a href="' + esc(lienRevue(numero, ss)) + '">' + esc(texte || numero) + '</a>'; }
 
   function blocs(m, opts) {
     opts = opts || {};
@@ -8537,15 +8811,15 @@ var PTE_TABLEAU = (function (C, I, K) {
     });
     /* 10.11 (demandes d'Achim) : à l'accueil, une tuile cliquée ouvre sous les tuiles la trajectoire de Prioriser
        elle-même (courbe depuis 2005, chemin projeté et son zoom), chargée en encart (« ?cadre=1&encart=ve ») */
-    if (encart) eh += '<div class="ptb-encart"><iframe class="ptb-ve" title="Trajectoire jusqu’en 2030 (Prioriser)" src="' + esc(C.lien('prio') + '?cadre=1&encart=ve') + '"></iframe></div>';
+    if (encart) eh += '<div class="ptb-encart"><i class="ptb-car" aria-hidden="true"></i><iframe class="ptb-ve" title="Trajectoire jusqu’en 2030 (Prioriser)" src="' + esc(C.lien('prio') + '?cadre=1&encart=ve') + '"></iframe></div>';
     if (m.rendement) eh += pourquoi(m.rendement);
-    if (!m.engagements.length) eh += '<div class="ptb-vide">Engagements non calculables : feuilles « Consommation par site » ou « Objectifs PTE » absentes du classeur.</div>';
-    h.engagements = '<section class="ptb-c" data-ptb="engagements" aria-label="Les 8 engagements 2030"><h3>' + (m.engagementsRpf ? 'Les engagements 2030, vus du portefeuille' : 'Les 8 engagements 2030') + (opts.mode === 'accueil' ? '<a href="' + esc(C.lien ? C.lien('prio') || '#' : '#') + '">Prioriser ›</a>' : '') + '</h3>' +
-      (m.engagementsRpf || encart ? '' : '<p class="ptb-exp">Chemin parcouru depuis 2005 (plein), apport des projets en cours (hachuré), statut par rapport à la cible 2030' + (m.parcEntier ? ' — parc entier : les filtres ne s’appliquent pas aux engagements' : '') + '.</p>') + eh +
+    if (!m.engagements.length) eh += '<div class="ptb-vide">Objectifs PTE non calculables : feuilles « Consommation par site » ou « Objectifs PTE » absentes du classeur.</div>';
+    h.engagements = '<section class="ptb-c" data-ptb="engagements" aria-label="Objectifs PTE"><h3>' + (m.engagementsRpf ? 'Objectifs PTE, vus du portefeuille' : 'Objectifs PTE') + (opts.mode === 'accueil' ? '<a href="' + esc(C.lien ? C.lien('prio') || '#' : '#') + '">Prioriser ›</a>' : '') + '</h3>' +
+      (m.engagementsRpf || encart ? '' : '<p class="ptb-exp">Chemin parcouru depuis 2005 (plein), apport des projets en cours (hachuré), statut par rapport à la cible 2030' + (m.parcEntier ? ' — parc entier : les filtres ne s’appliquent pas aux objectifs PTE' : '') + '.</p>') + eh +
       '<div class="ptb-leg" style="margin-top:8px"><span><i style="background:var(--ptb-acc)"></i>chemin parcouru</span><span><i style="background:repeating-linear-gradient(135deg,var(--ptb-acc) 0 2px,transparent 2px 4px)"></i>apport des projets en cours' + (m.fiabilite.classement ? '' : ' (classement de la priorisation non publié : inconnu)') + '</span></div></section>';
     /* avancement */
     var tot = m.phases.reduce(function (a, p) { return a + p.n; }, 0);
-    var phs = m.phases.filter(function (p) { return p.n; }).map(function (p) { return '<span title="' + esc('Phase ' + p.k + ' · ' + p.nom + ' : ' + pl(p.n, 'projet')) + '" style="flex:' + p.n + ' 1 0;background:var(--pte-sia-' + p.k + ');color:var(--pte-sia-' + p.k + '-tx)">' + (p.n / Math.max(1, tot) > 0.045 ? p.n : '') + '</span>'; }).join('');
+    var phs = m.phases.filter(function (p) { return p.n; }).map(function (p) { return '<span title="' + esc('Phase ' + p.k + ' · ' + p.nom + ' : ' + pl(p.n, 'projet')) + '" style="flex:' + p.n + ' 1 0;background:var(--pte-sia-' + p.k + ');color:var(--pte-sia-' + p.k + '-tx)' + (p.k === '21' ? ';box-shadow:inset 0 0 0 2px var(--pte-sia-21-bord)' : '') + '">' + (p.n / Math.max(1, tot) > 0.045 ? p.n : '') + '</span>'; }).join('');
     var LV = { finances: 'Finances', delais: 'Délais', livrables: 'Livrables', risques: 'Risques' };
     var semH = m.semaphores.map(function (s) {
       var t = s.ok + s.surveiller + s.difficulte + s.nr || 1, w = function (v) { return (100 * v / t).toFixed(2) + '%'; };
@@ -8559,19 +8833,19 @@ var PTE_TABLEAU = (function (C, I, K) {
     var J = m.jalonsProgramme, jp = m.jalonsProjets, auj = jourIso(new Date());
     var tl = J.length ? '<div class="ptb-tl" role="list">' + J.map(function (j) { return '<div class="j' + (j.realise ? ' r' : '') + '" role="listitem"><i></i><b>' + esc(j.libelle) + '</b><span>' + (j.date ? esc(fd(j.date)) : 'date à fixer') + (j.detail ? ' · ' + esc(j.detail) : '') + (j.realise ? ' · réalisé' : '') + '</span></div>'; }).join('') + '</div>'
       : (prog ? '<div class="ptb-vide">Aucun jalon du programme saisi. Les consolidateurs les saisissent dans « Saisies › Programme : jalons et décisions ».</div>' : '');
-    var lst = jp.aVenir.length ? '<table class="ptb-tab" style="margin-top:10px"><thead><tr><th style="width:96px">Date</th><th>Jalon</th><th>Projet</th></tr></thead><tbody>' + jp.aVenir.map(function (j) { return '<tr><td>' + esc(fd(j.date)) + '</td><td>' + esc(j.libelle) + '</td><td><a href="' + esc(lienRevue(j.numero)) + '">' + esc(j.projet) + '</a></td></tr>'; }).join('') + '</tbody></table>' : '';
+    var lst = jp.aVenir.length ? '<table class="ptb-tab" style="margin-top:10px"><thead><tr><th style="width:96px">Date</th><th>Jalon</th><th>Projet</th></tr></thead><tbody>' + jp.aVenir.map(function (j) { return '<tr><td>' + esc(fd(j.date)) + '</td><td>' + esc(j.libelle) + '</td><td>' + numP(j.numero, null, j.projet) + '</td></tr>'; }).join('') + '</tbody></table>' : '';
     h.jalons = '<section class="ptb-c" data-ptb="jalons" aria-label="Les jalons"><h3>Les jalons' + (opts.mode === 'accueil' ? '<a href="' + esc(C.lien ? C.lien('revue') || '#' : '#') + '">Planning ›</a>' : '') + '</h3><p class="ptb-exp">' + (prog ? 'Jalons du programme et de sa gouvernance (saisies partagées) · ' : '') +
       pl(jp.nAVenir, 'jalon') + ' de projets dans les ' + jp.jours + ' jours' + (jp.nAVenir > jp.aVenir.length ? ' (les ' + jp.aVenir.length + ' premiers ci-dessous)' : '') + ' · ' + pl(jp.nEchus, 'jalon') + ' de projets en cours dont la date prévue est passée sans date réalisée dans GE-Invest (en retard, ou réalisés sans mise à jour).</p>' + tl + lst + '</section>';
     /* projets clés */
     var pc = m.projetsCles.length ? '<table class="ptb-tab"><thead><tr><th>Projet</th><th class="n" style="text-align:right">Crédit, MCHF</th><th class="n" style="text-align:right">Avanc.</th><th>Performance déclarée</th></tr></thead><tbody>' + m.projetsCles.map(function (p) {
-      return '<tr><td><a href="' + esc(lienRevue(p.numero, p.sousSite)) + '">' + esc(p.nom) + '</a></td><td class="n">' + esc(M(p.credit)) + '</td><td class="n">' + (p.avancement != null ? esc(nf(p.avancement, 0)) + ' %' : '—') + '</td><td>' + pill(p.perfCode === 'difficulte' ? 'difficulte' : p.perfCode, p.perf || 'non renseignée') + '</td></tr>';
+      return '<tr><td>' + numP(p.numero, p.sousSite, p.nom) + '</td><td class="n">' + esc(M(p.credit)) + '</td><td class="n">' + (p.avancement != null ? esc(nf(p.avancement, 0)) + ' %' : '—') + '</td><td>' + pill(p.perfCode === 'difficulte' ? 'difficulte' : p.perfCode, p.perf || 'non renseignée') + '</td></tr>';
     }).join('') + '</tbody></table>' : '<div class="ptb-vide">Aucun projet en cours avec un crédit dans ce périmètre.</div>';
     h.projets = '<section class="ptb-c" data-ptb="projets" aria-label="Les projets clés"><h3>Les projets clés</h3><p class="ptb-exp">Les plus gros crédits des projets en cours du périmètre, avec leur performance déclarée dans GE-Invest. Un nom ouvre la fiche du projet (revue).</p>' + pc + '</section>';
     /* risques */
     var R = m.risques, tr = R.fort + R.moyen + R.faible + R.nr || 1;
     h.risques = '<section class="ptb-c" data-ptb="risques" aria-label="Les risques"><h3>Les risques</h3><p class="ptb-exp">' + (R.inconnu ? 'Risques ouverts : non renseigné' : pl(R.n, 'risque') + ' ouvert' + (R.n > 1 ? 's' : '') + ' dans GE-Invest') + (R.themes.length ? ' · thèmes dominants : ' + R.themes.map(function (t) { return esc(t.t) + ' (' + t.n + ')'; }).join(', ') : '') + '.</p>' +
       (R.inconnu ? '<div class="ptb-vide">Feuille GEI_Risques ou colonne « Statut du risque » absente du classeur : risques non comptés.</div>' : R.n ? '<div class="ptb-barre" style="height:9px" role="img" aria-label="' + esc(R.fort + ' forts, ' + R.moyen + ' moyens, ' + R.faible + ' faibles') + '"><span style="width:' + (100 * R.fort / tr) + '%;background:var(--ptb-err)"></span><span style="width:' + (100 * R.moyen / tr) + '%;background:var(--ptb-mid)"></span><span style="width:' + (100 * R.faible / tr) + '%;background:#B8C1C8"></span></div><div class="ptb-leg"><span><i style="background:var(--ptb-err)"></i>fort (≥ 9/16) · ' + R.fort + '</span><span><i style="background:var(--ptb-mid)"></i>moyen · ' + R.moyen + '</span><span><i style="background:#B8C1C8"></i>faible · ' + R.faible + '</span></div>' +
-        R.top.map(function (r) { return '<div class="ptb-rq"><span class="s ' + (r.sev >= 9 ? 'ptb-difficulte' : r.sev >= 4 ? 'ptb-surveiller' : 'ptb-nr') + '" title="Sévérité sur 16 (probabilité × impact, chacun de 1 à 4)">' + (r.sev == null ? '?' : r.sev + '/16') + '</span><div><b>' + esc(r.libelle) + '</b> <small>· <a href="' + esc(lienRevue(r.numero)) + '">' + esc(r.projet) + '</a></small>' + (r.description ? '<br><small>' + esc(r.description.length > 180 ? r.description.slice(0, 177) + '…' : r.description) + '</small>' : '') + '</div></div>'; }).join('') : '<div class="ptb-vide">Aucun risque ouvert.</div>') + '</section>';
+        R.top.map(function (r) { return '<div class="ptb-rq"><span class="s ' + (r.sev >= 9 ? 'ptb-difficulte' : r.sev >= 4 ? 'ptb-surveiller' : 'ptb-nr') + '" title="Sévérité sur 16 (probabilité × impact, chacun de 1 à 4)">' + (r.sev == null ? '?' : r.sev + '/16') + '</span><div><b>' + esc(r.libelle) + '</b> <small>· ' + numP(r.numero, null, r.projet) + '</small>' + (r.description ? '<br><small>' + esc(r.description.length > 180 ? r.description.slice(0, 177) + '…' : r.description) + '</small>' : '') + '</div></div>'; }).join('') : '<div class="ptb-vide">Aucun risque ouvert.</div>') + '</section>';
     /* décisions */
     var D = m.decisions, di = function (d, pris) { return '<div class="i"><span class="q ' + (pris ? 'ptb-ok' : 'ptb-surveiller') + '">' + (pris ? '✓' : '?') + '</span><div>' + esc(d.decision) + '<br><small>' + [d.responsable, pris ? (d.date_prise ? 'décidée le ' + fd(d.date_prise) : 'prise') : (d.echeance ? 'attendue pour le ' + fd(d.echeance) : '')].filter(Boolean).map(esc).join(' · ') + '</small></div></div>'; };
     h.decisions = '<section class="ptb-c" data-ptb="decisions" aria-label="Les décisions"><h3>Les décisions</h3><p class="ptb-exp">' + (D.programme ? 'Ce qui est attendu de la direction, et ce qui a été tranché, daté (saisies partagées du programme).' : 'Décisions du registre de la revue pour les projets du périmètre.') + '</p><div class="ptb-dec"><div><h4>Attendues · ' + D.attendues.length + '</h4>' +
@@ -8579,8 +8853,7 @@ var PTE_TABLEAU = (function (C, I, K) {
       (D.prises.length ? D.prises.slice(0, 8).map(function (d) { return di(d, true); }).join('') : '<div class="ptb-vide">Registre vide : aucune décision datée n’est encore enregistrée.' + (D.programme ? ' Les consolidateurs les saisissent dans « Saisies › Programme : jalons et décisions ».' : '') + '</div>') + '</div></div></section>';
     /* fiabilité */
     var F = m.fiabilite, cv = function (x) { return x && x.couverture ? nf(x.couverture.n) + ' sur ' + nf(x.couverture.sur) : '—'; };
-    h.pied = '<div class="ptb-pied" data-ptb="fiabilite"><span><b>Fiabilité</b> : fiches de suivi à jour ' + cv(F.fiches) + (F.fiches && F.fiches.detail && F.fiches.detail.moisRevue ? ' (' + esc(C.formatMois ? C.formatMois(F.fiches.detail.moisRevue) : F.fiches.detail.moisRevue) + ')' : '') + ' · Estimé ImmOBA ' + cv(F.estime) + ' sous-sites · audits CECB+ ' + cv(F.cecb) + (F.sansRpf ? ' · ' + nf(F.sansRpf) + ' sous-sites sans RPF' : '') + (m.manque && m.manque.length ? ' · <b>absent du classeur</b> : ' + esc(m.manque.join(', ')) : '') + '</span>' +
-      '<span><b>Sources</b> : ' + esc(m.fichier) + (m.date ? ', déposé le ' + esc(fd(jourLocal(m.date))) : '') + ' · engagements : ' + esc(F.engagementsParams) + (F.classement && F.classement.date ? ' · classement publié le ' + esc(fd(jourLocal(F.classement.date))) : '') + '</span></div>';
+    h.pied = '<div class="ptb-pied" data-ptb="fiabilite"><span><b>Fiabilité</b> : fiches de suivi à jour ' + cv(F.fiches) + (F.fiches && F.fiches.detail && F.fiches.detail.moisRevue ? ' (' + esc(C.formatMois ? C.formatMois(F.fiches.detail.moisRevue) : F.fiches.detail.moisRevue) + ')' : '') + ' · Estimé ImmOBA ' + cv(F.estime) + ' sous-sites · audits CECB+ ' + cv(F.cecb) + (F.sansRpf ? ' · ' + nf(F.sansRpf) + ' sous-sites sans RPF' : '') + (m.manque && m.manque.length ? ' · <b>absent du classeur</b> : ' + esc(m.manque.join(', ')) : '') + '</span></div>';   /* ligne « Sources » retirée (13.11.2026, Achim) : fichier et dates restent dans « Données du … » */
     return h;
   }
 
@@ -8589,27 +8862,47 @@ var PTE_TABLEAU = (function (C, I, K) {
   var ENCART_ECOUTE = false;
   function relierEncart(host) {
     var f = host.querySelector('iframe.ptb-ve'); if (!f) return;
-    var choisir = function (t) {
+    /* 13.11 (Achim) : la trajectoire se raccroche à la tuile choisie — une pointe sous la tuile, même rayon, plus de bande grise */
+    var pointer = function () {   /* relit le DOM à chaque appel : l'hôte peut avoir été redessiné */
+      var t = host.querySelector('.ptb-tuile.on[data-ptb-ind]'), e = host.querySelector('.ptb-encart'), car = e && e.querySelector('.ptb-car'); if (!car) return;
+      if (!t) { car.style.left = '-99px'; return; }
+      var r = t.getBoundingClientRect(), q = e.getBoundingClientRect();
+      car.style.left = Math.round(r.left + r.width / 2 - q.left) + 'px';
+    };
+    var choisir = function (t, sansMsg) {
       Array.prototype.forEach.call(host.querySelectorAll('.ptb-tuile[data-ptb-ind]'), function (x) { x.classList.toggle('on', x === t); x.setAttribute('aria-pressed', String(x === t)); });
+      pointer();
+      if (sansMsg) return;
       try { f.contentWindow.postMessage({ pte: 'encart-ind', k: t.getAttribute('data-ptb-ind') }, location.protocol === 'file:' ? '*' : location.origin); } catch (e) {}
     };
+    f.__ptbEnvoyer = function () { var t = host.querySelector('.ptb-tuile.on[data-ptb-ind]'); if (t) choisir(t); };
     Array.prototype.forEach.call(host.querySelectorAll('.ptb-tuile[data-ptb-ind]'), function (t) {
       t.addEventListener('click', function () { choisir(t); });
       t.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choisir(t); } });
     });
+    /* la trajectoire affichée d'office est celle du CO₂ (indicateur par défaut de Prioriser) : sa tuile est marquée d'emblée */
+    var t0 = host.querySelector('.ptb-tuile[data-ptb-ind="co2"]') || host.querySelector('.ptb-tuile[data-ptb-ind]');
+    if (t0 && !host.querySelector('.ptb-tuile.on[data-ptb-ind]')) choisir(t0, true);
+    pointer();
+    if (typeof requestAnimationFrame !== 'undefined') requestAnimationFrame(pointer);   /* après mise en page (rendu et re-rendu) */
+    if (!host.__ptbCar) {   /* une seule observation par hôte, même s'il est redessiné */
+      host.__ptbCar = true;
+      if (typeof ResizeObserver !== 'undefined') { try { new ResizeObserver(pointer).observe(host); } catch (e) {} }
+      else if (typeof window !== 'undefined') window.addEventListener('resize', pointer);
+    }
     if (!ENCART_ECOUTE && typeof window !== 'undefined') {
       ENCART_ECOUTE = true;
       window.addEventListener('message', function (e) {
         var d = e.data; if (!d || d.pte !== 'encart-h' || !isFinite(d.h)) return;
         Array.prototype.forEach.call(document.querySelectorAll('iframe.ptb-ve'), function (x) {
-          if (x.contentWindow === e.source) { x.style.height = Math.max(200, Math.min(4000, Math.ceil(d.h))) + 'px'; x.__ptbOk = true; }
+          if (x.contentWindow === e.source) { x.style.height = Math.max(200, Math.min(4000, Math.ceil(d.h))) + 'px'; var prem = !x.__ptbOk; x.__ptbOk = true; if (prem && x.__ptbEnvoyer) x.__ptbEnvoyer(); }
         });
       });
     }
     setTimeout(function () {
       if (f.__ptbOk || !f.isConnected) return;
       var e = f.closest('.ptb-encart'); if (e) e.parentNode.removeChild(e);
-      Array.prototype.forEach.call(host.querySelectorAll('.ptb-tuile[data-ptb-ind]'), function (t) { t.removeAttribute('data-ptb-ind'); t.removeAttribute('role'); t.removeAttribute('tabindex'); t.classList.remove('on'); });
+      Array.prototype.forEach.call(host.querySelectorAll('.ptb-tuile[data-ptb-ind]'), function (t) { t.removeAttribute('data-ptb-ind'); t.removeAttribute('role'); t.removeAttribute('tabindex'); t.removeAttribute('aria-pressed'); t.removeAttribute('title'); t.classList.remove('on'); });
     }, 25000);
   }
   function rendre(host, m, opts) {
@@ -9028,7 +9321,7 @@ var PTE_BARRE = (function (C) {
     function dessiner() {
       var q = norm(inp.value).trim(), vis = items.filter(function (x) { return x.tous || !q || norm(x.t + ' ' + (x.d || '') + ' ' + x.v).indexOf(q) >= 0; });
       var n = vis.length; vis = vis.slice(0, 301);
-      ul.innerHTML = vis.map(function (x, i) { return '<li role="option" id="' + idL + '-' + i + '" data-i="' + items.indexOf(x) + '" class="' + (x.tous ? 'ptn-tous' : '') + (x.on ? ' ptn-on' : '') + '"' + (x.on ? ' aria-current="true"' : '') + ' aria-selected="false"><span>' + esc(x.t) + '</span>' + (x.d ? '<small>' + esc(x.d) + '</small>' : '') + '</li>'; }).join('') +
+      ul.innerHTML = vis.map(function (x, i) { return '<li role="option" id="' + idL + '-' + i + '" data-i="' + items.indexOf(x) + '" class="' + (x.tous ? 'ptn-tous' : '') + (x.on ? ' ptn-on' : '') + '"' + (x.on ? ' aria-current="true"' : '') + ' aria-selected="false"' + (x.tous ? '' : ' title="' + esc(x.t) + '"') + '><span>' + esc(x.t) + '</span>' + (x.d ? '<small>' + esc(x.d) + '</small>' : '') + '</li>'; }).join('') +
         (n > 301 ? '<li class="ptn-pv" aria-disabled="true">' + nf(n - 301) + ' de plus : préciser la recherche.</li>' : '') + (n <= 1 ? '<li class="ptn-pv" aria-disabled="true">Rien ne correspond.</li>' : '');
       sel = -1; inp.removeAttribute('aria-activedescendant'); ul.removeAttribute('aria-activedescendant');
     }
@@ -9257,6 +9550,22 @@ var PTE_CADRE = (function (C) {
       setInterval(annonce, 1500);
       window.PTE_ENCART_POSTER = poster;
     }
+    /* fenêtre « Estimer les gains » (13.11.2026, demande d'Achim) : la simulation dans une fenêtre flottante de la page
+       unique, sans son en-tête ; Échap la ferme */
+    if (/[?&]encart=pop(?:&|$)/.test(location.search)) {
+      document.documentElement.classList.add('pte-simpop');
+      var sPop = document.createElement('style');
+      sPop.textContent = 'html.pte-simpop .band,html.pte-simpop body>header.hdr,html.pte-simpop footer.foot,html.pte-simpop .pte-mp-bandeau{display:none!important}html.pte-simpop body{padding-top:0!important}';
+      (document.head || document.documentElement).appendChild(sPop);
+      /* phase de capture : une bulle, un menu ou une fenêtre ouverte dans la simulation se ferment d'abord (relecture du 13.11) */
+      window.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape' || e.defaultPrevented) return;
+        var vis = function (x) { return !!(x.offsetWidth || x.offsetHeight || x.getClientRects().length); };
+        if (document.querySelector('.ep-i[aria-expanded="true"], [aria-haspopup][aria-expanded="true"], dialog[open]') ||
+          Array.prototype.some.call(document.querySelectorAll('.ep-pop, [role="dialog"]'), vis)) return;
+        poster({ pte: 'fermer' });
+      }, true);
+    }
     surLien(function (k, hash) {
       /* lien vers sa propre vue : l'ancre change ici, sans recharger la page (l'adresse garde « ?cadre=1 ») */
       if (MOI && k === MOI.k) { if (hash) location.hash = hash; else { try { history.pushState(null, '', location.pathname + location.search); } catch (e) {} try { window.dispatchEvent(new HashChangeEvent('hashchange')); } catch (e) {} } return; }
@@ -9397,6 +9706,93 @@ var PTE_CADRE = (function (C) {
     return true;
   }
   function calculEnCours() { return !!CALC; }
+  /* ---------- fenêtre « Estimer les gains » (13.11.2026, demande d'Achim) ----------
+     Un lien vers la simulation d'un sous-site (« Estimer les gains » des fiches) ouvre la simulation dans une fenêtre
+     flottante, au-dessus de la vue courante, qui reste en place dessous : déplaçable par sa barre de titre, taille
+     réglable par le coin, fermée par la croix ou Échap. Un autre sous-site la repositionne. Sans sous-site, la vue
+     Simulation s'ouvre comme avant. */
+  var POP = null;
+  function popCss() {
+    if (document.getElementById('pte-simpop-css')) return;
+    var s = document.createElement('style'); s.id = 'pte-simpop-css';
+    s.textContent = '#pte-simpop{position:fixed;z-index:2600;top:72px;right:24px;width:min(980px,calc(100vw - 32px));height:min(780px,calc(100vh - 96px));min-width:360px;min-height:260px;' +
+      'display:flex;flex-direction:column;background:var(--ep-card,#fff);color:var(--ep-ink,#1D1D1F);border:1px solid var(--ep-line,rgba(0,0,0,.14));border-radius:14px;' +
+      'box-shadow:0 18px 50px rgba(0,0,0,.28);overflow:hidden;resize:both}#pte-simpop[hidden]{display:none}' +
+      '#pte-simpop .pp-b{display:flex;align-items:center;gap:10px;padding:8px 10px 8px 16px;border-bottom:1px solid var(--ep-line,rgba(0,0,0,.1));cursor:move;user-select:none;touch-action:none;flex:none}' +
+      '#pte-simpop .pp-t{font-size:14px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#pte-simpop .pp-t small{font-weight:400;color:var(--ep-ink2,#6E6E73);margin-left:6px;font-size:12.5px}' +
+      '#pte-simpop .pp-x{width:30px;height:30px;border-radius:50%;border:0;background:var(--ep-fill,rgba(118,118,128,.12));color:inherit;font:inherit;font-size:18px;line-height:1;cursor:pointer;flex:none}' +
+      '#pte-simpop .pp-x:hover{background:var(--ep-accent,#005F73);color:#fff}#pte-simpop .pp-x:focus-visible{outline:2px solid var(--ep-accent,#005F73);outline-offset:2px}' +
+      '#pte-simpop iframe{flex:1;width:100%;border:0;display:block;background:var(--ep-bg,#F5F5F7)}html.pte-simpop-glisse #pte-simpop iframe{pointer-events:none}' +
+      'body.night #pte-simpop{background:#1C1C1E;color:#F5F5F7;border-color:rgba(255,255,255,.16)}' +
+      '@media (max-width:640px){#pte-simpop{top:8px;right:8px;left:8px;width:auto;height:calc(100vh - 16px);min-width:0;resize:none}}' +
+      '@media print{#pte-simpop{display:none!important}}';
+    document.head.appendChild(s);
+  }
+  function popTitre(hash) {
+    var m = /(?:^|&)ss=([0-9]{6})/.exec(hash || '');
+    return 'Estimer les gains' + (m ? '<small>sous-site ' + m[1] + '</small>' : '');
+  }
+  function versPop(k, hash) {
+    if (k !== 'sim' || enCadre || ACTIVE === 'sim') return false;   /* vue Simulation déjà affichée : elle se repositionne */
+    hash = propre(hash);
+    if (!/(?:^|&)ss=[0-9]{6}/.test(hash)) return false;
+    var l = C && C.lien ? C.lien('sim') : null; if (!l) return false;
+    popCss();
+    var emp = empreinte();
+    /* empreinte du classeur dans l'adresse : un classeur changé recharge la simulation (relecture du 13.11) */
+    var src = l + '?cadre=1&encart=pop&v=' + encodeURIComponent(emp || '0') + '#' + hash;
+    if (!POP) {
+      var d = document.createElement('div'); d.id = 'pte-simpop'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'false'); d.setAttribute('aria-labelledby', 'pte-simpop-t');
+      d.innerHTML = '<div class="pp-b"><div class="pp-t" id="pte-simpop-t"></div><button type="button" class="pp-x" aria-label="Fermer la simulation" title="Fermer (Échap)">×</button></div>';
+      var f = document.createElement('iframe'); f.title = 'Simulation des gains'; d.appendChild(f);
+      document.body.appendChild(d);
+      POP = { el: d, ifr: f, emp: null, hash: '', retour: null };
+      d.querySelector('.pp-x').addEventListener('click', fermerPop);
+      d.addEventListener('keydown', function (e) { if (e.key === 'Escape') { e.preventDefault(); fermerPop(); } });
+      /* déplacer par la barre de titre (souris, doigt, stylet) */
+      var barre = d.querySelector('.pp-b'), g = null;
+      barre.addEventListener('pointerdown', function (e) {
+        if (e.button !== 0 || (e.target.closest && e.target.closest('.pp-x'))) return;
+        var r = d.getBoundingClientRect(); g = { dx: e.clientX - r.left, dy: e.clientY - r.top, id: e.pointerId };
+        try { barre.setPointerCapture(e.pointerId); } catch (x) {}
+        document.documentElement.classList.add('pte-simpop-glisse'); e.preventDefault();
+      });
+      barre.addEventListener('pointermove', function (e) {
+        if (!g || e.pointerId !== g.id) return;
+        var w = d.offsetWidth, vw = window.innerWidth, vh = window.innerHeight;
+        var x = Math.min(Math.max(e.clientX - g.dx, 40 - w), vw - 40), y = Math.min(Math.max(e.clientY - g.dy, 0), vh - 40);
+        d.style.left = x + 'px'; d.style.top = y + 'px'; d.style.right = 'auto';
+      });
+      var lacher = function () { g = null; document.documentElement.classList.remove('pte-simpop-glisse'); };
+      barre.addEventListener('pointerup', lacher); barre.addEventListener('pointercancel', lacher);
+      /* Précédent / Suivant change la vue dessous : la fenêtre se ferme ; écran rétréci : elle y reste */
+      window.addEventListener('popstate', fermerPop);
+      window.addEventListener('resize', function () {
+        if (!POP || POP.el.hidden || !POP.el.style.left) return;
+        var r = POP.el.getBoundingClientRect();
+        POP.el.style.left = Math.max(40 - r.width, Math.min(r.left, window.innerWidth - 40)) + 'px';
+        POP.el.style.top = Math.max(0, Math.min(r.top, window.innerHeight - 40)) + 'px';
+      });
+    }
+    if (POP.el.hidden || !POP.ifr.getAttribute('src') || POP.emp !== emp) {
+      if (POP.el.hidden || !POP.retour) POP.retour = document.activeElement && document.activeElement !== document.body ? document.activeElement : null;
+      if (POP.ifr.getAttribute('src') !== src || POP.emp !== emp) POP.ifr.setAttribute('src', src);
+    } else if (hash !== POP.hash) {
+      /* fenêtre déjà ouverte : seule l'ancre change, la simulation se repositionne sans recharger */
+      try { POP.ifr.contentWindow.postMessage({ pte: 'ancre', hash: hash }, CIBLE); } catch (e) { POP.ifr.setAttribute('src', src); }
+    }
+    POP.emp = emp; POP.hash = hash;
+    POP.el.querySelector('.pp-t').innerHTML = popTitre(hash);
+    POP.el.hidden = false;
+    try { POP.el.querySelector('.pp-x').focus({ preventScroll: true }); } catch (e) {}
+    return true;
+  }
+  function fermerPop() {
+    if (!POP || POP.el.hidden) return;
+    POP.el.hidden = true;
+    var r = POP.retour; POP.retour = null;
+    if (r && r.isConnected) { try { r.focus({ preventScroll: true }); } catch (e) {} }
+  }
   function coquille(o) {
     if (enCadre) return null;
     O = o || {};
@@ -9413,9 +9809,15 @@ var PTE_CADRE = (function (C) {
       window.addEventListener('storage', function (e) { if (!e.key || e.key === 'pte.theme.v1') suivreTheme(); });
       document.head.appendChild(s);
     }
-    surLien(function (k, hash) { montrer(k, hash, true); });
+    surLien(function (k, hash) { if (versPop(k, hash)) return; montrer(k, hash, true); });
     window.addEventListener('message', function (e) {
       var d = e.data; if (!d || typeof d !== 'object' || typeof d.pte !== 'string' || !origineSure(e)) return;
+      if (POP && e.source === POP.ifr.contentWindow) {
+        /* la fenêtre « Estimer les gains » : Échap la ferme ; un lien vers un autre outil s'ouvre dans la page */
+        if (d.pte === 'fermer') fermerPop();
+        else if (d.pte === 'vue' && NOMS[d.k] && !versPop(d.k, d.hash)) { if (d.k === 'sim') fermerPop(); montrer(d.k, propre(d.hash), true); }
+        return;
+      }
       var k = null; Object.keys(CADRES).forEach(function (x) { if (CADRES[x].contentWindow === e.source) k = x; });
       if (!k) {
         /* encart de la Vue d'ensemble du tableau de bord (10.11) : un lien ou un onglet de Prioriser ouvre Prioriser */
@@ -9423,7 +9825,7 @@ var PTE_CADRE = (function (C) {
         if (enc && d.pte === 'vue' && NOMS[d.k]) montrer(d.k, propre(d.hash), true);
         return;
       }
-      if (d.pte === 'vue' && NOMS[d.k]) montrer(d.k, d.hash, true);
+      if (d.pte === 'vue' && NOMS[d.k]) { if (!versPop(d.k, d.hash)) montrer(d.k, d.hash, true); }
       else if (d.pte === 'adresse' && k === ACTIVE) { ecrireAdresse(k, propre(d.hash), false); if (typeof d.titre === 'string' && d.titre) document.title = d.titre.slice(0, 160); }
     });
     window.addEventListener('popstate', lireAdresse);
@@ -9436,7 +9838,7 @@ var PTE_CADRE = (function (C) {
       window.addEventListener('storage', function (e) { if (e.key === (C.LS_META || 'pte.classeur.meta.v1')) { CALC_N = 0; setTimeout(calculerClassement, 3000); } });   /* le cadre qui a déposé publie d'abord le sien */
       setTimeout(calculerClassement, 1500);
     }
-    return { montrer: montrer, active: function () { return ACTIVE; }, cadre: function (k) { return CADRES[k] || null; } };
+    return { montrer: montrer, active: function () { return ACTIVE; }, cadre: function (k) { return CADRES[k] || null; }, fermerPop: fermerPop };
   }
   return { enCadre: enCadre, coquille: coquille, vueDepuisHash: vueDepuisHash, vueDe: vueDe, montrer: montrer,
            active: function () { return ACTIVE; }, calculerClassement: calculerClassement, calculEnCours: calculEnCours,
@@ -9467,6 +9869,7 @@ var PTE_FICHE = (function (C, T) {
     s.textContent =
       '.ptf{border:1px solid var(--ep-line,#E5E5EA);border-radius:12px;background:var(--ep-card,#fff);padding:14px 16px;margin:0 0 14px}' +
       '.ptf h3{margin:0 0 2px;font-size:16px}.ptf .ptf-sous{font-size:12.5px;color:var(--ep-ink3,#6b7280);margin:0 0 10px}' +
+      '.ptf .ptf-rang{font-size:13px;margin:2px 0 2px}.ptf .ptf-det{margin:0 0 6px}' +
       '.ptf-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 14px;margin:0 0 12px}' +
       '.ptf-k{font-size:11.5px;color:var(--ep-ink3,#6b7280)}.ptf-v{font-size:14px;font-weight:600}' +
       '.ptf h4{margin:12px 0 6px;font-size:13px}' +
@@ -9475,7 +9878,10 @@ var PTE_FICHE = (function (C, T) {
       '.ptf-s{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:3px;vertical-align:-1px}' +
       '.ptf-v.ptf-s,.ptf-s.ptf-v{background:#1A8554}.ptf-s.ptf-o{background:#B58900}.ptf-s.ptf-r{background:#C9573C}.ptf-s.ptf-n{background:#C7C7CC}' +
       '.ptf-act{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.ptf-act a,.ptf-act button{font:inherit;font-size:13px;border:1px solid var(--ep-line,#D1D1D6);border-radius:8px;padding:5px 11px;background:transparent;color:inherit;cursor:pointer;text-decoration:none}' +
-      '.ptf-act .ptf-p{background:#005F73;border-color:#005F73;color:#fff}body.night .ptf-act .ptf-p{background:#30E5D9;border-color:#30E5D9;color:#00222B}' +
+      /* 13.11.2026 (Achim) : les actions de la fiche ont toutes le même aspect ; × de fermeture dans la tuile */
+      '.ptf-act a:hover,.ptf-act button:hover{border-color:var(--ep-accent,#005F73);color:var(--ep-accent,#005F73)}' +
+      '.ptf{position:relative}.ptf.ptf-ax h3{padding-right:36px}.ptf-x{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;border:0;background:var(--ep-fill,rgba(118,118,128,.12));color:inherit;font:inherit;font-size:18px;line-height:1;cursor:pointer}' +
+      '.ptf-x:hover{background:var(--ep-accent-bg,#005F73);color:#fff}.ptf-x:focus-visible{outline:2px solid var(--ep-accent,#005F73);outline-offset:2px}' +
       '.ptf-note{white-space:pre-wrap;font-size:13px;margin:0}.ptf-vide{color:var(--ep-ink3,#6b7280);font-size:12.5px}' +
       '.ptf a.ptf-lien{color:inherit;text-decoration:none}.ptf a.ptf-lien:hover b{text-decoration:underline}.ptf-plus{display:block;width:100%;flex:1 1 100%}.ptf-plus>summary{cursor:pointer;font-weight:600;font-size:13px;margin:6px 0}' +
       '@media (max-width:640px){.ptf{padding:12px}.ptf table{display:block;overflow-x:auto}}';
@@ -9485,7 +9891,7 @@ var PTE_FICHE = (function (C, T) {
   function rendre(hote, src, num, o) {
     var B = src.B, ss = (B.sousSites || []).filter(function (s) { return String(s.num) === String(num); })[0];
     var Rss = ((src.R && src.R.sousSites) || []).filter(function (s) { return String(s.num) === String(num); })[0] || {};
-    if (!ss) { hote.innerHTML = '<div class="ptf"><p class="ptf-vide">Sous-site ' + esc(num) + ' absent du classeur commun.</p></div>'; return; }
+    if (!ss) { hote.innerHTML = '<div class="ptf' + (o.surFermer ? ' ptf-ax' : '') + '">' + xHtml(o) + '<p class="ptf-vide">Sous-site ' + esc(num) + ' absent du classeur commun.</p>' + detailSeul(o) + '</div>'; finir(hote, o); return; }
     var st = lj('pte_state_v2') || {}, note = st.siteNotes ? st.siteNotes[num] : null, q = st.siteQuali ? st.siteQuali[num] : null;
     var g = (src.gains || {})[num] || null;
     var rang = g && g.rang_global ? '<b>' + esc(g.rang_global) + '</b>' + (g.nb_classes ? ' sur ' + esc(g.nb_classes) : '') + (+g.objectifs_servis > 0 ? ' · ' + esc(g.objectifs_servis) + ' objectif(s) servi(s)' : '') : '<span class="ptf-vide">' + (typeof PTE_CADRE !== 'undefined' && PTE_CADRE && PTE_CADRE.calculEnCours && PTE_CADRE.calculEnCours() ? 'classement en cours de calcul…' : C.classementAJour && C.classementAJour() ? 'pas classé (sous-site hors du classement de Prioriser)' : 'pas encore classé') + '</span>';
@@ -9503,7 +9909,15 @@ var PTE_FICHE = (function (C, T) {
       ['Estimé ImmOBA', mchf(ss.estimImmoba), 'Coût des travaux estimé par l’OCBA (colonne Estim ImmOBA de Plan_PTE).'],
       ['Diag polluants', esc(ss.diagPolluants || '—'), 'Diagnostic des polluants du bâtiment (amiante, PCB, plomb…) : aucun, partiel, complet à mettre à jour ou complet à jour.']
     ];
-    var h = '<div class="ptf" data-num="' + esc(num) + '"><h3>' + esc(num) + ' · ' + esc(ss.nom || Rss.nomSite || 'sous-site') + '</h3>' +
+    var h = '<div class="ptf' + (o.surFermer ? ' ptf-ax' : '') + '" data-num="' + esc(num) + '">' + xHtml(o) + '<h3>' + esc(num) + ' · ' + esc(ss.nom || Rss.nomSite || 'sous-site') + '</h3>';
+    if (o.detail) {
+      /* Prioriser (13.11.2026, Achim ; QCM « A · Détail seul ») : plus de rangée de chiffres en tête — le rang, la ligne
+         site · portefeuille · plans, puis le détail de Prioriser (bâtiment, chaleur et travaux, mesures), chaque donnée
+         une seule fois */
+      h += '<p class="ptf-rang" title="' + esc(cases[0][2]) + '">Rang dans le classement : ' + rang + '</p>' +
+        '<p class="ptf-sous">' + esc(['Site ' + (ss.site || '—'), pf, ss.aff || null].concat(plans).filter(Boolean).join(' · ')) + '</p>' +
+        '<div class="ptf-det">' + (typeof o.detail === 'function' ? o.detail({ auditCecb: ss.auditCecb, estimImmoba: ss.estimImmoba, diagPolluants: ss.diagPolluants }) : o.detail) + '</div>';
+    } else h +=
       '<p class="ptf-sous">' + esc(['Site ' + (ss.site || '—'), pf, ss.aff || null].concat(plans).filter(Boolean).join(' · ')) + '</p>' +
       '<div class="ptf-g">' + cases.map(function (c) { return '<div' + (c[2] ? ' title="' + esc(c[2]) + '"' : '') + '><div class="ptf-k">' + c[0] + '</div><div class="ptf-v">' + c[1] + '</div></div>'; }).join('') + '</div>';
     /* projets en cours : sémaphores GE-Invest, finances, prochain jalon */
@@ -9518,24 +9932,31 @@ var PTE_FICHE = (function (C, T) {
           var dots = ['finances', 'delais', 'livrables', 'risques'].map(function (k) { var v = SEM[s[k] || 'nr'] || SEM.nr; var lib = ({ finances: 'Finances', delais: 'Délais', livrables: 'Livrables', risques: 'Risques' })[k] + ' : ' + v[0]; return '<i class="ptf-s ' + v[1] + '" role="img" aria-label="' + lib + '" title="' + lib + '"></i>'; }).join('');
           var dep = (p.cumulN1 == null && p.comptaN == null) ? null : (p.cumulN1 || 0) + (p.comptaN || 0);
           var jx = (src.jalons || []).filter(function (j) { return j.numero === p.numero && !j.realisee && j.prevue; }).sort(function (a, b) { return a.prevue < b.prevue ? -1 : 1; })[0];
-          var nom = '<b>' + esc(p.numero) + '</b> — ' + esc(d.nom || '') + '<br><span class="ptf-k">' + esc([p.statut, d.rp ? 'RP ' + (C.nomRp ? C.nomRp(d.rp) : d.rp) : null].filter(Boolean).join(' · ')) + '</span>';
-          if (o.lienProjet) nom = '<a class="ptf-lien" href="' + esc(o.lienProjet(p.numero)) + '" data-projet="' + esc(p.numero) + '">' + nom + '</a>';
+          /* 13.11.2026 : le n° ouvre la fiche Suivre du projet, ↗ ouvre GE-Invest — dans Prioriser aussi */
+          var lp = o.lienProjet ? o.lienProjet(p.numero) : (C.lien ? C.lien('revue', num, p.numero) : null);
+          var gp = C.lienGEInvest ? C.lienGEInvest(p.numero) : null;
+          var nom = (lp ? '<a class="ptf-lien pte-np" href="' + esc(lp) + '" data-projet="' + esc(p.numero) + '" title="Ouvre la fiche du projet dans Suivre"><b>' + esc(p.numero) + '</b></a>' : '<b>' + esc(p.numero) + '</b>') +
+            (gp ? '<a class="pte-gei" href="' + esc(gp) + '" target="_blank" rel="noopener noreferrer" title="' + (C.TITRE_GEI || 'GE-Invest') + '" aria-label="Projet ' + esc(p.numero) + ' dans GE-Invest">↗</a>' : '') +
+            ' — ' + esc(d.nom || '') + '<br><span class="ptf-k">' + esc([p.statut, d.rp ? 'RP ' + (C.nomRp ? C.nomRp(d.rp) : d.rp) : null].filter(Boolean).join(' · ')) + '</span>';
+          if (C.cssNumProjet) C.cssNumProjet();
           return '<tr><td>' + nom + '</td><td style="white-space:nowrap">' + dots + '</td><td class="n">' + mchf(p.credit) + '</td><td class="n">' + mchf(dep) + '</td><td>' +
             (jx ? esc(jx.libelle) + ' · ' + esc(C.formatDate ? C.formatDate(jx.prevue) : jx.prevue) + (jx.prevue < auj ? ' <span title="date passée, jalon non réalisé">⚠︎</span>' : '') : '<span class="ptf-vide">—</span>') + '</td></tr>';
         }).join('') + '</tbody></table>' +
         '<p class="ptf-k" style="margin:6px 0 0">Sémaphores GE-Invest, dans l’ordre finances, délais, livrables, risques : <i class="ptf-s ptf-v"></i>conforme · <i class="ptf-s ptf-o"></i>à surveiller · <i class="ptf-s ptf-r"></i>en difficulté · <i class="ptf-s ptf-n"></i>non renseigné.</p>';
     }
-    /* note et ajustement (saisies partagées, faites dans Prioriser) */
-    h += '<h4>Note et ajustement</h4>' +
+    /* note et ajustement (saisies partagées, faites dans Prioriser) ; Prioriser (13.11.2026, Achim) : saisie directement
+       dans la fiche (o.saisie, nœud gardé d'un dessin à l'autre), sans clic de plus */
+    h += '<h4>Note et ajustement</h4>' + (o.saisie ? '<div class="ptf-saisie"></div>' :
       (note ? '<p class="ptf-note">' + esc(note) + '</p>' : '<p class="ptf-vide">Aucune note.</p>') +
-      (q && q.p && q.p !== '0' ? '<p class="ptf-note"><b>Ajustement :</b> ' + esc(QUALI[q.p] || q.p) + (q.m ? ' — ' + esc(q.m) : '') + '</p>' : '<p class="ptf-vide">Aucun ajustement.</p>');
+      (q && q.p && q.p !== '0' ? '<p class="ptf-note"><b>Ajustement :</b> ' + esc(QUALI[q.p] || q.p) + (q.m ? ' — ' + esc(q.m) : '') + '</p>' : '<p class="ptf-vide">Aucun ajustement.</p>'));
     h += '<div class="ptf-act">' +
       (C.lien ? '<a class="ptf-p" href="' + esc(C.lien('sim', num)) + '">Estimer les gains</a>' : '') +
-      (o.vue === 'prio' && o.surModifier ? '<button type="button" data-ptf="modifier">Modifier la note ou l’ajustement</button>' : '') +
+      (o.vue === 'prio' && o.surModifier && !o.saisie ? '<button type="button" data-ptf="modifier">Modifier la note ou l’ajustement</button>' : '') +
       (o.vue !== 'prio' && C.lien ? '<a href="' + esc(C.lien('prio', num)) + '">Voir dans Prioriser</a>' : '') +
       (o.vue !== 'revue' && C.lien && pp.length ? '<a href="' + esc(C.lien('revue', num)) + '">Suivre ses projets</a>' : '') +
       '</div></div>';
     hote.innerHTML = h;
+    finir(hote, o);
     var bm = hote.querySelector('[data-ptf="modifier"]'); if (bm) bm.addEventListener('click', function () { o.surModifier(); });
     if (o.surProjet) Array.prototype.forEach.call(hote.querySelectorAll('a[data-projet]'), function (a) {
       a.addEventListener('click', function (e) { if (e.button !== 0 || e.metaKey || e.ctrlKey) return; e.preventDefault(); o.surProjet(a.getAttribute('data-projet')); });
@@ -9544,6 +9965,19 @@ var PTE_FICHE = (function (C, T) {
   /* hote : élément vide ; la fiche s'y écrit quand le classeur commun est lu (aucun classeur : un mot, rien d'autre) */
   var DERNIER = null;
   /* après une saisie (note, ajustement) : la fiche se réécrit sur le classeur déjà lu */
+  /* Prioriser sans classeur commun (relecture du 13.11) : son détail reste montré, lu dans son propre classeur */
+  function xHtml(o) { return o && o.surFermer ? '<button type="button" class="ptf-x" aria-label="Fermer la fiche" title="Fermer (Échap)">×</button>' : ''; }
+  /* après chaque dessin : la croix, et la saisie de Prioriser remise à sa place (sans classeur commun : en fin de fiche) */
+  function finir(hote, o) {
+    if (!o) return;
+    var x = hote.querySelector('.ptf-x'); if (x) x.addEventListener('click', function () { o.surFermer(); });
+    if (o.saisie) {
+      var place = hote.querySelector('.ptf-saisie');
+      if (!place) { var f = hote.querySelector('.ptf'); if (f) { var h4 = document.createElement('h4'); h4.textContent = 'Note et ajustement'; f.appendChild(h4); place = document.createElement('div'); place.className = 'ptf-saisie'; f.appendChild(place); } }
+      if (place) place.appendChild(o.saisie);
+    }
+  }
+  function detailSeul(o) { try { return o && o.detail ? '<div class="ptf-det">' + (typeof o.detail === 'function' ? o.detail({}) : o.detail) + '</div>' : ''; } catch (e) { return ''; } }
   function rafraichir(hote, num, o) { if (hote) monter(hote, num, o); }   /* relu : un ajustement change aussi le rang (relecture du 10.11) */
   function monter(hote, num, o) {
     if (!hote || !T || !T.charger) return null;
@@ -9551,9 +9985,9 @@ var PTE_FICHE = (function (C, T) {
     hote.setAttribute('aria-busy', 'true'); hote.setAttribute('aria-live', 'polite');
     return T.charger().then(function (src) {
       hote.removeAttribute('aria-busy');
-      if (!src) { hote.innerHTML = '<div class="ptf"><p class="ptf-vide">Fiche commune : aucun classeur commun (déposer Plan_PTE.xlsx sur la page Pilotage PTE).</p></div>'; return null; }
+      if (!src) { hote.innerHTML = '<div class="ptf' + (o.surFermer ? ' ptf-ax' : '') + '">' + xHtml(o) + '<p class="ptf-vide">Fiche commune : aucun classeur commun (déposer Plan_PTE.xlsx sur la page Pilotage PTE).</p>' + detailSeul(o) + '</div>'; finir(hote, o); return null; }
       DERNIER = src; rendre(hote, src, num, o); MONTEES = MONTEES.filter(function (m) { return m.hote !== hote; }); MONTEES.push({ hote: hote, num: num, o: o }); return src;
-    }).catch(function (e) { hote.removeAttribute('aria-busy'); try { console.warn('Fiche commune non affichée :', e); } catch (x) {} return null; });
+    }).catch(function (e) { hote.removeAttribute('aria-busy'); if (o.detail) { hote.innerHTML = '<div class="ptf' + (o.surFermer ? ' ptf-ax' : '') + '">' + xHtml(o) + detailSeul(o) + '</div>'; finir(hote, o); } try { console.warn('Fiche commune non affichée :', e); } catch (x) {} return null; });
   }
   /* classement publié pendant que la fiche est affichée (séance 8 : calcul au dépôt) : le rang se met à jour */
   var MONTEES = [];
@@ -9744,7 +10178,12 @@ function affEff(){
 function affMatch(s){const a=affEff();return !a.length||PTE_COMMUN.dansAffectations(s&&s.aff,a)}
 function perimMatch(s){return rpMatch(s&&s.rp)}
 /* Plan ou affectation actifs : filtre commun aux outils */
-function filtreCommun(){return PROG_ACT.length>0||affEff().length>0}
+function filtreCommun(){return PROG_ACT.length>0||affEff().length>0||!!mpAct()}
+/* « Mon périmètre » (12.11.2026, demande d'Achim) : liste de sous-sites propre à l'utilisateur (PTE_COMMUN), filtre commun
+   comme le plan et l'affectation */
+function mpAct(){return(typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.monPerimetreActif)?PTE_COMMUN.monPerimetreActif():null}
+function mpMatch(s){return typeof PTE_COMMUN==='undefined'||!PTE_COMMUN.dansMonPerimetre||PTE_COMMUN.dansMonPerimetre(s&&s.id)}
+function mpSig(){const l=mpAct();return l?l.join(','):''}
 try{affLire()}catch(e){}
 /* Plan (21.10.2026, demande d'Achim) : « Les 300 », « Plan canicule », « COE complexes », section « Plan » du menu Périmètre,
    filtre commun aux outils (PTE_COMMUN, localStorage pte.programmes.v1). Il s'applique à tous les
@@ -9752,11 +10191,12 @@ try{affLire()}catch(e){}
    anomalies. Les rangs, écarts et références 2005 restent calculés sur le parc entier (comme pour le
    périmètre) ; les exports et le classement publié pour la revue restent complets. */
 let PROG_ACT=[];
+let _mpVu=(typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.monPerimetreActif)?((PTE_COMMUN.monPerimetreActif()||[]).join(',')):'';
 function tagVal(v){if(typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.valeurTag)return PTE_COMMUN.valeurTag(v);const t=String(v==null?'':v).trim();return(!t||t==='0'||/^non$/i.test(t))?null:t}
 function progLire(){PROG_ACT=(typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.lireProgrammes)?PTE_COMMUN.lireProgrammes():[]}
 function planMatch(s){return !PROG_ACT.length||(typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.dansProgrammes(s&&s.tags,PROG_ACT))}
 /* Plan et affectation (03.11.2026) : les deux à la fois */
-function progMatch(s){return planMatch(s)&&affMatch(s)}
+function progMatch(s){return planMatch(s)&&affMatch(s)&&mpMatch(s)}
 /* Étiquettes du Plan (21.10.2026, demande d'Achim) : icônes 300 / canicule / COE à côté du nom d'un sous-site,
    qu'un plan soit coché ou non — on voit l'appartenance sans filtrer. */
 let _planIdx=null,_planIdxV=-1;
@@ -9777,10 +10217,11 @@ function planPart(k){
   if(!filtreCommun()||typeof PTE_COMMUN==='undefined')return'';
   const pop=S,plan=pop.filter(progMatch),ids={};plan.forEach(function(s){ids[String(s.id)]=1});
   const af=affEff(),libA=af.length&&PTE_COMMUN.libelleAffectations?PTE_COMMUN.libelleAffectations(af):'';
-  const ico=(PTE_COMMUN.iconeProgramme&&PROG_ACT.length===1&&!af.length?PTE_COMMUN.iconeProgramme(PROG_ACT[0],12)+' ':(PROG_ACT.length?'Plan : ':'Affectation : ')),lib=[PROG_ACT.length?PTE_COMMUN.libelleProgrammes(PROG_ACT):'',libA].filter(Boolean).join(' · ');
+  const mpL=mpAct()&&PTE_COMMUN.libelleMonPerimetre?PTE_COMMUN.libelleMonPerimetre():'';
+  const ico=(PTE_COMMUN.iconeProgramme&&PROG_ACT.length===1&&!af.length&&!mpL?PTE_COMMUN.iconeProgramme(PROG_ACT[0],12)+' ':(PROG_ACT.length?'Plan : ':af.length?'Affectation : ':'')),lib=[mpL,PROG_ACT.length?PTE_COMMUN.libelleProgrammes(PROG_ACT):'',libA].filter(Boolean).join(' · ');
   /* Développement durable : l'indice calculé sur les seuls sous-sites du plan */
   if(k==='dd'){const P=ddParc(plan);if(P.score==null)return'';
-    return'<div class="tplan" title="'+esc(lib+' : indice de développement durable calculé sur ses '+nf(plan.length)+' sous-sites'+(P.scoreProj!=null?' ; '+nf(P.scoreProj,1)+' si tous ses projets repérés se font':'')+'.')+'">'+ico+'indice <b>'+nf(P.score,1)+'</b> / 100 sur le plan</div>'}
+    return'<div class="tplan" title="'+esc(lib+' : indice de développement durable calculé sur ses '+nf(plan.length)+' sous-sites'+(P.scoreProj!=null?' ; '+nf(P.scoreProj,1)+' si tous ses projets repérés se font':'')+'.')+'">'+ico+'indice <b>'+nf(P.score,1)+'</b> / 100 sur '+(PROG_ACT.length&&!af.length&&!mpL?'le plan':'ce périmètre')+'</div>'}
   const F={co2:'co2',th:'consoTherm',ren:'consoTherm',elec:'elec',eau:'eau',idc:'sre'}[k];if(!F)return'';
   const tot=pop.reduce(function(t,s){return t+(+s[F]||0)},0),pl=plan.reduce(function(t,s){return t+(+s[F]||0)},0);
   if(!(tot>0))return'';
@@ -9788,7 +10229,7 @@ function planPart(k){
   const nom={co2:'du CO₂',th:'de la chaleur',ren:'de la chaleur',elec:'de l\'électricité',eau:'de l\'eau',idc:'de la SRE'}[k];
   let t='<b>'+pc(100*pl/tot)+' %</b> '+nom+' du parc',ttl=lib+' : '+nf(plan.length)+' sous-sites, '+pc(100*pl/tot)+' % '+nom+' du parc.';
   /* IDC : la moyenne propre au plan, la tuile restant sur le parc */
-  if(k==='idc'){const q=idcParc(plan);if(q.idc!=null){t='IDC <b>'+nf(q.idc,1)+'</b> · '+t;ttl+=' IDC moyen du plan : '+nf(q.idc,1)+' kWh/m²·an ('+nf(q.nHors||0)+' sous-sites au-dessus du seuil).'}}
+  if(k==='idc'){const q=idcParc(plan);if(q.idc!=null){t='IDC <b>'+nf(q.idc,1)+'</b> · '+t;ttl+=' IDC moyen '+(PROG_ACT.length&&!af.length&&!mpL?'du plan':'de ce périmètre')+' : '+nf(q.idc,1)+' kWh/m²·an ('+nf(q.nHors||0)+' sous-sites au-dessus du seuil).'}}
   const g=(typeof OBJ_GAPS!=='undefined'&&OBJ_GAPS)?OBJ_GAPS[k]:null,R=(typeof OBJRANK!=='undefined'&&OBJRANK)?OBJRANK[k]:null;
   if(g&&g.gap>0&&R&&R.items){
     const gp=R.items.filter(function(it){return ids[String(it.id)]&&it.gain>0}).reduce(function(t,it){return t+it.gain},0),x=100*gp/g.gap;
@@ -9846,16 +10287,18 @@ function rpLabel(){
   const plan=(PROG_ACT.length&&typeof PTE_COMMUN!=='undefined'&&PTE_COMMUN.libelleProgrammes)?PTE_COMMUN.libelleProgrammes(PROG_ACT):'';
   const pf=!RP_SEL.length?'':(RP_SEL.length===1?rpNom(RP_SEL[0]):RP_SEL.length+' portefeuilles');
   const af=(affEff().length&&PTE_COMMUN.libelleAffectations)?PTE_COMMUN.libelleAffectations(affEff()):'';
-  return [pf,af,plan].filter(Boolean).join(' · ')||'Tout le parc'}
+  const mp=mpAct()&&PTE_COMMUN.libelleMonPerimetre?PTE_COMMUN.libelleMonPerimetre():'';
+  return [mp,pf,af,plan].filter(Boolean).join(' · ')||'Tout le parc'}
 /* Menu Périmètre commun (09.11.2026, séance 6 de l'audit du 03.11, demande d'Achim) : le même menu dans les quatre vues
    (PTE_COMMUN.menuPerimetre) — Portefeuilles · Affectation · Plan, sections repliées, aide derrière un « i ». Les
    portefeuilles « 0 », « hors périmètre » ou vides restent propres à cet outil (séance 4). */
 let PM=null;
 function rpSections(){
   if(typeof PTE_COMMUN==='undefined'||!PTE_COMMUN.lignesPerimetre)return[];
-  const sx=PTE_COMMUN.lignesPerimetre((S||[]).map(function(s){return{rpf:s.rp,aff:s.aff,tags:s.tags}}),{nomRpf:rpNom,rpfCoches:RP_SEL});
+  const sx=PTE_COMMUN.lignesPerimetre((S||[]).map(function(s){return{num:s.id,rpf:s.rp,aff:s.aff,tags:s.tags}}),{nomRpf:rpNom,rpfCoches:RP_SEL});
   const cnt={};(S||[]).forEach(function(s){const r=s.rp||'';if(!PTE_COMMUN.vraiPortefeuille(r))cnt[r]=(cnt[r]||0)+1});
-  Object.keys(cnt).sort().forEach(function(r){sx[0].lignes.push({v:r,t:!r?'Sans portefeuille':(/^hors\s*p[ée]rim/i.test(r)?'Hors périmètre':rpNom(r)),n:cnt[r],coche:RP_SEL.indexOf(r)>=0,
+  const sR=sx.filter(function(x){return x.k==='rpf'})[0]||sx[0];
+  Object.keys(cnt).sort().forEach(function(r){sR.lignes.push({v:r,t:!r?'Sans portefeuille':(/^hors\s*p[ée]rim/i.test(r)?'Hors périmètre':rpNom(r)),n:cnt[r],coche:RP_SEL.indexOf(r)>=0,
     titre:'Sous-sites sans vrai portefeuille dans Plan_PTE (valeur « '+(r||'vide')+' ») : choix propre à la priorisation'})});
   return sx}
 function rpFill(){if(PM)PM.maj()}
@@ -9865,7 +10308,8 @@ function rpAppliquer(sel){
     const avPlan=JSON.stringify(PROG_ACT);
     RP_SEL=PTE_COMMUN.ecrirePerimetre(sel);
     PROG_ACT=PTE_COMMUN.lireProgrammes();AFF_SEL=PTE_COMMUN.lireAffectations();_affEff=null;_prioCache=null;
-    if(JSON.stringify(PROG_ACT)!==avPlan){try{buildOpt()}catch(e){}}
+    /* plan ou « Mon périmètre » changé depuis le dernier calcul : l'arbitrage est refait une fois (relecture du 12.11) */
+    if(JSON.stringify(PROG_ACT)!==avPlan||mpSig()!==_mpVu){_mpVu=mpSig();try{buildOpt()}catch(e){}}
   }finally{_rpEcrit=false}
   onRPChange()}
 function poserMenuPerimetre(){
@@ -10883,7 +11327,7 @@ function importFromRows(rows){
      build_priorisation.py (`numv(r,"SRE") or numv(r,"SRE corrigée (temp)")`). */
   const sreVal=pn(gvr(R,c.sre))||pn(gvr(R,c.sreCorr));
   const idcCVal=pn(gvr(R,c.idcC))||pn(gvr(R,c.idcCorr));
-  sites.push({id,nom:(gv(R,c.nom)||'').replace(/\s*-\s*\(.*/,'').substring(0,55),adr:gv(R,adrCol),rp:rpV.trim(),coeff,sre:sreVal,idcC:idcCVal,pat:gv(R,c.pat)||'',elec:pn(gvr(R,c.elec)),eau:pn(gvr(R,c.eau)),consoTherm:pn(gvr(R,c.consoTherm)),co2:pn(gvr(R,c.co2)),ht:htVal,htPrin:htPrinVal,hsub:gv(R,c.hsub),cecbRaw:cecbRaw,cecbSt:cecbSt,cecb:CECB_DEF[cecbSt].pts===33,idcVB:pn(gvr(R,idcpColF)),invEstim:pn(gvr(R,c.invEstim)),invImmOBA:pn(gvr(R,c.invVB)),invGE:pn(gvr(R,c.invGE)),invDG:pn(gvr(R,c.invDG)),invVB:pn(gvr(R,c.invVB)),gainElecMax:pn(gvr(R,c.gainElec)),gainEauMax:pn(gvr(R,c.gainEau)),pol:(gv(R,c.pol)||'').trim(),gainElecProj:pn(gvr(R,c.gainElecProj)),consoElecProj:pn(gvr(R,c.consoElecProj)),gainEauProj:pn(gvr(R,c.gainEauProj)),gainEauEst:pn(gvr(R,c.gainEauEst)),co2Proj:pn(gvr(R,c.co2Proj)),ideProj:pn(gvr(R,c.idceProj)),renAct:pn(gvr(R,c.renAct)),renFut:pn(gvr(R,c.renFut)),pvExist:pn(gvr(R,c.pvExist)),pvProd:pn(gvr(R,c.pvProd)),anneeIDC:anneeRecentePrio(gvr(R,c.anneeIDC)),ddEng:pn(gvr(R,c.ddEng)),ddPrev:pn(gvr(R,c.ddPrev)),
+  sites.push({id,nom:(gv(R,c.nom)||'').replace(/\s*-\s*\(.*/,'').substring(0,55),bat:batimentsNom(gv(R,c.nom)),adr:gv(R,adrCol),rp:rpV.trim(),coeff,sre:sreVal,idcC:idcCVal,pat:gv(R,c.pat)||'',elec:pn(gvr(R,c.elec)),eau:pn(gvr(R,c.eau)),consoTherm:pn(gvr(R,c.consoTherm)),co2:pn(gvr(R,c.co2)),ht:htVal,htPrin:htPrinVal,hsub:gv(R,c.hsub),cecbRaw:cecbRaw,cecbSt:cecbSt,cecb:CECB_DEF[cecbSt].pts===33,idcVB:pn(gvr(R,idcpColF)),invEstim:pn(gvr(R,c.invEstim)),invImmOBA:pn(gvr(R,c.invVB)),invGE:pn(gvr(R,c.invGE)),invDG:pn(gvr(R,c.invDG)),invVB:pn(gvr(R,c.invVB)),gainElecMax:pn(gvr(R,c.gainElec)),gainEauMax:pn(gvr(R,c.gainEau)),pol:(gv(R,c.pol)||'').trim(),gainElecProj:pn(gvr(R,c.gainElecProj)),consoElecProj:pn(gvr(R,c.consoElecProj)),gainEauProj:pn(gvr(R,c.gainEauProj)),gainEauEst:pn(gvr(R,c.gainEauEst)),co2Proj:pn(gvr(R,c.co2Proj)),ideProj:pn(gvr(R,c.idceProj)),renAct:pn(gvr(R,c.renAct)),renFut:pn(gvr(R,c.renFut)),pvExist:pn(gvr(R,c.pvExist)),pvProd:pn(gvr(R,c.pvProd)),anneeIDC:anneeRecentePrio(gvr(R,c.anneeIDC)),ddEng:pn(gvr(R,c.ddEng)),ddPrev:pn(gvr(R,c.ddPrev)),
     ddToitVeg:pn(gvr(R,c.ddToitVeg)),ddToitType:gv(R,c.ddToitType),ddToitSurf:pn(gvr(R,c.ddToitSurf)),
     ddPerm:pn(gvr(R,c.ddPerm)),ddVeget:pn(gvr(R,c.ddVeget)),ddVegCout:pn(gvr(R,c.ddVegCout)),ddArbres:pn(gvr(R,c.ddArbres)),
     ddCour:gv(R,c.ddCour),ddTri:pn(gvr(R,c.ddTri)),ddTriOk:gv(R,c.ddTriOk),
@@ -11281,7 +11725,7 @@ function buildContributionsObj(sites,coFactors){
        chaleur en trop, SRE × (IDC − seuil) : ce qu'il faudrait retirer pour
        que ce sous-site passe sous la barre. (Achim, 21.09.2026) */
     if(sre>0&&idc>0&&idc>cibleIdc){
-      out.idc.push({id:s.id,nom:s.nom,estim:(cL('idc')>0?cL('idc'):null),lot:coutLot(s,'idc')!=null,sre:sre,
+      out.idc.push({id:s.id,nom:s.nom,estim:(cL('idc')>0?cL('idc'):null),lot:coutLot(s,'idc')!=null,sre:sre,idc:idc,
         gain:sre*(idc-cibleIdc),
         mesure:'IDC '+Math.round(idc)+' kWh/m²·an — '+Math.round(idc-cibleIdc)+
                ' au-dessus du seuil de '+Math.round(cibleIdc)+
@@ -11506,6 +11950,13 @@ function computeObjRanking(){
      n'est plus nécessaire » n'aurait aucun sens ici. */
   const idc=rankIntentionObj(contribs.idc,(OBJ_GAPS.idc&&OBJ_GAPS.idc.gap)||null);
   idc.franchiRang=null;idc.sansFranchi=true;idc.items.forEach(function(it){it.franchi=false});
+  /* 13.11.2026 (Achim ; QCM « IDC décroissant + mention ») : objectif 2030 atteint (IDC moyen du parc sous la cible),
+     le classement IDC suit l'IDC lui-même, du plus élevé au plus bas — les bâtiments les plus énergivores en tête,
+     plutôt que la plus grande surface au-dessus du seuil. */
+  try{const qI=idcParc(pop);idc.parIdc=!!(qI&&qI.idc!=null&&qI.idc<=pCible30())}catch(e){idc.parIdc=false}
+  if(idc.parIdc){
+    idc.items.sort(function(a,b){return (b.idc||0)-(a.idc||0)||(a.id<b.id?-1:1)});
+    let cI=0;idc.items.forEach(function(it,i){it.rang=i+1;cI+=it.gain;it.cumulGain=cI;it.pctGap=idc.gap?cI/idc.gap:null})}
   const veg=rankVegObj(contribs.veg,(OBJ_GAPS.veg&&OBJ_GAPS.veg.gap)||null);
   const co2ById={};for(const it of co2.items)co2ById[it.id]=it.gain;
 
@@ -12938,9 +13389,9 @@ function objTable(key,R,meta,bySiteId,f){
              : 'Même après les travaux arrêtés, ce sous-site reste au-dessus du seuil de '+objFmtNum(cibIdc,1)+' kWh/m²·an.'))
       : '<span style="color:var(--ink3)" title="Aucune variante CECB+ précise arrêtée pour ce sous-site : il n’y a pas d’IDC projeté à afficher, et rien ne dit encore ce que les travaux donneraient.">---</span>';
     const _r=(it.rangAdj||it.rang);
-    html+='<tr class="row-click'+(_r===adj.franchiRang?' franchi-row':'')+(_r===adj.franchiRang2?' franchi-row-50':'')+'" data-id="'+esc(it.id)+'" onclick="toggleDetail('+jsArg(it.id)+')" style="'+objRowStyle(Object.assign({},it,{rang:_r}),adj.franchiRang,adj.franchiRang2)+'">'+
+    html+='<tr tabindex="0" class="row-click'+(_r===adj.franchiRang?' franchi-row':'')+(_r===adj.franchiRang2?' franchi-row-50':'')+'" data-id="'+esc(it.id)+'" onclick="toggleDetail('+jsArg(it.id)+')" style="'+objRowStyle(Object.assign({},it,{rang:_r}),adj.franchiRang,adj.franchiRang2)+'">'+
       '<td>'+(it.rangAdj||it.rang)+((it.rangAdj&&rangObj[it.id]&&it.rangAdj!==rangObj[it.id])?'<br><span style="font-size:.6rem;color:var(--ink3)" title="rang du classement arithmétique, avant ajustement">obj. '+rangObj[it.id]+'</span>':'')+
-      (snapCur()?('<br>'+snapDelta(key,it.id,(it.rangAdj||it.rang))):'')+'</td><td><b>'+esc(it.id)+'</b></td>'+planCell(it.id)+'<td>'+esc(it.nom||'')+'</td>'+
+      (snapCur()?('<br>'+snapDelta(key,it.id,(it.rangAdj||it.rang))):'')+'</td><td><b>'+esc(it.id)+'</b></td>'+planCell(it.id)+'<td>'+nomBat(it.id,it.nom)+'</td>'+
       '<td style="font-size:.63rem"'+(s.rp?' title="'+esc(s.rp)+'"':'')+'>'+(estHorsPerimetre(s)?hpChip(s):esc(s.rp?rpNom(s.rp):'—'))+'</td>'+(K.pat?'<td>'+patBg(s.pat)+'</td>':'')+(K.cecb?'<td>'+cecbBg(s)+'</td>':'')+(K.ch?'<td>'+hBg(s.ht)+'</td>':'')+(K.sub?'<td>'+subBg(s.hsub,s.ht)+(key==='ren'?pacChip(s,it.gain):'')+'</td>':'')+
       K.extra.map(function(x){return '<td style="text-align:right">'+x.v(s,it)+'</td>'}).join('')+
       '<td style="text-align:right">'+gainDisp+'</td><td style="text-align:right">'+objFmtNum(it.cumulGain,0)+'</td>'+
@@ -12958,8 +13409,8 @@ function objTable(key,R,meta,bySiteId,f){
        :key==='co2'?'Hors classement — gain CO₂ non chiffrable pour ces sous-sites (pas d\'audit CECB+ ou pas de montant). Ordre de constat, pas une priorité : du plus gros émetteur au plus petit.'
        :'Hors classement — non mesurable pour cet objectif (pas d\'audit CECB+ ou pas de montant). Ordre de constat, pas une priorité : du plus gros consommateur de chaleur au plus petit.')+'</td></tr>';
     for(const{s,sc}of restRows)
-      html+='<tr class="row-click" data-id="'+esc(s.id)+'" onclick="toggleDetail('+jsArg(s.id)+')" style="color:var(--ink3)">'+
-        '<td>'+(sc.t!=null?'repli':'—')+'</td><td><b>'+esc(s.id)+'</b></td>'+planCell(s.id)+'<td>'+esc(s.nom||'')+'</td>'+
+      html+='<tr class="row-click" tabindex="0" data-id="'+esc(s.id)+'" onclick="toggleDetail('+jsArg(s.id)+')" style="color:var(--ink3)">'+
+        '<td>'+(sc.t!=null?'repli':'—')+'</td><td><b>'+esc(s.id)+'</b></td>'+planCell(s.id)+'<td>'+nomBat(s.id,s.nom)+'</td>'+
         '<td style="font-size:.63rem"'+(s.rp?' title="'+esc(s.rp)+'"':'')+'>'+(estHorsPerimetre(s)?hpChip(s):esc(s.rp?rpNom(s.rp):'—'))+'</td>'+(K.pat?'<td>'+patBg(s.pat)+'</td>':'')+(K.cecb?'<td>'+cecbBg(s)+'</td>':'')+(K.ch?'<td>'+hBg(s.ht)+'</td>':'')+(K.sub?'<td>'+subBg(s.hsub,s.ht)+'</td>':'')+
         K.extra.map(function(x){return '<td style="text-align:right">'+x.v(s,null)+'</td>'}).join('')+
         '<td colspan="'+((key==='th'?5:4)-(K.montant||key==='idc'?0:1))+'" style="text-align:center;font-size:.66rem">'+(key==='veg'?'surface végétalisée non renseignée':repliTexte(s,key))+'</td>'+
@@ -13017,7 +13468,7 @@ function objTousTable(bySiteId,f){
   for(const k of keys)html+='<th style="text-align:right">'+OBJ_META[k].lblCourt+'</th>';
   html+='<th style="text-align:right">Objectifs<br>servis</th><th style="text-align:right">'+esc(invDef().short)+'</th><th>Alerte</th></tr></thead><tbody>';
   rows.forEach((row,i)=>{
-    html+='<tr class="row-click" data-id="'+esc(row.id)+'" onclick="toggleDetail('+jsArg(row.id)+')"><td>'+(i+1)+'</td><td><b>'+esc(row.id)+'</b></td>'+planCell(row.id)+'<td>'+esc(row.nom||'')+'</td>'+
+    html+='<tr class="row-click" tabindex="0" data-id="'+esc(row.id)+'" onclick="toggleDetail('+jsArg(row.id)+')"><td>'+(i+1)+'</td><td><b>'+esc(row.id)+'</b></td>'+planCell(row.id)+'<td>'+nomBat(row.id,row.nom)+'</td>'+
       '<td style="font-size:.63rem"'+(row.s.rp?' title="'+esc(row.s.rp)+'"':'')+'>'+(estHorsPerimetre(row.s)?hpChip(row.s):esc(row.s.rp?rpNom(row.s.rp):'—'))+'</td><td>'+cecbBg(row.s)+'</td>';
     for(const k of keys){
       const g=row.gains[k];
@@ -13038,7 +13489,7 @@ function objTousTable(bySiteId,f){
     html+='<tr><td colspan="'+(9+keys.length)+'" style="background:var(--soft);color:var(--ink3);font-size:.68rem;font-style:italic;padding:5px 8px">'+
       reste.length+' sous-site(s) sans contribution chiffrée à ces objectifs (pas d\'audit CECB+, pas de gain renseigné ou pas de montant). Ordre de constat, pas une priorité : du plus gros consommateur de chaleur au plus petit.</td></tr>';
     reste.forEach(function(x){const r=x.s;
-      html+='<tr class="row-click" data-id="'+esc(r.id)+'" onclick="toggleDetail('+jsArg(r.id)+')" style="color:var(--ink3)"><td>—</td><td><b>'+esc(r.id)+'</b></td>'+planCell(r.id)+'<td>'+esc(r.nom||'')+'</td>'+
+      html+='<tr class="row-click" tabindex="0" data-id="'+esc(r.id)+'" onclick="toggleDetail('+jsArg(r.id)+')" style="color:var(--ink3)"><td>—</td><td><b>'+esc(r.id)+'</b></td>'+planCell(r.id)+'<td>'+nomBat(r.id,r.nom)+'</td>'+
         '<td style="font-size:.63rem"'+(r.rp?' title="'+esc(r.rp)+'"':'')+'>'+(estHorsPerimetre(r)?hpChip(r):esc(r.rp?rpNom(r.rp):'—'))+'</td><td>'+cecbBg(r)+'</td>';
       for(const k of keys)html+='<td style="color:#ddd;text-align:right">—</td>';
       html+='<td style="text-align:right">0</td><td style="text-align:right">'+objFmtNum(r.invVB,0)+'</td>'+
@@ -13049,8 +13500,10 @@ function objTousTable(bySiteId,f){
 function renR(){
   objBtnsSync();
   const box=$('objBody'),note=$('objNote');if(!box)return;
-  if(expandedRow!=null){const fb=$('objFiche');if(fb){fb.classList.remove('on');fb.innerHTML=''}}
-  expandedRow=null;
+  if(expandedRow!=null){
+    if(FICHE_SAISIE){const ta=FICHE_SAISIE.querySelector('textarea');if(ta&&(siteNotes[expandedRow]||'')!==ta.value){try{saveNote(expandedRow,ta)}catch(e){}}}
+    const fb=$('objFiche');if(fb){fb.classList.remove('on');fb.innerHTML=''}}
+  expandedRow=null;FICHE_SAISIE=null;document.body.classList.remove('fiche-flot-on');
   const sel=$('objSel');const key=sel?sel.value:'co2';
   const pop=S;
   if(!pop||!pop.length){box.innerHTML='';if(note)note.textContent='';
@@ -13095,6 +13548,8 @@ function renR(){
       const fr50='';
       note.innerHTML=(key==='veg'
         ?'Trié par <b>coût du m² créé</b> croissant, du moins cher au plus cher. Ni durée de vie ni <span title="Méthode qui ramène à leur valeur d\'aujourd\'hui des gains étalés sur des années. Elle ne s\'applique pas ici : une cour désimperméabilisée crée une surface une fois pour toutes, pas un gain qui revient chaque année." style="border-bottom:1px dotted currentColor;cursor:help">actualisation</span> : on achète une surface, pas un flux annuel. Objectif 2030 : '+objFmtNum(gap,0)+' m² à créer — les surfaces de la colonne du classeur sont à créer, aucune n’est comptée comme réalisée. '
+        :(key==='idc'&&R.parIdc)
+        ?'<b>Objectif 2030 atteint : classement par IDC, du plus élevé au plus bas.</b> L’IDC moyen du parc est sous la cible de '+objFmtNum(pCible30(),1)+' kWh/m²·an ; les <b>'+nR+'</b> sous-sites encore au-dessus du seuil sont listés du plus énergivore au moins énergivore, quelle que soit leur surface. Sans coût : aucune colonne du classeur n’isole ce que coûte le passage sous le seuil. '
         :key==='idc'
         ?'Trié par <b>chaleur en trop décroissante</b> — SRE × (IDC − '+objFmtNum(pCible30(),1)+') — du sous-site le plus loin du seuil au plus près. Sans coût : aucune colonne du classeur n’isole ce que coûte le passage sous le seuil. Les <b>'+nR+'</b> sous-sites listés sont tous au-dessus du seuil, il n’y a donc pas de rang de franchissement ; la colonne cumulée dit quelle part de l’excédent du parc (<b>'+objFmtNum(gap,0)+' kWh/an</b>) les premiers rangs portent. <span title="La tuile de la Vue d’ensemble affiche la moyenne du parc pondérée par la SRE, qui peut être sous la cible alors que ces sous-sites la dépassent : le parc et le seuil ne se lisent pas au même niveau." style="border-bottom:1px dotted currentColor;cursor:help">Pourquoi la tuile peut être verte</span>. Les deux dernières colonnes chiffrées portent ici l’<b>IDC du dernier relevé</b> et l’<b>IDC projeté</b> : sur ce classement, le montant et le coût unitaire ne trient rien, ils leur ont cédé la place. '
         :key==='eau'
@@ -13140,25 +13595,34 @@ function eauSourcesTxt(R){
    la fiche s'ouvre aussi pour un sous-site absent du classement affiché (C2). */
 /* fiche commune (séance 7) : FICHE_COMMUNE=false rend la fiche d'avant (retour arrière) */
 const FICHE_COMMUNE=true;
-function rafraichirFicheCommune(id){const h=$('ficheCommune');if(h&&String(expandedRow)===String(id)&&typeof PTE_FICHE!=='undefined'&&PTE_FICHE)PTE_FICHE.rafraichir(h,String(id),{vue:'prio',surModifier:function(){const d=$('ficheSaisie');if(d)d.open=true}})}
-function monterFicheCommune(id){
+function rafraichirFicheCommune(id){const h=$('ficheCommune');if(h&&String(expandedRow)===String(id)&&typeof PTE_FICHE!=='undefined'&&PTE_FICHE)PTE_FICHE.rafraichir(h,String(id),ficheOpts(FICHE_DETAIL))}
+/* détail de Prioriser de la fiche ouverte (13.11.2026) : gardé pour les redessins après une note ou un ajustement */
+let FICHE_DETAIL=null,FICHE_SAISIE=null;
+function ficheOpts(detail){return{vue:'prio',detail:detail||null,saisie:FICHE_SAISIE,surFermer:function(){const id=expandedRow;fermerFiche();const r=id!=null?document.querySelector('#objBody tr[data-id="'+attrSel(id)+'"]'):null;if(r){try{r.focus({preventScroll:true})}catch(x){}}},surModifier:null}}
+function monterFicheCommune(id,detail){
+  FICHE_DETAIL=detail||null;
   const h=$('ficheCommune');if(!h||typeof PTE_FICHE==='undefined'||!PTE_FICHE)return;
-  PTE_FICHE.monter(h,id,{vue:'prio',surModifier:function(){const d=$('ficheSaisie');if(d){d.open=true;const t=$('noteTA');if(t)try{t.focus()}catch(e){}}}});
+  const pr=PTE_FICHE.monter(h,id,ficheOpts(detail));
+  /* le focus va sur la croix de la fenêtre une fois la fiche écrite */
+  if(pr&&pr.then)pr.then(function(){posFicheFlot();const x=h.querySelector('.ptf-x');if(x&&String(expandedRow)===String(id)){try{x.focus({preventScroll:true})}catch(e){}}});
 }
 function fermerFiche(){
-  expandedRow=null;
+  /* la note en cours de frappe est gardée même si la fiche se ferme sans quitter le champ (Échap, ×) */
+  if(expandedRow!=null&&FICHE_SAISIE){const ta=FICHE_SAISIE.querySelector('textarea');if(ta&&(siteNotes[expandedRow]||'')!==ta.value){try{saveNote(expandedRow,ta)}catch(e){}}}
+  document.body.classList.remove('fiche-flot-on');
+  expandedRow=null;FICHE_SAISIE=null;
   const box=$('objFiche');if(box){box.classList.remove('on');box.innerHTML=''}
   document.querySelectorAll('tr.row-expanded').forEach(r=>r.classList.remove('row-expanded'));
   try{PTE_COMMUN.ecrireHash(null)}catch(e){}}
 function toggleDetail(id){
 const prevId=expandedRow;
-if(prevId===id){fermerFiche();return}
+if(prevId!=null&&String(prevId)===String(id)){fermerFiche();return}
 ouvrirFiche(id)}
 function ouvrirFiche(id){
-expandedRow=id;
-document.querySelectorAll('tr.row-expanded').forEach(r=>r.classList.remove('row-expanded'));
 const pop=S;
 const site=pop.find(s=>String(s.id)===String(id));if(!site)return;
+expandedRow=id;
+document.querySelectorAll('tr.row-expanded').forEach(r=>r.classList.remove('row-expanded'));
 const cp=compl(site),sc=score(site),al=alertsFor(site);
 const row=document.querySelector('#objBody tr[data-id="'+attrSel(id)+'"]');
 if(row)row.classList.add('row-expanded');
@@ -13175,7 +13639,7 @@ const kv=function(lbl,val,sub,titre){
 const val=function(v,unit){return (v==null)?'—':('<b>'+nf(v,0)+'</b> '+unit)};
 const bloc=function(t,corps){return '<section class="fs"><h5>'+t+'</h5>'+corps+'</section>'};
 const dotCp=(cp>=80?'dot-vert':cp>=50?'dot-orange':'dot-rouge'),motCp=(cp>=80?'complète':cp>=50?'partielle':'lacunaire');
-const bBat=bloc('Bâtiment',
+const bBatCorps=(
   kv('SRE','<b>'+fmtSRE(site.sre)+'</b>','','Surface de référence énergétique : la surface chauffée du sous-site, en mètres carrés. C\'est elle qui ramène toutes les consommations au mètre carré et rend comparables deux sous-sites de tailles différentes.')+
   kv('Montant actif','<b>'+fmtInv(site.invVB)+'</b>',invDef().short)+
   kv('Complétude','<b>'+cp+' %</b> <span class="sem sm"><i class="sem-dot '+dotCp+'"></i>'+motCp+'</span>','')+
@@ -13185,6 +13649,7 @@ const bBat=bloc('Bâtiment',
     return kv('Type d\'intervention',t==null?'—':(tiBg(t)+' <b>'+esc(TI_LABELS[t]||'')+'</b>'),
       (a!=null&&b!=null)?('classe IDC '+a+' × classe vétusté '+b+' (Coeff Stratus '+nf(site.coeff,2)+')'):'IDC ou Coeff Stratus manquant',
       'Type d\'intervention recommandé, calculé : classe IDC (≤ 83 / 125 / 180 kWh/m²·an) × classe de vétusté (Coeff Stratus ≤ 0,6 / 0,7 / < 0,8). Règle de l\'ancienne colonne du classeur. Indicatif : il ne change pas les rangs.')})());
+const bBat=bloc('Bâtiment',bBatCorps);
 let agent='';
 if(site.contrat){
   agent=kv('Agent','<b>'+esc(site.agentSitg||'—')+'</b>'+
@@ -13207,20 +13672,46 @@ if(site.contrat){
     kv('Électricité',val(site.elec,'kWh/an'),'','Colonne Conso Elec de l\'année dans Plan_PTE')+
     kv('Eau',val(site.eau,'m³/an'),'','Colonne Conso Eau de l\'année dans Plan_PTE')+
     kv('CO₂',val(site.co2!=null?site.co2/1000:null,'t/an'),'','Colonne Co2 de l\'année dans Plan_PTE, scope 1+2'))}
+const alH=al.length?'<div class="fiche-al"><h5>Alertes</h5><ul>'+al.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></div>':'';
+/* Fiche de Prioriser, disposition A (13.11.2026, Achim) : les trois blocs, ouverts, dans la fiche commune, sous le rang et
+   la ligne site · portefeuille · plans ; l'audit CECB+ et l'Estimé ImmOBA rejoignent le bloc Bâtiment (une seule fois
+   chaque donnée). x : données du classeur commun lues par la fiche commune. */
+const detailFiche=function(x){
+  x=x||{};
+  const au=x.auditCecb&&x.auditCecb!=='0'?esc(x.auditCecb):(x.auditCecb==='0'?'aucun':'—');
+  const ext=kv('Audit CECB+','<b>'+au+'</b>','','Certificat énergétique cantonal des bâtiments avec rapport de conseil : la variante de travaux retenue en découle.')+
+    (invMode!=='immoba'?kv('Estimé ImmOBA','<b>'+fmtInv(site.invImmOBA)+'</b>','','Coût des travaux estimé par l’OCBA (colonne Estim ImmOBA de Plan_PTE).'):'');
+  return '<div class="fiche-grid">'+bloc('Bâtiment',bBatCorps+ext)+bCh+bMes+'</div>'+alH};
 /* Une seule fiche (séance 7 de l'audit du 03.11, 09.11.2026) : la fiche commune PTE_FICHE en tête — bâtiment, rang,
    projets, note et ajustement, « Estimer les gains » —, la même que dans Suivre ; le détail propre à Prioriser
    (données, mesures, alertes) et la saisie de la note et de l'ajustement suivent, repliés. */
 const FC=FICHE_COMMUNE&&typeof PTE_FICHE!=='undefined'&&PTE_FICHE;
+/* Saisie de la note et de l'ajustement (13.11.2026, Achim) : directement dans la fiche, sans « Modifier » ; un nœud
+   gardé d'un dessin de la fiche commune à l'autre (un ajustement redessine la fiche : rang à jour) */
+const saisieHtml=  '<div class="fiche-act">'+
+  '<div class="q-box"><h5>Facteur non mesurable (choix politique, urgence, vente prévue, contrainte technique…)</h5>'+
+  '<div class="q-row">'+
+  '<select id="qSel">'+
+  QUALI_DEF.map(function(d){return '<option value="'+d.k+'"'+(((siteQuali[id]||{}).p||'0')===d.k?' selected':'')+'>'+d.lbl+'</option>'}).join('')+'</select>'+
+  '<input id="qMot" placeholder="Motif (obligatoire) — ex. : vente prévue 2027, décision DT du 12.03" value="'+esc((siteQuali[id]||{}).m||'')+'">'+
+  '<button class="bt bt-p bt-s" onclick="setQuali('+jsArg(id)+')">Appliquer</button></div>'+
+  '<p class="mini" style="margin-top:6px">L\'ajustement ne modifie jamais la donnée : il déplace le sous-site dans le classement et le motif reste affiché à côté du rang.</p></div>'+
+  '<div class="fiche-notes"><h5>Notes et commentaires :</h5>'+
+  '<textarea id="noteTA" placeholder="Note conservée lors des mises à jour du fichier de données — partagée par le bouton Saisies, en haut à droite" onblur="saveNote('+jsArg(id)+',this)">'+esc(siteNotes[id]||'')+'</textarea></div>'+
+  '</div>';
+if(FC){
+  /* Fiche en fenêtre flottante au-dessus du classement (13.11.2026, QCM d'Achim) : le classement reste visible et
+     défilable dessous ; × dans la tuile ou Échap pour fermer ; plus de « Fiche imprimable » */
+  box.innerHTML='<div class="fiche-card fiche-flot" role="dialog" aria-modal="false" aria-label="Fiche du sous-site '+esc(site.id)+' · '+esc(site.nom||'')+'"><div class="ptf-hote" id="ficheCommune"></div></div>';
+  const sn=document.createElement('div');sn.className='fiche-saisie';sn.innerHTML=saisieHtml;FICHE_SAISIE=sn;
+}else
 box.innerHTML='<div class="fiche-card">'+
   '<div class="fiche-head"><div class="fh-t">'+(FC?'':'<h4>'+esc(site.id)+' — '+esc(site.nom||'')+'</h4>')+
   (FC?'':'<span class="mini" title="RPF — responsable de portefeuille. Les responsables de projet sont ceux des projets GE-Invest (survol d\'un repère de la carte, Revue de projets).">RPF '+esc(site.rp?rpNom(site.rp):'—')+(site.nbProjets?' · '+site.nbProjets+' projet'+(site.nbProjets>1?'s':'')+' GE-Invest':'')+'</span>')+'</div>'+
   '<span class="grow"></span>'+
   '<button class="bt bt-i bt-s" onclick="printSite('+jsArg(id)+')" title="Imprimer ou enregistrer en PDF une fiche d\'une page pour ce sous-site">Fiche imprimable (PDF)</button>'+
   '<button class="bt bt-s bt-x" onclick="fermerFiche()" title="Fermer la fiche">Fermer</button></div>'+
-  (FC?'<div class="ptf-hote" id="ficheCommune"></div><details class="ptf-plus" id="ficheDet"><summary>'+(al.length?'Données, mesures et alertes ('+al.length+')':'Données et mesures')+' du bâtiment</summary>':'')+
-  '<div class="fiche-grid">'+bBat+bCh+bMes+'</div>'+
-  (al.length?'<div class="fiche-al"><h5>Alertes</h5><ul>'+al.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></div>':'')+
-  (FC?'</details><details class="ptf-plus" id="ficheSaisie"><summary>Note et ajustement : modifier</summary>':'')+
+  '<div class="fiche-grid">'+bBat+bCh+bMes+'</div>'+alH+
   '<div class="fiche-act">'+
   '<div class="q-box"><h5>Facteur non mesurable (choix politique, urgence, vente prévue, contrainte technique…)</h5>'+
   '<div class="q-row">'+
@@ -13230,21 +13721,39 @@ box.innerHTML='<div class="fiche-card">'+
   '<button class="bt bt-p bt-s" onclick="setQuali('+jsArg(id)+')">Appliquer</button></div>'+
   '<p class="mini" style="margin-top:6px">L\'ajustement ne modifie jamais la donnée : il déplace le sous-site dans le classement et le motif reste affiché à côté du rang.</p></div>'+
   '<div class="fiche-notes"><h5>Notes et commentaires :</h5>'+
-  '<textarea id="noteTA" placeholder="Note conservée lors des mises à jour du fichier de données — partagée par le bouton Saisies, en haut à droite" onblur="saveNote('+jsArg(id)+')">'+esc(siteNotes[id]||'')+'</textarea></div>'+
+  '<textarea id="noteTA" placeholder="Note conservée lors des mises à jour du fichier de données — partagée par le bouton Saisies, en haut à droite" onblur="saveNote('+jsArg(id)+',this)">'+esc(siteNotes[id]||'')+'</textarea></div>'+
   '</div>'+
   /* Le bloc entier disparaît quand les liens sortants sont coupés : un
      conteneur vide laisserait une marge sous les notes. */
-  (FC?'</details>':'')+
   (LIENS_SORTANTS&&!FC
     ? ('<div class="fiche-liens">'+
        '<a class="btn" href="'+esc(PTE_COMMUN.lien('sim',site.id)||'#')+'" title="Ouvre la simulation des gains, déjà positionnée sur ce sous-site">Estimer les gains</a>'+
        '<a class="btn" href="'+esc(PTE_COMMUN.lien('revue',site.id)||'#')+'" title="Ouvrir la revue de projets sur ce sous-site">Voir ses projets</a>'+
        '</div>')
     : '')+'</div>';
-box.classList.add('on');
-if(FC)monterFicheCommune(String(site.id));
+box.classList.add('on');box.classList.toggle('flot',!!FC);document.body.classList.toggle('fiche-flot-on',!!FC);
+if(FC){posFicheFlot();monterFicheCommune(String(site.id),detailFiche)}
 try{PTE_COMMUN.ecrireHash(String(site.id))}catch(e){}
-try{box.scrollIntoView({block:'nearest'})}catch(e){}}
+if(!FC){try{box.scrollIntoView({block:'nearest'})}catch(e){}}}
+/* place de la fenêtre : sous l'en-tête collant de la page s'il est visible, sinon en haut */
+function posFicheFlot(){const box=$('objFiche');if(!box)return;let t=12;
+  try{document.querySelectorAll('header.hdr,.hdr').forEach(function(h){const r=h.getBoundingClientRect();const ps=getComputedStyle(h).position;if(r.height&&r.bottom>0&&(ps==='sticky'||ps==='fixed'))t=Math.max(t,Math.round(r.bottom)+8)})}catch(e){}
+  box.style.setProperty('--fiche-top',t+'px')}
+window.addEventListener('resize',function(){if(expandedRow!=null)posFicheFlot()});
+/* l'en-tête change de hauteur (menus, polices, retour à la ligne) : la fenêtre suit */
+try{if(typeof ResizeObserver!=='undefined'){const ro=new ResizeObserver(function(){if(expandedRow!=null)posFicheFlot()});
+  const obs=function(){document.querySelectorAll('header.hdr').forEach(function(h){ro.observe(h)})};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',obs);else obs()}}catch(e){}
+/* Échap : phase de capture, pour céder d'abord à une bulle, un menu, le voile de navigation ou la recherche ouverts */
+window.addEventListener('keydown',function(e){
+  if(e.key!=='Escape'||e.defaultPrevented||expandedRow==null)return;const box=$('objFiche');if(!box||!box.classList.contains('flot'))return;
+  if(document.querySelector('.ep-i[aria-expanded="true"],[aria-haspopup][aria-expanded="true"],#gsRes.on,.pop.on,.pte-mp-bandeau:not([hidden])'))return;
+  if(Array.prototype.some.call(document.querySelectorAll('.ptn-voile,.ptn-feuille,.ep-pop,[role="dialog"]:not(.fiche-flot)'),function(x){return !x.hidden&&!!(x.offsetWidth||x.offsetHeight)}))return;
+  const r=document.querySelector('#objBody tr[data-id="'+attrSel(expandedRow)+'"]');fermerFiche();if(r){try{r.focus({preventScroll:true})}catch(x){}}},true);
+/* lignes du classement au clavier (13.11.2026) : Entrée ou Espace ouvre ou ferme la fiche */
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter'&&e.key!==' ')return;const t=e.target;if(!t||!t.matches||!t.matches('tr.row-click[data-id]'))return;
+  e.preventDefault();toggleDetail(t.getAttribute('data-id'))});
 
 /* ================================================================
    FACTEURS NON MESURABLES  (19.08.2026)
@@ -13286,7 +13795,10 @@ function setQualiFrom(id,selId,motId){
   /* exclure fait disparaître la ligne : on ouvre le bloc qui la recueille,
      et on dit où elle est partie — sinon l'écran se contente de la perdre */
   if(p==='ex')exclOuvert=true;
-  saveState();_prioCache=null;ren();try{rafraichirFicheCommune(id)}catch(e){}
+  /* le classement se redessine (et ferme la fiche) : la fiche ouverte se rouvre, rang à jour (13.11.2026) */
+  const fo=String(expandedRow)===String(id)&&$('objFiche')&&$('objFiche').classList.contains('on');
+  saveState();_prioCache=null;ren();
+  if(fo){try{ouvrirFiche(id)}catch(e){}}else{try{rafraichirFicheCommune(id)}catch(e){}}
   toast(p==='ex'
     ?id+' retiré des classements — motif conservé dans le bloc « Exclus du programme », au-dessus du tableau'
     :'Ajustement enregistré','ok')}
@@ -13296,6 +13808,7 @@ function setQuali(id){return setQualiFrom(id,'qSel','qMot')}
    le photovoltaïque : l'ajustement doit agir sur LA clé du classement affiché,
    sinon il reste sans effet (constaté sur CEE et PV le 20.08.2026). */
 function qualiSortKey(key){
+  if(key==='idc'&&typeof OBJRANK!=='undefined'&&OBJRANK&&OBJRANK.idc&&OBJRANK.idc.parIdc)return{f:function(it){return it.idc},desc:true};   /* 13.11.2026 */
   if(key==='pv'||key==='idc'||key==='eau')return{f:function(it){return it.gain},desc:true};
   /* hors chiffrage, la clé du classement est la contribution : l'ajustement
      doit agir sur elle, sinon il resterait sans effet */
@@ -13715,6 +14228,17 @@ function renFresh(){
   if(Math.floor((Date.now()-lastFileTime)/86400000)>30)
     setTimeout(function(){toast('Le fichier importé date de plus de 30 jours','wr')},2500)}
 
+/* Bâtiments d'un sous-site (13.11.2026, demande d'Achim) : la partie entre parenthèses de « Nom du site_AB »
+   (« Site Moillebeau 72 - (ECPS Budé) » → « ECPS Budé »), doublons retirés. Au survol du nom et dans les recherches. */
+function batimentsNom(v){
+  const m=/\s*-\s*\((.*)\)\s*$/.exec(String(v==null?'':v));if(!m)return'';
+  const vu={};return m[1].split(/\s*,\s*/).filter(function(x){x=x.trim();if(!x||vu[x.toLowerCase()])return false;vu[x.toLowerCase()]=1;return true}).join(', ')}
+let _batS=null,_batM=null;
+function batDe(id){
+  if(typeof S==='undefined'||!S)return'';
+  if(_batS!==S){_batS=S;_batM={};S.forEach(function(x){if(x.bat)_batM[String(x.id)]=x.bat})}
+  return _batM[String(id)]||''}
+function nomBat(id,nom){const b=batDe(id);return b?'<span class="nm-bat" title="Bâtiments : '+esc(b)+'">'+esc(nom||'')+'</span>':esc(nom||'')}
 /* ---------- recherche globale ---------- */
 function gsPop(){return S}
 /* Recherche globale (07.10.2026, demande d'Achim) : au-delà du numéro et du nom, le texte est cherché dans
@@ -13726,8 +14250,8 @@ function gsChamps(s){
   var id=String(s.id),p=s.projets||[];
   return [['Note',siteNotes[id]],['Adresse',s.adr],['RPF',s.rp?rpNom(s.rp):''],['RP (projets)',p.map(function(x){return x.rp||''}).filter(function(v,i,a){return v&&a.indexOf(v)===i}).map(rpNom).join(' · ')],['Chauffage',s.ht],['Chauffage prévu',s.hsub],
     ['Patrimoine',s.pat],['Diag polluants',s.diag],['Projet GE-Invest',p.map(function(x){return x.numero+' '+(x.nom||'')}).join(' · ')],
-    ['Surfaces de relais',s.relais]].filter(function(c){return c[1]!=null&&String(c[1]).trim()!==''})}
-function gsTexte(s){return gsNorm(String(s.id)+' '+(s.nom||'')+' '+gsChamps(s).map(function(c){return c[1]}).join(' '))}
+    ['Surfaces de relais',s.relais],['Bâtiments',s.bat]].filter(function(c){return c[1]!=null&&String(c[1]).trim()!==''})}
+function gsTexte(s){return gsNorm(String(s.id)+' '+(s.nom||'')+' '+(s.bat||'')+' '+gsChamps(s).map(function(c){return c[1]}).join(' '))}
 function gsExtrait(t,q){
   t=String(t).replace(/\s+/g,' ');var i=gsNorm(t).indexOf(q);if(i<0)return t.substring(0,70);
   var a=Math.max(0,i-24),b=Math.min(t.length,i+q.length+40);
@@ -14710,9 +15234,11 @@ function trajBascule(zoom,yM,y1){
     '<button type="button" class="'+(zoom?'on':'')+'" aria-pressed="'+zoom+'" onclick="trajZoom(true)">Projection '+yM+' → '+y1+'</button></div>'}
 /* Légende des trajectoires (05.11.2026, demande d'Achim) : une ligne par courbe, valeur et écart alignés en colonnes */
 function legTraj(rows,titreV,cols){
-  const st=cols?' style="grid-template-columns:'+cols+'"':'';
-  return '<div class="lgt"'+(cols?' style="max-width:900px"':'')+'>'+(titreV?'<div class="lgt-r lgt-h"'+st+'><span></span><span></span><span class="lgt-v">'+esc(titreV)+'</span><span></span></div>':'')+
-    rows.map(function(r){return '<div class="lgt-r"'+st+'><span class="lgt-s">'+(r.s||'')+'</span><span class="lgt-l">'+r.l+'</span><span class="lgt-v">'+(r.v?'<b>'+r.v+'</b>':'')+'</span><span class="lgt-t">'+(r.t||'')+'</span></div>'}).join('')+'</div>'}
+  /* 13.11.2026 (Achim) : plus de colonne « fin 2030 » ; légende sur deux colonnes. La valeur de fin 2030 reste au
+     survol de la ligne ; l'écart à la cible (étiquette) reste affiché. */
+  return '<div class="lgt lgt-2">'+
+    rows.map(function(r){const v=r.v?String(r.v).replace(/<[^>]*>/g,''):'';
+      return '<div class="lgt-r"'+(v?' title="'+(titreV?esc(titreV.replace(/^IDC moyen /,''))+' : ':'')+esc(v)+'"':'')+'><span class="lgt-s">'+(r.s||'')+'</span><span class="lgt-l">'+r.l+'</span><span class="lgt-t">'+(r.t||'')+'</span></div>'}).join('')+'</div>'}
 /* Trajectoire EN INTENSITÉ (28.10.2026, décision d'Achim) — CO₂, thermique, électricité, eau.
    En valeur absolue, la courbe officielle (sites mesurés, ou série « Objectifs PTE ») et le point
    d'aujourd'hui (parc complet, Σ des sous-sites de Plan_PTE) ne portent pas sur le même parc : le
@@ -14763,6 +15289,10 @@ function trajIntensite(k,s,o,C,host){
   const step=zoom?1:Math.max(1,Math.ceil((y1-y0)/9));
   for(let yr=y0;yr<=y1;yr+=step)g+=txt(x(yr),H-B+15,String(yr),{a:'middle',s:9,c:C.ink3});
   if((y1-y0)%step)g+=txt(x(y1),H-B+15,String(y1),{a:'middle',s:9,c:C.ink3});
+  if(zoom){
+    /* 13.11.2026 (Achim) : un clic sur la projection agrandie rend le graphique entier */
+    g+='<rect x="'+L+'" y="'+T+'" width="'+(W-L-R)+'" height="'+(H-T-B)+'" fill="transparent" style="cursor:zoom-out" onclick="trajZoom(false)"><title>Retour au graphique entier, depuis 2005</title></rect>'+
+       txt(L+4,T+10,'clic pour revenir au graphique entier',{a:'start',s:9,c:C.ink3})}
   if(!zoom){
     /* la zone de projection est cliquable : elle s'ouvre en grand */
     g+='<rect x="'+x(yM)+'" y="'+T+'" width="'+(x(y1)-x(yM))+'" height="'+(H-T-B)+'" fill="'+C.soft+'" fill-opacity="0.55" style="cursor:zoom-in" onclick="trajZoom(true)"><title>Agrandir la projection '+yM+' → '+y1+'</title></rect>'+
@@ -15201,7 +15731,11 @@ function snapDelta(key,id,rang){
   if(d===0)return '<span class="mini" style="color:var(--ink3)" title="rang inchangé depuis le '+esc(s.lbl)+'">=</span>';
   return '<span style="font-weight:700;color:'+(d>0?'var(--ok)':'var(--red)')+'" title="rang '+old+' le '+esc(s.lbl)+'">'+(d>0?'▲ +'+d:'▼ '+d)+'</span>'}
 
-function saveNote(id){const ta=$('noteTA');if(ta)siteNotes[id]=ta.value;saveState();try{rafraichirFicheCommune(id)}catch(e){}toast('Note sauvegardée','ok')}
+function saveNote(id,el){const ta=el||(FICHE_SAISIE&&FICHE_SAISIE.querySelector('textarea'))||$('noteTA');if(!ta)return;
+  if((siteNotes[id]||'')===ta.value)return;   /* rien de changé : ni écriture ni message */
+  siteNotes[id]=ta.value;saveState();
+  /* saisie dans la fiche (13.11.2026) : rien à redessiner, la note s'affiche là où elle s'écrit ; sans fiche commune, idem */
+  toast('Note sauvegardée','ok')}
 
 /* ---------- MANUEL — démonstration interactive de pondération ---------- */
 
@@ -15339,7 +15873,7 @@ function getFilteredForMap(){
   if(FO.length)f=f.filter(s=>{const v=FDEF.fo.val(s);return FO.some(x=>v.indexOf(x)>=0)});
   if(PA.length)f=f.filter(s=>PA.some(p=>p==='prot'?isProt(s.pat):p==='nprot'?!isProt(s.pat):(s.pat||'')===p));
   if(CE.length)f=f.filter(s=>CE.indexOf(cecbInfo(s).fam)>=0);
-  if(se)f=f.filter(s=>(s.id+s.nom+(s.rp||'')+(s.hsub||'')+(s.pat||'')+(s.adr||'')).toLowerCase().includes(se));return f}
+  if(se)f=f.filter(s=>(s.id+s.nom+(s.rp||'')+(s.hsub||'')+(s.pat||'')+(s.adr||'')+' '+(s.bat||'')).toLowerCase().includes(se));return f}
 
 function renM(){
   if(!mapReady||!lMap||!lMarkers)return;lMarkers.clearLayers();
@@ -15408,9 +15942,10 @@ function tipStatut(v){return String(v||'').replace(/^\s*\d+\s*-\s*/,'').toLocale
 function tipProjets(s,fige){
   var p=s.projets||[],max=fige?p.length:TIP_MAX;
   if(!p.length)return'<div class="tip-sec">Projets GE-Invest : <b>aucun</b></div>';
-  return'<div class="tip-sec">Projets GE-Invest : <b>'+p.length+'</b>'+p.slice(0,max).map(function(x){var st=tipStatut(x.statut),t=esc(x.numero)+(st?' · '+esc(st):'')+(x.nom?' — '+esc(x.nom):'')+(x.rp?' · RP '+esc(rpNom(x.rp)):''),u=null;
-    if(fige){try{u=PTE_COMMUN.lien('revue',String(s.id),x.numero)}catch(e){u=null}}
-    return'<span class="tip-l">· '+(u?'<a href="'+esc(u)+'" title="Ouvrir la fiche du projet dans la Revue de projets">'+t+'</a>':t)+'</span>'}).join('')+
+  return'<div class="tip-sec">Projets GE-Invest : <b>'+p.length+'</b>'+p.slice(0,max).map(function(x){var st=tipStatut(x.statut),t=(st?' · '+esc(st):'')+(x.nom?' — '+esc(x.nom):'')+(x.rp?' · RP '+esc(rpNom(x.rp)):''),n=esc(x.numero);
+    /* 13.11.2026 : bulle figée, le n° ouvre la fiche Suivre du projet et ↗ GE-Invest (comme partout) */
+    if(fige&&PTE_COMMUN.numProjetHtml){try{n=PTE_COMMUN.numProjetHtml(x.numero,String(s.id))}catch(e){n=esc(x.numero)}}
+    return'<span class="tip-l">· '+n+t+'</span>'}).join('')+
     (p.length>max?'<span class="tip-l tip-plus" data-n="'+(p.length-max)+'" data-suf="">… et '+(p.length-max)+' de plus</span>':'')+'</div>'}
 function tipRelais(s,fige){
   if(s.relais==null||s.relais==='')return'';
@@ -15761,7 +16296,7 @@ function renderList(){
     try{selVersMulti('fPol','Politiques publiques',renderList)}catch(e){}}
   const q=($('q').value||'').toLowerCase(),FP=valsDe('fPol'),FS=valsDe('fSt');
   let L=SITES.filter(function(s){
-    if(q&&(s.nom+' '+s.id).toLowerCase().indexOf(q)<0)return false;
+    if(q&&(s.nom+' '+s.id+' '+(s.bat||'')).toLowerCase().indexOf(q)<0)return false;
     if(FP.length&&FP.indexOf(s.pol)<0)return false;
     if(FS.length&&!FS.some(function(fs){return fs==='nc'?!(s.c>0):fs==='al'?!!s.alerts.length:s.st===fs}))return false;
     return true});
@@ -16291,8 +16826,16 @@ function onPanelShown(id){
     if (iw && iw.__garde) { ranger(iw.__garde, el, titre, sig); el.setAttribute('data-ep', '1'); return; }
     var x = bouton(GENERIQUES.test(titre || '') ? 'En savoir plus' : titre);
     x.iw.__garde = x.garde;
-    var droite = cible.querySelector(':scope > .card-title-right, :scope > .ch');
-    if (droite) cible.insertBefore(x.iw, droite); else cible.appendChild(x.iw);
+    /* le « i » suit le titre, avant ce qui est rangé à droite (lien « Finances détaillées › » du tableau de bord, 13.11.2026) */
+    var droite = cible.querySelector(':scope > .card-title-right, :scope > a[href]:not(:first-child)');
+    /* un seul « i » par titre (13.11.2026, Achim : « pas de double i ») : le « i » propre du titre (Suivre : .info-icon)
+       passe en tête de la même bulle */
+    var natif = cible.querySelector(':scope > .info-icon');
+    if (natif) {
+      var tn = natif.getAttribute('data-tip') || natif.getAttribute('aria-label') || '';
+      cible.replaceChild(x.iw, natif);
+      if (tn) { var pn = document.createElement('p'); pn.className = 'ep-natif'; pn.textContent = tn; ranger(x.garde, pn, '', 'natif'); }
+    } else if (droite) cible.insertBefore(x.iw, droite); else cible.appendChild(x.iw);
     ranger(x.garde, el, titre, sig);
     el.setAttribute('data-ep', '1');
   }
@@ -16479,7 +17022,8 @@ function onPanelShown(id){
     var b = document.createElement('button');
     b.type = 'button'; b.className = 'ep-plier'; b.setAttribute('aria-label', 'Replier ou déplier « ' + texte(t.titre).slice(0, 60) + ' »');
     b.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
-    t.titre.appendChild(b);
+    /* 13.11.2026 (Achim) : un seul schéma de titre partout, « › titre i » — le chevron avant le titre, le « i » juste après */
+    t.titre.insertBefore(b, t.titre.firstChild);
     var etat = function (replie) { c.classList.toggle('ep-replie', !!replie); b.setAttribute('aria-expanded', replie ? 'false' : 'true'); };
     etat(REPLIS[cle]);
     var basculer = function () {
@@ -16540,7 +17084,9 @@ function onPanelShown(id){
     if(_rpEcrit)return;
     /* « 0 » et « hors périmètre » ne sont pas communs : gardés dans cet outil (séance 4) */
     af=af||[];pf=(pf||[]).concat(RP_SEL.filter(function(r){return PTE_COMMUN.vraiPortefeuille&&!PTE_COMMUN.vraiPortefeuille(r)}));
-    if(JSON.stringify(a)===JSON.stringify(PROG_ACT)&&JSON.stringify(af)===JSON.stringify(AFF_SEL)&&JSON.stringify(pf)===JSON.stringify(RP_SEL))return;
+    const mpS=mpSig();
+    if(JSON.stringify(a)===JSON.stringify(PROG_ACT)&&JSON.stringify(af)===JSON.stringify(AFF_SEL)&&JSON.stringify(pf)===JSON.stringify(RP_SEL)&&mpS===_mpVu)return;
+    _mpVu=mpS;
     PROG_ACT=a.slice();AFF_SEL=af.slice();RP_SEL=pf.slice();_affEff=null;_prioCache=null;try{buildOpt()}catch(e){}cxSync();try{rpFill()}catch(e){}try{saveState()}catch(e){}ren()});
 })();
 </script>
