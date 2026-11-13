@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-ClsjLDM17RzUpUqfliSSwqUN3WN2c3hnxn3NjYFP1vo=' 'sha256-gfDIFAbjiHy1ufbiIFwVGfgZ3QfSD8cpvML/KBfk77w=' 'sha256-oLgBtzZVsRNDu2HkdjQWJlXQMtmuMxBpaDRxFEM4l8U=' 'sha256-IqbttiDgr22CcujzJzGv1C9gBVxH8ozZ8/cDEQoqGMc=' 'sha256-UUiI/4huYlfrewigXylxrk06b2sUllb+0XKiugUN3xI=' 'sha256-OiZbKxcrhmewxouMuwXBQu6lMJqW9CYUxrHCv/cw5XE=' 'sha256-dXMhz01Z28QGkzkHpjpzVt3wVjq2iqU1AsFqJC8wiWk=' 'sha256-WpRhij7bpUWMHVfvowQe7eF8RFYc1FDAwfIye5OzxJ0=' 'sha256-I/V9Gac5nS8uK6eEvc/JXuO0FVViiiyx7QWDMmgDpGA=' 'sha256-S8IZr2RLVpRFH57GfMZUH9KWfM4Xqp2907SF0ct/Tu4=' 'sha256-OmUoq7k4l7JqX2HItKEJQELvDt2p6Iig8vLGaCdiY0I=' 'sha256-2h7Yt/H007ZeShuNDLJptMX7un8hXVuj38Vb+QFEsss='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; img-src data: https://server.arcgisonline.com; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-ClsjLDM17RzUpUqfliSSwqUN3WN2c3hnxn3NjYFP1vo=' 'sha256-gfDIFAbjiHy1ufbiIFwVGfgZ3QfSD8cpvML/KBfk77w=' 'sha256-4A2ZY0Yc7dINHzXb3TblnEDR6Zqn5GNCcn76yTkT0EA=' 'sha256-IqbttiDgr22CcujzJzGv1C9gBVxH8ozZ8/cDEQoqGMc=' 'sha256-UUiI/4huYlfrewigXylxrk06b2sUllb+0XKiugUN3xI=' 'sha256-OiZbKxcrhmewxouMuwXBQu6lMJqW9CYUxrHCv/cw5XE=' 'sha256-dXMhz01Z28QGkzkHpjpzVt3wVjq2iqU1AsFqJC8wiWk=' 'sha256-WpRhij7bpUWMHVfvowQe7eF8RFYc1FDAwfIye5OzxJ0=' 'sha256-HsTd8vZT2h5IL7GHe6wJGw9JSWgT+HW6FOV2rOwiQPg=' 'sha256-S8IZr2RLVpRFH57GfMZUH9KWfM4Xqp2907SF0ct/Tu4=' 'sha256-OmUoq7k4l7JqX2HItKEJQELvDt2p6Iig8vLGaCdiY0I=' 'sha256-2h7Yt/H007ZeShuNDLJptMX7un8hXVuj38Vb+QFEsss='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; img-src data: https://server.arcgisonline.com; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <!-- <PTE-VUE sim:tete> -->
 <style id="css-vue-sim-jetons">
 :root{
@@ -675,7 +675,7 @@ html.epure [data-ep-repli] > [data-ep-tete]{cursor:pointer}
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Pilotage PTE · <a href="#" data-pte-versions="accueil" title="Historique des versions">v1.36 · 13.11.2026</a></span>
+  <span>Pilotage PTE · <a href="#" data-pte-versions="accueil" title="Historique des versions">v1.37 · 13.11.2026</a></span>
 </footer>
 
 <script>
@@ -2527,6 +2527,8 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "13.11.2026", "objet": "accueil", "version": "v1.37", "titre": "Suivre sans « Autres vues »", "points": ["Suivre : onglet « Autres vues » supprimé ; la situation par portefeuille passe dans Portefeuille."]},
+    {"date": "13.11.2026", "objet": "revue", "version": "v0.69", "titre": "Onglet « Autres vues » supprimé", "points": ["Onglets : Portefeuille · Planning · Sémaphores · Finances · Organigramme.", "Portefeuille : la situation consolidée par portefeuille (par statut quand un seul portefeuille est choisi) précède le tableau « Sous-sites et projets », sur les mêmes projets ; un clic sur un portefeuille le choisit dans le périmètre.", "La vue consolidée d'un sous-site reste ouverte sous l'onglet Portefeuille ; retour arrière par une constante (AUTRES_VUES)."]},
     {"date": "13.11.2026", "objet": "accueil", "version": "v1.36", "titre": "Phases SIA : version « Terre »", "points": ["Phase 41 en violet, phases 51 → 53 du sable au brun : plus aucune phase aux couleurs des sémaphores (vert, orange, rouge)."]},
     {"date": "13.11.2026", "objet": "revue", "version": "v0.68", "titre": "Phases SIA : version « Terre »", "points": ["Phase 41 en violet, phases 51 → 53 du sable au brun : plus aucune phase aux couleurs des sémaphores (vert, orange, rouge).", "Bleus 31 → 33, 21 creux et « terminé » noir inchangés."]},
     {"date": "13.11.2026", "objet": "accueil", "version": "v1.35", "titre": "Nouvelle palette des phases SIA", "points": ["Phases SIA par familles, du froid au chaud (21 creux, 31-33 bleus, 41 vert d’eau, 51-53 oranges, terminé noir), lisible en cas de daltonisme : tableau de bord et Suivre dans la page."]},
@@ -10573,7 +10575,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     <button type="button" class="btn" id="btn-fil-rouge" aria-pressed="false" title="Ordre du jour de la revue en cinq temps : préparer, constater, analyser, décider, restituer">Mode revue</button>
     <!-- recherche dans l'en-tête (10.11.2026, demande d'Achim), comme dans Prioriser : une proposition ouvre le sous-site ou le projet ; texte libre + Entrée : filtre de texte des vues -->
     <div class="gsearch rv-gs no-print" id="rv-gs">
-      <input type="search" id="rv-gq" placeholder="Rechercher…" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="rv-gs-lb" aria-label="Rechercher un projet ou un sous-site" title="Numéro ou nom de projet, numéro ou nom de sous-site, RP : une proposition ouvre le sous-site ou le projet. Texte libre + Entrée : filtre les projets de Planning, Sémaphores, Finances et Autres vues.">
+      <input type="search" id="rv-gq" placeholder="Rechercher…" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="rv-gs-lb" aria-label="Rechercher un projet ou un sous-site" title="Numéro ou nom de projet, numéro ou nom de sous-site, RP : une proposition ouvre le sous-site ou le projet. Texte libre + Entrée : filtre les projets de Planning, Sémaphores et Finances.">
       <div class="gs-res" id="rv-gs-res" tabindex="-1"></div>
       <span class="sr-only" id="rv-gs-statut" role="status" aria-live="polite"></span>
     </div>
@@ -10624,7 +10626,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
 
 <footer class="foot">
   <span>Office cantonal des bâtiments · Programme de transition écologique · loi 13210</span>
-  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.68 · 13.11.2026</a> · <a href="Pilotage_PTE.html">Pilotage PTE</a></span>
+  <span>Revue de projets · <a href="#" data-pte-versions="revue" title="Historique des versions">v0.69 · 13.11.2026</a> · <a href="Pilotage_PTE.html">Pilotage PTE</a></span>
 </footer>
 
 
@@ -14141,6 +14143,9 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
      RP en initiales (« ASI » = Achim Siegele), nom complet au survol. TABLEAU_FUSIONNE=false : retour à la heatmap
      et au tableau « Sous-sites » d'Autres vues d'avant. */
   var TABLEAU_FUSIONNE = true;
+  /* 13.11.2026 (Achim, 23 h 01) : onglet « Autres vues » supprimé ; la situation par portefeuille (ou par statut) passe dans
+     Portefeuille, sous le tableau « Sous-sites et projets ». true = onglet rétabli (retour arrière). */
+  var AUTRES_VUES = false;
   var LS_TSP = 'pte.revue.tableau.v1';
   var TSP_GROUPES = [['s', 'Sémaphores', 'Rang, sémaphores du mois, tendance, 4 derniers mois'], ['u', 'Suivi', 'Avancement, performance, Plan, diagnostic polluants, RP, prochain jalon'],
     ['f', 'Finances', 'Crédit total, Estim ImmOBA, écart, dépensé, engagé, prévision']];
@@ -16816,7 +16821,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
       try { if (COMMUN && COMMUN.ecrirePerimetre) COMMUN.ecrirePerimetre({ rpf: [label] }); } catch (e) { /* choix de la page seulement */ }
       setPerimetres(['RPF:' + label]);
     }
-    STATE.rep.pf = null; STATE.rep.ss = null; STATE.rep.projet = null;
+    STATE.rep.pf = null; STATE.rep.ss = null; STATE.rep.projet = null; STATE.hashMessage = null;
     try { if (PM && PM.maj) PM.maj(); } catch (e) {}
     renderAll();
     try { var pb = document.getElementById('pm-btn'); if (pb) pb.focus(); } catch (e) {}   /* la ligne cliquée est redessinée : le focus va au menu Périmètre */
@@ -16832,7 +16837,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     var lvlSs = !!STATE.rep.ss;
     var lvlPf = !!STATE.rep.pf;
     if (!lvlPf && !lvlSs && !lvlProjet) return wrap;   /* 02.10.2026 : au niveau Programme, les boutons « Aller à » prennent la place */
-    wrap.appendChild(crumb('Programme', function () { STATE.rep.pf = null; STATE.rep.ss = null; STATE.rep.projet = null; ecrireHashSs(null); renderReportingView(); }, !lvlPf && !lvlSs && !lvlProjet));
+    wrap.appendChild(crumb('Programme', function () { STATE.rep.pf = null; STATE.rep.ss = null; STATE.rep.projet = null; ecrireHashSs(null); if (!AUTRES_VUES) showView('reporting', 'garder'); else renderReportingView(); }, !lvlPf && !lvlSs && !lvlProjet));
     if (lvlPf) {
       wrap.appendChild(el('span', { class: 'crumb-sep' }, ['›']));
       wrap.appendChild(crumb(nPf(STATE.rep.pf), function () { STATE.rep.ss = null; STATE.rep.projet = null; ecrireHashSs(null); renderReportingView(); }, !lvlSs && !lvlProjet));
@@ -17423,6 +17428,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     if (!mine.length) {
       STATE.hashMessage = 'Aucun projet GE-Invest sur le sous-site ' + num + (mesuresDe(num) ? ' (présent dans le Plan_PTE).' : '.');
       STATE.rep.pf = null; STATE.rep.ss = null; STATE.rep.projet = null;
+      if (!AUTRES_VUES) { showView('portefeuille'); return false; }   /* message dans Portefeuille (13.11.2026) */
       showView('reporting', 'garder'); return false;
     }
     STATE.rep.pf = null; STATE.rep.projet = null; STATE.rep.ss = num;
@@ -17569,7 +17575,9 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
       return;
     }
 
-    /* Autres vues : portefeuilles et sous-sites du périmètre de l'en-tête */
+    /* Autres vues : portefeuilles et sous-sites du périmètre de l'en-tête — onglet supprimé le 13.11.2026 ; la suite ne sert qu'au
+       retour arrière (AUTRES_VUES=true), comme le mode « autres » de SECTIONS, de gsFiltrer et du clic d'onglet */
+    if (!AUTRES_VUES) { showView('portefeuille'); return; }
     body.appendChild(el('div', { id: 'rep-sec-portefeuilles', class: 'rep-ancre' }));
     if (!STATE.rep.pf) {
       var groupsPf = groupBy(rows, function (r) { return r.pf; });
@@ -17690,6 +17698,8 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     if (!DB.projets.length) { host.appendChild(el('div', { class: 'empty-state' }, [buildDropzone(true)])); return; }
     /* « Portefeuille validé » retiré de Suivre le 10.11.2026 (Achim) : la validation se fait dans Prioriser › Scénarios */
     if (PORTEFEUILLE_VALIDE_DANS_SUIVRE) { host.appendChild(portefeuilleValideCard()); host.appendChild(el('div', { style: 'height:16px;' })); }
+    /* message d'une adresse #ss=… sans projet (ex-Autres vues, 13.11.2026) */
+    if (!AUTRES_VUES && STATE.hashMessage) host.appendChild(el('div', { class: 'notice warn' }, [STATE.hashMessage]));
     if (!STATE.mois) { host.appendChild(emptyCard(sansMoisTexte('portefeuille'))); return; }
     var list = projetsByPerimetre(STATE.perimetre);
     var gel = Engine.gelDate(STATE.mois, PARAMS);
@@ -17709,6 +17719,19 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     host.appendChild(c1);
 
     /* mêmes projets que la situation : filtre de statut de Suivre (« en cours » par défaut), comme l'ex-tableau des sous-sites */
+    /* ex-Autres vues (13.11.2026) : situation consolidée par portefeuille, avant le détail par sous-site ; mêmes projets que la
+       situation et le tableau (périmètre de l'en-tête et statut), sans les filtres propres à Planning, Sémaphores et Finances.
+       Un seul portefeuille choisi dans le périmètre : par statut. */
+    if (!AUTRES_VUES) {
+      try {
+        var fStA = statutsActifs(), rowsAg = repRows().filter(function (r) { return !fStA.length || fStA.indexOf(r.statut) >= 0; });
+        var clesPf = perimetreCles().filter(function (k) { return k === 'HORS' || k.indexOf('RPF:') === 0; });
+        var agHote = el('div', { id: 'pf-portefeuilles' });
+        if (clesPf.length !== 1) agHote.appendChild(repAggTable('Portefeuille', 'Situation consolidée par portefeuille, avec le taux de réponse aux questions du mois. Un clic sur une ligne choisit ce portefeuille dans le périmètre de l’en-tête.', groupBy(rowsAg, function (r) { return r.pf; }), function (gr) { choisirPortefeuille(gr.label); }));
+        else if (rowsAg.length) agHote.appendChild(repAggTable('Statut', 'Situation consolidée par statut de projet GE-Invest (nombre, crédit, dépenses, engagés, prévisions).', groupBy(rowsAg, function (r) { return r.statut; }), null));
+        if (agHote.firstChild) host.appendChild(agHote);
+      } catch (e) { console.error(e); }
+    }
     if (TABLEAU_FUSIONNE) host.appendChild(tspCarte(listSit, gel));
     var c2 = el('div', { class: 'card' });
     var parSs = heatVue() === 's';
@@ -19161,9 +19184,11 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     if (barreActive()) { BARRE.ouvrir('aide'); return; }
     var cur = $('#nav-tabs button.on');
     if (cur && cur.dataset.view !== 'methode') vueAvantMethode = cur.dataset.view;
+    /* vue consolidée d'un sous-site sous l'onglet Portefeuille (13.11.2026) : on y revient */
+    if (vueVisible() === 'reporting' && (STATE.rep.ss || STATE.rep.projet)) vueAvantMethode = 'reporting-garder';
     showView('methode');
   }
-  function closePanel() { if (barreActive()) { BARRE.fermer(); return; } showView(vueAvantMethode); }
+  function closePanel() { if (barreActive()) { BARRE.fermer(); return; } if (vueAvantMethode === 'reporting-garder') showView('reporting', 'garder'); else showView(vueAvantMethode); }
 
   // ------------------------------------------------------------------
   // Navigation / rendu global
@@ -19449,6 +19474,11 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     if (name === 'planning' || name === 'semaphores' || name === 'finances') { STATE.rep.mode = name; name = 'reporting'; }
     /* « reporting » = Autres vues ; garde = descente vers un sous-site ou un projet, ou retour au programme : l'onglet reste */
     else if (name === 'reporting') { if (garde === 'garder' && STATE.rep.mode !== 'autres') onglet = STATE.rep.mode; else STATE.rep.mode = 'autres'; }
+    /* sans « Autres vues » : le mode « autres » n'a plus d'onglet ; sans sous-site ni projet, c'est Portefeuille ; la vue consolidée
+       d'un sous-site reste là, sous l'onglet Portefeuille */
+    if (!AUTRES_VUES && name === 'reporting' && STATE.rep.mode === 'autres') { onglet = 'portefeuille'; if (!STATE.rep.ss && !STATE.rep.projet) name = 'portefeuille'; }
+    /* Portefeuille affiché : un sous-site ouvert ensuite depuis son tableau s'affiche sous Portefeuille, pas sous le dernier onglet visité */
+    if (!AUTRES_VUES && name === 'portefeuille') STATE.rep.mode = 'autres';
     STATE.ongletRep = onglet;
     renderChrome();
     $all('section.view').forEach(function (s) { if (s.closest && s.closest('#ptn-reserve, .ptn-voile')) return; s.hidden = (s.id !== 'view-' + name); });
@@ -19529,6 +19559,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     var r = COMMUN.ecrirePerimetre({ plan: sel.plan, aff: sel.aff, rpf: rpf(sel.rpf), mp: sel.mp, proposees: { plan: P.plan, aff: P.aff, rpf: rpf(P.rpf), mp: P.mp } });
     var hors = (sel.rpf || []).indexOf('HORS') >= 0 ? ['HORS'] : [];
     setPerimetres(r.map(function (x) { return 'RPF:' + x; }).concat(hors, sel.rp || []));
+    STATE.hashMessage = null;
     renderAll();
   }
   function pmPoser() {
@@ -19545,7 +19576,9 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     syncClassementCommun();
     renderFiltreSelect();
     var active = $all('#nav-tabs button').filter(function (b) { return b.getAttribute('aria-current') === 'true'; })[0];
-    showView(typeof vue === 'string' ? vue : (active ? active.dataset.view : 'portefeuille'));
+    /* vue consolidée d'un sous-site ouverte : elle reste (13.11.2026, sans « Autres vues » l'onglet marqué est Portefeuille) */
+    if (typeof vue !== 'string' && vueVisible() === 'reporting' && (STATE.rep.ss || STATE.rep.projet)) showView('reporting', 'garder');
+    else showView(typeof vue === 'string' ? vue : (active ? active.dataset.view : 'portefeuille'));
     renderFilRouge();
   }
 
@@ -19554,6 +19587,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
   // n'a pas de DOM interactif complet, ex. tests)
   // ------------------------------------------------------------------
   function wireEvents() {
+    if (!AUTRES_VUES) $all('#nav-tabs button[data-view="reporting"]').forEach(function (b) { b.hidden = true; b.setAttribute('data-ancien-onglet', '1'); });
     $all('#nav-tabs button').forEach(function (b) {
       b.addEventListener('click', function () {
         var v = b.dataset.view;
@@ -19561,11 +19595,18 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
            import rouvrirait ce sous-site) */
         if (v !== 'fiche' && !((v === 'reporting' || v === 'planning' || v === 'semaphores' || v === 'finances') && (STATE.rep.ss || STATE.rep.projet))) ecrireHashSs(null);
         if (v === 'reporting') STATE.rep.mode = 'autres';
+        if (!AUTRES_VUES) {
+          STATE.hashMessage = null;   /* le message d'une adresse #ss=… ne suit pas l'utilisateur d'onglet en onglet */
+          /* Portefeuille ou Organigramme : on quitte la vue consolidée d'un sous-site ; Portefeuille reprend le mode « autres »,
+             sous lequel un sous-site ouvert depuis son tableau s'affiche (relecture du 13.11) */
+          if (v === 'portefeuille' || v === 'organigramme') { STATE.rep.ss = null; STATE.rep.projet = null; ecrireHashSs(null); }
+          if (v === 'portefeuille') STATE.rep.mode = 'autres';
+        }   /* le message d'une adresse #ss=… ne suit pas l'utilisateur d'onglet en onglet */
         if (barreActive() && BARRE.ouvert()) BARRE.fermer();   /* un onglet de la revue choisi : le panneau commun se referme */
         showView(v);
       });
     });
-    $('#sel-filtre').addEventListener('change', function (e) { var av = perimetreCles(); if (e.target.value !== 'MULTI') { STATE.perimetre = e.target.value; STATE.perimetres = []; } ecrirePortefeuillesCommuns(av); renderAll(); });
+    $('#sel-filtre').addEventListener('change', function (e) { STATE.hashMessage = null; var av = perimetreCles(); if (e.target.value !== 'MULTI') { STATE.perimetre = e.target.value; STATE.perimetres = []; } ecrirePortefeuillesCommuns(av); renderAll(); });
     pmPoser();
     var btnEff = $('#btnEff');
     if (btnEff) btnEff.addEventListener('click', demanderEffacement);
@@ -19876,7 +19917,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
   var ETAPES_REVUE = [
     { sel: '.hdr h1', t: 'Revue de projets',
       d: 'Le mois de revue, projet par projet : sémaphores, questions, décisions. Tout se calcule dans ce navigateur, à partir du classeur Plan_PTE.' },
-    { sel: '#badge', avant: function () { showView('reporting'); },
+    { sel: '#badge', avant: function () { showView(AUTRES_VUES ? 'reporting' : 'portefeuille'); },
       t: 'État et périmètre',
       d: 'La pastille dit quel classeur est chargé et à quelle date. À côté, le périmètre filtre tout l’écran. Mois de revue : dernier mois des fiches, ou mois courant passé le délai de saisie.' },
     { sel: function () { return $('#reporting-content .rep-kpis') || $('#nav-tabs'); },
@@ -19893,7 +19934,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
       d: 'Les projets qui demandent une décision : rouges d’abord, puis non renseignés, puis à surveiller. Dix au plus, pour tenir dans une séance.' },
     { sel: function () { return $('#pm-btn') || $('#nav-tabs'); },
       t: 'Choisir le périmètre',
-      d: 'Le menu Périmètre de l’en-tête règle toutes les vues. Une ligne du tableau des portefeuilles (Autres vues) le règle aussi ; une ligne de sous-site ouvre sa fiche.' },
+      d: 'Le menu Périmètre de l’en-tête règle toutes les vues. Une ligne du tableau des portefeuilles (Portefeuille, quand le périmètre en compte plusieurs) le règle aussi ; une ligne de sous-site ouvre sa fiche.' },
     { sel: function () { return $('#fiche-decisions') || $('#nav-tabs button[data-view="fiche"]'); },
       avant: function () { showView('fiche'); },
       t: 'Fiche et décisions',

@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-/+fzRm7xDaIi8Ivz75zkQg+i6cTELGC05u1sljpkB7k=' 'sha256-i/7EtLYmidkgpgPPEq+IS+32G1tV0OAhP9NkohmUA10=' 'sha256-IoIVczSwqTIxi3aJfptH1u7jlX7sw+ccCIDJkpnpnsA=' 'sha256-IqbttiDgr22CcujzJzGv1C9gBVxH8ozZ8/cDEQoqGMc='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-/+fzRm7xDaIi8Ivz75zkQg+i6cTELGC05u1sljpkB7k=' 'sha256-i/7EtLYmidkgpgPPEq+IS+32G1tV0OAhP9NkohmUA10=' 'sha256-qEqPqfAbpV30gpmI4+YsKNG3cz+y3eJiba3TFgxzJCc=' 'sha256-IqbttiDgr22CcujzJzGv1C9gBVxH8ozZ8/cDEQoqGMc='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net http://127.0.0.1:8090 http://localhost:8090; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Simulation des gains</title>
 <style>
@@ -2794,6 +2794,8 @@ var PTE_COMMUN = (function () {
      VERSIONS et dans 00_Contexte/Versioning_PTE.md, puis recopier ce module dans les quatre
      pages (la revue se reconstruit par build-html.js). */
   var VERSIONS = [
+    {"date": "13.11.2026", "objet": "accueil", "version": "v1.37", "titre": "Suivre sans « Autres vues »", "points": ["Suivre : onglet « Autres vues » supprimé ; la situation par portefeuille passe dans Portefeuille."]},
+    {"date": "13.11.2026", "objet": "revue", "version": "v0.69", "titre": "Onglet « Autres vues » supprimé", "points": ["Onglets : Portefeuille · Planning · Sémaphores · Finances · Organigramme.", "Portefeuille : la situation consolidée par portefeuille (par statut quand un seul portefeuille est choisi) précède le tableau « Sous-sites et projets », sur les mêmes projets ; un clic sur un portefeuille le choisit dans le périmètre.", "La vue consolidée d'un sous-site reste ouverte sous l'onglet Portefeuille ; retour arrière par une constante (AUTRES_VUES)."]},
     {"date": "13.11.2026", "objet": "accueil", "version": "v1.36", "titre": "Phases SIA : version « Terre »", "points": ["Phase 41 en violet, phases 51 → 53 du sable au brun : plus aucune phase aux couleurs des sémaphores (vert, orange, rouge)."]},
     {"date": "13.11.2026", "objet": "revue", "version": "v0.68", "titre": "Phases SIA : version « Terre »", "points": ["Phase 41 en violet, phases 51 → 53 du sable au brun : plus aucune phase aux couleurs des sémaphores (vert, orange, rouge).", "Bleus 31 → 33, 21 creux et « terminé » noir inchangés."]},
     {"date": "13.11.2026", "objet": "accueil", "version": "v1.35", "titre": "Nouvelle palette des phases SIA", "points": ["Phases SIA par familles, du froid au chaud (21 creux, 31-33 bleus, 41 vert d’eau, 51-53 oranges, terminé noir), lisible en cas de daltonisme : tableau de bord et Suivre dans la page."]},
