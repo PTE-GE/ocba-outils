@@ -1,5 +1,8 @@
 <!DOCTYPE html><html lang="fr"><head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-pG+KvAU3Eu8lAr6iT0e0bbe5zydcnYGKIFcZdtKcw/4='; style-src 'unsafe-inline'; style-src-elem 'sha256-DGMX/qDMf6OkuLeyiHwDvsi1iiEdSFJc3tCuoCrQCj8='; style-src-attr 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trombinoscope OCBA</title>
 <style>
@@ -246,37 +249,37 @@ footer a:hover{color:var(--violet);border-bottom-color:var(--violet)}
   <div class="bloctitre">Trombinoscope</div>
   <div class="compte"><b id="cN">0</b> collaborateurs · <span id="cV">0</span> postes vacants</div>
   <div class="hspacer"></div>
-  <button class="bt bt-v" onclick="ouvrirNotes()">📝 Mes notes <span id="nbNotes"></span></button>
-  <button class="bt" onclick="quizStart()">🎯 Mémoriser</button>
-  <button class="bt" onclick="stats()">📊 Effectifs</button>
-  <button class="bt" onclick="ouvrir('mExport')">📤 Exporter</button>
-  <button class="bt" id="btImport" onclick="ouvrir('mImport')">📥 Importer</button>
-  <button class="bt adm" onclick="fEdition(null)">➕ Ajouter</button>
-  <button class="bt adm bt-r" onclick="viderDonnees()">🗑 Vider</button>
-  <button class="bt" id="btAdmin" onclick="basculeAdmin()">🔧 Admin</button>
+  <button class="bt bt-v" data-clic="ouvrirNotes()">📝 Mes notes <span id="nbNotes"></span></button>
+  <button class="bt" data-clic="quizStart()">🎯 Mémoriser</button>
+  <button class="bt" data-clic="stats()">📊 Effectifs</button>
+  <button class="bt" data-clic="ouvrir('mExport')">📤 Exporter</button>
+  <button class="bt" id="btImport" data-clic="ouvrir('mImport')">📥 Importer</button>
+  <button class="bt adm" data-clic="fEdition(null)">➕ Ajouter</button>
+  <button class="bt adm bt-r" data-clic="viderDonnees()">🗑 Vider</button>
+  <button class="bt" id="btAdmin" data-clic="basculeAdmin()">🔧 Admin</button>
  </div>
  <div class="hrow2">
-  <div class="rech"><span>🔍</span><input id="q" placeholder="Nom, fonction, service, unité, site…" oninput="rendre()"></div>
-  <select class="sel" id="fDir" onchange="majServices();rendre()"><option value="">Toutes les directions</option></select>
-  <select class="sel" id="fSvc" onchange="rendre()"><option value="">Tous les services</option></select>
-  <select class="sel" id="fAff" onchange="rendre()"><option value="">Tous les sites</option></select>
-  <select class="sel" id="fTri" onchange="rendre()">
+  <div class="rech"><span>🔍</span><input id="q" placeholder="Nom, fonction, service, unité, site…" data-saisie="rendre()"></div>
+  <select class="sel" id="fDir" data-change="majServices();rendre()"><option value="">Toutes les directions</option></select>
+  <select class="sel" id="fSvc" data-change="rendre()"><option value="">Tous les services</option></select>
+  <select class="sel" id="fAff" data-change="rendre()"><option value="">Tous les sites</option></select>
+  <select class="sel" id="fTri" data-change="rendre()">
    <option value="org">Par direction / service</option>
    <option value="nom">Par nom (A→Z)</option>
    <option value="fonction">Par fonction</option>
    <option value="affectation">Par site / affectation</option>
    <option value="unite">Par unité (organigramme)</option>
   </select>
-  <button class="bt bt-s" id="btNotes" onclick="basculeFiltreNotes()">📝 Annotés</button>
-  <button class="bt bt-s" id="btVac" onclick="basculeVacants()">Vacants masqués</button>
+  <button class="bt bt-s" id="btNotes" data-clic="basculeFiltreNotes()">📝 Annotés</button>
+  <button class="bt bt-s" id="btVac" data-clic="basculeVacants()">Vacants masqués</button>
   <div class="hspacer"></div>
   <span class="compte" id="cAff">0 affichés</span>
   <div class="vues">
-   <button id="vGrille" class="on" onclick="setVue('grille')" title="Grille">▦</button>
-   <button id="vCompact" onclick="setVue('compact')" title="Compact">▪▪</button>
-   <button id="vListe" onclick="setVue('liste')" title="Liste">☰</button>
-   <button id="vOrga" onclick="setVue('orga')" title="Organigramme">🌳</button>
-   <button id="v3D" onclick="setVue('troisd')" title="Organigramme 3D" style="font-weight:bold;font-size:11px">3D</button>
+   <button id="vGrille" class="on" data-clic="setVue('grille')" title="Grille">▦</button>
+   <button id="vCompact" data-clic="setVue('compact')" title="Compact">▪▪</button>
+   <button id="vListe" data-clic="setVue('liste')" title="Liste">☰</button>
+   <button id="vOrga" data-clic="setVue('orga')" title="Organigramme">🌳</button>
+   <button id="v3D" data-clic="setVue('troisd')" title="Organigramme 3D" style="font-weight:bold;font-size:11px">3D</button>
   </div>
  </div>
 </header>
@@ -291,83 +294,83 @@ footer a:hover{color:var(--violet);border-bottom-color:var(--violet)}
 
 <!-- FICHE -->
 <div class="ovl" id="mFiche"><div class="mod">
- <div class="mod-h"><h3>Fiche collaborateur</h3><button onclick="fermer('mFiche')">✕</button></div>
+ <div class="mod-h"><h3>Fiche collaborateur</h3><button data-clic="fermer('mFiche')">✕</button></div>
  <div class="mod-b" id="ficheB"></div>
  <div class="mod-f">
-  <div><button class="bt bt-s" onclick="naviguer(-1)">← Précédent</button>
-       <button class="bt bt-s" onclick="naviguer(1)">Suivant →</button></div>
-  <div><button class="bt bt-s adm" onclick="fEdition(courant)">✏️ Modifier</button>
-       <button class="bt bt-s adm" onclick="supprimer(courant)">🗑 Supprimer</button>
-       <button class="bt bt-s bt-p" onclick="fermer('mFiche')">Fermer</button></div>
+  <div><button class="bt bt-s" data-clic="naviguer(-1)">← Précédent</button>
+       <button class="bt bt-s" data-clic="naviguer(1)">Suivant →</button></div>
+  <div><button class="bt bt-s adm" data-clic="fEdition(courant)">✏️ Modifier</button>
+       <button class="bt bt-s adm" data-clic="supprimer(courant)">🗑 Supprimer</button>
+       <button class="bt bt-s bt-p" data-clic="fermer('mFiche')">Fermer</button></div>
  </div>
 </div></div>
 
 <!-- NOTES -->
 <div class="ovl" id="mNotes"><div class="mod large">
- <div class="mod-h"><h3>Mes notes personnelles</h3><button onclick="fermer('mNotes')">✕</button></div>
+ <div class="mod-h"><h3>Mes notes personnelles</h3><button data-clic="fermer('mNotes')">✕</button></div>
  <div class="mod-b">
   <div class="aide"><b>Vos notes restent sur ce poste.</b> Elles sont enregistrées dans le navigateur, ne sont
    jamais transmises et ne sont visibles par personne d'autre. Elles sont rattachées au <b>nom</b> de la personne :
    une mise à jour du trombinoscope ne les efface pas.</div>
-  <div class="ongl"><div class="on" onclick="ongletNotes('l')">📋 Mes notes</div><div onclick="ongletNotes('t')">🏷 Mes étiquettes</div></div>
+  <div class="ongl"><div class="on" data-clic="ongletNotes('l')">📋 Mes notes</div><div data-clic="ongletNotes('t')">🏷 Mes étiquettes</div></div>
   <div id="notesListe"></div>
   <div id="notesTags" style="display:none">
    <div class="aide">Les étiquettes sont <b>les vôtres</b> : renommez-les, supprimez-les, ajoutez les vôtres.
     Elles n'existent que sur ce poste et suivent vos notes à l'export.</div>
    <div id="tagEdit"></div>
-   <div class="tagrow"><input id="tagNew" placeholder="Nouvelle étiquette…" onkeydown="if(event.key==='Enter')ajouterTag()">
-    <button class="bt bt-s bt-v" onclick="ajouterTag()">Ajouter</button></div>
-   <div style="margin-top:10px"><button class="bt bt-s" onclick="resetTags()">Revenir aux étiquettes proposées</button></div>
+   <div class="tagrow"><input id="tagNew" placeholder="Nouvelle étiquette…" data-entree="ajouterTag()">
+    <button class="bt bt-s bt-v" data-clic="ajouterTag()">Ajouter</button></div>
+   <div style="margin-top:10px"><button class="bt bt-s" data-clic="resetTags()">Revenir aux étiquettes proposées</button></div>
   </div>
  </div>
  <div class="mod-f">
   <div>
-   <button class="bt bt-s bt-v" onclick="exportNotes()">📥 Exporter mes notes (CSV)</button>
-   <button class="bt bt-s" onclick="document.getElementById('inNotes').click()">📂 Importer des notes</button>
-   <input type="file" id="inNotes" accept=".csv,.txt" style="display:none" onchange="importNotes(event)">
+   <button class="bt bt-s bt-v" data-clic="exportNotes()">📥 Exporter mes notes (CSV)</button>
+   <button class="bt bt-s" data-clic="cliquer('inNotes')">📂 Importer des notes</button>
+   <input type="file" id="inNotes" accept=".csv,.txt" style="display:none" data-change="importNotes(event)">
   </div>
-  <button class="bt bt-s" onclick="effacerNotes()">🗑 Effacer mes notes</button>
+  <button class="bt bt-s" data-clic="effacerNotes()">🗑 Effacer mes notes</button>
  </div>
 </div></div>
 
 <!-- QUIZ -->
 <div class="ovl" id="mQuiz"><div class="mod">
- <div class="mod-h"><h3>Mémoriser les visages</h3><button onclick="fermer('mQuiz')">✕</button></div>
+ <div class="mod-h"><h3>Mémoriser les visages</h3><button data-clic="fermer('mQuiz')">✕</button></div>
  <div class="mod-b qz" id="quizB"></div>
  <div class="mod-f"><span class="score" id="quizScore"></span>
-  <div><button class="bt bt-s" onclick="quizStart()">↻ Recommencer</button>
-       <button class="bt bt-s bt-p" onclick="fermer('mQuiz')">Fermer</button></div></div>
+  <div><button class="bt bt-s" data-clic="quizStart()">↻ Recommencer</button>
+       <button class="bt bt-s bt-p" data-clic="fermer('mQuiz')">Fermer</button></div></div>
 </div></div>
 
 <!-- STATS -->
 <div class="ovl" id="mStats"><div class="mod large">
- <div class="mod-h"><h3>Effectifs</h3><button onclick="fermer('mStats')">✕</button></div>
+ <div class="mod-h"><h3>Effectifs</h3><button data-clic="fermer('mStats')">✕</button></div>
  <div class="mod-b" id="statsB"></div>
- <div class="mod-f"><span></span><button class="bt bt-s bt-p" onclick="fermer('mStats')">Fermer</button></div>
+ <div class="mod-f"><span></span><button class="bt bt-s bt-p" data-clic="fermer('mStats')">Fermer</button></div>
 </div></div>
 
 <!-- EXPORT -->
 <div class="ovl" id="mExport"><div class="mod">
- <div class="mod-h"><h3>Exporter</h3><button onclick="fermer('mExport')">✕</button></div>
+ <div class="mod-h"><h3>Exporter</h3><button data-clic="fermer('mExport')">✕</button></div>
  <div class="mod-b">
   <div class="aide">Tous les exports sont produits localement, sans connexion réseau.</div>
-  <p style="margin-bottom:9px"><button class="bt bt-p" style="width:100%" onclick="expCSV()">📄 Annuaire complet, postes vacants compris (CSV pour Excel)</button></p>
-  <p style="margin-bottom:9px"><button class="bt bt-v" style="width:100%" onclick="exportNotes()">📝 Mes notes (CSV)</button></p>
-  <p style="margin-bottom:9px"><button class="bt" style="width:100%" onclick="expJSON()">💾 Données + photos (JSON)</button></p>
-  <p style="margin-bottom:9px"><button class="bt" style="width:100%" onclick="expHTML(true)">📦 Outil complet avec les données (HTML)</button></p>
-  <p style="margin-bottom:9px"><button class="bt" style="width:100%" onclick="expHTML(false)">📄 Outil vierge, sans données (HTML)</button></p>
-  <p style="margin-bottom:9px"><button class="bt" style="width:100%" onclick="expCSV(false)">📄 Seulement la sélection affichée (CSV)</button></p>
-  <p><button class="bt" style="width:100%" onclick="fermer('mExport');window.print()">🖨 Imprimer la sélection affichée</button></p>
+  <p style="margin-bottom:9px"><button class="bt bt-p" style="width:100%" data-clic="expCSV()">📄 Annuaire complet, postes vacants compris (CSV pour Excel)</button></p>
+  <p style="margin-bottom:9px"><button class="bt bt-v" style="width:100%" data-clic="exportNotes()">📝 Mes notes (CSV)</button></p>
+  <p style="margin-bottom:9px"><button class="bt" style="width:100%" data-clic="expJSON()">💾 Données + photos (JSON)</button></p>
+  <p style="margin-bottom:9px"><button class="bt" style="width:100%" data-clic="expHTML(true)">📦 Outil complet avec les données (HTML)</button></p>
+  <p style="margin-bottom:9px"><button class="bt" style="width:100%" data-clic="expHTML(false)">📄 Outil vierge, sans données (HTML)</button></p>
+  <p style="margin-bottom:9px"><button class="bt" style="width:100%" data-clic="expCSV(false)">📄 Seulement la sélection affichée (CSV)</button></p>
+  <p><button class="bt" style="width:100%" data-clic="fermer('mExport');imprimer()">🖨 Imprimer la sélection affichée</button></p>
  </div>
- <div class="mod-f"><span></span><button class="bt bt-s" onclick="fermer('mExport')">Fermer</button></div>
+ <div class="mod-f"><span></span><button class="bt bt-s" data-clic="fermer('mExport')">Fermer</button></div>
 </div></div>
 
 <!-- MOT DE PASSE -->
 <div class="ovl" id="mPass"><div class="mod" style="max-width:380px">
- <div class="mod-h"><h3>Mode administration</h3><button onclick="fermer('mPass')">✕</button></div>
+ <div class="mod-h"><h3>Mode administration</h3><button data-clic="fermer('mPass')">✕</button></div>
  <div class="mod-b">
   <div class="chp"><label>Mot de passe</label>
-   <input type="password" id="pw" onkeydown="if(event.key==='Enter')verifPass()">
+   <input type="password" id="pw" data-entree="verifPass()">
    <div class="err" id="pwErr">Mot de passe incorrect</div></div>
   <div class="aide">Le mode administration sert à mettre à jour l'annuaire (import CSV, photos, ajout,
    modification, remise à zéro) puis à réexporter l'outil pour l'intranet. Il ne concerne pas vos notes,
@@ -376,22 +379,22 @@ footer a:hover{color:var(--violet);border-bottom-color:var(--violet)}
    distribuée sur l'intranet, ou importez simplement le JSON : le bouton d'import reste accessible
    sans mot de passe.</div>
  </div>
- <div class="mod-f"><span></span><div><button class="bt bt-s" onclick="fermer('mPass')">Annuler</button>
-  <button class="bt bt-s bt-p" onclick="verifPass()">Valider</button></div></div>
+ <div class="mod-f"><span></span><div><button class="bt bt-s" data-clic="fermer('mPass')">Annuler</button>
+  <button class="bt bt-s bt-p" data-clic="verifPass()">Valider</button></div></div>
 </div></div>
 
 <!-- EDITION -->
 <div class="ovl" id="mEdit"><div class="mod">
- <div class="mod-h"><h3 id="editT">Ajouter une personne</h3><button onclick="fermer('mEdit')">✕</button></div>
+ <div class="mod-h"><h3 id="editT">Ajouter une personne</h3><button data-clic="fermer('mEdit')">✕</button></div>
  <div class="mod-b">
   <input type="hidden" id="eId">
   <div class="chp"><label>Photo</label>
-   <div class="zone" id="zPhoto" onclick="document.getElementById('inPhoto').click()">
+   <div class="zone" id="zPhoto" data-clic="cliquer('inPhoto')">
     <div id="pvWrap" style="display:none"><img id="pv" style="max-height:130px;border-radius:3px"></div>
     <div id="pvVide"><div style="font-size:22px">📷</div><div class="t">Cliquer ou déposer une photo</div>
      <div class="s">JPEG / PNG · redimensionnée automatiquement</div></div>
    </div>
-   <input type="file" id="inPhoto" accept="image/*" style="display:none" onchange="chargePhoto(event)"></div>
+   <input type="file" id="inPhoto" accept="image/*" style="display:none" data-change="chargePhoto(event)"></div>
   <div class="duo">
    <div class="chp"><label>Nom complet *</label><input id="eNom"></div>
    <div class="chp"><label>Fonction</label><input id="eFon"></div>
@@ -420,46 +423,47 @@ footer a:hover{color:var(--violet);border-bottom-color:var(--violet)}
   <div class="chp"><label>Hiérarchie (organigramme)</label><input id="eHier" placeholder="Office › Direction › Service › Unité">
   </div>
  </div>
- <div class="mod-f"><span></span><div><button class="bt bt-s" onclick="fermer('mEdit')">Annuler</button>
-  <button class="bt bt-s bt-p" onclick="enregistrer()">💾 Enregistrer</button></div></div>
+ <div class="mod-f"><span></span><div><button class="bt bt-s" data-clic="fermer('mEdit')">Annuler</button>
+  <button class="bt bt-s bt-p" data-clic="enregistrer()">💾 Enregistrer</button></div></div>
 </div></div>
 
 <!-- IMPORT -->
 <div class="ovl" id="mImport"><div class="mod large">
- <div class="mod-h"><h3>Mettre à jour l'annuaire</h3><button onclick="fermer('mImport')">✕</button></div>
+ <div class="mod-h"><h3>Mettre à jour l'annuaire</h3><button data-clic="fermer('mImport')">✕</button></div>
  <div class="mod-b">
-  <div class="ongl"><div class="on" onclick="ongl('csv')">📄 CSV</div><div onclick="ongl('pho')">📷 Photos</div><div onclick="ongl('jsn')">💾 JSON</div></div>
+  <div class="ongl"><div class="on" data-clic="ongl('csv')">📄 CSV</div><div data-clic="ongl('pho')">📷 Photos</div><div data-clic="ongl('jsn')">💾 JSON</div></div>
   <div id="oCsv">
    <div class="aide">1<sup>re</sup> ligne = en-têtes. Colonnes reconnues : <b>nom · fonction · direction · service ·
     unite · uo · chef · affectation · tel · email · sexe · statut · hierarchie</b>. Séparateur ; ou , ou tabulation.
     Seul <b>nom</b> est obligatoire. <b>Vos notes ne sont pas touchées</b> par l'import.
-    <a class="lien" onclick="modeleCSV()">Télécharger un modèle vierge</a>.</div>
-   <div class="zone" id="zCsv" onclick="document.getElementById('inCsv').click()">
+    <a class="lien" data-clic="modeleCSV()">Télécharger un modèle vierge</a>.</div>
+   <div class="zone" id="zCsv" data-clic="cliquer('inCsv')">
     <div style="font-size:22px">📄</div><div class="t">Déposer le fichier CSV</div><div class="s">ou cliquer pour parcourir</div></div>
-   <input type="file" id="inCsv" accept=".csv,.txt,.tsv" style="display:none" onchange="chargeCSV(event)">
+   <input type="file" id="inCsv" accept=".csv,.txt,.tsv" style="display:none" data-change="chargeCSV(event)">
    <div id="csvApercu" style="margin-top:12px"></div>
   </div>
   <div id="oPho" style="display:none">
    <div class="aide">Les fichiers sont rapprochés du nom de la personne (<i>Prénom Nom.jpg</i>). Accents, tirets et
     ordre prénom / nom sont tolérés.</div>
-   <div class="zone" id="zPho" onclick="document.getElementById('inPho').click()">
+   <div class="zone" id="zPho" data-clic="cliquer('inPho')">
     <div style="font-size:22px">📷</div><div class="t">Déposer les photos</div><div class="s">sélection multiple possible</div></div>
-   <input type="file" id="inPho" accept="image/*" multiple style="display:none" onchange="chargePhotos(event)">
+   <input type="file" id="inPho" accept="image/*" multiple style="display:none" data-change="chargePhotos(event)">
    <div id="phoApercu" style="margin-top:12px"></div>
   </div>
   <div id="oJsn" style="display:none">
    <div class="aide">Remplace l'intégralité de l'annuaire par un fichier <b>trombinoscope_data.json</b> exporté depuis cet outil (données <b>et</b> photos).</div>
-   <div class="zone" id="zJsn" onclick="document.getElementById('inJsn').click()">
+   <div class="zone" id="zJsn" data-clic="cliquer('inJsn')">
     <div style="font-size:22px">💾</div><div class="t">Déposer le fichier JSON</div><div class="s">ou cliquer pour parcourir</div></div>
-   <input type="file" id="inJsn" accept=".json" style="display:none" onchange="chargeJSON(event)">
+   <input type="file" id="inJsn" accept=".json" style="display:none" data-change="chargeJSON(event)">
   </div>
  </div>
- <div class="mod-f"><span></span><button class="bt bt-s" onclick="fermer('mImport')">Fermer</button></div>
+ <div class="mod-f"><span></span><button class="bt bt-s" data-clic="fermer('mImport')">Fermer</button></div>
 </div></div>
 
 <div class="toastz" id="toastz"></div>
 <div class="admin-on" id="badgeAdmin" style="display:none">Mode administration activé</div>
 
+<script type="application/json" id="donnees">[]</script>
 <script>
 /* ==================================================================
    TROMBINOSCOPE OCBA — outil local, aucune donnée ne sort du poste.
@@ -468,7 +472,9 @@ footer a:hover{color:var(--violet);border-bottom-color:var(--violet)}
    ================================================================== */
 const MDP = null;   /* copie publique : mode administration désactivé */
 
-let DONNEES = [];
+/* Les données vivent dans le bloc <script type="application/json" id="donnees"> : ce script-ci ne change jamais,
+   son empreinte dans la politique de sécurité (CSP) reste donc vraie, y compris dans l'outil complet exporté. */
+let DONNEES = (function(){try{const d=JSON.parse(document.getElementById('donnees').textContent||'[]');return Array.isArray(d)?d:[]}catch(e){return[]}})();
 const SOURCE = 'Trombi OCBA août 2026 + organigramme du 01.10.2026';
 
 let vue='grille', admin=false, courant=null, listeAff=[], photoTmp='';
@@ -576,9 +582,9 @@ function filtrer(){
 }
 function carte(p){
   const n=noteDe(p);
-  const img=p.photo?`<img class="ph" src="${p.photo}" alt="" loading="lazy">`
+  const img=p.photo?`<img class="ph" src="${esc(p.photo)}" alt="" loading="lazy">`
     :`<div class="ph-vide">${p.statut==='vacant'?'—':esc(initiales(p.nom))}</div>`;
-  return `<div class="fiche" onclick="fiche(${p.id})">
+  return `<div class="fiche" data-clic="fiche(${p.id})">
     ${p.statut==='vacant'?'<span class="tag-vac">Vacant</span>':(p.resp?'<span class="tag-resp">Resp.</span>':'')}
     ${n?'<span class="pastille" title="Note personnelle">📝</span>':''}
     ${img}
@@ -633,7 +639,7 @@ function accueil(){
    </ol>
    <p>À défaut de JSON, un <b>CSV</b> (annuaire seul) et un dossier de <b>photos</b> nommées « Prénom Nom.jpg »
       produisent le même résultat, en deux imports successifs.</p>
-   <p style="margin-top:12px"><button class="bt bt-p" onclick="ouvrir('mImport');ongl('jsn')">📥 Importer les données maintenant</button></p>
+   <p style="margin-top:12px"><button class="bt bt-p" data-clic="ouvrir('mImport');ongl('jsn')">📥 Importer les données maintenant</button></p>
   </div></div>`;
 }
 
@@ -658,7 +664,7 @@ function rendreOrga(L){
     const plie=plies[key];
     const chefs=n.p.filter(p=>p.resp);
     return `<div class="noeud ${lvl===0?'rac':''} nd-n${lvl}">
-      <div class="nd-h" onclick="plier('${esc(key).replace(/'/g,"&#39;")}')">
+      <div class="nd-h" data-clic="plier(${esc(JSON.stringify(key))})">
         <span class="nd-tog">${plie?'+':'−'}</span>
         <span class="nd-t">${esc(n.n)}</span>
         ${info[key]?`<span class="nd-code">${esc(info[key])}</span>`:''}
@@ -674,8 +680,8 @@ function rendreOrga(L){
     :'<div class="vide">Aucun résultat.</div>';
 }
 function mini(p){
-  const img=p.photo?`<img src="${p.photo}" alt="" loading="lazy">`:`<span class="av">${p.statut==='vacant'?'—':esc(initiales(p.nom))}</span>`;
-  return `<div class="mini-p ${p.resp?'chef':''}" onclick="fiche(${p.id})" title="${esc(p.fonction)}">
+  const img=p.photo?`<img src="${esc(p.photo)}" alt="" loading="lazy">`:`<span class="av">${p.statut==='vacant'?'—':esc(initiales(p.nom))}</span>`;
+  return `<div class="mini-p ${p.resp?'chef':''}" data-clic="fiche(${p.id})" title="${esc(p.fonction)}">
     ${img}<span><b>${esc(p.nom)}</b><br><i>${esc(p.fonction||'')}</i></span></div>`;
 }
 function plier(k){plies[k]=!plies[k];rendre()}
@@ -685,7 +691,7 @@ function ligne(l,v){return v?`<tr><th>${esc(l)}</th><td>${v}</td></tr>`:''}
 function fiche(id){
   const p=DONNEES.find(x=>x.id===id);if(!p)return;courant=id;
   const n=NOTES[cle(p.nom)]||{txt:'',tags:[]};
-  const img=p.photo?`<img class="d-ph" src="${p.photo}" alt="">`
+  const img=p.photo?`<img class="d-ph" src="${esc(p.photo)}" alt="">`
     :`<div class="d-ph" style="display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:bold;color:var(--teal)">${p.statut==='vacant'?'—':esc(initiales(p.nom))}</div>`;
   const ch=chemin(p);
   const chefP=p.chef?DONNEES.find(x=>norm(x.nom)===norm(p.chef)):null;
@@ -700,7 +706,7 @@ function fiche(id){
      <table class="info">
       ${ligne('Direction',esc(p.direction))}${ligne('Service',esc(p.service))}
       ${ligne('Unité / secteur',esc(p.unite)+(p.uo?' <span style="color:var(--gris);font-size:11px">'+esc(p.uo)+'</span>':''))}
-      ${ligne('Responsable',chefP?`<span class="lien" onclick="fiche(${chefP.id})">${esc(p.chef)}</span>`:esc(p.chef))}
+      ${ligne('Responsable',chefP?`<span class="lien" data-clic="fiche(${chefP.id})">${esc(p.chef)}</span>`:esc(p.chef))}
       ${ligne('Site / affectation',esc(p.affectation))}
       ${ligne('Téléphone',p.tel?`<a href="tel:${esc(p.tel)}">${esc(p.tel)}</a>`:'')}
       ${ligne('Courriel',p.email?`<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>`:'')}
@@ -711,11 +717,11 @@ function fiche(id){
    ${eq.length?`<div style="margin-top:12px"><div style="font-size:11px;font-weight:bold;color:var(--teal);text-transform:uppercase;margin-bottom:5px">Même unité — ${esc(chemin(p).slice(-1)[0])} (${eq.length})</div>
      <div class="mini" style="max-height:160px;overflow:auto">${eq.slice().sort((a,b)=>(b.resp?1:0)-(a.resp?1:0)||a.nom.localeCompare(b.nom,'fr')).map(mini).join('')}</div></div>`:''}
    <div class="note-z">
-    <h4><span>📝 Ma note personnelle</span><button onclick="fermer('mFiche');ouvrirNotes();ongletNotes('t')">Gérer mes étiquettes</button></h4>
-    <div class="note-tags">${TAGS.length?TAGS.map(t=>`<span class="ntag${(n.tags||[]).includes(t)?' on':''}" onclick="basculeTag(${JSON.stringify(t).replace(/"/g,'&quot;')})">${esc(t)}</span>`).join('')
+    <h4><span>📝 Ma note personnelle</span><button data-clic="fermer('mFiche');ouvrirNotes();ongletNotes('t')">Gérer mes étiquettes</button></h4>
+    <div class="note-tags">${TAGS.length?TAGS.map(t=>`<span class="ntag${(n.tags||[]).includes(t)?' on':''}" data-clic="basculeTag(${esc(JSON.stringify(t))})">${esc(t)}</span>`).join('')
       :'<span class="ntag vide">Aucune étiquette définie — « Gérer mes étiquettes » pour en créer.</span>'}</div>
     <textarea id="noteTxt" placeholder="Contexte, dossier partagé, historique d'échange, à qui s'adresser…"
-      oninput="majNote()" onblur="majNote(true)">${esc(n.txt||'')}</textarea>
+      data-saisie="majNote()" data-sortie="majNote(true)">${esc(n.txt||'')}</textarea>
     <div class="hint">Enregistrée sur ce poste uniquement · conservée lors des mises à jour · exportable en CSV.</div>
    </div>`;
   ouvrir('mFiche');
@@ -755,7 +761,7 @@ function ouvrirNotes(){
    '<table class="info"><tr><th style="width:26%">Personne</th><th style="width:22%;background:var(--teal)">Étiquettes</th><th style="background:var(--teal)">Note</th></tr>'+
    ks.sort((a,b)=>(NOTES[a].nom||a).localeCompare(NOTES[b].nom||b,'fr')).map(k=>{
      const n=NOTES[k], p=DONNEES.find(x=>cle(x.nom)===k);
-     return `<tr${p?` style="cursor:pointer" onclick="fermer('mNotes');fiche(${p.id})"`:''}>
+     return `<tr${p?` style="cursor:pointer" data-clic="fermer('mNotes');fiche(${p.id})"`:''}>
       <td><b>${esc(n.nom||k)}</b>${p?'':' <span style="color:var(--rouge);font-size:10px">(absent de l&#39;annuaire)</span>'}</td>
       <td>${esc((n.tags||[]).join(', '))}</td>
       <td>${esc(n.txt||'')}</td></tr>`}).join('')+'</table>'
@@ -764,8 +770,8 @@ function ouvrirNotes(){
 }
 function rendreTags(){
   $('tagEdit').innerHTML=TAGS.map((t,i)=>`<div class="tagrow">
-    <input value="${esc(t)}" onchange="renommerTag(${i},this.value)">
-    <button class="bt bt-s" onclick="supprimerTag(${i})">✕</button></div>`).join('')
+    <input value="${esc(t)}" data-change="renommerTag(${i},this.value)">
+    <button class="bt bt-s" data-clic="supprimerTag(${i})">✕</button></div>`).join('')
     ||'<p style="color:var(--gris);font-size:11.5px;margin-bottom:8px">Aucune étiquette.</p>';
 }
 function ajouterTag(){
@@ -845,9 +851,9 @@ function quizTour(){
   if(mm.length<3)mm=pool.filter(p=>p.id!==cible.id);
   const autres=mm.sort(()=>Math.random()-.5).slice(0,3);
   const rep=[cible,...autres].sort(()=>Math.random()-.5);
-  $('quizB').innerHTML=`<img src="${cible.photo}" alt="">
+  $('quizB').innerHTML=`<img src="${esc(cible.photo)}" alt="">
     <div style="font-size:12px;color:var(--gris);font-weight:bold">${esc(cible.service||cible.direction)}</div>
-    <div class="rep">${rep.map(r=>`<button onclick="quizRep(${r.id},${cible.id},this)">${esc(r.nom)}</button>`).join('')}</div>
+    <div class="rep">${rep.map(r=>`<button data-clic="quizRep(${r.id},${cible.id},this)">${esc(r.nom)}</button>`).join('')}</div>
     <div class="ind" id="quizInd"></div>`;
   quizScore();
 }
@@ -881,7 +887,7 @@ function stats(){
   $('statsB').innerHTML=`<div class="aide">Effectif total <b>${DONNEES.length-v}</b> collaborateurs · <b>${v}</b> postes vacants ·
      <b>${new Set(DONNEES.map(p=>p.service)).size}</b> services · <b>${new Set(DONNEES.map(p=>p.unite).filter(Boolean)).size}</b> unités · source ${esc(SOURCE)}.</div>
    ${sansPhoto().length?`<div class="aide alerte"><b>${sansPhoto().length} fiches sans photo individuelle</b> (aucune photo, ou silhouette générique) —
-     elles sont exclues du mode « Mémoriser ». <a class="lien" onclick="listeSansPhoto()">Voir la liste</a>.</div>`:''}`
+     elles sont exclues du mode « Mémoriser ». <a class="lien" data-clic="listeSansPhoto()">Voir la liste</a>.</div>`:''}`
    +bloc('Par direction',d)+bloc('Par service',par('service'))+bloc('Par unité / secteur',par('unite'));
   ouvrir('mStats');
 }
@@ -891,9 +897,9 @@ function listeSansPhoto(){
   const L=sansPhoto().slice().sort((a,b)=>a.nom.localeCompare(b.nom,'fr'));
   $('statsB').innerHTML=`<div class="aide"><b>${L.length}</b> fiches sans photo individuelle. Déposer les fichiers
     « Prénom Nom.jpg » via 📥 Importer → Photos les corrige d'un coup.
-    <a class="lien" onclick="stats()">← Retour aux effectifs</a></div>
+    <a class="lien" data-clic="stats()">← Retour aux effectifs</a></div>
     <table class="info"><tr><th style="width:30%">Personne</th><th style="background:var(--teal)">Service</th><th style="background:var(--teal);width:22%">État</th></tr>
-    ${L.map(p=>`<tr style="cursor:pointer" onclick="fermer('mStats');fiche(${p.id})"><td><b>${esc(p.nom)}</b></td>
+    ${L.map(p=>`<tr style="cursor:pointer" data-clic="fermer('mStats');fiche(${p.id})"><td><b>${esc(p.nom)}</b></td>
       <td>${esc(p.service)}</td><td>${p.photo?'silhouette générique':'aucune photo'}</td></tr>`).join('')}</table>`;
 }
 
@@ -907,7 +913,7 @@ function expCSV(tout){
   fermer('mExport');toast('📄 '+L.length+' lignes exportées','ok');
 }
 function modeleCSV(){
-  tel(new Blob(['﻿'+COLS.join(';')+'\nJean Dupont;Chef de projets;Direction des constructions;Direction des constructions;Secteur projets DCO 1;UO 6567;Sandro Simioni;;+41 22 546 00 00;jean.dupont@etat.ge.ch;M;pourvu;Office cantonal des bâtiments › Direction des constructions › Secteur projets DCO 1\n'],
+  tel(new Blob(['﻿'+COLS.join(';')+'\nJean Dupont;Chef de projets;Direction des constructions;Direction des constructions;Secteur projets DCO 1;UO 6567;Marie Martin;;+41 22 546 00 00;jean.dupont@etat.ge.ch;M;pourvu;Office cantonal des bâtiments › Direction des constructions › Secteur projets DCO 1\n'],
     {type:'text/csv;charset=utf-8;'}),'modele_trombinoscope.csv');
   toast('📄 Modèle téléchargé','ok');
 }
@@ -918,7 +924,8 @@ function expJSON(){
 function expHTML(avecDonnees){
   if(avecDonnees&&!DONNEES.length){toast('Aucune donnée à embarquer','wr');return}
   let h=document.documentElement.outerHTML;
-  h=h.replace(/let DONNEES = [\s\S]*?;\nconst SOURCE/, 'let DONNEES = '+(avecDonnees?JSON.stringify(DONNEES):'[]')+';\nconst SOURCE');
+  /* « < » écrit \u003c : aucune donnée ne peut fermer le bloc */
+  h=h.replace(/(<script type="application\/json" id="donnees">)[\s\S]*?(<\/script>)/, (m,a,b)=>a+(avecDonnees?JSON.stringify(DONNEES).replace(/</g,'\\u003c'):'[]')+b);
   tel(new Blob(['<!DOCTYPE html>\n'+h],{type:'text/html;charset=utf-8'}),
       avecDonnees?('trombinoscope_OCBA_'+horodate()+'.html'):'trombinoscope_vierge.html');
   fermer('mExport');
@@ -1047,8 +1054,8 @@ function preparerCSV(rows){
      ${arr.length?'<b>Nouveaux :</b> '+arr.map(p=>esc(p.nom)).join(', '):''}
      ${dep.length?'<br><br><b>Absents :</b> '+dep.map(p=>esc(p.nom)).join(', '):''}</div>
     <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">
-     <button class="bt bt-s" onclick="appliquerCSV(false)">Compléter (garder les photos et les absents)</button>
-     <button class="bt bt-s bt-p" onclick="appliquerCSV(true)">Remplacer l'annuaire</button></div>`;
+     <button class="bt bt-s" data-clic="appliquerCSV(false)">Compléter (garder les photos et les absents)</button>
+     <button class="bt bt-s bt-p" data-clic="appliquerCSV(true)">Remplacer l'annuaire</button></div>`;
 }
 function appliquerCSV(remplace){
   if(!csvTmp)return;
@@ -1088,7 +1095,7 @@ function apercuPhotos(){
     <b style="color:var(--rouge)">${ko.length}</b> sans correspondance.</div>
     ${ko.length?`<div style="max-height:120px;overflow:auto;font-size:11px;border:1px solid var(--bord);padding:8px;border-radius:3px">
      <b>Non rapprochées :</b> ${ko.map(p=>esc(p.fichier)).join(', ')}</div>`:''}
-    <div style="margin-top:10px;text-align:right"><button class="bt bt-s bt-p" onclick="appliquerPhotos()">Appliquer ${ok.length} photos</button></div>`;
+    <div style="margin-top:10px;text-align:right"><button class="bt bt-s bt-p" data-clic="appliquerPhotos()">Appliquer ${ok.length} photos</button></div>`;
 }
 function appliquerPhotos(){
   let n=0;phoTmp.forEach(p=>{if(!p.cible)return;const d=DONNEES.find(x=>x.id===p.cible);if(d){d.photo=p.b64;d.gen=0;n++}});
@@ -1295,7 +1302,7 @@ function fil3D(){
     const p=n.path.slice(0,i), nd=V3.map[p.join('›')];
     if(nd) ch.push(i===n.path.length
       ? '<b>'+esc(i?nd.n:'Office cantonal des bâtiments')+'</b>'
-      : '<a class="lien" onclick="vers3D('+JSON.stringify(p.join('›')).replace(/"/g,'&quot;')+')">'
+      : '<a class="lien" data-clic="vers3D('+esc(JSON.stringify(p.join('›')))+')">'
         +esc(i?nd.n:'Office')+'</a>');
   }
   f.innerHTML=ch.join(' <span class="v3pt">›</span> ')
@@ -1488,11 +1495,11 @@ function rendre3D(L){
     +'<canvas id="v3cv"></canvas>'
     +'<div class="v3hud v3tl" id="v3Fil"></div>'
     +'<div class="v3hud v3tr">'
-      +'<button class="bt bt-s" id="v3Auto" onclick="auto3D()">↻ Rotation</button>'
-      +'<button class="bt bt-s" onclick="zoom3D(0.78)" title="Zoom avant">＋</button>'
-      +'<button class="bt bt-s" onclick="zoom3D(1.3)" title="Zoom arrière">－</button>'
-      +'<button class="bt bt-s" onclick="tout3D()" title="Déplier toute la hiérarchie">Tout déplier</button>'
-      +'<button class="bt bt-s bt-p" onclick="reset3D()">Vue d\'ensemble</button>'
+      +'<button class="bt bt-s" id="v3Auto" data-clic="auto3D()">↻ Rotation</button>'
+      +'<button class="bt bt-s" data-clic="zoom3D(0.78)" title="Zoom avant">＋</button>'
+      +'<button class="bt bt-s" data-clic="zoom3D(1.3)" title="Zoom arrière">－</button>'
+      +'<button class="bt bt-s" data-clic="tout3D()" title="Déplier toute la hiérarchie">Tout déplier</button>'
+      +'<button class="bt bt-s bt-p" data-clic="reset3D()">Vue d\'ensemble</button>'
     +'</div>'
     +'<div class="v3hud v3bl">Glisser : pivoter · Molette : zoomer · Maj + glisser : déplacer · '
       +'Clic sur une unité : la déplier et s\'y rendre · Clic à nouveau : replier · '
@@ -1591,7 +1598,7 @@ function rendre3D(L){
 (function(){
   var VERSIONS = [
     {"date": "13.10.2026", "objet": "trombinoscope", "version": "v3.2", "titre": "Numéro de version et historique", "points": ["Le pied de page porte le numéro de version de l'outil ; un clic dessus ouvre cet historique, comme dans les autres outils OCBA.", "L'historique affiché est le même partout : « Cet outil » ne montre que le trombinoscope, « Tous les outils » montre les cinq."]},
-    {"date": "12.10.2026", "objet": "trombinoscope", "version": "v3.1", "titre": "Organigramme du 01.10.2026", "points": ["Chaque fiche a été comparée à sa case dans l'organigramme d'octobre : 289 → 294 fiches (270 personnes, 24 postes vacants).", "Mutations vers la DPTE : Clara Jousson, Lucas Cohen Adad, Monica Alvarez Ozainne, Marina Galiano, Piergiorgio Loiacono, et le nouveau Pôle spécialistes techniques (Luc Gibrat, Flavio Pittueo, Adrien Tabarini, Emmanuel Maidonis, Sylvain Vergnal). Bernard Wenger rejoint la DRT.", "Les neuf responsables de secteur de la DPTE deviennent « Chef / Cheffe de projets » ; le Secteur projets DRT 6 disparaît au profit du Secteur portefeuille 9.", "Départs : Sibylle Da Silva (poste devenu vacant), Jean-Marc Campana (fiche supprimée). Détail : RAPPORT-changements_20261001.md."]},
+    {"date": "12.10.2026", "objet": "trombinoscope", "version": "v3.1", "titre": "Organigramme du 01.10.2026", "points": ["Chaque fiche a été comparée à sa case dans l'organigramme d'octobre : 289 → 294 fiches (270 personnes, 24 postes vacants).", "Mutations vers la DPTE (cinq personnes) et nouveau Pôle spécialistes techniques (cinq personnes) ; une mutation vers la DRT.", "Les neuf responsables de secteur de la DPTE deviennent « Chef / Cheffe de projets » ; le Secteur projets DRT 6 disparaît au profit du Secteur portefeuille 9.", "Deux départs : un poste devenu vacant, une fiche supprimée."]},
     {"date": "12.10.2026", "objet": "trombinoscope", "version": "v3.0", "titre": "Cinquième vue : organigramme 3D", "points": ["La hiérarchie en arbre conique navigable : une unité est un plateau, ses sous-unités se répartissent en cercle au niveau du dessous, les personnes forment une couronne autour de leur unité.", "Seule la branche ouverte est dépliée. Un clic sur une unité la déplie et y amène la caméra, un clic sur un visage ouvre la fiche ; glisser pour pivoter, molette pour zoomer, Échap pour revenir à la vue d'ensemble.", "Canvas 2D et projection perspective écrits à la main : aucune librairie 3D, aucune requête réseau.", "Le CSV est régénéré depuis le JSON : la désynchronisation signalée en septembre est résorbée."]},
     {"date": "07.10.2026", "objet": "accueil", "version": "v1.7", "titre": "Import depuis SharePoint", "points": ["Nouveau bouton « Importer depuis SharePoint » : le classeur est lu à son adresse sur l'intranet de l'État. L'adresse se saisit une fois et reste dans le navigateur.", "Si la lecture directe est refusée, la page propose le lien de téléchargement ; le classeur se dépose ensuite comme d'habitude.", "L'import manuel (dépôt ou choix du fichier) ne change pas."]},
     {"date": "07.10.2026", "objet": "priorisation", "version": "v2.6", "titre": "Recherche globale", "points": ["La recherche de l'en-tête cherche aussi dans la note du sous-site, son adresse, ses responsables, son chauffage, son patrimoine, son état SIA, ses projets GE-Invest et ses surfaces de relais ; la proposition indique le champ où le texte a été trouvé.", "Le filtre du classement (texte libre validé par Entrée) cherche dans les mêmes champs. Casse et accents sont ignorés."]},
@@ -1630,7 +1637,7 @@ function rendre3D(L){
     {"date": "24.09.2026", "objet": "commun", "version": null, "titre": "Modules communs à source unique", "points": ["Les modules communs ont une seule source, copiée à l'identique dans les quatre pages.", "Le contrat de données lit les nouvelles feuilles GE-Invest, avec repli sur l'ancienne feuille GEI_Suivi."]},
     {"date": "23.09.2026", "objet": "priorisation", "version": null, "titre": "Libellé Estim CECB+", "points": ["Le menu Montants suit le nouveau nom Estim CECB+ ; l'ancien nom reste reconnu.", "Mise en ligne le 23.09."]},
     {"date": "23.09.2026", "objet": "commun", "version": null, "titre": "Effacement du classeur commun clarifié", "points": ["« Effacer les données » pose une seconde question qui nomme le fichier et prévient que les trois outils le perdront.", "Une fois effacé, le classeur ne revient plus au rechargement.", "Mise en ligne le 23.09."]},
-    {"date": "22.09.2026", "objet": "priorisation", "version": null, "titre": "Liens sortants masqués", "points": ["Les quatre liens vers Pilotage PTE, la simulation et la revue sont masqués, à la demande d'Achim.", "Modification faite dans la version en ligne."]},
+    {"date": "22.09.2026", "objet": "priorisation", "version": null, "titre": "Liens sortants masqués", "points": ["Les quatre liens vers Pilotage PTE, la simulation et la revue sont masqués, à la demande du chef de projet PTE.", "Modification faite dans la version en ligne."]},
     {"date": "21.09.2026", "objet": "accueil", "version": "v1.3", "titre": "Copie en ligne aux liens réécrits", "points": ["Version en ligne dont les liens ont été adaptés à la main au site publié.", "Non reportée en local, resté en v1.2 : écart résolu par la v1.4."]},
     {"date": "20.09.2026", "objet": "accueil", "version": "v1.2", "titre": "Version locale", "points": ["Version tenue en local ; le détail des changements n'est pas consigné."]},
     {"date": "19.09.2026", "objet": "commun", "version": null, "titre": "Contrat de données commun", "points": ["La simulation et la revue lisent les colonnes du classeur avec les mêmes règles.", "Une colonne est trouvée par son nom, jamais par sa position."]},
@@ -1644,7 +1651,7 @@ function rendre3D(L){
     {"date": "13.09.2026", "objet": "revue", "version": "v0.3", "titre": "Lien avec la priorisation PTE", "points": ["Chaque projet affiche son rang dans la priorisation PTE, grâce à l'export CSV de la priorisation.", "Cartes « Priorisation PTE » sur la fiche projet et « Alignement » sur le portefeuille.", "Contrastes renforcés ; la couleur n'est jamais le seul repère."]},
     {"date": "12.09.2026", "objet": "revue", "version": "v0.2", "titre": "Refonte visuelle", "points": ["Tableau de bord en ouverture ; import, complétude et paramètres regroupés dans Données.", "Filtre RPF/RP commun à toutes les vues ; graphiques et info-bulles au lieu de tableaux."]},
     {"date": "12.09.2026", "objet": "revue", "version": "v0.1.1", "titre": "Corrections", "points": ["Impact de risque « Assez faible » : l'indicateur ne passe plus à tort en gris.", "Trajectoire 2030 : l'écart à combler est exprimé en valeur absolue."]},
-    {"date": "03.09.2026", "objet": "trombinoscope", "version": "v2.2", "titre": "Organigramme du 01.09.2026", "points": ["Huit changements repris de l'organigramme de septembre : arrivée de Marisa Sava, départ d'Olivier Favot (Secteur 3 sans chef), deux postes vacants pourvus, deux nouveaux postes vacants.", "Seul le JSON a été corrigé à cette date ; l'outil et le CSV ont été régénérés le 12.10."]},
+    {"date": "03.09.2026", "objet": "trombinoscope", "version": "v2.2", "titre": "Organigramme du 01.09.2026", "points": ["Huit changements repris de l'organigramme de septembre : une arrivée, un départ (un secteur sans chef), deux postes vacants pourvus, deux nouveaux postes vacants.", "Seul le JSON a été corrigé à cette date ; l'outil et le CSV ont été régénérés le 12.10."]},
     {"date": "24.08.2026", "objet": "trombinoscope", "version": "v2.1", "titre": "Quiz « Mémoriser » fiable", "points": ["Les quatre noms proposés sont du même sexe que la personne recherchée (nouvelle colonne « sexe » du CSV).", "Les fiches sans photo et celles portant la silhouette générique du PDF sont exclues du tirage ; la fenêtre Effectifs en donne la liste, pour réclamer les photos manquantes."]},
     {"date": "24.08.2026", "objet": "trombinoscope", "version": "v2.0", "titre": "Organigramme fusionné, copie publique", "points": ["L'organigramme du 17.08.2026 est fusionné au trombinoscope : 108 unités avec leur code CR/UO, leur responsable et leur hiérarchie complète, portée par la colonne « hierarchie » du CSV.", "Quatrième vue : organigramme dépliable. Photos agrandies, étiquettes de notes éditables par l'utilisateur, champs téléphone et courriel, mode « Mémoriser ».", "Deux copies : l'outil complet pour l'intranet, et une copie vierge sans aucune donnée nominative, publiable en accès libre."]},
     {"date": "24.08.2026", "objet": "trombinoscope", "version": "v1.0", "titre": "Première version", "points": ["284 fiches et 270 photos extraites du PDF « Trombi OCBA août 2026 » par lecture positionnelle.", "Refonte à la charte OCBA / DPTE : recherche, filtres, trois vues, fiches, effectifs, impression.", "Notes personnelles : texte libre et étiquettes, enregistrées dans le navigateur du poste, jamais transmises, conservées lors des mises à jour."]},
@@ -1749,6 +1756,49 @@ function rendre3D(L){
   }
 
 })();
+
+/* ---------- ACTIONS DE LA PAGE (14.11.2026) ----------
+   Plus aucun gestionnaire « on…= » dans le HTML : la politique de sécurité (CSP) les interdit. Un élément porte
+   data-clic, data-change, data-saisie, data-sortie ou data-entree = « action(arguments) ; action(…) ». Un seul écouteur
+   par type d'événement lit l'attribut et appelle l'action par son nom, dans la liste ci-dessous. Rien n'est évalué :
+   un nom hors liste ou un argument qui n'est ni texte, ni nombre, ni l'un des mots admis est ignoré. */
+function cliquer(id){$(id).click()}
+function imprimer(){window.print()}
+const ACTIONS={ouvrir,fermer,rendre,majServices,basculeFiltreNotes,basculeVacants,setVue,fiche,plier,majNote,basculeTag,naviguer,
+  ongletNotes,ouvrirNotes,ajouterTag,renommerTag,supprimerTag,resetTags,exportNotes,importNotes,effacerNotes,quizStart,quizRep,stats,listeSansPhoto,
+  expCSV,modeleCSV,expJSON,expHTML,basculeAdmin,verifPass,viderDonnees,fEdition,chargePhoto,enregistrer,supprimer,ongl,chargeCSV,appliquerCSV,
+  chargePhotos,appliquerPhotos,chargeJSON,vers3D,reset3D,tout3D,auto3D,zoom3D,cliquer,imprimer};
+function executerActions(texte,el,ev){
+  const re=/\s*([A-Za-z_$][\w$]*)\(((?:'[^']*'|"(?:[^"\\]|\\.)*"|[^()'"])*)\)\s*(?:;|$)/y;
+  let i=0,m;
+  while(i<texte.length){
+    re.lastIndex=i;m=re.exec(texte);
+    if(!m||!Object.prototype.hasOwnProperty.call(ACTIONS,m[1]))return;
+    const args=[];let ok=true;
+    (m[2].match(/'[^']*'|"(?:[^"\\]|\\.)*"|[^,\s][^,]*/g)||[]).forEach(a=>{
+      a=a.trim();
+      if(a[0]==="'")args.push(a.slice(1,-1));
+      else if(a[0]==='"'){try{args.push(JSON.parse(a))}catch(e){ok=false}}
+      else if(/^-?\d+(\.\d+)?$/.test(a))args.push(+a);
+      else if(a==='true')args.push(true);else if(a==='false')args.push(false);else if(a==='null')args.push(null);
+      else if(a==='this')args.push(el);else if(a==='this.value')args.push(el.value);
+      else if(a==='event')args.push(ev);else if(a==='courant')args.push(courant);
+      else ok=false});
+    if(!ok)return;
+    ACTIONS[m[1]].apply(null,args);
+    i=re.lastIndex;
+  }
+}
+[['click','data-clic'],['change','data-change'],['input','data-saisie'],['focusout','data-sortie'],['keydown','data-entree']].forEach(([type,attr])=>{
+  document.addEventListener(type,ev=>{
+    if(attr==='data-entree'&&ev.key!=='Enter')return;
+    /* comme un gestionnaire en ligne : de l'élément visé vers ses parents */
+    const chaine=[];for(let n=ev.target;n&&n!==document;n=n.parentNode)if(n.getAttribute&&n.hasAttribute(attr))chaine.push(n);
+    chaine.forEach(n=>{if(attr==='data-sortie'&&n!==ev.target)return;executerActions(n.getAttribute(attr),n,ev)});
+  });
+});
+/* page affichée dans le cadre d'un autre site : rien n'est montré */
+if(window.top!==window.self){try{void window.top.location.href}catch(e){document.documentElement.hidden=true}}
 
 /* ---------- DÉMARRAGE ---------- */
 chargerNotes();majFiltres();compter();rendre();

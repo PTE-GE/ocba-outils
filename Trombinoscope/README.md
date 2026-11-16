@@ -58,7 +58,10 @@ définissez vous-même (renommer, supprimer, créer).
 ## Fonctionnement technique
 
 Un seul fichier HTML. Aucune librairie externe, aucun CDN, **aucune requête réseau** : ouvrez la
-page, coupez le réseau, tout continue de fonctionner. La vue 3D elle-même est écrite à la main —
+page, coupez le réseau, tout continue de fonctionner. La page porte une politique de sécurité
+(CSP) à empreintes : seul son propre script s'exécute, aucune image ni requête ne part vers un autre
+site. Les données importées sont rangées dans un bloc à part du script, qui ne change donc jamais —
+l'« outil complet » exporté garde la même empreinte. La vue 3D elle-même est écrite à la main —
 canvas 2D et projection perspective, pas de moteur 3D embarqué. L'import CSV, le rapprochement des photos,
 le redimensionnement des images et la construction de l'organigramme se font intégralement dans
 le navigateur.
