@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-SpR/L6rrmNFcJdwmqdDgw4FzjsyVV0IzuGH0AWOb1oI=' 'sha256-cwtCwi0M6+njQZWF8TH2c11WeFvyJrqMrDD5KVa+qyg=' 'sha256-3srdaCLdYUQC6GtPZ99MeoVhyNj7ugzqZgQVdHNWHmo=' 'sha256-wcytUdZFJXnxsizoKhn5kCEf7MpqLmtyTf0T0KKfUCU=' 'sha256-UUiI/4huYlfrewigXylxrk06b2sUllb+0XKiugUN3xI=' 'sha256-dXMhz01Z28QGkzkHpjpzVt3wVjq2iqU1AsFqJC8wiWk=' 'sha256-zpVbscbOr6H4DOMuS+5bi7cAslGewz/Qj3N+J4hbjlg=' 'sha256-Od5eunmWP6HChVuQtYfAMHzubSq6Tbh/GS5W0HkYHCI=' 'sha256-cphz6g+iUKT1boC6HCv+VgmNitW/Q1byFwP8KQajcXY=' 'sha256-S8IZr2RLVpRFH57GfMZUH9KWfM4Xqp2907SF0ct/Tu4=' 'sha256-WspxV6IeE7upT+HeYpHLUMcE4kQ3l3KmmAOvYNFf2Sw=' 'sha256-bnAbwHevk2xn9+AJ2LcBkMkM9pfnrRNPftETlK1XPKQ='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net https://nominatim.openstreetmap.org; img-src data: https://server.arcgisonline.com https://wmts.geo.admin.ch https://a.tile.opentopomap.org https://b.tile.opentopomap.org https://c.tile.opentopomap.org; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-SpR/L6rrmNFcJdwmqdDgw4FzjsyVV0IzuGH0AWOb1oI=' 'sha256-cwtCwi0M6+njQZWF8TH2c11WeFvyJrqMrDD5KVa+qyg=' 'sha256-LQNdEdeCanb5i1nD78Ms9Am8wAsOYb1r46L1spyzpq8=' 'sha256-wcytUdZFJXnxsizoKhn5kCEf7MpqLmtyTf0T0KKfUCU=' 'sha256-UUiI/4huYlfrewigXylxrk06b2sUllb+0XKiugUN3xI=' 'sha256-dXMhz01Z28QGkzkHpjpzVt3wVjq2iqU1AsFqJC8wiWk=' 'sha256-zpVbscbOr6H4DOMuS+5bi7cAslGewz/Qj3N+J4hbjlg=' 'sha256-ENyVHYKOmi8ep9RbCu/vc29fgEqRKVkOWD6dCYCRbnQ=' 'sha256-VK8qsYl6W9XZW6fM5q4DnIBPUwFUQfQXQx2/vpCY7IE=' 'sha256-S8IZr2RLVpRFH57GfMZUH9KWfM4Xqp2907SF0ct/Tu4=' 'sha256-WspxV6IeE7upT+HeYpHLUMcE4kQ3l3KmmAOvYNFf2Sw=' 'sha256-bnAbwHevk2xn9+AJ2LcBkMkM9pfnrRNPftETlK1XPKQ='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net https://nominatim.openstreetmap.org; img-src data: https://server.arcgisonline.com https://wmts.geo.admin.ch https://a.tile.opentopomap.org https://b.tile.opentopomap.org https://c.tile.opentopomap.org; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <!-- <PTE-VUE prio:tete> -->
 <style id="css-vue-prio-jetons">
 :root{
@@ -3096,6 +3096,7 @@ var PTE_COMMUN = (function () {
      plus ancienne des vingt sort ; l'historique complet est dans 00_Contexte/Versioning_PTE.md,
      ce que dit le pied de la fenêtre. Une entrée ne sort qu'une fois écrite dans ce journal. */
   var VERSIONS = [
+    {"date": "19.11.2026", "objet": "revue", "version": "v0.76", "titre": "Allègement : mode revue retiré ; Partager ; Délais", "points": ["Mode revue retiré ; « Performance coût et planning » devient « Cohérence coût et planning ».", "Organigramme : libellés courts communs aux projets et aux lignes XXXX (détail au survol) ; coche « nécessaire » épaissie, sablier « à temporiser » en vert.", "Délais : la fin ré-estimée compte comme un jalon, plus de glissement depuis la fin initiale. Dépenses : orange de 5 à 10 % de dépassement, rouge au-delà de 10 % (avant 15 %).", "« À compléter » : diagnostic polluants retiré (simple information) ; bouton Partager : fichier CSV joint et court message d’instructions (Outlook ou Mail)."]},
     {"date": "19.11.2026", "objet": "revue", "version": "v0.75", "titre": "Colonne retirée du classeur", "points": ["Ne cherche plus la colonne « Statut consolidation », supprimée de Plan_PTE le 18.11 ; aucun affichage ne s’en servait."]},
     {"date": "19.11.2026", "objet": "priorisation", "version": "v2.57", "titre": "Colonnes retirées du classeur", "points": ["Ne cherche plus sept colonnes supprimées de Plan_PTE le 18.11 (IDE projeté, part renouvelable actuelle et après projet, montants DD engagé et prévu, type et surface brute de toiture) ; aucune n’était exploitée, les résultats ne changent pas."]},
     {"date": "18.11.2026", "objet": "revue", "version": "v0.74", "titre": "« À compléter » suit les filtres", "points": ["La carte « À compléter » de Sémaphores suit le fil d’Ariane et tous les filtres (RP, statut, type, phase SIA, recherche) : un projet terminé exclu par le filtre de statut n’y figure plus.", "Le courriel, l’export CSV, le taux de réponse et la tuile « Questions soldées » portent sur les mêmes projets."]},
@@ -3115,7 +3116,6 @@ var PTE_COMMUN = (function () {
     {"date": "14.11.2026", "objet": "revue", "version": "v0.70", "titre": "Carte des phases SIA : fond de carte au choix", "points": ["Planning, carte des phases SIA : fond de carte au choix parmi sept, le même que dans Prioriser.", "Liens vers Prioriser et la simulation : ouverts dans la page, sans rechargement.", "Méthode (panneau « ? ») : largeur, taille du texte et marges prévues enfin appliquées."]},
     {"date": "14.11.2026", "objet": "priorisation", "version": "v2.54", "titre": "Prioriser dans la page unique", "points": ["Prioriser est une vue de la page unique, à la même adresse (« #vue=prio ») ; l’ancienne page y renvoie.", "Le classeur commun est relu à chaque dépôt, sans copie des sous-sites dans le navigateur ; notes, ajustements, réglages, portefeuille validé et coordonnées géocodées sont conservés.", "Carte : fonds Esri, swisstopo et OpenTopoMap, sans chargement depuis un serveur de scripts ; CARTO et OpenStreetMap retirés (clé exigée ; accès refusé aux pages sans adresse d’origine).", "Import d’un fichier .csv abandonné ; visite guidée recalée sur la barre commune."]},
     {"date": "14.11.2026", "objet": "simulation", "version": "v3.27", "titre": "« Estimer les gains » sans cadre", "points": ["La fenêtre « Estimer les gains » montre la simulation de la page : ouverture immédiate, un seul calcul.", "L’ancienne page de la simulation renvoie à la page unique."]},
-    {"date": "13.11.2026", "objet": "accueil", "version": "v1.37", "titre": "Suivre sans « Autres vues »", "points": ["Suivre : onglet « Autres vues » supprimé ; la situation par portefeuille passe dans Portefeuille."]}
   ];
   /* 16.11.2026 (chef de projet PTE) : noms des vues de la page unique ; le Trombinoscope, projet indépendant, sort de cet historique */
   var OBJETS_VER = { accueil: 'Tableau de bord', priorisation: 'Prioriser', simulation: 'Simulation',
@@ -17609,36 +17609,7 @@ body.night :where(#vue-revue,.pte-rv) th,body.night :where(#vue-revue,.pte-rv) .
 body.night :where(#vue-revue,.pte-rv) .distbar .seg{color:#fff;}
 body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) svg image{filter:none;}
 :where(#vue-revue,.pte-rv) .menu-wrap,:where(#vue-revue,.pte-rv) .tour-mask,:where(#vue-revue,.pte-rv) .tour-hole,:where(#vue-revue,.pte-rv) .tour-box{display:none !important;}}
-:where(#vue-revue,.pte-rv) #btn-fil-rouge.on{background:var(--teal);color:#fff;border-color:var(--teal);}
-:where(#vue-revue,.pte-rv) .fr{background:var(--card-bg,#fff);border:1px solid var(--border);border-radius:12px;margin:0 0 16px;padding:10px 14px;}
-:where(#vue-revue,.pte-rv) .fr-bar{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;}
-:where(#vue-revue,.pte-rv) .fr-titre{font-size:13px;}
-:where(#vue-revue,.pte-rv) .fr-chips{display:flex;gap:6px;flex-wrap:wrap;}
-:where(#vue-revue,.pte-rv) .fr-chip{font:inherit;font-size:12.5px;border:1px solid var(--border);background:var(--card-bg,#fff);color:var(--ink);border-radius:100px;padding:4px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
-:where(#vue-revue,.pte-rv) .fr-chip:hover{background:var(--blue-pale,#E8F4F7);}
-:where(#vue-revue,.pte-rv) .fr-chip.on{border-color:var(--teal);color:var(--teal);font-weight:bold;background:var(--blue-pale,#E8F4F7);}
-:where(#vue-revue,.pte-rv) .fr-chip.fait{color:var(--green);}
-:where(#vue-revue,.pte-rv) .fr-n{font-size:11px;font-weight:bold;background:var(--border);color:var(--ink);border-radius:100px;padding:0 7px;}
-:where(#vue-revue,.pte-rv) .fr-droite{margin-left:auto;display:inline-flex;align-items:center;gap:6px;}
-:where(#vue-revue,.pte-rv) .fr-chrono{font-variant-numeric:tabular-nums;font-size:12.5px;color:var(--ink-muted);}
-:where(#vue-revue,.pte-rv) .fr-chrono.fr-depasse{color:var(--red);font-weight:bold;}
 :where(#vue-revue,.pte-rv) .btn.fr-mini{padding:2px 9px;font-size:12px;min-height:0;}
-:where(#vue-revue,.pte-rv) .fr-panel{border-top:1px solid var(--border);margin-top:10px;padding-top:10px;font-size:13px;}
-:where(#vue-revue,.pte-rv) .fr-panel h4{font-size:13px;margin:12px 0 4px;}
-:where(#vue-revue,.pte-rv) .fr-desc{margin:0 0 8px;}
-:where(#vue-revue,.pte-rv) .fr-check,:where(#vue-revue,.pte-rv) .fr-proj{list-style:none;margin:4px 0;padding:0;}
-:where(#vue-revue,.pte-rv) .fr-check li,:where(#vue-revue,.pte-rv) .fr-proj li{margin:4px 0;}
-:where(#vue-revue,.pte-rv) .fr-ic{display:inline-block;width:1.3em;font-weight:bold;}
-:where(#vue-revue,.pte-rv) .fr-ok .fr-ic{color:var(--green);}
-:where(#vue-revue,.pte-rv) .fr-ko .fr-ic{color:var(--ochre-text,var(--ochre));}
-:where(#vue-revue,.pte-rv) .fr-cb{display:inline-flex;align-items:center;gap:6px;font-weight:normal;margin:0;}
-:where(#vue-revue,.pte-rv) .fr-tbl{width:100%;margin:4px 0 8px;}
-:where(#vue-revue,.pte-rv) .fr-tbl select{font:inherit;font-size:12px;padding:2px 4px;}
-:where(#vue-revue,.pte-rv) .fr-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
-:where(#vue-revue,.pte-rv) .fr-pied{border-top:1px dashed var(--border);margin-top:10px;padding-top:8px;}
-:where(#vue-revue,.pte-rv) .fr-msg{width:100%;font:inherit;font-size:13px;margin:4px 0 8px;}
-:where(#vue-revue,.pte-rv) .fr-synth{white-space:pre-wrap;background:var(--blue-pale,#E8F4F7);color:var(--ink);border-radius:8px;padding:10px 12px;font:12.5px/1.5 ui-monospace,Menlo,monospace;margin:0;}
-@media print{:where(#vue-revue,.pte-rv) .fr{display:none!important;}}
 :where(#vue-revue,.pte-rv) .ap-leg{display:flex;flex-wrap:wrap;gap:14px;margin:4px 0 6px;color:var(--ink-muted)}
 :where(#vue-revue,.pte-rv) .ap-leg span{display:inline-flex;align-items:center;gap:5px}
 :where(#vue-revue,.pte-rv) .ap-sq{display:inline-block;width:10px;height:10px;border-radius:2px}
@@ -17716,10 +17687,10 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
 :where(#vue-revue,.pte-rv) .org-pt.oxa svg{display:block;overflow:visible}
 :where(#vue-revue,.pte-rv) .org-pt.oxa svg path{fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 :where(#vue-revue,.pte-rv) .org-pt.oxa svg path.oxa-plein{stroke:none}
-:where(#vue-revue,.pte-rv) .oxa-f svg path{stroke:var(--vert,#1A8554);stroke-width:2.1}
+:where(#vue-revue,.pte-rv) .oxa-f svg path{stroke:var(--vert,#1A8554);stroke-width:2.8}
 :where(#vue-revue,.pte-rv) .oxa-u svg path{stroke:var(--pte-serie-1)}
-:where(#vue-revue,.pte-rv) .oxa-b svg path{stroke:var(--pte-serie-2);stroke-width:1.3}
-:where(#vue-revue,.pte-rv) .oxa-b svg path.oxa-plein{fill:var(--pte-serie-2)}
+:where(#vue-revue,.pte-rv) .oxa-b svg path{stroke:#3E9E6B;stroke-width:1.3}
+:where(#vue-revue,.pte-rv) .oxa-b svg path.oxa-plein{fill:#3E9E6B}
 :where(#vue-revue,.pte-rv) .oxa-0 svg path{stroke:var(--ink-muted);stroke-width:1;stroke-linecap:butt}
 :where(#vue-revue,.pte-rv) .org-l-apport .org-x{color:var(--ink)}
 :where(#vue-revue,.pte-rv) .org-leg-sep{font-weight:600;margin-left:6px}
@@ -17729,7 +17700,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
 :where(#vue-revue,.pte-rv) .ap-chip .org-pt.oxa{margin:0}
 :where(#vue-revue,.pte-rv) .ap-f{color:var(--vert,#1A8554);font-weight:700;border-color:var(--vert,#1A8554)}
 :where(#vue-revue,.pte-rv) .ap-u{color:var(--pte-serie-1);border-color:var(--pte-serie-1)}
-:where(#vue-revue,.pte-rv) .ap-b{color:var(--pte-serie-2);border-color:var(--pte-serie-2)}
+:where(#vue-revue,.pte-rv) .ap-b{color:var(--vert,#1A8554);border-color:#3E9E6B}
 :where(#vue-revue,.pte-rv) .ap-0{color:var(--ink-muted);border-color:var(--border)}
 @media print{:where(#vue-revue,.pte-rv) .org-pt.oxa{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 :where(#vue-revue,.pte-rv) .org-num{font-weight:700;font-variant-numeric:tabular-nums;min-width:3.4em}
@@ -17791,7 +17762,6 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
   <div class="hdr-ctx">
     <span class="cx-l">Périmètre
       <span class="pm-sel" id="pm-sel"><!-- menu Périmètre commun (PTE_COMMUN.menuPerimetre) --></span></span>
-    <button type="button" class="btn" id="btn-fil-rouge" aria-pressed="false" title="Ordre du jour de la revue en cinq temps : préparer, constater, analyser, décider, restituer">Mode revue</button>
     <!-- recherche dans l'en-tête (10.11.2026, demande du chef de projet PTE), comme dans Prioriser : une proposition ouvre le sous-site ou le projet ; texte libre + Entrée : filtre de texte des vues -->
     <div class="gsearch rv-gs no-print" id="rv-gs">
       <input type="search" id="rv-gq" placeholder="Rechercher…" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="rv-gs-lb" aria-label="Rechercher un projet ou un sous-site" title="Numéro ou nom de projet, numéro ou nom de sous-site, RP : une proposition ouvre le sous-site ou le projet. Texte libre + Entrée : filtre les projets de Planning, Sémaphores et Finances.">
@@ -17806,7 +17776,6 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
 
 <div class="notice" id="notice-commun" hidden></div>
 
-<div class="fr no-print" id="fil-rouge" hidden></div>
 
 <section class="view" id="view-reporting" hidden>
   <div id="reporting-content"></div>
@@ -18904,10 +18873,9 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     return {
       dateGelJour: 5,
       jalonRetardOrangeMaxJ: 30,   // <=30j de retard => orange, sinon rouge
-      glissementOrangeMaxMois: 3,  // >3 mois => rouge
-      finFenetreJours: 30,         // ± jours autour de la fin prévue => vert
       depensesEcartVertMaxPct: 5,
-      depensesEcartOrangeMaxPct: 15,
+      depensesEcartOrangeMaxPct: 10,   // 19.11.2026 (chef de projet PTE) : orange 5–10 %, rouge > 10 % (avant : 15)
+      seuilsVersion: 2,               // 2 = seuil rouge des dépenses à 10 % ; un réglage enregistré avant (version absente) à 15 passe à 10
       depensesSousConsoOrangeMinPct: 50,
       depensesSousConsoVertMinPct: 70,
       risqueOrangeMin: 1.5,
@@ -19024,28 +18992,23 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
       }
     }
 
+    /* 19.11.2026 (chef de projet PTE) : plus de glissement mesuré depuis la fin initiale (une fin initiale jamais revue laissait
+       un projet rouge à vie). La référence est la fin ré-estimée : elle compte comme un jalon. Échue sans mise en service
+       à la date de gel → orange jusqu'à jalonRetardOrangeMaxJ jours, rouge au-delà. L'écart fin initiale → fin ré-estimée
+       (glissJours) reste calculé, pour information seulement (tuile « Dérive délais »). */
     var finPrevue = parseDate(projet.date_fin_prevue);
     var finReest = suiviRow ? parseDate(suiviRow.date_fin_reestimee) : null;
     var miseEnService = suiviRow ? parseDate(suiviRow.date_mise_en_service) : null;
-    var glissColor = 'vert', glissReason = 'Aucune donnée de glissement disponible.', glissJours = null;
-    if (finPrevue && finReest) {
-      glissJours = dayDiff(finReest, finPrevue);
-      var absJ = Math.abs(glissJours);
-      if (glissJours <= 0 || absJ <= params.finFenetreJours) {
-        glissColor = 'vert'; glissReason = 'Fin ré-estimée conforme à la fin prévue (± ' + params.finFenetreJours + ' j).';
-      } else {
-        var moisGliss = absJ / 30.4;
-        if (moisGliss <= params.glissementOrangeMaxMois) {
-          glissColor = 'orange'; glissReason = 'Glissement de fin de ' + glissJours + ' j (~' + moisGliss.toFixed(1) + ' mois).';
-        } else {
-          glissColor = 'rouge'; glissReason = 'Glissement de fin de ' + glissJours + ' j (~' + moisGliss.toFixed(1) + ' mois), > ' + params.glissementOrangeMaxMois + ' mois.';
-        }
+    var glissColor = 'vert', glissReason = 'Fin ré-estimée non échue.', glissJours = (finPrevue && finReest) ? dayDiff(finReest, finPrevue) : null;
+    if (finReest) {
+      var retardFin = dayDiff(gel, finReest);
+      if (retardFin > 0 && !(miseEnService && dayDiff(gel, miseEnService) >= 0)) {
+        glissColor = retardFin > params.jalonRetardOrangeMaxJ ? 'rouge' : 'orange';
+        glissReason = 'Fin ré-estimée (' + finReest.toISOString().slice(0, 10).split('-').reverse().join('.') + ') échue depuis ' + retardFin + ' j' +
+          (glissColor === 'rouge' ? ' (> ' + params.jalonRetardOrangeMaxJ + ' j)' : '') + ', sans mise en service.';
       }
-      if (finPrevue.getUTCFullYear() && miseEnService && miseEnService.getUTCFullYear() > finPrevue.getUTCFullYear()) {
-        if (SEV['rouge'] > SEV[glissColor]) { glissColor = 'rouge'; glissReason += ' Mise en service reportée à un autre exercice (' + miseEnService.getUTCFullYear() + ').'; }
-      }
-    } else if (!finPrevue && !finReest && jal.length === 0) {
-      return { color: 'gris', reason: 'Aucune donnée de planning disponible (ni dates, ni jalons).' };
+    } else if (jal.length === 0) {
+      return { color: 'gris', reason: 'Aucune donnée de planning disponible (ni fin ré-estimée, ni jalons).', glissJours: glissJours };
     }
 
     var color = worst([jalonColor, glissColor]);
@@ -19800,6 +19763,8 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
         var nombre = function (v) { return (typeof v === 'number' || (typeof v === 'string' && v.trim() !== '')) && isFinite(+v) ? +v : null; };
         if (p.impactTable && typeof p.impactTable === 'object') Object.keys(p.impactTable).forEach(function (k) { var nk = Engine.normKey(k), v = nombre(p.impactTable[k]); if (nk in it && v !== null) it[nk] = v; });
         Object.keys(def).forEach(function (k) { if (k === 'impactTable') return; var v = nombre(p[k]); if (v !== null) def[k] = v; });
+        /* 19.11.2026 : réglages enregistrés avant le passage du seuil rouge des dépenses de 15 à 10 % — l'ancienne valeur par défaut suit */
+        if (!(nombre(p.seuilsVersion) >= 2)) { if (nombre(p.depensesEcartOrangeMaxPct) === 15) def.depensesEcartOrangeMaxPct = 10; def.seuilsVersion = 2; }
       }
     } catch (e) { PARAMS_VU = brut; return; }   /* texte illisible : les seuils en mémoire restent, le prochain enregistrement le remplace */
     PARAMS = def; PARAMS.impactTable = it;
@@ -21300,7 +21265,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
       f: function (R) { var dn = R.num ? diagNiveau(diagSousSite(R.num)) : null; return [dn ? { v: dn, l: DIAG_NIV[dn].court } : { v: 'nr', l: 'non renseigné' }]; },
       cell: function (R) {
         var v = R.num ? diagSousSite(R.num) : null, dn = diagNiveau(v), brut = v ? String(v).trim() : '';
-        var td = el('td', { class: 'nowrap small' + (dn === 'aucun' || dn === 'partiel' ? ' alert-text' : '') }, [dn ? DIAG_NIV[dn].court : (brut ? (brut.length > 18 ? brut.slice(0, 17) + '…' : brut) : '—')]);
+        var td = el('td', { class: 'nowrap small' }, [   /* information, pas une alerte (19.11.2026) */ dn ? DIAG_NIV[dn].court : (brut ? (brut.length > 18 ? brut.slice(0, 17) + '…' : brut) : '—')]);
         return tip(td, dn ? 'Diag polluants : ' + v + '.' : (brut ? 'Diag polluants : « ' + brut + ' », valeur non reconnue.' : 'Diag polluants non renseigné dans Plan_PTE.'));
       } });
     cols.push({ k: 'rp', lib: 'RP', g: 'u', d0: 1, texte: true, aide: 'Responsable de projet, en initiales (première lettre du prénom, deux premières du nom) ; nom complet au survol.',
@@ -21576,7 +21541,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     tbl.appendChild(tb); return el('div', { class: 'table-scroll' }, [tbl]);   /* 390 px (séance 7) */
   }
 
-  /* Décisions d'un périmètre — règle unique (26.10.2026) pour la vue Portefeuille et le fil rouge : celles de ses
+  /* Décisions d'un périmètre — règle unique (26.10.2026) pour la vue Portefeuille : celles de ses
      projets ; celles d'un portefeuille (sans projet) si ce portefeuille en fait partie ; celles du parc (ni projet ni
      portefeuille) sur tout le parc seulement. */
   function decisionsDuPerimetre(list) {
@@ -21787,9 +21752,9 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
       m ? kv('RP', m.rp ? nRp(m.rp) : null, m.rpSource || '', 'RP = GEI_Projets!Nom responsable suivi (ou GEI_Suivi) du premier projet du sous-site qui en a un (contrat D8). Depuis le 18.10.2026, la colonne « Responsable projet » de Plan_PTE n\'est plus lue.') : null,
       kv('SRE', n(m ? m.sre : (pp && pp.sre_m2), 0, 'm²'), '', 'Surface de référence énergétique (Plan_PTE!SRE) : la surface chauffée, qui ramène les consommations au mètre carré.'),
       pp && pp.diag_polluants !== null && pp.diag_polluants !== undefined ? kv('Diag polluants', pp.diag_polluants || 'non renseigné',
-        diagNiveau(pp.diag_polluants) && diagNiveau(pp.diag_polluants) !== 'ajour' ? 'à compléter' : (pp.diag_polluants && !diagNiveau(pp.diag_polluants) ? 'valeur non reconnue' : ''),
+        pp.diag_polluants && !diagNiveau(pp.diag_polluants) ? 'valeur non reconnue' : '',   /* information, pas une alerte (19.11.2026) */
         'Plan_PTE!Diag polluants : existence d’un diagnostic des polluants du bâtiment (amiante, PCB, plomb…), pas leur présence ou absence.',
-        diagNiveau(pp.diag_polluants) === 'aucun' || diagNiveau(pp.diag_polluants) === 'partiel' ? 'mes-warn' : '') : null,
+        '') : null,
       opts.nbProjets !== undefined ? kv('Projets GE-Invest', String(opts.nbProjets), '') : null,
       DB.priorisation && DB.priorisation.length ? kv('Rang (priorisation)', rang === null ? 'non classé' : '#' + rang + (prioRow.nb_classes ? ' / ' + prioRow.nb_classes : ''), prioSourceLabel()) : null
     ]);
@@ -21919,7 +21884,6 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     sans_sous_site:        { poids: 4,  texte: function (d) { return 'Dans GE-Invest, fiche ' + d.np + ' : objet actif à rattacher au sous-site concerné (numéro à six chiffres).'; } },
     sans_ligne_pte:        { poids: 3,  texte: function (d) { return 'Dans Plan_PTE : ligne du sous-site ' + d.ss + ' à ajouter (projet ' + d.np + ').'; } },
     sous_site_sans_sre:    { poids: 2,  texte: function (d) { return 'Dans Plan_PTE, sous-site ' + d.ss + ' : SRE à renseigner (colonne SRE), sinon aucune chaleur n’est calculable.'; } },
-    diag_polluants:        { poids: 2,  texte: function (d) { return d.niv ? 'Diagnostic polluants du sous-site ' + d.ss + ' (' + d.niv + ') : à compléter' + (d.travaux ? ', projet ' + d.np + ' en travaux (phase ' + d.phase + ').' : ' avant l’appel d’offres du projet ' + d.np + ' (phase ' + d.phase + ').') : 'Dans Plan_PTE, sous-site ' + d.ss + ' : « Diag polluants » à renseigner (projet ' + d.np + ' en phase ' + d.phase + ').'; } },
     facteur_co2:           { poids: 1,  texte: function (d) { return 'Dans Data, colonnes FournisseurChaleur et FacteurCO2 : facteur de « ' + d.cible + ' » à renseigner (sous-site ' + d.ss + ').'; } }
   };
   var QUESTIONS_MAX_PAR_RPF = Infinity;   /* 5 jusqu'au 10.11.2026 */
@@ -21935,7 +21899,6 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     sans_sous_site:          { ou: 'GE-Invest', lib: function () { return 'Objet actif sans sous-site'; } },
     sans_ligne_pte:          { ou: 'Plan_PTE', lib: function () { return 'Sous-site absent de Plan_PTE'; } },
     sous_site_sans_sre:      { ou: 'Plan_PTE', lib: function () { return 'Sous-site sans SRE'; } },
-    diag_polluants:          { ou: 'Plan_PTE', lib: function () { return 'Diagnostic polluants à compléter'; } },
     facteur_co2:             { ou: 'Data', lib: function () { return 'Facteur CO₂ à renseigner'; } }
   };
   function moisLibelle(mois) { var m = /^(\d{4})-(\d{2})$/.exec(mois || ''); return m ? (MOIS_FR[+m[2] - 1] + ' ' + m[1]) : (mois || '—'); }
@@ -21958,11 +21921,10 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
       if (vus[cle]) return; vus[cle] = true;
       d.np = np; d.annee = annee; d.moisLib = moisLibelle(mois);
       out.push({ cle: cle, regle: regle, np: np, rpf: rpf || '', poids: REGLES_QUESTIONS[regle].poids, credit: credit || 0, texte: REGLES_QUESTIONS[regle].texte(d),
-        det: d.lib || (regle === 'diag_polluants' || regle === 'sous_site_sans_sre' || regle === 'sans_ligne_pte' || regle === 'facteur_co2' ? 'sous-site ' + d.ss : '') + (d.cible ? ' · ' + d.cible : '') });
+        det: d.lib || (regle === 'sous_site_sans_sre' || regle === 'sans_ligne_pte' || regle === 'facteur_co2' ? 'sous-site ' + d.ss : '') + (d.cible ? ' · ' + d.cible : '') });
     }
     var idx = Engine.indexParProjet(DB);   /* lignes par projet, ordre d'origine : une passe par tableau */
     var lpQ = Engine.controleLibellesPhases(DB);
-    var avecDiagQ = diagColonnePresente(), diagQ = {};
     DB.projets.forEach(function (p) {
       var np = p.numero_projet, rpf = (p.rpf || '').trim(), V = Engine.vueProjet(idx, np);
       var g = (DB.gei && DB.gei[np]) || null;
@@ -21988,22 +21950,14 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
       if (rows.length) { var dm = Engine.parseDate(rows[0].date_maj); if (dm && Engine.dayDiff(gel, dm) > 60) push('fiche_60j', np, rpf, credit, { date: fmtDateCH(rows[0].date_maj) }); }
       if (!ss) push('sans_sous_site', np, rpf, credit, {});
       else if (DB.planpte && DB.planpte.bySousSite && !DB.planpte.bySousSite[ss]) push('sans_ligne_pte', np, rpf, credit, { ss: ss });
-      /* diagnostic polluants (06.11.2026) : projet en cours au stade projet de l'ouvrage (32) ou plus loin, sans diagnostic
-         complet à jour ; une question par sous-site, posée après la boucle (projet de plus petit numéro, clé stable) */
-      if (ss && avecDiagQ && DB.planpte.bySousSite[ss] && /^\s*2\s*-/.test(statutDe(p))) {
-        var phD = phaseSia(g && g.avancement !== null && g.avancement !== undefined ? g.avancement : null), vD = diagSousSite(ss), dn = diagNiveau(vD);
-        if (phD && +phD >= 32 && dn !== 'ajour') {
-          var cD = diagQ[ss];
-          if (!cD || np < cD.np) diagQ[ss] = { np: np, rpf: rpf, credit: credit, d: { ss: ss, phase: phD, travaux: +phD >= 51, niv: dn ? DIAG_NIV[dn].lib : (vD && String(vD).trim() ? '« ' + String(vD).trim() + ' »' : null) } };
-        }
-      }
+      /* diagnostic polluants : plus de question depuis le 19.11.2026 (décision du chef de projet PTE) — c'est une information,
+         pas un manque ; elle reste affichée dans la fiche et le tableau. Les questions déjà posées passent « retirée ». */
       var m = mesuresDe(ss);
       if (m) {
         if (m.sre === null) push('sous_site_sans_sre', np, rpf, credit, { ss: ss });
         if (m.agent && m.agent.aRenseigner) push('facteur_co2', np, rpf, credit, { ss: ss, cible: m.agent.cible });
       }
     });
-    Object.keys(diagQ).sort().forEach(function (ss) { var q = diagQ[ss]; push('diag_polluants', q.np, q.rpf, q.credit, q.d, 'ss' + ss); });
     return out;
   }
 
@@ -22158,34 +22112,63 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     STATE.questionsGenerees = cle;
     try { genererQuestions(mois); } catch (e) { console.error(e); }
   }
-  /* Courriel des questions (17.11.2026, demande du chef de projet PTE) : l'enveloppe ouvre directement un message dans la
-     messagerie du poste (Outlook), avec l'objet et le texte, et un lien GE-Invest par projet à compléter. Le texte est aussi
-     copié : au-delà d'environ 1 800 caractères, certaines messageries coupent une adresse « mailto: » trop longue ; le message
-     invite alors à coller le texte complet. */
-  function ouvrirMailQuestions(mois, rpf, garder) {
-    var corps = texteQuestionsMail(mois, rpf, garder, true);
+  /* Partager les questions (19.11.2026, demande du chef de projet PTE ; remplace le courriel « mailto: » du 17.11, dont le texte
+     était tronqué) : un fichier CSV des questions ouvertes du portefeuille, joint à un message court d'instructions.
+     Un lien « mailto: » ne peut joindre aucun fichier : le bouton passe par le partage du système (Safari, Edge et Chrome
+     sous Windows, iPhone), qui propose Outlook ou Mail avec le fichier joint. Navigateur sans partage de fichiers : le CSV
+     est téléchargé et le courriel s'ouvre avec les mêmes instructions, qui disent de joindre le fichier. */
+  function lignesQuestionsPartage(mois, rpf, garder) {
+    var stock = lireQuestionsStock(), e = stock.mois[mois], out = [];
+    questionsGroupees(e, rpf, mois, garder).forEach(function (x) {
+      x.ouvertes.forEach(function (q) {
+        var u = COMMUN && COMMUN.lienGEInvest && /^\d{6,20}$/.test(String(q.projet)) ? COMMUN.lienGEInvest(q.projet) : '';
+        out.push({ question: q.id, projet: q.projet, detail: q.det || '', a_completer: x.lib, ou: x.ou || '', texte: q.texte || '', lien_ge_invest: u || '' });
+      });
+    });
+    return out;
+  }
+  var ENTETES_PARTAGE = ['question', 'projet', 'detail', 'a_completer', 'ou', 'texte', 'lien_ge_invest'];
+  function messagePartage(mois, rpf, n, nomFichier, aJoindre) {
     var objet = 'PTE — à compléter — ' + moisLibelle(mois) + ' — ' + (rpf ? nomRpf(rpf) : 'hors périmètre RPF');
-    var copie = copierTexte(corps);
+    var corps = ['Bonjour,', '',
+      n + (n > 1 ? ' données sont' : ' donnée est') + ' à compléter pour la revue de ' + moisLibelle(mois) + ' : voir le fichier ' + (aJoindre ? '« ' + nomFichier + ' » (à joindre : il vient d’être téléchargé).' : 'joint.'),
+      '', '1. Ouvrir le fichier dans Excel : une ligne par donnée manquante.',
+      '2. Compléter chaque ligne là où l’indique la colonne « ou » (GE-Invest : lien direct dans la dernière colonne).',
+      '3. Le faire avant la prochaine revue ; les lignes complétées disparaissent d’elles-mêmes au classeur suivant.',
+      '', 'Merci.'].join('\n');
+    return { objet: objet, corps: corps };
+  }
+  function partagerQuestions(mois, rpf, garder) {
+    var rows = lignesQuestionsPartage(mois, rpf, garder);
+    var nom = 'a_completer_' + mois + '_' + rpfCourt(rpf).toLowerCase() + '.csv';
+    var csv = buildCSVString(ENTETES_PARTAGE, rows);
+    var fichier = null;
+    try { fichier = new File([csv], nom, { type: 'text/csv' }); } catch (e) { fichier = null; }
+    /* partage du système : appelé dans le clic, sans attente avant (le navigateur l'exige) */
+    if (fichier && typeof navigator !== 'undefined' && navigator.canShare && navigator.share) {
+      var ok = false; try { ok = navigator.canShare({ files: [fichier] }); } catch (e) { ok = false; }
+      if (ok) {
+        var m = messagePartage(mois, rpf, rows.length, nom, false);
+        navigator.share({ files: [fichier], title: m.objet, text: m.corps }).catch(function () { /* partage annulé : rien à faire */ });
+        return { mode: 'partage', fichier: nom, lignes: rows.length };
+      }
+    }
+    downloadCSV(nom, ENTETES_PARTAGE, rows);
+    var m2 = messagePartage(mois, rpf, rows.length, nom, true);
     var enc = function (t) { return encodeURIComponent(String(t).replace(/\n/g, '\r\n')); };
-    var url = 'mailto:?subject=' + enc(objet) + '&body=' + enc(corps);
-    if (url.length > 1800) url = 'mailto:?subject=' + enc(objet) + '&body=' + enc((copie ? 'Le détail des questions a été copié : le coller ici (Ctrl+V ou Cmd+V).' : 'Le détail des questions est trop long pour être transmis ici : l’exporter depuis Suivre.') + '\n\n' + corps.slice(0, 600) + '\n…');
-    var a = document.createElement('a'); a.href = url; a.style.display = 'none'; document.body.appendChild(a);
-    try { a.click(); } catch (e) { location.href = url; }
-    setTimeout(function () { if (a.parentNode) a.parentNode.removeChild(a); }, 0);
-    return copie;
-  }
-  function iconeEnveloppe() {
-    var s = sv('svg', { viewBox: '0 0 24 24', width: '18', height: '18', 'aria-hidden': 'true', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.8', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
-    s.appendChild(sv('rect', { x: '3', y: '5', width: '18', height: '14', rx: '2' }));
-    s.appendChild(sv('path', { d: 'M3.5 6.5l8.5 6.5 8.5-6.5' }));
-    return s;
-  }
-  function copierTexte(txt) {
-    try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(txt); return true; } } catch (e) { /* repli */ }
+    var url = 'mailto:?subject=' + enc(m2.objet) + '&body=' + enc(m2.corps);
     try {
-      var ta = el('textarea', { style: 'position:fixed; left:-9999px;' }); ta.value = txt; document.body.appendChild(ta); ta.select();
-      var okc = document.execCommand && document.execCommand('copy'); document.body.removeChild(ta); return !!okc;
-    } catch (e2) { return false; }
+      var a = document.createElement('a'); a.href = url; a.style.display = 'none'; document.body.appendChild(a);
+      a.click(); setTimeout(function () { if (a.parentNode) a.parentNode.removeChild(a); }, 0);
+    } catch (e) { /* environnement sans messagerie (tests) */ }
+    return { mode: 'courriel', fichier: nom, lignes: rows.length };
+  }
+  /* icône « partager » (carré, flèche vers le haut), à la manière des apps Apple */
+  function iconePartager() {
+    var s = sv('svg', { viewBox: '0 0 24 24', width: '18', height: '18', 'aria-hidden': 'true', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.8', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+    s.appendChild(sv('path', { d: 'M8 9H6.5A1.5 1.5 0 0 0 5 10.5v8A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 17.5 9H16' }));
+    s.appendChild(sv('path', { d: 'M12 14V3.5M8.5 7 12 3.5 15.5 7' }));
+    return s;
   }
   function exportQuestionsCSV(mois, garder) {
     var stock = lireQuestionsStock(), e = stock.mois[mois];
@@ -22194,7 +22177,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
   }
 
   // Carte « À compléter » (Sémaphores, 10.11.2026 — chef de projet PTE : « Dans Sémaphores, regroupées ») : par RPF du périmètre,
-  // une ligne par règle (« N fiches »), numéros des projets, enveloppe (courriel) ; questions soldées comptées à part.
+  // une ligne par règle (« N fiches »), numéros des projets, bouton Partager (CSV + message) ; questions soldées comptées à part.
   function questionsCard(mois, rows) {
     assurerQuestions(mois);
     var stock = lireQuestionsStock(), e = stock.mois[mois];
@@ -22221,9 +22204,9 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
       var head = el('div', { class: 'questions-rpf-head' }, [el('h3', {}, [rpf ? nomRpf(rpf) : 'Hors périmètre RPF'])]);
       head.appendChild(el('span', { class: 'taux' }, [nO + ' ouverte' + (nO > 1 ? 's' : '') + ' · ' + nS + ' soldée' + (nS > 1 ? 's' : '') +
         (tr.moisPrecedent ? ' · taux de réponse ' + moisLibelle(tr.moisPrecedent) + ' : ' + (tr.taux === null ? '—' : Math.round(tr.taux * 100) + ' %') : '')]));
-      var btnMail = el('button', { type: 'button', class: 'btn btn-ic q-mail', 'aria-label': 'Préparer un courriel des questions de ' + (rpf ? nomRpf(rpf) : 'hors périmètre RPF') }, [iconeEnveloppe()]);
-      tip(btnMail, 'Ouvre un courriel (Outlook) avec les questions ouvertes et, pour chaque projet, le lien vers sa fiche GE-Invest. Le texte est aussi copié.');
-      btnMail.addEventListener('click', function () { ouvrirMailQuestions(mois, rpf, garder); });
+      var btnMail = el('button', { type: 'button', class: 'btn btn-ic q-mail', 'aria-label': 'Partager les questions de ' + (rpf ? nomRpf(rpf) : 'hors périmètre RPF') + ' (fichier CSV et instructions)' }, [iconePartager()]);
+      tip(btnMail, 'Partager : fichier CSV des questions ouvertes (une ligne par donnée, lien GE-Invest) avec un court message d’instructions, par Outlook ou Mail. Sans partage dans ce navigateur, le fichier est téléchargé et le courriel s’ouvre : y joindre le fichier.');
+      btnMail.addEventListener('click', function () { partagerQuestions(mois, rpf, garder); });
       if (nO) head.appendChild(btnMail);
       sec.appendChild(head);
       var ul = el('ul', { class: 'questions-list questions-grp' });
@@ -23671,7 +23654,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
   }
 
 
-  // ---- Performance coût et planning (CPI / SPI) — 02.10.2026, diagramme demandé par le chef de projet PTE ----
+  // ---- Cohérence coût et planning (CPI / SPI) — 02.10.2026, diagramme demandé par le chef de projet PTE ----
   // Valeur acquise    EV = avancement global × crédit total du projet
   // Coût réel         AC = dépensé cumulé (comptabilisé à fin N-1 + comptabilisé N)
   // Valeur planifiée  PV = part du temps écoulé entre le début et la fin prévus (dates initiales) × crédit
@@ -23702,7 +23685,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     };
     var n = { vert: 0, retard: 0, derive: 0, rouge: 0 }; pts.forEach(function (x) { n[x.k]++; });
     var card = el('div', { class: 'card', id: 'cpi-spi-card' });
-    card.appendChild(cardTitle('Performance coût et planning (CPI / SPI)',
+    card.appendChild(cardTitle('Cohérence coût et planning (CPI / SPI)',
       'Un point par projet. SPI (planning) = valeur acquise ÷ valeur planifiée ; CPI (coût) = valeur acquise ÷ dépensé. Valeur acquise = avancement global × crédit du projet ; valeur planifiée = part du temps écoulé entre le début et la fin prévus × crédit (dépense supposée linéaire). 1 = conforme au plan ; en dessous, retard ou surcoût. Au-delà de 1,5 le point est posé sur le bord. Un clic sur un point ouvre le projet.'));
     if (!pts.length) {
       card.appendChild(el('p', { class: 'muted small' }, ['Aucun projet du périmètre ne peut être placé : il faut un avancement global, un crédit, des dates de début et de fin, et une dépense.']));
@@ -24621,10 +24604,12 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
      Enveloppes financières 2030 : OF1 optimisation CVSE (01, 02, 03, 09) 170 MCHF, OF2 renouvelable (04, 06,
      07) 200 MCHF, OF3 développement durable (08) 30 MCHF, OF4 architecture (05) 600 MCHF. */
   var ORG_NATURES = {
-    '01': 'Électricité (lumière, moteurs)', '02': 'Thermique (pompes, circulation)', '03': 'Eau',
-    '04': 'CO₂ (chaufferie)', '05': 'IDC (rénovation)', '06': 'Électricité renouvelable (PV)',
-    '07': 'Chaleur renouvelable (CàD, PAC, pellets)', '08': 'Développement durable', '09': 'Projet générique',
-    emb: 'Embrasures (loi 12552)', autre: 'Autre'
+    /* libellés courts, un seul vocabulaire pour les projets et les lignes XXXX (19.11.2026, demande du chef de projet PTE :
+       une ligne de tuile) ; le détail (objectif, travaux, enveloppe) reste dans l'info-bulle, ORG_OBJ */
+    '01': 'Électricité', '02': 'Technique CVS', '03': 'Eau',
+    '04': 'Chaufferie', '05': 'Enveloppe', '06': 'Photovoltaïque',
+    '07': 'Chaleur renouv.', '08': 'Dév. durable', '09': 'Générique',
+    emb: 'Embrasures', autre: 'Autre'
   };
   var ORG_OBJ = {
     '01': ['Réduction conso électrique, −20 % en 2030', 'lumière, moteurs', 'OF1'],
@@ -24645,8 +24630,8 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
   function orgCouvert(natures, k) { return (ORG_EQUIV[k] || [k]).some(function (n) { return natures[n]; }); }
   /* interventions identifiées : lot de Plan_PTE → code ; une ligne n'apparaît que sans projet couvrant ce code */
   var ORG_LOTS = [
-    { k: 'idc', code: '05', lib: 'Enveloppe (IDC)', col: 'Coût lot enveloppe [CHF]' }, { k: 'chaufferie', code: '04', lib: 'Chaufferie', col: 'Coût lot chaufferie [CHF]' },
-    { k: 'technique', code: '02', lib: 'Technique (ventilation, circulation)', col: 'Coût lot technique [CHF]' }, { k: 'lumiere', code: '01', lib: 'Lumière', col: 'Coût lot électricité [CHF]' },
+    { k: 'idc', code: '05', lib: 'Enveloppe', col: 'Coût lot enveloppe [CHF]' }, { k: 'chaufferie', code: '04', lib: 'Chaufferie', col: 'Coût lot chaufferie [CHF]' },
+    { k: 'technique', code: '02', lib: 'Technique CVS', col: 'Coût lot technique [CHF]' }, { k: 'lumiere', code: '01', lib: 'Électricité', col: 'Coût lot électricité [CHF]' },
     { k: 'eau', code: '03', lib: 'Eau', col: 'Coût lot eau [CHF]' }
   ];
   /* Apport des interventions identifiées (XXXX) aux objectifs 2030 (16.11.2026, demande du chef de projet PTE) : identification
@@ -24955,7 +24940,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     if (li.identifie) {
       row.appendChild(el('span', { class: 'org-num org-x' }, ['XXXX']));
       row.appendChild(tip(el('span', { class: 'org-nat' }, [li.libelle]),
-        'Identifié par l’audit CECB+, sans projet GE-Invest de cette nature : ' + (li.kwc ? fmt(li.kwc, 0) + ' kWc' : fmtK(li.montant / 1000) + ' MCHF') + ' (Plan_PTE!' + li.source + ').'));
+        'Identifié par l’audit CECB+, sans projet GE-Invest de cette nature : ' + (li.kwc ? fmt(li.kwc, 0) + ' kWc' : fmtK(li.montant / 1000) + ' MCHF') + ' (Plan_PTE!' + li.source + ') · ' + orgNatureTip(li.nature) + '.'));
     } else {
       var p = li.projet;
       row.appendChild(el('span', { class: 'org-num' }, [numProjet(li.id, p && p.numero_sous_site, li.court)]));
@@ -25549,7 +25534,6 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
       saveState();
       iDec.value = ''; iEch.value = ''; iEsc.value = ''; iNotes.value = '';
       buildFiche(numeroProjet);
-      renderFilRouge();
     });
     decFormWrap.appendChild(form);
 
@@ -25558,7 +25542,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     var rt2 = el('table', { class: 'small' }, [el('thead', {}, [el('tr', {}, [el('th', { class: 'no-sort' }, ['Date']), el('th', { class: 'no-sort' }, ['Décision']), el('th', { class: 'no-sort' }, ['Resp.']), el('th', { class: 'no-sort' }, ['Échéance']), el('th', { class: 'no-sort' }, ['Statut'])])])]);
     var rb2 = el('tbody');
     regRows.forEach(function (d) {
-      var echue = d.statut === 'ouverte' && d.echeance && d.echeance < frGel();   /* date de gel réglable, comme le fil rouge */
+      var echue = d.statut === 'ouverte' && d.echeance && d.echeance < (STATE.mois ? STATE.mois + '-' + String(PARAMS.dateGelJour || 5).padStart(2, '0') : '');   /* date de gel réglable */
       var tdDec = el('td', {}, [d.decision]);
       if (d.escalade_vers) tdDec.appendChild(el('div', { class: 'muted small' }, ['Escalade vers ' + d.escalade_vers]));
       if (d.notes) tdDec.appendChild(el('div', { class: 'muted small dec-notes' }, [d.notes]));
@@ -25868,9 +25852,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
       f.appendChild(input);
       grid.appendChild(f);
     }
-    numField('Retard jalon → rouge, j', 'jalonRetardOrangeMaxJ', '1', 'Au-delà de ce nombre de jours de retard sur un jalon échu, le sémaphore Délais passe au rouge (sinon orange).');
-    numField('Glissement → rouge, mois', 'glissementOrangeMaxMois', '0.5', 'Glissement de fin de projet à partir duquel le sémaphore Délais passe au rouge.');
-    numField('Fenêtre fin conforme, j', 'finFenetreJours', '1', 'Écart toléré (± jours) entre la fin prévue et la fin ré-estimée pour rester vert.');
+    numField('Retard jalon → rouge, j', 'jalonRetardOrangeMaxJ', '1', 'Au-delà de ce nombre de jours de retard sur un jalon échu, le sémaphore Délais passe au rouge (sinon orange). Vaut aussi pour la fin ré-estimée.');
     numField('Écart dépenses vert, %', 'depensesEcartVertMaxPct', '1', 'Écart maximal prévision/objectif toléré pour rester vert.');
     numField('Écart dépenses rouge, %', 'depensesEcartOrangeMaxPct', '1', 'Au-delà de cet écart, le sémaphore Dépenses passe au rouge.');
     numField('Sous-conso. orange, %', 'depensesSousConsoOrangeMinPct', '1', 'En dessous de ce taux de consommation de l’objectif, le sémaphore Dépenses passe au rouge.');
@@ -26053,7 +26035,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     var b1 = el('div', { class: 'accordion-body' });
     b1.appendChild(el('p', {}, ['Quatre indicateurs, trois couleurs + gris. Les seuils sont réglables dans le panneau « Données ».']));
     var rows = [
-      ['Délais', 'Aucun jalon échu ; fin conforme (± ' + PARAMS.finFenetreJours + ' j)', 'Jalon échu ≤ ' + PARAMS.jalonRetardOrangeMaxJ + ' j, ou glissement de plus de ' + PARAMS.finFenetreJours + ' j, jusqu’à ' + PARAMS.glissementOrangeMaxMois + ' mois', 'Jalon échu > ' + PARAMS.jalonRetardOrangeMaxJ + ' j, glissement > ' + PARAMS.glissementOrangeMaxMois + ' mois, ou MES reportée'],
+      ['Délais', 'Aucun jalon échu ; fin ré-estimée non échue', 'Jalon ou fin ré-estimée échu depuis ' + PARAMS.jalonRetardOrangeMaxJ + ' j au plus', 'Jalon ou fin ré-estimée échu depuis plus de ' + PARAMS.jalonRetardOrangeMaxJ + ' j (sans mise en service)'],
       ['Dépenses', 'Prévision entre ' + PARAMS.depensesSousConsoVertMinPct + ' % et +' + PARAMS.depensesEcartVertMaxPct + ' % de l’objectif', 'Écart ' + PARAMS.depensesEcartVertMaxPct + '–' + PARAMS.depensesEcartOrangeMaxPct + ' %, ou sous-conso. ' + PARAMS.depensesSousConsoOrangeMinPct + '–' + PARAMS.depensesSousConsoVertMinPct + ' %', 'Écart > ' + PARAMS.depensesEcartOrangeMaxPct + ' %, sous-conso. < ' + PARAMS.depensesSousConsoOrangeMinPct + ' %, ou dépassement du crédit'],
       ['Livrables', 'Déclaré « Bon »', 'Déclaré « À surveiller »', 'Déclaré « Mauvais »'],
       ['Risques', 'Score max < ' + fmtDec(PARAMS.risqueOrangeMin), 'Score entre ' + fmtDec(PARAMS.risqueOrangeMin) + ' et ' + fmtDec(PARAMS.risqueRougeMin), 'Score ≥ ' + fmtDec(PARAMS.risqueRougeMin)],
@@ -26090,11 +26072,11 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     var bq = el('div', { class: 'accordion-body' });
     bq.appendChild(el('p', {}, ['La revue commence par les trous. Pour le mois de revue et chaque RPF, l’outil pose une question par trou de données détecté, numérotée Q-<RPF>-<AAAA-MM>-<n>, avec l’action à faire et l’endroit où la saisir ; la carte « À compléter » de l’onglet Sémaphores les regroupe par portefeuille puis par nature (10.11.2026 : plus de plafond de cinq).']));
     var rl = el('ul', {});
-    [['Engagé > crédit', 'GE-Invest, crédit'], ['Suivi du mois absent', 'GE-Invest, fiche de suivi'], ['Budget ou prévision N absents', 'GE-Invest, finances'], ['Risque ouvert sans probabilité ou impact', 'GE-Invest, risques'], ['Jalon hors de la liste normée, ou aucun jalon', 'GE-Invest, jalons'], ['Fiche non mise à jour depuis plus de 60 jours', 'GE-Invest, fiche de suivi'], ['Projet sans numéro de sous-site', 'GE-Invest, objet actif'], ['Sous-site absent du Plan_PTE, ou sans SRE', 'Plan_PTE'], ['Projet au stade projet de l’ouvrage ou plus loin, sous-site sans diagnostic polluants complet à jour', 'Plan_PTE, Diag polluants'], ['Facteur CO₂ à renseigner', 'Data, colonnes FournisseurChaleur / FacteurCO2']].forEach(function (pair) { rl.appendChild(el('li', {}, [el('strong', {}, [pair[0]]), ' — ' + pair[1]])); });
+    [['Engagé > crédit', 'GE-Invest, crédit'], ['Suivi du mois absent', 'GE-Invest, fiche de suivi'], ['Budget ou prévision N absents', 'GE-Invest, finances'], ['Risque ouvert sans probabilité ou impact', 'GE-Invest, risques'], ['Jalon hors de la liste normée, ou aucun jalon', 'GE-Invest, jalons'], ['Fiche non mise à jour depuis plus de 60 jours', 'GE-Invest, fiche de suivi'], ['Projet sans numéro de sous-site', 'GE-Invest, objet actif'], ['Sous-site absent du Plan_PTE, ou sans SRE', 'Plan_PTE'], ['Facteur CO₂ à renseigner', 'Data, colonnes FournisseurChaleur / FacteurCO2']].forEach(function (pair) { rl.appendChild(el('li', {}, [el('strong', {}, [pair[0]]), ' — ' + pair[1]])); });
     bq.appendChild(rl);
     bq.appendChild(el('p', {}, ['Au mois suivant, à l’import du nouveau classeur, les détections sont rejouées : une question dont le trou est comblé passe « soldée ». Taux de réponse par RPF = soldées ÷ posées le mois précédent (première tuile du Reporting, colonne du tableau par portefeuille).']));
     bq.appendChild(el('p', {}, [el('strong', {}, ['Critère d’échec : '] ), 'si la complétude ne gagne pas 20 points en un cycle, on retire.']));
-    bq.appendChild(el('p', {}, ['Tout reste dans ce navigateur ; l’export CSV (« ; », UTF-8) et l’enveloppe (courriel) servent à partager les questions. Le navigateur garde les questions du mois de revue, du mois précédent et des deux mois les plus récents ; celles des mois plus anciens en sont retirées, et un message le dit à ce moment-là. Un mois exporté en CSV avant d’en sortir reste dans le fichier.']));
+    bq.appendChild(el('p', {}, ['Tout reste dans ce navigateur ; l’export CSV (« ; », UTF-8) et le bouton Partager (fichier CSV par portefeuille et message d’instructions, par Outlook ou Mail) servent à transmettre les questions. Le navigateur garde les questions du mois de revue, du mois précédent et des deux mois les plus récents ; celles des mois plus anciens en sont retirées, et un message le dit à ce moment-là. Un mois exporté en CSV avant d’en sortir reste dans le fichier.']));
     dq.appendChild(bq); host.appendChild(dq);
 
     var d2b = el('details', { class: 'accordion' });
@@ -26512,7 +26494,6 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     /* vue consolidée d'un sous-site ouverte : elle reste (13.11.2026, sans « Autres vues » l'onglet marqué est Portefeuille) */
     if (typeof vue !== 'string' && vueVisible() === 'reporting' && (STATE.rep.ss || STATE.rep.projet)) showView('reporting', 'garder');
     else showView(typeof vue === 'string' ? vue : (active ? active.dataset.view : 'portefeuille'));
-    renderFilRouge();
     ECRAN.empreinte = ACTIVE ? empreinteEcran() : null;
   }
 
@@ -26540,8 +26521,6 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     var btnEff = $('#rv-btnEff');
     if (btnEff) btnEff.addEventListener('click', demanderEffacement);
     gsInit();
-    var btnFR = $('#btn-fil-rouge');
-    if (btnFR) btnFR.addEventListener('click', function () { frSetOuvert(!frOuvert()); renderFilRouge(); });
     if (COMMUN) window.addEventListener('hashchange', function () { if (ACTIVE && DB.projets.length) ouvrirDepuisAdresse(); });
     var btnReload = $('#btn-reload');
     var fClasseur = $('#fClasseur');
@@ -26826,7 +26805,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
   }
 
   // --- visite guidée de Suivre (revue du 16.11.2026, demande du chef de projet PTE : aligner la visite sur l'outil
-  // révisé — page unique, cinq onglets, fil d'Ariane, Mode revue, organigramme). Déclenchée par le « ? » ou le menu ☰,
+  // révisé — page unique, cinq onglets, fil d'Ariane, organigramme ; Mode revue retiré le 19.11.2026). Déclenchée par le « ? » ou le menu ☰,
   // jamais toute seule. Quand l'élément visé est absent (pas de données, rien choisi), la bulle s'affiche au centre.
   function visible(e) { return e && e.getClientRects().length ? e : null; }
   function teteDe(id) { var c = $('#' + id); return visible(c ? (c.firstElementChild || c) : null); }
@@ -26848,7 +26827,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     { sel: function () { return teteDe('questions-card') || $('#nav-tabs'); },
       avant: function () { showView('semaphores'); },
       t: 'Questions du mois',
-      d: 'Par portefeuille et par nature, les trous de données qui empêchent un sémaphore d’être juste. Elles se soldent au classeur suivant quand le trou est comblé ; l’enveloppe les envoie par courriel, avec les liens GE-Invest.' },
+      d: 'Par portefeuille et par nature, les trous de données qui empêchent un sémaphore d’être juste. Elles se soldent au classeur suivant quand le trou est comblé ; « Partager » les envoie en CSV, avec les liens GE-Invest.' },
     { sel: function () { return visible($('#organigramme-content .org-legende')) || $('#nav-tabs'); },
       avant: function () { showView('organigramme'); },
       t: 'Projets à ouvrir',
@@ -26856,10 +26835,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     { sel: function () { return visible($('#fiche-decisions')) || $('#nav-tabs'); },
       avant: function () { showView('fiche'); },
       t: 'Fiche et décisions',
-      d: 'Partout, <b>le numéro ou le nom d’un projet ouvre sa fiche</b> ; la flèche <b>↗</b> ouvre GE-Invest. La fiche réunit jalons, livrables, finances et risques ; les décisions s’y saisissent.' },
-    { sel: function () { return visible($('#btn-fil-rouge')) || $('#nav-tabs'); },
-      t: 'Mode revue',
-      d: 'Pour la séance mensuelle : un ordre du jour en cinq temps — préparer, constater, analyser, décider, restituer — avec compteurs et chronomètre. Rien n’est bloquant ; l’état de la séance est gardé par mois.' }
+      d: 'Partout, <b>le numéro ou le nom d’un projet ouvre sa fiche</b> ; la flèche <b>↗</b> ouvre GE-Invest. La fiche réunit jalons, livrables, finances et risques ; les décisions s’y saisissent.' }
   ];
   function lancerVisite() {
     if (!COMMUN || !COMMUN.tour) return null;
@@ -26937,260 +26913,6 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
   // ------------------------------------------------------------------
   // API publique (interface + tests automatisés)
   // ------------------------------------------------------------------
-  // ------------------------------------------------------------------
-  // Fil rouge de la revue (v0.26, 21.10.2026 — option B choisie par le chef de projet PTE
-  // après la proposition du Cabinet). Bandeau en cinq temps au-dessus des
-  // vues : chaque temps renvoie aux vues existantes, rien n'est bloquant.
-  // État de séance par mois dans localStorage (best-effort) ; les
-  // décisions restent dans DB.decisions (fichier des saisies).
-  // ------------------------------------------------------------------
-  var LS_FR = 'ocba_revue_filrouge_v1';
-  var FR_ETAPES = [
-    { k: 'preparer', t: 'Préparer', min: 0, d: 'Avant la séance : données du mois, périmètre, questions du mois.' },
-    { k: 'constater', t: 'Constater', min: 10, d: 'Suivi des décisions de la revue précédente, sémaphores qui ont changé.' },
-    { k: 'analyser', t: 'Analyser', min: 20, d: 'Seulement les projets en rouge ou orange : écart, cause, options.' },
-    { k: 'decider', t: 'Décider', min: 20, d: 'Décisions et escalades : quoi, qui, quand.' },
-    { k: 'restituer', t: 'Restituer', min: 10, d: 'Synthèse 30 secondes : messages, décisions, escalades.' }
-  ];
-  var FR_DUREE = 60;   // minutes, somme des temps
-  var FR = { etape: 'preparer', timer: null };
-  function frStock() { try { var o = JSON.parse(localStorage.getItem(LS_FR) || '{}'); return (o && typeof o === 'object') ? o : {}; } catch (e) { return {}; } }
-  function frEcrireStock(s) { try { localStorage.setItem(LS_FR, JSON.stringify(s)); } catch (e) { /* stockage indisponible */ } }
-  function frOuvert() { return !!frStock().__ouvert; }
-  function frSetOuvert(v) { var s = frStock(); s.__ouvert = !!v; frEcrireStock(s); }
-  function frSeance() {
-    var x = frStock()[STATE.mois || '—'] || {};
-    x.faits = x.faits || {}; x.analyses = x.analyses || {}; x.messages = x.messages || '';
-    x.aucuneDecision = !!x.aucuneDecision; x.chrono = x.chrono || { cumul: 0, debut: null };
-    return x;
-  }
-  function frEcrire(x) { var s = frStock(); s[STATE.mois || '—'] = x; frEcrireStock(s); }
-  function frGel() { return STATE.mois ? STATE.mois + '-' + String(PARAMS.dateGelJour || 5).padStart(2, '0') : ''; }
-  function frListe() { return STATE.mois ? projetsByPerimetre(STATE.perimetre) : []; }
-  function frNomProjet(np) { var p = DB.projets.filter(function (q) { return q.numero_projet === np; })[0]; return np ? (np + (p && p.nom_projet ? ' — ' + p.nom_projet : '')) : 'Niveau parc / portefeuille'; }
-  function frDecisions(list) { return decisionsDuPerimetre(list || frListe()); }
-  function frEnRetard(d) { return d.statut === 'ouverte' && d.echeance && d.echeance < frGel(); }
-  function frEtat() {
-    var list = frListe(), m = STATE.mois || '';
-    var decs = frDecisions(list);
-    var prec = decs.filter(function (d) { return String(d.date || '').slice(0, 7) < m; });
-    var duMois = decs.filter(function (d) { return String(d.date || '').slice(0, 7) === m; });
-    var alertes = list.filter(function (c) { return c.global === 'rouge' || c.global === 'orange'; })
-      .sort(function (a, b) { return (Engine.SEV[b.global] - Engine.SEV[a.global]) || String(a.projet.numero_projet).localeCompare(String(b.projet.numero_projet)); });
-    var degr = list.filter(function (c) { return c.tendance && c.tendance.symbol === '↓'; });
-    var amel = list.filter(function (c) { return c.tendance && c.tendance.symbol === '↑'; });
-    var cnt = { vert: 0, orange: 0, rouge: 0, gris: 0 }; list.forEach(function (c) { cnt[c.global]++; });
-    return { list: list, prec: prec, precOuvertes: prec.filter(function (d) { return d.statut === 'ouverte'; }),
-      duMois: duMois, alertes: alertes, degr: degr, amel: amel, cnt: cnt };
-  }
-  function frChronoMs(x) { var c = x.chrono; return (c.cumul || 0) + (c.debut ? Date.now() - c.debut : 0); }
-  function frChronoTxt(ms) { var s = Math.floor(ms / 1000), mn = Math.floor(s / 60); return String(mn).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
-  function frTick() {
-    var t = $('#fr-chrono-t'); if (!t) { if (FR.timer) { clearInterval(FR.timer); FR.timer = null; } return; }
-    var x = frSeance(), ms = frChronoMs(x);
-    t.textContent = frChronoTxt(ms) + ' / ' + FR_DUREE + ':00';
-    t.classList.toggle('fr-depasse', ms > FR_DUREE * 60000);
-    if (!x.chrono.debut && FR.timer) { clearInterval(FR.timer); FR.timer = null; }
-  }
-  function frAller(vue, ancre) {
-    if (vue !== 'portefeuille' && vue !== 'fiche' && vue !== 'organigramme') { STATE.rep.ss = null; STATE.rep.projet = null; }   /* sinon le détail d'un sous-site masque l'ancre */
-    showView(vue);
-    if (ancre) { var c = document.getElementById(ancre); if (c && c.scrollIntoView) c.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-  }
-  /* Séance guidée sur les onglets (10.11.2026, chef de projet PTE, QCM) : chaque temps ouvre son onglet de Suivre.
-     Préparer et Constater → Sémaphores ; Analyser → Sémaphores (« À traiter en revue »), sauf si une fiche est ouverte ;
-     Décider → Portefeuille (décisions ouvertes), sauf fiche ouverte ; Restituer → Portefeuille.
-     Le bandeau reste en haut : pas de défilement ici, les boutons « Voir … » de chaque temps s'en chargent. */
-  var FR_ONGLET = { preparer: 'semaphores', constater: 'semaphores', analyser: 'semaphores', decider: 'portefeuille', restituer: 'portefeuille' };
-  function frGuider(k) {
-    FR.etape = k; FR.focus = k;
-    var ficheOuverte = $('#view-fiche') && !$('#view-fiche').hidden;
-    var cible = FR_ONGLET[k];
-    if (cible && !((k === 'analyser' || k === 'decider') && ficheOuverte)) {
-      var dejaLa = $('#view-' + (cible === 'portefeuille' ? 'portefeuille' : 'reporting')) && !$('#view-' + (cible === 'portefeuille' ? 'portefeuille' : 'reporting')).hidden && (cible === 'portefeuille' || STATE.rep.mode === cible) && !STATE.rep.ss && !STATE.rep.projet;
-      if (!dejaLa) { STATE.rep.ss = null; STATE.rep.projet = null; showView(cible); }
-    }
-    renderFilRouge();
-  }
-  function frOuvrirFiche(np) { STATE.projetSel = np; showView('fiche'); try { window.scrollTo(0, 0); } catch (e) { /* jsdom */ } }
-  function frLigne(ok, texte, extra) {
-    return el('li', { class: ok === null ? '' : (ok ? 'fr-ok' : 'fr-ko') }, [el('span', { class: 'fr-ic', 'aria-hidden': 'true' }, [ok === null ? '•' : (ok ? '✓' : '!')]), texte].concat(extra ? [' ', extra] : []));
-  }
-  function frBtn(txt, fn, cls) { var b = el('button', { type: 'button', class: 'btn' + (cls ? ' ' + cls : '') }, [txt]); b.addEventListener('click', fn); return b; }
-
-  function frPanneau(k, E, x) {
-    var p = el('div', { class: 'fr-panel' });
-    var et = FR_ETAPES.filter(function (e) { return e.k === k; })[0];
-    p.appendChild(el('p', { class: 'fr-desc' }, [el('b', {}, [et.t + (et.min ? ' · ' + et.min + ' min' : ' · avant la séance')]), ' — ' + et.d]));
-
-    if (k === 'preparer') {
-      var pf = planFileInfo();
-      var rens = E.list.filter(function (c) { return c.sems.fraicheur.color === 'vert' && !c.sems.fraicheur.aMettreAJour; }).length;
-      var aMaj = E.list.filter(function (c) { return c.sems.fraicheur.aMettreAJour; }).length;
-      assurerQuestions(STATE.mois);
-      var q = (lireQuestionsStock().mois || {})[STATE.mois || ''];
-      var dansFr = {}; E.list.forEach(function (c) { dansFr[c.projet.numero_projet] = true; });
-      var nq = q && q.questions ? q.questions.filter(function (qq) { return dansFr[qq.projet] && qq.statut !== 'retirée'; }).length : 0;
-      var ul = el('ul', { class: 'fr-check' });
-      ul.appendChild(frLigne(!!pf, pf ? 'Classeur chargé : ' + pf.name : 'Aucun classeur chargé'));
-      ul.appendChild(frLigne(!!STATE.mois, 'Mois de revue : ' + moisLibelle(STATE.mois)));
-      ul.appendChild(frLigne(null, 'Périmètre : ' + labelPerimetre(STATE.perimetre) + ' · ' + E.list.length + ' projet' + (E.list.length > 1 ? 's' : '')));
-      ul.appendChild(frLigne(E.list.length ? rens / E.list.length >= 0.8 : false, 'Suivi du mois saisi : ' + rens + ' sur ' + E.list.length + ' projets'));
-      if (aMaj) ul.appendChild(frLigne(null, aMaj + ' projet' + (aMaj > 1 ? 's' : '') + ' encore sur la fiche du mois précédent (délai de saisie : ' + PARAMS.fraicheurDelaiJour + ' du mois)'));
-      var nqo = q && q.questions ? q.questions.filter(function (qq) { return qq.statut === 'ouverte' && dansFr[qq.projet]; }).length : 0;
-      ul.appendChild(frLigne(nqo === 0, nqo ? nqo + ' question' + (nqo > 1 ? 's' : '') + ' ouverte' + (nqo > 1 ? 's' : '') + ' (À compléter)' : (nq ? 'Toutes les questions du mois sont soldées' : 'Aucun trou détecté pour ce mois'),
-        nqo ? frBtn('Voir', function () { frAller('semaphores', 'rep-sec-questions'); }, 'fr-mini') : null));
-      p.appendChild(ul);
-    }
-
-    if (k === 'constater') {
-      var nFaites = E.prec.filter(function (d) { return d.statut === 'faite'; }).length;
-      var nAband = E.prec.filter(function (d) { return d.statut === 'abandonnée'; }).length;
-      var nRet = E.precOuvertes.filter(frEnRetard).length;
-      p.appendChild(el('h4', {}, ['Décisions des revues précédentes']));
-      p.appendChild(el('p', { class: 'small muted' }, [E.prec.length ? (nFaites + ' faite' + (nFaites > 1 ? 's' : '') + ' · ' + E.precOuvertes.length + ' ouverte' + (E.precOuvertes.length > 1 ? 's' : '') + (nRet ? ' dont ' + nRet + ' en retard' : '') + ' · ' + nAband + ' abandonnée' + (nAband > 1 ? 's' : '') + '. Mettre à jour le statut des décisions ouvertes :') : 'Aucune décision antérieure sur ce périmètre.']));
-      if (E.precOuvertes.length) {
-        var tb = el('tbody');
-        E.precOuvertes.slice().sort(function (a, b) { return String(a.echeance || '9').localeCompare(String(b.echeance || '9')); }).forEach(function (d) {
-          var s = el('select', { 'aria-label': 'Statut de la décision' });
-          ['ouverte', 'faite', 'abandonnée'].forEach(function (v) { var o = el('option', { value: v }, [v]); if (d.statut === v) o.selected = true; s.appendChild(o); });
-          s.addEventListener('change', function () { d.statut = s.value; saveState(); renderFilRouge(); });
-          tb.appendChild(el('tr', {}, [el('td', {}, [frNomProjet(d.numero_projet)]), el('td', {}, [d.decision || '']), el('td', {}, [d.responsable || '']),
-            el('td', { class: frEnRetard(d) ? 'alert-text' : '' }, [(d.echeance || '—') + (frEnRetard(d) ? ' (en retard)' : '')]), el('td', {}, [s])]));
-        });
-        p.appendChild(el('table', { class: 'small fr-tbl' }, [el('thead', {}, [el('tr', {}, ['Projet', 'Décision', 'Resp.', 'Échéance', 'Statut'].map(function (h) { return el('th', { class: 'no-sort' }, [h]); }))]), tb]));
-      }
-      p.appendChild(el('h4', {}, ['Sémaphores qui ont changé depuis le mois précédent']));
-      if (!E.degr.length && !E.amel.length) p.appendChild(el('p', { class: 'small muted' }, ['Aucun changement mesurable (ou pas d’export du mois précédent).']));
-      [[E.degr, 'Dégradations'], [E.amel, 'Améliorations']].forEach(function (g) {
-        if (!g[0].length) return;
-        var u = el('ul', { class: 'fr-proj' });
-        g[0].forEach(function (c) {
-          var a = el('a', { href: '#' }, [frNomProjet(c.projet.numero_projet)]);
-          a.addEventListener('click', function (e) { e.preventDefault(); frOuvrirFiche(c.projet.numero_projet); });
-          u.appendChild(el('li', {}, [semInline(c.tendance.prev ? c.tendance.prev.global : 'gris'), ' → ', semInline(c.global), ' ', a]));
-        });
-        p.appendChild(el('div', { class: 'small' }, [el('b', {}, [g[1] + ' (' + g[0].length + ')']), u]));
-      });
-      p.appendChild(el('div', { class: 'fr-actions' }, [frBtn('Voir les sémaphores', function () { frAller('semaphores', 'rep-sec-semaphores'); })]));
-    }
-
-    if (k === 'analyser') {
-      var nA = E.alertes.filter(function (c) { return x.analyses[c.projet.numero_projet]; }).length;
-      p.appendChild(el('p', { class: 'small muted' }, [E.alertes.length ? (nA + ' sur ' + E.alertes.length + ' projets en alerte analysés. Les projets au vert restent consultables dans le Reporting.') : 'Aucun projet en rouge ou orange sur ce périmètre.']));
-      var u2 = el('ul', { class: 'fr-proj' });
-      E.alertes.forEach(function (c) {
-        var np = c.projet.numero_projet;
-        var cb = el('input', { type: 'checkbox', 'aria-label': 'Projet analysé' }); cb.checked = !!x.analyses[np];
-        cb.addEventListener('change', function () { var y = frSeance(); if (cb.checked) y.analyses[np] = true; else delete y.analyses[np]; frEcrire(y); renderFilRouge(); });
-        u2.appendChild(el('li', {}, [el('label', { class: 'fr-cb' }, [cb, semInline(c.global), ' ', frNomProjet(np), c.projet.rp ? el('span', { class: 'muted' }, [' · ' + nRp(c.projet.rp)]) : null]),
-          ' ', frBtn('Fiche', function () { frOuvrirFiche(np); }, 'fr-mini')]));
-      });
-      p.appendChild(u2);
-    }
-
-    if (k === 'decider') {
-      var nEsc = E.duMois.filter(function (d) { return d.escalade_vers; }).length;
-      p.appendChild(el('p', { class: 'small muted' }, ['Les décisions se saisissent dans la fiche projet (bouton « Fiche » à l’étape Analyser). ' + E.duMois.length + ' décision' + (E.duMois.length > 1 ? 's' : '') + ' ce mois, dont ' + nEsc + ' escalade' + (nEsc > 1 ? 's' : '') + '.']));
-      if (E.duMois.length) {
-        var tb2 = el('tbody');
-        E.duMois.forEach(function (d) { tb2.appendChild(el('tr', {}, [el('td', {}, [frNomProjet(d.numero_projet)]), el('td', {}, [d.decision || '', d.escalade_vers ? el('div', { class: 'muted' }, ['Escalade vers ' + d.escalade_vers]) : null]), el('td', {}, [d.responsable || '—']), el('td', {}, [d.echeance || '—'])])); });
-        p.appendChild(el('table', { class: 'small fr-tbl' }, [el('thead', {}, [el('tr', {}, ['Projet', 'Décision / escalade', 'Porteur', 'Échéance'].map(function (h) { return el('th', { class: 'no-sort' }, [h]); }))]), tb2]));
-        var sansPorteur = E.duMois.filter(function (d) { return !d.responsable || !d.echeance; }).length;
-        if (sansPorteur) p.appendChild(el('p', { class: 'small alert-text' }, [sansPorteur + ' décision' + (sansPorteur > 1 ? 's' : '') + ' sans porteur ou sans échéance.']));
-      } else {
-        var cbA = el('input', { type: 'checkbox' }); cbA.checked = x.aucuneDecision;
-        cbA.addEventListener('change', function () { var y = frSeance(); y.aucuneDecision = cbA.checked; frEcrire(y); renderFilRouge(); });
-        p.appendChild(el('label', { class: 'fr-cb small' }, [cbA, ' Aucune décision à prendre ce mois']));
-      }
-    }
-
-    if (k === 'restituer') {
-      var ta = el('textarea', { rows: '3', class: 'fr-msg', placeholder: 'Trois messages pour la direction, un par ligne.' }); ta.value = x.messages;
-      /* frappe : seuls les messages changent, l'état de séance E (calculé au rendu du panneau) est repris tel quel */
-      ta.addEventListener('input', function () { var y = frSeance(); y.messages = ta.value; frEcrire(y); var pre = $('#fr-synth'); if (pre) pre.textContent = frSynthese(E, y); });
-      p.appendChild(el('label', { class: 'small' }, ['Trois messages']));
-      p.appendChild(ta);
-      p.appendChild(el('pre', { class: 'fr-synth', id: 'fr-synth' }, [frSynthese(E, x)]));
-      p.appendChild(el('div', { class: 'fr-actions' }, [
-        frBtn('Copier la synthèse', function (ev) {
-          /* copierTexte : repli execCommand quand le presse-papiers est refusé (file://) */
-          var b = ev.currentTarget, okc = copierTexte(frSynthese(frEtat(), frSeance()));
-          b.textContent = okc ? 'Copiée' : 'Copie impossible'; setTimeout(function () { b.textContent = 'Copier la synthèse'; }, 1500);
-        }),
-        frBtn('Exporter les décisions du mois (CSV)', function () {
-          downloadCSV('decisions_' + (STATE.mois || '') + '.csv', ['date', 'niveau', 'numero_projet', 'portefeuille', 'decision', 'responsable', 'echeance', 'statut', 'escalade_vers', 'notes'], frEtat().duMois);
-        })
-      ]));
-    }
-
-    if (k === 'analyser') p.appendChild(el('div', { class: 'fr-actions' }, [frBtn('Voir « À traiter en revue »', function () { frAller('semaphores', 'watch-card'); })]));
-    if (k === 'decider') p.appendChild(el('div', { class: 'fr-actions' }, [frBtn('Voir les décisions ouvertes', function () { frAller('portefeuille', 'pf-decisions'); })]));
-    var fait = !!x.faits[k];
-    var cbF = el('input', { type: 'checkbox' }); cbF.checked = fait;
-    cbF.addEventListener('change', function () { var y = frSeance(); y.faits[k] = cbF.checked; frEcrire(y); if (cbF.checked) { var i = FR_ETAPES.map(function (e) { return e.k; }).indexOf(k); if (i < FR_ETAPES.length - 1) FR.etape = FR_ETAPES[i + 1].k; } renderFilRouge(); });
-    var iEt = FR_ETAPES.map(function (e) { return e.k; }).indexOf(k), suiv = FR_ETAPES[iEt + 1];
-    var bSuiv = suiv ? frBtn('Temps suivant : ' + suiv.t + ' →', function () { var y = frSeance(); y.faits[k] = true; frEcrire(y); frGuider(suiv.k); }, 'fr-mini') : null;
-    p.appendChild(el('div', { class: 'fr-pied' }, [el('label', { class: 'fr-cb' }, [cbF, ' Temps « ' + et.t + ' » terminé']), bSuiv ? ' ' : null, bSuiv]));
-    return p;
-  }
-
-  function frSynthese(E, x) {
-    var sem = Engine.computePortfolioSemaphore(E.list, PARAMS);
-    var L = ['Revue de projets — ' + moisLibelle(STATE.mois) + ' — ' + labelPerimetre(STATE.perimetre), ''];
-    var msgs = String(x.messages || '').split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
-    if (msgs.length) { L.push('Messages'); msgs.forEach(function (s, i) { L.push((i + 1) + '. ' + s); }); L.push(''); }
-    L.push('Situation : sémaphore ' + sem.color + ' · ' + E.list.length + ' projets : ' + E.cnt.rouge + ' rouge' + (E.cnt.rouge > 1 ? 's' : '') + ', ' + E.cnt.orange + ' orange, ' + E.cnt.vert + ' vert' + (E.cnt.vert > 1 ? 's' : '') + ', ' + E.cnt.gris + ' non renseigné' + (E.cnt.gris > 1 ? 's' : '') + '.');
-    L.push('Depuis le mois précédent : ' + E.degr.length + ' dégradation' + (E.degr.length > 1 ? 's' : '') + ', ' + E.amel.length + ' amélioration' + (E.amel.length > 1 ? 's' : '') + '.');
-    var nRet = E.precOuvertes.filter(frEnRetard).length;
-    L.push('Décisions précédentes : ' + E.prec.filter(function (d) { return d.statut === 'faite'; }).length + ' faites, ' + E.precOuvertes.length + ' ouvertes' + (nRet ? ' dont ' + nRet + ' en retard' : '') + '.');
-    var esc = E.duMois.filter(function (d) { return d.escalade_vers; });
-    L.push('Décisions de la séance : ' + E.duMois.length + (esc.length ? ' · escalades : ' + esc.length : '') + (E.duMois.length || !x.aucuneDecision ? '' : ' (aucune décision nécessaire)') + '.');
-    E.duMois.forEach(function (d) { L.push('- ' + frNomProjet(d.numero_projet) + ' : ' + (d.decision || '') + (d.responsable ? ' (' + d.responsable + (d.echeance ? ', ' + d.echeance : '') + ')' : '') + (d.escalade_vers ? ' → escalade vers ' + d.escalade_vers : '')); });
-    return L.join('\n');
-  }
-
-  function renderFilRouge() {
-    var host = $('#fil-rouge'), btn = $('#btn-fil-rouge');
-    var ouvert = frOuvert() && DB.projets.length > 0;
-    if (btn) { btn.setAttribute('aria-pressed', ouvert ? 'true' : 'false'); btn.classList.toggle('on', ouvert); }
-    if (!host) return;
-    host.hidden = !ouvert; host.innerHTML = '';
-    if (!ouvert) { if (FR.timer) { clearInterval(FR.timer); FR.timer = null; } return; }
-    var E = frEtat(), x = frSeance();
-    var bar = el('div', { class: 'fr-bar' }, [el('strong', { class: 'fr-titre' }, ['Ordre du jour'])]);
-    var nav = el('nav', { class: 'fr-chips', 'aria-label': 'Les cinq temps de la revue' });
-    var info = {
-      preparer: '', constater: E.precOuvertes.length ? E.precOuvertes.length + ' ouv.' : '',
-      analyser: E.alertes.length ? E.alertes.filter(function (c) { return x.analyses[c.projet.numero_projet]; }).length + '/' + E.alertes.length : '0',
-      decider: String(E.duMois.length), restituer: ''
-    };
-    FR_ETAPES.forEach(function (et, i) {
-      var b = el('button', { type: 'button', class: 'fr-chip' + (FR.etape === et.k ? ' on' : '') + (x.faits[et.k] ? ' fait' : ''), 'aria-pressed': FR.etape === et.k ? 'true' : 'false', title: et.d },
-        [(x.faits[et.k] ? '✓ ' : (i + 1) + ' · ') + et.t, info[et.k] ? el('span', { class: 'fr-n' }, [info[et.k]]) : null]);
-      b.addEventListener('click', function () { frGuider(et.k); });
-      nav.appendChild(b);
-    });
-    bar.appendChild(nav);
-    var t = el('span', { class: 'fr-chrono', id: 'fr-chrono-t', title: 'Durée de la séance (cible ' + FR_DUREE + ' min)' }, ['']);
-    var bPlay = frBtn(x.chrono.debut ? '⏸' : '▶', function () {
-      var y = frSeance();
-      if (y.chrono.debut) { y.chrono.cumul = frChronoMs(y); y.chrono.debut = null; } else { y.chrono.debut = Date.now(); }
-      frEcrire(y); renderFilRouge();
-    }, 'fr-mini');
-    bPlay.setAttribute('aria-label', x.chrono.debut ? 'Mettre le chronomètre en pause' : 'Démarrer le chronomètre');
-    var bZero = frBtn('↺', function () { var y = frSeance(); y.chrono = { cumul: 0, debut: null }; frEcrire(y); renderFilRouge(); }, 'fr-mini');
-    bZero.setAttribute('aria-label', 'Remettre le chronomètre à zéro');
-    var bFerme = frBtn('×', function () { frSetOuvert(false); renderFilRouge(); }, 'fr-mini');
-    bFerme.setAttribute('aria-label', 'Masquer le mode revue'); bFerme.title = 'Masquer le mode revue (l’état de la séance est gardé)';
-    bar.appendChild(el('span', { class: 'fr-droite' }, [t, bPlay, bZero, bFerme]));
-    host.appendChild(bar);
-    host.appendChild(frPanneau(FR.etape, E, x));
-    if (FR.focus) { var ch = host.querySelectorAll('.fr-chip')[FR_ETAPES.map(function (e) { return e.k; }).indexOf(FR.focus)]; FR.focus = null; if (ch) ch.focus(); }   /* le focus reste sur le temps choisi */
-    frTick();
-    if (x.chrono.debut && !FR.timer) FR.timer = setInterval(frTick, 1000);
-  }
-
   window.App = {
     loadCSVText: loadCSVText,
     loadXLSXBuffer: loadXLSXBuffer,
@@ -27226,6 +26948,7 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     lireQuestions: lireQuestionsStock,
     purgerQuestions: purgerQuestions,
     texteQuestionsMail: texteQuestionsMail,
+    partagerQuestions: partagerQuestions, lignesQuestionsPartage: lignesQuestionsPartage,
     exportQuestionsCSV: exportQuestionsCSV,
     prioSourceLabel: prioSourceLabel,
     badgeStats: badgeStats,
