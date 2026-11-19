@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-SpR/L6rrmNFcJdwmqdDgw4FzjsyVV0IzuGH0AWOb1oI=' 'sha256-cwtCwi0M6+njQZWF8TH2c11WeFvyJrqMrDD5KVa+qyg=' 'sha256-bLmAqD170Wbkw/0KG+edjV0eYbC2bRr/G3qO7YmJIzY=' 'sha256-wcytUdZFJXnxsizoKhn5kCEf7MpqLmtyTf0T0KKfUCU=' 'sha256-UUiI/4huYlfrewigXylxrk06b2sUllb+0XKiugUN3xI=' 'sha256-dXMhz01Z28QGkzkHpjpzVt3wVjq2iqU1AsFqJC8wiWk=' 'sha256-EObSr8o8mfdKIdp//hO5UHhPPJh7p/xU/VLhkdUdtXs=' 'sha256-IrPHXTm6EVWVF3BwI7peu+LwY2p7iBtC7I+382BjbXQ=' 'sha256-LhbYSx4rJ+Sc2s6vJC0LRu8Qurm1BJ/FYuG1CR4g5Aw=' 'sha256-S8IZr2RLVpRFH57GfMZUH9KWfM4Xqp2907SF0ct/Tu4=' 'sha256-WspxV6IeE7upT+HeYpHLUMcE4kQ3l3KmmAOvYNFf2Sw=' 'sha256-bnAbwHevk2xn9+AJ2LcBkMkM9pfnrRNPftETlK1XPKQ='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net https://nominatim.openstreetmap.org; img-src data: https://server.arcgisonline.com https://wmts.geo.admin.ch https://a.tile.opentopomap.org https://b.tile.opentopomap.org https://c.tile.opentopomap.org; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-WBMg256sdH1gUmD5ZPEP9EIAB+v9nG90cVVuLa5tn2g=' 'sha256-SpR/L6rrmNFcJdwmqdDgw4FzjsyVV0IzuGH0AWOb1oI=' 'sha256-cwtCwi0M6+njQZWF8TH2c11WeFvyJrqMrDD5KVa+qyg=' 'sha256-3srdaCLdYUQC6GtPZ99MeoVhyNj7ugzqZgQVdHNWHmo=' 'sha256-wcytUdZFJXnxsizoKhn5kCEf7MpqLmtyTf0T0KKfUCU=' 'sha256-UUiI/4huYlfrewigXylxrk06b2sUllb+0XKiugUN3xI=' 'sha256-dXMhz01Z28QGkzkHpjpzVt3wVjq2iqU1AsFqJC8wiWk=' 'sha256-zpVbscbOr6H4DOMuS+5bi7cAslGewz/Qj3N+J4hbjlg=' 'sha256-Od5eunmWP6HChVuQtYfAMHzubSq6Tbh/GS5W0HkYHCI=' 'sha256-cphz6g+iUKT1boC6HCv+VgmNitW/Q1byFwP8KQajcXY=' 'sha256-S8IZr2RLVpRFH57GfMZUH9KWfM4Xqp2907SF0ct/Tu4=' 'sha256-WspxV6IeE7upT+HeYpHLUMcE4kQ3l3KmmAOvYNFf2Sw=' 'sha256-bnAbwHevk2xn9+AJ2LcBkMkM9pfnrRNPftETlK1XPKQ='; style-src 'unsafe-inline'; connect-src https://mac-mini.tail6df2ea.ts.net https://nominatim.openstreetmap.org; img-src data: https://server.arcgisonline.com https://wmts.geo.admin.ch https://a.tile.opentopomap.org https://b.tile.opentopomap.org https://c.tile.opentopomap.org; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <!-- <PTE-VUE prio:tete> -->
 <style id="css-vue-prio-jetons">
 :root{
@@ -3096,6 +3096,9 @@ var PTE_COMMUN = (function () {
      plus ancienne des vingt sort ; l'historique complet est dans 00_Contexte/Versioning_PTE.md,
      ce que dit le pied de la fenêtre. Une entrée ne sort qu'une fois écrite dans ce journal. */
   var VERSIONS = [
+    {"date": "19.11.2026", "objet": "revue", "version": "v0.75", "titre": "Colonne retirée du classeur", "points": ["Ne cherche plus la colonne « Statut consolidation », supprimée de Plan_PTE le 18.11 ; aucun affichage ne s’en servait."]},
+    {"date": "19.11.2026", "objet": "priorisation", "version": "v2.57", "titre": "Colonnes retirées du classeur", "points": ["Ne cherche plus sept colonnes supprimées de Plan_PTE le 18.11 (IDE projeté, part renouvelable actuelle et après projet, montants DD engagé et prévu, type et surface brute de toiture) ; aucune n’était exploitée, les résultats ne changent pas."]},
+    {"date": "18.11.2026", "objet": "revue", "version": "v0.74", "titre": "« À compléter » suit les filtres", "points": ["La carte « À compléter » de Sémaphores suit le fil d’Ariane et tous les filtres (RP, statut, type, phase SIA, recherche) : un projet terminé exclu par le filtre de statut n’y figure plus.", "Le courriel, l’export CSV, le taux de réponse et la tuile « Questions soldées » portent sur les mêmes projets."]},
     {"date": "18.11.2026", "objet": "revue", "version": "v0.73", "titre": "Courriel des questions ; apport des projets ; onglets", "points": ["« À compléter » : une enveloppe ouvre un courriel (Outlook) avec les questions du mois et, par projet, le lien vers GE-Invest ; le texte est aussi copié.", "Périmètre d’action : la liste d’un segment dit l’objectif 2030 que sert chaque projet (lu dans son numéro) et l’état de son sous-site pour cet objectif ; avancement en % ; RP en initiales ; total des projets du classeur rappelé.", "Organigramme : coche, flèche, sablier et trait fin à la place des triangles ; « au-delà de l’objectif » = peut être temporisé ; règle du type d’intervention derrière un « i ».", "Onglets : Sémaphores avant Planning ; Finances masqué (pas supprimé)."]},
     {"date": "18.11.2026", "objet": "commun", "titre": "Politique publique et affectation ; Plan lumière ; icônes du Plan", "points": ["Nouveau périmètre « Politique publique » (colonne Politique publique_AB), à côté de l’affectation, dans les quatre vues.", "Nouveau périmètre « Plan lumière » (colonne Tag Plan Lumière).", "Colonne « Plan » des classements : icône pour les sites emblématiques (étoile) et pour le Plan lumière (ampoule).", "Tous les « i » suivent la même règle : même cercle gris, à 6 px du titre ; leur fenêtre est la même carte, 8 px dessous."]},
     {"date": "18.11.2026", "objet": "accueil", "version": "v1.41", "titre": "Politique publique et Plan lumière", "points": ["Menu Périmètre : section « Politique publique » à côté de l’affectation ; « Plan lumière » dans la section Plan."]},
@@ -3112,10 +3115,7 @@ var PTE_COMMUN = (function () {
     {"date": "14.11.2026", "objet": "revue", "version": "v0.70", "titre": "Carte des phases SIA : fond de carte au choix", "points": ["Planning, carte des phases SIA : fond de carte au choix parmi sept, le même que dans Prioriser.", "Liens vers Prioriser et la simulation : ouverts dans la page, sans rechargement.", "Méthode (panneau « ? ») : largeur, taille du texte et marges prévues enfin appliquées."]},
     {"date": "14.11.2026", "objet": "priorisation", "version": "v2.54", "titre": "Prioriser dans la page unique", "points": ["Prioriser est une vue de la page unique, à la même adresse (« #vue=prio ») ; l’ancienne page y renvoie.", "Le classeur commun est relu à chaque dépôt, sans copie des sous-sites dans le navigateur ; notes, ajustements, réglages, portefeuille validé et coordonnées géocodées sont conservés.", "Carte : fonds Esri, swisstopo et OpenTopoMap, sans chargement depuis un serveur de scripts ; CARTO et OpenStreetMap retirés (clé exigée ; accès refusé aux pages sans adresse d’origine).", "Import d’un fichier .csv abandonné ; visite guidée recalée sur la barre commune."]},
     {"date": "14.11.2026", "objet": "simulation", "version": "v3.27", "titre": "« Estimer les gains » sans cadre", "points": ["La fenêtre « Estimer les gains » montre la simulation de la page : ouverture immédiate, un seul calcul.", "L’ancienne page de la simulation renvoie à la page unique."]},
-    {"date": "13.11.2026", "objet": "accueil", "version": "v1.37", "titre": "Suivre sans « Autres vues »", "points": ["Suivre : onglet « Autres vues » supprimé ; la situation par portefeuille passe dans Portefeuille."]},
-    {"date": "13.11.2026", "objet": "revue", "version": "v0.69", "titre": "Onglet « Autres vues » supprimé", "points": ["Onglets : Portefeuille · Planning · Sémaphores · Finances · Organigramme.", "Portefeuille : la situation consolidée par portefeuille (par statut quand un seul portefeuille est choisi) précède le tableau « Sous-sites et projets », sur les mêmes projets ; un clic sur un portefeuille le choisit dans le périmètre.", "La vue consolidée d'un sous-site reste ouverte sous l'onglet Portefeuille ; retour arrière par une constante (AUTRES_VUES)."]},
-    {"date": "13.11.2026", "objet": "accueil", "version": "v1.36", "titre": "Phases SIA : version « Terre »", "points": ["Phase 41 en violet, phases 51 → 53 du sable au brun : plus aucune phase aux couleurs des sémaphores (vert, orange, rouge)."]},
-    {"date": "13.11.2026", "objet": "revue", "version": "v0.68", "titre": "Phases SIA : version « Terre »", "points": ["Phase 41 en violet, phases 51 → 53 du sable au brun : plus aucune phase aux couleurs des sémaphores (vert, orange, rouge).", "Bleus 31 → 33, 21 creux et « terminé » noir inchangés."]}
+    {"date": "13.11.2026", "objet": "accueil", "version": "v1.37", "titre": "Suivre sans « Autres vues »", "points": ["Suivre : onglet « Autres vues » supprimé ; la situation par portefeuille passe dans Portefeuille."]}
   ];
   /* 16.11.2026 (chef de projet PTE) : noms des vues de la page unique ; le Trombinoscope, projet indépendant, sort de cet historique */
   var OBJETS_VER = { accueil: 'Tableau de bord', priorisation: 'Prioriser', simulation: 'Simulation',
@@ -10517,7 +10517,7 @@ diffèrent. Les graphiques de trajectoire du CO₂, du thermique, de l'électric
 <p><b>La végétalisation fait exception elle aussi</b>, dans l'autre sens : elle est chiffrée mais ne se rapporte à aucune durée de vie. Une cour d'école désimperméabilisée ne produit pas un flux annuel de kWh évités ; elle crée une surface, une fois. Son classement se fait donc au <b>coût du m² créé</b> — montant TTC du projet ÷ m² créés — du moins cher au plus cher, sans actualisation ni durée de vie. Le rang de franchissement garde le même sens : le rang auquel le cumul des surfaces atteint la cible 2030. Attention à la lecture des surfaces : la colonne du classeur porte ce que les projets <b>créeraient</b>, pas ce qui est déjà créé — l'écart à combler est donc l'objectif entier.</p>
 <p>Le photovoltaïque fait exception : sans coût fiable, il est classé par puissance décroissante — un classement d'intention. Sa cible est en revanche chiffrée : <b>20 % de la consommation électrique</b>, convertie en kWc avec le productible paramétrable.</p>
 <h4 class="sub">Unités : ce qui est une intensité, ce qui est un total</h4>
-<p>Le classeur mélange les deux, et les confondre fausse tout. Dans <code>Plan_PTE</code> : <code>IDC</code>, <code>IDC projeté</code>, <code>IDE</code>, <code>IDE projeté</code> et <code>CO2 projeté</code> sont des <b>intensités</b> (par m² et par an), malgré des en-têtes qui indiquent « [kWh] » ; <code>CONSO</code>, <code>Conso Elec</code>, <code>Conso Eau</code> et <code>Co2</code> sont des <b>totaux annuels</b> par sous-site.</p>
+<p>Le classeur mélange les deux, et les confondre fausse tout. Dans <code>Plan_PTE</code> : <code>IDC</code>, <code>IDC projeté</code> et <code>CO2 projeté</code> sont des <b>intensités</b> (par m² et par an), malgré des en-têtes qui indiquent « [kWh] » ; <code>CONSO</code>, <code>Conso Elec</code>, <code>Conso Eau</code> et <code>Co2</code> sont des <b>totaux annuels</b> par sous-site.</p>
 <div class="m-callout info"><div>C'est pourquoi chaque gain est <b>pondéré par la surface</b> : gain = SRE × (intensité actuelle − intensité projetée). Une intensité n'est jamais additionnée d'un bâtiment à l'autre ; une moyenne de parc est toujours pondérée par la SRE, jamais arithmétique. Réciproquement, chaque objectif est affiché <b>aussi au m²</b> (ligne « Au m² » des cartes) : c'est la seule façon de comparer un parc dont le périmètre a changé depuis 2005.</div></div>
 </div></div></div>
 
@@ -11867,9 +11867,8 @@ function gvr(row,idx){if(idx<0||!row||idx>=row.length)return null;const v=row[id
 
 function importFromRows(rows){
   if(rows.length<2)return[];const h=rows[0].map(v=>String(v||'').trim());
-  const c={id:fc(h,['N° sous site','nsoussite','N°soussite','N°']),nom:fc(h,['Nom du site_AB','Nomdusite','Nom du site']),adr:fc(h,['Adresse','Adresse du site','Lieu']),coeff:fc(h,['Coeff Stratus','CoeffStratus']),sre:fc(h,['SRE']),sreCorr:fc(h,['SRE corrigée (temp)','SRE corrigée','SREcorrigée']),idcC:fc(h,['IDC [kWh]']),idcCorr:fc(h,['IDC corrigé (temp) [kWh]','IDC corrigé','IDCcorrigé','IDC corrige']),agent:fc(h,['Agent']),pat:fc(h,['Classement au Patrimoine','Patrimoine']),elec:fc(h,['Conso Elec [kWh]','Conso Elec 2025 [kWh]','Conso Elec 2025 - kWh2','Conso Elec 2025','Conso Elec 2024 [kWh]','Conso Elec 2024 - kWh','Conso Elec','ConsoElec']),eau:fc(h,['Conso Eau [m3]','Conso Eau 2025 [m3]','Conso Eau 2025 - m3','Conso Eau 2025','Conso Eau 2024 [m3]','Conso Eau 2024 - m3','Conso Eau','ConsoEau']),consoTherm:fc(h,['CONSO [kWh]','CONSO kWh','Conso totale [kWh]']),pol:fc(h,['Politique publique_AB','Politique publique']),co2:fc(h,['Co2 [kgCO2]','Co2 2025','Co2 2024','kgCo2','Co2']),rp:fc(h,['Responsables Portefeuille','Responsable Portefeuille','ResponsablesPortefeuille','Resp Portefeuille','Portefeuille','RP']),cecb:fc(h,['Audit CECB','AuditCECB']),ht:fc(h,['Chauffage Type Energie','ChauffageTypeEnergie','Chauffage Type']),hsub:fc(h,['Chauffage de subsitution','Chauffage de substitution','substitution']),idcpA:fc(h,['IDC projeté VA [kWh]','IDC projeté VA']),gainElecProj:fc(h,['Gain Elec simulé [kWh/an]','Gain Elec projeté [kWh/an]','Gain Elec projeté']),consoElecProj:fc(h,['Conso élec projetée [kWh/an]','Conso elec projetee [kWh/an]','Conso élec projetée en kWh (MDS)','Conso élec projetée']),gainEauProj:fc(h,['Gain Eau simulé [m3/an]','Gain Eau projeté [m3/an]','Gain Eau projeté']),gainEauEst:fc(h,['Gain Eau estimé [m3/an]','Gain Eau estimé']),co2Proj:fc(h,['CO2 projeté [kg/m2.an]','CO2 projeté [kgCO2/an]','CO2 projeté']),idceProj:fc(h,['IDE projeté [kWh]','IDE projeté']),renAct:fc(h,['Part renouvelable actuelle [%]','Part renouvelable actuelle']),renFut:fc(h,['Part renouvelable après projet [%]']),pvExist:fc(h,['PV existant - puissance [kWc]']),pvProd:fc(h,['PV existant - production [kWh/an]']),anneeIDC:fc(h,['Année IDC']),ddEng:fc(h,['Montant DD engagé [CHF]']),ddPrev:fc(h,['Montant DD prévu [CHF]']),
+  const c={id:fc(h,['N° sous site','nsoussite','N°soussite','N°']),nom:fc(h,['Nom du site_AB','Nomdusite','Nom du site']),adr:fc(h,['Adresse','Adresse du site','Lieu']),coeff:fc(h,['Coeff Stratus','CoeffStratus']),sre:fc(h,['SRE']),sreCorr:fc(h,['SRE corrigée (temp)','SRE corrigée','SREcorrigée']),idcC:fc(h,['IDC [kWh]']),idcCorr:fc(h,['IDC corrigé (temp) [kWh]','IDC corrigé','IDCcorrigé','IDC corrige']),agent:fc(h,['Agent']),pat:fc(h,['Classement au Patrimoine','Patrimoine']),elec:fc(h,['Conso Elec [kWh]','Conso Elec 2025 [kWh]','Conso Elec 2025 - kWh2','Conso Elec 2025','Conso Elec 2024 [kWh]','Conso Elec 2024 - kWh','Conso Elec','ConsoElec']),eau:fc(h,['Conso Eau [m3]','Conso Eau 2025 [m3]','Conso Eau 2025 - m3','Conso Eau 2025','Conso Eau 2024 [m3]','Conso Eau 2024 - m3','Conso Eau','ConsoEau']),consoTherm:fc(h,['CONSO [kWh]','CONSO kWh','Conso totale [kWh]']),pol:fc(h,['Politique publique_AB','Politique publique']),co2:fc(h,['Co2 [kgCO2]','Co2 2025','Co2 2024','kgCo2','Co2']),rp:fc(h,['Responsables Portefeuille','Responsable Portefeuille','ResponsablesPortefeuille','Resp Portefeuille','Portefeuille','RP']),cecb:fc(h,['Audit CECB','AuditCECB']),ht:fc(h,['Chauffage Type Energie','ChauffageTypeEnergie','Chauffage Type']),hsub:fc(h,['Chauffage de subsitution','Chauffage de substitution','substitution']),idcpA:fc(h,['IDC projeté VA [kWh]','IDC projeté VA']),gainElecProj:fc(h,['Gain Elec simulé [kWh/an]','Gain Elec projeté [kWh/an]','Gain Elec projeté']),consoElecProj:fc(h,['Conso élec projetée [kWh/an]','Conso elec projetee [kWh/an]','Conso élec projetée en kWh (MDS)','Conso élec projetée']),gainEauProj:fc(h,['Gain Eau simulé [m3/an]','Gain Eau projeté [m3/an]','Gain Eau projeté']),gainEauEst:fc(h,['Gain Eau estimé [m3/an]','Gain Eau estimé']),co2Proj:fc(h,['CO2 projeté [kg/m2.an]','CO2 projeté [kgCO2/an]','CO2 projeté']),pvExist:fc(h,['PV existant - puissance [kWc]']),pvProd:fc(h,['PV existant - production [kWh/an]']),anneeIDC:fc(h,['Année IDC']),
     ddToitVeg:fc(h,['DD Toiture végétalisée réalisée [m2]','Toiture Végétalisée Surf m2']),
-    ddToitType:fc(h,['Toiture Principale Type']),ddToitSurf:fc(h,['Surface toiture brute estimée [m2]','Surface toiture brute estimée (m2)']),
     ddPerm:fc(h,['Indicateur Biodiversité 1 Surface perméabilisée ajoutée [m2]','Indicateur Biodiversité 1 Surface perméabilisée ajoutée (m2)','Surface perméabilisée ajoutée (m2)']),
     ddVeget:fc(h,['Indicateur Biodiversité 2 Surface végétalisée ajoutée [m2]','Indicateur Biodiversité 2 Surface végétalisée ajoutée (m2)','Surface végétalisée ajoutée (m2)']),
     ddVegCout:fc(h,['Coût végétalisation TTC [CHF]','Cout végétalisation TTC [CHF]','Coût végétalisation TTC']),
@@ -11947,8 +11946,8 @@ function importFromRows(rows){
      build_priorisation.py (`numv(r,"SRE") or numv(r,"SRE corrigée (temp)")`). */
   const sreVal=pn(gvr(R,c.sre))||pn(gvr(R,c.sreCorr));
   const idcCVal=pn(gvr(R,c.idcC))||pn(gvr(R,c.idcCorr));
-  sites.push({id,nom:(gv(R,c.nom)||'').replace(/\s*-\s*\(.*/,'').substring(0,55),bat:batimentsNom(gv(R,c.nom)),adr:gv(R,adrCol),rp:rpV.trim(),coeff,sre:sreVal,idcC:idcCVal,pat:gv(R,c.pat)||'',elec:pn(gvr(R,c.elec)),eau:pn(gvr(R,c.eau)),consoTherm:pn(gvr(R,c.consoTherm)),co2:pn(gvr(R,c.co2)),ht:htVal,htPrin:htPrinVal,hsub:gv(R,c.hsub),cecbRaw:cecbRaw,cecbSt:cecbSt,cecb:CECB_DEF[cecbSt].pts===33,idcVB:pn(gvr(R,idcpColF)),invEstim:pn(gvr(R,c.invEstim)),invImmOBA:pn(gvr(R,c.invVB)),invGE:pn(gvr(R,c.invGE)),invDG:pn(gvr(R,c.invDG)),invVB:pn(gvr(R,c.invVB)),gainElecMax:pn(gvr(R,c.gainElec)),gainEauMax:pn(gvr(R,c.gainEau)),pol:(gv(R,c.pol)||'').trim(),gainElecProj:pn(gvr(R,c.gainElecProj)),consoElecProj:pn(gvr(R,c.consoElecProj)),gainEauProj:pn(gvr(R,c.gainEauProj)),gainEauEst:pn(gvr(R,c.gainEauEst)),co2Proj:pn(gvr(R,c.co2Proj)),ideProj:pn(gvr(R,c.idceProj)),renAct:pn(gvr(R,c.renAct)),renFut:pn(gvr(R,c.renFut)),pvExist:pn(gvr(R,c.pvExist)),pvProd:pn(gvr(R,c.pvProd)),anneeIDC:anneeRecentePrio(gvr(R,c.anneeIDC)),ddEng:pn(gvr(R,c.ddEng)),ddPrev:pn(gvr(R,c.ddPrev)),
-    ddToitVeg:pn(gvr(R,c.ddToitVeg)),ddToitType:gv(R,c.ddToitType),ddToitSurf:pn(gvr(R,c.ddToitSurf)),
+  sites.push({id,nom:(gv(R,c.nom)||'').replace(/\s*-\s*\(.*/,'').substring(0,55),bat:batimentsNom(gv(R,c.nom)),adr:gv(R,adrCol),rp:rpV.trim(),coeff,sre:sreVal,idcC:idcCVal,pat:gv(R,c.pat)||'',elec:pn(gvr(R,c.elec)),eau:pn(gvr(R,c.eau)),consoTherm:pn(gvr(R,c.consoTherm)),co2:pn(gvr(R,c.co2)),ht:htVal,htPrin:htPrinVal,hsub:gv(R,c.hsub),cecbRaw:cecbRaw,cecbSt:cecbSt,cecb:CECB_DEF[cecbSt].pts===33,idcVB:pn(gvr(R,idcpColF)),invEstim:pn(gvr(R,c.invEstim)),invImmOBA:pn(gvr(R,c.invVB)),invGE:pn(gvr(R,c.invGE)),invDG:pn(gvr(R,c.invDG)),invVB:pn(gvr(R,c.invVB)),gainElecMax:pn(gvr(R,c.gainElec)),gainEauMax:pn(gvr(R,c.gainEau)),pol:(gv(R,c.pol)||'').trim(),gainElecProj:pn(gvr(R,c.gainElecProj)),consoElecProj:pn(gvr(R,c.consoElecProj)),gainEauProj:pn(gvr(R,c.gainEauProj)),gainEauEst:pn(gvr(R,c.gainEauEst)),co2Proj:pn(gvr(R,c.co2Proj)),pvExist:pn(gvr(R,c.pvExist)),pvProd:pn(gvr(R,c.pvProd)),anneeIDC:anneeRecentePrio(gvr(R,c.anneeIDC)),
+    ddToitVeg:pn(gvr(R,c.ddToitVeg)),
     ddPerm:pn(gvr(R,c.ddPerm)),ddVeget:pn(gvr(R,c.ddVeget)),ddVegCout:pn(gvr(R,c.ddVegCout)),ddArbres:pn(gvr(R,c.ddArbres)),
     ddCour:gv(R,c.ddCour),ddTri:pn(gvr(R,c.ddTri)),ddTriOk:gv(R,c.ddTriOk),
     ddToitProj:pn(gvr(R,c.ddToitProj)),ddTriProj:pn(gvr(R,c.ddTriProj)),
@@ -18424,7 +18423,6 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
       estim: _findCol(header, ['estim_pte', 'estim_pte_chf']),
       dg: _findCol(header, ['dg_3_31_chf', 'dg_3_31', 'dg', 'dg_chf', 'devis_general', 'devis_general_chf', 'devis_general_dg', 'dg_25']),
       dateDg: _findCol(header, ['date_dg']),
-      statutConsolidation: _findCol(header, ['statut_consolidation']),
       gei: _findCol(header, ['previsionnel_pte_gei', 'ge_invest', 'geinvest', 'invest_ge']),
       immoba: _findCol(header, ['estim_immoba', 'invest_immoba']),
       affectation: _findCol(header, ['affectation_ab', 'affectation']),   // 03.11.2026 : périmètre par affectation (commun aux outils)
@@ -18485,7 +18483,6 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
         estim_pte_kchf: estimKchf,
         dg_kchf: cols.dg ? _toKCHF(get(cols.dg, r)) : null,
         date_dg: txt(get(cols.dateDg, r)),
-        statut_consolidation: txt(get(cols.statutConsolidation, r)),
         prev_gei_kchf: _toKCHF(get(cols.gei, r)),
         invest_immoba_kchf: _toKCHF(get(cols.immoba, r)),
         tags: { p300: tag(cols.tag300, r), coe: tag(cols.tagCoe, r), canicule: tag(cols.tagCanicule, r), emb: tag(cols.tagEmb, r), lum: tag(cols.tagLum, r) },
@@ -18538,7 +18535,6 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
         estim_pte: cols.estim ? cols.estim.header : null,
         dg: cols.dg ? cols.dg.header : null,
         date_dg: cols.dateDg ? cols.dateDg.header : null,
-        statut_consolidation: cols.statutConsolidation ? cols.statutConsolidation.header : null,
         prev_gei: cols.gei ? cols.gei.header : null,
         invest_immoba: cols.immoba ? cols.immoba.header : null,
         lot_enveloppe: cols.lotEnv ? cols.lotEnv.header : null
@@ -22114,12 +22110,12 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
 
   // Taux de réponse par RPF = soldées ÷ posées le mois précédent (dernier
   // mois stocké strictement antérieur au mois de revue). rpf === null → tous.
-  function tauxReponse(mois, rpf) {
+  function tauxReponse(mois, rpf, garder) {
     var stock = lireQuestionsStock();
     var prev = Object.keys(stock.mois || {}).filter(function (m) { return m < mois; }).sort().pop() || null;
     var cur = stock.mois[mois] || null;
     if (!prev) return { taux: null, posees: 0, soldees: 0, moisPrecedent: null, premieres: !!(cur && cur.questions.length) };
-    var qs = stock.mois[prev].questions.filter(function (q) { return q.statut !== 'retirée' && REGLES_QUESTIONS[q.regle] && (rpf === null || rpf === undefined || q.rpf === rpf); });
+    var qs = stock.mois[prev].questions.filter(function (q) { return q.statut !== 'retirée' && REGLES_QUESTIONS[q.regle] && (rpf === null || rpf === undefined || q.rpf === rpf) && (!garder || garder(q)); });
     var s = qs.filter(function (q) { return q.statut === 'soldée'; }).length;
     return { taux: qs.length ? s / qs.length : null, posees: qs.length, soldees: s, moisPrecedent: prev, premieres: false };
   }
@@ -22202,9 +22198,13 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
   function questionsCard(mois, rows) {
     assurerQuestions(mois);
     var stock = lireQuestionsStock(), e = stock.mois[mois];
-    /* périmètre de l'en-tête seulement (pas les filtres du Reporting) : mêmes comptes que le mode revue et l'export */
-    var dans = null;
-    if (rows) { dans = {}; projetsByPerimetre(STATE.perimetre).forEach(function (c) { dans[c.projet.numero_projet] = true; }); }
+    /* 18.11.2026 (chef de projet PTE) : la carte suit exactement les projets affichés — fil d'Ariane (périmètre, sous-site,
+       projet) ET filtres de Sémaphores (RP, statut, type, phase SIA, recherche) : `rows` sont les lignes déjà filtrées.
+       Un projet « Terminé » exclu par le filtre de statut n'y apparaît plus. Le courriel, l'export CSV et le taux de réponse
+       portent sur le même ensemble. Sans `rows` (appel hors Sémaphores) : périmètre de l'en-tête. */
+    var dans = {};
+    if (rows) rows.forEach(function (r) { dans[r.p.numero_projet] = true; });
+    else projetsByPerimetre(STATE.perimetre).forEach(function (c) { dans[c.projet.numero_projet] = true; });
     var garder = dans ? function (q) { return dans[q.projet]; } : null;
     var card = el('div', { class: 'card', id: 'questions-card' });
     var btnCsv = el('button', { type: 'button', class: 'btn' }, ['Exporter (CSV)']);
@@ -22212,11 +22212,11 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     card.appendChild(cardTitle('À compléter — questions de ' + moisLibelle(mois), 'Trous de données qui empêchent un sémaphore d’être juste, détectés à chaque classeur, regroupés par portefeuille puis par nature. Chaque question garde son numéro Q-<RPF>-<mois>-<n> ; au classeur suivant, celles dont le trou est comblé se soldent. « Copier pour un mail » reprend la liste du portefeuille.', btnCsv));
     var rpfs = []; (e ? e.questions : []).forEach(function (q) { if (q.statut !== 'retirée' && (!garder || garder(q)) && rpfs.indexOf(q.rpf) === -1) rpfs.push(q.rpf); });
     rpfs.sort(function (a, b) { return (!a) - (!b) || nomRpf(a).localeCompare(nomRpf(b)); });
-    if (!rpfs.length) { card.appendChild(el('p', { class: 'muted small' }, ['Aucun trou détecté pour ce mois dans le périmètre : rien à demander.'])); return card; }
+    if (!rpfs.length) { card.appendChild(el('p', { class: 'muted small' }, ['Aucun trou détecté pour ce mois dans le périmètre et avec les filtres affichés : rien à demander.'])); return card; }
     rpfs.forEach(function (rpf) {
       var grp = questionsGroupees(e, rpf, mois, garder);
       var nO = 0, nS = 0; grp.forEach(function (x) { nO += x.ouvertes.length; nS += x.soldees.length; });
-      var tr = tauxReponse(mois, rpf);
+      var tr = tauxReponse(mois, rpf, garder);
       var sec = el('div', { class: 'questions-rpf' });
       var head = el('div', { class: 'questions-rpf-head' }, [el('h3', {}, [rpf ? nomRpf(rpf) : 'Hors périmètre RPF'])]);
       head.appendChild(el('span', { class: 'taux' }, [nO + ' ouverte' + (nO > 1 ? 's' : '') + ' · ' + nS + ' soldée' + (nS > 1 ? 's' : '') +
@@ -23849,7 +23849,9 @@ body.night :where(#vue-revue,.pte-rv) img,body.night :where(#vue-revue,.pte-rv) 
     var N = agg.anneeRef;
     function tile(label, value, sub, tipText, extra) { tiles.appendChild(kpiTile(label, value, sub, tipText, extra)); }
     if (full) {
-      var tr = tauxReponse(STATE.mois, (STATE.perimetre && STATE.perimetre.indexOf('RPF:') === 0 ? STATE.perimetre.slice(4) : null));
+      /* 18.11.2026 : mêmes projets que la carte « À compléter » (fil d'Ariane et filtres affichés) */
+      var vusQ = null; if (opts.list) { vusQ = {}; opts.list.forEach(function (c) { vusQ[c.projet.numero_projet] = true; }); }
+      var tr = tauxReponse(STATE.mois, (STATE.perimetre && STATE.perimetre.indexOf('RPF:') === 0 ? STATE.perimetre.slice(4) : null), vusQ ? function (q) { return vusQ[q.projet]; } : null);
       var qVal = tr.taux === null ? '—' : Math.round(tr.taux * 100) + ' %';
       var qSub = tr.moisPrecedent ? (tr.soldees + ' sur ' + tr.posees + ' · ' + moisLibelle(tr.moisPrecedent)) : (tr.premieres ? 'premières questions posées ce mois' : 'aucune question posée');
       tile('Questions soldées', qVal, qSub, 'Taux de réponse aux questions du mois précédent : questions soldées (trou comblé dans le nouveau classeur) ÷ questions posées. Questions du mois : carte « À compléter » de l’onglet Sémaphores.', 'kpi-questions');
